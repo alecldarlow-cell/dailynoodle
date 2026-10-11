@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-11T06:25:48.918Z",
+  "built": "2026-10-11T06:51:52.936Z",
   "today": "2026-10-11",
   "timezone": "Europe/London",
-  "count": 537,
+  "count": 538,
   "items": [
     {
       "path": "reports/2026-10-11-crossword-mini-0092.html",
@@ -78,6 +78,21 @@
       "statUnit": "",
       "statLabel": "",
       "mask": "..............o....................."
+    },
+    {
+      "path": "reports/2026-10-11-uk-hottest-summer-back-to-back.html",
+      "kind": "report",
+      "topic": "Science",
+      "headline": "Britain’s hottest summer on record broke a record set only a year earlier",
+      "standfirst": "Summer 2026 averaged 16.5°C across the UK, the highest in a series that starts in 1884 and 0.4°C above the record 2025 set. Seven of the ten hottest summers have come since 2000, and the warmth carried on into a joint-fourth-warmest Sept…",
+      "date": "2026-10-11",
+      "updated": "",
+      "read": "~4 min",
+      "thumb": "",
+      "stat": "16.5",
+      "statUnit": "°C",
+      "statLabel": "summer mean",
+      "mask": ""
     },
     {
       "path": "reports/2026-10-11-word-link-0064.html",
