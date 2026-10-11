@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-11T11:01:30.509Z",
+  "built": "2026-10-11T16:33:38.066Z",
   "today": "2026-10-11",
   "timezone": "Europe/London",
-  "count": 539,
+  "count": 540,
   "items": [
     {
       "path": "reports/2026-10-11-crossword-mini-0092.html",
@@ -107,6 +107,21 @@
       "stat": "16.5",
       "statUnit": "°C",
       "statLabel": "summer mean",
+      "mask": ""
+    },
+    {
+      "path": "reports/2026-10-11-uk-unemployed-per-vacancy.html",
+      "kind": "report",
+      "topic": "Economy",
+      "headline": "Britain has 2.5 unemployed people for every vacancy, the most outside the pandemic since 2015",
+      "standfirst": "Vacancies have fallen to 702,000 while the number of unemployed people has risen, so each job opening now has more people chasing it than at any point in a decade. The ratio has stopped climbing, but it has not come back down.",
+      "date": "2026-10-11",
+      "updated": "",
+      "read": "~3 min",
+      "thumb": "",
+      "stat": "2.5",
+      "statUnit": "×",
+      "statLabel": "per vacancy",
       "mask": ""
     },
     {
