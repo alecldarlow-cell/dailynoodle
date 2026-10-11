@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-11T16:35:57.660Z",
+  "built": "2026-10-11T16:37:23.180Z",
   "today": "2026-10-11",
   "timezone": "Europe/London",
-  "count": 541,
+  "count": 542,
   "items": [
     {
       "path": "reports/2026-10-11-co2-rise-slows-emissions-record.html",
@@ -107,6 +107,21 @@
       "stat": "38",
       "statUnit": "%",
       "statLabel": "grant rate",
+      "mask": ""
+    },
+    {
+      "path": "reports/2026-10-11-uk-borrowing-above-forecast-benefits.html",
+      "kind": "report",
+      "topic": "UK politics",
+      "headline": "UK borrowing is below last year's pace but £8.1bn above forecast, with benefits the biggest spending rise",
+      "standfirst": "Five months into the financial year, the government has borrowed £2.2bn less than a year ago but £8.1bn more than the Office for Budget Responsibility expected. Higher benefits, not debt interest, account for the largest part of the extr…",
+      "date": "2026-10-11",
+      "updated": "",
+      "read": "~3 min",
+      "thumb": "",
+      "stat": "£8.1",
+      "statUnit": "bn",
+      "statLabel": "above forecast",
       "mask": ""
     },
     {
