@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-11T06:51:52.936Z",
+  "built": "2026-10-11T06:55:12.042Z",
   "today": "2026-10-11",
   "timezone": "Europe/London",
-  "count": 538,
+  "count": 539,
   "items": [
     {
       "path": "reports/2026-10-11-crossword-mini-0092.html",
@@ -78,6 +78,21 @@
       "statUnit": "",
       "statLabel": "",
       "mask": "..............o....................."
+    },
+    {
+      "path": "reports/2026-10-11-uk-asylum-grant-rate-halves.html",
+      "kind": "report",
+      "topic": "Immigration",
+      "headline": "Fewer than four in ten asylum claims now succeed at first decision, half the 2022 peak",
+      "standfirst": "The Home Office granted protection in 38% of initial decisions in the year to June 2026, down from 48% a year earlier and 77% at the 2022 peak. The biggest single shift is Syria. The rate is for first decisions only, and appeals have his…",
+      "date": "2026-10-11",
+      "updated": "",
+      "read": "~4 min",
+      "thumb": "",
+      "stat": "38",
+      "statUnit": "%",
+      "statLabel": "grant rate",
+      "mask": ""
     },
     {
       "path": "reports/2026-10-11-uk-hottest-summer-back-to-back.html",
