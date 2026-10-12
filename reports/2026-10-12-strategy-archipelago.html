@@ -26,6 +26,8 @@
 html,body{height:100%;margin:0;overflow:hidden;background:var(--navy);color:var(--paper);font-family:var(--f-ui);-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
 body{touch-action:manipulation;user-select:none;-webkit-user-select:none}
 #cv{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+/* the play screen never pinch-zooms the page: a pinch anywhere on it is the game's camera */
+#top,#dock,#hint,#banner,#note,#sign,#top *,#dock *{touch-action:none}
 button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 /* fleet bar */
@@ -62,7 +64,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 #dInfo:empty{display:none}
 #dock.sl .dl{display:none}
 @media (max-width:350px){.hero canvas{width:86px;height:99px}}
-@media (max-width:370px){#dock.tg #dIcon{display:none}}
+@media (max-width:370px){#dock.tg #dIcon,#dock.sl #dIcon{display:none}#dock.sl .btn.pri{min-width:84px}#dock.sl .btn.ico{width:42px;min-width:42px}}
 .btn{min-height:46px;border-radius:14px;padding:0 13px;font:900 16px var(--f-ui);border:2px solid rgba(244,233,204,.5);background:rgba(255,255,255,.05);color:var(--paper);touch-action:manipulation;transition:transform .08s,opacity .2s;flex:none;white-space:nowrap}
 .btn.pri{min-width:96px;border:0;color:#fff;background:linear-gradient(#f2703f,#d5461d);box-shadow:inset 0 -4px 0 rgba(0,0,0,.24),0 6px 16px rgba(228,87,46,.4);text-shadow:0 1px 0 rgba(0,0,0,.25)}
 .btn:active{transform:translateY(2px) scale(.98)}
@@ -71,8 +73,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 @keyframes glow{0%,100%{box-shadow:inset 0 -4px 0 rgba(0,0,0,.24),0 0 0 0 rgba(242,196,107,.0)}50%{box-shadow:inset 0 -4px 0 rgba(0,0,0,.24),0 0 0 5px rgba(242,196,107,.75)}}
 #range{display:flex;align-items:center;gap:5px;flex:1;min-width:0}
 #range input{flex:1;min-width:0;accent-color:var(--verm);height:34px;margin:0}
-#rangeV{min-width:28px;text-align:center;font:900 21px var(--f-ui);font-variant-numeric:tabular-nums}
-.sq{width:40px;height:40px;border-radius:12px;border:2px solid rgba(244,233,204,.5);background:transparent;font:900 22px var(--f-ui);flex:none;padding:0;line-height:1}
+#rangeV{display:none}
+.btn.ico{min-width:46px;width:46px;padding:0;font-size:19px}
+.sq{width:38px;height:40px;border-radius:12px;border:2px solid rgba(244,233,204,.5);background:transparent;font:900 22px var(--f-ui);flex:none;padding:0;line-height:1}
 /* turn banner */
 #banner{position:fixed;left:0;right:0;top:34%;z-index:8;display:flex;justify-content:center;pointer-events:none}
 .rib{display:flex;align-items:center;gap:12px;padding:10px 26px 10px 14px;background:linear-gradient(90deg,rgba(244,233,204,0),var(--paper) 12%,var(--paper) 88%,rgba(244,233,204,0));color:var(--ink);min-width:min(86vw,360px);justify-content:center;animation:rib 1.5s cubic-bezier(.2,.8,.2,1) forwards}
@@ -84,7 +87,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 #note{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 58px);transform:translate(-50%,-8px);z-index:7;max-width:min(92vw,420px);background:rgba(6,28,41,.88);border:1px solid rgba(244,233,204,.2);border-radius:14px;padding:8px 13px;font-size:14px;font-weight:700;line-height:1.35;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;text-align:center}
 #note.on{opacity:1;transform:translate(-50%,0)}
 #note b{color:var(--gold)}
-#sign{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 58px);transform:translateX(-50%);z-index:9;width:min(92vw,400px);box-sizing:border-box;background:var(--paper);color:var(--ink);border-radius:16px;padding:12px 15px 12px;box-shadow:0 12px 32px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:3px;font-size:14.5px;line-height:1.4;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+#sign{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 58px);transform:translateX(-50%);z-index:9;pointer-events:none;width:min(92vw,400px);box-sizing:border-box;background:var(--paper);color:var(--ink);border-radius:16px;padding:12px 15px 12px;box-shadow:0 12px 32px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:3px;font-size:14.5px;line-height:1.4;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
 #sign b{font-family:var(--f-chart);font-weight:400;font-size:21px}
 #sign small{color:var(--ink-2);font-size:12px;font-weight:700}
 @keyframes pop{0%{transform:translateX(-50%) scale(.85);opacity:0}100%{transform:translateX(-50%) scale(1);opacity:1}}
@@ -164,7 +167,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 </header>
 <div id="hint" role="status" aria-live="polite"></div>
 <div id="note" role="status" aria-live="polite"></div>
-<div id="sign" hidden role="status"><b id="signH"></b><span id="signP"></span><small>Tap to close</small></div>
+<div id="sign" hidden role="status"><b id="signH"></b><span id="signP"></span><small>Tap anywhere to close</small></div>
 <div id="banner" aria-live="polite"></div>
 <section id="dock" aria-label="Orders">
  <img id="dIcon" alt=""><div class="dl"><span id="dTitle">Archipelago</span><span id="dInfo"></span></div>
@@ -759,23 +762,37 @@ function frameOf(ids,zmax,battle){const b=boxOf(ids);if(!b)return null;const A=c
 const ZDAY=1.3;
 function frameDay(core,ctx){const gc=frameOf(ctx);if(!gc||gc.z>=ZDAY-.01)return gc||frameOf(core);const gk=frameOf(core);if(!gk||gk.z<=gc.z+.02)return gc;
  const A=camArea(false),z=Math.min(ZDAY,gk.z),b=boxOf(core),bc=boxOf(ctx);
- let g=aim({x0:(b.x0+bc.x0)/2,x1:(b.x1+bc.x1)/2,y0:(b.y0+bc.y0)/2,y1:(b.y1+bc.y1)/2},z,A);if(!fits(b,g,A))g=aim(b,z,A);return g;}
+ const mid={x0:(b.x0+bc.x0)/2,x1:(b.x1+bc.x1)/2,y0:(b.y0+bc.y0)/2,y1:(b.y1+bc.y1)/2};
+ /* near the chart's edge the gentle zoom may not fit your islands; close in only as far as it takes */
+ for(let zz=z;zz<=gk.z+1e-6;zz*=1.06){let g=aim(mid,zz,A);if(fits(b,g,A))return g;g=aim(b,zz,A);if(fits(b,g,A))return g;}return gk;}
 function camKey(){if(!st)return '';return [st.phase,ui.sel,ui.tgt>=0?1:0,ui.mv?ui.mv.from:-1,ui.mv&&ui.mv.to>=0?1:0,ui.rival,ui.chains?1:0,st.turn,W,H].join('|');}
-function camGoal(){if(!st||!D||!ISL.length)return OVER();
- if(cam.fx)return frameOf(cam.fx,cam.fxZ,true)||OVER();
- if(cam.man)return cam.man;
- const P=st.phase;if(meta.set.rm||ui.chains||P==='over'||P==='rival'||ui.rival>=0)return OVER();
- const own=[];for(let i=0;i<st.own.length;i++)if(st.own[i]===0)own.push(i);let ids=null;
- if(P==='reinforce'){const s=new Set(own);for(const i of own)for(const j of adjOf(st)[i])if(st.own[j]!==0)s.add(j);return frameDay(own,[...s])||OVER();}
- else if(P==='attack'){if(ui.sel>=0)ids=[ui.sel,...targets(st,ui.sel)];else{const src=own.filter(i=>canFrom(st,i,0)),s=new Set(src);for(const i of src)for(const j of targets(st,i))s.add(j);return (src.length?frameDay(src,[...s]):frameDay(own,own))||OVER();}}
- else if(P==='occupy'&&st.occ)ids=[st.occ.from,st.occ.to];
- else if(P==='move'){if(ui.mv)ids=[ui.mv.from,...(ui.mv.to>=0?[ui.mv.to]:reach(st,ui.mv.from))];else{const mv=own.filter(i=>st.tr[i]>1&&reach(st,i).length);return frameDay(mv.length?mv:own,own)||OVER();}}
- return frameOf(ids)||OVER();}
-function camUpdate(dt){const k=camKey();if(k!==cam.key){cam.key=k;cam.man=null;}
- const g=camGoal(),f=1-Math.exp(-dt*(cam.man?40:cam.fx?4.2:2.6));
- cam.z=1/(1/cam.z+(1/g.z-1/cam.z)*f);cam.x+=(g.x-cam.x)*f;cam.y+=(g.y-cam.y)*f;cam.shake*=Math.pow(.004,dt);}
+/* what the camera should show for the current step: the islands you must be able to tap (need), where it would frame (g),
+   and whether it must go there (force: rival turns, the whole chart) */
+function camPlan(){if(!st||!D||!ISL.length)return {g:OVER(),force:true};
+ const P=st.phase;if(meta.set.rm||ui.chains||P==='over'||P==='rival'||ui.rival>=0)return {g:OVER(),force:true};
+ const own=[];for(let i=0;i<st.own.length;i++)if(st.own[i]===0)own.push(i);
+ if(P==='reinforce'){const s=new Set(own);for(const i of own)for(const j of adjOf(st)[i])if(st.own[j]!==0)s.add(j);return {g:frameDay(own,[...s])||OVER(),need:own};}
+ if(P==='attack'){if(ui.sel>=0){const ids=[ui.sel,...targets(st,ui.sel)],near=adjOf(st)[ui.sel].filter(k=>st.own[k]===0&&canFrom(st,k,0));return {g:frameOf([...ids,...near])||frameOf(ids)||OVER(),need:ids};}
+  const src=own.filter(i=>canFrom(st,i,0)),s=new Set(src);for(const i of src)for(const j of targets(st,i))s.add(j);
+  return {g:(src.length?frameDay(src,[...s]):frameDay(own,own))||OVER(),need:src.length?src:own};}
+ if(P==='occupy'&&st.occ){const ids=[st.occ.from,st.occ.to];return {g:frameOf(ids)||OVER(),need:ids};}
+ if(P==='move'){if(ui.mv){const ids=[ui.mv.from,...(ui.mv.to>=0?[ui.mv.to]:reach(st,ui.mv.from))];return {g:frameOf(ids)||OVER(),need:ids};}
+  const mv=own.filter(i=>st.tr[i]>1&&reach(st,i).length);return {g:frameDay(mv.length?mv:own,own)||OVER(),need:mv.length?mv:own};}
+ return {g:OVER(),force:true};}
+/* is every island you need on screen, clear of the bars? */
+function inView(ids){const z=cam.z,top=MAP.y0-2,bot=dockTop-6;for(const i of ids){const I=ISL[i];if(!I)continue;
+ const x0=(I.x-I.R*.9-cam.x)*z+MAP.cx,x1=(I.x+I.R*.9-cam.x)*z+MAP.cx,y0=(I.y-cam.y)*z+MAP.cy+(I.bannerY-13)*Math.min(z,Math.sqrt(z)),y1=(I.y+I.R*.8-cam.y)*z+MAP.cy;
+ if(x0<4||x1>W-4||y0<top||y1>bot)return false;}return true;}
+function camUpdate(dt){const k=camKey(),plan=camPlan();
+ if(k!==cam.key){cam.key=k;cam.man=null;let fresh=false;if(!plan.force){const t=st?st.turn:0;fresh=t!==cam.turn;cam.turn=t;}
+  /* a new turn frames your fleet; after that the camera holds still while everything you need to tap is already on screen,
+     so islands never slide away under a finger. It moves only to bring something you need into view. */
+  if(!fresh&&!plan.force&&!cam.fx&&!cam.moving&&plan.need&&inView(plan.need))cam.man={x:cam.x,y:cam.y,z:cam.z,hold:true};}
+ const g=cam.fx?(frameOf(cam.fx,cam.fxZ,true)||OVER()):(cam.man||plan.g),f=1-Math.exp(-dt*(cam.man&&!cam.man.hold&&!cam.man.soft?40:cam.fx?4.2:3.2));
+ cam.z=1/(1/cam.z+(1/g.z-1/cam.z)*f);cam.x+=(g.x-cam.x)*f;cam.y+=(g.y-cam.y)*f;cam.shake*=Math.pow(.004,dt);
+ cam.moving=Math.abs(g.x-cam.x)*cam.z>2||Math.abs(g.y-cam.y)*cam.z>2||Math.abs(g.z-cam.z)>.01;}
 function camManual(x,y,z){const g=camClamp({x,y,z:clamp(z,1,ZMAN)});cam.man=g;cam.x=g.x;cam.y=g.y;cam.z=g.z;}
-function toggleView(){if(!st)return;cam.fx=null;cam.man=cam.z>1.06?OVER():null;sfx('tap');}
+function toggleView(){if(!st)return;cam.fx=null;cam.man=cam.z>1.06?Object.assign(OVER(),{soft:true}):Object.assign(camPlan().g,{soft:true});sfx('tap');}
 
 /* ---------- one attack: a ship sails over, dice tumble, cannon and casualties ---------- */
 async function animBattle(e,player){const fa=e.f,fd=e.was,B=ISL[e.to];face={i:e.from,tx:B.x};if(player||meta.set.spd==='normal')focusOn(e.from,e.to,player?ZAUTO:1.55);
@@ -886,8 +903,8 @@ function strip(){if(!st||!D){$('fleets').innerHTML='';$('turnL').textContent='';
  const F=$('fleets');F.classList.remove('tight');const need=[...F.children].reduce((a,c)=>a+c.offsetWidth+5,0)+8;if(need>F.clientWidth)F.classList.add('tight');
  $('turnL').textContent='Turn '+st.turn;}
 const btnFns={b1:null,b2:null};
-function setBtn(id,label,fn,o){const b=$(id);if(!label){b.hidden=true;btnFns[id]=null;b.classList.remove('glow');return;}b.hidden=false;b.textContent=label;b.disabled=!!(o&&o.dis)||(ui.busy&&!(o&&o.always));btnFns[id]=fn;}
-function showRange(o){const R=$('range');if(!o){R.hidden=true;return;}R.hidden=false;const r=$('rng');r.min=o.min;r.max=o.max;r.value=o.n;$('rangeV').textContent=o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;}
+function setBtn(id,label,fn,o){const b=$(id);if(!label){b.hidden=true;btnFns[id]=null;b.classList.remove('glow');return;}b.hidden=false;b.textContent=label;b.classList.toggle('ico',label==='✕');if(label==='✕')b.setAttribute('aria-label','Cancel');else b.removeAttribute('aria-label');b.disabled=!!(o&&o.dis)||(ui.busy&&!(o&&o.always));btnFns[id]=fn;}
+function showRange(o){const R=$('range');if(!o){R.hidden=true;return;}R.hidden=false;const r=$('rng');r.min=o.min;r.max=o.max;r.value=o.n;$('rangeV').textContent=o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;$('b1').textContent=(st&&st.phase==='occupy'?'Sail ':'Move ')+o.n;}
 function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo').innerHTML=h||'';};dk.classList.remove('sl','tg');$('b1').classList.remove('glow');
  if(!st){$('dIcon').src=iconURL('puffin');$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');showRange(null);return;}
  if(ui.rival>=0){const k=st.fl[ui.rival];$('dIcon').src=iconURL(k);$('dTitle').textContent=FLEETS[k].name;info('Their move · turn '+st.turn);setBtn('b2');showRange(null);setBtn('b1','Skip ›',()=>{skipNow=true;},{always:true});hint('');return;}
@@ -896,31 +913,31 @@ function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo'
  else if(P==='attack'){$('dTitle').textContent='Attack';const canUndo=st.placed.length&&!st.attacked;
   if(ui.tgt>=0&&ui.sel>=0){const p=odds(st,ui.sel,ui.tgt);dk.classList.add('tg');$('dTitle').textContent=p>.995?'99%+':Math.round(p*100)+'%';info('to take '+nm(ui.tgt));setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
   else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Spoils chest earned':'Pick an island');setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);setBtn('b1','Done',doneAttacking);}}
- else if(P==='occupy'){$('dTitle').textContent='Sail in';info('');dk.classList.add('sl');setBtn('b2');showRange(st.occ);setBtn('b1','Sail',sailNow);}
- else if(P==='move'){$('dTitle').textContent='Move';if(ui.mv&&ui.mv.to>=0){dk.classList.add('sl');setBtn('b2');showRange(ui.mv);setBtn('b1','Move',doMove);}else{info(ui.mv?`<b>${st.tr[ui.mv.from]-1}</b> can move`:'One move, then rivals sail');setBtn('b2',ui.mv?'Cancel':null,()=>{ui.mv=null;dockUI();coach();});setBtn('b1','End turn',endMyTurn);}}
+ else if(P==='occupy'){$('dTitle').textContent='Sail in';info('');dk.classList.add('sl');setBtn('b2');setBtn('b1','Sail '+st.occ.n,sailNow);showRange(st.occ);}
+ else if(P==='move'){$('dTitle').textContent='Move';if(ui.mv&&ui.mv.to>=0){dk.classList.add('sl');setBtn('b2','✕',()=>{ui.mv=null;dockUI();});setBtn('b1','Move '+ui.mv.n,doMove);showRange(ui.mv);}else{info(ui.mv?`<b>${st.tr[ui.mv.from]-1}</b> can move`:'One move, then rivals sail');setBtn('b2',ui.mv?'Cancel':null,()=>{ui.mv=null;dockUI();coach();});setBtn('b1','End turn',endMyTurn);}}
  else{$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');}
  coach();}
 /* the hint floats over the sea: a new line shows for a few seconds and fades; first-chart coaching stays until done */
 function hint(txt,coachy){const h=$('hint');txt=txt||'';const co=!!coachy&&!!txt;if(h.textContent===txt&&h.classList.contains('coach')===co)return;
  clearTimeout(hint.t);h.textContent=txt;h.classList.toggle('coach',co);h.classList.remove('off');if(txt&&!co)hint.t=setTimeout(()=>h.classList.add('off'),4200);}
 function phaseHint(){if(!st)return '';const P=st.phase;if(P==='reinforce')return 'Tap your islands to send troops';
- if(P==='attack')return ui.tgt>=0?'Attack once, or Blitz until it falls':ui.sel>=0?'Tap an island to attack it':st.conq?'Attack again, or tap Done':'Tap one of your islands to attack from';
- if(P==='occupy')return `${nm(st.occ.to)} is yours. How many sail in?`;if(P==='move')return ui.mv?(ui.mv.to>=0?'Choose how many move':'Tap one of your islands to move them to'):'Move troops once, or end your turn';return '';}
+ if(P==='attack')return ui.tgt>=0?'Attack once, or Blitz until it falls':ui.sel>=0?'Tap an island next to it to attack':st.conq?'Attack again, or tap Done':'Tap a rival island to attack it';
+ if(P==='occupy')return `${nm(st.occ.to)} is yours. How many sail in?`;if(P==='move')return ui.mv?(ui.mv.to>=0?`Tap ${nm(ui.mv.to)} again, or press Move`:'Tap where they go. The rings show where they can reach'):'Tap an island to move troops from, or end your turn';return '';}
 /* guided first chart: an arrow over the island to tap, and the next step in words */
 function coach(){ui.coach=null;if(!st||ui.rival>=0||st.phase==='over'||st.phase==='rival')return;$('b1').classList.remove('glow');
  if(meta.coached||st.c!==0){hint(phaseHint());return;}const P=st.phase;let txt='';
  if(P==='reinforce'){const a=planPlace(st,0,st.pool),i=+Object.keys(a)[0];if(i>=0&&!isNaN(i)){ui.coach={i};txt=`Tap ${nm(i)} to send your new troops there`;}}
  else if(P==='attack'){if(ui.sel<0){let best=null,bp=0;for(let i=0;i<st.own.length;i++){if(!canFrom(st,i,0))continue;for(const j of targets(st,i)){const p=odds(st,i,j);if(p>bp){bp=p;best=[i,j];}}}
-   if(best&&bp>=.55){ui.coach={i:best[0]};txt=`Tap ${nm(best[0])} to attack from there`;}else{$('b1').classList.add('glow');txt='No good attacks left. Tap Done';}}
+   if(best&&bp>=.55){ui.coach={i:best[1]};txt=`Tap ${nm(best[1])} to attack it`;}else{$('b1').classList.add('glow');txt='No good attacks left. Tap Done';}}
   else if(ui.tgt<0){let bj=-1,bp=-1;for(const j of targets(st,ui.sel)){const p=odds(st,ui.sel,j);if(p>bp){bp=p;bj=j;}}if(bj>=0){ui.coach={i:bj};txt=`Tap ${nm(bj)}. The chip is your chance to take it`;}}
   else{$('b1').classList.add('glow');txt='Blitz keeps rolling until the island falls';}}
  else if(P==='occupy'){$('b1').classList.add('glow');txt=`${nm(st.occ.to)} is yours. Slide, then Sail`;}
- else if(P==='move'){$('b1').classList.add('glow');txt=ui.mv?'Pick where they go, then Move':'Move troops up to the front, or tap End turn';}
+ else if(P==='move'){if(!ui.mv){$('b1').classList.add('glow');txt='Move troops up to the front, or tap End turn';}else if(ui.mv.to<0)txt='Tap where they go. The rings show where they can reach';else{$('b1').classList.add('glow');txt=`Tap ${nm(ui.mv.to)} again, or press Move`;}}
  hint(txt,true);}
 function banner(title,sub,k){const b=$('banner');b.innerHTML='';const el=document.createElement('div');el.className='rib';el.innerHTML=`<img src="${iconURL(k||'puffin')}" alt=""><span><b>${title}</b>${sub?`<small>${sub}</small>`:''}</span>`;b.appendChild(el);clearTimeout(banner.t);banner.t=setTimeout(()=>{if(el.parentNode)el.remove();},1600);}
 function note(html,ms){const el=$('note');el.innerHTML=html;el.classList.add('on');clearTimeout(note.t);note.t=setTimeout(()=>el.classList.remove('on'),ms||3800);}
 const signQ=[];let signCur=null;
-function sign(id,h,p){if(meta.seen[id]||TEST)return;meta.seen[id]=1;saveMeta();signQ.push({h,p});pumpSign();}
+function sign(id,h,p){if(meta.seen[id]||(TEST&&!window.__SIGNS))return;meta.seen[id]=1;saveMeta();signQ.push({h,p});pumpSign();}
 function pumpSign(){if(signCur||!signQ.length||!$('modal').hidden)return;signCur=signQ.shift();$('signH').textContent=signCur.h;$('signP').textContent=signCur.p;$('sign').hidden=false;signCur.to=setTimeout(signDone,(signCur.h+' '+signCur.p).split(' ').length>22?5600:4500);}
 function signDone(){if(!signCur)return;clearTimeout(signCur.to);signCur=null;$('sign').hidden=true;setTimeout(pumpSign,350);}
 $('sign').addEventListener('click',signDone);
@@ -929,7 +946,7 @@ $('sign').addEventListener('click',signDone);
 function startChart(ci,how){$('top').hidden=false;st=newGame(ci,(Math.random()*4294967295)>>>0,meta.set.mode);const s=meta.streak;st.assist=s.c===ci&&s.n>=2?Math.min(.3,.1*(s.n-1)):0;cps=[];
  resetScene();meta.stats.played++;saveMeta();rndArm(how||'new');hideModal();$('dock').hidden=false;layout();syncD();
  banner(chartOf(st).name,chartOf(st).real?'A real chart':'An invented chart','puffin');setTimeout(()=>beginTurn(),TEST?0:900);}
-function resetScene(){ui={sel:-1,tgt:-1,mv:null,busy:false,chains:ui.chains,changed:new Set(),coach:null,rival:-1,occShip:null};DT=null;ships=[];flyers=[];parts=[];floats=[];face=null;speedK=1;skipNow=false;cam.shake=0;unfocus();}
+function resetScene(){cam.turn=0;cam.man=null;ui={sel:-1,tgt:-1,mv:null,busy:false,chains:ui.chains,changed:new Set(),coach:null,rival:-1,occShip:null};DT=null;ships=[];flyers=[];parts=[];floats=[];face=null;speedK=1;skipNow=false;cam.shake=0;unfocus();}
 function beginTurn(){if(!st||st.phase==='over')return;cps.push(JSON.stringify(st));if(cps.length>4)cps.shift();const m=startTurn(st,0);st.lastMuster=m;st.phase='reinforce';st.attacked=false;st.occ=null;
  ui.sel=ui.tgt=-1;ui.mv=null;ui.rival=-1;speedK=1;skipNow=false;landK=0;saveRun();dockUI();
  const bits=[`${m.base} for ${count(st,0)} island${count(st,0)>1?'s':''}`];m.held.forEach(k=>bits.push(`${chartOf(st).chains[k].b} ${chartOf(st).chains[k].n}`));if(m.spoils)bits.push(`${m.spoils} spoils`);
@@ -947,17 +964,30 @@ function autoPlace(){if(st.phase!=='reinforce'||st.pool<=0||ui.busy)return;act()
 function cancelSel(){ui.sel=-1;ui.tgt=-1;dockUI();}
 function info(i){const c=chartOf(st),s=c.isl[i],o=st.own[i];const [have,size]=chainCount(st,0,s.ch);const who=o<0?'Unclaimed':o===0?'Yours':FLEETS[st.fl[o]].name;
  hint(`${s.n} · ${who} · ${st.tr[i]} troops${isHarb(st,i)?' · harbour':''} · ${c.chains[s.ch].n} +${c.chains[s.ch].b} (you ${have}/${size})`);clearTimeout(info.t);info.t=setTimeout(()=>{if(st)coach();},3200);}
+/* a short line of explanation in the hint, then back to the step's own hint */
+function say(txt){hint(txt);clearTimeout(info.t);info.t=setTimeout(()=>{if(st)coach();},3400);}
+function setMoveTo(i){const mv=ui.mv;mv.to=i;mv.min=1;mv.max=st.tr[mv.from]-1;mv.n=mv.max;sfx('tap');dockUI();}
 function tap(i){if(!st)return;const P=st.phase;
- if(ui.rival>=0||P==='rival'){skipNow=true;return;}
- if(ui.busy)return;
- if(i<0){if(P==='attack'&&ui.sel>=0)cancelSel();else if(P==='move'&&ui.mv){ui.mv=null;dockUI();}return;}
+ if(ui.rival>=0||P==='rival'||ui.busy)return;
+ if(i<0){if(P==='attack'&&ui.sel>=0)cancelSel();else if(P==='move'&&ui.mv&&ui.mv.to<0){ui.mv=null;dockUI();}return;}
  if(P==='reinforce'){if(st.own[i]===0)place(i);else info(i);return;}
- if(P==='attack'){if(st.own[i]===0){if(canFrom(st,i,0)){ui.sel=i;ui.tgt=-1;sfx('tap');dockUI();sign('odds','Chance chips','Each chip is your chance of taking that island if you Blitz. Green is a good bet, red a long shot.');}else if(ui.sel===i)cancelSel();else info(i);}
-  else if(ui.sel>=0&&adjOf(st)[ui.sel].includes(i)){ui.tgt=i;sfx('tap');dockUI();if(isHarb(st,i))sign('fort','A harbour fort','The fort adds 1 to the defender’s top die. Whoever holds a harbour gets +2 troops there every turn, so harbours are worth the fight.');}
-  else info(i);return;}
+ if(P==='attack'){
+  if(st.own[i]===0){if(i===ui.sel){cancelSel();return;}
+   if(canFrom(st,i,0)){ui.sel=i;ui.tgt=-1;sfx('tap');dockUI();sign('odds','Chance chips','Each chip is your chance of taking that island if you Blitz. Green is a good bet, red a long shot.');return;}
+   say(st.tr[i]<2?`${nm(i)} needs 2 or more troops to attack`:`${nm(i)} has no rivals next to it`);return;}
+  /* a rival or gull island: attack it from the chosen island if it can, otherwise from your best island next to it */
+  let from=ui.sel>=0&&adjOf(st)[ui.sel].includes(i)?ui.sel:-1;
+  if(from<0){let bp=-1;for(const k of adjOf(st)[i])if(canFrom(st,k,0)){const q=odds(st,k,i);if(q>bp){bp=q;from=k;}}}
+  if(from<0){say(adjOf(st)[i].some(k=>st.own[k]===0)?`Your islands next to ${nm(i)} need 2 or more troops to attack it`:`None of your islands is next to ${nm(i)}`);return;}
+  ui.sel=from;ui.tgt=i;sfx('tap');dockUI();if(isHarb(st,i))sign('fort','A harbour fort','The fort adds 1 to the defender’s top die. Whoever holds a harbour gets +2 troops there every turn, so harbours are worth the fight.');return;}
  if(P==='occupy'){if(i===st.occ.to)sailNow();return;}
- if(P==='move'){if(ui.mv&&ui.mv.to<0&&reach(st,ui.mv.from).includes(i)){ui.mv.to=i;ui.mv.min=1;ui.mv.max=st.tr[ui.mv.from]-1;ui.mv.n=ui.mv.max;sfx('tap');dockUI();return;}
-  if(st.own[i]===0&&st.tr[i]>1&&reach(st,i).length){ui.mv={from:i,to:-1,n:1,min:1,max:1};sfx('tap');dockUI();return;}info(i);}}
+ if(P==='move'){const mv=ui.mv;
+  if(mv){if(i===mv.from){if(mv.to>=0)mv.to=-1;else ui.mv=null;sfx('tap');dockUI();return;}   /* the source again: step back */
+   if(i===mv.to){doMove();return;}                                                             /* the destination again: go */
+   if(st.own[i]===0&&reach(st,mv.from).includes(i)){setMoveTo(i);return;}}                    /* another destination */
+  if(st.own[i]===0&&st.tr[i]>1&&reach(st,i).length){ui.mv={from:i,to:-1,n:1,min:1,max:1};sfx('tap');dockUI();return;}
+  if(st.own[i]===0){say(mv?`No route from ${nm(mv.from)} to ${nm(i)}. Troops move only through your own islands`:st.tr[i]<2?`${nm(i)} has no spare troops to move`:`${nm(i)} isn't joined to your other islands`);return;}
+  info(i);}}
 async function attack(blitz){if(ui.busy||ui.sel<0||ui.tgt<0)return;act();if(flyers.some(f=>f.applies&&f.gen===GEN))syncD();const i=ui.sel,j=ui.tgt,fd=st.own[j];ui.busy=true;st.attacked=true;dockUI();hint('');
  const rolls=[];do{const r=throwOnce(st,i,j);if(!r)break;rolls.push(r);}while(blitz&&st.tr[j]>0&&avail(st,i)>=1);const taken=st.tr[j]<=0;saveRun();
  const ship=await animBattle({f:0,from:i,to:j,was:fd,rolls,taken},true);ui.busy=false;
@@ -1016,7 +1046,7 @@ function mascot(c){try{const R=Math.min(2,window.devicePixelRatio||1),saved=DPR;
 function home(){$('dock').hidden=true;$('top').hidden=true;hint('');const run=loadRun(),nxt=Math.max(0,Math.min(meta.unlocked,CHARTS.length)-1);
  const rows=CHARTS.map((c,ci)=>{const open=ci<meta.unlocked,b=meta.best[c.id]||0;const riv=c.fleets.slice(1).map(k=>`<img src="${iconURL(k)}" alt="${FLEETS[k].name}">`).join('');
   return `<button class="ccard" data-c="${ci}" ${open?'':'disabled'}><canvas data-mini="${ci}"></canvas><span class="ci"><b>${c.name}</b><small>${c.real?'Real':'Invented'} chart · ${c.isl.length} islands</small><span class="riv">${riv}</span></span>${open?`<span class="st">${b?starsHTML(b):'<span class="off">★★★</span>'}</span>`:`<span class="lock">Clear chart ${ci} to unlock</span>`}</button>`;}).join('');
- showModal(`<div class="hero"><canvas id="masc"></canvas><div class="htext"><span class="tag">Prototype · v2.1</span><h1>Archipelago</h1><p>Command the Puffins. Take every island.</p></div></div>
+ showModal(`<div class="hero"><canvas id="masc"></canvas><div class="htext"><span class="tag">Prototype · v2.2</span><h1>Archipelago</h1><p>Command the Puffins. Take every island.</p></div></div>
   ${run?`<button class="cbtn pri" id="cont">Continue · ${CHARTS[run.st.c].name}, turn ${run.st.turn}</button>`:`<button class="cbtn pri" id="play">Set sail · ${CHARTS[nxt].name}</button>`}
   <div class="kick">Charts</div>${rows}
   <div class="tlinks"><button class="link" id="how" type="button">How to play</button><button class="link" id="set" type="button">Settings</button>${homeLink}</div>`,'title',()=>{
@@ -1068,17 +1098,17 @@ function settings(back){const s=meta.set;const sw=(id,on,l,sub)=>`<button class=
 function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">‹ Back</button><h2>How to play</h2></div>
  <ol class="rules"><li><b>Win</b> by holding every island on the chart. You are out if you lose them all.</li>
  <li><b>Reinforce:</b> each turn you get your islands ÷ 3 (at least 3), plus a bonus for every whole chain you hold. Tap your islands to send them.</li>
- <li><b>Attack</b> along a dotted lane from an island with 2 or more troops. You roll up to 3 dice, the defender up to 2. Highest against highest; ties go to the defender. Blitz keeps rolling for you.</li>
+ <li><b>Attack</b> along a dotted lane from an island with 2 or more troops: tap the rival island (or tap yours first to choose where from). You roll up to 3 dice, the defender up to 2. Highest against highest; ties go to the defender. Blitz keeps rolling for you.</li>
  <li><b>Harbours</b> have a fort (+1 on the defender’s top die) and give whoever holds them +2 troops a turn.</li>
  <li><b>Spoils:</b> any turn you take an island earns a chest. Three chests cash in for +4, then more each time anyone cashes in.</li>
- <li><b>Move</b> once a turn along your own islands, then the rivals sail.</li>
+ <li><b>Move</b> once a turn: tap one of your islands, then where they go. They can travel through any chain of your own islands. Tap the destination again (or press Move) to send them, then the rivals sail.</li>
  <li><b>Camera:</b> it closes in on your islands and on every battle. Pinch or drag to look around, and double-tap open sea to see the whole chart.</li></ol>`,'',()=>$('bk').addEventListener('click',back));}
 
 /* ---------- input: a tap picks the island under it; a held finger keeps sending troops;
    two fingers pinch the camera, one finger drags it once it is close in, a double tap on open sea swaps views ---------- */
-function pick(sx,sy){if(!st||!ISL.length)return -1;const [bx,by]=toBase(sx,sy);let best=-1,bd=1e9;ISL.forEach((I,i)=>{const d=Math.hypot(bx-I.x,(by-I.y)*1.1);const lim=Math.max(I.R+16,40/cam.z);if(d<lim&&d<bd){bd=d;best=i;}});return best;}
+function pick(sx,sy){if(!st||!ISL.length)return -1;const [bx,by]=toBase(sx,sy);let best=-1,bd=1e9;ISL.forEach((I,i)=>{const d=Math.hypot(bx-I.x,(by-I.y)*1.1);const lim=Math.max(I.R+22,44/cam.z);if(d<lim&&d<bd){bd=d;best=i;}});return best;}
 let down=null,pinch=null,drag=null,lastSea=0;const pts=new Map();
-cv.addEventListener('pointerdown',e=>{if(!st)return;try{cv.setPointerCapture(e.pointerId);}catch(x){}pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+cv.addEventListener('pointerdown',e=>{if(!st)return;if(signCur){const r=$('sign').getBoundingClientRect(),on=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;signDone();if(on&&pick(e.clientX,e.clientY)<0)return;}try{cv.setPointerCapture(e.pointerId);}catch(x){}pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(pts.size>=2){if(down){clearTimeout(down.t);down=null;}drag=null;const [a,b]=[...pts.values()],[wx,wy]=toBase((a.x+b.x)/2,(a.y+b.y)/2);pinch={d0:Math.max(24,Math.hypot(a.x-b.x,a.y-b.y)),z0:cam.z,wx,wy};return;}
  const i=pick(e.clientX,e.clientY);down={x:e.clientX,y:e.clientY,i,held:false};drag={x:e.clientX,y:e.clientY,cx:cam.x,cy:cam.y,on:false};
  if(st.phase==='reinforce'&&i>=0&&st.own[i]===0&&!ui.busy){let gap=150;const go=()=>{if(!down||down.i!==i)return;down.held=true;if(!place(i))return;gap=Math.max(55,gap*.85);down.t=setTimeout(go,gap);};down.t=setTimeout(go,360);}});
@@ -1094,7 +1124,7 @@ cv.addEventListener('wheel',e=>{if(!st||!$('modal').hidden)return;e.preventDefau
 $('b1').addEventListener('click',()=>{sfx('tap');btnFns.b1&&btnFns.b1();});
 $('b2').addEventListener('click',()=>{sfx('tap');btnFns.b2&&btnFns.b2();});
 const occ=()=>st&&(st.phase==='occupy'?st.occ:st.phase==='move'&&ui.mv&&ui.mv.to>=0?ui.mv:null);
-$('rng').addEventListener('input',()=>{const o=occ();if(!o)return;o.n=+$('rng').value;$('rangeV').textContent=o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;if(ui.occShip)ui.occShip.carry=Math.min(3,o.n);});
+$('rng').addEventListener('input',()=>{const o=occ();if(!o)return;o.n=+$('rng').value;$('rangeV').textContent=o.n;$('b1').textContent=(st.phase==='occupy'?'Sail ':'Move ')+o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;if(ui.occShip)ui.occShip.carry=Math.min(3,o.n);});
 $('rm').addEventListener('click',()=>{const o=occ();if(o&&o.n>o.min){o.n--;showRange(o);sfx('tap');}});
 $('rp').addEventListener('click',()=>{const o=occ();if(o&&o.n<o.max){o.n++;showRange(o);sfx('tap');}});
 $('pz').addEventListener('click',()=>{sfx('tap');pause();});
@@ -1117,6 +1147,5 @@ if(TEST)window.__dg={
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
