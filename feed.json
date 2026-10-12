@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-12T00:57:55.126Z",
+  "built": "2026-10-12T00:58:53.284Z",
   "today": "2026-10-12",
   "timezone": "Europe/London",
-  "count": 551,
+  "count": 552,
   "items": [
     {
       "path": "reports/2026-10-12-crossword-mini-0093.html",
@@ -78,6 +78,21 @@
       "statUnit": "",
       "statLabel": "",
       "mask": "...............................o...."
+    },
+    {
+      "path": "reports/2026-10-12-uk-gdp-second-in-g7-after-flat-2025.html",
+      "kind": "report",
+      "topic": "Economy",
+      "headline": "UK growth was second-fastest in the G7 this spring, after a 2025 in which two quarters recorded none",
+      "standfirst": "The ONS now puts April to June 2026 growth at 0.5%, behind only Canada. Revisions in the same release moved 2025 around: the second and fourth quarters came out at 0.0%, so the 2026 pickup follows a stall.",
+      "date": "2026-10-12",
+      "updated": "",
+      "read": "~3 min",
+      "thumb": "",
+      "stat": "0.5",
+      "statUnit": "%",
+      "statLabel": "q2 gdp growth",
+      "mask": ""
     },
     {
       "path": "reports/2026-10-12-uk-productivity-component-approach.html",
