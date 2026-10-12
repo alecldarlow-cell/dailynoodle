@@ -18,8 +18,9 @@ house template — both happen in the first ten turns of every build.
 | Project instructions | already in context — free |
 | `DN-API.md` | once, at the top of a build |
 | House template | **never** — `dn-build.py` splices it; `DN-API.md` documents it |
-| Standards rubric v3 | **only on a contested call** — when a judgement is genuinely in dispute |
-| Prepublish checklist v3 | **at the gate step, not at startup** |
+| Standards rubric (latest version) | **only on a contested call** — when a judgement is genuinely in dispute |
+| Prepublish checklist (latest version) | **pass 1 (editorial) at the spine checkpoint; pass 2 (production) at the gate step** — never at startup |
+| Headline & style guide | **at step 5, before writing the headline and first two paragraphs** — §1–§4 only |
 | Reporter addendum | never as a read — its one rule (`dn:statlabel`) is in the instructions and gated by the linter |
 | `toolchain/README.md` | only when bootstrapping without the Project (unattended runs) |
 
@@ -43,8 +44,24 @@ mkdir -p ~/b && cd ~/b \
   && npm install jsdom --silent && mkdir -p piece
 ```
 
-The rubric, checklist and addendum stay in `~/b/repo/toolchain/` — read them from
-there on demand, never at startup.
+Inside the Project, read the rubric, checklist and style guide from **project
+knowledge** (the highest-versioned copy), on demand and never at startup. The copies
+in `~/b/repo/toolchain/` are for unattended runs outside the Project, and can lag
+project knowledge until the repo is synced. If the two disagree, project knowledge
+wins; say so in the reply.
+
+**30-day duplicate check** (rubric §0). One call; it needs only `feed.json`, not the
+back catalogue:
+
+```bash
+git -C ~/b/repo show HEAD:feed.json | python3 -c "import json,sys; \
+k=[w.lower() for w in sys.argv[1:]]; \
+[print(i['date'], i['headline']) for i in json.load(sys.stdin)['items'] \
+ if i['kind']=='report' and any(w in (i['headline']+' '+i['standfirst']).lower() for w in k)]" \
+  KEYWORD1 KEYWORD2
+```
+
+Any hit in the last 30 days makes the piece a follow-up, or drops it.
 
 Pull back-catalogue context **only** when it is actually needed — checking whether
 a story has run, or rebuilding a shipped piece. Not by default. One file:
@@ -68,6 +85,17 @@ saving tokens can cost you sourcing.
   cannot be pulled down and grepped locally; bounded fetching is the only lever.
 - Search before fetching a cold URL — fetch reliability is much better for URLs
   that have already appeared in a search result.
+- **Go to the tables (rubric §1b), and know where that fails.** Spreadsheet
+  downloads (e.g. ONS `.xlsx` reference tables) fail through the fetch tool, and
+  the shell cannot reach the publisher. When the spine needs a series that is only
+  in the tables, ask the desk to attach the file at the spine checkpoint, and name
+  the gap honestly if they can't.
+- **Earlier editions are a partial fallback, not a free series.** Previous editions
+  of a bulletin often state the same breakdown for their own year. That yields a
+  cross-edition comparison, but check for reweighting or method breaks between
+  editions first. The ONS reweighted its 2020–23 smoking estimates, so the 2023
+  edition's 11.9% became 11.1% in the next. Prefer editions on the same basis, and
+  put any break in the caveat card.
 
 ---
 
@@ -77,11 +105,16 @@ The gate moves to the front. Geometry failures are decidable from the chart spec
 alone, so there is no reason to discover them after the prose is written.
 
 ```
+0  EDITORIAL GATE   peg + date, added-value sentence, 30-day feed check, interests
 1  verify.js        compute every derived figure, lock the outputs
-2  SPINE CHECKPOINT one line to the desk: confirmed, or changed to X because Y
+2  SPINE CHECKPOINT one block to the desk + checklist pass 1 (editorial):
+                    spine (confirmed / changed because Y), peg and date,
+                    added-value sentence, independent source, data to attach,
+                    interest to declare, prior DN piece to link
 3  piece/init.js    author the exhibits
 4  dn-preflight.js  geometry + silent-failure check, before any prose
-5  piece/body.html  author the prose against exhibits already known to fit
+5  piece/body.html  author the prose against exhibits already known to fit;
+                    style guide §1–§4 first; caveat card before headline (§5b)
    piece/footer.html
    piece/meta.json
 6  dn-build.py      assemble
@@ -90,7 +123,9 @@ alone, so there is no reason to discover them after the prose is written.
 9  copy to outputs, present_files
 ```
 
-**Step 2 is not optional.** On five pieces the pitch premise failed verification and
+**Steps 0 and 2 are not optional.** Step 0 decides whether there is a piece at all.
+A bulletin rewritten in the bulletin's order is not one, and nor is a topic run in
+the last 30 days with nothing new. On five pieces the pitch premise failed verification and
 the story was rebuilt around what survived — correct behaviour, but twice the desk
 learned about it only after the file was built and gated. One sentence at step 2
 costs a sentence; the same news at step 7 costs a rebuild.

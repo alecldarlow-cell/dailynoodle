@@ -11,7 +11,7 @@ Node 18+ and Python 3. **jsdom is the only dependency.**
 | File | What it is | When it's used |
 |---|---|---|
 | `digi-news-house-template-v3-3-3.html` | House template: chrome, CSS tokens and the embedded DN chart library. **Canonical.** | Never read; `dn-build.py` and `dn-preflight.js` splice from it |
-| `dn-build.py` | Assembler. Splices `piece/` into the template; owns the masthead, `<title>`, Corrections, "Figures to", version line and filename | Build step 6 |
+| `dn-build.py` | Assembler. Splices `piece/` into the template; owns the masthead, `<title>`, the production note, Corrections (from `meta.corrections`; refuses a bumped version with no entry), "Figures to", version line and filename | Build step 6 |
 | `dn-preflight.js` | Geometry + silent-failure gate on `piece/init.js` alone, before prose is written | Build step 4 |
 | `dn-lint.js` | Structural gate on the assembled file: sourcing, a11y, self-containment, footer, feed meta, tile, honesty slots, presentation contracts | Build step 7 |
 | `dn-probe.js` | Geometry gate on the assembled file at 360px and 680px | Build step 7 |
@@ -19,8 +19,9 @@ Node 18+ and Python 3. **jsdom is the only dependency.**
 | `dn-redate.js` | Moves an already-shipped piece to a new date; refuses on date-dependent content | Redates only |
 | `DN-API.md` | Chart toolkit reference: primitives, spec fields, label budgets, silent failures, markup contracts. Replaces reading the template | Read once per build |
 | `SESSION-PROTOCOL.md` | Build order, context discipline, bootstrap, the two dates, redating | Read first |
-| `digi-news-standards-rubric-v3.md` | Binding editorial standards: source tiers, assumption firewall, accessibility floor, length tiers, footer | Only on a contested call |
-| `digi-news-prepublish-checklist-3.md` | Pre-publish checklist mapped to rubric sections | At the gate step |
+| `digi-news-standards-rubric-v4.md` | Binding editorial standards: news value, source tiers, going to the data, assumption firewall, caveat test, accessibility floor, length tiers, footer, disclosure, continuity, fairness | Only on a contested call |
+| `digi-news-prepublish-checklist-4.md` | Pre-publish checklist in two passes, mapped to rubric sections | Pass 1 at the spine checkpoint; pass 2 at the gate step |
+| `digi-news-style-guide-v1.md` | Headlines, standfirsts, the first two paragraphs, number ration, register | Build step 5, before the headline |
 | `addendum-digi-reporter.md` | The `dn:statlabel` tile-kicker rule (also gated by the linter) | Only if a kicker call is unclear |
 | `site-sections-and-tracking.md` | Site sections (`report`/`puzzle`/`game`), the tracker-line exception, admin | When publishing or rebuilding a shipped piece |
 

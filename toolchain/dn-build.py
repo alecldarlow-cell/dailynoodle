@@ -24,7 +24,8 @@ PIECE DIRECTORY
   body.html    required. From <div class="head"> to the end of the last
                <section>. NOT the masthead and NOT the footer — both generated.
   footer.html  required. The Method div and the Sources div only. The
-               Corrections line and the Figures-to/version line are generated.
+               Corrections line, the production note (reports) and the
+               Figures-to/version line are generated.
   init.js      required. Chart init body. No <script> wrapper — added here.
 
 EXIT CODES
@@ -33,7 +34,14 @@ EXIT CODES
 import argparse, io, json, os, re, sys
 
 REQUIRED_META = ["headline", "standfirst", "topic", "date", "kind", "read", "slug", "version"]
-OPTIONAL_META = {"statlabel": "", "subarea": "", "kicker": "ANALYSIS", "built": ""}
+OPTIONAL_META = {"statlabel": "", "subarea": "", "kicker": "ANALYSIS", "built": "",
+                 "corrections": []}
+
+# Rubric §12/§14: every report carries this line, identical on every piece.
+# Generated here so it cannot be forgotten; skipped if footer.html already has it.
+PRODUCTION_NOTE = ("Researched, written and checked by an AI system working to the "
+                   "Digi News standards; edited and published by the Digi News editor.")
+PRODUCTION_MARK = "Researched, written and checked by an AI system"
 TOPICS = ["UK politics", "Economy", "Immigration", "AI", "Science", "Medicine", "Society", "World"]
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
@@ -122,6 +130,19 @@ def build(args):
             % (meta["topic"], " | ".join(TOPICS)))
     if not re.match(r"^v\d+\.\d+$", meta["version"]):
         die('meta.version "%s" is not the canonical v<major>.<minor>' % meta["version"])
+    # Rubric §15: a version above v1.0 means a post-publication revision, and every
+    # revision is logged. meta.corrections is a list of one-line, dated entries.
+    corr = meta["corrections"]
+    if isinstance(corr, str):
+        corr = [corr] if corr.strip() else []
+    if not isinstance(corr, list) or not all(isinstance(c, str) and c.strip() for c in corr):
+        die('meta.corrections must be a list of non-empty strings')
+    if meta["version"] != "v1.0" and not corr:
+        die('meta.version is %s but meta.corrections is empty. Rubric §15: log every '
+            'post-publication revision as a dated one-line entry, e.g. '
+            '"v1.1 (12 Oct 2026): Exhibit 02 relabelled; no figures changed." '
+            'Pre-publication rebuilds stay at v1.0.' % meta["version"])
+    meta["corrections"] = corr
     if meta["statlabel"] and (len(meta["statlabel"]) > 14 or meta["statlabel"] != meta["statlabel"].lower()):
         die('meta.statlabel "%s" must be <=14 chars and lower case' % meta["statlabel"])
 
@@ -173,10 +194,24 @@ def build(args):
         '',
     ]
 
+    def esc_text(t):
+        return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+    production = []
+    if meta["kind"] == "report" and PRODUCTION_MARK not in footer_inner:
+        production = ['    <div class="fm"><b>Production.</b> %s</div>' % PRODUCTION_NOTE]
+    if meta["corrections"]:
+        corrections = '    <div class="fm"><b>Corrections.</b> %s</div>' % " ".join(
+            esc_text(c.strip()) for c in meta["corrections"])
+    else:
+        corrections = ('    <div class="fm"><b>Corrections.</b> None. Material corrections '
+                       'will be logged here with date.</div>')
+
     foot = [
         '  <div class="foot">',
         footer_inner,
-        '    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>',
+    ] + production + [
+        corrections,
         '    <div><b>Figures to %s.</b> <span class="ver">Digi News &middot; %s &middot; %s.</span></div>'
         % (built_human, meta["version"], meta["slug"]),
         '  </div>',
