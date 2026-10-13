@@ -46,6 +46,18 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 #fleets.tight .chip{padding:0;width:38px;justify-content:center}
 #fleets.tight .chip b{position:absolute;right:-6px;bottom:-5px;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;border-radius:9px;background:var(--c);color:var(--k);font-size:11.5px;line-height:18px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.55)}
 #side{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none;min-width:58px}
+.srow{display:flex;align-items:center;gap:8px}
+#chest{position:relative;display:flex;align-items:center;gap:4px;height:26px;padding:0 7px 0 5px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:rgba(6,28,41,.66);font:900 13px var(--f-ui);color:var(--paper);font-variant-numeric:tabular-nums;transition:box-shadow .3s,background .3s}
+#chest svg{width:19px;height:15px}
+#chest::after{content:"";position:absolute;inset:-9px -4px}
+#chest.ready{background:rgba(242,196,107,.22);border-color:var(--gold);box-shadow:0 0 10px rgba(242,196,107,.55)}
+#chest.pop{animation:chestPop .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes chestPop{0%{transform:scale(1)}35%{transform:scale(1.35)}100%{transform:scale(1)}}
+.slots{display:flex;justify-content:center;gap:14px;margin:4px 0}
+.slots span{width:58px;height:48px;border-radius:12px;display:grid;place-items:center;background:rgba(120,90,40,.12);box-shadow:inset 0 0 0 2px rgba(120,90,40,.25)}
+.slots span svg{width:40px;height:32px}
+.slots span.off svg{opacity:.18;filter:grayscale(1)}
+.slots span.new{box-shadow:inset 0 0 0 2px var(--gold),0 0 12px rgba(242,196,107,.6)}
 #turnL{font-weight:900;font-size:14px;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 #chainsBtn{position:relative;border:0;background:rgba(6,28,41,.66);border-radius:10px;font-size:13px;font-weight:800;padding:5px 10px;min-height:30px;border:1.5px solid rgba(255,255,255,.1)}
 #chainsBtn::after{content:"";position:absolute;inset:-8px -6px}
@@ -57,19 +69,21 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 #hint.up{bottom:calc(var(--dockH) + 80px)}
 @keyframes nudge{0%,100%{transform:translateX(-50%)}50%{transform:translate(-50%,-3px)}}
 /* orders bar: one slim row in the thumb zone; buttons appear only when they do something */
-#dock{position:fixed;left:0;right:0;bottom:0;z-index:6;max-width:560px;margin:0 auto;box-sizing:border-box;min-height:62px;background:linear-gradient(180deg,rgba(15,61,86,.96),rgba(7,31,45,.99));border-top:1.5px solid rgba(244,233,204,.22);border-radius:20px 20px 0 0;box-shadow:0 -10px 28px rgba(0,0,0,.34);padding:8px 10px calc(env(safe-area-inset-bottom,0px) + 8px);display:flex;align-items:center;gap:8px}
-#dIcon{width:32px;height:32px;flex:none;margin:-4px -3px 0 -2px}
-.dl{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:1px}
-#dTitle{font-family:var(--f-chart);font-size:20px;line-height:1.05;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#dInfo{font-weight:800;font-size:14px;line-height:1.2;color:rgba(244,233,204,.78);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+#dock{position:fixed;left:0;right:0;bottom:0;z-index:6;margin:0 auto;box-sizing:border-box;height:calc(72px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,#0f3d56,#082a3c 70%);border-top:1px solid rgba(244,233,204,.2);box-shadow:0 -1px 0 rgba(0,0,0,.35),0 -12px 26px rgba(0,0,0,.28);padding:0 12px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px}
+@media (min-width:600px){#dock{max-width:560px;border:1px solid rgba(244,233,204,.2);border-bottom:0;border-radius:18px 18px 0 0}}
+#dIcon{width:30px;height:30px;flex:none;margin:-4px -4px 0 -2px}
+.dl{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px}
+#dTitle{font-family:var(--f-chart);font-size:19px;line-height:1.05;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#dInfo{font-weight:800;font-size:13.5px;line-height:1.25;color:rgba(244,233,204,.8);overflow:hidden;font-variant-numeric:tabular-nums;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 #dInfo b{color:var(--gold);font-weight:900;font-size:15px}
 #dInfo:empty{display:none}
-#dock.rf #dInfo{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 #dock.sl .dl{display:none}
 @media (max-width:350px){.hero canvas{width:86px;height:99px}}
+@media (max-width:400px){#dock.two #dIcon{display:none}}
 @media (max-width:370px){#dock.tg #dIcon,#dock.sl #dIcon{display:none}#dock.sl .btn.pri{min-width:84px}#dock.sl .btn.ico{width:42px;min-width:42px}}
-.btn{min-height:46px;border-radius:14px;padding:0 13px;font:900 16px var(--f-ui);border:2px solid rgba(244,233,204,.5);background:rgba(255,255,255,.05);color:var(--paper);touch-action:manipulation;transition:transform .08s,opacity .2s;flex:none;white-space:nowrap}
+.btn{min-height:46px;height:46px;border-radius:14px;padding:0 13px;font:900 16px var(--f-ui);border:2px solid rgba(244,233,204,.5);background:rgba(255,255,255,.05);color:var(--paper);touch-action:manipulation;transition:transform .08s,opacity .2s;flex:none;white-space:nowrap}
 .btn.pri{min-width:96px;border:0;color:#fff;background:linear-gradient(#f2703f,#d5461d);box-shadow:inset 0 -4px 0 rgba(0,0,0,.24),0 6px 16px rgba(228,87,46,.4);text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.btn.pri.warn{background:#f4e9cc;color:#8a2a12;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);text-shadow:none}
 .btn.pri.sec{background:rgba(255,255,255,.05);border:2px solid rgba(244,233,204,.5);color:var(--paper);box-shadow:none;text-shadow:none}
 .btn:active{transform:translateY(2px) scale(.98)}
 .btn:disabled{opacity:.32;transform:none}
@@ -167,7 +181,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .tlinks{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:2px}
 .tlinks .link{color:var(--paper)}
 .tlinks .link.home{color:rgba(244,233,204,.75)}
-@media (prefers-reduced-motion:reduce){.rib{animation:ribfade 1.5s forwards}@keyframes ribfade{0%,100%{opacity:0}15%,80%{opacity:1}}.hero canvas,#hint.coach,.btn.glow{animation:none}#note,.chip{transition:none}}
+@media (prefers-reduced-motion:reduce){#chest.pop{animation:none}.rib{animation:ribfade 1.5s forwards}@keyframes ribfade{0%,100%{opacity:0}15%,80%{opacity:1}}.hero canvas,#hint.coach,.btn.glow{animation:none}#note,.chip{transition:none}}
 </style>
 </head>
 <body>
@@ -175,7 +189,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 <header id="top">
  <button class="round" id="pz" type="button" aria-label="Pause"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="3" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="12" y="3" width="4" height="14" rx="1.5" fill="currentColor"/></svg></button>
  <button id="fleets" type="button" aria-label="Fleet standings"></button>
- <div id="side"><span id="turnL"></span><button id="chainsBtn" type="button" aria-pressed="false">Chains</button></div>
+ <div id="side"><div class="srow"><button id="chest" type="button" aria-label="Spoils chests"><svg viewBox="0 0 20 16" aria-hidden="true"><path d="M2 7h16v7.5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" fill="#9a6532" stroke="#2a1a0c" stroke-width="1.2"/><path d="M2 7V5.5C2 2.5 5 1 10 1s8 1.5 8 4.5V7z" fill="#7a4a22" stroke="#2a1a0c" stroke-width="1.2"/><path d="M2 7h16" stroke="#f2c46b" stroke-width="1.6"/><rect x="8.3" y="5.6" width="3.4" height="4.4" rx=".8" fill="#f2c46b" stroke="#2a1a0c" stroke-width=".9"/></svg><b id="chestN">0/3</b></button><span id="turnL"></span></div><button id="chainsBtn" type="button" aria-pressed="false">Chains</button></div>
 </header>
 <div id="hint" role="status" aria-live="polite"></div>
 <div id="note" role="status" aria-live="polite"></div>
@@ -624,6 +638,7 @@ function buildSprites(){for(const k of ['puffin','cormorant','gannet','skua'])SP
  SPR.glow=softCanvas(40,[[0,'rgba(255,253,220,1)'],[.3,'rgba(255,196,80,.9)'],[1,'rgba(255,140,40,0)']]);
  SPR.cloud=softCanvas(96,[[0,'rgba(3,22,36,.5)'],[.6,'rgba(3,22,36,.22)'],[1,'rgba(3,22,36,0)']]);}
 /* icons for the dock, the fleet bar and the cards: a big soldier drawn once and kept as an image */
+const CHEST_SVG='<svg viewBox="0 0 20 16" aria-hidden="true"><path d="M2 7h16v7.5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" fill="#9a6532" stroke="#2a1a0c" stroke-width="1.2"/><path d="M2 7V5.5C2 2.5 5 1 10 1s8 1.5 8 4.5V7z" fill="#7a4a22" stroke="#2a1a0c" stroke-width="1.2"/><path d="M2 7h16" stroke="#f2c46b" stroke-width="1.6"/><rect x="8.3" y="5.6" width="3.4" height="4.4" rx=".8" fill="#f2c46b" stroke="#2a1a0c" stroke-width=".9"/></svg>';
 const ICON={};
 function iconURL(k){if(ICON[k])return ICON[k];try{const saved=DPR;DPR=1;const s=birdCanvas(k,64,k==='gull'?null:FLEETS[k].col,false,1);DPR=saved;
  const c=document.createElement('canvas');c.width=c.height=72;const g=c.getContext('2d');g.drawImage(s.cv,(72-s.cv.width)/2+4,72-s.cv.height+6);ICON[k]=c.toDataURL();}catch(e){ICON[k]='';}return ICON[k];}
@@ -631,9 +646,41 @@ function iconURL(k){if(ICON[k])return ICON[k];try{const saved=DPR;DPR=1;const s=
 /* ---------- static layers: the sea, and the board (shallows, lanes, islands) ---------- */
 let sea=null,board=null,borders=null,bordersKey='';
 function layer(sc){sc=sc||LS;const c=document.createElement('canvas');c.width=Math.round(W*sc);c.height=Math.round(H*sc);const g=c.getContext('2d');g.setTransform(sc,0,0,sc,0,0);return [c,g];}
-function buildSea(){const [c,g]=layer(DPR);const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,'#227d9b');gr.addColorStop(.5,'#17617f');gr.addColorStop(1,'#0d405a');g.fillStyle=gr;g.fillRect(0,0,W,H);
- const v=g.createRadialGradient(W/2,H*.45,Math.min(W,H)*.3,W/2,H*.45,Math.max(W,H)*.8);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(2,16,26,.38)');g.fillStyle=v;g.fillRect(0,0,W,H);
- const r=srand(99);g.fillStyle='rgba(255,255,255,.035)';for(let k=0;k<Math.round(W*H/900);k++){g.beginPath();g.ellipse(r()*W,r()*H,2+r()*5,1+r()*1.5,0,0,7);g.fill();}sea=c;}
+/* ---------- the sea: coloured by depth (pale turquoise at the coast, deep blue in open water), mottled with soft noise
+   and a fine grain; a slow two-layer swell drifts over it in the frame loop ---------- */
+function noise2(seed){const r=srand(seed),p=[...Array(256).keys()];for(let i=255;i>0;i--){const j=Math.floor(r()*(i+1));[p[i],p[j]]=[p[j],p[i]];}
+ const P=new Uint16Array(512);for(let i=0;i<512;i++)P[i]=p[i&255];const V=new Float32Array(256);for(let i=0;i<256;i++)V[i]=r()*2-1;const sm=t=>t*t*(3-2*t);
+ const h=(a,b)=>V[P[P[a&255]+(b&255)]];
+ return (x,y)=>{const xi=Math.floor(x),yi=Math.floor(y),u=sm(x-xi),v=sm(y-yi);return lerp(lerp(h(xi,yi),h(xi+1,yi),u),lerp(h(xi,yi+1),h(xi+1,yi+1),u),v);};}
+const SEA_N=noise2(7);
+const fbm=(x,y)=>SEA_N(x,y)*.55+SEA_N(x*2.03+5.2,y*2.03+1.3)*.3+SEA_N(x*4.1+9.7,y*4.1+3.1)*.15;
+const SEA_RAMP=[[0,[118,214,200]],[.1,[64,184,190]],[.28,[34,140,166]],[.55,[22,103,136]],[.8,[16,80,112]],[1,[11,62,92]]];
+function seaCol(t){for(let k=1;k<SEA_RAMP.length;k++){const [b,cb]=SEA_RAMP[k];if(t<=b){const [a,ca]=SEA_RAMP[k-1],u=(t-a)/(b-a);return [lerp(ca[0],cb[0],u),lerp(ca[1],cb[1],u),lerp(ca[2],cb[2],u)];}}return SEA_RAMP[SEA_RAMP.length-1][1];}
+let seaPlain=null,seaPlainKey='',GRAIN=null,SWELL=null;
+function seaLayer(withLand){const cs=5,gw=Math.ceil(W/cs)+2,gh=Math.ceil(H/cs)+2,lo=document.createElement('canvas');lo.width=gw;lo.height=gh;const lg=lo.getContext('2d'),im=lg.createImageData(gw,gh),d=im.data;
+ const P=[];if(withLand)for(const I of ISL)for(const p of I.parts)P.push([I.x+p.dx,I.y+p.dy+I.depth*.5,p.R]);
+ const deep=Math.max(110,S*26),cxm=W/2,cym=MAP.y0+MAP.h*.45,vr=Math.max(W,H)*.78;
+ for(let y=0;y<gh;y++)for(let x=0;x<gw;x++){const wx=(x-.5)*cs,wy=(y-.5)*cs;let dist=1e9;for(const [px,py,Rr] of P){const dd=Math.hypot(wx-px,(wy-py)*1.18)-Rr;if(dd<dist)dist=dd;}
+  const n=fbm(wx/170,wy/170),t=P.length?clamp(Math.pow(clamp(dist/deep,0,1),.85)+n*.1,0,1):clamp(.78+n*.14+(wy/H)*.12,0,1);
+  const c=seaCol(t),vg=1-clamp((Math.hypot(wx-cxm,(wy-cym)*.9)/vr-.42)/.58,0,1)*.32,lt=(1+n*.07)*vg,o=(y*gw+x)*4;
+  d[o]=c[0]*lt;d[o+1]=c[1]*lt;d[o+2]=c[2]*lt;d[o+3]=255;}
+ lg.putImageData(im,0,0);
+ const [c,g]=layer(DPR);g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(lo,-cs*.5,-cs*.5,gw*cs,gh*cs);
+ if(!GRAIN){const T=128,gc=document.createElement('canvas');gc.width=gc.height=T;const gg=gc.getContext('2d'),gi=gg.createImageData(T,T),r=srand(11);
+  for(let k=0;k<T*T;k++){const v=r(),o=k*4;gi.data[o]=gi.data[o+1]=gi.data[o+2]=v>.5?255:0;gi.data[o+3]=Math.abs(v-.5)*22;}gg.putImageData(gi,0,0);GRAIN=gc;}
+ g.fillStyle=g.createPattern(GRAIN,'repeat');g.fillRect(0,0,W,H);
+ return c;}
+function buildSea(){sea=seaLayer(true);const k=W+'x'+H+'x'+DPR;if(k!==seaPlainKey){seaPlain=seaLayer(false);seaPlainKey=k;}buildSwell();}
+/* the swell: soft crests and troughs on a tile that repeats seamlessly; two copies drift at different scales */
+function buildSwell(){if(SWELL)return;const T=384,c=document.createElement('canvas');c.width=c.height=T;const g=c.getContext('2d'),r=srand(23);g.lineCap='round';
+ const crest=(x,y,len,a)=>{for(const ox of [-T,0,T])for(const oy of [-T,0,T]){const X=x+ox,Y=y+oy;
+   g.strokeStyle=`rgba(4,30,48,${a*.55})`;g.lineWidth=5;g.beginPath();g.moveTo(X-len/2,Y+3);g.quadraticCurveTo(X,Y-5+3,X+len/2,Y+3);g.stroke();
+   g.strokeStyle=`rgba(230,250,255,${a})`;g.lineWidth=2.4;g.beginPath();g.moveTo(X-len/2,Y);g.quadraticCurveTo(X,Y-5,X+len/2,Y);g.stroke();}};
+ for(let k=0;k<26;k++)crest(r()*T,r()*T,40+r()*70,.35+r()*.45);
+ SWELL=cx.createPattern(c,'repeat');}
+function drawSwell(t){if(!SWELL)return;const rm=meta.set.rm;
+ for(const [sc,vx,vy,a] of [[.5,4,1.6,.16],[.85,-2.6,2.4,.1]]){const per=384*sc,ox=rm?0:((t*vx)%per+per)%per,oy=rm?0:((t*vy)%per+per)%per;
+  cx.save();cx.globalAlpha=a;cx.translate(ox,oy);cx.scale(sc,sc);cx.fillStyle=SWELL;cx.fillRect(-ox/sc-384,-oy/sc-384,W/sc+768,H/sc+768);cx.restore();}}
 function laneEnds(a,b){const A=ISL[a],B=ISL[b],dx=B.x-A.x,dy=B.y-A.y,d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d;return [A.x+ux*(A.R*.96+4),A.y+uy*(A.R*.82*.96+4),B.x-ux*(B.R*.96+4),B.y-uy*(B.R*.82*.96+4)];}
 /* chain waters: each chain's islands, and the lanes between them, sit in one shaded stretch of water with a pale rim,
    so which islands make a chain is always on the chart. CHW keeps the shapes for the Chains view */
@@ -646,11 +693,10 @@ function chainShape(C,k,grow){const p=new Path2D(),rad=i=>ISL[i].R*1.12+8+grow,c
  return p;}
 function drawChainWaters(g,C){CHW=[];chainLab=null;
  C.chains.forEach((ch,k)=>{const outer=chainShape(C,k,2),inner=chainShape(C,k,0);
-  g.save();g.fillStyle='rgba(240,248,244,.5)';g.fill(outer);g.globalCompositeOperation='destination-out';g.fill(inner);g.restore();
+  g.save();g.fillStyle='rgba(240,248,244,.32)';g.fill(outer);g.globalCompositeOperation='destination-out';g.fill(inner);g.restore();
   g.save();g.fillStyle=k%2?'rgba(150,226,226,.13)':'rgba(190,236,226,.10)';g.fill(inner);g.restore();CHW.push(inner);});}
 function buildBoard(){const [c,g]=layer();board=c;if(!st)return;const C=chartOf(st);
  drawChainWaters(g,C);
- for(const I of ISL)for(const p of I.parts){const x=I.x+p.dx,y=I.y+p.dy+I.depth*.6,gr=g.createRadialGradient(x,y,p.R*.7,x,y,p.R*1.75);gr.addColorStop(0,'rgba(92,214,214,.5)');gr.addColorStop(.55,'rgba(92,214,214,.18)');gr.addColorStop(1,'rgba(92,214,214,0)');g.fillStyle=gr;g.beginPath();g.arc(x,y,p.R*1.75,0,7);g.fill();}
  /* lanes: dotted chart routes */
  for(const [a,b] of C.lanes){const [x1,y1,x2,y2]=laneEnds(a,b),len=Math.hypot(x2-x1,y2-y1),n=Math.max(2,Math.round(len/9));g.strokeStyle='rgba(255,255,255,.07)';g.lineWidth=7;g.lineCap='round';g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();
   for(let k=0;k<=n;k++){const t=k/n;g.fillStyle='rgba(248,238,212,.78)';g.beginPath();g.arc(lerp(x1,x2,t),lerp(y1,y2,t),1.7,0,7);g.fill();}}
@@ -704,12 +750,33 @@ function drawIsland(g,I,i,s){const r=srand(st.c*31+i*7+1);
 function drawLabels(){const C=chartOf(st),zs=1/Math.sqrt(cam.z),fs=Math.round(clamp(S*3.3,13,16));cx.font=`${fs}px "IM Fell English SC",Georgia,serif`;cx.textAlign='center';cx.textBaseline='top';cx.lineJoin='round';
  ISL.forEach((I,i)=>{const lx=I.x+(I.ldx||0),ly=I.y+I.labelY+(I.ldy||0);cx.save();cx.translate(lx,ly);cx.scale(zs,zs);cx.lineWidth=3.5;cx.strokeStyle='rgba(6,30,44,.85)';cx.strokeText(C.isl[i].n,0,0);cx.fillStyle='rgba(250,242,220,.95)';cx.fillText(C.isl[i].n,0,0);cx.restore();});}
 /* ownership: a painted coast line and a tint in the water, redrawn only when an island changes hands */
+/* ownership, built into the island rather than drawn on top: the cliffs below the sand are painted in the fleet's colour
+   (light at the top, deep at the waterline, the surf line kept), a fine line of colour runs along the beach edge, and the
+   water close round the coast takes a soft tint. Redrawn only when an island changes hands */
+const shade=(hex,k)=>{const n=parseInt(hex.slice(1),16),f=v=>clamp(Math.round(v*k),0,255);return `rgb(${f(n>>16)},${f(n>>8&255)},${f(n&255)})`;};
+const BSTYLE=1;   /* 0 = the old outline, 1 = painted cliffs and a fine beach line */
 function buildBorders(){let g;if(borders&&borders.width===Math.round(W*LS)&&borders.height===Math.round(H*LS)){g=borders.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,borders.width,borders.height);g.setTransform(LS,0,0,LS,0,0);}else{const L=layer();borders=L[0];g=L[1];}bordersKey=D.own.join(',');
+ if(BSTYLE===0){ /* the old look, kept for comparison */
  ISL.forEach((I,i)=>{const o=D.own[i];if(o<0)return;const col=colOf(o);for(const p of I.parts){const x=I.x+p.dx,y=I.y+p.dy+I.depth*.5;const gr=g.createRadialGradient(x,y,p.R*.85,x,y,p.R*1.55);gr.addColorStop(0,col+'70');gr.addColorStop(1,col+'00');g.fillStyle=gr;g.beginPath();g.arc(x,y,p.R*1.55,0,7);g.fill();}});
- /* cut the glow back off the land so only the water around an island is tinted */
  g.save();g.globalCompositeOperation='destination-out';g.fillStyle='#000';ISL.forEach(I=>{for(const p of I.parts){const dp=Math.max(3,p.R*.17);g.save();g.translate(I.x+p.dx,I.y+p.dy);g.fill(p.path);g.translate(0,dp);g.fill(p.path);g.restore();}});g.restore();
- ISL.forEach((I,i)=>{const o=D.own[i];if(o<0)return;const col=colOf(o);for(const p of I.parts){g.save();g.translate(I.x+p.dx,I.y+p.dy);g.lineJoin='round';g.strokeStyle='rgba(8,20,26,.55)';g.lineWidth=6.5;g.stroke(p.path);g.strokeStyle=col;g.lineWidth=3.6;g.stroke(p.path);g.scale(.955,.955);g.strokeStyle='rgba(255,255,255,.4)';g.lineWidth=1.1;g.stroke(p.path);g.restore();}});}
-
+ ISL.forEach((I,i)=>{const o=D.own[i];if(o<0)return;const col=colOf(o);for(const p of I.parts){g.save();g.translate(I.x+p.dx,I.y+p.dy);g.lineJoin='round';g.strokeStyle='rgba(8,20,26,.55)';g.lineWidth=6.5;g.stroke(p.path);g.strokeStyle=col;g.lineWidth=3.6;g.stroke(p.path);g.scale(.955,.955);g.strokeStyle='rgba(255,255,255,.4)';g.lineWidth=1.1;g.stroke(p.path);g.restore();}});return;}
+ /* soft tint in the water hugging the coast */
+ ISL.forEach((I,i)=>{const o=D.own[i];if(o<0)return;const col=colOf(o);for(const p of I.parts){const x=I.x+p.dx,y=I.y+p.dy+I.depth*.6;const gr=g.createRadialGradient(x,y,p.R*.9,x,y,p.R*1.4+6);gr.addColorStop(0,col+'5c');gr.addColorStop(1,col+'00');g.fillStyle=gr;g.beginPath();g.arc(x,y,p.R*1.4+6,0,7);g.fill();}});
+ g.save();g.globalCompositeOperation='destination-out';g.fillStyle='#000';ISL.forEach(I=>{for(const p of I.parts){const dp=Math.max(3,p.R*.17);g.save();g.translate(I.x+p.dx,I.y+p.dy);g.fill(p.path);g.translate(0,dp);g.fill(p.path);g.restore();}});g.restore();
+ ISL.forEach((I,i)=>{const o=D.own[i];if(o<0)return;const col=colOf(o);for(const p of I.parts){const dp=Math.max(3,p.R*.17),R=p.R;g.save();g.translate(I.x+p.dx,I.y+p.dy);g.lineJoin='round';
+  if(BSTYLE!==2){ /* painted cliffs: fill the drop below the beach, then cut the beach back out so only the visible cliff is coloured */
+   g.save();
+   const band=new Path2D();band.addPath(p.path,new DOMMatrix().translate(0,dp));
+   g.clip(band);g.globalCompositeOperation='source-over';
+   const cg=g.createLinearGradient(0,R*.2,0,R*.82+dp);cg.addColorStop(0,shade(col,1.05));cg.addColorStop(1,shade(col,.62));g.fillStyle=cg;g.fill(band);
+   g.restore();
+   g.strokeStyle='rgba(30,18,10,.55)';g.lineWidth=1.2;g.stroke(band);
+   g.strokeStyle='rgba(255,255,255,.55)';g.lineWidth=1.8;g.setLineDash([5,4]);g.stroke(band);g.setLineDash([]);
+   /* the beach sits back on top, so cut it out of the band and its waterline */
+   g.save();g.globalCompositeOperation='destination-out';g.fillStyle='#000';g.fill(p.path);g.restore();}
+  if(BSTYLE!==3){ /* a fine line of colour along the beach edge */
+   g.strokeStyle=col;g.globalAlpha=.85;g.lineWidth=BSTYLE===2?2.4:1.5;g.stroke(p.path);g.globalAlpha=1;}
+  g.restore();}});}
 /* ---------- moving things: ships, flying and hopping birds, particles, floating numbers ---------- */
 let ships=[],flyers=[],parts=[],floats=[];
 const P2=(ax,ay,cx_,cy_,bx,by,t)=>{const k=1-t;return [k*k*ax+2*k*t*cx_+t*t*bx,k*k*ay+2*k*t*cy_+t*t*by];};
@@ -724,16 +791,14 @@ function confetti(I,col){for(let q=0;q<26;q++){const a=-Math.PI/2+(Math.random()
 /* ---------- ambient life: waves, glints, cloud shadows ---------- */
 const waves=[],glints=[],clouds=[];
 function ambient(dt){
- while(waves.length<Math.round(W*H/9000))waves.push({x:Math.random()*W,y:Math.random()*H,t0:tnow()+Math.random()*3,life:2.5+Math.random()*2,len:8+Math.random()*12});
- while(glints.length<Math.round(W*H/16000))glints.push({x:Math.random()*W,y:Math.random()*H,t0:tnow()+Math.random()*2,life:1+Math.random()*1.4});
+ while(glints.length<Math.round(W*H/26000))glints.push({x:Math.random()*W,y:Math.random()*H,t0:tnow()+Math.random()*3,life:1.4+Math.random()*1.6});
  if(clouds.length<4)clouds.push({x:Math.random()*W*1.4-W*.2,y:Math.random()*H,s:3+Math.random()*3,v:4+Math.random()*5,a:.5+Math.random()*.3});
  for(const c of clouds){c.x+=c.v*dt;if(c.x-c.s*96>W)c.x=-c.s*96;}}
-function drawWaves(t){cx.lineCap='round';
- for(let k=waves.length-1;k>=0;k--){const w=waves[k],p=(t-w.t0)/w.life;if(p<0)continue;if(p>=1){waves.splice(k,1);continue;}const a=Math.sin(p*Math.PI)*.32;cx.strokeStyle=`rgba(225,246,250,${a})`;cx.lineWidth=1.6;const dx=p*10;
-  cx.beginPath();cx.moveTo(w.x+dx-w.len,w.y);cx.quadraticCurveTo(w.x+dx-w.len/2,w.y-4,w.x+dx,w.y);cx.quadraticCurveTo(w.x+dx+w.len/2,w.y-4,w.x+dx+w.len,w.y);cx.stroke();}
- for(let k=glints.length-1;k>=0;k--){const g=glints[k],p=(t-g.t0)/g.life;if(p<0)continue;if(p>=1){glints.splice(k,1);continue;}const a=Math.sin(p*Math.PI),s=2+a*2.5;cx.strokeStyle=`rgba(255,255,255,${a*.8})`;cx.lineWidth=1.2;cx.beginPath();cx.moveTo(g.x-s,g.y);cx.lineTo(g.x+s,g.y);cx.moveTo(g.x,g.y-s*.6);cx.lineTo(g.x,g.y+s*.6);cx.stroke();}}
+function drawWaves(t){if(meta.set.rm)return;
+ for(let k=glints.length-1;k>=0;k--){const g=glints[k],p=(t-g.t0)/g.life;if(p<0)continue;if(p>=1){glints.splice(k,1);continue;}const a=Math.sin(p*Math.PI);
+  cx.fillStyle=`rgba(255,255,248,${a*.55})`;cx.beginPath();cx.ellipse(g.x,g.y,1.6+a*2.6,.8+a*.5,0,0,7);cx.fill();}}
 function drawFoam(t){if(!st)return;cx.lineWidth=1.8;
- ISL.forEach((I,i)=>{for(const p of I.parts){for(let k=0;k<2;k++){const ph=((t*.32+i*.173+k*.5)%1),sc=1.02+ph*.24;cx.save();cx.translate(I.x+p.dx,I.y+p.dy+Math.max(3,p.R*.17));cx.scale(sc,sc);cx.strokeStyle=`rgba(240,252,255,${.5*(1-ph)})`;cx.lineWidth=1.8/sc;cx.stroke(p.path);cx.restore();}}});}
+ ISL.forEach((I,i)=>{for(const p of I.parts){for(let k=0;k<2;k++){const ph=((t*.32+i*.173+k*.5)%1),sc=1.02+ph*.24;cx.save();cx.translate(I.x+p.dx,I.y+p.dy+Math.max(3,p.R*.17));cx.scale(sc,sc);cx.strokeStyle=`rgba(240,252,255,${.42*(1-ph)})`;cx.lineWidth=1.6/sc;cx.stroke(p.path);cx.restore();}}});}
 
 /* ---------- soldiers, banners, flags ---------- */
 const bump=[],flagT=[];   /* when each island's number last changed / flag last changed hands */
@@ -968,10 +1033,10 @@ function drawGulls(t,dt){if(gulls.length<2&&Math.random()<dt*.15)gulls.push({x:-
 let lastT=0;
 function frame(ts){requestAnimationFrame(frame);const t=ts/1000,dt=lastT?clamp(t-lastT,0,.05):0;lastT=t;NOW=t;if(rnd.open&&$('modal').hidden&&!document.hidden)rnd.secs+=dt;try{draw(t,dt);}catch(e){if(TEST)throw e;}}
 function draw(t,dt){ambient(dt);camUpdate(dt);
- cx.setTransform(DPR,0,0,DPR,0,0);if(sea)cx.drawImage(sea,0,0,W,H);
+ cx.setTransform(DPR,0,0,DPR,0,0);cx.fillStyle='#0b3e5c';cx.fillRect(0,0,W,H);
  const sx=cam.shake>.1?(Math.random()-.5)*cam.shake:0,sy=cam.shake>.1?(Math.random()-.5)*cam.shake:0;
  cx.setTransform(DPR*cam.z,0,0,DPR*cam.z,DPR*(MAP.cx-cam.x*cam.z+sx),DPR*(MAP.cy-cam.y*cam.z+sy));
- drawWaves(t);
+ {const sl=(st&&D&&!titleUp)?sea:seaPlain;if(sl)cx.drawImage(sl,0,0,W,H);}drawSwell(t);drawWaves(t);
  if(st&&D&&!titleUp){drawFoam(t);if(board)cx.drawImage(board,0,0,W,H);if(D.own.join(',')!==bordersKey)buildBorders();cx.drawImage(borders,0,0,W,H);drawLabels();
   drawHighlights(t);const order=ISL.map((I,i)=>i).sort((a,b)=>ISL[a].y-ISL[b].y);for(const i of order)drawIslandLife(i,t);
   for(const s of ships)drawShip(s,t);
@@ -983,15 +1048,17 @@ function draw(t,dt){ambient(dt);camUpdate(dt);
  cx.setTransform(DPR,0,0,DPR,0,0);drawDice(t);}
 
 /* ---------- fleet bar, dock, hint, banner, notes, signs ---------- */
-function strip(){if(!st||!D){$('fleets').innerHTML='';$('turnL').textContent='';return;}
+function strip(){if(!st||!D){$('fleets').innerHTML='';$('turnL').textContent='';$('chestN').textContent='0/3';return;}
  $('fleets').innerHTML=st.fl.map((k,f)=>{let n=0;for(const o of D.own)if(o===f)n++;return `<span class="chip${f===st.cur?' on':''}${n?'':' out'}" style="--c:${FLEETS[k].col};--k:${FLEETS[k].ink}" title="${FLEETS[k].name}"><img src="${iconURL(k)}" alt=""><b>${n}</b></span>`;}).join('');
  /* four fleets on a narrow phone: the chips shrink to bird icons with a count badge */
  const F=$('fleets');F.classList.remove('tight');const need=[...F.children].reduce((a,c)=>a+c.offsetWidth+5,0)+8;if(need>F.clientWidth)F.classList.add('tight');
- $('turnL').textContent='Turn '+st.turn;}
+ $('turnL').textContent='Turn '+st.turn;const n=myChests(),ch=$('chest');$('chestN').textContent=`${n}/3`;ch.classList.toggle('ready',n>=3);ch.setAttribute('aria-label',`Spoils chests: ${n} of 3`);}
+const nextCash=()=>RULES.spoils[Math.min(st.cash,RULES.spoils.length-1)];
+function myChests(){return Math.min(5,st.spoils[0]+(st.cur===0&&st.conq&&st.phase!=='rival'&&st.phase!=='rivals-done'?1:0));}
 const btnFns={b1:null,b2:null};
-function setBtn(id,label,fn,o){const b=$(id);if(!label){b.hidden=true;btnFns[id]=null;b.classList.remove('glow');return;}b.hidden=false;b.textContent=label;b.classList.toggle('ico',label==='✕');if(label==='✕')b.setAttribute('aria-label','Cancel');else b.removeAttribute('aria-label');b.disabled=!!(o&&o.dis)||(ui.busy&&!(o&&o.always));btnFns[id]=fn;}
+function setBtn(id,label,fn,o){const b=$(id);if(!label){b.hidden=true;btnFns[id]=null;b.classList.remove('glow');b.dataset.l='';return;}if(b.hidden||b.dataset.l!==label)b.dataset.at=performance.now();b.dataset.l=label;b.hidden=false;b.textContent=label;b.classList.toggle('ico',label==='✕');if(label==='✕')b.setAttribute('aria-label','Cancel');else b.removeAttribute('aria-label');b.disabled=!!(o&&o.dis)||(ui.busy&&!(o&&o.always));btnFns[id]=fn;}
 function showRange(o){const R=$('range');if(!o){R.hidden=true;return;}R.hidden=false;const r=$('rng');r.min=o.min;r.max=o.max;r.value=o.n;$('rangeV').textContent=o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;$('b1').textContent=(st&&st.phase==='occupy'?'Sail ':'Move ')+o.n;}
-function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo').innerHTML=h||'';};dk.classList.remove('sl','tg','rf');$('b1').classList.remove('glow','sec');
+function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo').innerHTML=h||'';};dk.classList.remove('sl','tg','rf','two');$('b1').classList.remove('glow','sec','warn');
  if(!st){$('dIcon').src=iconURL('puffin');$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');showRange(null);return;}
  if(ui.rival>=0){const k=st.fl[ui.rival];$('dIcon').src=iconURL(k);$('dTitle').textContent=FLEETS[k].name;info('Their move · turn '+st.turn);setBtn('b2');showRange(null);setBtn('b1');hint('');return;}
  $('dIcon').src=iconURL('puffin');showRange(null);
@@ -999,23 +1066,24 @@ function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo'
  else if(P==='attack'&&ui.blitzing){$('dTitle').textContent='Blitz';info(`<b>${D?D.tr[ui.sel]:st.tr[ui.sel]}</b> against <b>${D?D.tr[ui.tgt]:st.tr[ui.tgt]}</b> on ${nm(ui.tgt)}`);setBtn('b2');setBtn('b1',ui.blitzStop?'Stopping…':'Stop',()=>{ui.blitzStop=true;dockUI();},{always:true,dis:ui.blitzStop});}
  else if(P==='attack'){$('dTitle').textContent='Attack';const canUndo=st.placed.length&&!st.attacked;
   if(ui.tgt>=0&&ui.sel>=0){const p=odds(st,ui.sel,ui.tgt);dk.classList.add('tg');$('dTitle').textContent=p>.995?'99%+':Math.round(p*100)+'%';info('to take '+nm(ui.tgt));setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
-  else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Spoils chest earned':'Pick an island');setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);setBtn('b1','Done',doneAttacking);}}
+  else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Chest earned this turn':'Take an island for a chest');setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);
+   setBtn('b1',ui.skipAsk?'Skip attacks':'End attacks',endAttacks);$('b1').classList.add(ui.skipAsk?'warn':'sec');}}
  else if(P==='occupy'){$('dTitle').textContent='Sail in';info('');dk.classList.add('sl');setBtn('b2');setBtn('b1','Sail '+st.occ.n,sailNow);showRange(st.occ);}
  else if(P==='move'){$('dTitle').textContent='Move';if(ui.mv&&ui.mv.to>=0){dk.classList.add('sl');setBtn('b2','✕',()=>{ui.mv=null;dockUI();});setBtn('b1','Move '+ui.mv.n,doMove);showRange(ui.mv);}else{info(ui.mv?`<b>${st.tr[ui.mv.from]-1}</b> can move`:'One move, then rivals sail');setBtn('b2',ui.mv?'Cancel':null,()=>{ui.mv=null;dockUI();coach();});setBtn('b1','End turn',endMyTurn);}}
  else{$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');}
- coach();signCheck();}
+ dk.classList.toggle('two',!$('b1').hidden&&!$('b2').hidden);coach();signCheck();}
 /* the hint floats over the sea: a new line shows for a few seconds and fades; first-chart coaching stays until done */
 function hint(txt,coachy){const h=$('hint');txt=txt||'';const co=!!coachy&&!!txt;if(h.textContent===txt&&h.classList.contains('coach')===co)return;
  clearTimeout(hint.t);h.textContent=txt;h.classList.toggle('coach',co);h.classList.remove('off');if(txt&&!co)hint.t=setTimeout(()=>h.classList.add('off'),6500);}
 function phaseHint(){if(!st)return '';const P=st.phase;if(P==='reinforce')return 'Tap your islands to send troops';
- if(P==='attack')return ui.tgt>=0?'Attack once, or Blitz until it falls':ui.sel>=0?'Tap an island next to it to attack':st.conq?'Attack again, or tap Done':'Tap a rival island to attack it';
+ if(P==='attack')return ui.tgt>=0?'Attack once, or Blitz until it falls':ui.sel>=0?'Tap an island next to it to attack':st.conq?'Attack again, or tap End attacks':'Tap a rival island to attack it';
  if(P==='occupy')return `${nm(st.occ.to)} is yours. How many sail in?`;if(P==='move')return ui.mv?(ui.mv.to>=0?`Tap ${nm(ui.mv.to)} again, or press Move`:'Tap where they go. The rings show where they can reach'):'Tap an island to move troops from, or end your turn';return '';}
 /* guided first chart: an arrow over the island to tap, and the next step in words */
 function coach(){ui.coach=null;if(!st||ui.rival>=0||st.phase==='over'||st.phase==='rival')return;$('b1').classList.remove('glow');
  if(meta.coached||st.c!==0){hint(phaseHint());return;}const P=st.phase;let txt='';
  if(P==='reinforce'){const a=planPlace(st,0,st.pool),i=+Object.keys(a)[0];if(i>=0&&!isNaN(i)){ui.coach={i};txt=`Tap ${nm(i)} to send your new troops there`;}}
  else if(P==='attack'){if(ui.sel<0){let best=null,bp=0;for(let i=0;i<st.own.length;i++){if(!canFrom(st,i,0))continue;for(const j of targets(st,i)){const p=odds(st,i,j);if(p>bp){bp=p;best=[i,j];}}}
-   if(best&&bp>=.55){ui.coach={i:best[1]};txt=`Tap ${nm(best[1])} to attack it`;}else{$('b1').classList.add('glow');txt='No good attacks left. Tap Done';}}
+   if(best&&bp>=.55){ui.coach={i:best[1]};txt=`Tap ${nm(best[1])} to attack it`;}else{$('b1').classList.add('glow');txt='No good attacks left. Tap End attacks';}}
   else if(ui.tgt<0){let bj=-1,bp=-1;for(const j of targets(st,ui.sel)){const p=odds(st,ui.sel,j);if(p>bp){bp=p;bj=j;}}if(bj>=0){ui.coach={i:bj};txt=`Tap ${nm(bj)}. The chip is your chance to take it`;}}
   else{$('b1').classList.add('glow');txt='Blitz keeps rolling until the island falls';}}
  else if(P==='occupy'){$('b1').classList.add('glow');txt=`${nm(st.occ.to)} is yours. Slide, then Sail`;}
@@ -1040,7 +1108,7 @@ function assistFor(ci){const s=meta.streak;return s.c===ci&&s.n>=1?Math.min(.3,.
 function startChart(ci,how){$('top').hidden=false;st=newGame(ci,(Math.random()*4294967295)>>>0,meta.set.mode);st.assist=assistFor(ci);cps=[];
  resetScene();meta.stats.played++;saveMeta();rndArm(how||'new');hideModal();$('dock').hidden=false;layout();syncD();
  banner(chartOf(st).name,chartOf(st).real?'A real chart':'An invented chart','puffin',2400);setTimeout(()=>beginTurn(),TEST?0:2000);}
-function resetScene(){cam.turn=0;cam.man=null;ui={sel:-1,tgt:-1,mv:null,busy:false,blitzing:false,blitzStop:false,chains:ui.chains,changed:new Set(),coach:null,rival:-1,occShip:null};DT=null;ships=[];flyers=[];parts=[];floats=[];face=null;speedK=1;skipNow=false;cam.shake=0;unfocus();}
+function resetScene(){cam.turn=0;cam.man=null;ui={sel:-1,tgt:-1,mv:null,busy:false,blitzing:false,blitzStop:false,skipAsk:false,chains:ui.chains,changed:new Set(),coach:null,rival:-1,occShip:null};DT=null;ships=[];flyers=[];parts=[];floats=[];face=null;speedK=1;skipNow=false;cam.shake=0;unfocus();}
 /* where this turn's troops came from, in words */
 function musterText(m){if(!m)return '';const c=chartOf(st),n=count(st,0),bits=[`${m.base} for ${n} island${n>1?'s':''}`];m.held.forEach(k=>bits.push(`${c.chains[k].b} ${c.chains[k].n}`));if(m.spoils)bits.push(`${m.spoils} spoils`);
  return bits.join(' · ')+(m.harbs&&m.harbs.length?` · +${RULES.harbourBonus} landed at ${m.harbs.length>1?'each harbour':nm(m.harbs[0])}`:'');}
@@ -1048,14 +1116,31 @@ function beginTurn(){if(!st||st.phase==='over')return;cps.push(JSON.stringify(st
  ui.sel=ui.tgt=-1;ui.mv=null;ui.rival=-1;speedK=1;skipNow=false;landK=0;saveRun();dockUI();
  banner('Your turn',`+${m.total} troops to place<br>${musterText(m)}`,'puffin',3800);sfx('yourTurn');
  for(const h of m.harbs)for(let q=0;q<RULES.harbourBonus;q++)flyIn(h,0,edgeFrom(h),350+q*140);
- if(m.spoils)setTimeout(()=>{note(`Spoils cashed in: <b>+${m.spoils}</b> troops`,5500);sfx('spoils');},1400);
+ if(m.spoils)setTimeout(()=>{note(`Three spoils chests cashed in: <b>+${m.spoils}</b> troops. The next three will be worth <b>+${nextCash()}</b>.`,6500);sfx('spoils');},1400);
  const inReinf=()=>st&&st.phase==='reinforce'&&ui.rival<0;
  if(st.turn>=2&&playerLeads(st))setTimeout(()=>sign('lead','They’re coming for you','You lead the chart, so the rivals have stopped fighting each other and are turning on you.',inReinf),1600);
  if(st.turn>=2&&!meta.set.rm)setTimeout(()=>sign('camera','Look around','Pinch or drag to look closer. Double-tap open sea for the whole chart.',inReinf),1600);
  if(st.turn>=3)setTimeout(()=>sign('fleets','Who’s winning?','Tap the fleet bar for every fleet’s troops, income and the rivals’ last turn.',inReinf),1600);}
 function act(){rndStart();if(ui.changed.size)ui.changed.clear();}
+/* your first island of a turn earns a chest: it rises off the island, the meter pops, and a line says what it's for */
+function chestEarned(i){const I=ISL[i],n=myChests(),v=nextCash();floatTxt(I.x,I.y-I.R*.4,'+1 chest','#ffd36b');sfx('spoils');buzz([10,30,10]);
+ const ch=$('chest');ch.classList.remove('pop');void ch.offsetWidth;ch.classList.add('pop');strip();
+ const first=!meta.seen.chest1;meta.seen.chest1=1;saveMeta();
+ if(first)note(`<b>Spoils chest earned</b> (the chest at the top). You get one in any turn you take an island. Three cash in for <b>+${v}</b> troops.`,9000);
+ else note(n>=3?`Spoils chest earned: <b>${n} of 3</b>. They cash in for <b>+${v}</b> troops at the start of your next turn.`:`Spoils chest earned: <b>${n} of 3</b>. Three cash in for <b>+${v}</b> troops.`,6000);}
+function spoilsCard(){if(!st||st.phase==='over'||!$('modal').hidden)return;const n=myChests(),v=nextCash(),fresh=st.cur===0&&st.conq;
+ const slot=k=>`<span class="${k<n?'':'off'}${fresh&&k===n-1?' new':''}">${CHEST_SVG}</span>`;
+ const riv=st.fl.map((k,f)=>f&&st.alive[f]?`${FLEETS[k].name} ${st.spoils[f]}`:'').filter(Boolean).join(' · ');
+ showModal(`<div class="kick">${chartOf(st).name} · turn ${st.turn}</div><h2>Spoils chests</h2><div class="slots">${slot(0)}${slot(1)}${slot(2)}</div>
+  <p style="text-align:center"><b>You have ${n}${n>3?' (three cash in at a time)':''}.</b> ${n>=3?`They cash in for <b>+${v}</b> troops at the start of your next turn.`:`Three cash in for <b>+${v}</b> troops.`}</p>
+  <ol class="rules"><li><b>Earn one</b> in any turn you take at least one island. One chest a turn, however many you take.</li>
+  <li><b>Three chests</b> cash in by themselves at the start of your turn, for bonus troops.</li>
+  <li><b>The bonus grows</b> each time any fleet cashes in: +4, +6, +8, +10, then +12.</li>
+  <li><b>Knock a fleet out</b> and its chests are yours.</li></ol>
+  ${riv?`<p class="sub" style="font-size:13px">Rivals’ chests: ${riv}</p>`:''}<button class="cbtn pri" id="bk">Back to the chart</button>`,'',()=>$('bk').addEventListener('click',()=>{goFS();hideModal();}));}
+function attackBanner(){banner('Attack','Take an island to earn a spoils chest','puffin',2000);}
 function place(i){if(!st||st.phase!=='reinforce'||st.own[i]!==0||st.pool<=0||ui.busy)return false;act();st.tr[i]++;st.pool--;st.placed.push(i);flyIn(i,0,dockFrom(),0);sfx('flutter');
- if(st.pool===0){st.phase='attack';ui.sel=-1;}dockUI();saveRun();return true;}
+ if(st.pool===0){st.phase='attack';ui.sel=-1;attackBanner();}dockUI();saveRun();return true;}
 function undo(){if(!st.placed.length||st.attacked||ui.busy)return;const i=st.placed.pop();st.tr[i]--;st.pool++;st.phase='reinforce';ui.sel=ui.tgt=-1;
  const fi=flyers.findIndex(f=>f.to===i&&f.gen===GEN&&f.applies&&!f.hop);if(fi>=0)flyers.splice(fi,1);else{D.tr[i]--;bump[i]=tnow();const I=ISL[i];feathers(I.x,I.y-FH,'puffin',3);}sfx('tap');dockUI();saveRun();}
 function autoPlace(){if(st.phase!=='reinforce'||st.pool<=0||ui.busy)return;act();const adds=planPlace(st,0,st.pool),from=dockFrom();let d0=0;
@@ -1066,7 +1151,7 @@ function info(i){const c=chartOf(st),s=c.isl[i],o=st.own[i];const [have,size]=ch
 /* a short line of explanation in the hint, then back to the step's own hint */
 function say(txt){hint(txt);clearTimeout(info.t);info.t=setTimeout(()=>{if(st)coach();},3400);}
 function setMoveTo(i){const mv=ui.mv;mv.to=i;mv.min=1;mv.max=st.tr[mv.from]-1;mv.n=mv.max;sfx('tap');dockUI();}
-function tap(i){if(!st)return;const P=st.phase;
+function tap(i){if(!st)return;const P=st.phase;if(ui.skipAsk){ui.skipAsk=false;clearTimeout(endAttacks.t);}
  if(ui.rival>=0||P==='rival'||ui.busy)return;
  if(i<0){if(P==='attack'&&ui.sel>=0)cancelSel();else if(P==='move'&&ui.mv&&ui.mv.to<0){ui.mv=null;dockUI();}return;}
  if(P==='reinforce'){if(st.own[i]===0)place(i);else info(i);return;}
@@ -1095,15 +1180,20 @@ async function attack(blitz){if(ui.busy||ui.sel<0||ui.tgt<0)return;act();if(flye
  if(taken){const min=Math.max(1,Math.min(rolls[rolls.length-1].a,avail(st,i))),max=avail(st,i),sug=Math.max(min,Math.min(max,sailIn(st,i,j,min)));st.occ={from:i,to:j,was:fd,min,max,n:sug};ui.occShip=ship;st.phase='occupy';
   dockUI();saveRun();sign('sail','Island taken','Choose how many sail in. Only troops that sail in can attack on from here.',()=>st&&st.phase==='occupy');return;}
  syncD();if(!canFrom(st,i,0)){ui.sel=-1;ui.tgt=-1;}else if(blitz)ui.tgt=-1;dockUI();}
-async function sailNow(){if(st.phase!=='occupy'||ui.busy)return;const o=st.occ,n=o.n;ui.busy=true;const out=capture(st,o.from,o.to,n);st.occ=null;st.phase='attack';saveRun();dockUI();hint('');
+async function sailNow(){if(st.phase!=='occupy'||ui.busy)return;const o=st.occ,n=o.n,firstTake=!st.conq;ui.busy=true;const out=capture(st,o.from,o.to,n);st.occ=null;st.phase='attack';saveRun();dockUI();hint('');
  await animLand({f:0,from:o.from,to:o.to},ui.occShip,n);ui.occShip=null;ui.busy=false;unfocus();syncD();meta.stats.taken++;saveMeta();
  if(out!=null){note(`<b>${FLEETS[st.fl[out]].name}</b> are out of the fight. Their spoils chests are yours.`,3600);sign('out','A fleet is out','Its spoils chests pass to whoever took its last island.',()=>!!st&&st.phase!=='over');}
- if(finishIfOver())return;ui.sel=canFrom(st,o.to,0)?o.to:-1;ui.tgt=-1;
+ if(finishIfOver())return;ui.sel=canFrom(st,o.to,0)?o.to:-1;ui.tgt=-1;if(firstTake)chestEarned(o.to);
  const c=chartOf(st);c.chains.forEach((ch,k)=>{const [h,s]=chainCount(st,0,k);if(h===s-1&&s>1){const miss=c.isl.findIndex((x,ii)=>x.ch===k&&st.own[ii]!==0);sign('chain-'+k,'One short of '+ch.n,`Take ${c.isl[miss].n} for +${ch.b} troops every turn.`,()=>st&&st.phase!=='over'&&chainCount(st,0,k)[0]===chainCount(st,0,k)[1]-1);}});
  dockUI();}
+/* End attacks: straight through if you've attacked or have nothing worth attacking; otherwise it asks once */
+function goodAttack(){for(let i=0;i<st.own.length;i++){if(!canFrom(st,i,0))continue;for(const j of targets(st,i))if(odds(st,i,j)>=.5)return true;}return false;}
+function endAttacks(){if(ui.busy)return;if(!st.attacked&&!ui.skipAsk&&goodAttack()){ui.skipAsk=true;clearTimeout(endAttacks.t);endAttacks.t=setTimeout(()=>{ui.skipAsk=false;if(st&&st.phase==='attack')dockUI();},5000);
+  dockUI();say('No attack yet, so no spoils chest. Tap Skip attacks to end anyway');return;}
+ ui.skipAsk=false;clearTimeout(endAttacks.t);doneAttacking();}
 function doneAttacking(){if(ui.busy)return;st.phase='move';ui.sel=-1;ui.tgt=-1;ui.mv=null;dockUI();saveRun();sign('move','One move','Shift troops along your own islands to the front. Your turn ends after it.',()=>st&&st.phase==='move');}
 async function doMove(){if(!ui.mv||ui.mv.to<0||ui.busy)return;const {from,to,n}=ui.mv;ui.busy=true;st.tr[from]-=n;st.tr[to]+=n;ui.mv=null;saveRun();dockUI();hint('');await animMove(0,from,to,n);ui.busy=false;endMyTurn();}
-async function endMyTurn(){if(ui.busy||!st||st.phase==='over')return;act();const had=st.conq;endTurn(st);if(had)setTimeout(()=>sign('spoils','A spoils chest','You took an island this turn. Three chests cash in for bonus troops.',()=>!!st&&st.phase!=='over'),400);
+async function endMyTurn(){if(ui.busy||!st||st.phase==='over')return;act();const had=st.conq;endTurn(st);
  meta.turnsPlayed++;if(!meta.coached&&st.c===0)meta.coached=true;saveMeta();ui.busy=true;ui.sel=ui.tgt=-1;ui.mv=null;hint('');
  const ev=rivalsTurn(st);st.phase='rivals-done';saveRun();st.phase='rival';
  const {lines,changed}=await replayRivals(ev);ui.busy=false;ui.changed=changed;
@@ -1141,7 +1231,7 @@ const homeLink='<a class="link home" href="../games.html">← Digi Games</a>';
 const starsHTML=n=>[0,1,2].map(k=>k<n?'★':'<span class="off">★</span>').join('');
 /* a small drawn chart for the cards */
 function drawMini(c,ci,own){try{const r=c.getBoundingClientRect(),w=Math.max(60,r.width||84),h=Math.max(60,r.height||84),R=Math.min(2,window.devicePixelRatio||1);c.width=Math.round(w*R);c.height=Math.round(h*R);const g=c.getContext('2d');g.setTransform(R,0,0,R,0,0);
- const C=CHARTS[ci],I=C.isl;const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#227d9b');gr.addColorStop(1,'#0f4862');g.fillStyle=gr;g.fillRect(0,0,w,h);
+ const C=CHARTS[ci],I=C.isl;const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#1f7f9f');gr.addColorStop(1,'#0e4864');g.fillStyle=gr;g.fillRect(0,0,w,h);
  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;for(const s of I){x0=Math.min(x0,s.x-s.r*1.5);x1=Math.max(x1,s.x+s.r*1.5);y0=Math.min(y0,s.y-s.r*1.5);y1=Math.max(y1,s.y+s.r*1.5);}
  const sc=Math.min((w-10)/(x1-x0),(h-10)/(y1-y0)),ox=w/2-(x0+x1)/2*sc,oy=h/2-(y0+y1)/2*sc,P=s=>[ox+s.x*sc,oy+s.y*sc];
  g.fillStyle='rgba(250,240,215,.75)';for(const [a,b] of C.lanes){const [ax,ay]=P(I[a]),[bx,by]=P(I[b]),n=Math.max(2,Math.round(Math.hypot(bx-ax,by-ay)/5));for(let k=0;k<=n;k++){g.beginPath();g.arc(lerp(ax,bx,k/n),lerp(ay,by,k/n),.9,0,7);g.fill();}}
@@ -1220,7 +1310,7 @@ function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">�
  <li><b>Chains</b> are the shaded stretches of water. Tap Chains to see each one’s bonus and who holds it.</li>
  <li><b>Attack</b> along a dotted lane from an island with 2 or more troops: tap the rival island (or tap yours first to choose where from). You roll up to 3 dice, the defender up to 2. Highest against highest; ties go to the defender. Blitz keeps rolling, one throw at a time, until the island falls or you tap Stop.</li>
  <li><b>Harbours</b> have a fort (+1 on the defender’s top die) and give whoever holds them +2 troops a turn.</li>
- <li><b>Spoils:</b> any turn you take an island earns a chest. Three chests cash in for +4, then more each time anyone cashes in.</li>
+ <li><b>Spoils:</b> take at least one island in a turn and you earn a spoils chest (the chest counter at the top; tap it for details). Three chests cash in at the start of your next turn for +4 troops, and each cash-in by any fleet makes the next worth more: +6, +8, +10, +12.</li>
  <li><b>Move</b> once a turn: tap one of your islands, then where they go. They can travel through any chain of your own islands. Tap the destination again (or press Move) to send them, then the rivals sail.</li>
  <li><b>Rivals</b> fight each other, but if you pull ahead they turn on you together. Tap the fleet bar to see who’s winning.</li>
  <li><b>Camera:</b> each turn opens on the whole chart and it closes in on attacks. Pinch or drag to look around, and double-tap open sea to see the whole chart.</li></ol>`,'',()=>$('bk').addEventListener('click',back));}
@@ -1242,13 +1332,15 @@ cv.addEventListener('pointerup',e=>{if(ptrEnd(e)||!down)return;clearTimeout(down
  if(d.i<0){const now=performance.now();if(now-lastSea<330){lastSea=0;toggleView();return;}lastSea=now;}tap(d.i);});
 cv.addEventListener('pointercancel',e=>{ptrEnd(e);if(down)clearTimeout(down.t);down=null;});
 cv.addEventListener('wheel',e=>{if(!st||!$('modal').hidden)return;e.preventDefault();const z=clamp(cam.z*Math.exp(-e.deltaY*.0016),1,ZMAN),[wx,wy]=toBase(e.clientX,e.clientY);camManual(wx-(e.clientX-MAP.cx)/z,wy-(e.clientY-MAP.cy)/z,z);},{passive:false});
-$('b1').addEventListener('click',()=>{sfx('tap');btnFns.b1&&btnFns.b1();});
-$('b2').addEventListener('click',()=>{sfx('tap');btnFns.b2&&btnFns.b2();});
+const fresh=b=>performance.now()-(+b.dataset.at||0)<700;
+$('b1').addEventListener('click',e=>{if(fresh(e.currentTarget))return;sfx('tap');btnFns.b1&&btnFns.b1();});
+$('b2').addEventListener('click',e=>{if(fresh(e.currentTarget))return;sfx('tap');btnFns.b2&&btnFns.b2();});
 const occ=()=>st&&(st.phase==='occupy'?st.occ:st.phase==='move'&&ui.mv&&ui.mv.to>=0?ui.mv:null);
 $('rng').addEventListener('input',()=>{const o=occ();if(!o)return;o.n=+$('rng').value;$('rangeV').textContent=o.n;$('b1').textContent=(st.phase==='occupy'?'Sail ':'Move ')+o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;if(ui.occShip)ui.occShip.carry=Math.min(3,o.n);});
 $('rm').addEventListener('click',()=>{const o=occ();if(o&&o.n>o.min){o.n--;showRange(o);sfx('tap');}});
 $('rp').addEventListener('click',()=>{const o=occ();if(o&&o.n<o.max){o.n++;showRange(o);sfx('tap');}});
 $('pz').addEventListener('click',()=>{sfx('tap');pause();});
+$('chest').addEventListener('click',()=>{if(ui.busy&&ui.rival<0)return;sfx('tap');spoilsCard();});
 $('fleets').addEventListener('click',()=>{if(ui.busy&&ui.rival<0)return;sfx('tap');standings();});
 $('chainsBtn').addEventListener('click',()=>{ui.chains=!ui.chains;$('chainsBtn').setAttribute('aria-pressed',ui.chains);sfx('tap');});
 addEventListener('keydown',e=>{if(e.key==='Escape'){if($('modal').hidden)pause();else if($('modal').className!=='title'){if($('dock').hidden)home();else if(st&&st.phase!=='over')hideModal();}}
@@ -1269,6 +1361,5 @@ if(TEST)window.__dg={
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
