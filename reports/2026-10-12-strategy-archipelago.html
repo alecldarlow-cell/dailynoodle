@@ -695,10 +695,18 @@ function chainShape(C,k,grow){const p=new Path2D(),rad=i=>ISL[i].R*1.12+8+grow,c
  for(const [a,b] of C.lanes){if(C.isl[a].ch!==k||C.isl[b].ch!==k)continue;const ax=ISL[a].x,ay=cy(a),bx=ISL[b].x,by=cy(b),d=Math.hypot(bx-ax,by-ay)||1,nx=-(by-ay)/d,ny=(bx-ax)/d,w=Math.min(rad(a),rad(b))*.5;
   p.moveTo(ax-nx*w,ay-ny*w);p.lineTo(bx-nx*w,by-ny*w);p.lineTo(bx+nx*w,by+ny*w);p.lineTo(ax+nx*w,ay+ny*w);p.closePath();}
  return p;}
-function drawChainWaters(g,C){CHW=[];chainLab=null;
- C.chains.forEach((ch,k)=>{const outer=chainShape(C,k,2),inner=chainShape(C,k,0);
-  g.save();g.fillStyle='rgba(240,248,244,.32)';g.fill(outer);g.globalCompositeOperation='destination-out';g.fill(inner);g.restore();
-  g.save();g.fillStyle=k%2?'rgba(150,226,226,.13)':'rgba(190,236,226,.10)';g.fill(inner);g.restore();CHW.push(inner);});}
+/* sea-glass colours for chains: pale enough never to be read as a fleet, different enough to tell neighbours apart */
+const GLASS=[[198,240,214],[206,226,252],[244,226,186],[226,212,248],[250,212,204]];
+const glass=(k,a)=>{const c=GLASS[k%GLASS.length];return `rgba(${c[0]},${c[1]},${c[2]},${a})`;};
+let chainView=null;
+function buildChainView(C){const [c,g]=layer();C.chains.forEach((ch,k)=>{const outer=chainShape(C,k,3.2),inner=chainShape(C,k,0),edge=chainShape(C,k,5.5);
+  const [t,tg]=layer();tg.fillStyle='rgba(4,20,30,.55)';tg.fill(edge);tg.globalCompositeOperation='destination-out';tg.fill(outer);tg.globalCompositeOperation='source-over';
+  tg.fillStyle=glass(k,.95);tg.fill(outer);tg.globalCompositeOperation='destination-out';tg.fill(inner);tg.globalCompositeOperation='source-over';tg.fillStyle=glass(k,.2);tg.fill(inner);
+  g.setTransform(1,0,0,1,0,0);g.drawImage(t,0,0);g.setTransform(LS,0,0,LS,0,0);});chainView=c;}
+function drawChainWaters(g,C){CHW=[];chainLab=null;chainTag=null;chainView=null;
+ C.chains.forEach((ch,k)=>{const outer=chainShape(C,k,2.2),inner=chainShape(C,k,0);
+  g.save();g.fillStyle=glass(k,.5);g.fill(outer);g.globalCompositeOperation='destination-out';g.fill(inner);g.restore();
+  g.save();g.fillStyle=glass(k,.11);g.fill(inner);g.restore();CHW.push(inner);});}
 function buildBoard(){const [c,g]=layer();board=c;if(!st)return;const C=chartOf(st);
  drawChainWaters(g,C);
  /* lanes: dotted chart routes */
@@ -1008,24 +1016,41 @@ function drawHighlights(t){if(!st||!D)return;const P=st.phase;
 function drawChips(t){if(!st||ui.busy)return;if(st.phase==='attack'&&ui.sel>=0&&meta.set.odds)for(const j of targets(st,ui.sel))chip(j,odds(st,ui.sel,j));
  if(ui.coach&&ui.coach.i>=0&&$('modal').hidden){const I=ISL[ui.coach.i],zs=1/Math.sqrt(cam.z),y=I.y+I.bannerY-((st.phase==='attack'&&ui.sel>=0?52:24)+(meta.set.rm?0:Math.abs(Math.sin(t*4))*8))*zs;
   cx.fillStyle='#ffd36b';cx.strokeStyle='#3a2a10';cx.lineWidth=2;cx.lineJoin='round';const bx=I.x+(I.bdx||0);cx.beginPath();cx.moveTo(bx-10*zs,y-12*zs);cx.lineTo(bx+10*zs,y-12*zs);cx.lineTo(bx,y);cx.closePath();cx.fill();cx.stroke();}}
-function placeChainLabels(){const C=chartOf(st),out=[],F1='17px "IM Fell English SC",Georgia,serif',F2='900 12.5px Nunito,system-ui,sans-serif';
- const fs=Math.round(clamp(S*3.3,13,16)),hit=(a,b)=>Math.max(0,Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0))*Math.max(0,Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0));
+/* where a chain's tag or label goes: clear of island names, troop badges, the islands themselves and other tags,
+   as close as possible to its own islands and never nearer another chain's islands than its own */
+function placeChainBoxes(size){const C=chartOf(st),out=[],fs=Math.round(clamp(S*3.3,13,16)),hit=(a,b)=>Math.max(0,Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0))*Math.max(0,Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0));
  const avoid=[];ISL.forEach((I,i)=>{cx.font=`${fs}px "IM Fell English SC",Georgia,serif`;const w=cx.measureText(C.isl[i].n).width+6,lx=I.x+(I.ldx||0),ly=I.y+I.labelY+(I.ldy||0);
   avoid.push({x0:lx-w/2,x1:lx+w/2,y0:ly,y1:ly+fs+3});const bx=I.x+(I.bdx||0);avoid.push({x0:bx-28,x1:bx+28,y0:I.y+I.bannerY-15,y1:I.y+I.bannerY+20});
-  avoid.push({x0:I.x-I.R*.85,x1:I.x+I.R*.85,y0:I.y-I.R*.7,y1:I.y+I.R*.75});});
- C.chains.forEach((ch,k)=>{const m=[];C.isl.forEach((s,i)=>{if(s.ch===k)m.push(i);});cx.font=F1;const w=Math.max(cx.measureText(`${ch.n} +${ch.b}`).width,90)+12,h=36;
-  const mx=m.reduce((a,i)=>a+ISL[i].x,0)/m.length,my=m.reduce((a,i)=>a+ISL[i].y,0)/m.length,cand=[[mx,my]];
-  const bx0=MAP.cx,by0=MAP.y0+MAP.h/2;for(const i of m){const I=ISL[i];cand.push([I.x+(bx0-I.x)*.38,I.y+(by0-I.y)*.38],[I.x,I.y+I.bannerY-30],[I.x,I.y+I.labelY+fs+24],[I.x-I.R-w/2-4,I.y],[I.x+I.R+w/2+4,I.y],[I.x-I.R-w/2,I.y-I.R*.6],[I.x+I.R+w/2,I.y-I.R*.6],[I.x-I.R-w/2,I.y+I.R*.7],[I.x+I.R+w/2,I.y+I.R*.7]);}
+  avoid.push({x0:I.x-I.R*.95,x1:I.x+I.R*.95,y0:I.y-I.R*.75,y1:I.y+I.R*.8+I.depth});});
+ const near=(x,y,k)=>{let own=1e9,other=1e9;C.isl.forEach((s,i)=>{const I=ISL[i],d=Math.max(0,Math.hypot(x-I.x,y-I.y)-I.R);if(s.ch===k)own=Math.min(own,d);else other=Math.min(other,d);});return [own,other];};
+ C.chains.forEach((ch,k)=>{const m=[];C.isl.forEach((s,i)=>{if(s.ch===k)m.push(i);});const [w,h]=size(ch,k),cand=[];
+  for(const i of m){const I=ISL[i],gx=I.R+w/2+6,gy=I.R*.8+h/2+4;for(const f of [1,1.45])for(let a=0;a<16;a++){const th=a/16*6.2832;cand.push([I.x+Math.cos(th)*gx*f,I.y+Math.sin(th)*gy*f]);}cand.push([I.x,I.y+I.bannerY-h/2-16],[I.x,I.y+I.labelY+fs+h/2+4]);}
   for(const [a,b] of C.lanes)if(C.isl[a].ch===k&&C.isl[b].ch===k)cand.push([(ISL[a].x+ISL[b].x)/2,(ISL[a].y+ISL[b].y)/2]);
-  let best=null;for(const [x,y] of cand){const x0=clamp(x-w/2,6,W-6-w),y0=clamp(y-h/2,MAP.y0+4,dockTop-10-h),r={x0,x1:x0+w,y0,y1:y0+h};
-   let bad=0;for(const a of avoid)bad+=hit(r,a);for(const o of out)bad+=hit(r,o.r)*3;const sc=bad*12+Math.hypot(x0+w/2-mx,y0+h/2-my)*.6;if(!best||sc<best.sc)best={sc,r};}
-  out.push({k,r:best.r});});
+  let best=null;for(const [x,y] of cand){const x0=clamp(x-w/2,6,W-6-w),y0=clamp(y-h/2,MAP.y0+4,dockTop-10-h),r={x0,x1:x0+w,y0,y1:y0+h},cx_=x0+w/2,cy_=y0+h/2;
+   let bad=0;for(const a of avoid)bad+=hit(r,a);for(const o of out)bad+=hit(r,o.r)*3;const [own,other]=near(cx_,cy_,k);
+   const sc=bad*12+own*1.2+Math.max(0,own-other+6)*6;if(!best||sc<best.sc)best={sc,r};}
+  /* the member island the box sits beside, for the Chains-view leader line */
+  let at=m[0],bd=1e9;for(const i of m){const I=ISL[i],d=Math.hypot((best.r.x0+best.r.x1)/2-I.x,(best.r.y0+best.r.y1)/2-I.y);if(d<bd){bd=d;at=i;}}
+  out.push({k,r:best.r,at});});
  return out;}
-function drawChains(){if(!ui.chains||!st)return;const c=chartOf(st);if(!chainLab)chainLab=placeChainLabels();cx.textAlign='center';cx.textBaseline='middle';cx.lineJoin='round';
- cx.fillStyle='rgba(255,240,200,.12)';for(const p of CHW)cx.fill(p);
- for(const {k,r} of chainLab){const ch=c.chains[k],[have,size]=chainCount(st,0,k),x=(r.x0+r.x1)/2,y=r.y0+11;let sub=`you hold ${have} of ${size}`,col='#ffd9a8';
-  const own0=st.own[c.isl.findIndex(s=>s.ch===k)];if(own0>=0&&c.isl.every((s,i)=>s.ch!==k||st.own[i]===own0)){if(own0===0){sub='yours';col='#ffd36b';}else{sub=`${FLEETS[st.fl[own0]].name} hold it`;col=FLEETS[st.fl[own0]].col;}}
-  cx.fillStyle='rgba(6,26,38,.72)';rr(cx,r.x0,r.y0,r.x1-r.x0,r.y1-r.y0,9);cx.fill();
+let chainTag=null;
+const chainHolder=k=>{const c=chartOf(st),o=D.own[c.isl.findIndex(s=>s.ch===k)];return o>=0&&c.isl.every((s,i)=>s.ch!==k||D.own[i]===o)?o:-1;};
+/* the always-on tags: just the bonus, ringed in the chain's colour; filled in a fleet's colour once it holds the whole chain */
+function drawChainTags(){if(!st||!D||ui.chains)return;const c=chartOf(st);
+ if(!chainTag){cx.font='15px "IM Fell English SC",Georgia,serif';chainTag=placeChainBoxes(ch=>[cx.measureText('+'+ch.b).width+14,20]);}
+ const zs=1/Math.sqrt(cam.z);cx.textAlign='center';cx.textBaseline='middle';
+ for(const {k,r} of chainTag){const ch=c.chains[k],o=chainHolder(k),x=(r.x0+r.x1)/2,y=(r.y0+r.y1)/2,w=r.x1-r.x0,h=r.y1-r.y0;cx.save();cx.translate(x,y);cx.scale(zs,zs);
+  cx.fillStyle=o>=0?colOf(o):'rgba(6,30,44,.72)';rr(cx,-w/2,-h/2,w,h,h/2);cx.fill();cx.strokeStyle=glass(k,.95);cx.lineWidth=1.6;cx.stroke();
+  cx.font='15px "IM Fell English SC",Georgia,serif';cx.fillStyle=o>=0?inkOf(o):'#fbefd0';cx.fillText('+'+ch.b,0,1);cx.restore();}}
+function drawChains(){if(!ui.chains||!st)return;const c=chartOf(st);
+ if(!chainLab){cx.font='17px "IM Fell English SC",Georgia,serif';chainLab=placeChainBoxes(ch=>[Math.max(cx.measureText(`${ch.n} +${ch.b}`).width,96)+14,38]);}
+ cx.textAlign='center';cx.textBaseline='middle';cx.lineJoin='round';
+ for(const {k,r,at} of chainLab){const ch=c.chains[k],[have,size]=chainCount(st,0,k),x=(r.x0+r.x1)/2,y=r.y0+12;let sub=`you hold ${have} of ${size}`,col='#ffd9a8';
+  const o=chainHolder(k);if(o===0){sub='yours';col='#ffd36b';}else if(o>0){sub=`${FLEETS[st.fl[o]].name} hold it`;col=FLEETS[st.fl[o]].col;}
+  /* a short line from the label to the nearest island of its chain */
+  const I=ISL[at],lx=clamp(I.x,r.x0+10,r.x1-10),ly=(r.y0+r.y1)/2,ang=Math.atan2(ly-I.y,lx-I.x),ex=I.x+Math.cos(ang)*I.R*.9,ey=I.y+Math.sin(ang)*I.R*.75;
+  if(Math.hypot(ex-lx,ey-ly)>14){cx.strokeStyle=glass(k,.9);cx.lineWidth=2;cx.setLineDash([3,3]);cx.beginPath();cx.moveTo(lx,ly);cx.lineTo(ex,ey);cx.stroke();cx.setLineDash([]);cx.fillStyle=glass(k,1);cx.beginPath();cx.arc(ex,ey,3,0,7);cx.fill();}
+  cx.fillStyle='rgba(6,26,38,.86)';rr(cx,r.x0,r.y0,r.x1-r.x0,r.y1-r.y0,9);cx.fill();cx.strokeStyle=glass(k,.95);cx.lineWidth=2;cx.stroke();
   cx.font='17px "IM Fell English SC",Georgia,serif';cx.fillStyle='#fbefd0';cx.fillText(`${ch.n} +${ch.b}`,x,y);
   cx.font='900 12.5px Nunito,system-ui,sans-serif';cx.fillStyle=col;cx.fillText(sub,x,y+15);}}
 /* ---------- the frame ---------- */
@@ -1041,7 +1066,7 @@ function draw(t,dt){ambient(dt);camUpdate(dt);
  const sx=cam.shake>.1?(Math.random()-.5)*cam.shake:0,sy=cam.shake>.1?(Math.random()-.5)*cam.shake:0;
  cx.setTransform(DPR*cam.z,0,0,DPR*cam.z,DPR*(MAP.cx-cam.x*cam.z+sx),DPR*(MAP.cy-cam.y*cam.z+sy));
  {const sl=(st&&D&&!titleUp)?sea:seaPlain;if(sl)cx.drawImage(sl,0,0,W,H);}drawSwell(t);drawWaves(t);
- if(st&&D&&!titleUp){drawFoam(t);if(board)cx.drawImage(board,0,0,W,H);if(D.own.join(',')!==bordersKey)buildBorders();cx.drawImage(borders,0,0,W,H);drawLabels();
+ if(st&&D&&!titleUp){drawFoam(t);if(board)cx.drawImage(board,0,0,W,H);if(D.own.join(',')!==bordersKey)buildBorders();cx.drawImage(borders,0,0,W,H);if(ui.chains){if(!chainView)buildChainView(chartOf(st));cx.drawImage(chainView,0,0,W,H);}drawLabels();drawChainTags();
   drawHighlights(t);const order=ISL.map((I,i)=>i).sort((a,b)=>ISL[a].y-ISL[b].y);for(const i of order)drawIslandLife(i,t);
   for(const s of ships)drawShip(s,t);
   for(let q=flyers.length-1;q>=0;q--){const f=flyers[q];if(t>=f.t0+f.dur){if(f.gen===GEN&&f.applies&&f.land)f.land();flyers.splice(q,1);continue;}drawFlyer(f,t);}
@@ -1311,7 +1336,7 @@ function settings(back){const s=meta.set;const sw=(id,on,l,sub)=>`<button class=
 function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">‹ Back</button><h2>How to play</h2></div>
  <ol class="rules"><li><b>Win</b> by holding every island on the chart. You are out if you lose them all.</li>
  <li><b>Reinforce:</b> each turn you get your islands ÷ 3 (at least 3), plus a bonus for every whole chain you hold. Tap your islands to send them.</li>
- <li><b>Chains</b> are the shaded stretches of water. Tap Chains to see each one’s bonus and who holds it.</li>
+ <li><b>Chains</b> are the groups of islands sharing a coloured stretch of water. The small tag (+4) is what holding the whole chain adds every turn; it takes a fleet’s colour once that fleet holds it all. Tap Chains for names and who is closest.</li>
  <li><b>Attack</b> along a dotted lane from an island with 2 or more troops: tap the rival island (or tap yours first to choose where from). You roll up to 3 dice, the defender up to 2. Highest against highest; ties go to the defender. Blitz keeps rolling, one throw at a time, until the island falls or you tap Stop.</li>
  <li><b>Harbours</b> have a fort (+1 on the defender’s top die) and give whoever holds them +2 troops a turn.</li>
  <li><b>Spoils:</b> take at least one island in a turn and you earn a spoils chest (the chest counter at the top; tap it for details). Three chests cash in at the start of your next turn for +4 troops, and each of your cash-ins makes the next worth one more, up to +8.</li>
@@ -1365,6 +1390,5 @@ if(TEST)window.__dg={
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
