@@ -211,66 +211,68 @@ const FLEETS={
 };
 /* tuning, set by the balance bot (October 2026). aiMul and modeThr make the rival-strength setting bite;
    lead/dogpile/leadThr make the rivals turn on a player who is running away with the chart */
-const RULES={harbour0:10,first0:2,neutral:{calm:2,standard:3,stormy:3},harbourBonus:2,fort:1,spoils:[4,6,8,10,12],
+/* spoils: a fleet's chests are worth more each time THAT fleet cashes in (+4, +5, +6, +7, then +8), so a steady trickle of
+   single captures can't out-earn holding whole chains. Chain bonuses scale with how exposed a chain is (see CHARTS) */
+const RULES={harbour0:10,first0:2,neutral:{calm:2,standard:3,stormy:3},harbourBonus:2,fort:1,spoils:[4,5,6,7,8],spoilsOwn:true,
  aiMul:{calm:.8,standard:1,stormy:1.3},modeThr:{calm:.06,standard:0,stormy:-.05},
  lead:1.15,dogpile:.9,leadThr:.06,harbourKeep:.6};
 /* charts: a 100 x 160 portrait grid. r = island radius in grid units; cl = drawn as a cluster of rocks */
 const CHARTS=[
- {id:'scilly',name:'Isles of Scilly',real:true,par:6,ai:.8,thrAdd:.06,p0:2,
+ {id:'scilly',name:'Isles of Scilly',real:true,par:5,ai:.75,thrAdd:.06,p0:2,
   flav:"Twenty-eight miles off Land's End: five lived-on islands and a scatter of granite. The Cormorants already hold Tresco.",
-  tip:'Take Samson first. With St Mary’s and St Agnes it completes St Mary’s Roads, worth +2 troops a turn.',
+  tip:'Take Samson first. With St Mary’s and St Agnes it completes St Mary’s Roads, worth +3 troops a turn.',
   fleets:['puffin','cormorant'],
-  chains:[{n:'Tresco Sound',b:2},{n:'Eastern isles',b:1},{n:'St Mary’s Roads',b:2}],
+  chains:[{n:'Tresco Sound',b:4},{n:'Eastern isles',b:3},{n:'St Mary’s Roads',b:3}],
   isl:[{n:'St Mary’s',x:60,y:104,r:9,ch:2},{n:'Tresco',x:46,y:46,r:7.5,ch:0},{n:'Bryher',x:20,y:58,r:6,ch:0},{n:'Tean',x:66,y:20,r:5,ch:0},
    {n:'St Martin’s',x:85,y:42,r:7,ch:1},{n:'Samson',x:28,y:90,r:5.5,ch:2},{n:'Eastern Isles',x:86,y:84,r:5,ch:1,cl:3},{n:'St Agnes',x:32,y:130,r:6,ch:2}],
   lanes:[[1,2],[1,3],[3,4],[1,4],[2,5],[1,5],[5,0],[5,7],[0,7],[0,6],[4,6]],
   start:{puffin:{h:0,f:[7]},cormorant:{h:1,f:[2]}}},
- {id:'varr',name:'The Varr Skerries',real:false,par:9,ai:.87,thrAdd:.04,p0:2,
+ {id:'varr',name:'The Varr Skerries',real:false,par:8,ai:.91,thrAdd:.04,p0:2,
   flav:'An invented spread of northern skerries. The Gannets and Cormorants are already squabbling over the holms.',
   tip:'Let the Gannets and Cormorants wear each other down in the north while you take Brannoy Sound.',
   fleets:['puffin','gannet','cormorant'],
-  chains:[{n:'Ronavey Holms',b:2},{n:'Skarholm Reach',b:2},{n:'Mid Skerries',b:1},{n:'Brannoy Sound',b:2}],
+  chains:[{n:'Ronavey Holms',b:3},{n:'Skarholm Reach',b:4},{n:'Mid Skerries',b:3},{n:'Brannoy Sound',b:3}],
   isl:[{n:'Ronavey',x:20,y:16,r:6.5,ch:0},{n:'Kelda',x:50,y:12,r:5.5,ch:0},{n:'Skarholm',x:82,y:22,r:7,ch:1},{n:'Ellisker',x:34,y:44,r:6,ch:0},
    {n:'Toravik',x:66,y:50,r:7.5,ch:1},{n:'Hestay',x:14,y:78,r:5.5,ch:2},{n:'Mirrin',x:48,y:80,r:6,ch:2},{n:'Gullholm',x:86,y:76,r:6.5,ch:1},
    {n:'Brannoy',x:28,y:114,r:8,ch:3},{n:'Sulvik',x:72,y:110,r:6,ch:3},{n:'Fennay',x:50,y:144,r:5.5,ch:3}],
   lanes:[[0,1],[1,2],[0,3],[1,3],[1,4],[2,4],[3,4],[3,5],[3,6],[4,6],[4,7],[2,7],[5,6],[5,8],[6,8],[6,9],[7,9],[8,9],[8,10],[9,10]],
   start:{puffin:{h:8,f:[10]},gannet:{h:7,f:[2]},cormorant:{h:0,f:[1]}}},
- {id:'channel',name:'Channel Islands',real:true,par:11,ai:.85,thrAdd:0,p0:1,
+ {id:'channel',name:'Channel Islands',real:true,par:10,ai:.85,thrAdd:0,p0:1,
   flav:'Four islands with harbours, four fleets, and the Little Russel channel running between Guernsey and Herm.',
   tip:'Herm and Jethou sit between you and everyone else. Hold them and you choose who to fight.',
   fleets:['puffin','cormorant','skua','gannet'],
-  chains:[{n:'Alderney Race',b:2},{n:'Guernsey',b:1},{n:'Little Russel',b:1},{n:'Sark',b:1},{n:'Jersey',b:2}],
+  chains:[{n:'Alderney Race',b:4},{n:'Guernsey',b:3},{n:'Little Russel',b:3},{n:'Sark',b:3},{n:'Jersey',b:3}],
   isl:[{n:'Casquets',x:14,y:14,r:4,ch:0,cl:3},{n:'Burhou',x:40,y:22,r:4.5,ch:0},{n:'Alderney',x:72,y:16,r:7,ch:0},{n:'Lihou',x:10,y:58,r:4.5,ch:1},
    {n:'Guernsey',x:33,y:64,r:10,ch:1},{n:'Herm',x:58,y:46,r:5.5,ch:2},{n:'Jethou',x:58,y:72,r:4.5,ch:2},{n:'Sark',x:88,y:80,r:7,ch:3},
    {n:'Brecqhou',x:72,y:96,r:4.5,ch:3},{n:'Jersey',x:56,y:128,r:11,ch:4},{n:'Écréhous',x:88,y:118,r:4.5,ch:4,cl:3},{n:'Minquiers',x:30,y:150,r:5,ch:4,cl:4}],
   lanes:[[0,1],[1,2],[0,3],[3,4],[1,4],[2,5],[4,5],[4,6],[5,6],[5,7],[6,8],[7,8],[7,10],[8,9],[9,10],[9,11]],
   start:{puffin:{h:4,f:[3]},cormorant:{h:2,f:[1]},skua:{h:7,f:[8]},gannet:{h:9,f:[11]}}},
- {id:'orkney',name:'Orkney',real:true,par:11,ai:1.1,thrAdd:0,p0:1,
+ {id:'orkney',name:'Orkney',real:true,par:11,ai:1.15,thrAdd:0,p0:1,
   flav:'Seventy-odd islands off the top of Scotland, about twenty of them lived on. Scapa Flow, once the Navy’s great anchorage, sits inside the southern ring.',
-  tip:'Scapa Flow (+3) can only be entered from Mainland, through Hoy or Burray. Take Burray early and the Flow is yours to hold.',
+  tip:'Scapa Flow (+4) can only be entered from Mainland, through Hoy or Burray. Take Burray early and the Flow is yours to hold.',
   fleets:['puffin','gannet','cormorant','skua'],
-  chains:[{n:'Westray Firth',b:2},{n:'North Isles',b:3},{n:'Kirkwall Bay',b:2},{n:'Scapa Flow',b:3}],
+  chains:[{n:'Westray Firth',b:4},{n:'North Isles',b:4},{n:'Kirkwall Bay',b:3},{n:'Scapa Flow',b:4}],
   isl:[{n:'North Ronaldsay',x:80,y:16,r:4,ch:1},{n:'Papa Westray',x:54,y:18,r:4,ch:0},{n:'Westray',x:36,y:36,r:7,ch:0},{n:'Sanday',x:76,y:46,r:7,ch:1},
    {n:'Eday',x:58,y:60,r:5,ch:1},{n:'Stronsay',x:78,y:74,r:6,ch:1},{n:'Rousay',x:28,y:62,r:6,ch:0},{n:'Shapinsay',x:54,y:86,r:5,ch:2},
    {n:'Mainland',x:24,y:90,r:10,ch:2},{n:'Hoy',x:13,y:124,r:8,ch:3},{n:'Flotta',x:33,y:134,r:4.5,ch:3},{n:'Burray',x:54,y:118,r:4.5,ch:3},{n:'South Ronaldsay',x:50,y:144,r:6,ch:3}],
   lanes:[[0,1],[0,3],[1,2],[2,4],[2,6],[3,4],[3,5],[4,5],[4,6],[4,7],[5,7],[6,8],[7,8],[8,9],[8,11],[9,10],[10,11],[10,12],[11,12]],
   start:{puffin:{h:9,f:[10]},gannet:{h:8,f:[6]},cormorant:{h:2,f:[1]},skua:{h:3,f:[0]}}},
- {id:'crown',name:'The Sunken Crown',real:false,par:13,ai:.92,thrAdd:0,p0:1,
+ {id:'crown',name:'The Sunken Crown',real:false,par:12,ai:1.02,thrAdd:0,p0:1,
   flav:'An invented atoll: twelve islets in a ring round a drowned volcano, and the Crown standing alone in the lagoon.',
-  tip:'The Crown is worth +3 on its own, but every reef touches it. Finish the South Reef first and take the Crown when you can hold it.',
+  tip:'Each reef is worth +4 and the Crown +3 on its own, but every reef touches the Crown. Finish the South Reef first and take the Crown when you can hold it.',
   fleets:['puffin','skua','gannet','cormorant'],
-  chains:[{n:'North Reef',b:2},{n:'East Reef',b:2},{n:'South Reef',b:2},{n:'West Reef',b:2},{n:'The Crown',b:3}],
+  chains:[{n:'North Reef',b:4},{n:'East Reef',b:4},{n:'South Reef',b:4},{n:'West Reef',b:4},{n:'The Crown',b:3}],
   isl:[{n:'Halloway',x:50,y:16,r:5.5,ch:0},{n:'Skerrin',x:70,y:25,r:4.5,ch:0},{n:'Wrackholm',x:85,y:49,r:4.5,ch:1},{n:'Lanternay',x:90,y:82,r:5.5,ch:1},
    {n:'Selsker',x:85,y:115,r:4.5,ch:1},{n:'Tullock',x:70,y:139,r:4.5,ch:2},{n:'Sundmere',x:50,y:148,r:5.5,ch:2},{n:'Corrabay',x:30,y:139,r:4.5,ch:2},
    {n:'Gorsay',x:15,y:115,r:4.5,ch:3},{n:'Haddersay',x:10,y:82,r:5.5,ch:3},{n:'Quillon',x:15,y:49,r:4.5,ch:3},{n:'Marrowick',x:30,y:25,r:4.5,ch:0},
    {n:'The Crown',x:50,y:82,r:9,ch:4}],
   lanes:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,0],[12,0],[12,3],[12,6],[12,9]],
   start:{puffin:{h:6,f:[5]},skua:{h:3,f:[4]},gannet:{h:0,f:[1]},cormorant:{h:9,f:[10]}}},
- {id:'hebrides',name:'Outer Hebrides',real:true,par:9,ai:1.25,thrAdd:-.05,p0:1,
+ {id:'hebrides',name:'Outer Hebrides',real:true,par:8,ai:1.25,thrAdd:-.05,p0:1,
   flav:'The Long Isle: a 130-mile chain on Scotland’s Atlantic edge, with St Kilda far out to the west. Lewis and Harris are one island; the chart splits them at the hills.',
   tip:'You start at the southern tip with only one way north. Clear the Barra Isles, then take South Uist before the Skuas do.',
   fleets:['puffin','skua','cormorant','gannet'],
-  chains:[{n:'Lewis',b:1},{n:'Harris',b:3},{n:'The Uists',b:3},{n:'Barra Isles',b:2}],
+  chains:[{n:'Lewis',b:3},{n:'Harris',b:5},{n:'The Uists',b:4},{n:'Barra Isles',b:4}],
   isl:[{n:'Lewis',x:74,y:14,r:8,ch:0},{n:'Great Bernera',x:44,y:10,r:4,ch:0},{n:'Harris',x:58,y:44,r:6,ch:1},{n:'Scalpay',x:86,y:46,r:4,ch:1},
    {n:'Taransay',x:34,y:40,r:4,ch:1},{n:'Berneray',x:44,y:62,r:4,ch:2},{n:'North Uist',x:30,y:74,r:6,ch:2},{n:'St Kilda',x:8,y:50,r:4.5,ch:1,cl:3},
    {n:'Benbecula',x:54,y:90,r:4.5,ch:2},{n:'South Uist',x:32,y:108,r:6,ch:2},{n:'Eriskay',x:58,y:122,r:3.5,ch:3},{n:'Barra',x:36,y:138,r:5.5,ch:3},
@@ -299,7 +301,7 @@ const die=st=>1+Math.floor(rng01(st)*6);
 
 function newGame(ci,seed,mode){const c=CHARTS[ci],n=c.isl.length,m=mode||'standard';
  const st={v:1,c:ci,mode:m,own:new Array(n).fill(-1),tr:new Array(n).fill(RULES.neutral[m]||3),fl:c.fleets.slice(),alive:c.fleets.map(()=>true),
-  spoils:c.fleets.map(()=>0),cash:0,turn:1,cur:0,phase:'reinforce',pool:0,placed:[],conq:false,moved:false,rs:(seed>>>0)||1,
+  spoils:c.fleets.map(()=>0),cash:0,cashF:c.fleets.map(()=>0),turn:1,cur:0,phase:'reinforce',pool:0,placed:[],conq:false,moved:false,rs:(seed>>>0)||1,
   stats:{taken:0,lost:0,battles:0,best:0}};
  c.fleets.forEach((k,f)=>{const s=c.start[k];st.own[s.h]=f;st.tr[s.h]=RULES.harbour0+(f===0?(c.p0||0):0);for(const i of s.f){st.own[i]=f;st.tr[i]=RULES.first0;}});
  return st;}
@@ -310,12 +312,14 @@ const count=(st,f)=>{let k=0;for(const o of st.own)if(o===f)k++;return k;};
 function chainHeld(st,f,ch){const c=chartOf(st);return c.isl.every((s,i)=>s.ch!==ch||st.own[i]===f);}
 function chainCount(st,f,ch){const c=chartOf(st);let have=0,size=0;c.isl.forEach((s,i)=>{if(s.ch===ch){size++;if(st.own[i]===f)have++;}});return [have,size];}
 /* troops for the start of a turn. The harbour bonus lands on each harbour the fleet holds. */
+/* how many times this fleet has cashed in (older saves without the per-fleet count fall back to none) */
+const cashIdx=(st,f)=>RULES.spoilsOwn?((st.cashF&&st.cashF[f])||0):st.cash;
 function musterInfo(st,f){const c=chartOf(st),n=count(st,f);const base=Math.max(3,Math.floor(n/3));let chains=0;const held=[];
  c.chains.forEach((ch,k)=>{if(chainHeld(st,f,k)){chains+=ch.b;held.push(k);}});
  const harbs=[];for(const i in HARB[st.c])if(st.own[+i]===f)harbs.push(+i);
- const sp=st.spoils[f]>=3?RULES.spoils[Math.min(st.cash,RULES.spoils.length-1)]:0;
+ const sp=st.spoils[f]>=3?RULES.spoils[Math.min(cashIdx(st,f),RULES.spoils.length-1)]:0;
  return {base,chains,held,harbs,spoils:sp,total:base+chains+sp};}
-function startTurn(st,f){const m=musterInfo(st,f);if(m.spoils){st.spoils[f]-=3;st.cash++;}
+function startTurn(st,f){const m=musterInfo(st,f);if(m.spoils){st.spoils[f]-=3;st.cash++;if(st.cashF)st.cashF[f]++;}
  for(const h of m.harbs)st.tr[h]+=RULES.harbourBonus;
  let tot=m.total;if(f!==0)tot=Math.max(1,Math.round(tot*(RULES.aiMul[st.mode]||1)*(chartOf(st).ai||1)*(st.assist?1-st.assist:1)));
  st.cur=f;st.conq=false;st.moved=false;st.pool=tot;st.placed=[];return Object.assign(m,{total:tot});}
@@ -401,7 +405,7 @@ function botTurn(st,f,ev){const m=startTurn(st,f);ev.push({t:'start',f,harbs:m.h
 /* the rivals' turns, in order, until it is the player's turn again (or the round is over) */
 function rivalsTurn(st){const ev=[];for(let f=1;f<st.fl.length;f++){if(!st.alive[f])continue;const sub=[];botTurn(st,f,sub);ev.push({f,ev:sub});if(over(st))break;}
  st.turn++;return ev;}
-if(typeof module!=='undefined')module.exports={power,playerLeads,reserve,FLEETS,RULES,CHARTS,ADJ,HARB,pTake,newGame,musterInfo,startTurn,throwOnce,capture,reach,endTurn,over,botTurn,rivalsTurn,odds,avail,canFrom,targets,count,planPlace,sailIn,chainCount,chainHeld,isHarb,fortAt,DIST};
+if(typeof module!=='undefined')module.exports={cashIdx,power,playerLeads,reserve,FLEETS,RULES,CHARTS,ADJ,HARB,pTake,newGame,musterInfo,startTurn,throwOnce,capture,reach,endTurn,over,botTurn,rivalsTurn,odds,avail,canFrom,targets,count,planPlace,sailIn,chainCount,chainHeld,isHarb,fortAt,DIST};
 /* ================= Archipelago v2: core (saving, site wiring, sound, timing) ================= */
 const $=id=>document.getElementById(id);
 const prefersRM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
@@ -1053,7 +1057,7 @@ function strip(){if(!st||!D){$('fleets').innerHTML='';$('turnL').textContent='';
  /* four fleets on a narrow phone: the chips shrink to bird icons with a count badge */
  const F=$('fleets');F.classList.remove('tight');const need=[...F.children].reduce((a,c)=>a+c.offsetWidth+5,0)+8;if(need>F.clientWidth)F.classList.add('tight');
  $('turnL').textContent='Turn '+st.turn;const n=myChests(),ch=$('chest');$('chestN').textContent=`${n}/3`;ch.classList.toggle('ready',n>=3);ch.setAttribute('aria-label',`Spoils chests: ${n} of 3`);}
-const nextCash=()=>RULES.spoils[Math.min(st.cash,RULES.spoils.length-1)];
+const nextCash=()=>RULES.spoils[Math.min(cashIdx(st,0),RULES.spoils.length-1)];
 function myChests(){return Math.min(5,st.spoils[0]+(st.cur===0&&st.conq&&st.phase!=='rival'&&st.phase!=='rivals-done'?1:0));}
 const btnFns={b1:null,b2:null};
 function setBtn(id,label,fn,o){const b=$(id);if(!label){b.hidden=true;btnFns[id]=null;b.classList.remove('glow');b.dataset.l='';return;}if(b.hidden||b.dataset.l!==label)b.dataset.at=performance.now();b.dataset.l=label;b.hidden=false;b.textContent=label;b.classList.toggle('ico',label==='✕');if(label==='✕')b.setAttribute('aria-label','Cancel');else b.removeAttribute('aria-label');b.disabled=!!(o&&o.dis)||(ui.busy&&!(o&&o.always));btnFns[id]=fn;}
@@ -1135,7 +1139,7 @@ function spoilsCard(){if(!st||st.phase==='over'||!$('modal').hidden)return;const
   <p style="text-align:center"><b>You have ${n}${n>3?' (three cash in at a time)':''}.</b> ${n>=3?`They cash in for <b>+${v}</b> troops at the start of your next turn.`:`Three cash in for <b>+${v}</b> troops.`}</p>
   <ol class="rules"><li><b>Earn one</b> in any turn you take at least one island. One chest a turn, however many you take.</li>
   <li><b>Three chests</b> cash in by themselves at the start of your turn, for bonus troops.</li>
-  <li><b>The bonus grows</b> each time any fleet cashes in: +4, +6, +8, +10, then +12.</li>
+  <li><b>The bonus grows</b> each time you cash in: +4, +5, +6, +7, then +8.</li>
   <li><b>Knock a fleet out</b> and its chests are yours.</li></ol>
   ${riv?`<p class="sub" style="font-size:13px">Rivals’ chests: ${riv}</p>`:''}<button class="cbtn pri" id="bk">Back to the chart</button>`,'',()=>$('bk').addEventListener('click',()=>{goFS();hideModal();}));}
 function attackBanner(){banner('Attack','Take an island to earn a spoils chest','puffin',2000);}
@@ -1260,7 +1264,7 @@ function intro(ci){const c=CHARTS[ci],assist=Math.round(assistFor(ci)*100);const
   ${same?`<button class="cbtn pri" id="cont">Continue · turn ${run.st.turn}</button><button class="cbtn danger" id="go">Start over</button>`:'<button class="cbtn pri" id="go">Set sail</button>'}<button class="cbtn" id="bk">Back</button>`,'',()=>{drawMini($('imini'),ci);
   if(same)$('cont').addEventListener('click',()=>{goFS();resume(run);});
   $('go').addEventListener('click',e=>{const b=e.currentTarget;if(same&&!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again to start over';return;}goFS();auStart();startChart(ci,'new');});$('bk').addEventListener('click',home);});}
-function resume(run){$('top').hidden=false;st=run.st;cps=run.cps||[];resetScene();rndArm('resume');hideModal();$('dock').hidden=false;layout();syncD();auStart();
+function resume(run){$('top').hidden=false;st=run.st;if(!st.cashF)st.cashF=st.fl.map(()=>0);cps=run.cps||[];resetScene();rndArm('resume');hideModal();$('dock').hidden=false;layout();syncD();auStart();
  if(finishIfOver())return;if(st.phase==='rivals-done'||st.phase==='rival'){beginTurn();return;}if(st.phase==='occupy'&&!st.occ)st.phase='attack';dockUI();note('Back where you left off.',2400);}
 function winCard(stars){const c=chartOf(st),nx=st.c+1<CHARTS.length?st.c+1:-1;
  showModal(`<div class="kick">Chart ${st.c+1} · ${c.real?'Real':'Invented'}</div><h2>${c.name} ${['scilly','varr','channel'].includes(c.id)?'are':'is'} yours</h2>
@@ -1273,7 +1277,7 @@ function lossCard(){const c=chartOf(st),k=Math.max(0,cps.length-3),cp=cps[k];let
  showModal(`<div class="kick">Chart ${st.c+1} · ${c.name}</div><h2>Driven from ${c.name}</h2><p>Your last island fell on turn ${st.turn}. The seas will be calmer next time: rivals muster ${Math.round(assistFor(st.c)*100)}% less.</p>
   ${cp?`<button class="cbtn pri" id="rt">Try again from turn ${tn}</button>`:''}<button class="cbtn${cp?'':' pri'}" id="rs">Restart the chart</button><button class="cbtn" id="ch">All charts</button><div class="links">${homeLink}</div>`,'',()=>{
   if(cp)$('rt').addEventListener('click',()=>{goFS();retryFrom(cp);});$('rs').addEventListener('click',()=>{goFS();startChart(st.c,'retry');});$('ch').addEventListener('click',()=>{st=null;D=null;home();});});}
-function retryFrom(cp){$('top').hidden=false;st=JSON.parse(cp);st.rs=(Math.random()*4294967295)>>>0;st.assist=assistFor(st.c);cps=[];resetScene();rndArm('retry');hideModal();$('dock').hidden=false;layout();syncD();beginTurn();note('Back to turn '+st.turn+'. New dice, same seas.',2600);}
+function retryFrom(cp){$('top').hidden=false;st=JSON.parse(cp);if(!st.cashF)st.cashF=st.fl.map(()=>0);st.rs=(Math.random()*4294967295)>>>0;st.assist=assistFor(st.c);cps=[];resetScene();rndArm('retry');hideModal();$('dock').hidden=false;layout();syncD();beginTurn();note('Back to turn '+st.turn+'. New dice, same seas.',2600);}
 /* standings: every fleet's islands, troops and income, a bar for its share of all the power on the chart, and the last rival turn */
 function incomeOf(f){const c=chartOf(st),m=musterInfo(st,f);let t=m.total;if(f!==0)t=Math.max(1,Math.round(t*(RULES.aiMul[st.mode]||1)*(c.ai||1)*(st.assist?1-st.assist:1)));return {t:t+m.harbs.length*RULES.harbourBonus,held:m.held};}
 function standings(){if(!st||st.phase==='over'||!$('modal').hidden)return;const c=chartOf(st);let all=0;st.fl.forEach((k,f)=>{if(st.alive[f])all+=power(st,f);});
@@ -1310,7 +1314,7 @@ function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">�
  <li><b>Chains</b> are the shaded stretches of water. Tap Chains to see each one’s bonus and who holds it.</li>
  <li><b>Attack</b> along a dotted lane from an island with 2 or more troops: tap the rival island (or tap yours first to choose where from). You roll up to 3 dice, the defender up to 2. Highest against highest; ties go to the defender. Blitz keeps rolling, one throw at a time, until the island falls or you tap Stop.</li>
  <li><b>Harbours</b> have a fort (+1 on the defender’s top die) and give whoever holds them +2 troops a turn.</li>
- <li><b>Spoils:</b> take at least one island in a turn and you earn a spoils chest (the chest counter at the top; tap it for details). Three chests cash in at the start of your next turn for +4 troops, and each cash-in by any fleet makes the next worth more: +6, +8, +10, +12.</li>
+ <li><b>Spoils:</b> take at least one island in a turn and you earn a spoils chest (the chest counter at the top; tap it for details). Three chests cash in at the start of your next turn for +4 troops, and each of your cash-ins makes the next worth one more, up to +8.</li>
  <li><b>Move</b> once a turn: tap one of your islands, then where they go. They can travel through any chain of your own islands. Tap the destination again (or press Move) to send them, then the rivals sail.</li>
  <li><b>Rivals</b> fight each other, but if you pull ahead they turn on you together. Tap the fleet bar to see who’s winning.</li>
  <li><b>Camera:</b> each turn opens on the whole chart and it closes in on attacks. Pinch or drag to look around, and double-tap open sea to see the whole chart.</li></ol>`,'',()=>$('bk').addEventListener('click',back));}
@@ -1361,6 +1365,5 @@ if(TEST)window.__dg={
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
