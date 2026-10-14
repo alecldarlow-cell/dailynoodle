@@ -1642,5 +1642,6 @@ if(TEST)window.__dg={
  sea:(leg,ord,ci)=>{meta.best=Object.fromEntries(CHARTS.map(c=>[c.id,meta.best[c.id]||1]));const S=seaState();S.leg=leg||1;S.ord=ord||{};S.offer=null;S.draft=null;S.strike=false;saveMeta();startSeaLeg(ci==null?1:ci,12345);},seaCard:()=>seaCard(),claimTap:i=>tap(i),fortTap:i=>{ui.fortify=true;tap(i);},seaState:()=>JSON.parse(JSON.stringify(meta.sea||null)),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
+<script src="../dn-track.js" defer></script>
 </body>
 </html>
