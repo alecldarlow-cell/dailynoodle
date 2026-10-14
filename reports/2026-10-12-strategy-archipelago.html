@@ -69,19 +69,28 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 #hint.up{bottom:calc(var(--dockH) + 108px)}
 @keyframes nudge{0%,100%{transform:translateX(-50%)}50%{transform:translate(-50%,-3px)}}
 /* orders bar: one slim row in the thumb zone; buttons appear only when they do something */
-#dock{position:fixed;left:0;right:0;bottom:0;z-index:6;margin:0 auto;box-sizing:border-box;height:calc(72px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,#0f3d56,#082a3c 70%);border-top:1px solid rgba(244,233,204,.2);box-shadow:0 -1px 0 rgba(0,0,0,.35),0 -12px 26px rgba(0,0,0,.28);padding:0 12px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px}
-@media (min-width:600px){#dock{max-width:560px;border:1px solid rgba(244,233,204,.2);border-bottom:0;border-radius:18px 18px 0 0}}
-#dIcon{width:30px;height:30px;flex:none;margin:-4px -4px 0 -2px}
-.dl{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px}
-#dTitle{font-family:var(--f-chart);font-size:19px;line-height:1.05;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#dInfo{font-weight:800;font-size:13.5px;line-height:1.25;color:rgba(244,233,204,.8);overflow:hidden;font-variant-numeric:tabular-nums;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-#dInfo b{color:var(--gold);font-weight:900;font-size:15px}
+/* the command card: floats clear of the screen edge; row one says where you are, row two is what you can do */
+#dock{position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:6;max-width:520px;margin:0 auto;box-sizing:border-box;border-radius:22px;padding:10px 12px 12px;background:rgba(7,30,44,.9);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(244,233,204,.16);box-shadow:0 12px 30px rgba(0,0,0,.42);display:flex;flex-direction:column;gap:9px}
+.r1{display:flex;align-items:center;gap:8px;height:26px;margin:0 2px 0 4px}
+.r2{display:flex;align-items:center;gap:10px;height:54px}
+#dLine{flex:1;min-width:0;margin-left:4px;font-weight:800;font-size:13px;line-height:1.35;color:rgba(244,233,204,.78);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#dLine .dim{font-weight:700;opacity:.8}
+#dLine:empty,#dock.two #dLine,#dock.sl #dLine{display:none}
+#dock.two .btn,#dock.solo .btn{flex:1}
+.lnk{position:relative;flex:none;border:0;background:none;padding:0 2px;font:800 14px var(--f-ui);color:rgba(244,233,204,.85);white-space:nowrap}
+.lnk::after{content:"";position:absolute;inset:-10px -8px}
+.lnk.warn{color:#ffb39c}
+.lnk.glow{color:var(--gold)}
+
+#dIcon{display:none;width:24px;height:24px;flex:none;margin:-4px -2px 0 -2px}
+#dock.rv #dIcon{display:block}
+
+#dTitle{font-family:var(--f-chart);font-size:19px;line-height:1;letter-spacing:.02em;white-space:nowrap;flex:none}
+#dInfo{flex:1;min-width:0;font-weight:800;font-size:13.5px;color:rgba(244,233,204,.72);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+#dInfo b{color:var(--gold);font-weight:900}
 #dInfo:empty{display:none}
-#dock.sl .dl{display:none}
 @media (max-width:350px){.hero canvas{width:86px;height:99px}}
-@media (max-width:400px){#dock.two #dIcon{display:none}}
-@media (max-width:370px){#dock.tg #dIcon,#dock.sl #dIcon{display:none}#dock.sl .btn.pri{min-width:84px}#dock.sl .btn.ico{width:42px;min-width:42px}}
-.btn{min-height:46px;height:46px;border-radius:14px;padding:0 13px;font:900 16px var(--f-ui);border:2px solid rgba(244,233,204,.5);background:rgba(255,255,255,.05);color:var(--paper);touch-action:manipulation;transition:transform .08s,opacity .2s;flex:none;white-space:nowrap}
+.btn{min-height:54px;height:54px;border-radius:16px;padding:0 16px;min-width:104px;font:900 17px var(--f-ui);border:2px solid rgba(244,233,204,.5);background:rgba(255,255,255,.05);color:var(--paper);touch-action:manipulation;transition:transform .08s,opacity .2s;flex:none;white-space:nowrap}
 .btn.pri{min-width:96px;border:0;color:#fff;background:linear-gradient(#f2703f,#d5461d);box-shadow:inset 0 -4px 0 rgba(0,0,0,.24),0 6px 16px rgba(228,87,46,.4);text-shadow:0 1px 0 rgba(0,0,0,.25)}
 .btn.pri.warn{background:#f4e9cc;color:#8a2a12;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);text-shadow:none}
 .btn.pri.sec{background:rgba(255,255,255,.05);border:2px solid rgba(244,233,204,.5);color:var(--paper);box-shadow:none;text-shadow:none}
@@ -196,9 +205,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 <div id="sign" hidden role="status"><b id="signH"></b><span id="signP"></span><small>Tap anywhere to close</small></div>
 <div id="banner" aria-live="polite"></div>
 <section id="dock" aria-label="Orders">
- <img id="dIcon" alt=""><div class="dl"><span id="dTitle">Archipelago</span><span id="dInfo"></span></div>
+ <div class="r1"><img id="dIcon" alt=""><span id="dTitle">Archipelago</span><span id="dInfo"></span><button class="lnk" id="bEnd" type="button" hidden></button></div>
+ <div class="r2"><div id="dLine"></div>
  <div id="range" hidden><button class="sq" id="rm" type="button" aria-label="Fewer">&minus;</button><input id="rng" type="range" min="1" max="10" step="1" value="5" aria-label="Troops to send"><output id="rangeV">5</output><button class="sq" id="rp" type="button" aria-label="More">+</button></div>
- <button class="btn" id="b2" type="button">Undo</button><button class="btn pri" id="b1" type="button">Auto</button>
+ <button class="btn" id="b2" type="button" hidden></button><button class="btn pri" id="b1" type="button" hidden></button></div>
 </section>
 <div id="modal" hidden><div id="card"></div></div>
 <script>
@@ -553,7 +563,7 @@ function measure(){const d=$('dock');dockTop=d.hidden?H:d.getBoundingClientRect(
 function layout(){W=innerWidth;H=innerHeight;DPR=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);measure();
  const top=$('top').getBoundingClientRect().bottom-6,bottom=dockTop-6;MAP={x0:0,y0:top,w:W,h:Math.max(160,bottom-top)};MAP.cx=W/2;MAP.cy=MAP.y0+MAP.h/2;
  if(st){const I=chartOf(st).isl;let gx0=1e9,gx1=-1e9,gy0=1e9,gy1=-1e9;for(const s of I){const r=s.r*VS;gx0=Math.min(gx0,s.x-r);gx1=Math.max(gx1,s.x+r);gy0=Math.min(gy0,s.y-r);gy1=Math.max(gy1,s.y+r);}
-  const padT=40,padB=62,padX=8,aw=MAP.w-2*padX,ah=MAP.h-padT-padB;let px=aw/(gx1-gx0),py=ah/(gy1-gy0);S=Math.min(px,py,7.5);PX=Math.min(px,S*1.42);PY=Math.min(py,S*1.42);
+  const padT=40,padB=34,padX=8,aw=MAP.w-2*padX,ah=MAP.h-padT-padB;let px=aw/(gx1-gx0),py=ah/(gy1-gy0);S=Math.min(px,py,7.5);PX=Math.min(px,S*1.42);PY=Math.min(py,S*1.42);
   BX=(gx0+gx1)/2;BY=(gy0+gy1)/2;OX=MAP.x0+padX+aw/2;OY=MAP.y0+padT+ah/2;}
  FH=clamp(Math.round(S*3.3),15,27);
  LS=Math.min(DPR*ZAUTO,Math.sqrt(9e6/Math.max(1,W*H)));ZS=Math.max(1,LS/DPR);
@@ -876,7 +886,7 @@ let landK=0;      /* rising pitch for a run of landings */
 const nm=i=>chartOf(st).isl[i].n;
 function syncD(){if(!st){D=null;return;}D={own:st.own.slice(),tr:st.tr.slice()};GEN++;}
 const toBase=(sx,sy)=>[(sx-MAP.cx)/cam.z+cam.x,(sy-MAP.cy)/cam.z+cam.y];
-function dockFrom(){const r=$('dIcon').getBoundingClientRect();return toBase(r.left+r.width/2,r.top+r.height/2);}
+function dockFrom(){const r=$('dock').getBoundingClientRect();return toBase(r.left+48,r.top+16);}
 function edgeFrom(i){const I=ISL[i];return toBase(clamp((I.x-cam.x)*cam.z+MAP.cx+(Math.random()-.5)*120,20,W-20),-30);}
 const pendingTo=i=>flyers.reduce((n,f)=>n+(f.to===i&&f.gen===GEN&&f.applies&&!f.hop?1:0),0);
 /* a bird flies in and joins an island's troops; the number goes up when it lands */
@@ -1087,35 +1097,37 @@ function strip(){if(!st||!D){$('fleets').innerHTML='';$('turnL').textContent='';
  $('turnL').textContent='Turn '+st.turn;const n=myChests(),ch=$('chest');$('chestN').textContent=`${n}/3`;ch.classList.toggle('ready',n>=3);ch.setAttribute('aria-label',`Spoils chests: ${n} of 3`);}
 const nextCash=()=>RULES.spoils[Math.min(cashIdx(st,0),RULES.spoils.length-1)];
 function myChests(){return Math.min(5,st.spoils[0]+(st.cur===0&&st.conq&&st.phase!=='rival'&&st.phase!=='rivals-done'?1:0));}
-const btnFns={b1:null,b2:null};
+const btnFns={b1:null,b2:null,bEnd:null};
 function setBtn(id,label,fn,o){const b=$(id);if(!label){b.hidden=true;btnFns[id]=null;b.classList.remove('glow');b.dataset.l='';return;}if(b.hidden||b.dataset.l!==label)b.dataset.at=performance.now();b.dataset.l=label;b.hidden=false;b.textContent=label;b.classList.toggle('ico',label==='✕');if(label==='✕')b.setAttribute('aria-label','Cancel');else b.removeAttribute('aria-label');b.disabled=!!(o&&o.dis)||(ui.busy&&!(o&&o.always));btnFns[id]=fn;}
 function showRange(o){const R=$('range');if(!o){R.hidden=true;return;}R.hidden=false;const r=$('rng');r.min=o.min;r.max=o.max;r.value=o.n;$('rangeV').textContent=o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;$('b1').textContent=(st&&st.phase==='occupy'?'Sail ':'Move ')+o.n;}
-function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo').innerHTML=h||'';};dk.classList.remove('sl','tg','rf','two');$('b1').classList.remove('glow','sec','warn');
- if(!st){$('dIcon').src=iconURL('puffin');$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');showRange(null);return;}
- if(ui.rival>=0){const k=st.fl[ui.rival];$('dIcon').src=iconURL(k);$('dTitle').textContent=FLEETS[k].name;info('Their move · turn '+st.turn);setBtn('b2');showRange(null);setBtn('b1');hint('');return;}
- $('dIcon').src=iconURL('puffin');showRange(null);
- if(P==='reinforce'){$('dTitle').textContent='Reinforce';dk.classList.add('rf');info(`<b>${st.pool}</b> to place · ${musterText(st.lastMuster)}`);setBtn('b2',st.placed.length?'Undo':null,undo);setBtn('b1');}
- else if(P==='attack'&&ui.blitzing){$('dTitle').textContent='Blitz';info(`<b>${D?D.tr[ui.sel]:st.tr[ui.sel]}</b> against <b>${D?D.tr[ui.tgt]:st.tr[ui.tgt]}</b> on ${nm(ui.tgt)}`);setBtn('b2');setBtn('b1',ui.blitzStop?'Stopping…':'Stop',()=>{ui.blitzStop=true;dockUI();},{always:true,dis:ui.blitzStop});}
+function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo').innerHTML=h||'';},line=h=>{$('dLine').innerHTML=h||'';},end=(l,fn,o)=>setBtn('bEnd',l,fn,o);
+ dk.classList.remove('sl','two','solo','rv');['b1','bEnd'].forEach(id=>$(id).classList.remove('glow','sec','warn'));line('');end();showRange(null);
+ if(!st){$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');return;}
+ if(ui.rival>=0){const k=st.fl[ui.rival];dk.classList.add('rv');$('dIcon').src=iconURL(k);$('dTitle').textContent=FLEETS[k].name;info('Turn '+st.turn);line(FLEETS[k].mood||'Their move');setBtn('b2');setBtn('b1');hint('');return;}
+ if(P==='reinforce'){$('dTitle').textContent='Reinforce';info(`<b>${st.pool}</b> to place`);line(`Tap your islands to place them<br><span class="dim">${musterText(st.lastMuster).replace(' landed at ',' at ')}</span>`);setBtn('b2',st.placed.length?'Undo':null,undo);setBtn('b1');}
+ else if(P==='attack'&&ui.blitzing){$('dTitle').textContent='Blitz';info(`<b>${D?D.tr[ui.sel]:st.tr[ui.sel]}</b> against <b>${D?D.tr[ui.tgt]:st.tr[ui.tgt]}</b> on ${nm(ui.tgt)}`);setBtn('b2');setBtn('b1',ui.blitzStop?'Stopping…':'Stop',()=>{ui.blitzStop=true;dockUI();},{always:true,dis:ui.blitzStop});$('b1').classList.add('sec');}
  else if(P==='attack'){$('dTitle').textContent='Attack';const canUndo=st.placed.length&&!st.attacked;
-  if(ui.tgt>=0&&ui.sel>=0){const p=odds(st,ui.sel,ui.tgt);dk.classList.add('tg');$('dTitle').textContent=p>.995?'99%+':Math.round(p*100)+'%';info('to take '+nm(ui.tgt)+(fortAt(st,ui.tgt)?' · fort +1':''));setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
-  else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Chest earned this turn':'Take an island for a chest');setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);
-   setBtn('b1',ui.skipAsk?'Skip attacks':'End attacks',endAttacks);$('b1').classList.add(ui.skipAsk?'warn':'sec');}}
- else if(P==='occupy'){$('dTitle').textContent='Sail in';info('');dk.classList.add('sl');setBtn('b2');setBtn('b1','Sail '+st.occ.n,sailNow);showRange(st.occ);}
- else if(P==='move'){$('dTitle').textContent='Move';if(ui.mv&&ui.mv.to>=0){dk.classList.add('sl');setBtn('b2','✕',()=>{ui.mv=null;dockUI();});setBtn('b1','Move '+ui.mv.n,doMove);showRange(ui.mv);}else{info(ui.mv?`<b>${st.tr[ui.mv.from]-1}</b> can move`:'One move, then rivals sail');setBtn('b2',ui.mv?'Cancel':null,()=>{ui.mv=null;dockUI();coach();});setBtn('b1','End turn',endMyTurn);}}
+  end(ui.skipAsk?'Skip attacks ›':'End ›',endAttacks);if(ui.skipAsk)$('bEnd').classList.add('warn');
+  if(ui.tgt>=0&&ui.sel>=0){const p=odds(st,ui.sel,ui.tgt);info(`<b>${p>.995?'99%+':Math.round(p*100)+'%'}</b> · ${nm(ui.tgt)}${fortAt(st,ui.tgt)?' · fort +1':''}`);setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
+  else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Chest earned this turn':'Take an island for a chest');line(phaseHint());setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);setBtn('b1');}}
+ else if(P==='occupy'){$('dTitle').textContent='Sail in';info(`${nm(st.occ.to)} is yours`);dk.classList.add('sl');setBtn('b2');setBtn('b1','Sail '+st.occ.n,sailNow);showRange(st.occ);}
+ else if(P==='move'){$('dTitle').textContent='Move';
+  if(ui.mv&&ui.mv.to>=0){info(`${nm(ui.mv.from)} to ${nm(ui.mv.to)}`);end('Cancel',()=>{ui.mv=null;dockUI();});dk.classList.add('sl');setBtn('b2');setBtn('b1','Move '+ui.mv.n,doMove);showRange(ui.mv);}
+  else{info(ui.mv?`<b>${st.tr[ui.mv.from]-1}</b> can move`:'One move, then rivals sail');line(phaseHint());setBtn('b2',ui.mv?'Cancel':null,()=>{ui.mv=null;dockUI();coach();});setBtn('b1','End turn',endMyTurn);}}
  else{$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');}
- dk.classList.toggle('two',!$('b1').hidden&&!$('b2').hidden);coach();signCheck();}
+ const n=(!$('b1').hidden)+(!$('b2').hidden);dk.classList.toggle('two',n===2);dk.classList.toggle('solo',n===1&&!$('dLine').innerHTML&&$('range').hidden);coach();signCheck();}
 /* the hint floats over the sea: a new line shows for a few seconds and fades; first-chart coaching stays until done */
 function hint(txt,coachy){const h=$('hint');txt=txt||'';const co=!!coachy&&!!txt;if(h.textContent===txt&&h.classList.contains('coach')===co)return;
  clearTimeout(hint.t);h.textContent=txt;h.classList.toggle('coach',co);h.classList.remove('off');if(txt&&!co)hint.t=setTimeout(()=>h.classList.add('off'),6500);}
 function phaseHint(){if(!st)return '';const P=st.phase;if(P==='reinforce')return 'Tap your islands to send troops';
- if(P==='attack')return ui.tgt>=0?'Attack once, or Blitz until it falls':ui.sel>=0?'Tap an island next to it to attack':st.conq?'Attack again, or tap End attacks':'Tap a rival island to attack it';
+ if(P==='attack')return ui.tgt>=0?'Attack once, or Blitz until it falls':ui.sel>=0?'Tap an island next to it to attack':st.conq?'Attack again, or tap End when you’re done':'Tap a rival island to attack it';
  if(P==='occupy')return `${nm(st.occ.to)} is yours. How many sail in?`;if(P==='move')return ui.mv?(ui.mv.to>=0?`Tap ${nm(ui.mv.to)} again, or press Move`:'Tap where they go. The rings show where they can reach'):'Tap an island to move troops from, or end your turn';return '';}
 /* guided first chart: an arrow over the island to tap, and the next step in words */
 function coach(){ui.coach=null;if(!st||ui.rival>=0||st.phase==='over'||st.phase==='rival')return;$('b1').classList.remove('glow');
- if(meta.coached||st.c!==0){hint(phaseHint());return;}const P=st.phase;let txt='';
+ if(meta.coached||st.c!==0){hint('');return;}const P=st.phase;let txt='';
  if(P==='reinforce'){const a=planPlace(st,0,st.pool),i=+Object.keys(a)[0];if(i>=0&&!isNaN(i)){ui.coach={i};txt=`Tap ${nm(i)} to send your new troops there`;}}
  else if(P==='attack'){if(ui.sel<0){let best=null,bp=0;for(let i=0;i<st.own.length;i++){if(!canFrom(st,i,0))continue;for(const j of targets(st,i)){const p=odds(st,i,j);if(p>bp){bp=p;best=[i,j];}}}
-   if(best&&bp>=.55){ui.coach={i:best[1]};txt=`Tap ${nm(best[1])} to attack it`;}else{$('b1').classList.add('glow');txt='No good attacks left. Tap End attacks';}}
+   if(best&&bp>=.55){ui.coach={i:best[1]};txt=`Tap ${nm(best[1])} to attack it`;}else{$('bEnd').classList.add('glow');txt='No good attacks left. Tap End';}}
   else if(ui.tgt<0){let bj=-1,bp=-1;for(const j of targets(st,ui.sel)){const p=odds(st,ui.sel,j);if(p>bp){bp=p;bj=j;}}if(bj>=0){ui.coach={i:bj};txt=`Tap ${nm(bj)}. The chip is your chance to take it`;}}
   else{$('b1').classList.add('glow');txt='Blitz keeps rolling until the island falls';}}
  else if(P==='occupy'){$('b1').classList.add('glow');txt=`${nm(st.occ.to)} is yours. Slide, then Sail`;}
@@ -1367,6 +1379,7 @@ cv.addEventListener('wheel',e=>{if(!st||!$('modal').hidden)return;e.preventDefau
 const fresh=b=>performance.now()-(+b.dataset.at||0)<700;
 $('b1').addEventListener('click',e=>{if(fresh(e.currentTarget))return;sfx('tap');btnFns.b1&&btnFns.b1();});
 $('b2').addEventListener('click',e=>{if(fresh(e.currentTarget))return;sfx('tap');btnFns.b2&&btnFns.b2();});
+$('bEnd').addEventListener('click',e=>{if(fresh(e.currentTarget))return;sfx('tap');btnFns.bEnd&&btnFns.bEnd();});
 const occ=()=>st&&(st.phase==='occupy'?st.occ:st.phase==='move'&&ui.mv&&ui.mv.to>=0?ui.mv:null);
 $('rng').addEventListener('input',()=>{const o=occ();if(!o)return;o.n=+$('rng').value;$('rangeV').textContent=o.n;$('b1').textContent=(st.phase==='occupy'?'Sail ':'Move ')+o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;if(ui.occShip)ui.occShip.carry=Math.min(3,o.n);});
 $('rm').addEventListener('click',()=>{const o=occ();if(o&&o.n>o.min){o.n--;showRange(o);sfx('tap');}});
@@ -1393,6 +1406,5 @@ if(TEST)window.__dg={
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
