@@ -981,7 +981,7 @@ function drawDie(x,y,s,face,col,ink,rot,dim,win){cx.save();cx.translate(x,y);cx.
  cx.fillStyle=col;rr(cx,-s/2,-s/2,s,s,s*.22);cx.fill();cx.fillStyle=g;cx.fill();cx.strokeStyle='rgba(10,14,18,.75)';cx.lineWidth=1.6;cx.stroke();
  cx.fillStyle=ink;for(const [px,py] of PIPS[face]){cx.beginPath();cx.arc(px*s*.26,py*s*.26,s*.085,0,7);cx.fill();}
  if(win){cx.strokeStyle='#ffd36b';cx.lineWidth=3;rr(cx,-s/2-3,-s/2-3,s+6,s+6,s*.28);cx.stroke();}
- if(dim){cx.fillStyle='rgba(20,10,10,.45)';rr(cx,-s/2,-s/2,s,s,s*.22);cx.fill();cx.strokeStyle='#ff5a48';cx.lineWidth=3.2;cx.lineCap='round';cx.beginPath();cx.moveTo(-s*.28,-s*.28);cx.lineTo(s*.28,s*.28);cx.moveTo(s*.28,-s*.28);cx.lineTo(-s*.28,s*.28);cx.stroke();}
+ if(dim){cx.fillStyle='rgba(20,10,10,.28)';rr(cx,-s/2,-s/2,s,s,s*.22);cx.fill();cx.strokeStyle='rgba(255,80,60,.8)';cx.lineWidth=2.4;cx.lineCap='round';cx.beginPath();cx.moveTo(-s*.28,-s*.28);cx.lineTo(s*.28,s*.28);cx.moveTo(s*.28,-s*.28);cx.lineTo(-s*.28,s*.28);cx.stroke();}
  cx.restore();}
 let hintUp=false;
 function drawDice(t){const up=!!(DT&&st);if(up!==hintUp){hintUp=up;$('hint').classList.toggle('up',up);}if(!DT||!st)return;const out=t>DT.hideAt?clamp((t-DT.hideAt)/.25,0,1):0;if(out>=1){DT=null;return;}
@@ -991,7 +991,8 @@ function drawDice(t){const up=!!(DT&&st);if(up!==hintUp){hintUp=up;$('hint').cla
  const fa=FLEETS[st.fl[DT.fa]],fd=DT.fd>=0?FLEETS[st.fl[DT.fd]]:{col:'#f4ead0',ink:'#1d2a31'};
  const nP=Math.min(nA,nD),lostA=[],lostD=[];for(let k=0;k<nP;k++){const db=DT.D[k]+(k===0&&DT.fort?1:0);if(DT.A[k]>db)lostD.push(k);else lostA.push(k);}
  const face_=(arr,k)=>done?arr[k]:1+(((Math.floor(age/.07)*7+k*13)%6)+6)%6;
- for(let k=0;k<nA;k++){const x=x0+k*(s+gap)+s/2,jump=done?0:-Math.abs(Math.sin(u*Math.PI*2.2))*(1-u)*s*.6,rot=done?0:(1-u)*(k%2?2.4:-2.4);drawDie(x,yc+jump,s,face_(DT.A,k),fa.col,fa.ink,rot,done&&lostA.includes(k),done&&k<nP&&!lostA.includes(k));}
+ /* attack dice run highest-last so the two highest dice meet across the 'vs': [2 4 6] vs [5 3] */
+ for(let k=0;k<nA;k++){const x=x0+(nA-1-k)*(s+gap)+s/2,jump=done?0:-Math.abs(Math.sin(u*Math.PI*2.2))*(1-u)*s*.6,rot=done?0:(1-u)*(k%2?2.4:-2.4);drawDie(x,yc+jump,s,face_(DT.A,k),fa.col,fa.ink,rot,done&&lostA.includes(k),done&&k<nP&&!lostA.includes(k));}
  cx.fillStyle='rgba(255,236,200,.85)';cx.font=`900 ${Math.round(s*.36)}px Nunito,system-ui,sans-serif`;cx.textAlign='center';cx.textBaseline='middle';cx.fillText('vs',x0+nA*(s+gap)-gap+mid/2,yc);
  for(let k=0;k<nD;k++){const x=x0+nA*(s+gap)-gap+mid+k*(s+gap)+s/2,jump=done?0:-Math.abs(Math.sin(u*Math.PI*2.2+1))*(1-u)*s*.6,rot=done?0:(1-u)*(k%2?-2.1:2.1);drawDie(x,yc+jump,s,face_(DT.D,k),fd.col,fd.ink,rot,done&&lostD.includes(k),done&&k<nP&&!lostD.includes(k));
   if(k===0&&DT.fort&&done){cx.fillStyle='#ffd36b';cx.strokeStyle='#3a2a10';cx.lineWidth=1.2;rr(cx,x+s*.18,yc-s*.86,s*.5,s*.36,s*.12);cx.fill();cx.stroke();cx.fillStyle='#3a2a10';cx.font=`900 ${Math.round(s*.26)}px Nunito,system-ui,sans-serif`;cx.fillText('+1',x+s*.43,yc-s*.67);}}
@@ -1390,6 +1391,5 @@ if(TEST)window.__dg={
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
