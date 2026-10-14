@@ -80,6 +80,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .lnk{position:relative;flex:none;height:30px;border:1.5px solid rgba(244,233,204,.35);border-radius:15px;background:rgba(244,233,204,.08);padding:0 12px;font:800 13.5px var(--f-ui);color:var(--paper);white-space:nowrap}
 .lnk::after{content:"";position:absolute;inset:-8px -6px}
 .lnk.warn{color:#ffb39c}
+.lnk.ico{width:30px;padding:0;font-size:14px;line-height:1;margin-left:-4px}
 .lnk.glow{color:var(--gold)}
 
 #dIcon{display:none;width:24px;height:24px;flex:none;margin:-4px -2px 0 -2px}
@@ -142,6 +143,39 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .ord{display:block;width:100%;text-align:left;border-radius:12px;background:rgba(120,90,40,.1);padding:9px 12px;font:14px/1.35 var(--f-ui);color:var(--ink);border:0}
 .ord b{font-weight:900}.ord small{display:block;color:var(--ink-2);font-size:12.5px;margin-top:2px}
 button.ord{border:2px solid var(--ink);background:transparent;min-height:56px}button.ord:active{transform:translateY(2px)}
+button.ord.on{background:var(--ink);color:var(--paper)}button.ord.on small{color:rgba(244,233,204,.8)}
+/* standing orders: each flies its own signal flag from the international code */
+.oc{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:start;width:100%;text-align:left;border:0;border-radius:18px;padding:14px 14px 12px;color:var(--ink);font:inherit;
+ background:radial-gradient(120% 90% at 30% 0%,#fbf3dc,var(--paper) 60%,#e8d9b3);box-shadow:0 10px 26px rgba(0,0,0,.35);transition:transform .12s,box-shadow .12s}
+.oc:active{transform:translateY(2px)}
+.oc.on{box-shadow:0 0 0 3px var(--gold),0 14px 30px rgba(0,0,0,.45);transform:translateY(-2px)}
+.oc.strike.on{box-shadow:0 0 0 3px var(--bad),0 14px 30px rgba(0,0,0,.45)}
+.oc .fl{display:block;margin-top:3px;filter:drop-shadow(0 2px 0 rgba(0,0,0,.18))}
+.oc b{display:block;font-family:var(--f-chart);font-weight:400;font-size:23px;line-height:1.02}
+.oc .t{display:block;margin-top:4px;font-size:14.5px;line-height:1.38;font-weight:700;color:#4a4a3d}
+.oc .f{display:flex;align-items:center;gap:10px;margin-top:9px}
+.oc .f em{font-style:normal;font-weight:900;font-size:13px;color:var(--ink-2)}
+.oc .f em.up{color:#b8401c}.oc .f em.down{color:var(--bad)}
+.pips{display:inline-flex;gap:4px}.pips i{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(29,42,49,.45)}
+.pips i.h{background:var(--ink);box-shadow:none}.pips i.a{background:var(--verm);box-shadow:0 0 0 2px rgba(228,87,46,.25)}.pips i.l{background:transparent;box-shadow:inset 0 0 0 1.5px var(--bad)}
+.ocs{display:flex;flex-direction:column;gap:12px}
+.sheet{border-radius:18px;padding:4px 14px;color:var(--ink);background:radial-gradient(120% 90% at 30% 0%,#fbf3dc,var(--paper) 60%,#e8d9b3);box-shadow:0 10px 26px rgba(0,0,0,.3)}
+.sheet .row{display:grid;grid-template-columns:34px 1fr auto;gap:2px 10px;align-items:center;padding:10px 0;background:radial-gradient(circle,rgba(29,42,49,.35) 1.1px,transparent 1.4px) 0 100%/9px 3px repeat-x}
+.sheet .row:last-child{background:none}
+.sheet .row .fl{grid-row:span 2;align-self:start;margin-top:2px}
+.sheet .row b{font-family:var(--f-chart);font-weight:400;font-size:18px;line-height:1.05}
+.sheet .row small{grid-column:2/4;font-size:13px;line-height:1.35;font-weight:700;color:var(--ink-2)}
+.sheet .none{padding:12px 0;font-size:14px;font-weight:700;color:var(--ink-2)}
+.card .sheet{background:rgba(120,90,40,.08);box-shadow:none}
+.tscreen h2{margin:2px 0 0;font-family:var(--f-chart);font-weight:400;font-size:34px;line-height:1.02;letter-spacing:.01em;text-shadow:0 3px 0 rgba(0,0,0,.35);text-wrap:balance}
+.tscreen .lede{margin:0;font-size:15px;line-height:1.45;font-weight:700;color:rgba(244,233,204,.85)}
+.tscreen .cbtn:not(.pri){border-color:rgba(244,233,204,.55);color:var(--paper)}
+.tscreen .cbtn.danger{border-color:rgba(255,143,122,.75);color:#ffb3a3}
+.tscreen .cbtn:disabled{opacity:.45}
+.tscreen .offer{background:radial-gradient(120% 90% at 30% 0%,#fbf3dc,var(--paper) 60%,#e8d9b3);color:var(--ink);box-shadow:0 10px 26px rgba(0,0,0,.35);border-radius:18px;padding:12px;margin:0}
+.tscreen .offer .seats .cbtn{border-color:var(--ink);color:var(--ink)}.tscreen .offer .seats .cbtn.on{background:var(--ink);color:var(--paper)}
+.cta{position:sticky;bottom:calc(-1 * (env(safe-area-inset-bottom,0px) + 18px));margin:4px -16px 0;padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 18px);background:linear-gradient(rgba(11,59,83,0),rgba(8,43,61,.92) 30%);display:flex;flex-direction:column;gap:10px}
+.gap{margin-top:22px}
 .offer{border-radius:16px;background:rgba(120,90,40,.1);padding:10px;margin:8px 0 12px}
 .offer .top{display:flex;gap:10px;align-items:center;margin-bottom:8px}.offer canvas{width:84px;height:84px;border-radius:12px;flex:none;background:#145a77}
 .offer h3{margin:0 0 2px;font:400 21px var(--f-head,Georgia),serif}.offer p{margin:0;font-size:13.5px;line-height:1.35}.offer .riv img{width:28px;height:28px;margin-right:2px;vertical-align:middle}
@@ -213,7 +247,7 @@ button.ord{border:2px solid var(--ink);background:transparent;min-height:56px}bu
 <div id="sign" hidden role="status"><b id="signH"></b><span id="signP"></span><small>Tap anywhere to close</small></div>
 <div id="banner" aria-live="polite"></div>
 <section id="dock" aria-label="Orders">
- <div class="r1"><img id="dIcon" alt=""><span id="dTitle">Archipelago</span><span id="dInfo"></span><button class="lnk" id="bEnd" type="button" hidden></button></div>
+ <div class="r1"><button class="lnk ico" id="bBack" type="button" hidden aria-label="Cancel">✕</button><img id="dIcon" alt=""><span id="dTitle">Archipelago</span><span id="dInfo"></span><button class="lnk" id="bEnd" type="button" hidden></button></div>
  <div class="r2"><div id="dLine"></div>
  <div id="range" hidden><button class="sq" id="rm" type="button" aria-label="Fewer">&minus;</button><input id="rng" type="range" min="1" max="10" step="1" value="5" aria-label="Troops to send"><output id="rangeV">5</output><button class="sq" id="rp" type="button" aria-label="More">+</button></div>
  <button class="btn" id="b2" type="button" hidden></button><button class="btn pri" id="b1" type="button" hidden></button></div>
@@ -950,7 +984,9 @@ function drawFlag(i,t){const I=ISL[i],o=D.own[i];const fx=I.x+I.fort[0],fy=I.y+I
 function drawShip(sh,t){const sp=SPR.ship[sh.k];if(!sp)return;let u,x,y;const e=sh.e;
  if(sh.mode==='go'){u=clamp((t-sh.t0)/sh.dur,0,1);[x,y]=P2(e[0],e[1],e[2],e[3],e[4],e[5],ease.inOut(u));}else if(sh.mode==='back'){u=clamp((t-sh.t0)/sh.dur,0,1);[x,y]=P2(e[4],e[5],e[2],e[3],e[0],e[1],ease.inOut(u));}else{x=e[4];y=e[5];}
  sh.x=x;sh.y=y;const moving=sh.mode==='go'||sh.mode==='back';if(moving&&Math.random()<.5)emit({k:'wake',x:x+(Math.random()-.5)*4,y:y+2,life:.9,size:2+Math.random()*2});
- const dir=(sh.mode==='back'?e[0]-e[4]:e[4]-e[0])>=0?1:-1,bob=meta.set.rm?0:Math.sin(t*3+sh.ph)*1.5,tilt=meta.set.rm?0:Math.sin(t*2.2+sh.ph)*.05;
+ /* sailing: the bow points the way it travels; on the last stretch in, and while it waits, it turns to face the island it's attacking */
+ const travel=(sh.mode==='back'?e[0]-e[4]:e[4]-e[0])>=0?1:-1,face=sh.tx!=null?(sh.tx-x>=0?1:-1):travel;
+ const turn=sh.mode==='go'?clamp((u-.75)/.2,0,1):sh.mode==='back'?0:1,dir=travel+(face-travel)*(turn*turn*(3-2*turn))||.05,bob=meta.set.rm?0:Math.sin(t*3+sh.ph)*1.5,tilt=meta.set.rm?0:Math.sin(t*2.2+sh.ph)*.05;
  let al=1;if(sh.mode==='fade'){al=1-clamp((t-sh.t0)/.4,0,1);}cx.save();cx.globalAlpha=al;cx.translate(x,y+bob);cx.rotate(tilt);cx.scale(dir,1);
  cx.fillStyle='rgba(2,22,34,.3)';cx.beginPath();cx.ellipse(0,FH*.12,sp.w*.36,FH*.16,0,0,7);cx.fill();
  cx.drawImage(sp.back,-sp.ox,-sp.oy,sp.w,sp.h);
@@ -1006,14 +1042,14 @@ function berth(from,to,ux,uy){const A=ISL[from],B=ISL[to],u=FH*.82,rx=B.R*1.02+F
  const fr=boxOf([from,to]),bx0=Math.max(4,fr.x0-FH),bx1=Math.min(W-4,fr.x1+FH),by0=Math.max(MAP.y0,fr.y0-FH),by1=Math.min(dockTop-4,fr.y1+FH);
  let best=null;for(const f of [1,1.3,1.6])for(let k=0;k<=18;k++){const d=(k&1?1:-1)*Math.ceil(k/2)*.13,a=a0+d,x=B.x+Math.cos(a)*rx*f,y=B.y+Math.sin(a)*ry*f+B.depth*.6,
   r={x0:x-u*1.5,x1:x+u*1.5,y0:y-u*2.15-2,y1:y+u*.35+2};
-  let cover=0,soft=0;for(const b of badges)cover+=area(r,b);for(const b of names)soft+=area(r,b);for(const b of land)soft+=area(r,b)*.5;
+  let cover=0,soft=0;for(const b of badges)cover+=area(r,b);for(const b of names)soft+=area(r,b)*40;for(const b of land)soft+=area(r,b)*.5;
   const out=Math.max(0,bx0-r.x0)+Math.max(0,r.x1-bx1)+Math.max(0,by0-r.y0)+Math.max(0,r.y1-by1),
    off=Math.max(0,2-r.x0)+Math.max(0,r.x1-(W-2))+Math.max(0,MAP.y0-r.y0)+Math.max(0,r.y1-dockTop);   /* off the screen: never */
   const sc=off*5e4+cover*400+soft+out*60+Math.abs(d)*90+(f-1)*rx*12;if(!best||sc<best.sc)best={sc,x,y};}
  return [best.x,best.y];}
 function launchShip(f,from,to,carry){if(quick())return null;const A=ISL[from],B=ISL[to],dx=B.x-A.x,dy=B.y-A.y,d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d;
  const sx=A.x+ux*(A.R*.92+FH*.5),sy=A.y+uy*(A.R*.78+FH*.4)+A.depth,[ex,ey]=berth(from,to,ux,uy);
- const sh={k:st.fl[f],e:[sx,sy,(sx+ex)/2-uy*d*.12,(sy+ey)/2+ux*d*.12,ex,ey],mode:'go',t0:tnow(),dur:Math.max(.05,dur(520)/1000),carry,ph:Math.random()*6,x:sx,y:sy};ships.push(sh);return sh;}
+ const sh={k:st.fl[f],tx:B.x,e:[sx,sy,(sx+ex)/2-uy*d*.12,(sy+ey)/2+ux*d*.12,ex,ey],mode:'go',t0:tnow(),dur:Math.max(.05,dur(520)/1000),carry,ph:Math.random()*6,x:sx,y:sy};ships.push(sh);return sh;}
 /* ---------- the camera: like the lighthouse, it closes in on what you are doing and pulls back for the whole chart ----------
    It frames a set of islands in the open sea between the fleet bar and the orders bar, easing in view-size space so the zoom
    feels even. A pinch or a drag takes over until your next choice; a double tap on open sea swaps whole chart and close view. */
@@ -1215,25 +1251,27 @@ function strip(){if(!st||!D){$('fleets').innerHTML='';$('turnL').textContent='';
  $('turnL').textContent='Turn '+st.turn;const n=myChests(),ch=$('chest');$('chestN').textContent=`${n}/3`;ch.classList.toggle('ready',n>=3);ch.setAttribute('aria-label',`Spoils chests: ${n} of 3`);}
 const nextCash=()=>RULES.spoils[Math.min(cashIdx(st,0),RULES.spoils.length-1)];
 function myChests(){return Math.min(5,st.spoils[0]+(st.cur===0&&st.conq&&st.phase!=='rival'&&st.phase!=='rivals-done'?1:0));}
-const btnFns={b1:null,b2:null,bEnd:null};
+const btnFns={b1:null,b2:null,bEnd:null,bBack:null};
 function setBtn(id,label,fn,o){const b=$(id);if(!label){b.hidden=true;btnFns[id]=null;b.classList.remove('glow');b.dataset.l='';return;}if(b.hidden||b.dataset.l!==label)b.dataset.at=performance.now();b.dataset.l=label;b.hidden=false;b.textContent=label;b.classList.toggle('ico',label==='✕');if(label==='✕')b.setAttribute('aria-label','Cancel');else b.removeAttribute('aria-label');b.disabled=!!(o&&o.dis)||(ui.busy&&!(o&&o.always));btnFns[id]=fn;}
 function showRange(o){const R=$('range');if(!o){R.hidden=true;return;}R.hidden=false;const r=$('rng');r.min=o.min;r.max=o.max;r.value=o.n;$('rangeV').textContent=o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;$('b1').textContent=(st&&st.phase==='occupy'?'Sail ':'Move ')+o.n;}
-function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo').innerHTML=h||'';},line=h=>{$('dLine').innerHTML=h||'';},end=(l,fn,o)=>setBtn('bEnd',l,fn,o);
- dk.classList.remove('sl','two','solo','rv');['b1','bEnd'].forEach(id=>$(id).classList.remove('glow','sec','warn'));line('');end();showRange(null);
+/* layout rule: the main action is always bottom-right; cancel/back is the ✕ at the top-left, never beside it; a phase-ending
+   button never shares a row with a different main action */
+function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo').innerHTML=h||'';},line=h=>{$('dLine').innerHTML=h||'';},end=(l,fn,o)=>setBtn('bEnd',l,fn,o),back=fn=>setBtn('bBack',fn?'✕':null,fn);
+ dk.classList.remove('sl','two','solo','rv');['b1','bEnd'].forEach(id=>$(id).classList.remove('glow','sec','warn'));line('');end();back();showRange(null);
  if(!st){$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');return;}
  if(ui.rival>=0){const k=st.fl[ui.rival];dk.classList.add('rv');$('dIcon').src=iconURL(k);$('dTitle').textContent=FLEETS[k].name;info('Turn '+st.turn);line(FLEETS[k].mood||'Their move');setBtn('b2');setBtn('b1');hint('');return;}
  if(P==='claim'){$('dTitle').textContent='Advance party';info(`<b>${st.claims}</b> to claim`);line('Tap a gull island next to one of yours to claim it');setBtn('b2');setBtn('b1');}
- else if(ui.fortify){$('dTitle').textContent='Fortify';info(`<b>${st.forts}</b> stone fort${st.forts>1?'s':''} left this leg`);line('Tap one of your islands for a stone fort');setBtn('b2');setBtn('b1','Cancel',()=>{ui.fortify=false;dockUI();});$('b1').classList.add('sec');}
+ else if(ui.fortify){$('dTitle').textContent='Fortify';info(`<b>${st.forts}</b> stone fort${st.forts>1?'s':''} left this leg`);line('Tap one of your islands to build a stone fort there');setBtn('b2');setBtn('b1');back(()=>{ui.fortify=false;dockUI();});}
  else if(P==='reinforce'){$('dTitle').textContent='Reinforce';info(`<b>${st.pool}</b> to place`);line(`Tap your islands to place them<br><span class="dim">${musterText(st.lastMuster).replace(' landed at ',' at ')}</span>`);setBtn('b2',st.placed.length?'Undo':null,undo);setBtn('b1');if(st.forts>0)end(`Fortify · ${st.forts}`,()=>{ui.fortify=true;sfx('tap');dockUI();});}
  else if(P==='attack'&&ui.blitzing){$('dTitle').textContent='Blitz';info(`<b>${D?D.tr[ui.sel]:st.tr[ui.sel]}</b> against <b>${D?D.tr[ui.tgt]:st.tr[ui.tgt]}</b> on ${nm(ui.tgt)}`);setBtn('b2');setBtn('b1',ui.blitzStop?'Stopping…':'Stop',()=>{ui.blitzStop=true;dockUI();},{always:true,dis:ui.blitzStop});$('b1').classList.add('sec');}
  else if(P==='attack'){$('dTitle').textContent='Attack';const canUndo=st.placed.length&&!st.attacked;
-  if(ui.tgt>=0&&ui.sel>=0){end('End attacks',endAttacks);const p=odds(st,ui.sel,ui.tgt),fo=defFort(st,ui.sel,ui.tgt);info(`<b>${p>.995?'99%+':Math.round(p*100)+'%'}</b> · ${nm(ui.tgt)}${fo>1?' · stone fort':fo?' · fort +1':fortAt(st,ui.tgt)?' · fort ignored':''}`);setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
-  else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Chest earned this turn':'Take an island for a chest');line(phaseHint());setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);
+  if(ui.tgt>=0&&ui.sel>=0){back(()=>{ui.tgt=-1;dockUI();});const p=odds(st,ui.sel,ui.tgt),fo=defFort(st,ui.sel,ui.tgt);info(`<b>${p>.995?'99%+':Math.round(p*100)+'%'}</b> · ${nm(ui.tgt)}${fo>1?' · stone fort':fo?' · fort +1':fortAt(st,ui.tgt)?' · fort ignored':''}`);setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
+  else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Chest earned this turn':'Take an island for a chest');line(phaseHint());if(ui.sel>=0)back(cancelSel);setBtn('b2',canUndo?'Undo':null,undo);
    setBtn('b1',ui.skipAsk?'Skip attacks':'End attacks',endAttacks);$('b1').classList.add(ui.skipAsk?'warn':'sec');}}
  else if(P==='occupy'){$('dTitle').textContent='Sail in';info(`${nm(st.occ.to)} is yours`);dk.classList.add('sl');setBtn('b2');setBtn('b1','Sail '+st.occ.n,sailNow);showRange(st.occ);}
  else if(P==='move'){$('dTitle').textContent='Move';
-  if(ui.mv&&ui.mv.to>=0){info(`${nm(ui.mv.from)} to ${nm(ui.mv.to)}`);end('Cancel',()=>{ui.mv=null;dockUI();});dk.classList.add('sl');setBtn('b2');setBtn('b1','Move '+ui.mv.n,doMove);showRange(ui.mv);}
-  else{info(ui.mv?`<b>${st.tr[ui.mv.from]-1}</b> can move`:'One move, then rivals sail');line(phaseHint());setBtn('b2',ui.mv?'Cancel':null,()=>{ui.mv=null;dockUI();coach();});setBtn('b1','End turn',endMyTurn);}}
+  if(ui.mv&&ui.mv.to>=0){info(`${nm(ui.mv.from)} to ${nm(ui.mv.to)}`);back(()=>{ui.mv.to=-1;dockUI();});dk.classList.add('sl');setBtn('b2');setBtn('b1','Move '+ui.mv.n,doMove);showRange(ui.mv);}
+  else{info(ui.mv?`<b>${st.tr[ui.mv.from]-1}</b> can move`:'One move, then rivals sail');line(phaseHint());if(ui.mv)back(()=>{ui.mv=null;dockUI();coach();});setBtn('b2');setBtn('b1','End turn',endMyTurn);if(ui.mv)$('b1').classList.add('sec');}}
  else{$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');}
  const n=(!$('b1').hidden)+(!$('b2').hidden);dk.classList.toggle('two',n===2);dk.classList.toggle('solo',n===1&&!$('dLine').innerHTML&&$('range').hidden);coach();signCheck();}
 /* the hint floats over the sea: a new line shows for a few seconds and fades; first-chart coaching stays until done */
@@ -1289,17 +1327,46 @@ function seaOffers(){const S=seaState();if(S.offer)return S.offer;const pool=sea
 function seaDraft(){const S=seaState(),ids=Object.keys(ORDERS),fresh=ids.filter(i=>!S.ord[i]),up=ids.filter(i=>S.ord[i]&&S.ord[i]<ordMax(i)),pick=a=>a.splice(Math.floor(Math.random()*a.length),1)[0];
  const f=fresh.slice(),u=up.slice(),out=[];if(f.length)out.push(pick(f));if(u.length)out.push(pick(u));const rest=f.concat(u);while(out.length<3&&rest.length)out.push(pick(rest));
  return out.sort(()=>Math.random()-.5);}
-const ordHTML=(o,id)=>`<div class="ord"><b>${ORDERS[id].n} ${ROMAN[o[id]]}</b><small>${ORDERS[id].t(ORDERS[id].v[o[id]-1])}</small></div>`;
-function ordList(o){const ids=Object.keys(o||{}).filter(id=>ORDERS[id]&&o[id]>0);return ids.length?`<div class="ords">${ids.map(id=>ordHTML(o,id)).join('')}</div>`:'<p class="sub" style="font-size:13.5px">No standing orders yet. Win a leg to choose your first.</p>';}
+/* each order flies a signal flag from the international code (30 x 20) */
+const SIG={R:'#c8372d',B:'#1f4e8c',Y:'#f2c230',W:'#f7f2e6'};
+const FLAG_OF={reserves:'R',veterans:'V',quarter:'Q',harbmaster:'H',prize:'P',press:'K',gunnery:'G',boarding:'B',advance:'A',owncharts:'C',divide:'D',fortify:'F'};
+function flagSVG(id,w){const c=FLAG_OF[id],{R,B,Y,W}=SIG,h=Math.round(w*2/3),sw='M0 0H30L24 10L30 20H0Z';let body='',clip='M0 0H30V20H0Z';
+ if(c==='A'){clip=sw;body=`<rect width="15" height="20" fill="${W}"/><rect x="15" width="15" height="20" fill="${B}"/>`;}
+ else if(c==='B'){clip=sw;body=`<rect width="30" height="20" fill="${R}"/>`;}
+ else if(c==='C')body=[B,W,R,W,B].map((f,k)=>`<rect y="${k*4}" width="30" height="4" fill="${f}"/>`).join('');
+ else if(c==='D')body=`<rect width="30" height="20" fill="${Y}"/><rect y="5" width="30" height="10" fill="${B}"/>`;
+ else if(c==='F')body=`<rect width="30" height="20" fill="${W}"/><path d="M15 1.5L27.5 10L15 18.5L2.5 10Z" fill="${R}"/>`;
+ else if(c==='G')body=[0,1,2,3,4,5].map(k=>`<rect x="${k*5}" width="5" height="20" fill="${k%2?B:Y}"/>`).join('');
+ else if(c==='H')body=`<rect width="15" height="20" fill="${W}"/><rect x="15" width="15" height="20" fill="${R}"/>`;
+ else if(c==='K')body=`<rect width="15" height="20" fill="${Y}"/><rect x="15" width="15" height="20" fill="${B}"/>`;
+ else if(c==='P')body=`<rect width="30" height="20" fill="${B}"/><rect x="10" y="6.5" width="10" height="7" fill="${W}"/>`;
+ else if(c==='Q')body=`<rect width="30" height="20" fill="${Y}"/>`;
+ else if(c==='R')body=`<rect width="30" height="20" fill="${R}"/><rect x="13" width="4" height="20" fill="${Y}"/><rect y="8" width="30" height="4" fill="${Y}"/>`;
+ else if(c==='V')body=`<rect width="30" height="20" fill="${W}"/><path d="M0 0L30 20M30 0L0 20" stroke="${R}" stroke-width="4.2"/>`;
+ return `<svg class="fl" viewBox="-1.5 -1 33 22" width="${w}" height="${h}" aria-hidden="true"><defs><clipPath id="cf-${id}-${w}"><path d="${clip}"/></clipPath></defs><g clip-path="url(#cf-${id}-${w})">${body}</g><path d="${clip}" fill="none" stroke="rgba(20,24,28,.55)" stroke-width="1"/><path d="M-0.5 -1V21" stroke="#3a2b1f" stroke-width="1.6" stroke-linecap="round"/></svg>`;}
+/* the key number of an order at a level, for a level-up's "before → after" */
+const OKEY={reserves:v=>`+${v}`,veterans:v=>`+${v}`,quarter:v=>`+${v}`,harbmaster:v=>`+${v}`,prize:v=>`+${RULES.spoils[Math.min(v,RULES.spoils.length-1)]}`,press:v=>`+${v}`,boarding:v=>`${v} throw${v>1?'s':''}`,advance:v=>`${v} island${v>1?'s':''}`,divide:v=>`${Math.round(v*100)} points`,fortify:v=>`${v} forts`};
+const keyAt=(id,l)=>OKEY[id]?OKEY[id](ORDERS[id].v[l-1]):'';
+function pipsHTML(id,have,mode){let h='';for(let k=1;k<=ordMax(id);k++){const c=k<=have?(mode==='lose'&&k===have?'l':'h'):(mode==='gain'&&k===have+1?'a':'');h+=`<i class="${c}"></i>`;}return `<span class="pips" aria-label="Level ${have} of ${ordMax(id)}">${h}</span>`;}
+/* a card in the draft (gain) or the strike (lose) */
+function orderCardHTML(id,have,mode,sel){const O=ORDERS[id],l=mode==='gain'?have+1:have,v=O.v[(mode==='gain'?l:Math.max(1,have-(mode==='lose'?1:0)))-1];
+ let meta='',cls='';
+ if(mode==='gain'){meta=have?`<em class="up">Level ${ROMAN[l]}: ${keyAt(id,have)} → ${keyAt(id,l)}</em>`:'<em>New order</em>';}
+ else{meta=have>1?`<em class="down">Down to level ${ROMAN[have-1]}${OKEY[id]?`: ${keyAt(id,have)} → ${keyAt(id,have-1)}`:''}</em>`:'<em class="down">Struck off</em>';cls=' strike';}
+ const txt=mode==='gain'?O.t(O.v[l-1]):O.t(O.v[have-1]);
+ return `<button class="oc${cls}${sel===id?' on':''}" data-id="${id}" aria-pressed="${sel===id}">${flagSVG(id,52)}<span><b>${O.n} ${ROMAN[l]}</b><span class="t">${txt}</span><span class="f">${pipsHTML(id,have,mode==='gain'?'gain':'lose')}${meta}</span></span></button>`;}
+/* the orders sheet: what you hold, one dotted line apart like the lanes on the chart */
+function ordList(o,empty){const ids=Object.keys(o||{}).filter(id=>ORDERS[id]&&o[id]>0);
+ return `<div class="sheet">${ids.length?ids.map(id=>`<div class="row">${flagSVG(id,30)}<b>${ORDERS[id].n} ${ROMAN[o[id]]}</b>${pipsHTML(id,o[id])}<small>${ORDERS[id].t(ORDERS[id].v[o[id]-1])}</small></div>`).join(''):`<div class="none">${empty||'No standing orders yet. Win a leg to choose your first.'}</div>`}</div>`;}
 function seaCard(){const S=seaState(),run=loadRun(),seaRun=run&&run.st.sea,clash=run&&!run.st.sea;
  const mul=Math.round((SEA.mul(S.leg)-1)*100),g=SEA.gar(S.leg);
- const head=`<div class="kick">The open sea${S.runs>1?` · voyage ${S.runs}`:''}</div><h2>Open sea ${S.leg}</h2>
-  <p class="sub" style="font-size:13.5px">Furthest: ${S.best?'Open sea '+S.best:'none yet'} · ${S.won} leg${S.won===1?'':'s'} won · ${S.lost} lost.${mul||g?` This leg the rivals muster ${mul}% more${g?` and gull garrisons are ${g} heavier`:''}.`:''}</p>
-  <div class="kick">Standing orders</div>${ordList(S.ord)}`;
- const foot=`<button class="cbtn" id="bk">Back</button><button class="cbtn danger" id="nv">New voyage</button>`;
+ const head=`<h2>Open sea ${S.leg}</h2>
+  <p class="lede">${S.best?`Your furthest is Open sea ${S.best}`:'Your first voyage'}${S.runs>1?` (voyage ${S.runs})`:''}: ${S.won} leg${S.won===1?'':'s'} won, ${S.lost} lost.${mul||g?` On this leg the rivals muster ${mul}% more${g?` and gull garrisons are ${g} heavier`:''}.`:''}</p>
+  <div class="kick">Your orders</div>${ordList(S.ord)}`;
+ const foot=`<button class="cbtn" id="bk">Back</button><button class="cbtn danger gap" id="nv">New voyage</button>`;
  const bindFoot=()=>{$('bk').addEventListener('click',home);$('nv').addEventListener('click',e=>{const b=e.currentTarget;if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again: back to Open sea 1, no orders';return;}
   const best=S.best,runs=S.runs;meta.sea=freshSea();meta.sea.best=best;meta.sea.runs=runs+1;if(seaRun)clearRun();saveMeta();sfx('tap');seaCard();});};
- if(seaRun){showModal(head+`<button class="cbtn pri" id="cont">Continue · ${CHARTS[run.st.c].name}, turn ${run.st.turn}</button>`+foot,'',()=>{$('cont').addEventListener('click',()=>{goFS();auStart();resume(run);});bindFoot();});return;}
+ if(seaRun){showModal(head+`<div class="cta"><button class="cbtn pri" id="cont">Continue: ${CHARTS[run.st.c].name}, turn ${run.st.turn}</button></div>`+foot,'title',()=>{$('cont').addEventListener('click',()=>{goFS();auStart();resume(run);});bindFoot();});return;}
  if(S.strike){strikeCard();return;}
  if(S.draft){draftCard();return;}
  const offers=seaOffers(),canSeat=ordLv({ord:S.ord},'owncharts')>0;
@@ -1308,23 +1375,28 @@ function seaCard(){const S=seaState(),run=loadRun(),seaRun=run&&run.st.sea,clash
   return `<div class="offer"><div class="top"><canvas data-off="${k}"></canvas><div><h3>${c.name}</h3><p>You start at <b>${c.isl[D_.seats[0].h].n}</b>.</p><p class="riv">${fl.slice(1).map(x=>`<img src="${iconURL(x)}" alt="${FLEETS[x].name}">`).join('')} ${fl.length-1} rival${fl.length>2?'s':''}</p></div></div>
    ${canSeat&&ok.length>1?`<div class="seats">${ok.map(h=>`<button class="cbtn${h===D_.seats[0].h?' on':''}" data-o="${k}" data-h="${h}">${c.isl[h].n}</button>`).join('')}</div>`:''}
    <button class="cbtn pri" data-go="${k}">Sail to ${c.name}</button></div>`;}).join('');
- showModal(head+`<div class="kick">Choose the next leg</div>${cards}${clash?`<p class="sub" style="font-size:13px">Setting sail ends your unfinished ${CHARTS[run.st.c].name} round.</p>`:''}`+foot,'',()=>{
+ showModal(head+`<div class="kick">${offers.length>1?'Choose the next leg':'Go again'}</div><div class="ocs">${cards}</div>${clash?`<p class="lede" style="font-size:13.5px">Setting sail ends your unfinished ${CHARTS[run.st.c].name} round.</p>`:''}`+foot,'title',()=>{
   $('card').querySelectorAll('[data-off]').forEach(cv=>{const o=offers[+cv.dataset.off],D_=dealSetup(o.ci,o.deal,'standard',o.seat);drawMini(cv,o.ci,D_.own,D_.fl);});
   $('card').querySelectorAll('[data-h]').forEach(b=>b.addEventListener('click',()=>{offers[+b.dataset.o].seat=+b.dataset.h;saveMeta();sfx('tap');seaCard();}));
   $('card').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{const o=offers[+b.dataset.go];goFS();auStart();startSeaLeg(o.ci,o.deal,o.seat,S.retry?'retry':'new');S.retry=false;saveMeta();}));
   bindFoot();});}
-function draftCard(){const S=seaState(),ids=S.draft;
- const cards=ids.map(id=>{const l=(S.ord[id]||0)+1,v=ORDERS[id].v[l-1],now=S.ord[id]?` <small>Now: ${ORDERS[id].t(ORDERS[id].v[S.ord[id]-1])}</small>`:'';
-  return `<button class="ord" data-id="${id}"><b>${ORDERS[id].n} ${ROMAN[l]}</b>${l>1?' · level up':' · new'}<small>${ORDERS[id].t(v)}</small>${now}</button>`;}).join('');
- showModal(`<div class="kick">Open sea ${S.leg-1} won</div><h2>Choose a standing order</h2><p class="sub" style="font-size:13.5px">It lasts the whole voyage. A lost leg costs one level of an order you choose.</p>
-  <div class="ords">${cards||'<p>Every order is at its top level. Sail on.</p>'}</div>${cards?'':'<button class="cbtn pri" id="on">Sail on</button>'}<div class="kick">Already held</div>${ordList(S.ord)}`,'',()=>{
-  $('card').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.id;S.ord[id]=Math.min(ordMax(id),(S.ord[id]||0)+1);S.draft=null;saveMeta();sfx('spoils');seaCard();}));
+/* draft and strike: a tap picks a card, a second button confirms, so a slip of the thumb never takes or strikes the wrong order */
+function draftCard(sel){const S=seaState(),ids=S.draft||[];
+ const cards=ids.map(id=>orderCardHTML(id,S.ord[id]||0,'gain',sel)).join('');
+ showModal(`<h2>Open sea ${S.leg-1} is won</h2><p class="lede">Choose a standing order. It lasts the whole voyage; a lost leg costs one level of an order you pick.</p>
+  <div class="ocs">${cards||'<div class="sheet"><div class="none">Every order is at its top level.</div></div>'}</div>
+  <div class="kick">Your orders</div>${ordList(S.ord,'None yet: this will be your first.')}
+  <div class="cta">${cards?`<button class="cbtn pri" id="take" ${sel?'':'disabled'}>${sel?`Take ${ORDERS[sel].n} ${ROMAN[(S.ord[sel]||0)+1]}`:'Tap an order to choose it'}</button>`:'<button class="cbtn pri" id="on">Sail on</button>'}</div>`,'title',()=>{
+  $('card').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{sfx('tap');const y=$('card').scrollTop;draftCard(b.dataset.id);$('card').scrollTop=y;}));
+  if($('take'))$('take').addEventListener('click',()=>{if(!sel)return;S.ord[sel]=Math.min(ordMax(sel),(S.ord[sel]||0)+1);S.draft=null;saveMeta();sfx('spoils');seaCard();});
   if($('on'))$('on').addEventListener('click',()=>{S.draft=null;saveMeta();seaCard();});});}
-function strikeCard(){const S=seaState(),ids=Object.keys(S.ord).filter(id=>S.ord[id]>0),c=S.last>=0?CHARTS[S.last]:null;
- showModal(`<div class="kick">Open sea ${S.leg} lost</div><h2>Strike one level</h2><p class="sub" style="font-size:13.5px">Driven from ${c?c.name:'the leg'}. Choose a standing order to lose one level; a level I order is struck off. Then you go again on a fresh deal.</p>
-  <div class="ords">${ids.map(id=>`<button class="ord" data-id="${id}"><b>${ORDERS[id].n} ${ROMAN[S.ord[id]]}</b>${S.ord[id]>1?` → ${ROMAN[S.ord[id]-1]}`:' · struck off'}<small>${ORDERS[id].t(ORDERS[id].v[S.ord[id]-1])}</small></button>`).join('')}</div>`,'',()=>{
-  $('card').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.id;S.ord[id]--;if(S.ord[id]<=0)delete S.ord[id];S.strike=false;S.retry=true;
-   if(S.last>=0)S.offer=[{ci:S.last,deal:newDeal()}];saveMeta();sfx('tap');seaCard();}));});}
+function strikeCard(sel){const S=seaState(),ids=Object.keys(S.ord).filter(id=>S.ord[id]>0),c=S.last>=0?CHARTS[S.last]:null;
+ showModal(`<h2>Driven from ${c?c.name:'the leg'}</h2><p class="lede">A lost leg costs one level of a standing order. Choose which; a level I order is struck off. Then you go again on a fresh deal.</p>
+  <div class="ocs">${ids.map(id=>orderCardHTML(id,S.ord[id],'lose',sel)).join('')}</div>
+  <div class="cta"><button class="cbtn pri" id="strike" ${sel?'':'disabled'}>${sel?(S.ord[sel]>1?`Lower ${ORDERS[sel].n} to ${ROMAN[S.ord[sel]-1]}`:`Strike off ${ORDERS[sel].n}`):'Tap an order to choose it'}</button></div>`,'title',()=>{
+  $('card').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{sfx('tap');const y=$('card').scrollTop;strikeCard(b.dataset.id);$('card').scrollTop=y;}));
+  $('strike').addEventListener('click',()=>{if(!sel)return;const id=sel;S.ord[id]--;if(S.ord[id]<=0)delete S.ord[id];S.strike=false;S.retry=true;
+   if(S.last>=0)S.offer=[{ci:S.last,deal:newDeal()}];saveMeta();sfx('tap');seaCard();});});}
 /* the end of a leg */
 function seaEnd(win){const S=seaState(),L=S.leg;
  if(win){S.won++;S.best=Math.max(S.best,L);S.leg=L+1;S.offer=null;S.retry=false;const d=seaDraft();S.draft=d.length?d:null;}
@@ -1514,7 +1586,7 @@ function intro(ci,deal){const c=CHARTS[ci],assist=Math.round(assistFor(ci)*100);
   <div class="kick">Rivals</div>${rivals}<p class="tip"><b>Tip:</b> ${c.tip}</p>
   <p style="font-size:13px;color:var(--ink-2)">Win by holding every island. Three stars for a win in ${c.par} turns or fewer.${won?'':' Win it once to open shuffled deals: the same chart with fresh harbours, rivals and garrisons.'}${assist?` <b>Calmer seas:</b> rivals muster ${assist}% less after your last tries.`:''}${clash?` Setting sail here ends your unfinished ${CHARTS[run.st.c].name} round.`:''}</p>`;
  showModal(`<div class="kick">Chart ${ci+1} of ${CHARTS.length} · ${c.real?'Real chart':'Invented chart'}</div><h2>${c.name}</h2>${pick}<canvas class="mini" id="imini"></canvas>${body}
-  ${same?`<button class="cbtn pri" id="cont">Continue · turn ${run.st.turn}</button><button class="cbtn danger" id="go">Start over${shuf?' with this deal':''}</button>`:'<button class="cbtn pri" id="go">Set sail</button>'}${shuf?'<button class="cbtn" id="rd">Deal again</button>':''}<button class="cbtn" id="bk">Back</button>`,'',()=>{
+  ${same?`<button class="cbtn pri" id="cont">Continue · turn ${run.st.turn}</button>`:'<button class="cbtn pri" id="go">Set sail</button>'}${shuf?'<button class="cbtn" id="rd">Deal again</button>':''}<button class="cbtn" id="bk">Back</button>${same?`<button class="cbtn danger gap" id="go">Start over${shuf?' with this deal':''}</button>`:''}`,'',()=>{
   drawMini($('imini'),ci,D_?D_.own:null,fl);
   if(won){$('sCh').addEventListener('click',()=>{if(!shuf)return;sfx('tap');meta.set.shuf=false;saveMeta();intro(ci);});$('sSh').addEventListener('click',()=>{if(shuf)return;sfx('tap');meta.set.shuf=true;saveMeta();intro(ci);});}
   if(shuf)$('rd').addEventListener('click',()=>{sfx('tap');intro(ci,newDeal());});
@@ -1555,7 +1627,7 @@ function standings(){if(!st||st.phase==='over'||!$('modal').hidden)return;const 
 function pause(){if(!st||st.phase==='over'){home();return;}uiN.pauses++;const c=chartOf(st);if(st.sea){seaPause();return;}
  showModal(`<h2>Paused</h2><p class="sub">${c.name} · turn ${st.turn} · you hold ${count(st,0)} of ${c.isl.length} islands · par ${c.par}</p>
   <button class="cbtn pri" id="rs">Resume</button>${fsOK?`<button class="sw" id="pF" role="switch" aria-checked="${meta.set.fs}"><span>Full screen<small>Hides the browser bars</small></span><i class="t"></i></button>`:''}<button class="cbtn" id="set">Settings</button><button class="cbtn" id="how">How to play</button><button class="cbtn" id="ch">All charts</button>
-  <button class="cbtn danger" id="rc">Restart this chart</button><div class="links">${homeLink}</div>`,'',()=>{
+  <button class="cbtn danger gap" id="rc">Restart this chart</button><div class="links">${homeLink}</div>`,'',()=>{
   $('rs').addEventListener('click',()=>{goFS();hideModal();});$('set').addEventListener('click',()=>settings(pause));
   if($('pF'))$('pF').addEventListener('click',e=>{const b=e.currentTarget;meta.set.fs=!meta.set.fs;b.setAttribute('aria-checked',meta.set.fs);saveMeta();if(meta.set.fs)goFS();else exitFS();});$('how').addEventListener('click',()=>how(pause));
   $('ch').addEventListener('click',()=>{saveRun();home();});
@@ -1564,7 +1636,7 @@ function seaPause(){const c=chartOf(st);
  showModal(`<h2>Paused</h2><p class="sub">Open sea ${st.sea.leg} · ${c.name} · turn ${st.turn} · you hold ${count(st,0)} of ${c.isl.length} islands</p>
   <button class="cbtn pri" id="rs">Resume</button>${fsOK?`<button class="sw" id="pF" role="switch" aria-checked="${meta.set.fs}"><span>Full screen<small>Hides the browser bars</small></span><i class="t"></i></button>`:''}
   <div class="kick">Standing orders</div>${ordList(st.ord)}<button class="cbtn" id="set">Settings</button><button class="cbtn" id="how">How to play</button><button class="cbtn" id="ch">Leave for now</button>
-  <button class="cbtn danger" id="ab">Abandon leg</button><div class="links">${homeLink}</div>`,'',()=>{
+  <button class="cbtn danger gap" id="ab">Abandon leg</button><div class="links">${homeLink}</div>`,'',()=>{
   $('rs').addEventListener('click',()=>{goFS();hideModal();});$('set').addEventListener('click',()=>settings(pause));$('how').addEventListener('click',()=>how(pause));
   if($('pF'))$('pF').addEventListener('click',e=>{const b=e.currentTarget;meta.set.fs=!meta.set.fs;b.setAttribute('aria-checked',meta.set.fs);saveMeta();if(meta.set.fs)goFS();else exitFS();});
   $('ch').addEventListener('click',()=>{saveRun();home();});
@@ -1615,6 +1687,7 @@ const fresh=b=>performance.now()-(+b.dataset.at||0)<700;
 $('b1').addEventListener('click',e=>{if(fresh(e.currentTarget))return;sfx('tap');btnFns.b1&&btnFns.b1();});
 $('b2').addEventListener('click',e=>{if(fresh(e.currentTarget))return;sfx('tap');btnFns.b2&&btnFns.b2();});
 $('bEnd').addEventListener('click',e=>{if(fresh(e.currentTarget))return;sfx('tap');btnFns.bEnd&&btnFns.bEnd();});
+$('bBack').addEventListener('click',e=>{if(fresh(e.currentTarget))return;sfx('tap');btnFns.bBack&&btnFns.bBack();});
 const occ=()=>st&&(st.phase==='occupy'?st.occ:st.phase==='move'&&ui.mv&&ui.mv.to>=0?ui.mv:null);
 $('rng').addEventListener('input',()=>{const o=occ();if(!o)return;o.n=+$('rng').value;$('rangeV').textContent=o.n;$('b1').textContent=(st.phase==='occupy'?'Sail ':'Move ')+o.n;$('rm').disabled=o.n<=o.min;$('rp').disabled=o.n>=o.max;if(ui.occShip)ui.occShip.carry=Math.min(3,o.n);});
 $('rm').addEventListener('click',()=>{const o=occ();if(o&&o.n>o.min){o.n--;showRange(o);sfx('tap');}});
@@ -1642,6 +1715,5 @@ if(TEST)window.__dg={
  sea:(leg,ord,ci)=>{meta.best=Object.fromEntries(CHARTS.map(c=>[c.id,meta.best[c.id]||1]));const S=seaState();S.leg=leg||1;S.ord=ord||{};S.offer=null;S.draft=null;S.strike=false;saveMeta();startSeaLeg(ci==null?1:ci,12345);},seaCard:()=>seaCard(),claimTap:i=>tap(i),fortTap:i=>{ui.fortify=true;tap(i);},seaState:()=>JSON.parse(JSON.stringify(meta.sea||null)),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
