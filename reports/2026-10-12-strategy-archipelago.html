@@ -185,7 +185,9 @@ button.ord.on{background:var(--ink);color:var(--paper)}button.ord.on small{color
 .gap{margin-top:22px}
 .offer{border-radius:16px;background:rgba(120,90,40,.1);padding:10px;margin:8px 0 12px}
 .offer .top{display:flex;gap:10px;align-items:center;margin-bottom:8px}.offer canvas{width:84px;height:84px;border-radius:12px;flex:none;background:#2a86b0}
-.offer h3{margin:0 0 2px;font:400 21px var(--f-head,Georgia),serif}.offer p{margin:0;font-size:13.5px;line-height:1.35}.offer .riv img{width:28px;height:28px;margin-right:2px;vertical-align:middle}
+.offer h3{margin:0 0 2px;font:400 21px var(--f-head,Georgia),serif}.offer p{margin:0;font-size:13.5px;line-height:1.35}.offer .unch{font:900 11px var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:#b4532a;margin-bottom:1px}
+.offer .flav{font-size:12.5px;opacity:.78;margin:1px 0 3px}
+.offer .riv img{width:28px;height:28px;margin-right:2px;vertical-align:middle}
 .seats{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}.seats .cbtn{width:auto;flex:1 1 30%;min-height:44px;font-size:14px;padding:0 8px}.seats .cbtn.on{background:var(--ink);color:var(--paper)}
 .links{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .link{color:var(--ink);font-weight:900;text-decoration:none;padding:0 2px;min-height:44px;display:inline-flex;align-items:center;background:none;border:0;font-size:15px}
@@ -338,8 +340,16 @@ const CHARTS=[
    {n:'Benbecula',x:54,y:90,r:4.5,ch:2},{n:'South Uist',x:32,y:108,r:6,ch:2},{n:'Eriskay',x:58,y:122,r:3.5,ch:3},{n:'Barra',x:36,y:138,r:5.5,ch:3},
    {n:'Vatersay',x:16,y:148,r:4,ch:3},{n:'Mingulay',x:22,y:164,r:4,ch:3}],
   lanes:[[0,1],[0,2],[0,3],[1,4],[2,3],[2,4],[2,5],[4,7],[5,6],[6,7],[6,8],[8,9],[9,10],[9,11],[10,11],[11,12],[12,13]],
-  start:{puffin:{h:11,f:[12]},skua:{h:6,f:[8]},cormorant:{h:2,f:[4]},gannet:{h:0,f:[1]}}}
+  start:{puffin:{h:11,f:[12]},skua:{h:6,f:[8]},cormorant:{h:2,f:[4]},gannet:{h:0,f:[1]}}},
+/* the open sea's own charts (sea:true): never in the campaign, offered only on Open sea legs, marked Uncharted until first sailed */
+ {id:"faroes",name:"Faroe Islands",real:true,sea:true,par:10,ai:1,thrAdd:0,p0:1,deal:[1,6],flav:"Eighteen steep islands halfway between Shetland and Iceland, cut by sounds so narrow the tide races through them.",tip:"Streymoy Sound pays +5 but sits in the middle of everyone. The Southern Isles are slower and safer.",fleets:["puffin","cormorant","gannet","skua"],chains:[{"n":"Norðoyar","b":4},{"n":"Vágar","b":3},{"n":"Streymoy Sound","b":5},{"n":"Southern Isles","b":3}],isl:[{"n":"Viðoy","x":90,"y":12,"r":4,"ch":0},{"n":"Borðoy","x":74,"y":28,"r":4.5,"ch":0},{"n":"Kunoy","x":57,"y":16,"r":3.5,"ch":0},{"n":"Kalsoy","x":40,"y":8,"r":3.5,"ch":0},{"n":"Eysturoy","x":62,"y":52,"r":8,"ch":2},{"n":"Streymoy","x":30,"y":56,"r":8,"ch":2},{"n":"Vágar","x":10,"y":32,"r":6.5,"ch":1},{"n":"Mykines","x":16,"y":9,"r":3.5,"ch":1,"cl":3},{"n":"Nólsoy","x":60,"y":82,"r":3.5,"ch":2},{"n":"Hestur","x":16,"y":80,"r":3.5,"ch":2},{"n":"Sandoy","x":40,"y":98,"r":7,"ch":3},{"n":"Skúvoy","x":60,"y":120,"r":4,"ch":3},{"n":"Suðuroy","x":42,"y":146,"r":8,"ch":3}],lanes:[[0,1],[1,2],[2,3],[1,4],[3,4],[4,5],[4,8],[5,8],[5,6],[6,7],[5,9],[6,9],[9,10],[5,10],[8,10],[10,11],[11,12],[10,12]],start:{"puffin":{"h":12,"f":[11]},"cormorant":{"h":1,"f":[0]},"gannet":{"h":5,"f":[8]},"skua":{"h":6,"f":[7]}}},
+ {id:"shetland",name:"Shetland",real:true,sea:true,par:10,ai:1,thrAdd:0,p0:1,deal:[11],flav:"A hundred islands closer to Bergen than to Edinburgh, strung along one long, ragged Mainland.",tip:"Mainland pays +5 but takes three islands to hold. Bressay and Whalsay guard its eastern side.",fleets:["puffin","cormorant","gannet"],chains:[{"n":"North Isles","b":4},{"n":"East Isles","b":3},{"n":"Mainland","b":5},{"n":"West Side","b":3},{"n":"Fair Isle","b":2}],isl:[{"n":"Unst","x":70,"y":8,"r":6,"ch":0},{"n":"Fetlar","x":88,"y":30,"r":4.5,"ch":0},{"n":"Yell","x":56,"y":32,"r":7,"ch":0},{"n":"Out Skerries","x":84,"y":54,"r":3.5,"ch":1,"cl":3},{"n":"Whalsay","x":72,"y":74,"r":4.5,"ch":1},{"n":"Northmavine","x":30,"y":52,"r":7,"ch":2},{"n":"Papa Stour","x":8,"y":70,"r":3.5,"ch":3},{"n":"Mainland","x":44,"y":90,"r":10,"ch":2},{"n":"Bressay","x":76,"y":100,"r":4.5,"ch":1},{"n":"Foula","x":8,"y":108,"r":4,"ch":3},{"n":"Burra","x":24,"y":124,"r":4,"ch":3},{"n":"Dunrossness","x":50,"y":132,"r":6,"ch":2},{"n":"Fair Isle","x":58,"y":158,"r":4,"ch":4}],lanes:[[0,1],[0,2],[1,2],[2,5],[2,4],[1,3],[3,4],[4,7],[4,8],[7,8],[5,6],[5,7],[6,9],[9,10],[10,7],[10,11],[7,11],[8,11],[11,12]],start:{"puffin":{"h":11,"f":[12]},"cormorant":{"h":0,"f":[1]},"gannet":{"h":7,"f":[8]}},sea4:{"h":5,"f":[6]}},
+ {id:"lofoten",name:"Lofoten",real:true,sea:true,par:10,ai:1,thrAdd:0,p0:1,deal:[2,6],flav:"A wall of granite peaks running out into the Norwegian Sea, with the Vesterålen islands beyond it to the north.",tip:"The chain is one long front: every island you take has rivals on only one or two sides.",fleets:["puffin","gannet","skua"],chains:[{"n":"Southern Isles","b":3},{"n":"Lofoten Wall","b":4},{"n":"Austvågøy","b":3},{"n":"Vesterålen","b":4}],isl:[{"n":"Røst","x":12,"y":152,"r":4,"ch":0,"cl":3},{"n":"Værøy","x":22,"y":128,"r":4.5,"ch":0},{"n":"Moskenesøya","x":32,"y":104,"r":6,"ch":0},{"n":"Flakstadøya","x":42,"y":82,"r":5,"ch":1},{"n":"Vestvågøy","x":52,"y":56,"r":7,"ch":1},{"n":"Gimsøya","x":66,"y":36,"r":3.5,"ch":1},{"n":"Austvågøy","x":82,"y":54,"r":7.5,"ch":2},{"n":"Skrova","x":86,"y":96,"r":3.5,"ch":2,"cl":3},{"n":"Hadseløya","x":58,"y":14,"r":5,"ch":3},{"n":"Hinnøya","x":86,"y":18,"r":7,"ch":3},{"n":"Langøya","x":30,"y":22,"r":6,"ch":3}],lanes:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[4,6],[6,7],[3,7],[5,8],[6,9],[8,9],[8,10],[4,10]],start:{"puffin":{"h":2,"f":[1]},"gannet":{"h":6,"f":[7]},"skua":{"h":9,"f":[8]}},sea4:{"h":10,"f":[5]}},
+ {id:"cyclades",name:"The Cyclades",real:true,sea:true,par:10,ai:1,thrAdd:0,p0:1,deal:[12],flav:"The Aegean islands that circle sacred Delos: whitewashed harbours, summer meltemi winds and four fleets far from home.",tip:"Paros and Naxos touch almost everything. Hold them and every other chain has to come through you.",fleets:["puffin","cormorant","gannet","skua"],chains:[{"n":"Northern Isles","b":4},{"n":"Western Isles","b":4},{"n":"Paros and Naxos","b":3},{"n":"Southern Isles","b":4}],isl:[{"n":"Andros","x":26,"y":10,"r":8,"ch":0},{"n":"Tinos","x":50,"y":28,"r":5.5,"ch":0},{"n":"Mykonos","x":76,"y":30,"r":5,"ch":0},{"n":"Delos","x":64,"y":52,"r":3.5,"ch":0,"cl":3},{"n":"Syros","x":20,"y":46,"r":5,"ch":1},{"n":"Serifos","x":8,"y":76,"r":4.5,"ch":1},{"n":"Paros","x":40,"y":76,"r":7,"ch":2},{"n":"Naxos","x":72,"y":82,"r":9,"ch":2},{"n":"Sifnos","x":16,"y":104,"r":4.5,"ch":1},{"n":"Amorgos","x":90,"y":112,"r":5,"ch":3},{"n":"Ios","x":52,"y":114,"r":5,"ch":3},{"n":"Milos","x":18,"y":138,"r":6,"ch":1},{"n":"Santorini","x":64,"y":148,"r":6,"ch":3}],lanes:[[0,1],[0,4],[1,2],[1,3],[2,3],[1,4],[4,5],[4,6],[3,6],[3,7],[2,7],[6,7],[5,8],[6,8],[8,11],[6,10],[7,10],[7,9],[9,12],[10,12],[11,12]],start:{"puffin":{"h":11,"f":[8]},"cormorant":{"h":0,"f":[4]},"gannet":{"h":7,"f":[9]},"skua":{"h":12,"f":[10]}}},
+ {id:"tarrow",name:"The Tarrow Ladder",real:false,sea:true,par:10,ai:1,thrAdd:0,p0:1,deal:[7,11],flav:"An invented sound between two long islands, with a ladder of holms down the middle and crossings at every rung.",tip:"Each shore pays +5, but the holms between them touch both. Whoever holds the ladder can strike either side.",fleets:["puffin","cormorant","gannet"],chains:[{"n":"West Tarrow","b":5},{"n":"East Tarrow","b":5},{"n":"The Holms","b":4}],isl:[{"n":"Wester Head","x":16,"y":16,"r":6,"ch":0},{"n":"Ord","x":50,"y":24,"r":4,"ch":2},{"n":"Easter Head","x":84,"y":16,"r":6,"ch":1},{"n":"Great Tarrow","x":18,"y":60,"r":10,"ch":0},{"n":"Midhouse","x":50,"y":58,"r":4.5,"ch":2},{"n":"Easter Tarrow","x":82,"y":64,"r":9,"ch":1},{"n":"Kist","x":50,"y":92,"r":4,"ch":2},{"n":"Wester Ness","x":16,"y":108,"r":6,"ch":0},{"n":"Easter Ness","x":84,"y":112,"r":6,"ch":1},{"n":"Brunt Skerry","x":50,"y":126,"r":4,"ch":2,"cl":3},{"n":"Sule","x":18,"y":150,"r":5,"ch":0},{"n":"Longa","x":80,"y":150,"r":5,"ch":1}],lanes:[[0,3],[3,7],[7,10],[2,5],[5,8],[8,11],[1,4],[4,6],[6,9],[0,1],[1,2],[3,4],[4,5],[7,6],[6,8],[10,9],[9,11]],start:{"puffin":{"h":7,"f":[10]},"cormorant":{"h":2,"f":[1]},"gannet":{"h":11,"f":[8]}},sea4:{"h":0,"f":[3]}},
+ {id:"narrows",name:"The Kelp Narrows",real:false,sea:true,par:10,ai:1,thrAdd:0,p0:1,deal:[0],flav:"An invented pair of island groups joined only through one small holm, where the kelp beds choke the channel.",tip:"Narrow Holm is the only way between north and south. Whoever holds it decides who fights whom.",fleets:["puffin","cormorant","gannet","skua"],chains:[{"n":"The North Banks","b":5},{"n":"Narrow Holm","b":2},{"n":"West Bank","b":3},{"n":"East Bank","b":3}],isl:[{"n":"Marrach","x":20,"y":14,"r":6,"ch":0},{"n":"Inchcraig","x":52,"y":10,"r":5,"ch":0},{"n":"Bellholm","x":84,"y":20,"r":6,"ch":0},{"n":"Dunvarra","x":34,"y":42,"r":7,"ch":0},{"n":"Fadda","x":70,"y":46,"r":5,"ch":0},{"n":"Narrow Holm","x":52,"y":72,"r":4.5,"ch":1},{"n":"Caolas","x":28,"y":98,"r":6,"ch":2},{"n":"Torran","x":74,"y":100,"r":7,"ch":3},{"n":"Brackay","x":10,"y":128,"r":5,"ch":2},{"n":"Maddy","x":50,"y":124,"r":4,"ch":3,"cl":3},{"n":"Rhumach","x":86,"y":132,"r":6,"ch":3},{"n":"Sorrel","x":36,"y":152,"r":6,"ch":2}],lanes:[[0,1],[1,2],[0,3],[1,3],[1,4],[2,4],[3,4],[3,5],[4,5],[5,6],[5,7],[6,7],[6,8],[6,9],[7,9],[7,10],[8,11],[9,11],[8,9],[10,11]],start:{"puffin":{"h":11,"f":[8]},"cormorant":{"h":2,"f":[1]},"gannet":{"h":0,"f":[3]},"skua":{"h":10,"f":[7]}}}
 ];
+const CAMP=CHARTS.filter(c=>!c.sea).length;   /* the campaign: the first CAMP charts */
 const ADJ=CHARTS.map(c=>{const a=c.isl.map(()=>[]);for(const [p,q] of c.lanes){a[p].push(q);a[q].push(p);}return a;});
 const HARB=CHARTS.map(c=>{const h={};for(const k in c.start)h[c.start[k].h]=k;return h;});
 
@@ -458,7 +468,7 @@ const ordMax=id=>ORDERS[id].v.length;
 const ROMAN=['','I','II','III'];
 /* the tide: rival muster, gull garrisons and rival boldness by leg. W = each chart's own weight so leg 1 plays
    about as hard on any chart (set by the open-sea simulation) */
-const SEA={W:{scilly:1.52,varr:.86,channel:.78,orkney:.83,crown:.88,hebrides:.71},
+const SEA={W:{scilly:1.52,varr:.86,channel:.78,orkney:.83,crown:.88,hebrides:.71,faroes:0.91,shetland:0.91,lofoten:0.79,cyclades:0.83,tarrow:0.78,narrows:0.53},
  k:.08,mul:L=>L<=10?1+SEA.k*(L-1):L<=14?1+SEA.k*9+SEA.k*.6*(L-10):1+SEA.k*11.4+SEA.k*.25*(L-14),gar:L=>L<4?0:L<8?1:2,bold:L=>Math.min(.06,Math.max(0,.01*(L-3))),
  small:'scilly',smallUntil:4,fourthFrom:8};
 const seaCharts=L=>CHARTS.map((c,ci)=>ci).filter(ci=>!(CHARTS[ci].id===SEA.small&&L>SEA.smallUntil));
@@ -1067,7 +1077,7 @@ function drawFloats(t){cx.textAlign='center';cx.textBaseline='middle';cx.lineJoi
 let ui={sel:-1,tgt:-1,mv:null,busy:false,chains:false,changed:new Set(),coach:null,rival:-1,occShip:null};
 let DT=null;      /* the dice tray */
 let landK=0;      /* rising pitch for a run of landings */
-const nm=i=>chartOf(st).isl[i].n;
+const nm=i=>{const q=st&&chartOf(st).isl[i];return q?q.n:'';};
 function syncD(){if(!st){D=null;return;}D={own:st.own.slice(),tr:st.tr.slice()};GEN++;}
 const toBase=(sx,sy)=>[(sx-MAP.cx)/cam.z+cam.x,(sy-MAP.cy)/cam.z+cam.y];
 function dockFrom(){const r=$('dock').getBoundingClientRect();return toBase(r.left+48,r.top+16);}
@@ -1379,7 +1389,7 @@ function startChart(ci,how,deal){$('top').hidden=false;st=newGame(ci,(Math.rando
  resetScene();meta.stats.played++;saveMeta();rndArm(how||'new');hideModal();$('dock').hidden=false;layout();syncD();
  banner(chartOf(st).name,(chartOf(st).real?'A real chart':'An invented chart')+(st.deal?' · shuffled':''),'puffin',2400);setTimeout(()=>beginTurn(),TEST?0:2000);}
 /* ---------- the open sea: runs, legs, the draft and the strike (spec 14 Oct 2026) ---------- */
-const allCharted=()=>CHARTS.every(c=>(meta.best[c.id]||0)>0);
+const allCharted=()=>CHARTS.slice(0,CAMP).every(c=>(meta.best[c.id]||0)>0);
 const freshSea=()=>({leg:1,ord:{},won:0,lost:0,best:0,offer:null,draft:null,strike:false,last:-1,runs:1});
 function seaState(){if(!meta.sea)meta.sea=freshSea();return meta.sea;}
 const ordLevels=o=>Object.values(o||{}).reduce((a,b)=>a+b,0);
@@ -1444,13 +1454,13 @@ function seaCard(){$('top').hidden=true;$('dock').hidden=true;const S=seaState()
  const offers=seaOffers(),canSeat=ordLv({ord:S.ord},'owncharts')>0;
  const cards=offers.map((o,k)=>{const c=CHARTS[o.ci],D_=dealSetup(o.ci,o.deal,'standard',o.seat),ok=c.fleets.map(x=>c.start[x].h).filter(h=>!c.deal||c.deal.includes(h));
   const fl=D_.fl.slice();if(c.sea4&&S.leg>=SEA.fourthFrom&&fl.length<4)fl.push(['cormorant','gannet','skua'].find(x=>!fl.includes(x)));
-  return `<div class="offer"><div class="top"><canvas data-off="${k}"></canvas><div><h3>${c.name}</h3><p>You start at <b>${c.isl[D_.seats[0].h].n}</b>.</p><p class="riv">${fl.slice(1).map(x=>`<img src="${iconURL(x)}" alt="${FLEETS[x].name}">`).join('')} ${fl.length-1} rival${fl.length>2?'s':''}</p></div></div>
+  return `<div class="offer"><div class="top"><canvas data-off="${k}"></canvas><div>${c.sea&&!meta.seen['sea_'+c.id]?'<div class="unch">Uncharted</div>':''}<h3>${c.name}</h3>${c.sea&&!meta.seen['sea_'+c.id]?`<p class="flav">${c.flav}</p>`:''}<p>You start at <b>${c.isl[D_.seats[0].h].n}</b>.</p><p class="riv">${fl.slice(1).map(x=>`<img src="${iconURL(x)}" alt="${FLEETS[x].name}">`).join('')} ${fl.length-1} rival${fl.length>2?'s':''}</p></div></div>
    ${canSeat&&ok.length>1?`<div class="seats">${ok.map(h=>`<button class="cbtn${h===D_.seats[0].h?' on':''}" data-o="${k}" data-h="${h}">${c.isl[h].n}</button>`).join('')}</div>`:''}
    <button class="cbtn pri" data-go="${k}">Sail to ${c.name}</button></div>`;}).join('');
  showModal(head+`<div class="kick">${offers.length>1?'Choose the next leg':'Go again'}</div><div class="ocs">${cards}</div>${clash?`<p class="lede" style="font-size:13.5px">Setting sail ends your unfinished ${CHARTS[run.st.c].name} round.</p>`:''}`+foot,'title',()=>{
   $('card').querySelectorAll('[data-off]').forEach(cv=>{const o=offers[+cv.dataset.off],D_=dealSetup(o.ci,o.deal,'standard',o.seat);drawMini(cv,o.ci,D_.own,D_.fl);});
   $('card').querySelectorAll('[data-h]').forEach(b=>b.addEventListener('click',()=>{offers[+b.dataset.o].seat=+b.dataset.h;saveMeta();sfx('tap');seaCard();}));
-  $('card').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{const o=offers[+b.dataset.go];goFS();auStart();startSeaLeg(o.ci,o.deal,o.seat,S.retry?'retry':'new');S.retry=false;saveMeta();}));
+  $('card').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{const o=offers[+b.dataset.go];if(CHARTS[o.ci].sea){meta.seen['sea_'+CHARTS[o.ci].id]=1;saveMeta();}goFS();auStart();startSeaLeg(o.ci,o.deal,o.seat,S.retry?'retry':'new');S.retry=false;saveMeta();}));
   bindFoot();});}
 /* draft and strike: a tap picks a card, a second button confirms, so a slip of the thumb never takes or strikes the wrong order */
 function draftCard(sel,drop){$('top').hidden=true;$('dock').hidden=true;const S=seaState(),ids=S.draft||[],hand=held(S.ord),full=hand.length>=HAND,swap=sel&&!S.ord[sel]&&full;
@@ -1485,7 +1495,7 @@ function seaEnd(win){const S=seaState(),L=S.leg;
  else{S.lost++;S.offer=null;if(ordLevels(S.ord)>0)S.strike=true;else{S.retry=true;if(S.last>=0)S.offer=[{ci:S.last,deal:newDeal()}];}}
  saveMeta();}
 function seaWinCard(){const S=seaState(),c=chartOf(st);
- showModal(`<div class="kick">Open sea ${S.leg-1}</div><h2>${c.name} ${['scilly','varr','channel'].includes(c.id)?'are':'is'} yours</h2>
+ showModal(`<div class="kick">Open sea ${S.leg-1}</div><h2>${c.name} ${['scilly','varr','channel','faroes','cyclades','narrows'].includes(c.id)?'are':'is'} yours</h2>
   <p class="sub" style="text-align:center">${st.turn} turn${st.turn===1?'':'s'} · ${st.stats.taken} island${st.stats.taken===1?'':'s'} taken</p>
   <p class="tip">On to Open sea ${S.leg}. The rivals will muster ${Math.round((SEA.mul(S.leg)-1)*100)}% more.</p>
   <button class="cbtn pri" id="go">${S.draft?'Choose a standing order':'Sail on'}</button><div class="links">${homeLink}</div>`,'',()=>{$('go').addEventListener('click',()=>{st=null;D=null;seaCard();});});}
@@ -1642,8 +1652,8 @@ function drawSeaMini(c){try{if(!c)return;const r=c.getBoundingClientRect(),w=Mat
  [[w*.72,h*.3,7],[w*.6,h*.72,5]].forEach(([x,y,rr_],q)=>{const pts=blobPts(77+q*13,rr_*1.4,.82);g.save();g.translate(x,y+1.5);g.fillStyle='#6a5034';g.fill(pathOf(pts));g.restore();g.save();g.translate(x,y);g.fillStyle='#edd9a6';g.fill(pathOf(pts));g.scale(.74,.74);g.fillStyle='#86b85a';g.fill(pathOf(pts));g.restore();});
  g.strokeStyle='#2a221b';g.lineWidth=1.4;g.beginPath();g.moveTo(w*.28,h*.62);g.lineTo(w*.28,h*.36);g.stroke();g.fillStyle=FLEETS.puffin.col;g.beginPath();g.moveTo(w*.28,h*.36);g.lineTo(w*.4,h*.41);g.lineTo(w*.28,h*.46);g.closePath();g.fill();
  g.fillStyle='#86532f';g.beginPath();g.moveTo(w*.16,h*.62);g.lineTo(w*.42,h*.62);g.quadraticCurveTo(w*.38,h*.7,w*.33,h*.7);g.lineTo(w*.22,h*.7);g.closePath();g.fill();}catch(e){}}
-function home(){$('dock').hidden=true;$('top').hidden=true;hint('');const run=loadRun(),nxt=Math.max(0,Math.min(meta.unlocked,CHARTS.length)-1);
- const rows=CHARTS.map((c,ci)=>{const open=ci<meta.unlocked,b=meta.best[c.id]||0;const riv=c.fleets.slice(1).map(k=>`<img src="${iconURL(k)}" alt="${FLEETS[k].name}">`).join('');
+function home(){$('dock').hidden=true;$('top').hidden=true;hint('');const run=loadRun(),nxt=Math.max(0,Math.min(meta.unlocked,CAMP)-1);
+ const rows=CHARTS.slice(0,CAMP).map((c,ci)=>{const open=ci<meta.unlocked,b=meta.best[c.id]||0;const riv=c.fleets.slice(1).map(k=>`<img src="${iconURL(k)}" alt="${FLEETS[k].name}">`).join('');
   return `<button class="ccard" data-c="${ci}" ${open?'':'disabled'}><canvas data-mini="${ci}"></canvas><span class="ci"><b>${c.name}</b><small>${c.real?'Real':'Invented'} chart · ${c.isl.length} islands${meta.deals[c.id]?` · ${meta.deals[c.id].w} shuffled win${meta.deals[c.id].w>1?'s':''}`:''}</small><span class="riv">${riv}</span></span>${open?`<span class="st">${b?starsHTML(b):'<span class="off">★★★</span>'}</span>`:`<span class="lock">Clear chart ${ci} to unlock</span>`}</button>`;}).join('');
  showModal(`<div class="hero"><canvas id="masc"></canvas><div class="htext"><span class="tag">A Digi strategy game</span><h1>Archipelago</h1><p>Command the Puffins. Take every island.</p></div></div>
   ${run?`<button class="cbtn pri" id="cont">Continue · ${run.st.sea?`Open sea ${run.st.sea.leg}, `:''}${CHARTS[run.st.c].name}, turn ${run.st.turn}</button>`:`<button class="cbtn pri" id="play">Set sail · ${CHARTS[nxt].name}</button>`}
@@ -1667,7 +1677,7 @@ function intro(ci,deal){const c=CHARTS[ci],assist=Math.round(assistFor(ci)*100);
   :`<p>${c.flav}</p>
   <div class="kick">Rivals</div>${rivals}<p class="tip"><b>Tip:</b> ${c.tip}</p>
   <p style="font-size:13px;color:var(--ink-2)">Win by holding every island. Three stars for a win in ${c.par} turns or fewer.${won?'':' Win it once to open shuffled deals: the same chart with fresh harbours, rivals and garrisons.'}${assist?` <b>Calmer seas:</b> rivals muster ${assist}% less after your last tries.`:''}${clash?` Setting sail here ends your unfinished ${CHARTS[run.st.c].name} round.`:''}</p>`;
- showModal(`<div class="kick">Chart ${ci+1} of ${CHARTS.length} · ${c.real?'Real chart':'Invented chart'}</div><h2>${c.name}</h2>${pick}<canvas class="mini" id="imini"></canvas>${body}
+ showModal(`<div class="kick">Chart ${ci+1} of ${CAMP} · ${c.real?'Real chart':'Invented chart'}</div><h2>${c.name}</h2>${pick}<canvas class="mini" id="imini"></canvas>${body}
   ${same?`<button class="cbtn pri" id="cont">Continue · turn ${run.st.turn}</button>`:'<button class="cbtn pri" id="go">Set sail</button>'}${shuf?'<button class="cbtn" id="rd">Deal again</button>':''}<button class="cbtn" id="bk">Back</button>${same?`<button class="cbtn danger gap" id="go">Start over${shuf?' with this deal':''}</button>`:''}`,'',()=>{
   drawMini($('imini'),ci,D_?D_.own:null,fl);
   if(won){$('sCh').addEventListener('click',()=>{if(!shuf)return;sfx('tap');meta.set.shuf=false;saveMeta();intro(ci);});$('sSh').addEventListener('click',()=>{if(shuf)return;sfx('tap');meta.set.shuf=true;saveMeta();intro(ci);});}
@@ -1676,8 +1686,8 @@ function intro(ci,deal){const c=CHARTS[ci],assist=Math.round(assistFor(ci)*100);
   $('go').addEventListener('click',e=>{const b=e.currentTarget;if(same&&!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again to start over';return;}goFS();auStart();startChart(ci,'new',shuf?deal:undefined);});$('bk').addEventListener('click',home);});}
 function resume(run){$('top').hidden=false;st=run.st;if(!st.cashF)st.cashF=st.fl.map(()=>0);cps=run.cps||[];resetScene();rndArm('resume');hideModal();$('dock').hidden=false;layout();syncD();auStart();
  if(finishIfOver())return;if(st.phase==='rivals-done'||st.phase==='rival'){beginTurn();return;}if(st.phase==='occupy'&&!st.occ)st.phase='attack';dockUI();note(st.sea?`Back on Open sea ${st.sea.leg}.`:'Back where you left off.',2400);}
-function winCard(stars){if(st.deal){dealWinCard();return;}const c=chartOf(st),nx=st.c+1<CHARTS.length?st.c+1:-1;
- showModal(`<div class="kick">Chart ${st.c+1} · ${c.real?'Real':'Invented'}</div><h2>${c.name} ${['scilly','varr','channel'].includes(c.id)?'are':'is'} yours</h2>
+function winCard(stars){if(st.deal){dealWinCard();return;}const c=chartOf(st),nx=st.c+1<CAMP?st.c+1:-1;
+ showModal(`<div class="kick">Chart ${st.c+1} · ${c.real?'Real':'Invented'}</div><h2>${c.name} ${['scilly','varr','channel','faroes','cyclades','narrows'].includes(c.id)?'are':'is'} yours</h2>
   <div class="big-stars">${[0,1,2].map(k=>`<span class="${k<stars?'':'off'}" style="animation-delay:${.15+k*.18}s">★</span>`).join('')}</div>
   <p class="sub" style="text-align:center">${st.turn} turn${st.turn===1?'':'s'} · par ${c.par} · ${st.stats.taken} island${st.stats.taken===1?'':'s'} taken</p>
   ${st.firstWin?`<p class="tip"><b>Shuffled deals are open</b> for ${c.name}: the same chart with fresh harbours, rivals and garrisons. Pick Shuffled on its card.</p>`:''}
@@ -1685,7 +1695,7 @@ function winCard(stars){if(st.deal){dealWinCard();return;}const c=chartOf(st),nx
   <button class="cbtn" id="ch">All charts</button><div class="links">${homeLink}</div>`,'',()=>{
   if(nx>=0)$('nx').addEventListener('click',()=>{goFS();intro(nx);});$('ch').addEventListener('click',()=>{st=null;D=null;home();});});}
 function dealWinCard(){const c=chartOf(st),d=meta.deals[c.id]||{w:1,b:st.turn},deal=st.deal;
- showModal(`<div class="kick">Chart ${st.c+1} · shuffled deal</div><h2>${c.name} ${['scilly','varr','channel'].includes(c.id)?'are':'is'} yours</h2>
+ showModal(`<div class="kick">Chart ${st.c+1} · shuffled deal</div><h2>${c.name} ${['scilly','varr','channel','faroes','cyclades','narrows'].includes(c.id)?'are':'is'} yours</h2>
   <p class="sub" style="text-align:center">${st.turn} turn${st.turn===1?'':'s'} · par ${c.par} · ${st.stats.taken} island${st.stats.taken===1?'':'s'} taken</p>
   <p class="tip">Shuffled wins here: <b>${d.w}</b> · best <b>${d.b}</b> turn${d.b===1?'':'s'}${d.b===st.turn&&d.w>1?' (a new best)':''}.</p>
   <button class="cbtn pri" id="nd">New deal</button><button class="cbtn" id="sd">Same deal again</button><button class="cbtn" id="ch">All charts</button><div class="links">${homeLink}</div>`,'',()=>{
@@ -1797,6 +1807,5 @@ if(TEST)window.__dg={
  sea:(leg,ord,ci)=>{meta.best=Object.fromEntries(CHARTS.map(c=>[c.id,meta.best[c.id]||1]));const S=seaState();S.leg=leg||1;S.ord=ord||{};S.offer=null;S.draft=null;S.strike=false;saveMeta();startSeaLeg(ci==null?1:ci,12345);},seaCard:()=>seaCard(),claimTap:i=>tap(i),fortTap:i=>{ui.fortify=true;tap(i);},seaState:()=>JSON.parse(JSON.stringify(meta.sea||null)),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
