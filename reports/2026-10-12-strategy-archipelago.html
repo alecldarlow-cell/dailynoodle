@@ -77,8 +77,8 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 #dLine .dim{font-weight:700;opacity:.8}
 #dLine:empty,#dock.two #dLine,#dock.sl #dLine{display:none}
 #dock.two .btn,#dock.solo .btn{flex:1}
-.lnk{position:relative;flex:none;border:0;background:none;padding:0 2px;font:800 14px var(--f-ui);color:rgba(244,233,204,.85);white-space:nowrap}
-.lnk::after{content:"";position:absolute;inset:-10px -8px}
+.lnk{position:relative;flex:none;height:30px;border:1.5px solid rgba(244,233,204,.35);border-radius:15px;background:rgba(244,233,204,.08);padding:0 12px;font:800 13.5px var(--f-ui);color:var(--paper);white-space:nowrap}
+.lnk::after{content:"";position:absolute;inset:-8px -6px}
 .lnk.warn{color:#ffb39c}
 .lnk.glow{color:var(--gold)}
 
@@ -1107,9 +1107,9 @@ function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo'
  if(P==='reinforce'){$('dTitle').textContent='Reinforce';info(`<b>${st.pool}</b> to place`);line(`Tap your islands to place them<br><span class="dim">${musterText(st.lastMuster).replace(' landed at ',' at ')}</span>`);setBtn('b2',st.placed.length?'Undo':null,undo);setBtn('b1');}
  else if(P==='attack'&&ui.blitzing){$('dTitle').textContent='Blitz';info(`<b>${D?D.tr[ui.sel]:st.tr[ui.sel]}</b> against <b>${D?D.tr[ui.tgt]:st.tr[ui.tgt]}</b> on ${nm(ui.tgt)}`);setBtn('b2');setBtn('b1',ui.blitzStop?'Stopping…':'Stop',()=>{ui.blitzStop=true;dockUI();},{always:true,dis:ui.blitzStop});$('b1').classList.add('sec');}
  else if(P==='attack'){$('dTitle').textContent='Attack';const canUndo=st.placed.length&&!st.attacked;
-  end(ui.skipAsk?'Skip attacks ›':'End ›',endAttacks);if(ui.skipAsk)$('bEnd').classList.add('warn');
-  if(ui.tgt>=0&&ui.sel>=0){const p=odds(st,ui.sel,ui.tgt);info(`<b>${p>.995?'99%+':Math.round(p*100)+'%'}</b> · ${nm(ui.tgt)}${fortAt(st,ui.tgt)?' · fort +1':''}`);setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
-  else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Chest earned this turn':'Take an island for a chest');line(phaseHint());setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);setBtn('b1');}}
+  if(ui.tgt>=0&&ui.sel>=0){end('End attacks',endAttacks);const p=odds(st,ui.sel,ui.tgt);info(`<b>${p>.995?'99%+':Math.round(p*100)+'%'}</b> · ${nm(ui.tgt)}${fortAt(st,ui.tgt)?' · fort +1':''}`);setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
+  else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Chest earned this turn':'Take an island for a chest');line(phaseHint());setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);
+   setBtn('b1',ui.skipAsk?'Skip attacks':'End attacks',endAttacks);$('b1').classList.add(ui.skipAsk?'warn':'sec');}}
  else if(P==='occupy'){$('dTitle').textContent='Sail in';info(`${nm(st.occ.to)} is yours`);dk.classList.add('sl');setBtn('b2');setBtn('b1','Sail '+st.occ.n,sailNow);showRange(st.occ);}
  else if(P==='move'){$('dTitle').textContent='Move';
   if(ui.mv&&ui.mv.to>=0){info(`${nm(ui.mv.from)} to ${nm(ui.mv.to)}`);end('Cancel',()=>{ui.mv=null;dockUI();});dk.classList.add('sl');setBtn('b2');setBtn('b1','Move '+ui.mv.n,doMove);showRange(ui.mv);}
@@ -1120,14 +1120,14 @@ function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo'
 function hint(txt,coachy){const h=$('hint');txt=txt||'';const co=!!coachy&&!!txt;if(h.textContent===txt&&h.classList.contains('coach')===co)return;
  clearTimeout(hint.t);h.textContent=txt;h.classList.toggle('coach',co);h.classList.remove('off');if(txt&&!co)hint.t=setTimeout(()=>h.classList.add('off'),6500);}
 function phaseHint(){if(!st)return '';const P=st.phase;if(P==='reinforce')return 'Tap your islands to send troops';
- if(P==='attack')return ui.tgt>=0?'Attack once, or Blitz until it falls':ui.sel>=0?'Tap an island next to it to attack':st.conq?'Attack again, or tap End when you’re done':'Tap a rival island to attack it';
+ if(P==='attack')return ui.tgt>=0?'Attack once, or Blitz until it falls':ui.sel>=0?'Tap an island next to it to attack':st.conq?'Attack again, or end your attacks':'Tap a rival island to attack it';
  if(P==='occupy')return `${nm(st.occ.to)} is yours. How many sail in?`;if(P==='move')return ui.mv?(ui.mv.to>=0?`Tap ${nm(ui.mv.to)} again, or press Move`:'Tap where they go. The rings show where they can reach'):'Tap an island to move troops from, or end your turn';return '';}
 /* guided first chart: an arrow over the island to tap, and the next step in words */
 function coach(){ui.coach=null;if(!st||ui.rival>=0||st.phase==='over'||st.phase==='rival')return;$('b1').classList.remove('glow');
  if(meta.coached||st.c!==0){hint('');return;}const P=st.phase;let txt='';
  if(P==='reinforce'){const a=planPlace(st,0,st.pool),i=+Object.keys(a)[0];if(i>=0&&!isNaN(i)){ui.coach={i};txt=`Tap ${nm(i)} to send your new troops there`;}}
  else if(P==='attack'){if(ui.sel<0){let best=null,bp=0;for(let i=0;i<st.own.length;i++){if(!canFrom(st,i,0))continue;for(const j of targets(st,i)){const p=odds(st,i,j);if(p>bp){bp=p;best=[i,j];}}}
-   if(best&&bp>=.55){ui.coach={i:best[1]};txt=`Tap ${nm(best[1])} to attack it`;}else{$('bEnd').classList.add('glow');txt='No good attacks left. Tap End';}}
+   if(best&&bp>=.55){ui.coach={i:best[1]};txt=`Tap ${nm(best[1])} to attack it`;}else{$('b1').classList.add('glow');txt='No good attacks left. Tap End attacks';}}
   else if(ui.tgt<0){let bj=-1,bp=-1;for(const j of targets(st,ui.sel)){const p=odds(st,ui.sel,j);if(p>bp){bp=p;bj=j;}}if(bj>=0){ui.coach={i:bj};txt=`Tap ${nm(bj)}. The chip is your chance to take it`;}}
   else{$('b1').classList.add('glow');txt='Blitz keeps rolling until the island falls';}}
  else if(P==='occupy'){$('b1').classList.add('glow');txt=`${nm(st.occ.to)} is yours. Slide, then Sail`;}
@@ -1406,6 +1406,5 @@ if(TEST)window.__dg={
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
