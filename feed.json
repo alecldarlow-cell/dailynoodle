@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-14T00:58:09.631Z",
+  "built": "2026-10-14T00:59:08.589Z",
   "today": "2026-10-14",
   "timezone": "Europe/London",
-  "count": 571,
+  "count": 572,
   "items": [
     {
       "path": "reports/2026-10-14-crossword-mini-0095.html",
@@ -93,6 +93,21 @@
       "statUnit": "",
       "statLabel": "",
       "mask": "..o................................."
+    },
+    {
+      "path": "reports/2026-10-14-uk-industry-concentration-weighted-gap.html",
+      "kind": "report",
+      "topic": "Economy",
+      "headline": "Concentration has fallen in the UK's biggest industries, not the typical one",
+      "standfirst": "The Office for National Statistics says the top five firms' share of turnover fell from 45% to 38% between 2010 and 2025, weighted by industry turnover. Across industries counted equally, it is unchanged at 47%.",
+      "date": "2026-10-14",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "38",
+      "statUnit": "%",
+      "statLabel": "top-5 share",
+      "mask": ""
     },
     {
       "path": "reports/2026-10-14-word-link-0067.html",
