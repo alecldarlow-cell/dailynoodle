@@ -138,6 +138,14 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .rv img{width:40px;height:40px;flex:none;margin:-4px 0}
 .rv b{font-weight:900}
 .tip{background:rgba(120,90,40,.1);border-radius:12px;padding:10px 12px;font-size:14.5px}
+.ords{display:flex;flex-direction:column;gap:6px;margin:6px 0 12px}
+.ord{display:block;width:100%;text-align:left;border-radius:12px;background:rgba(120,90,40,.1);padding:9px 12px;font:14px/1.35 var(--f-ui);color:var(--ink);border:0}
+.ord b{font-weight:900}.ord small{display:block;color:var(--ink-2);font-size:12.5px;margin-top:2px}
+button.ord{border:2px solid var(--ink);background:transparent;min-height:56px}button.ord:active{transform:translateY(2px)}
+.offer{border-radius:16px;background:rgba(120,90,40,.1);padding:10px;margin:8px 0 12px}
+.offer .top{display:flex;gap:10px;align-items:center;margin-bottom:8px}.offer canvas{width:84px;height:84px;border-radius:12px;flex:none;background:#145a77}
+.offer h3{margin:0 0 2px;font:400 21px var(--f-head,Georgia),serif}.offer p{margin:0;font-size:13.5px;line-height:1.35}.offer .riv img{width:28px;height:28px;margin-right:2px;vertical-align:middle}
+.seats{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}.seats .cbtn{width:auto;flex:1 1 30%;min-height:44px;font-size:14px;padding:0 8px}.seats .cbtn.on{background:var(--ink);color:var(--paper)}
 .links{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .link{color:var(--ink);font-weight:900;text-decoration:none;padding:0 2px;min-height:44px;display:inline-flex;align-items:center;background:none;border:0;font-size:15px}
 .link.home{color:var(--ink-2)}
@@ -247,7 +255,7 @@ const CHARTS=[
    {n:'Toravik',x:66,y:50,r:7.5,ch:1},{n:'Hestay',x:14,y:78,r:5.5,ch:2},{n:'Mirrin',x:48,y:80,r:6,ch:2},{n:'Gullholm',x:86,y:76,r:6.5,ch:1},
    {n:'Brannoy',x:28,y:114,r:8,ch:3},{n:'Sulvik',x:72,y:110,r:6,ch:3},{n:'Fennay',x:50,y:144,r:5.5,ch:3}],
   lanes:[[0,1],[1,2],[0,3],[1,3],[1,4],[2,4],[3,4],[3,5],[3,6],[4,6],[4,7],[2,7],[5,6],[5,8],[6,8],[6,9],[7,9],[8,9],[8,10],[9,10]],
-  start:{puffin:{h:8,f:[10]},gannet:{h:7,f:[2]},cormorant:{h:0,f:[1]}}},
+  start:{puffin:{h:8,f:[10]},gannet:{h:7,f:[2]},cormorant:{h:0,f:[1]}},sea4:{h:5,f:[6]}},
  {id:'channel',name:'Channel Islands',real:true,par:10,ai:.85,thrAdd:0,p0:1,deal:[2,4,9],
   flav:'Four islands with harbours, four fleets, and the Little Russel channel running between Guernsey and Herm.',
   tip:'Herm and Jethou sit between you and everyone else. Hold them and you choose who to fight.',
@@ -296,15 +304,18 @@ const HARB=CHARTS.map(c=>{const h={};for(const k in c.start)h[c.start[k].h]=k;re
 
 /* dice: every outcome of (attack dice, defence dice, fort) worked out once */
 const DIST={};
-(function(){for(let a=1;a<=3;a++)for(let d=1;d<=2;d++)for(const f of [0,1]){const o={};let n=0;
+(function(){for(let a=1;a<=3;a++)for(let d=1;d<=2;d++)for(const f of [0,1,2])for(const t of [0,1]){const o={};let n=0;
  const rec=(arr,k,cb)=>{if(!k){cb(arr);return;}for(let v=1;v<=6;v++)rec(arr.concat(v),k-1,cb);};
- rec([],a,A=>rec([],d,D=>{const As=[...A].sort((x,y)=>y-x),Ds=[...D].sort((x,y)=>y-x);if(f)Ds[0]+=1;let al=0,dl=0;
-  for(let i=0;i<Math.min(a,d);i++){if(As[i]>Ds[i])dl++;else al++;}const k=al+','+dl;o[k]=(o[k]||0)+1;n++;}));
- DIST[a+'|'+d+'|'+f]=Object.entries(o).map(([k,v])=>{const [al,dl]=k.split(',').map(Number);return [al,dl,v/n];});}})();
+ rec([],a,A=>rec([],d,D=>{const As=[...A].sort((x,y)=>y-x),Ds=[...D].sort((x,y)=>y-x);if(f)Ds[0]+=1;if(f>1&&Ds.length>1)Ds[1]+=1;let al=0,dl=0;
+  for(let i=0;i<Math.min(a,d);i++){if(As[i]>Ds[i]||(t&&i===0&&As[i]===Ds[i]))dl++;else al++;}const k=al+','+dl;o[k]=(o[k]||0)+1;n++;}));
+ DIST[a+'|'+d+'|'+f+(t?'|t':'')]=Object.entries(o).map(([k,v])=>{const [al,dl]=k.split(',').map(Number);return [al,dl,v/n];});}})();
 /* chance a Blitz takes the island: a = attackers able to roll (troops on the island minus the one that stays), d = defenders */
 const PT=new Map();
-function pTake(a,d,fort){if(d<=0)return 1;if(a<=0)return 0;const key=a*4096+d*2+(fort?1:0);let v=PT.get(key);if(v!==undefined)return v;
- v=0;for(const [al,dl,p] of DIST[Math.min(3,a)+'|'+Math.min(2,d)+'|'+(fort?1:0)])v+=p*pTake(a-al,d-dl,fort);PT.set(key,v);return v;}
+function pTake(a,d,fort){if(d<=0)return 1;if(a<=0)return 0;fort=+fort||0;const key=a*16384+d*4+fort;let v=PT.get(key);if(v!==undefined)return v;
+ v=0;for(const [al,dl,p] of DIST[Math.min(3,a)+'|'+Math.min(2,d)+'|'+fort])v+=p*pTake(a-al,d-dl,fort);PT.set(key,v);return v;}
+/* the same with the first tb throws won on ties (Boarding parties) */
+function pTakeB(a,d,fort,tb){if(!tb||d<=0||a<=0)return pTake(a,d,fort);let v=0;
+ fort=+fort||0;for(const [al,dl,p] of DIST[Math.min(3,a)+'|'+Math.min(2,d)+'|'+fort+'|t'])v+=p*pTakeB(a-al,d-dl,fort,tb-1);return v;}
 
 /* seeded dice: mulberry32, state kept in the game so a reload never re-rolls */
 function rng01(st){let t=(st.rs=(st.rs+0x6D2B79F5)>>>0);t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;}
@@ -313,12 +324,12 @@ const die=st=>1+Math.floor(rng01(st)*6);
 /* a shuffled deal: the same chart, harbours and number of rivals, but who starts at which harbour, which rivals sail
    (on charts with fewer than three) and the gull garrisons are dealt from a seed. Garrisons move by at most one either
    way and keep the charted total, so a deal changes the shape of the game, not how much there is to take. */
-function dealSetup(ci,deal,mode){const c=CHARTS[ci],n=c.isl.length,m=mode||'standard',base=RULES.neutral[m]||3;
+function dealSetup(ci,deal,mode,seat){const c=CHARTS[ci],n=c.isl.length,m=mode||'standard',base=RULES.neutral[m]||3;
  let s=(deal>>>0)||1;const r=()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};
  const mix=a=>{a=a.slice();for(let k=a.length-1;k>0;k--){const q=Math.floor(r()*(k+1));[a[k],a[q]]=[a[q],a[k]];}return a;};
  const fl=['puffin',...mix(['cormorant','gannet','skua']).slice(0,c.fleets.length-1)];
  /* the Puffins are only dealt harbours that simulate within reach of the charted start (c.deal); rivals take any */
- const all=c.fleets.map(k=>c.start[k]),ok=all.filter(p=>!c.deal||c.deal.includes(p.h)),me=ok[Math.floor(r()*ok.length)];
+ const all=c.fleets.map(k=>c.start[k]),ok=all.filter(p=>!c.deal||c.deal.includes(p.h)),pick=ok[Math.floor(r()*ok.length)],me=ok.find(p=>p.h===seat)||pick;
  const seats=[me,...mix(all.filter(p=>p!==me))];
  const own=new Array(n).fill(-1);seats.forEach((p,f)=>{own[p.h]=f;for(const i of p.f)own[i]=f;});
  const gar=new Array(n).fill(base),free=own.map((o,i)=>i).filter(i=>own[i]<0);
@@ -326,7 +337,7 @@ function dealSetup(ci,deal,mode){const c=CHARTS[ci],n=c.isl.length,m=mode||'stan
  for(let k=0,d=free.reduce((t,i)=>t+gar[i]-base,0);d!==0&&k<200;k++){const i=free[Math.floor(r()*free.length)];
   if(d>0&&gar[i]>Math.max(1,base-1)){gar[i]--;d--;}else if(d<0&&gar[i]<base+1){gar[i]++;d++;}}
  return {fl,seats,own,gar};}
-function newGame(ci,seed,mode,deal){const c=CHARTS[ci],n=c.isl.length,m=mode||'standard',D_=deal?dealSetup(ci,deal,m):null,fl=D_?D_.fl:c.fleets.slice();
+function newGame(ci,seed,mode,deal,seat){const c=CHARTS[ci],n=c.isl.length,m=mode||'standard',D_=deal?dealSetup(ci,deal,m,seat):null,fl=D_?D_.fl:c.fleets.slice();
  const st={v:1,c:ci,mode:m,own:new Array(n).fill(-1),tr:D_?D_.gar.slice():new Array(n).fill(RULES.neutral[m]||3),fl,alive:fl.map(()=>true),
   spoils:fl.map(()=>0),cash:0,cashF:fl.map(()=>0),turn:1,cur:0,phase:'reinforce',pool:0,placed:[],conq:false,moved:false,rs:(seed>>>0)||1,
   stats:{taken:0,lost:0,battles:0,best:0}};
@@ -334,8 +345,11 @@ function newGame(ci,seed,mode,deal){const c=CHARTS[ci],n=c.isl.length,m=mode||'s
  fl.forEach((k,f)=>{const s=D_?D_.seats[f]:c.start[k];st.own[s.h]=f;st.tr[s.h]=RULES.harbour0+(f===0?(c.p0||0):0);for(const i of s.f){st.own[i]=f;st.tr[i]=RULES.first0;}});
  return st;}
 const chartOf=st=>CHARTS[st.c],adjOf=st=>ADJ[st.c];
-const isHarb=(st,i)=>HARB[st.c][i]!==undefined;
-const fortAt=(st,i)=>isHarb(st,i);   /* a harbour's fort helps whoever holds it */
+const isHarb=(st,i)=>HARB[st.c][i]!==undefined||!!(st.xh&&st.xh.includes(i));
+const harbsOf=st=>Object.keys(HARB[st.c]).map(Number).concat(st.xh||[]);
+const fortAt=(st,i)=>st.xf&&st.xf.includes(i)?2:isHarb(st,i)?1:0;   /* a fort helps whoever holds it: 1 = a harbour's (+1 on the top defending die), 2 = a Fortify stone fort (+1 on both) */
+/* the fort that counts in a battle: Gunnery means rival forts don't count against the Puffins */
+const defFort=(st,i,j)=>st.own[i]===0&&ordLv(st,'gunnery')?0:fortAt(st,j);
 const count=(st,f)=>{let k=0;for(const o of st.own)if(o===f)k++;return k;};
 function chainHeld(st,f,ch){const c=chartOf(st);return c.isl.every((s,i)=>s.ch!==ch||st.own[i]===f);}
 function chainCount(st,f,ch){const c=chartOf(st);let have=0,size=0;c.isl.forEach((s,i)=>{if(s.ch===ch){size++;if(st.own[i]===f)have++;}});return [have,size];}
@@ -343,31 +357,84 @@ function chainCount(st,f,ch){const c=chartOf(st);let have=0,size=0;c.isl.forEach
 /* how many times this fleet has cashed in (older saves without the per-fleet count fall back to none) */
 const cashIdx=(st,f)=>RULES.spoilsOwn?((st.cashF&&st.cashF[f])||0):st.cash;
 function musterInfo(st,f){const c=chartOf(st),n=count(st,f);const base=Math.max(3,Math.floor(n/3));let chains=0;const held=[];
- c.chains.forEach((ch,k)=>{if(chainHeld(st,f,k)){chains+=ch.b;held.push(k);}});
- const harbs=[];for(const i in HARB[st.c])if(st.own[+i]===f)harbs.push(+i);
- const sp=st.spoils[f]>=3?RULES.spoils[Math.min(cashIdx(st,f),RULES.spoils.length-1)]:0;
- return {base,chains,held,harbs,spoils:sp,total:base+chains+sp};}
+ const qm=f===0?ordV(st,'quarter'):0;c.chains.forEach((ch,k)=>{if(chainHeld(st,f,k)){chains+=ch.b+qm;held.push(k);}});
+ const harbs=harbsOf(st).filter(i=>st.own[i]===f);
+ const sp=st.spoils[f]>=3?RULES.spoils[Math.min(cashIdx(st,f)+(f===0?ordV(st,'prize'):0),RULES.spoils.length-1)]:0,vet=f===0&&st.took0?ordV(st,'veterans'):0;
+ return {base,chains,held,harbs,spoils:sp,vet,total:base+chains+sp+vet};}
+const harbBonus=(st,f,h)=>{const l=f===0?ordLv(st,'harbmaster'):0;if(!l)return RULES.harbourBonus;return h===st.home?(l>1?3:RULES.harbourBonus):ORDERS.harbmaster.v[l-1];};
 function startTurn(st,f){const m=musterInfo(st,f);if(m.spoils){st.spoils[f]-=3;st.cash++;if(st.cashF)st.cashF[f]++;}
- for(const h of m.harbs)st.tr[h]+=RULES.harbourBonus;
- let tot=m.total;if(f!==0)tot=Math.max(1,Math.round(tot*(RULES.aiMul[st.mode]||1)*(chartOf(st).ai||1)*(st.assist?1-st.assist:1)));
- st.cur=f;st.conq=false;st.moved=false;st.pool=tot;st.placed=[];return Object.assign(m,{total:tot});}
+ for(const h of m.harbs)st.tr[h]+=harbBonus(st,f,h);
+ let tot=m.total;if(f!==0)tot=Math.max(1,Math.round(tot*(RULES.aiMul[st.mode]||1)*(chartOf(st).ai||1)*(st.assist?1-st.assist:1)*(st.sea?st.sea.mul:1)));
+ if(f===0&&st.extra0){tot+=st.extra0;m.reserves=st.extra0;st.extra0=0;}
+ st.cur=f;st.conq=false;st.moved=false;st.moves=f===0?Math.max(1,ordV(st,'watches')):1;st.pool=tot;st.placed=[];return Object.assign(m,{total:tot});}
 const avail=(st,i)=>Math.max(0,st.tr[i]-1);
 const canFrom=(st,i,f)=>st.own[i]===f&&st.tr[i]>=2&&adjOf(st)[i].some(j=>st.own[j]!==f);
 const targets=(st,i)=>adjOf(st)[i].filter(j=>st.own[j]!==st.own[i]);
-const odds=(st,i,j)=>pTake(avail(st,i),st.tr[j],fortAt(st,j));
+const tieThrows=(st,i,j)=>{if(st.own[i]!==0)return 0;const b=ordV(st,'boarding');if(!b)return 0;const a=st.atk;return a&&a.i===i&&a.j===j&&a.t===st.turn?Math.max(0,b-a.n):b;};
+const odds=(st,i,j)=>pTakeB(avail(st,i),st.tr[j],defFort(st,i,j),tieThrows(st,i,j));
 /* one throw; losses are applied straight away */
 function throwOnce(st,i,j,dice){const a=Math.min(3,avail(st,i),dice||3),d=Math.min(2,st.tr[j]);if(a<1||d<1)return null;
  const A=[],D=[];for(let k=0;k<a;k++)A.push(die(st));for(let k=0;k<d;k++)D.push(die(st));A.sort((x,y)=>y-x);D.sort((x,y)=>y-x);
- const Db=D.slice();if(fortAt(st,j))Db[0]+=RULES.fort;let al=0,dl=0;for(let k=0;k<Math.min(a,d);k++){if(A[k]>Db[k])dl++;else al++;}
- st.tr[i]-=al;st.tr[j]-=dl;st.stats.battles+=(st.own[i]===0||st.own[j]===0)?1:0;return {A,D,al,dl,a,fort:fortAt(st,j)};}
+ const fort=defFort(st,i,j),tie=tieThrows(st,i,j)>0;
+ if(!(st.atk&&st.atk.i===i&&st.atk.j===j&&st.atk.t===st.turn))st.atk={i,j,t:st.turn,n:0};st.atk.n++;
+ const Db=D.slice();if(fort)Db[0]+=RULES.fort;if(fort>1&&Db.length>1)Db[1]+=RULES.fort;let al=0,dl=0;for(let k=0;k<Math.min(a,d);k++){if(A[k]>Db[k]||(tie&&k===0&&A[k]===Db[k]))dl++;else al++;}
+ st.tr[i]-=al;st.tr[j]-=dl;st.stats.battles+=(st.own[i]===0||st.own[j]===0)?1:0;return {A,D,al,dl,a,fort,tie};}
 /* ownership changes hands; the attacker sails in n (at least the dice last rolled) */
-function capture(st,i,j,n){const f=st.own[i],was=st.own[j];st.own[j]=f;st.tr[j]=n;st.tr[i]-=n;st.conq=true;
+function capture(st,i,j,n){const f=st.own[i],was=st.own[j];st.own[j]=f;st.tr[j]=n+(f===0&&!st.conq?ordV(st,'press'):0);st.tr[i]-=n;st.conq=true;
  if(f===0)st.stats.taken++;if(was===0)st.stats.lost++;let out=null;
  if(was>=0&&count(st,was)===0){st.alive[was]=false;st.spoils[f]+=st.spoils[was];st.spoils[was]=0;out=was;}return out;}
-function reach(st,i){const f=st.own[i],seen=new Set([i]),q=[i],A=adjOf(st);while(q.length){const x=q.shift();for(const y of A[x])if(st.own[y]===f&&!seen.has(y)){seen.add(y);q.push(y);}}seen.delete(i);return [...seen];}
-function endTurn(st){const f=st.cur;if(st.conq)st.spoils[f]=Math.min(5,st.spoils[f]+1);st.conq=false;}
+function reach(st,i){const f=st.own[i],A=adjOf(st),g=f===0?ordV(st,'pilots'):0;
+ /* breadth-first over (island, islands passed so far); Pilots may pass g islands the fleet doesn't hold */
+ const best=new Map([[i,0]]),q=[[i,0]],out=new Set();while(q.length){const [x,u]=q.shift();for(const y of A[x]){const nu=u+(st.own[y]===f?0:1);if(nu>g)continue;if(best.has(y)&&best.get(y)<=nu)continue;best.set(y,nu);q.push([y,nu]);if(st.own[y]===f&&y!==i)out.add(y);}}
+ return [...out];}
+function endTurn(st){const f=st.cur;if(st.conq)st.spoils[f]=Math.min(5,st.spoils[f]+1);if(f===0)st.took0=!!st.conq;st.conq=false;}
 function over(st){const n=count(st,0);if(n===0)return 'lose';if(n===st.own.length)return 'win';return null;}
 
+
+/* ================= the open sea: standing orders and the tide (spec signed off 14 Oct 2026) ================= */
+/* orders belong to the Puffins only. v = the value at each level; t = the one line shown on a card */
+const ORDERS={
+ reserves:{n:'Reserves',v:[6,12,18],t:v=>`+${v} troops in your first reinforcement of each leg.`},
+ veterans:{n:'Veterans',v:[1,2],t:v=>`+${v} troop${v>1?'s':''} when you reinforce after a turn in which you took an island.`},
+ quarter:{n:'Quartermaster',v:[1,3],t:v=>`Every whole chain you hold pays +${v} more.`},
+ harbmaster:{n:'Harbour masters',v:[4,5],t:v=>`Harbours you take land +${v} a turn instead of +2${v>4?', and your home harbour +3':''}.`},
+ prize:{n:'Prize court',v:[2,4],t:v=>`Your spoils cash in from +${RULES.spoils[Math.min(v,RULES.spoils.length-1)]}, not +4.`},
+ press:{n:'Press gang',v:[1,2,3],t:v=>`+${v} troop${v>1?'s':''} join the first island you take each turn.`},
+ gunnery:{n:'Gunnery',v:[1],t:()=>`Rival forts don’t count against your attacks.`},
+ boarding:{n:'Boarding parties',v:[1,3],t:v=>`Your top die wins ties on the first ${v>1?'three throws':'throw'} of each attack.`},
+ advance:{n:'Advance party',v:[1,2],t:v=>`Before turn 1, claim ${v>1?'two gull islands':'a gull island'} next to your own.`},
+ owncharts:{n:'Own charts',v:[1],t:()=>`Choose your harbour from the fair seats.`},
+ divide:{n:'Divide and rule',v:[.1,.18,.25],t:v=>`Rivals want ${Math.round(v*100)} points better odds before they attack you.`},
+ fortify:{n:'Fortify',v:[2,4,6],t:v=>`Build ${v} stone forts each leg on islands you hold: +1 on both defending dice.`}};
+const ordLv=(st,id)=>(st.ord&&st.ord[id])||0,ordV=(st,id)=>{const l=ordLv(st,id);return l?ORDERS[id].v[l-1]:0;};
+const ordMax=id=>ORDERS[id].v.length;
+const ROMAN=['','I','II','III'];
+/* the tide: rival muster, gull garrisons and rival boldness by leg. W = each chart's own weight so leg 1 plays
+   about as hard on any chart (set by the open-sea simulation) */
+const SEA={W:{scilly:1.52,varr:.86,channel:.78,orkney:.83,crown:.88,hebrides:.71},
+ k:.08,mul:L=>L<=10?1+SEA.k*(L-1):1+SEA.k*9+SEA.k*.6*(L-10),gar:L=>L<4?0:L<8?1:2,bold:L=>Math.min(.06,Math.max(0,.01*(L-3))),
+ small:'scilly',smallUntil:4,fourthFrom:8};
+const seaCharts=L=>CHARTS.map((c,ci)=>ci).filter(ci=>!(CHARTS[ci].id===SEA.small&&L>SEA.smallUntil));
+/* a leg: a shuffled deal (Own charts can pick the seat), then the tide, the fourth fleet and the orders */
+function newSeaGame(ci,seed,deal,leg,ord,seat){const c=CHARTS[ci],st=newGame(ci,seed,'standard',deal,ord&&ord.owncharts?seat:undefined);
+ st.ord=Object.assign({},ord||{});st.sea={leg,mul:(SEA.W[c.id]||1)*SEA.mul(leg),bold:SEA.bold(leg)};
+ const g=SEA.gar(leg);if(g)st.own.forEach((o,i)=>{if(o<0)st.tr[i]+=g;});
+ if(c.sea4&&leg>=SEA.fourthFrom&&st.fl.length<4){const k=['cormorant','gannet','skua'].find(x=>!st.fl.includes(x));const f=st.fl.length;
+  st.fl.push(k);st.alive.push(true);st.spoils.push(0);st.cashF.push(0);st.xh=[c.sea4.h];
+  st.own[c.sea4.h]=f;st.tr[c.sea4.h]=RULES.harbour0;for(const i of c.sea4.f){st.own[i]=f;st.tr[i]=RULES.first0;}}
+ st.home=st.own.findIndex((o,i)=>o===0&&isHarb(st,i));st.extra0=ordV(st,'reserves');
+ st.forts=ordV(st,'fortify');st.xf=[];st.claims=claimable(st).length?ordV(st,'advance'):0;if(st.claims>0)st.phase='claim';
+ return st;}
+/* Advance party: the gull islands that can be claimed (next to one of yours) */
+const claimable=st=>st.own.map((o,i)=>i).filter(i=>st.own[i]<0&&adjOf(st)[i].some(k=>st.own[k]===0));
+function claim(st,i){if(!(st.claims>0)||!claimable(st).includes(i))return false;st.own[i]=0;st.tr[i]=RULES.first0;st.claims--;if(st.claims>0&&!claimable(st).length)st.claims=0;if(!st.claims)st.phase='reinforce';return true;}
+/* Fortify: a fort on an island you hold that has none */
+function fortify(st,i){if(!(st.forts>0)||st.own[i]!==0||fortAt(st,i))return false;st.xf.push(i);st.forts--;return true;}
+/* how the balance bot plays the orders that need a choice */
+function botClaims(st){while(st.claims>0){const c=claimable(st);if(!c.length){st.claims=0;st.phase='reinforce';break;}
+ c.sort((a,b)=>st.tr[a]-st.tr[b]||adjOf(st)[b].filter(k=>st.own[k]===0).length-adjOf(st)[a].filter(k=>st.own[k]===0).length);claim(st,c[0]);}}
+function botForts(st){while(st.forts>0){const B=border(st,0).filter(i=>!fortAt(st,i));if(!B.length)break;
+ B.sort((a,b)=>st.tr[b]-st.tr[a]);fortify(st,B[0]);}}
 /* ---------- rival AI: the same dice and rules, and it never looks at anything hidden ---------- */
 /* fleet power: troops plus two for each island held */
 function power(st,f){let p=0;for(let i=0;i<st.own.length;i++)if(st.own[i]===f)p+=st.tr[i]+2;return p;}
@@ -388,11 +455,12 @@ const threat=(st,f,i)=>adjOf(st)[i].reduce((s,k)=>s+(st.own[k]>=0&&st.own[k]!==f
 const border=(st,f)=>st.own.map((o,i)=>i).filter(i=>st.own[i]===f&&adjOf(st)[i].some(j=>st.own[j]!==f));
 /* attack threshold; it eases a little each turn so a standoff never lasts */
 const thrFor=(st,f,j)=>{const k=st.fl[f];const ease=Math.min(.2,.015*(st.turn-1));if(f===0)return (st.botThr||FLEETS.puffin.thr)-ease;
- const bold=(RULES.modeThr[st.mode]||0)-(st.own[j]===0&&playerLeads(st)?RULES.leadThr:0);
- if(k==='skua'&&st.tr[j]<=2)return .45-ease+bold;return FLEETS[k].thr+(chartOf(st).thrAdd||0)+bold-ease;};
+ const wary=st.own[j]===0?ordV(st,'divide'):0;
+ const bold=(RULES.modeThr[st.mode]||0)-(st.own[j]===0&&playerLeads(st)?RULES.leadThr:0)-(st.sea?st.sea.bold:0);
+ if(k==='skua'&&st.tr[j]<=2)return .45-ease+bold+wary;return FLEETS[k].thr+(chartOf(st).thrAdd||0)+bold-ease+wary;};
 /* where to put this turn's troops: guard harbours, then stack for the best attack (Cormorants split for defence) */
 function planPlace(st,f,pool){const adds={};const put=(i,n)=>{if(n>0){adds[i]=(adds[i]||0)+n;pool-=n;}};
- for(const h in HARB[st.c]){const i=+h;if(st.own[i]!==f)continue;const big=Math.max(0,...adjOf(st)[i].map(k=>st.own[k]>=0&&st.own[k]!==f?st.tr[k]:0));
+ for(const i of harbsOf(st)){if(st.own[i]!==f)continue;const big=Math.max(0,...adjOf(st)[i].map(k=>st.own[k]>=0&&st.own[k]!==f?st.tr[k]:0));
   const need=Math.ceil(big*.8)-(st.tr[i]+(adds[i]||0));if(need>0)put(i,Math.min(pool,need));}
  const B=border(st,f);if(!B.length||pool<=0)return adds;
  const score=(i,extra)=>Math.max(0,...targets(st,i).map(j=>pTake(avail(st,i)+extra,st.tr[j],fortAt(st,j))*worth(st,f,j)));
@@ -411,29 +479,32 @@ function reserve(st,f,i,skip){let big=Math.max(0,...adjOf(st)[i].map(k=>k!==skip
 function sailIn(st,i,j,dice){const f=st.own[i],o=st.own[j];st.own[j]=f;const keep=reserve(st,f,i);st.own[j]=o;
  return Math.min(avail(st,i),Math.max(dice,st.tr[i]-keep));}
 /* one whole fleet turn for a bot; ev collects what happened so the screen can replay it */
-function botTurn(st,f,ev){const m=startTurn(st,f);ev.push({t:'start',f,harbs:m.harbs,bonus:RULES.harbourBonus});
+function botTurn(st,f,ev){if(f===0&&st.claims>0)botClaims(st);const m=startTurn(st,f);ev.push({t:'start',f,harbs:m.harbs,bonus:harbBonus(st,f)});if(f===0&&st.forts>0)botForts(st);
  const adds=planPlace(st,f,st.pool);for(const i in adds)st.tr[+i]+=adds[i];st.pool=0;ev.push({t:'place',f,adds});
  /* early restraint: on their first turn rivals only claim open water (gull islands and each other),
     and for the first few turns a fleet takes at most two or three islands, so nobody is swept away in a minute */
  const truce=f>0&&st.turn<=1,cap=f===0?99:st.turn<=2?2:st.turn<=4?3:99;let caps=0;
  for(let n=0;n<24&&caps<cap;n++){let best=null,bs=-1;
   for(let i=0;i<st.own.length;i++){if(!canFrom(st,i,f))continue;
-   for(const j of targets(st,i)){if(truce&&st.own[j]===0)continue;const a=st.tr[i]-reserve(st,f,i,j);if(a<1)continue;const p=pTake(a,st.tr[j],fortAt(st,j));if(p<thrFor(st,f,j))continue;const s=p*worth(st,f,j);if(s>bs){bs=s;best=[i,j];}}}
+   for(const j of targets(st,i)){if(truce&&st.own[j]===0)continue;const a=st.tr[i]-reserve(st,f,i,j);if(a<1)continue;const p=pTakeB(a,st.tr[j],defFort(st,i,j),tieThrows(st,i,j));if(p<thrFor(st,f,j))continue;const s=p*worth(st,f,j);if(s>bs){bs=s;best=[i,j];}}}
   if(!best)break;const [i,j]=best;const was=st.own[j];const rolls=[];let dice=1;const res=reserve(st,f,i,j);
-  while(st.tr[i]-res>=1&&st.tr[j]>0){const r=throwOnce(st,i,j,st.tr[i]-res);rolls.push(r);dice=r.a;if(st.tr[j]>0&&pTake(st.tr[i]-res,st.tr[j],fortAt(st,j))<.2)break;}
+  while(st.tr[i]-res>=1&&st.tr[j]>0){const r=throwOnce(st,i,j,st.tr[i]-res);rolls.push(r);dice=r.a;if(st.tr[j]>0&&pTakeB(st.tr[i]-res,st.tr[j],defFort(st,i,j),tieThrows(st,i,j))<.2)break;}
   const e={t:'attack',f,from:i,to:j,was,rolls,taken:st.tr[j]<=0};
   if(e.taken){caps++;e.n=sailIn(st,i,j,dice);e.out=capture(st,i,j,e.n);}ev.push(e);if(over(st))return;}
  /* one move: the largest spare stack sails to the island with the best attack ahead of it (or the most threatened) */
- let mv=null,ms=0;for(let i=0;i<st.own.length;i++){if(st.own[i]!==f)continue;const ex=st.tr[i]-reserve(st,f,i);if(ex<2)continue;
-  for(const d of reach(st,i)){if(!adjOf(st)[d].some(k=>st.own[k]!==f))continue;
+ for(let mvN=st.moves||1;mvN>0;mvN--){
+ /* the Puffin bot (simulation only) makes an extra move, or a Pilots move past islands it doesn't hold, only for a clear gain */
+ const extra=mvN<(st.moves||1);let mv=null,ms=0;for(let i=0;i<st.own.length;i++){if(st.own[i]!==f)continue;if(extra&&(threat(st,f,i)>0||isHarb(st,i)))continue;const ex=st.tr[i]-reserve(st,f,i);if(ex<2)continue;
+  const plain=f===0&&ordV(st,'pilots')?reach(Object.assign({},st,{ord:{}}),i):null;
+  for(const d of reach(st,i)){if(!adjOf(st)[d].some(k=>st.own[k]!==f))continue;const bar=extra||(plain&&!plain.includes(d))?.15:0;
    const gain=Math.max(0,...targets(st,d).map(j=>pTake(avail(st,d)+ex,st.tr[j],fortAt(st,j))*worth(st,f,j)))-Math.max(0,...targets(st,d).map(j=>pTake(avail(st,d),st.tr[j],fortAt(st,j))*worth(st,f,j)))+.02*Math.max(0,threat(st,f,d)-st.tr[d]);
-   if(gain>ms){ms=gain;mv=[i,d,ex];}}}
- if(mv){const [a,b,n]=mv;st.tr[a]-=n;st.tr[b]+=n;ev.push({t:'move',f,from:a,to:b,n});}
+   if(gain>bar&&gain>ms){ms=gain;mv=[i,d,ex];}}}
+ if(!mv)break;{const [a,b,n]=mv;st.tr[a]-=n;st.tr[b]+=n;ev.push({t:'move',f,from:a,to:b,n});}}
  endTurn(st);}
 /* the rivals' turns, in order, until it is the player's turn again (or the round is over) */
 function rivalsTurn(st){const ev=[];for(let f=1;f<st.fl.length;f++){if(!st.alive[f])continue;const sub=[];botTurn(st,f,sub);ev.push({f,ev:sub});if(over(st))break;}
  st.turn++;return ev;}
-if(typeof module!=='undefined')module.exports={dealSetup,cashIdx,power,playerLeads,reserve,FLEETS,RULES,CHARTS,ADJ,HARB,pTake,newGame,musterInfo,startTurn,throwOnce,capture,reach,endTurn,over,botTurn,rivalsTurn,odds,avail,canFrom,targets,count,planPlace,sailIn,chainCount,chainHeld,isHarb,fortAt,DIST};
+if(typeof module!=='undefined')module.exports={dealSetup,ORDERS,SEA,ordLv,ordV,ordMax,seaCharts,newSeaGame,claimable,claim,fortify,botClaims,botForts,pTakeB,harbsOf,cashIdx,power,playerLeads,reserve,FLEETS,RULES,CHARTS,ADJ,HARB,pTake,newGame,musterInfo,startTurn,throwOnce,capture,reach,endTurn,over,botTurn,rivalsTurn,odds,avail,canFrom,targets,count,planPlace,sailIn,chainCount,chainHeld,isHarb,fortAt,DIST};
 /* ================= Archipelago v2: core (saving, site wiring, sound, timing) ================= */
 const $=id=>document.getElementById(id);
 const prefersRM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
@@ -445,7 +516,7 @@ const clamp=(v,a,b)=>v<a?a:v>b?b:v,lerp=(a,b,t)=>a+(b-a)*t;
 const KEY='digi-archipelago-v1',RUNKEY='digi-archipelago-run-v1';
 const freshMeta=()=>({ver:2,unlocked:1,best:{},seen:{},set:{snd:true,mus:true,hap:true,spd:'normal',odds:true,rm:prefersRM,fs:COARSE,mode:'standard',shuf:true},stats:{played:0,wins:0,taken:0},streak:{c:-1,n:0},turnsPlayed:0,coached:false,deals:{}});
 let meta=freshMeta();
-function migrate(m){const f=freshMeta(),o=Object.assign(f,m);o.set=Object.assign(freshMeta().set,m.set||{});o.stats=Object.assign(freshMeta().stats,m.stats||{});o.best=Object.assign({},m.best||{});o.seen=Object.assign({},m.seen||{});o.streak=Object.assign({c:-1,n:0},m.streak||{});o.deals=Object.assign({},m.deals||{});
+function migrate(m){const f=freshMeta(),o=Object.assign(f,m);o.set=Object.assign(freshMeta().set,m.set||{});o.stats=Object.assign(freshMeta().stats,m.stats||{});o.best=Object.assign({},m.best||{});o.seen=Object.assign({},m.seen||{});o.streak=Object.assign({c:-1,n:0},m.streak||{});o.deals=Object.assign({},m.deals||{});if(m.sea)o.sea=Object.assign({leg:1,ord:{},won:0,lost:0,best:0,offer:null,draft:null,strike:false,last:-1,runs:1},m.sea);
  if(m.ver!==2&&(m.turnsPlayed||0)>3)o.coached=true;o.ver=2;return o;}
 try{const v=localStorage.getItem(KEY);if(v)meta=migrate(JSON.parse(v));}catch(e){}
 function saveMeta(){try{localStorage.setItem(KEY,JSON.stringify(meta))}catch(e){}}
@@ -461,9 +532,9 @@ function clearRun(){try{localStorage.removeItem(RUNKEY)}catch(e){}}
 const GAME='archipelago';let rnd={armed:false,open:false,secs:0,how:'new'};let uiN={pauses:0};
 function trk(ev,x){try{if(window.digi&&window.digi.track)window.digi.track(ev,Object.assign({game:GAME},x));}catch(e){}}
 function rndArm(how){rnd={armed:true,open:false,secs:0,how:how||'new'};uiN={pauses:0};}
-function rndStart(){if(!rnd.armed||rnd.open||!st)return;rnd.armed=false;rnd.open=true;trk('game_start',{level:st.c+1,mode:st.mode,start:rnd.how,setup:st.deal?'shuffled':'charted'});}
+function rndStart(){if(!rnd.armed||rnd.open||!st)return;rnd.armed=false;rnd.open=true;trk('game_start',{level:st.sea?6+st.sea.leg:st.c+1,mode:st.mode,start:rnd.how,setup:st.sea?'open-sea':st.deal?'shuffled':'charted'});}
 function rndEnd(win,x){if(!rnd.open)rndStart();if(!rnd.open)return;rnd.open=false;
- trk('game_end',Object.assign({win:!!win,level:st.c+1,secs:Math.round(rnd.secs),mode:st.mode,setup:st.deal?'shuffled':'charted',turns:st.turn,score:count(st,0),pauses:uiN.pauses,fs:isFS()?1:0},x));}
+ trk('game_end',Object.assign({win:!!win,level:st.sea?6+st.sea.leg:st.c+1,secs:Math.round(rnd.secs),mode:st.mode,setup:st.sea?'open-sea':st.deal?'shuffled':'charted',turns:st.turn,score:count(st,0),pauses:uiN.pauses,fs:isFS()?1:0},x));}
 
 /* ---------- full screen (site contract §10): asked from start and resume taps only ---------- */
 const fsOK=(()=>{try{return !!(document.fullscreenEnabled||document.webkitFullscreenEnabled)}catch(e){return false}})();
@@ -849,6 +920,7 @@ function drawSoldier(k,x,y,dir,sc,t,ph,alpha){const s=SPR[k];if(!s)return;const 
  cx.fillStyle='rgba(0,0,0,.28)';cx.beginPath();cx.ellipse(x,y+1,FH*.27*sc,FH*.09*sc,0,0,7);cx.fill();
  cx.save();cx.translate(x,y);cx.scale(dir*sc,sc*sq);if(alpha!=null)cx.globalAlpha=alpha;cx.drawImage(s.cv,-s.ox,-s.oy+bob,s.w,s.h);cx.restore();}
 function drawIslandLife(i,t){const I=ISL[i],o=D.own[i],n=D.tr[i],k=fleetKey(o);const show=Math.min(n,I.maxF);const b=bump[i]||-9,bp=clamp((t-b)/.35,0,1),pop=bp<1?1+.35*(1-ease.out(bp)):1;
+ if(st.xf&&st.xf.includes(i))drawStoneFort(I);
  let fx=null;if(face&&face.i===i)fx=face.tx;
  const order=[];for(let q=0;q<show;q++)order.push(q);order.sort((a,b)=>I.slots[a][1]-I.slots[b][1]);
  for(const q of order){const [sx,sy]=I.slots[q];const x=I.x+sx,y=I.y+sy;const dir=fx!=null?(fx>=x?1:-1):(((q*7+i)%3)?1:-1);const isNew=q===show-1&&bp<1;drawSoldier(k,x,y,dir,isNew?pop:1,t,i*1.7+q*2.3);}
@@ -856,6 +928,11 @@ function drawIslandLife(i,t){const I=ISL[i],o=D.own[i],n=D.tr[i],k=fleetKey(o);c
  }
 const popOf=(i,t)=>{const bp=clamp((t-(bump[i]||-9))/.35,0,1);return bp<1?1+.35*(1-ease.out(bp)):1;};
 /* troop badges: drawn after ships and hopping birds, so nothing ever sits over a count */
+/* a Fortify stone fort: a squat grey tower on the island's flank */
+function drawStoneFort(I){const fx=I.x+I.R*.52,fy=I.y+I.R*.12,rw=FH*.42,th=FH*.55;cx.fillStyle='rgba(0,0,0,.25)';cx.beginPath();cx.ellipse(fx+3,fy+2,rw*1.15,rw*.45,0,0,7);cx.fill();
+ cx.fillStyle='#9ca19b';cx.strokeStyle='#2f3431';cx.lineWidth=1.2;cx.beginPath();cx.moveTo(fx-rw,fy-th);cx.lineTo(fx-rw,fy);cx.ellipse(fx,fy,rw,rw*.42,0,Math.PI,0,true);cx.lineTo(fx+rw,fy-th);cx.closePath();cx.fill();cx.stroke();
+ cx.fillStyle='#c9ccc5';cx.beginPath();cx.ellipse(fx,fy-th,rw,rw*.42,0,0,7);cx.fill();cx.stroke();
+ for(let k=0;k<5;k++){const a=k/5*6.283+.3;cx.fillStyle='#a7aca5';cx.beginPath();cx.rect(fx+Math.cos(a)*rw*.8-1.8,fy-th+Math.sin(a)*rw*.33-3.6,3.6,3.6);cx.fill();cx.stroke();}}
 function drawBanner(i,t,pop){const I=ISL[i],o=D.own[i],n=D.tr[i];const txt=String(n);cx.font='900 15px Nunito,system-ui,sans-serif';const tw=cx.measureText(txt).width,hasM=o>=0,w=tw+(hasM?30:18),h=25;
  const x=I.x+(I.bdx||0),y=I.y+I.bannerY,sw=meta.set.rm?0:Math.sin(t*1.6+i)*.03,zs=pop/Math.sqrt(cam.z);cx.save();cx.translate(x,y);cx.rotate(sw);cx.scale(zs,zs);
  cx.strokeStyle='rgba(30,20,10,.7)';cx.lineWidth=2;cx.beginPath();cx.moveTo(0,h/2);cx.lineTo(0,h/2+7);cx.stroke();
@@ -1061,6 +1138,8 @@ function chip(i,p){const I=ISL[i],txt=p>.995?'99%+':Math.round(p*100)+'%',zs=1/M
 function drawHighlights(t){if(!st||!D)return;const P=st.phase;
  for(const i of ui.changed){const I=ISL[i];cx.save();cx.translate(I.x,I.y);cx.scale(1.12,1.12);cx.strokeStyle='rgba(255,226,150,.65)';cx.lineWidth=2;cx.setLineDash([5,5]);cx.lineDashOffset=-t*12;cx.stroke(I.parts[0].path);cx.restore();}
  if(ui.busy&&!(P==='occupy'))return;
+ if(P==='claim')for(const j of claimable(st))ringIsland(j,'#ffd36b',t,2.5);
+ if(ui.fortify)for(let j=0;j<st.own.length;j++)if(st.own[j]===0&&!fortAt(st,j))ringIsland(j,'rgba(255,248,232,.7)',t,2);
  if(P==='attack'&&ui.sel>=0){ringIsland(ui.sel,FLEETS.puffin.col,t,3.5);for(const j of targets(st,ui.sel))arrow(ui.sel,j,j===ui.tgt,t);}
  if(P==='occupy'&&st.occ)arrow(st.occ.from,st.occ.to,true,t,'#ffd36b');
  if(P==='move'){if(ui.mv){ringIsland(ui.mv.from,FLEETS.puffin.col,t,3.5);for(const j of reach(st,ui.mv.from))if(j!==ui.mv.to)ringIsland(j,'rgba(255,248,232,.6)',t,2);if(ui.mv.to>=0)arrow(ui.mv.from,ui.mv.to,true,t,'#9fe3a8');}}}
@@ -1143,10 +1222,12 @@ function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo'
  dk.classList.remove('sl','two','solo','rv');['b1','bEnd'].forEach(id=>$(id).classList.remove('glow','sec','warn'));line('');end();showRange(null);
  if(!st){$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');return;}
  if(ui.rival>=0){const k=st.fl[ui.rival];dk.classList.add('rv');$('dIcon').src=iconURL(k);$('dTitle').textContent=FLEETS[k].name;info('Turn '+st.turn);line(FLEETS[k].mood||'Their move');setBtn('b2');setBtn('b1');hint('');return;}
- if(P==='reinforce'){$('dTitle').textContent='Reinforce';info(`<b>${st.pool}</b> to place`);line(`Tap your islands to place them<br><span class="dim">${musterText(st.lastMuster).replace(' landed at ',' at ')}</span>`);setBtn('b2',st.placed.length?'Undo':null,undo);setBtn('b1');}
+ if(P==='claim'){$('dTitle').textContent='Advance party';info(`<b>${st.claims}</b> to claim`);line('Tap a gull island next to one of yours to claim it');setBtn('b2');setBtn('b1');}
+ else if(ui.fortify){$('dTitle').textContent='Fortify';info(`<b>${st.forts}</b> stone fort${st.forts>1?'s':''} left this leg`);line('Tap one of your islands for a stone fort');setBtn('b2');setBtn('b1','Cancel',()=>{ui.fortify=false;dockUI();});$('b1').classList.add('sec');}
+ else if(P==='reinforce'){$('dTitle').textContent='Reinforce';info(`<b>${st.pool}</b> to place`);line(`Tap your islands to place them<br><span class="dim">${musterText(st.lastMuster).replace(' landed at ',' at ')}</span>`);setBtn('b2',st.placed.length?'Undo':null,undo);setBtn('b1');if(st.forts>0)end(`Fortify · ${st.forts}`,()=>{ui.fortify=true;sfx('tap');dockUI();});}
  else if(P==='attack'&&ui.blitzing){$('dTitle').textContent='Blitz';info(`<b>${D?D.tr[ui.sel]:st.tr[ui.sel]}</b> against <b>${D?D.tr[ui.tgt]:st.tr[ui.tgt]}</b> on ${nm(ui.tgt)}`);setBtn('b2');setBtn('b1',ui.blitzStop?'Stopping…':'Stop',()=>{ui.blitzStop=true;dockUI();},{always:true,dis:ui.blitzStop});$('b1').classList.add('sec');}
  else if(P==='attack'){$('dTitle').textContent='Attack';const canUndo=st.placed.length&&!st.attacked;
-  if(ui.tgt>=0&&ui.sel>=0){end('End attacks',endAttacks);const p=odds(st,ui.sel,ui.tgt);info(`<b>${p>.995?'99%+':Math.round(p*100)+'%'}</b> · ${nm(ui.tgt)}${fortAt(st,ui.tgt)?' · fort +1':''}`);setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
+  if(ui.tgt>=0&&ui.sel>=0){end('End attacks',endAttacks);const p=odds(st,ui.sel,ui.tgt),fo=defFort(st,ui.sel,ui.tgt);info(`<b>${p>.995?'99%+':Math.round(p*100)+'%'}</b> · ${nm(ui.tgt)}${fo>1?' · stone fort':fo?' · fort +1':fortAt(st,ui.tgt)?' · fort ignored':''}`);setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
   else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Chest earned this turn':'Take an island for a chest');line(phaseHint());setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);
    setBtn('b1',ui.skipAsk?'Skip attacks':'End attacks',endAttacks);$('b1').classList.add(ui.skipAsk?'warn':'sec');}}
  else if(P==='occupy'){$('dTitle').textContent='Sail in';info(`${nm(st.occ.to)} is yours`);dk.classList.add('sl');setBtn('b2');setBtn('b1','Sail '+st.occ.n,sailNow);showRange(st.occ);}
@@ -1192,14 +1273,81 @@ const newDeal=()=>((Math.random()*4294967295)>>>0)||1;
 function startChart(ci,how,deal){$('top').hidden=false;st=newGame(ci,(Math.random()*4294967295)>>>0,meta.set.mode,deal);st.assist=assistFor(ci);cps=[];
  resetScene();meta.stats.played++;saveMeta();rndArm(how||'new');hideModal();$('dock').hidden=false;layout();syncD();
  banner(chartOf(st).name,(chartOf(st).real?'A real chart':'An invented chart')+(st.deal?' · shuffled':''),'puffin',2400);setTimeout(()=>beginTurn(),TEST?0:2000);}
+/* ---------- the open sea: runs, legs, the draft and the strike (spec 14 Oct 2026) ---------- */
+const allCharted=()=>CHARTS.every(c=>(meta.best[c.id]||0)>0);
+const freshSea=()=>({leg:1,ord:{},won:0,lost:0,best:0,offer:null,draft:null,strike:false,last:-1,runs:1});
+function seaState(){if(!meta.sea)meta.sea=freshSea();return meta.sea;}
+const ordLevels=o=>Object.values(o||{}).reduce((a,b)=>a+b,0);
+function startSeaLeg(ci,deal,seat,how){const S=seaState();$('top').hidden=false;st=newSeaGame(ci,(Math.random()*4294967295)>>>0,deal,S.leg,S.ord,seat);st.assist=0;cps=[];
+ S.last=ci;S.offer=[{ci,deal,seat}];saveMeta();   /* kept until the leg ends, so leaving mid-leg can't re-deal it */resetScene();meta.stats.played++;saveMeta();rndArm(how||'new');hideModal();$('dock').hidden=false;layout();syncD();
+ banner('Open sea '+S.leg,chartOf(st).name,'puffin',2400);setTimeout(()=>{if(!st)return;if(st.phase==='claim'){dockUI();sign('claim','Advance party','Claim gull islands next to yours before the first turn.',()=>st&&st.phase==='claim');}else beginTurn();},TEST?0:2000);}
+/* two charts to choose from for the next leg (never the one just played), kept so a reload offers the same pair */
+function seaOffers(){const S=seaState();if(S.offer)return S.offer;const pool=seaCharts(S.leg).filter(ci=>ci!==S.last);
+ const a=pool.splice(Math.floor(Math.random()*pool.length),1)[0],b=pool[Math.floor(Math.random()*pool.length)];
+ S.offer=[a,b].map(ci=>({ci,deal:newDeal()}));saveMeta();return S.offer;}
+/* three cards: at least one new order while any are unheld, at least one level-up once something can level, all different */
+function seaDraft(){const S=seaState(),ids=Object.keys(ORDERS),fresh=ids.filter(i=>!S.ord[i]),up=ids.filter(i=>S.ord[i]&&S.ord[i]<ordMax(i)),pick=a=>a.splice(Math.floor(Math.random()*a.length),1)[0];
+ const f=fresh.slice(),u=up.slice(),out=[];if(f.length)out.push(pick(f));if(u.length)out.push(pick(u));const rest=f.concat(u);while(out.length<3&&rest.length)out.push(pick(rest));
+ return out.sort(()=>Math.random()-.5);}
+const ordHTML=(o,id)=>`<div class="ord"><b>${ORDERS[id].n} ${ROMAN[o[id]]}</b><small>${ORDERS[id].t(ORDERS[id].v[o[id]-1])}</small></div>`;
+function ordList(o){const ids=Object.keys(o||{}).filter(id=>ORDERS[id]&&o[id]>0);return ids.length?`<div class="ords">${ids.map(id=>ordHTML(o,id)).join('')}</div>`:'<p class="sub" style="font-size:13.5px">No standing orders yet. Win a leg to choose your first.</p>';}
+function seaCard(){const S=seaState(),run=loadRun(),seaRun=run&&run.st.sea,clash=run&&!run.st.sea;
+ const mul=Math.round((SEA.mul(S.leg)-1)*100),g=SEA.gar(S.leg);
+ const head=`<div class="kick">The open sea${S.runs>1?` · voyage ${S.runs}`:''}</div><h2>Open sea ${S.leg}</h2>
+  <p class="sub" style="font-size:13.5px">Furthest: ${S.best?'Open sea '+S.best:'none yet'} · ${S.won} leg${S.won===1?'':'s'} won · ${S.lost} lost.${mul||g?` This leg the rivals muster ${mul}% more${g?` and gull garrisons are ${g} heavier`:''}.`:''}</p>
+  <div class="kick">Standing orders</div>${ordList(S.ord)}`;
+ const foot=`<button class="cbtn" id="bk">Back</button><button class="cbtn danger" id="nv">New voyage</button>`;
+ const bindFoot=()=>{$('bk').addEventListener('click',home);$('nv').addEventListener('click',e=>{const b=e.currentTarget;if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again: back to Open sea 1, no orders';return;}
+  const best=S.best,runs=S.runs;meta.sea=freshSea();meta.sea.best=best;meta.sea.runs=runs+1;if(seaRun)clearRun();saveMeta();sfx('tap');seaCard();});};
+ if(seaRun){showModal(head+`<button class="cbtn pri" id="cont">Continue · ${CHARTS[run.st.c].name}, turn ${run.st.turn}</button>`+foot,'',()=>{$('cont').addEventListener('click',()=>{goFS();auStart();resume(run);});bindFoot();});return;}
+ if(S.strike){strikeCard();return;}
+ if(S.draft){draftCard();return;}
+ const offers=seaOffers(),canSeat=ordLv({ord:S.ord},'owncharts')>0;
+ const cards=offers.map((o,k)=>{const c=CHARTS[o.ci],D_=dealSetup(o.ci,o.deal,'standard',o.seat),ok=c.fleets.map(x=>c.start[x].h).filter(h=>!c.deal||c.deal.includes(h));
+  const fl=D_.fl.slice();if(c.sea4&&S.leg>=SEA.fourthFrom&&fl.length<4)fl.push(['cormorant','gannet','skua'].find(x=>!fl.includes(x)));
+  return `<div class="offer"><div class="top"><canvas data-off="${k}"></canvas><div><h3>${c.name}</h3><p>You start at <b>${c.isl[D_.seats[0].h].n}</b>.</p><p class="riv">${fl.slice(1).map(x=>`<img src="${iconURL(x)}" alt="${FLEETS[x].name}">`).join('')} ${fl.length-1} rival${fl.length>2?'s':''}</p></div></div>
+   ${canSeat&&ok.length>1?`<div class="seats">${ok.map(h=>`<button class="cbtn${h===D_.seats[0].h?' on':''}" data-o="${k}" data-h="${h}">${c.isl[h].n}</button>`).join('')}</div>`:''}
+   <button class="cbtn pri" data-go="${k}">Sail to ${c.name}</button></div>`;}).join('');
+ showModal(head+`<div class="kick">Choose the next leg</div>${cards}${clash?`<p class="sub" style="font-size:13px">Setting sail ends your unfinished ${CHARTS[run.st.c].name} round.</p>`:''}`+foot,'',()=>{
+  $('card').querySelectorAll('[data-off]').forEach(cv=>{const o=offers[+cv.dataset.off],D_=dealSetup(o.ci,o.deal,'standard',o.seat);drawMini(cv,o.ci,D_.own,D_.fl);});
+  $('card').querySelectorAll('[data-h]').forEach(b=>b.addEventListener('click',()=>{offers[+b.dataset.o].seat=+b.dataset.h;saveMeta();sfx('tap');seaCard();}));
+  $('card').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{const o=offers[+b.dataset.go];goFS();auStart();startSeaLeg(o.ci,o.deal,o.seat,S.retry?'retry':'new');S.retry=false;saveMeta();}));
+  bindFoot();});}
+function draftCard(){const S=seaState(),ids=S.draft;
+ const cards=ids.map(id=>{const l=(S.ord[id]||0)+1,v=ORDERS[id].v[l-1],now=S.ord[id]?` <small>Now: ${ORDERS[id].t(ORDERS[id].v[S.ord[id]-1])}</small>`:'';
+  return `<button class="ord" data-id="${id}"><b>${ORDERS[id].n} ${ROMAN[l]}</b>${l>1?' · level up':' · new'}<small>${ORDERS[id].t(v)}</small>${now}</button>`;}).join('');
+ showModal(`<div class="kick">Open sea ${S.leg-1} won</div><h2>Choose a standing order</h2><p class="sub" style="font-size:13.5px">It lasts the whole voyage. A lost leg costs one level of an order you choose.</p>
+  <div class="ords">${cards||'<p>Every order is at its top level. Sail on.</p>'}</div>${cards?'':'<button class="cbtn pri" id="on">Sail on</button>'}<div class="kick">Already held</div>${ordList(S.ord)}`,'',()=>{
+  $('card').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.id;S.ord[id]=Math.min(ordMax(id),(S.ord[id]||0)+1);S.draft=null;saveMeta();sfx('spoils');seaCard();}));
+  if($('on'))$('on').addEventListener('click',()=>{S.draft=null;saveMeta();seaCard();});});}
+function strikeCard(){const S=seaState(),ids=Object.keys(S.ord).filter(id=>S.ord[id]>0),c=S.last>=0?CHARTS[S.last]:null;
+ showModal(`<div class="kick">Open sea ${S.leg} lost</div><h2>Strike one level</h2><p class="sub" style="font-size:13.5px">Driven from ${c?c.name:'the leg'}. Choose a standing order to lose one level; a level I order is struck off. Then you go again on a fresh deal.</p>
+  <div class="ords">${ids.map(id=>`<button class="ord" data-id="${id}"><b>${ORDERS[id].n} ${ROMAN[S.ord[id]]}</b>${S.ord[id]>1?` → ${ROMAN[S.ord[id]-1]}`:' · struck off'}<small>${ORDERS[id].t(ORDERS[id].v[S.ord[id]-1])}</small></button>`).join('')}</div>`,'',()=>{
+  $('card').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.id;S.ord[id]--;if(S.ord[id]<=0)delete S.ord[id];S.strike=false;S.retry=true;
+   if(S.last>=0)S.offer=[{ci:S.last,deal:newDeal()}];saveMeta();sfx('tap');seaCard();}));});}
+/* the end of a leg */
+function seaEnd(win){const S=seaState(),L=S.leg;
+ if(win){S.won++;S.best=Math.max(S.best,L);S.leg=L+1;S.offer=null;S.retry=false;const d=seaDraft();S.draft=d.length?d:null;}
+ else{S.lost++;S.offer=null;if(ordLevels(S.ord)>0)S.strike=true;else{S.retry=true;if(S.last>=0)S.offer=[{ci:S.last,deal:newDeal()}];}}
+ saveMeta();}
+function seaWinCard(){const S=seaState(),c=chartOf(st);
+ showModal(`<div class="kick">Open sea ${S.leg-1}</div><h2>${c.name} ${['scilly','varr','channel'].includes(c.id)?'are':'is'} yours</h2>
+  <p class="sub" style="text-align:center">${st.turn} turn${st.turn===1?'':'s'} · ${st.stats.taken} island${st.stats.taken===1?'':'s'} taken</p>
+  <p class="tip">On to Open sea ${S.leg}. The rivals will muster ${Math.round((SEA.mul(S.leg)-1)*100)}% more.</p>
+  <button class="cbtn pri" id="go">${S.draft?'Choose a standing order':'Sail on'}</button><div class="links">${homeLink}</div>`,'',()=>{$('go').addEventListener('click',()=>{st=null;D=null;seaCard();});});}
+function seaLossCard(){const S=seaState(),c=chartOf(st);
+ showModal(`<div class="kick">Open sea ${S.leg}</div><h2>Driven from ${c.name}</h2><p>Your last island fell on turn ${st.turn}.${S.strike?' A lost leg costs one level of a standing order.':' You hold no orders, so nothing is lost: deal again and go back out.'}</p>
+  <button class="cbtn pri" id="go">${S.strike?'Strike a level':'Deal again'}</button><div class="links">${homeLink}</div>`,'',()=>{$('go').addEventListener('click',()=>{st=null;D=null;seaCard();});});}
 function resetScene(){cam.turn=0;cam.man=null;ui={sel:-1,tgt:-1,mv:null,busy:false,blitzing:false,blitzStop:false,skipAsk:false,chains:ui.chains,changed:new Set(),coach:null,rival:-1,occShip:null};DT=null;ships=[];flyers=[];parts=[];floats=[];face=null;speedK=1;skipNow=false;cam.shake=0;unfocus();}
 /* where this turn's troops came from, in words */
-function musterText(m){if(!m)return '';const c=chartOf(st),n=count(st,0),bits=[`${m.base} for ${n} island${n>1?'s':''}`];m.held.forEach(k=>bits.push(`${c.chains[k].b} ${c.chains[k].n}`));if(m.spoils)bits.push(`${m.spoils} spoils`);
- return bits.join(' · ')+(m.harbs&&m.harbs.length?` · +${RULES.harbourBonus} landed at ${m.harbs.length>1?'each harbour':nm(m.harbs[0])}`:'');}
+function musterText(m){if(!m)return '';const c=chartOf(st),n=count(st,0),qm=ordV(st,'quarter'),bits=[`${m.base} for ${n} island${n>1?'s':''}`];m.held.forEach(k=>bits.push(`${c.chains[k].b+qm} ${c.chains[k].n}`));if(m.spoils)bits.push(`${m.spoils} spoils`);
+ if(m.vet)bits.push(`${m.vet} Veterans`);if(m.reserves)bits.push(`${m.reserves} Reserves`);
+ const hb=(m.harbs||[]).map(h=>harbBonus(st,0,h)),same=hb.every(v=>v===hb[0]);
+ return bits.join(' · ')+(hb.length?(same?` · +${hb[0]} landed at ${hb.length>1?'each harbour':nm(m.harbs[0])}`:` · ${m.harbs.map((h,q)=>`+${hb[q]} at ${nm(h)}`).join(', ')}`):'');}
 function beginTurn(){if(!st||st.phase==='over')return;cps.push(JSON.stringify(st));if(cps.length>4)cps.shift();const m=startTurn(st,0);st.lastMuster=m;st.phase='reinforce';st.attacked=false;st.occ=null;
  ui.sel=ui.tgt=-1;ui.mv=null;ui.rival=-1;speedK=1;skipNow=false;landK=0;saveRun();dockUI();
  banner('Your turn',`+${m.total} troops to place<br>${musterText(m)}`,'puffin',3800);sfx('yourTurn');
- for(const h of m.harbs)for(let q=0;q<RULES.harbourBonus;q++)flyIn(h,0,edgeFrom(h),350+q*140);
+ for(const h of m.harbs)for(let q=0;q<harbBonus(st,0,h);q++)flyIn(h,0,edgeFrom(h),350+q*140);
  if(m.spoils)setTimeout(()=>{note(`Three spoils chests cashed in: <b>+${m.spoils}</b> troops. The next three will be worth <b>+${nextCash()}</b>.`,6500);sfx('spoils');},1400);
  const inReinf=()=>st&&st.phase==='reinforce'&&ui.rival<0;
  if(st.turn>=2&&playerLeads(st))setTimeout(()=>sign('lead','They’re coming for you','You lead the chart, so the rivals have stopped fighting each other and are turning on you.',inReinf),1600);
@@ -1237,7 +1385,10 @@ function say(txt){hint(txt);clearTimeout(info.t);info.t=setTimeout(()=>{if(st)co
 function setMoveTo(i){const mv=ui.mv;mv.to=i;mv.min=1;mv.max=st.tr[mv.from]-1;mv.n=mv.max;sfx('tap');dockUI();}
 function tap(i){if(!st)return;const P=st.phase;if(ui.skipAsk){ui.skipAsk=false;clearTimeout(endAttacks.t);}
  if(ui.rival>=0||P==='rival'||ui.busy)return;
- if(i<0){if(P==='attack'&&ui.sel>=0)cancelSel();else if(P==='move'&&ui.mv&&ui.mv.to<0){ui.mv=null;dockUI();}return;}
+ if(i<0){if(ui.fortify){ui.fortify=false;dockUI();}else if(P==='attack'&&ui.sel>=0)cancelSel();else if(P==='move'&&ui.mv&&ui.mv.to<0){ui.mv=null;dockUI();}return;}
+ if(P==='claim'){if(claim(st,i)){act();syncD();bump[i]=tnow();const I=ISL[i];floatTxt(I.x,I.y-I.R*.4,'Claimed','#ffd36b');sfx('land',{k:0});buildBorders&&(bordersKey='');saveRun();if(st.phase!=='claim'){dockUI();setTimeout(()=>beginTurn(),TEST?0:600);}else dockUI();}
+  else say(st.own[i]<0?`${nm(i)} isn’t next to your islands`:'Tap a gull island next to one of yours');return;}
+ if(ui.fortify){if(fortify(st,i)){act();const I=ISL[i];floatTxt(I.x,I.y-I.R*.4,'Stone fort','#ffd36b');sfx('march',{n:2});ui.fortify=false;saveRun();dockUI();}else say(st.own[i]!==0?'Forts go on your own islands':`${nm(i)} already has a fort`);return;}
  if(P==='reinforce'){if(st.own[i]===0)place(i);else info(i);return;}
  if(P==='attack'){
   if(st.own[i]===0){if(i===ui.sel){cancelSel();return;}
@@ -1303,6 +1454,8 @@ async function replayRivals(ev){speedK=1;const lines=[],changed=new Set(),caps=[
  skipNow=false;speedK=1;speedMul=1;ui.rival=-1;ui.log={turn:st.turn-1,lines:lines.slice()};syncD();return {lines,changed};}
 function finishIfOver(){const r=over(st);if(!r)return false;endRound(r==='win');return true;}
 function endRound(win){if(st.phase==='over')return;st.phase='over';ui.busy=false;ui.rival=-1;const c=chartOf(st);let stars=0;syncD();
+ if(st.sea){seaEnd(win);if(win){meta.stats.wins++;meta.streak={c:-1,n:0};sfx('win');for(const I of ISL)confetti(I,FLEETS.puffin.col);}else sfx('lose');
+  saveMeta();clearRun();rndEnd(win,{orders:ordLevels(st.ord),losses:meta.sea.lost});dockUI();hint('');setTimeout(()=>win?seaWinCard():seaLossCard(),TEST?0:1100);return;}
  if(win&&st.deal){const d=meta.deals[c.id]||{w:0,b:0};d.w++;d.b=d.b?Math.min(d.b,st.turn):st.turn;meta.deals[c.id]=d;meta.stats.wins++;meta.streak={c:-1,n:0};sfx('win');for(const I of ISL)confetti(I,FLEETS.puffin.col);}
  else if(win){stars=st.turn<=c.par?3:st.turn<=c.par+3?2:1;st.firstWin=!meta.best[c.id];meta.best[c.id]=Math.max(meta.best[c.id]||0,stars);meta.unlocked=Math.max(meta.unlocked,st.c+2);meta.stats.wins++;meta.streak={c:-1,n:0};sfx('win');for(const I of ISL)confetti(I,FLEETS.puffin.col);}
  else{meta.streak=meta.streak.c===st.c?{c:st.c,n:meta.streak.n+1}:{c:st.c,n:1};sfx('lose');}
@@ -1326,16 +1479,26 @@ function drawMini(c,ci,own,fl){try{const r=c.getBoundingClientRect(),w=Math.max(
   if(HARB[ci][i]!==undefined){const k=own&&own[i]>=0?FL[own[i]]:HARB[ci][i];g.strokeStyle='#2a221b';g.lineWidth=1.2;g.beginPath();g.moveTo(x,y);g.lineTo(x,y-rr_*1.1-4);g.stroke();g.fillStyle=FLEETS[k].col;g.beginPath();g.moveTo(x,y-rr_*1.1-4);g.lineTo(x+7,y-rr_*1.1-1.5);g.lineTo(x,y-rr_*1.1+1);g.closePath();g.fill();}});}catch(e){}}
 function mascot(c){try{const R=Math.min(2,window.devicePixelRatio||1),saved=DPR;DPR=R;const s=birdCanvas('puffin',96,FLEETS.puffin.col,true,1);DPR=saved;c.width=Math.round(104*R);c.height=Math.round(120*R);const g=c.getContext('2d');g.setTransform(R,0,0,R,0,0);
  g.fillStyle='rgba(0,0,0,.25)';g.beginPath();g.ellipse(52,114,30,6,0,0,7);g.fill();g.drawImage(s.cv,52-s.ox,116-s.oy,s.w,s.h);}catch(e){}}
+/* the open-sea row under the charts: locked until every chart is won */
+function seaRow(){const open=allCharted(),S=meta.sea;
+ return `<div class="kick" style="margin-top:14px">Beyond the charts</div><button class="ccard" id="seaRow" ${open?'':'disabled'}><canvas id="seaMini"></canvas><span class="ci"><b>The open sea</b><small>${open?(S?`Open sea ${S.leg} · ${ordLevels(S.ord)} order level${ordLevels(S.ord)===1?'':'s'}${S.best?` · furthest ${S.best}`:''}`:'Endless legs on shuffled charts. Win one, take a standing order.'):'Win every chart to sail the open sea'}</small></span></button>`;}
+function drawSeaMini(c){try{if(!c)return;const r=c.getBoundingClientRect(),w=Math.max(60,r.width||84),h=Math.max(60,r.height||84),R=Math.min(2,window.devicePixelRatio||1);c.width=Math.round(w*R);c.height=Math.round(h*R);const g=c.getContext('2d');g.setTransform(R,0,0,R,0,0);
+ const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#1f7f9f');gr.addColorStop(1,'#0b3e5c');g.fillStyle=gr;g.fillRect(0,0,w,h);
+ g.strokeStyle='rgba(255,255,255,.35)';g.lineWidth=1.4;for(let k=0;k<5;k++){const y=14+k*15,x=8+(k%2)*18;g.beginPath();g.moveTo(x,y);g.quadraticCurveTo(x+7,y-4,x+14,y);g.quadraticCurveTo(x+21,y+4,x+28,y);g.stroke();}
+ [[w*.72,h*.3,7],[w*.6,h*.72,5]].forEach(([x,y,rr_],q)=>{const pts=blobPts(77+q*13,rr_*1.4,.82);g.save();g.translate(x,y+1.5);g.fillStyle='#6a5034';g.fill(pathOf(pts));g.restore();g.save();g.translate(x,y);g.fillStyle='#edd9a6';g.fill(pathOf(pts));g.scale(.74,.74);g.fillStyle='#86b85a';g.fill(pathOf(pts));g.restore();});
+ g.strokeStyle='#2a221b';g.lineWidth=1.4;g.beginPath();g.moveTo(w*.28,h*.62);g.lineTo(w*.28,h*.36);g.stroke();g.fillStyle=FLEETS.puffin.col;g.beginPath();g.moveTo(w*.28,h*.36);g.lineTo(w*.4,h*.41);g.lineTo(w*.28,h*.46);g.closePath();g.fill();
+ g.fillStyle='#86532f';g.beginPath();g.moveTo(w*.16,h*.62);g.lineTo(w*.42,h*.62);g.quadraticCurveTo(w*.38,h*.7,w*.33,h*.7);g.lineTo(w*.22,h*.7);g.closePath();g.fill();}catch(e){}}
 function home(){$('dock').hidden=true;$('top').hidden=true;hint('');const run=loadRun(),nxt=Math.max(0,Math.min(meta.unlocked,CHARTS.length)-1);
  const rows=CHARTS.map((c,ci)=>{const open=ci<meta.unlocked,b=meta.best[c.id]||0;const riv=c.fleets.slice(1).map(k=>`<img src="${iconURL(k)}" alt="${FLEETS[k].name}">`).join('');
   return `<button class="ccard" data-c="${ci}" ${open?'':'disabled'}><canvas data-mini="${ci}"></canvas><span class="ci"><b>${c.name}</b><small>${c.real?'Real':'Invented'} chart · ${c.isl.length} islands${meta.deals[c.id]?` · ${meta.deals[c.id].w} shuffled win${meta.deals[c.id].w>1?'s':''}`:''}</small><span class="riv">${riv}</span></span>${open?`<span class="st">${b?starsHTML(b):'<span class="off">★★★</span>'}</span>`:`<span class="lock">Clear chart ${ci} to unlock</span>`}</button>`;}).join('');
  showModal(`<div class="hero"><canvas id="masc"></canvas><div class="htext"><span class="tag">A Digi strategy game</span><h1>Archipelago</h1><p>Command the Puffins. Take every island.</p></div></div>
-  ${run?`<button class="cbtn pri" id="cont">Continue · ${CHARTS[run.st.c].name}, turn ${run.st.turn}</button>`:`<button class="cbtn pri" id="play">Set sail · ${CHARTS[nxt].name}</button>`}
-  <div class="kick">Charts</div>${rows}
+  ${run?`<button class="cbtn pri" id="cont">Continue · ${run.st.sea?`Open sea ${run.st.sea.leg}, `:''}${CHARTS[run.st.c].name}, turn ${run.st.turn}</button>`:`<button class="cbtn pri" id="play">Set sail · ${CHARTS[nxt].name}</button>`}
+  <div class="kick">Charts</div>${rows}${seaRow()}
   <div class="tlinks"><button class="link" id="how" type="button">How to play</button><button class="link" id="set" type="button">Settings</button>${homeLink}</div>`,'title',()=>{
   mascot($('masc'));$('card').querySelectorAll('[data-mini]').forEach(c=>drawMini(c,+c.dataset.mini));
   if(run)$('cont').addEventListener('click',()=>{goFS();resume(run);});else $('play').addEventListener('click',()=>{goFS();auStart();startChart(nxt,'new');});
   $('card').querySelectorAll('[data-c]').forEach(b=>b.addEventListener('click',()=>{sfx('tap');intro(+b.dataset.c);}));
+  if($('seaRow')){drawSeaMini($('seaMini'));$('seaRow').addEventListener('click',()=>{sfx('tap');seaCard();});}
   $('how').addEventListener('click',()=>how(home));$('set').addEventListener('click',()=>settings(home));});}
 /* a chart's card. Once a chart has been won, it can be played as charted (the authored start, with stars and the tip)
    or as a shuffled deal (dealSetup): a fresh start you can look over and re-deal before you sail */
@@ -1358,7 +1521,7 @@ function intro(ci,deal){const c=CHARTS[ci],assist=Math.round(assistFor(ci)*100);
   if(same)$('cont').addEventListener('click',()=>{goFS();resume(run);});
   $('go').addEventListener('click',e=>{const b=e.currentTarget;if(same&&!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again to start over';return;}goFS();auStart();startChart(ci,'new',shuf?deal:undefined);});$('bk').addEventListener('click',home);});}
 function resume(run){$('top').hidden=false;st=run.st;if(!st.cashF)st.cashF=st.fl.map(()=>0);cps=run.cps||[];resetScene();rndArm('resume');hideModal();$('dock').hidden=false;layout();syncD();auStart();
- if(finishIfOver())return;if(st.phase==='rivals-done'||st.phase==='rival'){beginTurn();return;}if(st.phase==='occupy'&&!st.occ)st.phase='attack';dockUI();note('Back where you left off.',2400);}
+ if(finishIfOver())return;if(st.phase==='rivals-done'||st.phase==='rival'){beginTurn();return;}if(st.phase==='occupy'&&!st.occ)st.phase='attack';dockUI();note(st.sea?`Back on Open sea ${st.sea.leg}.`:'Back where you left off.',2400);}
 function winCard(stars){if(st.deal){dealWinCard();return;}const c=chartOf(st),nx=st.c+1<CHARTS.length?st.c+1:-1;
  showModal(`<div class="kick">Chart ${st.c+1} · ${c.real?'Real':'Invented'}</div><h2>${c.name} ${['scilly','varr','channel'].includes(c.id)?'are':'is'} yours</h2>
   <div class="big-stars">${[0,1,2].map(k=>`<span class="${k<stars?'':'off'}" style="animation-delay:${.15+k*.18}s">★</span>`).join('')}</div>
@@ -1380,7 +1543,7 @@ function lossCard(){const c=chartOf(st),k=Math.max(0,cps.length-3),cp=cps[k];let
   if(cp)$('rt').addEventListener('click',()=>{goFS();retryFrom(cp);});$('rs').addEventListener('click',()=>{goFS();startChart(st.c,'retry',st.deal);});if($('nd'))$('nd').addEventListener('click',()=>{const ci=st.c;st=null;D=null;intro(ci);});$('ch').addEventListener('click',()=>{st=null;D=null;home();});});}
 function retryFrom(cp){$('top').hidden=false;st=JSON.parse(cp);if(!st.cashF)st.cashF=st.fl.map(()=>0);st.rs=(Math.random()*4294967295)>>>0;st.assist=assistFor(st.c);cps=[];resetScene();rndArm('retry');hideModal();$('dock').hidden=false;layout();syncD();beginTurn();note('Back to turn '+st.turn+'. New dice, same seas.',2600);}
 /* standings: every fleet's islands, troops and income, a bar for its share of all the power on the chart, and the last rival turn */
-function incomeOf(f){const c=chartOf(st),m=musterInfo(st,f);let t=m.total;if(f!==0)t=Math.max(1,Math.round(t*(RULES.aiMul[st.mode]||1)*(c.ai||1)*(st.assist?1-st.assist:1)));return {t:t+m.harbs.length*RULES.harbourBonus,held:m.held};}
+function incomeOf(f){const c=chartOf(st),m=musterInfo(st,f);let t=m.total;if(f!==0)t=Math.max(1,Math.round(t*(RULES.aiMul[st.mode]||1)*(c.ai||1)*(st.assist?1-st.assist:1)*(st.sea?st.sea.mul:1)));return {t:t+m.harbs.reduce((a,h)=>a+harbBonus(st,f,h),0),held:m.held};}
 function standings(){if(!st||st.phase==='over'||!$('modal').hidden)return;const c=chartOf(st);let all=0;st.fl.forEach((k,f)=>{if(st.alive[f])all+=power(st,f);});
  const rows=st.fl.map((k,f)=>{const n=count(st,f);if(!st.alive[f])return `<div class="fr out" style="--c:${FLEETS[k].col}"><img src="${iconURL(k)}" alt=""><span><b>${FLEETS[k].name}</b><small>Out of the fight</small></span></div>`;
   let troops=0;st.own.forEach((o,i)=>{if(o===f)troops+=st.tr[i];});const inc=incomeOf(f),ch=inc.held.map(h=>c.chains[h].n).join(', '),sp=st.spoils[f];
@@ -1389,7 +1552,7 @@ function standings(){if(!st||st.phase==='over'||!$('modal').hidden)return;const 
  showModal(`<div class="kick">${c.name} · turn ${st.turn}</div><h2>Fleets</h2>${rows}
   <p class="sub" style="font-size:13px">The bar is each fleet’s share of all the troops and islands on the chart.${playerLeads(st)?' <b>You lead, so the rivals are coming for you.</b>':''}</p>
   ${ui.log?`<div class="kick">Rivals’ last turn</div>${lg}`:''}<button class="cbtn pri" id="bk">Back to the chart</button>`,'',()=>$('bk').addEventListener('click',()=>{goFS();hideModal();}));}
-function pause(){if(!st||st.phase==='over'){home();return;}uiN.pauses++;const c=chartOf(st);
+function pause(){if(!st||st.phase==='over'){home();return;}uiN.pauses++;const c=chartOf(st);if(st.sea){seaPause();return;}
  showModal(`<h2>Paused</h2><p class="sub">${c.name} · turn ${st.turn} · you hold ${count(st,0)} of ${c.isl.length} islands · par ${c.par}</p>
   <button class="cbtn pri" id="rs">Resume</button>${fsOK?`<button class="sw" id="pF" role="switch" aria-checked="${meta.set.fs}"><span>Full screen<small>Hides the browser bars</small></span><i class="t"></i></button>`:''}<button class="cbtn" id="set">Settings</button><button class="cbtn" id="how">How to play</button><button class="cbtn" id="ch">All charts</button>
   <button class="cbtn danger" id="rc">Restart this chart</button><div class="links">${homeLink}</div>`,'',()=>{
@@ -1397,6 +1560,15 @@ function pause(){if(!st||st.phase==='over'){home();return;}uiN.pauses++;const c=
   if($('pF'))$('pF').addEventListener('click',e=>{const b=e.currentTarget;meta.set.fs=!meta.set.fs;b.setAttribute('aria-checked',meta.set.fs);saveMeta();if(meta.set.fs)goFS();else exitFS();});$('how').addEventListener('click',()=>how(pause));
   $('ch').addEventListener('click',()=>{saveRun();home();});
   $('rc').addEventListener('click',e=>{const b=e.currentTarget;if(b.dataset.sure){goFS();startChart(st.c,'retry');}else{b.dataset.sure=1;b.textContent='Tap again to restart from nothing';}});});}
+function seaPause(){const c=chartOf(st);
+ showModal(`<h2>Paused</h2><p class="sub">Open sea ${st.sea.leg} · ${c.name} · turn ${st.turn} · you hold ${count(st,0)} of ${c.isl.length} islands</p>
+  <button class="cbtn pri" id="rs">Resume</button>${fsOK?`<button class="sw" id="pF" role="switch" aria-checked="${meta.set.fs}"><span>Full screen<small>Hides the browser bars</small></span><i class="t"></i></button>`:''}
+  <div class="kick">Standing orders</div>${ordList(st.ord)}<button class="cbtn" id="set">Settings</button><button class="cbtn" id="how">How to play</button><button class="cbtn" id="ch">Leave for now</button>
+  <button class="cbtn danger" id="ab">Abandon leg</button><div class="links">${homeLink}</div>`,'',()=>{
+  $('rs').addEventListener('click',()=>{goFS();hideModal();});$('set').addEventListener('click',()=>settings(pause));$('how').addEventListener('click',()=>how(pause));
+  if($('pF'))$('pF').addEventListener('click',e=>{const b=e.currentTarget;meta.set.fs=!meta.set.fs;b.setAttribute('aria-checked',meta.set.fs);saveMeta();if(meta.set.fs)goFS();else exitFS();});
+  $('ch').addEventListener('click',()=>{saveRun();home();});
+  $('ab').addEventListener('click',e=>{const b=e.currentTarget;if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again: counts as a lost leg';return;}hideModal();rndStart();endRound(false);});});}
 function settings(back){const s=meta.set;const sw=(id,on,l,sub)=>`<button class="sw" id="${id}" role="switch" aria-checked="${on}"><span>${l}${sub?`<small>${sub}</small>`:''}</span><i class="t"></i></button>`;
  const seg=(key,opts)=>`<div class="seg">${opts.map(([v,l])=>`<button class="cbtn${s[key]===v?' on':''}" data-k="${key}" data-v="${v}">${l}</button>`).join('')}</div>`;
  showModal(`<div class="phead"><button class="cbtn" id="bk">‹ Back</button><h2>Settings</h2></div>
@@ -1419,6 +1591,7 @@ function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">�
  <li><b>Move</b> once a turn: tap one of your islands, then where they go. They can travel through any chain of your own islands. Tap the destination again (or press Move) to send them, then the rivals sail.</li>
  <li><b>Rivals</b> fight each other, but if you pull ahead they turn on you together. Tap the fleet bar to see who’s winning.</li>
  <li><b>Shuffled deals:</b> once you’ve won a chart, its card offers Shuffled as well as Charted: the same islands, but your harbour, your rivals, their harbours and the gull garrisons are dealt fresh. Deal again until you like the look of it. Stars come from the charted start; shuffled wins keep their own record.</li>
+ <li><b>The open sea</b> opens once every chart is won: endless legs, each a shuffled deal, with the rivals mustering a little more every leg. Win a leg and choose a standing order (new, or the next level of one you hold); lose one and you strike a level of your choice, then deal again.</li>
  <li><b>Camera:</b> each turn opens on the whole chart and it closes in on attacks. Pinch or drag to look around, and double-tap open sea to see the whole chart.</li></ol>`,'',()=>$('bk').addEventListener('click',back));}
 
 /* ---------- input: a tap picks the island under it; a held finger keeps sending troops;
@@ -1466,8 +1639,8 @@ if(TEST)window.__dg={
   if(win){for(let i=0;i<n;i++){st.own[i]=0;st.tr[i]=Math.max(1,st.tr[i]);}}else{const r=st.fl.findIndex((k,f)=>f>0);for(let i=0;i<n;i++)st.own[i]=r;}finishIfOver();},
  state:()=>JSON.parse(JSON.stringify({st,meta,phase:st&&st.phase,D,ui:{sel:ui.sel,tgt:ui.tgt,busy:ui.busy,rival:ui.rival}})),
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
+ sea:(leg,ord,ci)=>{meta.best=Object.fromEntries(CHARTS.map(c=>[c.id,meta.best[c.id]||1]));const S=seaState();S.leg=leg||1;S.ord=ord||{};S.offer=null;S.draft=null;S.strike=false;saveMeta();startSeaLeg(ci==null?1:ci,12345);},seaCard:()=>seaCard(),claimTap:i=>tap(i),fortTap:i=>{ui.fortify=true;tap(i);},seaState:()=>JSON.parse(JSON.stringify(meta.sea||null)),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
