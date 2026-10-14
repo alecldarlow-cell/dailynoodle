@@ -66,7 +66,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 #hint{position:fixed;left:50%;bottom:calc(var(--dockH) + 8px);transform:translateX(-50%);z-index:5;box-sizing:border-box;background:rgba(6,28,41,.82);border:1px solid rgba(244,233,204,.18);color:var(--paper);padding:5px 13px;border-radius:14px;font-size:14px;font-weight:800;line-height:1.3;text-align:center;width:max-content;max-width:min(calc(100vw - 24px),440px);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:opacity .5s,background .25s;pointer-events:none}
 #hint.coach{background:var(--paper);color:var(--ink);box-shadow:0 6px 18px rgba(0,0,0,.35);animation:nudge 1.6s ease-in-out infinite}
 #hint:empty,#hint.off{opacity:0}
-#hint.up{bottom:calc(var(--dockH) + 80px)}
+#hint.up{bottom:calc(var(--dockH) + 108px)}
 @keyframes nudge{0%,100%{transform:translateX(-50%)}50%{transform:translate(-50%,-3px)}}
 /* orders bar: one slim row in the thumb zone; buttons appear only when they do something */
 #dock{position:fixed;left:0;right:0;bottom:0;z-index:6;margin:0 auto;box-sizing:border-box;height:calc(72px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,#0f3d56,#082a3c 70%);border-top:1px solid rgba(244,233,204,.2);box-shadow:0 -1px 0 rgba(0,0,0,.35),0 -12px 26px rgba(0,0,0,.28);padding:0 12px env(safe-area-inset-bottom,0px);display:flex;align-items:center;gap:10px}
@@ -995,7 +995,9 @@ function drawDice(t){const up=!!(DT&&st);if(up!==hintUp){hintUp=up;$('hint').cla
  for(let k=0;k<nA;k++){const x=x0+(nA-1-k)*(s+gap)+s/2,jump=done?0:-Math.abs(Math.sin(u*Math.PI*2.2))*(1-u)*s*.6,rot=done?0:(1-u)*(k%2?2.4:-2.4);drawDie(x,yc+jump,s,face_(DT.A,k),fa.col,fa.ink,rot,done&&lostA.includes(k),done&&k<nP&&!lostA.includes(k));}
  cx.fillStyle='rgba(255,236,200,.85)';cx.font=`900 ${Math.round(s*.36)}px Nunito,system-ui,sans-serif`;cx.textAlign='center';cx.textBaseline='middle';cx.fillText('vs',x0+nA*(s+gap)-gap+mid/2,yc);
  for(let k=0;k<nD;k++){const x=x0+nA*(s+gap)-gap+mid+k*(s+gap)+s/2,jump=done?0:-Math.abs(Math.sin(u*Math.PI*2.2+1))*(1-u)*s*.6,rot=done?0:(1-u)*(k%2?-2.1:2.1);drawDie(x,yc+jump,s,face_(DT.D,k),fd.col,fd.ink,rot,done&&lostD.includes(k),done&&k<nP&&!lostD.includes(k));
-  if(k===0&&DT.fort&&done){cx.fillStyle='#ffd36b';cx.strokeStyle='#3a2a10';cx.lineWidth=1.2;rr(cx,x+s*.18,yc-s*.86,s*.5,s*.36,s*.12);cx.fill();cx.stroke();cx.fillStyle='#3a2a10';cx.font=`900 ${Math.round(s*.26)}px Nunito,system-ui,sans-serif`;cx.fillText('+1',x+s*.43,yc-s*.67);}}
+  if(k===0&&DT.fort){/* the fort's +1, shown from the moment the dice land: a clear tag above the defender's top die */
+   const fs_=Math.round(s*.34),tw='fort +1';cx.font=`900 ${fs_}px Nunito,system-ui,sans-serif`;const w=cx.measureText(tw).width+12,h=fs_+8,tx=x-w/2,ty=yc-s/2-h-5;
+   cx.fillStyle='#ffd36b';cx.strokeStyle='#3a2a10';cx.lineWidth=1.4;rr(cx,tx,ty,w,h,h/2);cx.fill();cx.stroke();cx.fillStyle='#3a2a10';cx.textAlign='center';cx.textBaseline='middle';cx.fillText(tw,x,ty+h/2+.5);}}
  cx.restore();}
 
 /* ---------- highlights: chosen island, attack arrows, chance chips, coach marker ---------- */
@@ -1095,7 +1097,7 @@ function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo'
  if(P==='reinforce'){$('dTitle').textContent='Reinforce';dk.classList.add('rf');info(`<b>${st.pool}</b> to place · ${musterText(st.lastMuster)}`);setBtn('b2',st.placed.length?'Undo':null,undo);setBtn('b1');}
  else if(P==='attack'&&ui.blitzing){$('dTitle').textContent='Blitz';info(`<b>${D?D.tr[ui.sel]:st.tr[ui.sel]}</b> against <b>${D?D.tr[ui.tgt]:st.tr[ui.tgt]}</b> on ${nm(ui.tgt)}`);setBtn('b2');setBtn('b1',ui.blitzStop?'Stopping…':'Stop',()=>{ui.blitzStop=true;dockUI();},{always:true,dis:ui.blitzStop});}
  else if(P==='attack'){$('dTitle').textContent='Attack';const canUndo=st.placed.length&&!st.attacked;
-  if(ui.tgt>=0&&ui.sel>=0){const p=odds(st,ui.sel,ui.tgt);dk.classList.add('tg');$('dTitle').textContent=p>.995?'99%+':Math.round(p*100)+'%';info('to take '+nm(ui.tgt));setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
+  if(ui.tgt>=0&&ui.sel>=0){const p=odds(st,ui.sel,ui.tgt);dk.classList.add('tg');$('dTitle').textContent=p>.995?'99%+':Math.round(p*100)+'%';info('to take '+nm(ui.tgt)+(fortAt(st,ui.tgt)?' · fort +1':''));setBtn('b2','Attack ×1',()=>attack(false));setBtn('b1','Blitz',()=>attack(true));}
   else{info(ui.sel>=0?`<b>${avail(st,ui.sel)}</b> can fight`:st.conq?'Chest earned this turn':'Take an island for a chest');setBtn('b2',canUndo?'Undo':ui.sel>=0?'Cancel':null,canUndo?undo:cancelSel);
    setBtn('b1',ui.skipAsk?'Skip attacks':'End attacks',endAttacks);$('b1').classList.add(ui.skipAsk?'warn':'sec');}}
  else if(P==='occupy'){$('dTitle').textContent='Sail in';info('');dk.classList.add('sl');setBtn('b2');setBtn('b1','Sail '+st.occ.n,sailNow);showRange(st.occ);}
@@ -1391,6 +1393,5 @@ if(TEST)window.__dg={
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
