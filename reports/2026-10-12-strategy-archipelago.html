@@ -835,7 +835,9 @@ function drawIslandLife(i,t){const I=ISL[i],o=D.own[i],n=D.tr[i],k=fleetKey(o);c
  const order=[];for(let q=0;q<show;q++)order.push(q);order.sort((a,b)=>I.slots[a][1]-I.slots[b][1]);
  for(const q of order){const [sx,sy]=I.slots[q];const x=I.x+sx,y=I.y+sy;const dir=fx!=null?(fx>=x?1:-1):(((q*7+i)%3)?1:-1);const isNew=q===show-1&&bp<1;drawSoldier(k,x,y,dir,isNew?pop:1,t,i*1.7+q*2.3);}
  if(I.harb&&o>=0)drawFlag(i,t);
- drawBanner(i,t,pop);}
+ }
+const popOf=(i,t)=>{const bp=clamp((t-(bump[i]||-9))/.35,0,1);return bp<1?1+.35*(1-ease.out(bp)):1;};
+/* troop badges: drawn after ships and hopping birds, so nothing ever sits over a count */
 function drawBanner(i,t,pop){const I=ISL[i],o=D.own[i],n=D.tr[i];const txt=String(n);cx.font='900 15px Nunito,system-ui,sans-serif';const tw=cx.measureText(txt).width,hasM=o>=0,w=tw+(hasM?30:18),h=25;
  const x=I.x+(I.bdx||0),y=I.y+I.bannerY,sw=meta.set.rm?0:Math.sin(t*1.6+i)*.03,zs=pop/Math.sqrt(cam.z);cx.save();cx.translate(x,y);cx.rotate(sw);cx.scale(zs,zs);
  cx.strokeStyle='rgba(30,20,10,.7)';cx.lineWidth=2;cx.beginPath();cx.moveTo(0,h/2);cx.lineTo(0,h/2+7);cx.stroke();
@@ -896,8 +898,26 @@ function flyIn(i,f,from,delay){const I=ISL[i];if(!I)return;if(quick()||!D){if(D)
   land(){D.tr[i]++;bump[i]=tnow();sfx('land',{k:landK++});}});}
 function casualty(i,owner){const I=ISL[i];if(!D||D.tr[i]<=0)return;D.tr[i]--;bump[i]=tnow();if(quick())return;const k=fleetKey(owner);const vis=Math.min(D.tr[i],I.maxF-1),sl=I.slots[Math.max(0,vis)],x=I.x+sl[0],y=I.y+sl[1];
  if(D.tr[i]<I.maxF)emit({k:'fall',bk:k,x,y,dir:Math.random()<.5?1:-1,life:.9});feathers(x,y-FH*.5,k,7);floatTxt(x+(x>=I.x?1:-1)*FH*.55,y-FH*.8,'−1','#ffc9bd');sfx('squawk',{b:VOICE[k]});}
+/* where a ship waits off the island it sails to: on the side it comes from, slid round the coast until its sails
+   (up to about 70°) or stood further out until its sails clear every troop badge (an attacker parked on the defender's
+   count hid it for the whole battle), keeping off island names, other islands and the edges of the battle frame where it
+   can. Badges are drawn after ships anyway, so a count is never hidden even in a tight spot. */
+function berth(from,to,ux,uy){const A=ISL[from],B=ISL[to],u=FH*.82,rx=B.R*1.02+FH*1.15,ry=B.R*.84+FH*.9,a0=Math.atan2(-uy,-ux),C=chartOf(st),fs=Math.round(clamp(S*3.3,13,16));
+ const area=(a,b)=>Math.max(0,Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0))*Math.max(0,Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0));
+ const badges=[],names=[],land=[];cx.font=`${fs}px "IM Fell English SC",Georgia,serif`;
+ ISL.forEach((I,i)=>{const bx=I.x+(I.bdx||0);badges.push({x0:bx-30,x1:bx+30,y0:I.y+I.bannerY-16,y1:I.y+I.bannerY+21});
+  const w=cx.measureText(C.isl[i].n).width+6,lx=I.x+(I.ldx||0),ly=I.y+I.labelY+(I.ldy||0);names.push({x0:lx-w/2,x1:lx+w/2,y0:ly,y1:ly+fs+3});
+  if(i!==to)land.push({x0:I.x-I.R*.9,x1:I.x+I.R*.9,y0:I.y-I.R*.7,y1:I.y+I.R*.75});});
+ const fr=boxOf([from,to]),bx0=Math.max(4,fr.x0-FH),bx1=Math.min(W-4,fr.x1+FH),by0=Math.max(MAP.y0,fr.y0-FH),by1=Math.min(dockTop-4,fr.y1+FH);
+ let best=null;for(const f of [1,1.3,1.6])for(let k=0;k<=18;k++){const d=(k&1?1:-1)*Math.ceil(k/2)*.13,a=a0+d,x=B.x+Math.cos(a)*rx*f,y=B.y+Math.sin(a)*ry*f+B.depth*.6,
+  r={x0:x-u*1.5,x1:x+u*1.5,y0:y-u*2.15-2,y1:y+u*.35+2};
+  let cover=0,soft=0;for(const b of badges)cover+=area(r,b);for(const b of names)soft+=area(r,b);for(const b of land)soft+=area(r,b)*.5;
+  const out=Math.max(0,bx0-r.x0)+Math.max(0,r.x1-bx1)+Math.max(0,by0-r.y0)+Math.max(0,r.y1-by1),
+   off=Math.max(0,2-r.x0)+Math.max(0,r.x1-(W-2))+Math.max(0,MAP.y0-r.y0)+Math.max(0,r.y1-dockTop);   /* off the screen: never */
+  const sc=off*5e4+cover*400+soft+out*60+Math.abs(d)*90+(f-1)*rx*12;if(!best||sc<best.sc)best={sc,x,y};}
+ return [best.x,best.y];}
 function launchShip(f,from,to,carry){if(quick())return null;const A=ISL[from],B=ISL[to],dx=B.x-A.x,dy=B.y-A.y,d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d;
- const sx=A.x+ux*(A.R*.92+FH*.5),sy=A.y+uy*(A.R*.78+FH*.4)+A.depth,ex=B.x-ux*(B.R*1.02+FH*1.15),ey=B.y-uy*(B.R*.84+FH*.9)+B.depth*.6;
+ const sx=A.x+ux*(A.R*.92+FH*.5),sy=A.y+uy*(A.R*.78+FH*.4)+A.depth,[ex,ey]=berth(from,to,ux,uy);
  const sh={k:st.fl[f],e:[sx,sy,(sx+ex)/2-uy*d*.12,(sy+ey)/2+ux*d*.12,ex,ey],mode:'go',t0:tnow(),dur:Math.max(.05,dur(520)/1000),carry,ph:Math.random()*6,x:sx,y:sy};ships.push(sh);return sh;}
 /* ---------- the camera: like the lighthouse, it closes in on what you are doing and pulls back for the whole chart ----------
    It frames a set of islands in the open sea between the fleet bar and the orders bar, easing in view-size space so the zoom
@@ -1083,6 +1103,7 @@ function draw(t,dt){ambient(dt);camUpdate(dt);
   drawHighlights(t);const order=ISL.map((I,i)=>i).sort((a,b)=>ISL[a].y-ISL[b].y);for(const i of order)drawIslandLife(i,t);
   for(const s of ships)drawShip(s,t);
   for(let q=flyers.length-1;q>=0;q--){const f=flyers[q];if(t>=f.t0+f.dur){if(f.gen===GEN&&f.applies&&f.land)f.land();flyers.splice(q,1);continue;}drawFlyer(f,t);}
+  for(const i of order)drawBanner(i,t,popOf(i,t));
   drawParts(dt,t);drawFloats(t);drawChips(t);drawChains();}
  else drawParts(dt,t);
  for(const c of clouds){cx.globalAlpha=c.a*.42;cx.drawImage(SPR.cloud,c.x-96*c.s,c.y-60*c.s,192*c.s,120*c.s);}cx.globalAlpha=1;
@@ -1406,6 +1427,5 @@ if(TEST)window.__dg={
  chart(n){startChart(n,'new');},tapIsland(i){tap(i);},place:i=>place(i),auto:()=>autoPlace(),attack:(i,j,b)=>{ui.sel=i;ui.tgt=j;return attack(b);},sail:()=>sailNow(),done:()=>doneAttacking(),endTurn:()=>endMyTurn(),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
