@@ -36,22 +36,25 @@ body{touch-action:manipulation;user-select:none;-webkit-user-select:none}
 button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 /* fleet bar */
-#top{position:fixed;left:0;right:0;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 6px) 10px 10px;pointer-events:none;background:linear-gradient(rgba(14,74,106,.42),rgba(14,74,106,0))}
+#top{position:fixed;left:0;right:0;top:0;z-index:5;display:flex;align-items:center;gap:7px;padding:calc(env(safe-area-inset-top,0px) + 6px) 10px 6px;pointer-events:none;background:linear-gradient(rgba(14,74,106,.42),rgba(14,74,106,0))}
 #top>*{pointer-events:auto}
-.round{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(244,233,204,.32);background:rgba(12,62,90,.62);display:grid;place-items:center;flex:none;padding:0}
+.round{position:relative;width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(244,233,204,.24);background:rgba(12,62,90,.66);display:grid;place-items:center;flex:none;padding:0;color:var(--paper)}
+.round::after{content:"";position:absolute;inset:-3px}
+#chainsBtn[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
 .round svg{width:20px;height:20px}
 #fleets{flex:1;display:flex;justify-content:center;align-items:center;gap:5px;min-width:0;min-height:44px;background:none;border:0;padding:0;color:inherit;font:inherit}
-.chip{position:relative;display:flex;align-items:center;gap:3px;height:34px;padding:0 9px 0 2px;border-radius:17px;background:rgba(12,62,90,.66);border:1.5px solid rgba(255,255,255,.1);font-weight:900;font-size:15px;font-variant-numeric:tabular-nums;transition:transform .25s,box-shadow .25s,opacity .25s}
+.chip{position:relative;display:flex;align-items:center;gap:3px;height:34px;padding:0 9px 0 2px;border-radius:17px;background:rgba(12,62,90,.66);border:1.5px solid rgba(244,233,204,.24);font-weight:900;font-size:15px;font-variant-numeric:tabular-nums;transition:transform .25s,box-shadow .25s,opacity .25s}
 .chip img{width:30px;height:30px;margin-top:-4px}
 .chip.on{transform:scale(1.1);box-shadow:0 0 0 2px var(--c,#fff),0 0 14px var(--c,#fff)}
-.chip.out{opacity:.32;filter:grayscale(1)}
+.chip.out{opacity:.32;filter:grayscale(1);width:28px;height:28px;padding:0;justify-content:center}
+.chip.out b{display:none}
+.chip.out img{width:22px;height:22px;margin-top:-2px}
+#fleets.tight .chip.out{width:28px}
 .chip b{font-weight:900}
 #fleets.tight{gap:6px}
 #fleets.tight .chip{padding:0;width:38px;justify-content:center}
 #fleets.tight .chip b{position:absolute;right:-6px;bottom:-5px;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;border-radius:9px;background:var(--c);color:var(--k);font-size:11.5px;line-height:18px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.55)}
-#side{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none;min-width:58px}
-.srow{display:flex;align-items:center;gap:8px}
-#chest{position:relative;display:flex;align-items:center;gap:4px;height:26px;padding:0 7px 0 5px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:rgba(12,62,90,.66);font:900 13px var(--f-ui);color:var(--paper);font-variant-numeric:tabular-nums;transition:box-shadow .3s,background .3s}
+#chest{position:relative;flex:none;display:flex;align-items:center;gap:4px;height:34px;padding:0 10px 0 8px;border-radius:17px;border:1.5px solid rgba(244,233,204,.24);background:rgba(12,62,90,.66);font:900 13px var(--f-ui);color:var(--paper);font-variant-numeric:tabular-nums;transition:box-shadow .3s,background .3s}
 #chest svg{width:19px;height:15px}
 #chest::after{content:"";position:absolute;inset:-9px -4px}
 #chest.ready{background:rgba(242,196,107,.22);border-color:var(--gold);box-shadow:0 0 10px rgba(242,196,107,.55)}
@@ -62,10 +65,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .slots span svg{width:40px;height:32px}
 .slots span.off svg{opacity:.18;filter:grayscale(1)}
 .slots span.new{box-shadow:inset 0 0 0 2px var(--gold),0 0 12px rgba(242,196,107,.6)}
-#turnL{font-weight:900;font-size:14px;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px rgba(0,0,0,.6)}
-#chainsBtn{position:relative;border:0;background:rgba(12,62,90,.66);border-radius:10px;font-size:13px;font-weight:800;padding:5px 10px;min-height:30px;border:1.5px solid rgba(255,255,255,.1)}
-#chainsBtn::after{content:"";position:absolute;inset:-8px -6px}
-#chainsBtn[aria-pressed="true"]{background:var(--paper);color:var(--ink)}
+#dTurn{flex:none;margin-left:6px;font-size:12.5px;font-weight:800;color:rgba(244,233,204,.55);font-variant-numeric:tabular-nums}
+#dTurn:empty{display:none}
+#turnLx{font-weight:900;font-size:14px;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+
 /* hint: floats over the sea just above the orders bar, and fades after a few seconds */
 #hint{position:fixed;left:50%;bottom:calc(var(--dockH) + 8px);transform:translateX(-50%);z-index:5;box-sizing:border-box;background:rgba(12,62,90,.82);border:1px solid rgba(244,233,204,.18);color:var(--paper);padding:5px 13px;border-radius:14px;font-size:14px;font-weight:800;line-height:1.3;text-align:center;width:max-content;max-width:min(calc(100vw - 24px),440px);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:opacity .5s,background .25s;pointer-events:none}
 #hint.coach{background:var(--paper);color:var(--ink);box-shadow:0 6px 18px rgba(0,0,0,.35);animation:nudge 1.6s ease-in-out infinite}
@@ -244,14 +247,14 @@ button.ord.on{background:var(--ink);color:var(--paper)}button.ord.on small{color
 <header id="top">
  <button class="round" id="pz" type="button" aria-label="Pause"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="3" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="12" y="3" width="4" height="14" rx="1.5" fill="currentColor"/></svg></button>
  <button id="fleets" type="button" aria-label="Fleet standings"></button>
- <div id="side"><div class="srow"><button id="chest" type="button" aria-label="Spoils chests"><svg viewBox="0 0 20 16" aria-hidden="true"><path d="M2 7h16v7.5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" fill="#9a6532" stroke="#2a1a0c" stroke-width="1.2"/><path d="M2 7V5.5C2 2.5 5 1 10 1s8 1.5 8 4.5V7z" fill="#7a4a22" stroke="#2a1a0c" stroke-width="1.2"/><path d="M2 7h16" stroke="#f2c46b" stroke-width="1.6"/><rect x="8.3" y="5.6" width="3.4" height="4.4" rx=".8" fill="#f2c46b" stroke="#2a1a0c" stroke-width=".9"/></svg><b id="chestN">0/3</b></button><span id="turnL"></span></div><button id="chainsBtn" type="button" aria-pressed="false">Chains</button></div>
+ <button id="chest" type="button" aria-label="Spoils chests"><svg viewBox="0 0 20 16" aria-hidden="true"><path d="M2 7h16v7.5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" fill="#9a6532" stroke="#2a1a0c" stroke-width="1.2"/><path d="M2 7V5.5C2 2.5 5 1 10 1s8 1.5 8 4.5V7z" fill="#7a4a22" stroke="#2a1a0c" stroke-width="1.2"/><path d="M2 7h16" stroke="#f2c46b" stroke-width="1.6"/><rect x="8.3" y="5.6" width="3.4" height="4.4" rx=".8" fill="#f2c46b" stroke="#2a1a0c" stroke-width=".9"/></svg><b id="chestN">0/3</b></button><button class="round" id="chainsBtn" type="button" aria-pressed="false" aria-label="Chains"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M8.3 11.7l3.4-3.4"/><path d="M9.4 5.7l1.4-1.4a3.4 3.4 0 0 1 4.8 4.8l-1.4 1.4"/><path d="M10.6 14.3l-1.4 1.4a3.4 3.4 0 0 1-4.8-4.8l1.4-1.4"/></g></svg></button>
 </header>
 <div id="hint" role="status" aria-live="polite"></div>
 <div id="note" role="status" aria-live="polite"></div>
 <div id="sign" hidden role="status"><b id="signH"></b><span id="signP"></span><small>Tap anywhere to close</small></div>
 <div id="banner" aria-live="polite"></div>
 <section id="dock" aria-label="Orders">
- <div class="r1"><button class="lnk ico" id="bBack" type="button" hidden aria-label="Cancel">✕</button><img id="dIcon" alt=""><span id="dTitle">Archipelago</span><span id="dInfo"></span><button class="lnk" id="bEnd" type="button" hidden></button></div>
+ <div class="r1"><button class="lnk ico" id="bBack" type="button" hidden aria-label="Cancel">✕</button><img id="dIcon" alt=""><span id="dTitle">Archipelago</span><span id="dInfo"></span><span id="dTurn"></span><button class="lnk" id="bEnd" type="button" hidden></button></div>
  <div class="r2"><div id="dLine"></div>
  <div id="range" hidden><button class="sq" id="rm" type="button" aria-label="Fewer">&minus;</button><input id="rng" type="range" min="1" max="10" step="1" value="5" aria-label="Troops to send"><output id="rangeV">5</output><button class="sq" id="rp" type="button" aria-label="More">+</button></div>
  <button class="btn" id="b2" type="button" hidden></button><button class="btn pri" id="b1" type="button" hidden></button></div>
@@ -385,7 +388,7 @@ function newGame(ci,seed,mode,deal,seat){const c=CHARTS[ci],n=c.isl.length,m=mod
 const chartOf=st=>CHARTS[st.c],adjOf=st=>ADJ[st.c];
 const isHarb=(st,i)=>HARB[st.c][i]!==undefined||!!(st.xh&&st.xh.includes(i));
 const harbsOf=st=>Object.keys(HARB[st.c]).map(Number).concat(st.xh||[]);
-const fortAt=(st,i)=>st.xf&&st.xf.includes(i)?2:isHarb(st,i)?1:0;   /* a fort helps whoever holds it: 1 = a harbour's (+1 on the top defending die), 2 = a Fortify stone fort (+1 on both) */
+const fortAt=(st,i)=>st.xf&&st.xf.includes(i)?2:isHarb(st,i)?(st.own[i]===0&&ordLv(st,'gunnery')>1?2:1):0;   /* a fort helps whoever holds it: 1 = a harbour's (+1 on the top defending die), 2 = a Fortify stone fort (+1 on both) */
 /* the fort that counts in a battle: Gunnery means rival forts don't count against the Puffins */
 const defFort=(st,i,j)=>st.own[i]===0&&ordLv(st,'gunnery')?0:fortAt(st,j);
 const count=(st,f)=>{let k=0;for(const o of st.own)if(o===f)k++;return k;};
@@ -426,7 +429,13 @@ function reach(st,i){const f=st.own[i],A=adjOf(st),g=f===0?ordV(st,'pilots'):0;
  const best=new Map([[i,0]]),q=[[i,0]],out=new Set();while(q.length){const [x,u]=q.shift();for(const y of A[x]){const nu=u+(st.own[y]===f?0:1);if(nu>g)continue;if(best.has(y)&&best.get(y)<=nu)continue;best.set(y,nu);q.push([y,nu]);if(st.own[y]===f&&y!==i)out.add(y);}}
  return [...out];}
 function endTurn(st){const f=st.cur;if(st.conq)st.spoils[f]=Math.min(5,st.spoils[f]+1);if(f===0)st.took0=!!st.conq;st.conq=false;}
-function over(st){const n=count(st,0);if(n===0)return 'lose';if(n===st.own.length)return 'win';return null;}
+/* the round ends when the Puffins hold nothing (lost), or when no rival fleet is left afloat (won): the gull islands
+   never attack, so once the last rival is out they simply strike their colours (gullsStrike) */
+function over(st){const n=count(st,0);if(n===0)return 'lose';if(n===st.own.length||st.alive.every((a,f)=>f===0||!a))return 'win';return null;}
+function gullsStrike(){syncD();const ids=[];for(let i=0;i<st.own.length;i++)if(st.own[i]<0)ids.push(i);for(const i of ids){st.own[i]=0;st.tr[i]=Math.max(1,st.tr[i]);}
+ if(!ids.length||!D||quick()||TEST){syncD();return 0;}
+ ids.forEach((i,q)=>setTimeout(()=>{if(!D||!st)return;D.own[i]=0;D.tr[i]=st.tr[i];bump[i]=tnow();flagT[i]=tnow();confetti(ISL[i],colOf(0));sfx('flag');},250+q*160));
+ return 250+ids.length*160;}
 
 
 /* ================= the open sea: standing orders and the tide (spec signed off 14 Oct 2026) ================= */
@@ -438,10 +447,10 @@ const ORDERS={
  harbmaster:{n:'Harbour masters',v:[4,5],t:v=>`Harbours you take land +${v} a turn instead of +2${v>4?', and your home harbour +3':''}.`},
  prize:{n:'Prize court',v:[2,4],t:v=>`Your spoils cash in from +${RULES.spoils[Math.min(v,RULES.spoils.length-1)]}, not +4.`},
  press:{n:'Press gang',v:[1,2,3],t:v=>`+${v} troop${v>1?'s':''} join the first island you take each turn.`},
- gunnery:{n:'Gunnery',v:[1],t:()=>`Rival forts don’t count against your attacks.`},
+ gunnery:{n:'Gunnery',v:[1,2],t:v=>`Rival forts don’t count against your attacks${v>1?', and your harbour forts guard like stone forts':''}.`},
  boarding:{n:'Boarding parties',v:[1,3],t:v=>`Your top die wins ties on the first ${v>1?'three throws':'throw'} of each attack.`},
  advance:{n:'Advance party',v:[1,2],t:v=>`Before turn 1, claim ${v>1?'two gull islands':'a gull island'} next to your own.`},
- owncharts:{n:'Own charts',v:[1],t:()=>`Choose your harbour from the fair seats.`},
+ owncharts:{n:'Own charts',v:[1,2],t:v=>`Choose your harbour from the fair seats${v>1?', and choose from three charts each leg':''}.`},
  divide:{n:'Divide and rule',v:[.1,.18,.25],t:v=>`Rivals want ${Math.round(v*100)} points better odds before they attack you.`},
  fortify:{n:'Fortify',v:[2,4,6],t:v=>`Build ${v} stone forts each leg on islands you hold: +1 on both defending dice.`}};
 const ordLv=(st,id)=>(st.ord&&st.ord[id])||0,ordV=(st,id)=>{const l=ordLv(st,id);return l?ORDERS[id].v[l-1]:0;};
@@ -450,7 +459,7 @@ const ROMAN=['','I','II','III'];
 /* the tide: rival muster, gull garrisons and rival boldness by leg. W = each chart's own weight so leg 1 plays
    about as hard on any chart (set by the open-sea simulation) */
 const SEA={W:{scilly:1.52,varr:.86,channel:.78,orkney:.83,crown:.88,hebrides:.71},
- k:.08,mul:L=>L<=10?1+SEA.k*(L-1):1+SEA.k*9+SEA.k*.6*(L-10),gar:L=>L<4?0:L<8?1:2,bold:L=>Math.min(.06,Math.max(0,.01*(L-3))),
+ k:.08,mul:L=>L<=10?1+SEA.k*(L-1):L<=14?1+SEA.k*9+SEA.k*.6*(L-10):1+SEA.k*11.4+SEA.k*.25*(L-14),gar:L=>L<4?0:L<8?1:2,bold:L=>Math.min(.06,Math.max(0,.01*(L-3))),
  small:'scilly',smallUntil:4,fourthFrom:8};
 const seaCharts=L=>CHARTS.map((c,ci)=>ci).filter(ci=>!(CHARTS[ci].id===SEA.small&&L>SEA.smallUntil));
 /* a leg: a shuffled deal (Own charts can pick the seat), then the tide, the fourth fleet and the orders */
@@ -552,7 +561,7 @@ const clamp=(v,a,b)=>v<a?a:v>b?b:v,lerp=(a,b,t)=>a+(b-a)*t;
 
 /* ---------- saved progress (site contract §7) ---------- */
 const KEY='digi-archipelago-v1',RUNKEY='digi-archipelago-run-v1';
-const freshMeta=()=>({ver:2,unlocked:1,best:{},seen:{},set:{snd:true,mus:true,hap:true,spd:'normal',odds:true,rm:prefersRM,fs:COARSE,mode:'standard',shuf:true},stats:{played:0,wins:0,taken:0},streak:{c:-1,n:0},turnsPlayed:0,coached:false,deals:{}});
+const freshMeta=()=>({ver:2,unlocked:1,best:{},seen:{},set:{snd:true,mus:true,hap:true,spd:'normal',odds:true,rm:prefersRM,fs:COARSE,mode:'standard',shuf:true,cw:false},stats:{played:0,wins:0,taken:0},streak:{c:-1,n:0},turnsPlayed:0,coached:false,deals:{}});
 let meta=freshMeta();
 function migrate(m){const f=freshMeta(),o=Object.assign(f,m);o.set=Object.assign(freshMeta().set,m.set||{});o.stats=Object.assign(freshMeta().stats,m.stats||{});o.best=Object.assign({},m.best||{});o.seen=Object.assign({},m.seen||{});o.streak=Object.assign({c:-1,n:0},m.streak||{});o.deals=Object.assign({},m.deals||{});if(m.sea)o.sea=Object.assign({leg:1,ord:{},won:0,lost:0,best:0,offer:null,draft:null,strike:false,last:-1,runs:1},m.sea);
  if(m.ver!==2&&(m.turnsPlayed||0)>3)o.coached=true;o.ver=2;return o;}
@@ -601,7 +610,8 @@ const SFX={
  land(c,d,t,o){const p=1+Math.min(14,(o&&o.k)||0)*.035;O(c,d,t,{type:'triangle',f:560*p,f1:900*p,dur:.1,v:.42});N(c,d,t,{dur:.03,v:.22,ft:'highpass',f:2600});},
  dice(c,d,t){let tt=t;for(let k=0;k<6;k++){tt+=.032+Math.random()*.05;N(c,d,tt,{dur:.02,v:.7,f:2600+Math.random()*1800,q:1.3});O(c,d,tt,{type:'triangle',f:1400+Math.random()*900,f1:800,dur:.035,v:.16});}N(c,d,tt+.07,{dur:.035,v:.75,f:2100,q:1});O(c,d,tt+.07,{type:'triangle',f:900,f1:600,dur:.06,v:.25});},
  boom(c,d,t){N(c,d,t,{dur:.6,v:.8,ft:'lowpass',f:5000,f1:280,q:.6});O(c,d,t,{type:'sine',f:190,f1:48,dur:.45,v:.6});O(c,d,t,{type:'square',f:120,f1:70,dur:.09,v:.35,filt:1600});N(c,d,t+.02,{dur:.25,v:.35,ft:'bandpass',f:900,f1:400,q:.8});},
- volley(c,d,t){for(let k=0;k<4;k++)N(c,d,t+k*(.03+Math.random()*.04),{dur:.07,v:.62,ft:'highpass',f:1000+Math.random()*700});},
+ cannon(c,d,t){N(c,d,t,{dur:.24,v:.55,ft:'lowpass',f:1600,f1:260,q:.7});O(c,d,t,{type:'sine',f:150,f1:58,dur:.2,v:.42});},
+volley(c,d,t){for(let k=0;k<4;k++)N(c,d,t+k*(.03+Math.random()*.04),{dur:.07,v:.62,ft:'highpass',f:1000+Math.random()*700});},
  squawk(c,d,t,o){const b=(o&&o.b)||560;const os=c.createOscillator(),g=c.createGain(),fl=c.createBiquadFilter(),lfo=c.createOscillator(),lg=c.createGain();
   os.type='sawtooth';os.frequency.setValueAtTime(b,t);os.frequency.linearRampToValueAtTime(b*1.75,t+.05);os.frequency.linearRampToValueAtTime(b*1.12,t+.2);
   lfo.frequency.value=34;lg.gain.value=b*.09;lfo.connect(lg);lg.connect(os.frequency);fl.type='bandpass';fl.frequency.value=1700;fl.Q.value=.8;
@@ -673,12 +683,15 @@ let W=0,H=0,DPR=1,dockTop=0;
 let MAP={x0:0,y0:0,w:0,h:0,cx:0,cy:0};
 let PX=4,PY=4,S=4,OX=0,OY=0,BX=0,BY=0;
 const VS=1.62;                 /* islands are drawn larger than their grid radius so they read on a phone */
-let ISL=[],FH=16;              /* island geometry in screen px; FH = a soldier's height */
+let ISL=[],FH=20,SH=16;  /* FH = a soldier's height; SH = the scenery's scale (cottages, trees, quays, forts, ships) */              /* island geometry in screen px; FH = a soldier's height */
 let D=null,GEN=0;              /* D = what the screen shows (own, tr); it trails the rules while animations play */
 const cam={x:0,y:0,z:1,tx:0,ty:0,tz:1,shake:0,fx:null,man:null,key:''};
 /* the camera closes in on the action (up to ZAUTO), a pinch can go to ZMAN; the board and the soldiers are
    painted at LS pixels per unit so a close-up stays sharp */
-const ZAUTO=1.8,ZMAN=2.4;let LS=2,ZS=1;
+const ZAUTO=1.8,ZMAN=3.2;let LS=2,ZS=1;
+/* open sea round the chart: the camera can roam this far past the chart's edges at any zoom (more below, so an
+   edge island can be lifted clear of the orders bar) */
+let MG={x:0,t:0,b:0};
 function srand(n){let s=n>>>0;return()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};}
 const fleetKey=f=>f<0?'gull':st.fl[f];
 const colOf=f=>f<0?'#efe3c6':FLEETS[st.fl[f]].col;
@@ -692,7 +705,8 @@ function layout(){W=innerWidth;H=innerHeight;DPR=Math.min(2,window.devicePixelRa
  if(st){const I=chartOf(st).isl;let gx0=1e9,gx1=-1e9,gy0=1e9,gy1=-1e9;for(const s of I){const r=s.r*VS;gx0=Math.min(gx0,s.x-r);gx1=Math.max(gx1,s.x+r);gy0=Math.min(gy0,s.y-r);gy1=Math.max(gy1,s.y+r);}
   const padT=40,padB=34,padX=8,aw=MAP.w-2*padX,ah=MAP.h-padT-padB;let px=aw/(gx1-gx0),py=ah/(gy1-gy0);S=Math.min(px,py,7.5);PX=Math.min(px,S*1.42);PY=Math.min(py,S*1.42);
   BX=(gx0+gx1)/2;BY=(gy0+gy1)/2;OX=MAP.x0+padX+aw/2;OY=MAP.y0+padT+ah/2;}
- FH=clamp(Math.round(S*3.3),15,27);
+ SH=clamp(Math.round(S*3.3),15,27);FH=clamp(Math.round(S*4.6),20,30);
+ MG={x:Math.round(W*.14),t:Math.round(H*.07),b:Math.round(H*.13)};
  LS=Math.min(DPR*ZAUTO,Math.sqrt(9e6/Math.max(1,W*H)));ZS=Math.max(1,LS/DPR);
  buildIslands();buildSprites();buildSea();buildBoard();bordersKey='';
  cam.x=cam.tx=MAP.cx;cam.y=cam.ty=MAP.cy;cam.z=cam.tz=1;cam.man=null;cam.fx=null;}
@@ -707,17 +721,17 @@ function buildIslands(){ISL=[];if(!st)return;const c=chartOf(st);
   parts.forEach((p,k)=>{p.pts=blobPts(st.c*977+i*131+k*17+3,p.R,.82);p.path=pathOf(p.pts);});
   const m=parts[0],harb=isHarb(st,i),depth=Math.max(4,m.R*.17);
   const fort=harb?[m.R*.47,m.R*.05]:null;
-  const fw=FH*.7,rowH=FH*.4,ex=m.R*.6,ey=m.R*.82*.56,cy0=-m.R*.08,slots=[];
+  const fw=FH*.66,rowH=FH*.38,ex=m.R*.72,ey=m.R*.82*.62,cy0=-m.R*.06,slots=[];
   for(let row=-7;row<=7;row++){const yy=cy0+row*rowH;for(let col=-9;col<=9;col++){const xx=col*fw+(row&1?fw/2:0);
-   if((xx*xx)/(ex*ex)+((yy-cy0)*(yy-cy0))/(ey*ey)>1)continue;if(fort&&Math.hypot(xx-fort[0],(yy-fort[1])*1.3)<FH*1.05)continue;slots.push([xx,yy]);}}
+   if((xx*xx)/(ex*ex)+((yy-cy0)*(yy-cy0))/(ey*ey)>1)continue;if(fort&&Math.hypot(xx-fort[0],(yy-fort[1])*1.3)<SH*.62+FH*.45)continue;slots.push([xx,yy]);}}
   slots.sort((a,b)=>Math.hypot(a[0]*.9,(a[1]-cy0)*1.7)-Math.hypot(b[0]*.9,(b[1]-cy0)*1.7));
   while(slots.length<3){const k=slots.length;slots.push([(k-1)*fw*.55,cy0+(k%2?-rowH*.4:rowH*.3)]);}
   const maxF=Math.min(12,slots.length);let topY=0;for(let k=0;k<maxF;k++)topY=Math.min(topY,slots[k][1]);
   /* trees and cottages go round the edge of the grass, clear of the soldiers */
-  const trees=[],homes=[];const nT=s.cl?1:Math.round(clamp(m.R/9,1,7)),nH=s.cl?0:Math.round(clamp((m.R-24)/16,0,3));
-  for(let tries=0;tries<220&&(trees.length<nT||homes.length<nH);tries++){const th=r()*6.283,d=m.R*(.5+r()*.24);const px=Math.cos(th)*d,py=Math.sin(th)*d*.8-m.R*.04;
-   if((px*px)/((ex+fw*.6)**2)+((py-cy0)**2)/((ey+rowH)**2)<1)continue;if(fort&&Math.hypot(px-fort[0],py-fort[1])<FH*1.4)continue;
-   if([...trees,...homes].some(q=>Math.hypot(q[0]-px,q[1]-py)<FH*.8))continue;if(homes.length<nH&&r()<.45)homes.push([px,py,r()<.5]);else if(trees.length<nT)trees.push([px,py,.85+r()*.4]);}
+  const trees=[],homes=[];const nT=s.cl?1:Math.round(clamp(m.R/12,1,5)),nH=s.cl?0:Math.round(clamp((m.R-28)/18,0,2));
+  for(let tries=0;tries<220&&(trees.length<nT||homes.length<nH);tries++){const th=r()*6.283,d=m.R*(.64+r()*.16);const px=Math.cos(th)*d,py=Math.sin(th)*d*.8-m.R*.04;
+   if((px*px)/((ex+fw*.25)**2)+((py-cy0)**2)/((ey+rowH*.4)**2)<1)continue;if(fort&&Math.hypot(px-fort[0],py-fort[1])<SH*1.4)continue;
+   if([...trees,...homes].some(q=>Math.hypot(q[0]-px,q[1]-py)<SH*.8))continue;if(homes.length<nH&&r()<.45)homes.push([px,py,r()<.5]);else if(trees.length<nT)trees.push([px,py,.85+r()*.4]);}
   ISL.push({x,y,R:m.R,parts,depth,harb,fort,slots,maxF,bannerY:Math.min(topY-FH-13,-m.R*.66-10),labelY:m.R*.84+depth+5,trees,homes,quayA:.55+r()*.5});});}
 
 /* ---------- sprites: seabird soldiers, ships, smoke ---------- */
@@ -774,7 +788,7 @@ function shipCanvases(k,h){const col=FLEETS[k].col,w=h*3.1,hh=h*2.6,R=DPR*ZS,ox=
 function softCanvas(r,stops){const c=document.createElement('canvas');c.width=c.height=r*2;const g=c.getContext('2d');const gr=g.createRadialGradient(r,r,0,r,r,r);stops.forEach(([o,col])=>gr.addColorStop(o,col));g.fillStyle=gr;g.fillRect(0,0,r*2,r*2);return c;}
 const SPR={};
 function buildSprites(){for(const k of ['puffin','cormorant','gannet','skua'])SPR[k]=birdCanvas(k,FH,FLEETS[k].col,true,ZS);SPR.gull=birdCanvas('gull',FH,null,false,ZS);
- SPR.ship={};for(const k of Object.keys(FLEETS))SPR.ship[k]=shipCanvases(k,FH*.82);
+ SPR.ship={};for(const k of Object.keys(FLEETS))SPR.ship[k]=shipCanvases(k,SH*.9);
  SPR.puff=softCanvas(48,[[0,'rgba(255,255,255,.95)'],[.55,'rgba(240,238,230,.55)'],[1,'rgba(240,238,230,0)']]);
  SPR.glow=softCanvas(40,[[0,'rgba(255,253,220,1)'],[.3,'rgba(255,196,80,.9)'],[1,'rgba(255,140,40,0)']]);
  SPR.cloud=softCanvas(96,[[0,'rgba(3,22,36,.5)'],[.6,'rgba(3,22,36,.22)'],[1,'rgba(3,22,36,0)']]);}
@@ -799,20 +813,22 @@ const fbm=(x,y)=>SEA_N(x,y)*.55+SEA_N(x*2.03+5.2,y*2.03+1.3)*.3+SEA_N(x*4.1+9.7,
 const SEA_RAMP=[[0,[176,238,222]],[.1,[124,218,212]],[.28,[82,194,206]],[.55,[58,170,200]],[.8,[46,150,190]],[1,[38,134,180]]];
 function seaCol(t){for(let k=1;k<SEA_RAMP.length;k++){const [b,cb]=SEA_RAMP[k];if(t<=b){const [a,ca]=SEA_RAMP[k-1],u=(t-a)/(b-a);return [lerp(ca[0],cb[0],u),lerp(ca[1],cb[1],u),lerp(ca[2],cb[2],u)];}}return SEA_RAMP[SEA_RAMP.length-1][1];}
 let seaPlain=null,seaPlainKey='',GRAIN=null,SWELL=null;
-function seaLayer(withLand){const cs=5,gw=Math.ceil(W/cs)+2,gh=Math.ceil(H/cs)+2,lo=document.createElement('canvas');lo.width=gw;lo.height=gh;const lg=lo.getContext('2d'),im=lg.createImageData(gw,gh),d=im.data;
+const SEAR=()=>({x0:-MG.x-8,y0:-MG.t-8,w:W+2*MG.x+16,h:H+MG.t+MG.b+16});
+function seaLayer(withLand){const E=SEAR(),cs=5,gw=Math.ceil(E.w/cs)+2,gh=Math.ceil(E.h/cs)+2,lo=document.createElement('canvas');lo.width=gw;lo.height=gh;const lg=lo.getContext('2d'),im=lg.createImageData(gw,gh),d=im.data;
  const P=[];if(withLand)for(const I of ISL)for(const p of I.parts)P.push([I.x+p.dx,I.y+p.dy+I.depth*.5,p.R]);
  const deep=Math.max(110,S*26),cxm=W/2,cym=MAP.y0+MAP.h*.45,vr=Math.max(W,H)*.78;
- for(let y=0;y<gh;y++)for(let x=0;x<gw;x++){const wx=(x-.5)*cs,wy=(y-.5)*cs;let dist=1e9;for(const [px,py,Rr] of P){const dd=Math.hypot(wx-px,(wy-py)*1.18)-Rr;if(dd<dist)dist=dd;}
+ for(let y=0;y<gh;y++)for(let x=0;x<gw;x++){const wx=E.x0+(x-.5)*cs,wy=E.y0+(y-.5)*cs;let dist=1e9;for(const [px,py,Rr] of P){const dd=Math.hypot(wx-px,(wy-py)*1.18)-Rr;if(dd<dist)dist=dd;}
   const n=fbm(wx/170,wy/170),t=P.length?clamp(Math.pow(clamp(dist/deep,0,1),.85)+n*.1,0,1):clamp(.78+n*.14+(wy/H)*.12,0,1);
   const c=seaCol(t),vg=1-clamp((Math.hypot(wx-cxm,(wy-cym)*.9)/vr-.42)/.58,0,1)*.1,lt=(1+n*.07)*vg,o=(y*gw+x)*4;
   d[o]=c[0]*lt;d[o+1]=c[1]*lt;d[o+2]=c[2]*lt;d[o+3]=255;}
  lg.putImageData(im,0,0);
- const [c,g]=layer(DPR);g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(lo,-cs*.5,-cs*.5,gw*cs,gh*cs);
+ const c=document.createElement('canvas');c.width=Math.round(E.w*DPR);c.height=Math.round(E.h*DPR);const g=c.getContext('2d');g.setTransform(DPR,0,0,DPR,0,0);
+ g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(lo,-cs*.5,-cs*.5,gw*cs,gh*cs);
  if(!GRAIN){const T=128,gc=document.createElement('canvas');gc.width=gc.height=T;const gg=gc.getContext('2d'),gi=gg.createImageData(T,T),r=srand(11);
   for(let k=0;k<T*T;k++){const v=r(),o=k*4;gi.data[o]=gi.data[o+1]=gi.data[o+2]=v>.5?255:0;gi.data[o+3]=Math.abs(v-.5)*22;}gg.putImageData(gi,0,0);GRAIN=gc;}
- g.fillStyle=g.createPattern(GRAIN,'repeat');g.fillRect(0,0,W,H);
- return c;}
-function buildSea(){sea=seaLayer(true);const k=W+'x'+H+'x'+DPR;if(k!==seaPlainKey){seaPlain=seaLayer(false);seaPlainKey=k;}buildSwell();}
+ g.fillStyle=g.createPattern(GRAIN,'repeat');g.fillRect(0,0,E.w,E.h);
+ c.E=E;return c;}
+function buildSea(){sea=seaLayer(true);const k=W+'x'+H+'x'+DPR+'x'+MG.x;if(k!==seaPlainKey){seaPlain=seaLayer(false);seaPlainKey=k;}buildSwell();}
 /* the swell: soft crests and troughs on a tile that repeats seamlessly; two copies drift at different scales */
 function buildSwell(){if(SWELL)return;const T=384,c=document.createElement('canvas');c.width=c.height=T;const g=c.getContext('2d'),r=srand(23);g.lineCap='round';
  const crest=(x,y,len,a)=>{for(const ox of [-T,0,T])for(const oy of [-T,0,T]){const X=x+ox,Y=y+oy;
@@ -822,7 +838,7 @@ function buildSwell(){if(SWELL)return;const T=384,c=document.createElement('canv
  SWELL=cx.createPattern(c,'repeat');}
 function drawSwell(t){if(!SWELL)return;const rm=meta.set.rm;
  for(const [sc,vx,vy,a] of [[.5,4,1.6,.16],[.85,-2.6,2.4,.1]]){const per=384*sc,ox=rm?0:((t*vx)%per+per)%per,oy=rm?0:((t*vy)%per+per)%per;
-  cx.save();cx.globalAlpha=a;cx.translate(ox,oy);cx.scale(sc,sc);cx.fillStyle=SWELL;cx.fillRect(-ox/sc-384,-oy/sc-384,W/sc+768,H/sc+768);cx.restore();}}
+  cx.save();cx.globalAlpha=a;cx.translate(ox,oy);cx.scale(sc,sc);cx.fillStyle=SWELL;cx.fillRect((-ox-MG.x)/sc-384,(-oy-MG.t)/sc-384,(W+2*MG.x)/sc+768,(H+MG.t+MG.b)/sc+768);cx.restore();}}
 function laneEnds(a,b){const A=ISL[a],B=ISL[b],dx=B.x-A.x,dy=B.y-A.y,d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d;return [A.x+ux*(A.R*.96+4),A.y+uy*(A.R*.82*.96+4),B.x-ux*(B.R*.96+4),B.y-uy*(B.R*.82*.96+4)];}
 /* chain waters: each chain's islands, and the lanes between them, sit in one shaded stretch of water with a pale rim,
    so which islands make a chain is always on the chart. CHW keeps the shapes for the Chains view */
@@ -841,10 +857,22 @@ function buildChainView(C){const [c,g]=layer();C.chains.forEach((ch,k)=>{const o
   const [t,tg]=layer();tg.fillStyle='rgba(4,20,30,.55)';tg.fill(edge);tg.globalCompositeOperation='destination-out';tg.fill(outer);tg.globalCompositeOperation='source-over';
   tg.fillStyle=glass(k,.95);tg.fill(outer);tg.globalCompositeOperation='destination-out';tg.fill(inner);tg.globalCompositeOperation='source-over';tg.fillStyle=glass(k,.2);tg.fill(inner);
   g.setTransform(1,0,0,1,0,0);g.drawImage(t,0,0);g.setTransform(LS,0,0,LS,0,0);});chainView=c;}
-function drawChainWaters(g,C){CHW=[];chainLab=null;chainTag=null;chainView=null;
- C.chains.forEach((ch,k)=>{const outer=chainShape(C,k,2.2),inner=chainShape(C,k,0);
-  g.save();g.fillStyle=glass(k,.78);g.fill(outer);g.globalCompositeOperation='destination-out';g.fill(inner);g.restore();
-  g.save();g.fillStyle=glass(k,.17);g.fill(inner);g.restore();CHW.push(inner);});}
+/* chain waters: not painted into the board any more. Each chain's halo is its own small layer, shown for a few
+   seconds when a chart starts, flashed on one chain when an island in it changes hands, and held on by the Chains
+   button (or the "Chain outlines always on" setting). CHW keeps the shapes for the Chains view */
+let HALO=[],haloAll=-9,haloFl=[],haloOwn=null,haloSt=null;
+function drawChainWaters(g,C){CHW=[];chainLab=null;chainTag=null;chainView=null;HALO=[];haloFl=[];
+ C.chains.forEach((ch,k)=>{const outer=chainShape(C,k,2.2),inner=chainShape(C,k,0);CHW.push(inner);
+  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;C.isl.forEach((q,i)=>{if(q.ch!==k)return;const I=ISL[i],r=I.R*1.12+12,yy=I.y+I.depth*.4;x0=Math.min(x0,I.x-r);x1=Math.max(x1,I.x+r);y0=Math.min(y0,yy-r);y1=Math.max(y1,yy+r);});
+  if(x0>x1)return;const sc=Math.min(2,DPR),c=document.createElement('canvas');c.width=Math.ceil((x1-x0)*sc);c.height=Math.ceil((y1-y0)*sc);const h=c.getContext('2d');h.setTransform(sc,0,0,sc,-x0*sc,-y0*sc);
+  h.save();h.fillStyle=glass(k,.78);h.fill(outer);h.globalCompositeOperation='destination-out';h.fill(inner);h.restore();
+  h.fillStyle=glass(k,.17);h.fill(inner);HALO[k]={c,x0,y0,w:x1-x0,h:y1-y0};});}
+function drawHalos(t){if(!st||!D||!HALO.length)return;const C=chartOf(st);
+ if(haloSt!==st||!haloOwn||haloOwn.length!==D.own.length){haloSt=st;haloOwn=D.own.slice();haloAll=t;}
+ for(let i=0;i<D.own.length;i++)if(D.own[i]!==haloOwn[i]){haloOwn[i]=D.own[i];const k=C.isl[i].ch;if(k!=null&&k>=0)haloFl[k]=t;}
+ const fade=(t0,hold)=>{const u=t-t0;return u<hold?1:u<hold+.6?1-(u-hold)/.6:0;};
+ const all=ui.chains||meta.set.cw?1:fade(haloAll,3);
+ HALO.forEach((L,k)=>{if(!L)return;const a=Math.max(all,haloFl[k]!=null?fade(haloFl[k],1.6):0);if(a<=0)return;cx.globalAlpha=a;cx.drawImage(L.c,L.x0,L.y0,L.w,L.h);});cx.globalAlpha=1;}
 function buildBoard(){const [c,g]=layer();board=c;if(!st)return;const C=chartOf(st);
  drawChainWaters(g,C);
  /* lanes: dotted chart routes */
@@ -876,21 +904,21 @@ function drawIsland(g,I,i,s){const r=srand(st.c*31+i*7+1);
   g.save();g.translate(x,y+dp);const cg=g.createLinearGradient(0,-R*.8,0,R*.8);cg.addColorStop(0,'#a8875c');cg.addColorStop(1,'#5e4630');g.fillStyle=cg;g.fill(p.path);g.strokeStyle='#3a2b1d';g.lineWidth=1.4;g.stroke(p.path);
   g.strokeStyle='rgba(255,255,255,.62)';g.lineWidth=2.2;g.setLineDash([5,4]);g.stroke(p.path);g.setLineDash([]);g.restore();
   g.save();g.translate(x,y);const sg=g.createLinearGradient(-R,-R,R,R);sg.addColorStop(0,'#f6e7bb');sg.addColorStop(1,'#dcc48d');g.fillStyle=sg;g.fill(p.path);g.strokeStyle='rgba(150,118,70,.75)';g.lineWidth=1.2;g.stroke(p.path);
-  const gs=main&&!s.cl?.79:.56;g.save();g.translate(0,-R*.05);g.scale(gs,gs);const gg=g.createLinearGradient(0,-R,0,R);gg.addColorStop(0,'#9fcd6a');gg.addColorStop(1,'#6b9c45');g.fillStyle=gg;g.fill(p.path);g.strokeStyle='rgba(58,92,38,.45)';g.lineWidth=1.6/gs;g.stroke(p.path);
+  const gs=main&&!s.cl?.85:.6;g.save();g.translate(0,-R*.05);g.scale(gs,gs);const gg=g.createLinearGradient(0,-R,0,R);gg.addColorStop(0,'#9fcd6a');gg.addColorStop(1,'#6b9c45');g.fillStyle=gg;g.fill(p.path);g.strokeStyle='rgba(58,92,38,.45)';g.lineWidth=1.6/gs;g.stroke(p.path);
   g.clip(p.path);for(let k=0;k<R*R/26;k++){const tx=(r()*2-1)*R,ty=(r()*2-1)*R;g.fillStyle=r()<.5?'rgba(176,220,120,.55)':'rgba(82,128,52,.4)';g.beginPath();g.ellipse(tx,ty,1.6/gs,1/gs,0,0,7);g.fill();}g.restore();
   for(let k=0;k<(main?3:2);k++){const th=r()*6.283,d=R*(.8+r()*.1),rx=Math.cos(th)*d,ry=Math.sin(th)*d*.8,rs=Math.max(2,R*(.05+r()*.05));g.fillStyle='#868b8e';g.beginPath();g.ellipse(rx,ry,rs*1.3,rs,0,0,7);g.fill();g.fillStyle='#b9bdbf';g.beginPath();g.ellipse(rx-rs*.3,ry-rs*.35,rs*.6,rs*.4,0,0,7);g.fill();}
   g.restore();}
  const x=I.x,y=I.y;
  if(I.harb){const a=I.quayA,R=I.R,qx=x+Math.cos(a)*R*.9,qy=y+Math.sin(a)*R*.74,ex_=x+Math.cos(a)*R*1.34,ey_=y+Math.sin(a)*R*1.1;
-  g.strokeStyle='#2c1f15';g.lineWidth=FH*.42;g.lineCap='butt';g.beginPath();g.moveTo(qx,qy);g.lineTo(ex_,ey_);g.stroke();g.strokeStyle='#9a6b40';g.lineWidth=FH*.3;g.stroke();
-  g.strokeStyle='rgba(44,31,21,.55)';g.lineWidth=1;const n=6;for(let k=1;k<n;k++){const t=k/n,px=lerp(qx,ex_,t),py=lerp(qy,ey_,t),nx=-(ey_-qy),ny=ex_-qx,nl=Math.hypot(nx,ny);g.beginPath();g.moveTo(px-nx/nl*FH*.15,py-ny/nl*FH*.15);g.lineTo(px+nx/nl*FH*.15,py+ny/nl*FH*.15);g.stroke();}
-  const bx_=ex_+FH*.35,by_=ey_+FH*.25;g.fillStyle='#2c1f15';g.beginPath();g.ellipse(bx_,by_,FH*.42,FH*.17,a,0,7);g.fill();g.fillStyle='#a0703f';g.beginPath();g.ellipse(bx_,by_-1,FH*.36,FH*.12,a,0,7);g.fill();}
- for(const [hx,hy,slate] of I.homes){const px=x+hx,py=y+hy,w=FH*.62,h=FH*.34;g.fillStyle='rgba(0,0,0,.22)';g.beginPath();g.ellipse(px+3,py+3,w*.62,h*.5,0,0,7);g.fill();
+  g.strokeStyle='#2c1f15';g.lineWidth=SH*.42;g.lineCap='butt';g.beginPath();g.moveTo(qx,qy);g.lineTo(ex_,ey_);g.stroke();g.strokeStyle='#9a6b40';g.lineWidth=SH*.3;g.stroke();
+  g.strokeStyle='rgba(44,31,21,.55)';g.lineWidth=1;const n=6;for(let k=1;k<n;k++){const t=k/n,px=lerp(qx,ex_,t),py=lerp(qy,ey_,t),nx=-(ey_-qy),ny=ex_-qx,nl=Math.hypot(nx,ny);g.beginPath();g.moveTo(px-nx/nl*SH*.15,py-ny/nl*SH*.15);g.lineTo(px+nx/nl*SH*.15,py+ny/nl*SH*.15);g.stroke();}
+  const bx_=ex_+SH*.35,by_=ey_+SH*.25;g.fillStyle='#2c1f15';g.beginPath();g.ellipse(bx_,by_,SH*.42,SH*.17,a,0,7);g.fill();g.fillStyle='#a0703f';g.beginPath();g.ellipse(bx_,by_-1,SH*.36,SH*.12,a,0,7);g.fill();}
+ for(const [hx,hy,slate] of I.homes){const px=x+hx,py=y+hy,w=SH*.62,h=SH*.34;g.fillStyle='rgba(0,0,0,.22)';g.beginPath();g.ellipse(px+3,py+3,w*.62,h*.5,0,0,7);g.fill();
   g.fillStyle='#f5f0e3';g.strokeStyle='#4a3a2c';g.lineWidth=1;g.beginPath();g.rect(px-w/2,py-h,w,h);g.fill();g.stroke();g.fillStyle=slate?'#5e6e7b':'#b9573e';g.beginPath();g.moveTo(px-w*.62,py-h);g.lineTo(px-w*.36,py-h-h*.85);g.lineTo(px+w*.36,py-h-h*.85);g.lineTo(px+w*.62,py-h);g.closePath();g.fill();g.stroke();g.fillStyle='#3a2b1f';g.fillRect(px-w*.08,py-h*.55,w*.16,h*.55);}
- for(const [tx,ty,sc] of I.trees){const px=x+tx,py=y+ty,rr=FH*.4*sc;g.fillStyle='rgba(0,0,0,.24)';g.beginPath();g.ellipse(px+rr*.4,py+rr*.55,rr*1.05,rr*.55,0,0,7);g.fill();
+ for(const [tx,ty,sc] of I.trees){const px=x+tx,py=y+ty,rr=SH*.4*sc;g.fillStyle='rgba(0,0,0,.24)';g.beginPath();g.ellipse(px+rr*.4,py+rr*.55,rr*1.05,rr*.55,0,0,7);g.fill();
   g.fillStyle='#5a3d24';g.fillRect(px-1.2,py-rr*.2,2.4,rr*.55);g.fillStyle='#2f6a33';g.strokeStyle='#1d3f20';g.lineWidth=1.2;g.beginPath();g.arc(px,py-rr*.55,rr,0,7);g.fill();g.stroke();
   g.fillStyle='#4f9246';g.beginPath();g.arc(px-rr*.25,py-rr*.8,rr*.6,0,7);g.fill();g.fillStyle='rgba(190,240,150,.35)';g.beginPath();g.arc(px-rr*.4,py-rr*.98,rr*.25,0,7);g.fill();}
- if(I.harb){const fx=x+I.fort[0],fy=y+I.fort[1],rw=FH*.52,th=FH*.72;g.fillStyle='rgba(0,0,0,.28)';g.beginPath();g.ellipse(fx+4,fy+3,rw*1.2,rw*.5,0,0,7);g.fill();
+ if(I.harb){const fx=x+I.fort[0],fy=y+I.fort[1],rw=SH*.52,th=SH*.72;g.fillStyle='rgba(0,0,0,.28)';g.beginPath();g.ellipse(fx+4,fy+3,rw*1.2,rw*.5,0,0,7);g.fill();
   const tg=g.createLinearGradient(fx-rw,0,fx+rw,0);tg.addColorStop(0,'#b9bdb6');tg.addColorStop(1,'#7b827c');g.fillStyle=tg;g.strokeStyle='#2f3431';g.lineWidth=1.3;g.beginPath();g.moveTo(fx-rw,fy-th);g.lineTo(fx-rw,fy);g.ellipse(fx,fy,rw,rw*.42,0,Math.PI,0,true);g.lineTo(fx+rw,fy-th);g.closePath();g.fill();g.stroke();
   g.fillStyle='#d3d6cf';g.beginPath();g.ellipse(fx,fy-th,rw,rw*.42,0,0,7);g.fill();g.stroke();g.fillStyle='#8f958f';g.beginPath();g.ellipse(fx,fy-th,rw*.62,rw*.25,0,0,7);g.fill();
   for(let k=0;k<7;k++){const a=k/7*6.283;g.fillStyle='#a7aca5';g.strokeStyle='#2f3431';g.lineWidth=.8;g.beginPath();g.rect(fx+Math.cos(a)*rw*.86-2,fy-th+Math.sin(a)*rw*.36-4,4,4);g.fill();g.stroke();}
@@ -934,6 +962,19 @@ function emit(o){if(parts.length<420)parts.push(Object.assign({t0:tnow(),rot:0,v
 function feathers(x,y,k,n){const B=BIRD[k]||BIRD.gull;for(let q=0;q<n;q++){const a=Math.random()*6.28,v=30+Math.random()*60;emit({k:'feather',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-50,ay:70,vr:(Math.random()-.5)*10,rot:Math.random()*6,life:.8+Math.random()*.5,col:q%2?B.back:B.belly,size:FH*(.16+Math.random()*.1)});}}
 function smoke(x,y,n,big){for(let q=0;q<n;q++)emit({k:'smoke',x:x+(Math.random()-.5)*FH*.6,y:y+(Math.random()-.5)*FH*.4,vx:(Math.random()-.5)*14,vy:-14-Math.random()*16,life:.7+Math.random()*.5,size:FH*(big?.8:.5)*(.7+Math.random()*.5),t0:tnow()+q*.04});}
 function flash(x,y,s){emit({k:'flash',x,y,life:.16,size:FH*(s||1)});}
+/* cannon fire: a ball on a short arc from gun to target; whatever it hits happens when it lands (a promise, with a
+   timer behind it so a hidden tab or a skip never leaves a casualty waiting; a reset drops it unlanded) */
+const balls=[];
+function fireBall(x0,y0,x1,y1,ms,land){let done=false;const go=()=>{if(done)return;done=true;try{land&&land();}catch(e){}};
+ const d=meta.set.rm||quick()?0:dur(ms);if(d<=0){go();return Promise.resolve();}
+ return new Promise(res=>{const b={x0,y0,x1,y1,t0:tnow(),dur:d/1000,arc:Math.min(60,Math.hypot(x1-x0,y1-y0)*.35)+FH*.9,gen:GEN};b.land=()=>{if(b.gen===GEN)go();res();};balls.push(b);
+  setTimeout(()=>{const q=balls.indexOf(b);if(q>=0)balls.splice(q,1);b.land();},d+250);});}
+function drawBalls(t){const r=Math.max(3.5,SH*.24);for(let q=balls.length-1;q>=0;q--){const b=balls[q],u=(t-b.t0)/b.dur;
+  if(u>=1){balls.splice(q,1);b.land();continue;}if(u<0)continue;
+  const gx=lerp(b.x0,b.x1,u),gy=lerp(b.y0,b.y1,u),y=gy-Math.sin(u*Math.PI)*b.arc;
+  cx.fillStyle='rgba(2,22,34,.22)';cx.beginPath();cx.ellipse(gx,gy+2,r*1.1,r*.4,0,0,7);cx.fill();
+  cx.fillStyle='#161c20';cx.beginPath();cx.arc(gx,y,r,0,7);cx.fill();cx.fillStyle='rgba(255,255,255,.5)';cx.beginPath();cx.arc(gx-r*.35,y-r*.35,r*.33,0,7);cx.fill();
+  if(Math.random()<.45)emit({k:'smoke',x:gx,y,vx:0,vy:-6,life:.3,size:r*1.5});}}
 function splash(x,y){for(let q=0;q<7;q++){const a=-Math.PI*(q/6),v=40+Math.random()*30;emit({k:'drop',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,ay:180,life:.5,size:1.8});}emit({k:'ring',x,y,life:.6,size:FH*.6});}
 function floatTxt(x,y,txt,col,big){floats.push({x,y,txt,col:col||'#fff8ef',t0:tnow(),life:1.1,big});}
 function confetti(I,col){for(let q=0;q<26;q++){const a=-Math.PI/2+(Math.random()-.5)*2.4,v=70+Math.random()*90;emit({k:'conf',x:I.x,y:I.y-I.R*.3,vx:Math.cos(a)*v,vy:Math.sin(a)*v,ay:120,vr:(Math.random()-.5)*14,rot:Math.random()*6,life:1.2+Math.random()*.6,col:q%3?col:'#fff6dc',size:FH*.18});}}
@@ -968,7 +1009,7 @@ function drawIslandLife(i,t){const I=ISL[i],o=D.own[i],n=D.tr[i],k=fleetKey(o);c
 const popOf=(i,t)=>{const bp=clamp((t-(bump[i]||-9))/.35,0,1);return bp<1?1+.35*(1-ease.out(bp)):1;};
 /* troop badges: drawn after ships and hopping birds, so nothing ever sits over a count */
 /* a Fortify stone fort: a squat grey tower on the island's flank */
-function drawStoneFort(I){const fx=I.x+I.R*.52,fy=I.y+I.R*.12,rw=FH*.42,th=FH*.55;cx.fillStyle='rgba(0,0,0,.25)';cx.beginPath();cx.ellipse(fx+3,fy+2,rw*1.15,rw*.45,0,0,7);cx.fill();
+function drawStoneFort(I){const fx=I.x+I.R*.52,fy=I.y+I.R*.12,rw=SH*.42,th=SH*.55;cx.fillStyle='rgba(0,0,0,.25)';cx.beginPath();cx.ellipse(fx+3,fy+2,rw*1.15,rw*.45,0,0,7);cx.fill();
  cx.fillStyle='#9ca19b';cx.strokeStyle='#2f3431';cx.lineWidth=1.2;cx.beginPath();cx.moveTo(fx-rw,fy-th);cx.lineTo(fx-rw,fy);cx.ellipse(fx,fy,rw,rw*.42,0,Math.PI,0,true);cx.lineTo(fx+rw,fy-th);cx.closePath();cx.fill();cx.stroke();
  cx.fillStyle='#c9ccc5';cx.beginPath();cx.ellipse(fx,fy-th,rw,rw*.42,0,0,7);cx.fill();cx.stroke();
  for(let k=0;k<5;k++){const a=k/5*6.283+.3;cx.fillStyle='#a7aca5';cx.beginPath();cx.rect(fx+Math.cos(a)*rw*.8-1.8,fy-th+Math.sin(a)*rw*.33-3.6,3.6,3.6);cx.fill();cx.stroke();}}
@@ -980,10 +1021,10 @@ function drawBanner(i,t,pop){const I=ISL[i],o=D.own[i],n=D.tr[i];const txt=Strin
  cx.fillStyle=col;rr(cx,-w/2,-h/2,w,h,h/2);cx.fill();cx.fillStyle=gr;cx.fill();cx.strokeStyle='rgba(10,16,20,.7)';cx.lineWidth=1.5;cx.stroke();
  const ink=inkOf(o);if(hasM){cx.fillStyle=ink;markPath(cx,FLEETS[st.fl[o]].mark,-w/2+12,0,4.2);cx.fill();}
  cx.fillStyle=ink;cx.textAlign='center';cx.textBaseline='middle';cx.fillText(txt,hasM?-w/2+20+tw/2:0,1);cx.restore();}
-function drawFlag(i,t){const I=ISL[i],o=D.own[i];const fx=I.x+I.fort[0],fy=I.y+I.fort[1]-FH*.72-FH*.2;const ph=fy-FH*1.25;
+function drawFlag(i,t){const I=ISL[i],o=D.own[i];const fx=I.x+I.fort[0],fy=I.y+I.fort[1]-SH*.72-SH*.2;const ph=fy-SH*1.25;
  const ft=flagT[i]||-9,fp=clamp((t-ft)/.7,0,1);const rise=fp<1?ease.back(clamp((fp-.25)/.75,0,1)):1;
  cx.strokeStyle='#2a221b';cx.lineWidth=1.8;cx.beginPath();cx.moveTo(fx,fy);cx.lineTo(fx,ph-2);cx.stroke();cx.fillStyle='#d9b45a';cx.beginPath();cx.arc(fx,ph-3,2,0,7);cx.fill();
- const fw=FH*.95,fh=FH*.6,top=lerp(fy-fh,ph,rise);cx.fillStyle=colOf(o);cx.beginPath();cx.moveTo(fx,top);
+ const fw=SH*.95,fh=SH*.6,top=lerp(fy-fh,ph,rise);cx.fillStyle=colOf(o);cx.beginPath();cx.moveTo(fx,top);
  for(let k=0;k<=6;k++){const xx=fx+fw*k/6;cx.lineTo(xx,top+(meta.set.rm?0:Math.sin(t*6+k*.9)*fw*.06*k/6));}for(let k=6;k>=0;k--){const xx=fx+fw*k/6;cx.lineTo(xx,top+fh+(meta.set.rm?0:Math.sin(t*6+k*.9)*fw*.06*k/6));}cx.closePath();cx.fill();cx.strokeStyle='rgba(0,0,0,.45)';cx.lineWidth=1;cx.stroke();
  cx.fillStyle=inkOf(o);markPath(cx,FLEETS[st.fl[o]].mark,fx+fw*.45,top+fh*.5+(meta.set.rm?0:Math.sin(t*6+3)*fw*.03),fh*.22);cx.fill();}
 function drawShip(sh,t){const sp=SPR.ship[sh.k];if(!sp)return;let u,x,y;const e=sh.e;
@@ -996,7 +1037,12 @@ function drawShip(sh,t){const sp=SPR.ship[sh.k];if(!sp)return;let u,x,y;const e=
  cx.fillStyle='rgba(2,22,34,.3)';cx.beginPath();cx.ellipse(0,FH*.12,sp.w*.36,FH*.16,0,0,7);cx.fill();
  cx.drawImage(sp.back,-sp.ox,-sp.oy,sp.w,sp.h);
  const n=Math.min(3,sh.carry||0),bs=SPR[sh.k],su=sp.u;for(let q=0;q<n;q++){const bx=(-.55+q*.48)*su*1.1,sc=su/FH*.95;cx.save();cx.translate(bx,-su*.3);cx.scale(sc,sc);cx.drawImage(bs.cv,-bs.ox,-bs.oy,bs.w,bs.h);cx.restore();}
- cx.drawImage(sp.front,-sp.ox,-sp.oy,sp.w,sp.h);cx.restore();}
+ cx.drawImage(sp.front,-sp.ox,-sp.oy,sp.w,sp.h);
+ if(sh.mode==='wait'||sh.fired){const u=sp.u,rec=sh.fired?clamp(1-(t-sh.fired)/.28,0,1):0,bx=u*(.5-rec*.16),by=-u*.42;
+  cx.save();cx.translate(bx,by);cx.rotate(-.22);cx.fillStyle='#1b2226';cx.strokeStyle='#0b0f11';cx.lineWidth=Math.max(.8,u*.03);
+  rr(cx,-u*.1,-u*.1,u*.64,u*.2,u*.08);cx.fill();cx.stroke();cx.fillStyle='rgba(255,255,255,.25)';cx.fillRect(-u*.04,-u*.06,u*.38,u*.03);cx.restore();
+  cx.fillStyle='#5b3a20';cx.beginPath();cx.arc(u*.48,-u*.36,u*.08,0,7);cx.fill();}
+ cx.restore();}
 function drawFlyer(f,t){const u=clamp((t-f.t0)/f.dur,0,1);if(t<f.t0)return;const e=ease.inOut(u);let x=lerp(f.ax,f.bx,e),y=lerp(f.ay,f.by,e)-Math.sin(u*Math.PI)*f.arc;
  const s=SPR[f.k];if(!s)return;const dir=f.bx>=f.ax?1:-1;
  if(f.hop){drawSoldier(f.k,x,y,dir,1,t,f.ph);return;}
@@ -1038,13 +1084,13 @@ function casualty(i,owner){const I=ISL[i];if(!D||D.tr[i]<=0)return;D.tr[i]--;bum
    (up to about 70°) or stood further out until its sails clear every troop badge (an attacker parked on the defender's
    count hid it for the whole battle), keeping off island names, other islands and the edges of the battle frame where it
    can. Badges are drawn after ships anyway, so a count is never hidden even in a tight spot. */
-function berth(from,to,ux,uy){const A=ISL[from],B=ISL[to],u=FH*.82,rx=B.R*1.02+FH*1.15,ry=B.R*.84+FH*.9,a0=Math.atan2(-uy,-ux),C=chartOf(st),fs=Math.round(clamp(S*3.3,13,16));
+function berth(from,to,ux,uy){const A=ISL[from],B=ISL[to],u=SH*.82,rx=B.R*1.02+SH*1.15,ry=B.R*.84+SH*.9,a0=Math.atan2(-uy,-ux),C=chartOf(st),fs=Math.round(clamp(S*3.3,13,16));
  const area=(a,b)=>Math.max(0,Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0))*Math.max(0,Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0));
  const badges=[],names=[],land=[];cx.font=`${fs}px "IM Fell English SC",Georgia,serif`;
  ISL.forEach((I,i)=>{const bx=I.x+(I.bdx||0);badges.push({x0:bx-30,x1:bx+30,y0:I.y+I.bannerY-16,y1:I.y+I.bannerY+21});
   const w=cx.measureText(C.isl[i].n).width+6,lx=I.x+(I.ldx||0),ly=I.y+I.labelY+(I.ldy||0);names.push({x0:lx-w/2,x1:lx+w/2,y0:ly,y1:ly+fs+3});
   if(i!==to)land.push({x0:I.x-I.R*.9,x1:I.x+I.R*.9,y0:I.y-I.R*.7,y1:I.y+I.R*.75});});
- const fr=boxOf([from,to]),bx0=Math.max(4,fr.x0-FH),bx1=Math.min(W-4,fr.x1+FH),by0=Math.max(MAP.y0,fr.y0-FH),by1=Math.min(dockTop-4,fr.y1+FH);
+ const fr=boxOf([from,to]),bx0=Math.max(4,fr.x0-SH),bx1=Math.min(W-4,fr.x1+SH),by0=Math.max(MAP.y0,fr.y0-SH),by1=Math.min(dockTop-4,fr.y1+SH);
  let best=null;for(const f of [1,1.3,1.6])for(let k=0;k<=18;k++){const d=(k&1?1:-1)*Math.ceil(k/2)*.13,a=a0+d,x=B.x+Math.cos(a)*rx*f,y=B.y+Math.sin(a)*ry*f+B.depth*.6,
   r={x0:x-u*1.5,x1:x+u*1.5,y0:y-u*2.15-2,y1:y+u*.35+2};
   let cover=0,soft=0;for(const b of badges)cover+=area(r,b);for(const b of names)soft+=area(r,b)*40;for(const b of land)soft+=area(r,b)*.5;
@@ -1061,7 +1107,7 @@ function launchShip(f,from,to,carry){if(quick())return null;const A=ISL[from],B=
 function focusOn(a,b,z){if(meta.set.rm||quick())return;cam.fx=[a,b];cam.fxZ=z||ZAUTO;}
 function unfocus(){cam.fx=null;}
 const OVER=()=>({x:MAP.cx,y:MAP.cy,z:1});
-function camClamp(g){const z=g.z;g.x=clamp(g.x,MAP.cx/z,W-(W-MAP.cx)/z);g.y=clamp(g.y,MAP.cy/z,H-(H-MAP.cy)/z);return g;}
+function camClamp(g){const z=g.z;g.x=clamp(g.x,MAP.cx/z-MG.x,W-(W-MAP.cx)/z+MG.x);g.y=clamp(g.y,MAP.cy/z-MG.t,H-(H-MAP.cy)/z+MG.b);return g;}
 function camArea(battle){const y0=MAP.y0+6,y1=dockTop-(battle?(DT&&DT.small?64:84):40);return {x0:10,x1:W-10,y0,y1:Math.max(y0+90,y1)};}
 function boxOf(ids){let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;for(const i of ids||[]){const I=ISL[i];if(!I)continue;x0=Math.min(x0,I.x-I.R*1.08);x1=Math.max(x1,I.x+I.R*1.08);y0=Math.min(y0,I.y+I.bannerY-16);y1=Math.max(y1,I.y+I.labelY+18);}return x0>x1?null:{x0,x1,y0,y1};}
 const fitZ=(b,A)=>Math.min((A.x1-A.x0)/Math.max(1,b.x1-b.x0),(A.y1-A.y0)/Math.max(1,b.y1-b.y0));
@@ -1104,7 +1150,7 @@ function camUpdate(dt){const k=camKey(),plan=camPlan();
  cam.z=1/(1/cam.z+(1/g.z-1/cam.z)*f);cam.x+=(g.x-cam.x)*f;cam.y+=(g.y-cam.y)*f;cam.shake*=Math.pow(.004,dt);
  cam.moving=Math.abs(g.x-cam.x)*cam.z>2||Math.abs(g.y-cam.y)*cam.z>2||Math.abs(g.z-cam.z)>.01;}
 function camManual(x,y,z){const g=camClamp({x,y,z:clamp(z,1,ZMAN)});cam.man=g;cam.x=g.x;cam.y=g.y;cam.z=g.z;}
-function toggleView(){if(!st)return;cam.fx=null;cam.man=cam.z>1.06?Object.assign(OVER(),{soft:true}):Object.assign(camPlan().g,{soft:true});sfx('tap');}
+function toggleView(){if(!st)return;cam.fx=null;cam.man=(cam.z>1.06||Math.hypot(cam.x-MAP.cx,cam.y-MAP.cy)>4)?Object.assign(OVER(),{soft:true}):Object.assign(camPlan().g,{soft:true});sfx('tap');}
 
 /* ---------- one attack: a ship sails over, dice tumble, cannon and casualties ---------- */
 /* a battle in three parts so your Blitz can roll one throw at a time (and stop): the ship sails over, each throw plays,
@@ -1115,11 +1161,25 @@ async function battleOpen(e,full,focus){const B=ISL[e.to];face={i:e.from,tx:B.x}
 async function battleRoll(e,r,ship,full,k,small){const fa=e.f,fd=e.was,B=ISL[e.to],tum=full?620:Math.max(110,250-k*30);
  if(!quick()){DT={t0:tnow(),A:r.A,D:r.D,fort:r.fort,fa,fd,tum:dur(tum)/1000,small,hideAt:1e9,al:r.al,dl:r.dl};sfx('dice');}
  await wait(tum);
- if(!quick()){const sx=ship?ship.x:ISL[e.from].x,sy=ship?ship.y:ISL[e.from].y;flash(sx+FH*.3,sy-FH*.5,.8);smoke(sx,sy-FH*.4,2);
-  if(r.fort){const fx=B.x+B.fort[0],fy=B.y+B.fort[1]-FH*.75;flash(fx,fy,.9);smoke(fx,fy,2);}
-  if(r.dl){smoke(B.x,B.y-B.R*.15,3,true);cam.shake=Math.max(cam.shake,meta.set.rm?0:3.5);sfx('boom');buzz(16);}else{splash(sx+(Math.random()-.5)*FH*1.4,sy+FH*.35);sfx('volley');}}
- for(let q=0;q<r.al;q++)casualty(e.from,fa);for(let q=0;q<r.dl;q++)casualty(e.to,fd);
- await wait(full?720:Math.max(90,200-k*25));}
+ if(quick()){for(let q=0;q<r.al;q++)casualty(e.from,fa);for(let q=0;q<r.dl;q++)casualty(e.to,fd);await wait(full?720:Math.max(90,200-k*25));return;}
+ /* the ship fires: one ball per bird the island loses, or one that falls short; then the island (or its fort) fires back,
+    one ball per bird the ship loses. Each casualty lands with its ball */
+ const sx=ship?ship.x:ISL[e.from].x,sy=ship?ship.y:ISL[e.from].y,dir=B.x>=sx?1:-1,gx=sx+dir*FH*.55,gy=sy-FH*.55,fly=full?240:Math.max(120,200-k*20),gap=full?100:60;
+ const dx=B.x-sx,dy=B.y-sy,dd=Math.hypot(dx,dy)||1;
+ const shots=[],nA=Math.max(1,r.dl);
+ for(let q=0;q<nA;q++){const hit=q<r.dl;shots.push(new Promise(res=>setTimeout(()=>{if(ship)ship.fired=tnow();flash(gx,gy,.75);smoke(gx,gy,2);sfx('cannon');
+  const tx=hit?B.x+(Math.random()-.5)*B.R*.5:B.x-dx/dd*(B.R*1.15+FH*.3),ty=hit?B.y-FH*.3+(Math.random()-.5)*B.R*.25:B.y-dy/dd*(B.R*.95+FH*.3)+B.depth;
+  fireBall(gx,gy,tx,ty,fly,()=>{if(hit){smoke(tx,ty-FH*.2,3,true);flash(tx,ty-FH*.2,.9);cam.shake=Math.max(cam.shake,meta.set.rm?0:3.5);sfx('boom');buzz(16);casualty(e.to,fd);}
+   else{splash(tx,ty);sfx('splash');}}).then(res);},dur(q*gap))));}
+ if(r.fort){const fx=B.x+B.fort[0],fy=B.y+B.fort[1]-SH*.75;flash(fx,fy,.9);smoke(fx,fy,2);}
+ await Promise.all(shots);
+ if(r.al){const fromFort=r.fort&&B.fort,ox=fromFort?B.x+B.fort[0]:B.x-dx/dd*B.R*.5,oy=fromFort?B.y+B.fort[1]-SH*.75:B.y-dy/dd*B.R*.4-FH*.4;
+  await wait(full?40:20);const back=[];
+  for(let q=0;q<r.al;q++)back.push(new Promise(res=>setTimeout(()=>{flash(ox,oy,.7);smoke(ox,oy,2);sfx('cannon');
+   const tx=sx+(Math.random()-.5)*FH*.8,ty=sy-FH*.3;
+   fireBall(ox,oy,tx,ty,fly,()=>{flash(tx,ty,.7);smoke(tx,ty,2);splash(tx+(Math.random()-.5)*FH,sy+FH*.35);sfx('volley');buzz(10);casualty(e.from,fa);}).then(res);},dur(q*gap))));
+  await Promise.all(back);}
+ await wait(full?420:Math.max(70,150-k*25));}
 async function battleClose(e,ship,full){if(DT)DT.hideAt=tnow()+(quick()?0:(full?1.6:.4));
  if(!e.taken){if(ship){ship.mode='back';ship.t0=tnow();ship.dur=Math.max(.05,dur(480)/1000);setTimeout(()=>{const q=ships.indexOf(ship);if(q>=0)ships.splice(q,1);},dur(520)+20);}face=null;unfocus();await wait(full?500:200);}}
 async function animBattle(e,player,watch){const full=player||watch;const ship=await battleOpen(e,full,full);
@@ -1236,10 +1296,11 @@ function draw(t,dt){ambient(dt);camUpdate(dt);
  cx.setTransform(DPR,0,0,DPR,0,0);cx.fillStyle='#2a86b0';cx.fillRect(0,0,W,H);
  const sx=cam.shake>.1?(Math.random()-.5)*cam.shake:0,sy=cam.shake>.1?(Math.random()-.5)*cam.shake:0;
  cx.setTransform(DPR*cam.z,0,0,DPR*cam.z,DPR*(MAP.cx-cam.x*cam.z+sx),DPR*(MAP.cy-cam.y*cam.z+sy));
- {const sl=(st&&D&&!titleUp)?sea:seaPlain;if(sl)cx.drawImage(sl,0,0,W,H);}drawSwell(t);drawWaves(t);
- if(st&&D&&!titleUp){drawFoam(t);if(board)cx.drawImage(board,0,0,W,H);if(D.own.join(',')!==bordersKey)buildBorders();cx.drawImage(borders,0,0,W,H);if(ui.chains){if(!chainView)buildChainView(chartOf(st));cx.drawImage(chainView,0,0,W,H);}drawLabels();drawChainTags();
+ {const sl=(st&&D&&!titleUp)?sea:seaPlain;if(sl){const E=sl.E||{x0:0,y0:0,w:W,h:H};cx.drawImage(sl,E.x0,E.y0,E.w,E.h);}}drawSwell(t);drawWaves(t);
+ if(st&&D&&!titleUp){drawFoam(t);drawHalos(t);if(board)cx.drawImage(board,0,0,W,H);if(D.own.join(',')!==bordersKey)buildBorders();cx.drawImage(borders,0,0,W,H);if(ui.chains){if(!chainView)buildChainView(chartOf(st));cx.drawImage(chainView,0,0,W,H);}drawLabels();drawChainTags();
   drawHighlights(t);const order=ISL.map((I,i)=>i).sort((a,b)=>ISL[a].y-ISL[b].y);for(const i of order)drawIslandLife(i,t);
   for(const s of ships)drawShip(s,t);
+  drawBalls(t);
   for(let q=flyers.length-1;q>=0;q--){const f=flyers[q];if(t>=f.t0+f.dur){if(f.gen===GEN&&f.applies&&f.land)f.land();flyers.splice(q,1);continue;}drawFlyer(f,t);}
   for(const i of order)drawBanner(i,t,popOf(i,t));
   drawParts(dt,t);drawFloats(t);drawChips(t);drawChains();}
@@ -1249,11 +1310,11 @@ function draw(t,dt){ambient(dt);camUpdate(dt);
  cx.setTransform(DPR,0,0,DPR,0,0);drawDice(t);}
 
 /* ---------- fleet bar, dock, hint, banner, notes, signs ---------- */
-function strip(){if(!st||!D){$('fleets').innerHTML='';$('turnL').textContent='';$('chestN').textContent='0/3';return;}
+function strip(){if(!st||!D){$('fleets').innerHTML='';$('dTurn').textContent='';$('chestN').textContent='0/3';return;}
  $('fleets').innerHTML=st.fl.map((k,f)=>{let n=0;for(const o of D.own)if(o===f)n++;return `<span class="chip${f===st.cur?' on':''}${n?'':' out'}" style="--c:${FLEETS[k].col};--k:${FLEETS[k].ink}" title="${FLEETS[k].name}"><img src="${iconURL(k)}" alt=""><b>${n}</b></span>`;}).join('');
  /* four fleets on a narrow phone: the chips shrink to bird icons with a count badge */
  const F=$('fleets');F.classList.remove('tight');const need=[...F.children].reduce((a,c)=>a+c.offsetWidth+5,0)+8;if(need>F.clientWidth)F.classList.add('tight');
- $('turnL').textContent='Turn '+st.turn;const n=myChests(),ch=$('chest');$('chestN').textContent=`${n}/3`;ch.classList.toggle('ready',n>=3);ch.setAttribute('aria-label',`Spoils chests: ${n} of 3`);}
+ $('dTurn').textContent='Turn '+st.turn;const n=myChests(),ch=$('chest');$('chestN').textContent=`${n}/3`;ch.classList.toggle('ready',n>=3);ch.setAttribute('aria-label',`Spoils chests: ${n} of 3`);}
 const nextCash=()=>RULES.spoils[Math.min(cashIdx(st,0),RULES.spoils.length-1)];
 function myChests(){return Math.min(5,st.spoils[0]+(st.cur===0&&st.conq&&st.phase!=='rival'&&st.phase!=='rivals-done'?1:0));}
 const btnFns={b1:null,b2:null,bEnd:null,bBack:null};
@@ -1264,7 +1325,7 @@ function showRange(o){const R=$('range');if(!o){R.hidden=true;return;}R.hidden=f
 function dockUI(){strip();const P=st?st.phase:'',dk=$('dock'),info=h=>{$('dInfo').innerHTML=h||'';},line=h=>{$('dLine').innerHTML=h||'';},end=(l,fn,o)=>setBtn('bEnd',l,fn,o),back=fn=>setBtn('bBack',fn?'✕':null,fn);
  dk.classList.remove('sl','two','solo','rv');['b1','bEnd'].forEach(id=>$(id).classList.remove('glow','sec','warn'));line('');end();back();showRange(null);
  if(!st){$('dTitle').textContent='Archipelago';info('');setBtn('b1');setBtn('b2');return;}
- if(ui.rival>=0){const k=st.fl[ui.rival];dk.classList.add('rv');$('dIcon').src=iconURL(k);$('dTitle').textContent=FLEETS[k].name;info('Turn '+st.turn);line(FLEETS[k].mood||'Their move');setBtn('b2');setBtn('b1');hint('');return;}
+ if(ui.rival>=0){const k=st.fl[ui.rival];dk.classList.add('rv');$('dIcon').src=iconURL(k);$('dTitle').textContent=FLEETS[k].name;info('');line(FLEETS[k].mood||'Their move');setBtn('b2');setBtn('b1');hint('');return;}
  if(P==='claim'){$('dTitle').textContent='Advance party';info(`<b>${st.claims}</b> to claim`);line('Tap a gull island next to one of yours to claim it');setBtn('b2');setBtn('b1');}
  else if(ui.fortify){$('dTitle').textContent='Fortify';info(`<b>${st.forts}</b> stone fort${st.forts>1?'s':''} left this leg`);line('Tap one of your islands to build a stone fort there');setBtn('b2');setBtn('b1');back(()=>{ui.fortify=false;dockUI();});}
  else if(P==='reinforce'){$('dTitle').textContent='Reinforce';info(`<b>${st.pool}</b> to place`);line(`Tap your islands to place them<br><span class="dim">${musterText(st.lastMuster).replace(' landed at ',' at ')}</span>`);setBtn('b2',st.placed.length?'Undo':null,undo);setBtn('b1');if(st.forts>0)end(`Fortify · ${st.forts}`,()=>{ui.fortify=true;sfx('tap');dockUI();});}
@@ -1297,6 +1358,7 @@ function coach(){ui.coach=null;if(!st||ui.rival>=0||st.phase==='over'||st.phase=
  else if(P==='move'){if(!ui.mv){$('b1').classList.add('glow');txt='Move troops up to the front, or tap End turn';}else if(ui.mv.to<0)txt='Tap where they go. The rings show where they can reach';else{$('b1').classList.add('glow');txt=`Tap ${nm(ui.mv.to)} again, or press Move`;}}
  hint(txt,true);}
 function banner(title,sub,k,ms){ms=ms||2200;const b=$('banner');b.innerHTML='';const el=document.createElement('div');el.className='rib';el.style.animationDuration=ms+'ms';el.innerHTML=`<img src="${iconURL(k||'puffin')}" alt=""><span><b>${title}</b>${sub?`<small>${sub}</small>`:''}</span>`;b.appendChild(el);clearTimeout(banner.t);banner.t=setTimeout(()=>{if(el.parentNode)el.remove();},ms+100);}
+function clearMsgs(){const n=$('note');if(n.classList.contains('on')){clearTimeout(note.t);n.classList.remove('on');}const b=$('banner');if(b.firstChild){clearTimeout(banner.t);b.innerHTML='';}}
 function note(html,ms){const el=$('note');el.innerHTML=html;el.classList.add('on');clearTimeout(note.t);note.t=setTimeout(()=>el.classList.remove('on'),ms||3800);}
 /* tips: each one carries a test for whether it still applies. A tip that has gone stale is dropped unseen (it comes back the
    next time it fits), and a tip on screen closes as soon as you move past the step it explains */
@@ -1326,11 +1388,14 @@ function startSeaLeg(ci,deal,seat,how){const S=seaState();$('top').hidden=false;
  banner('Open sea '+S.leg,chartOf(st).name,'puffin',2400);setTimeout(()=>{if(!st)return;if(st.phase==='claim'){dockUI();sign('claim','Advance party','Claim gull islands next to yours before the first turn.',()=>st&&st.phase==='claim');}else beginTurn();},TEST?0:2000);}
 /* two charts to choose from for the next leg (never the one just played), kept so a reload offers the same pair */
 function seaOffers(){const S=seaState();if(S.offer)return S.offer;const pool=seaCharts(S.leg).filter(ci=>ci!==S.last);
- const a=pool.splice(Math.floor(Math.random()*pool.length),1)[0],b=pool[Math.floor(Math.random()*pool.length)];
- S.offer=[a,b].map(ci=>({ci,deal:newDeal()}));saveMeta();return S.offer;}
+ const a=pool.splice(Math.floor(Math.random()*pool.length),1)[0],b=pool.splice(Math.floor(Math.random()*pool.length),1)[0],c3=ordLv({ord:S.ord},'owncharts')>1&&pool.length?pool[Math.floor(Math.random()*pool.length)]:null;
+ S.offer=[a,b,c3].filter(x=>x!=null).map(ci=>({ci,deal:newDeal()}));saveMeta();return S.offer;}
 /* three cards: at least one new order while any are unheld, at least one level-up once something can level, all different */
+const HAND=3,held=o=>Object.keys(o||{}).filter(id=>ORDERS[id]&&o[id]>0);
+/* standing orders: you hold at most HAND at a time. Below that a draft is as before (one new, one level-up, one either);
+   with a full hand it offers level-ups of what you hold and one new order, taken only by dropping one */
 function seaDraft(){const S=seaState(),ids=Object.keys(ORDERS),fresh=ids.filter(i=>!S.ord[i]),up=ids.filter(i=>S.ord[i]&&S.ord[i]<ordMax(i)),pick=a=>a.splice(Math.floor(Math.random()*a.length),1)[0];
- const f=fresh.slice(),u=up.slice(),out=[];if(f.length)out.push(pick(f));if(u.length)out.push(pick(u));const rest=f.concat(u);while(out.length<3&&rest.length)out.push(pick(rest));
+ const f=fresh.slice(),u=up.slice(),out=[];if(held(S.ord).length>=HAND){while(out.length<2&&u.length)out.push(pick(u));while(out.length<3&&f.length)out.push(pick(f));return out.sort(()=>Math.random()-.5);}if(f.length)out.push(pick(f));if(u.length)out.push(pick(u));const rest=f.concat(u);while(out.length<3&&rest.length)out.push(pick(rest));
  return out.sort(()=>Math.random()-.5);}
 /* each order flies a signal flag from the international code (30 x 20) */
 const SIG={R:'#c8372d',B:'#1f4e8c',Y:'#f2c230',W:'#f7f2e6'};
@@ -1350,16 +1415,17 @@ function flagSVG(id,w){const c=FLAG_OF[id],{R,B,Y,W}=SIG,h=Math.round(w*2/3),sw=
  else if(c==='V')body=`<rect width="30" height="20" fill="${W}"/><path d="M0 0L30 20M30 0L0 20" stroke="${R}" stroke-width="4.2"/>`;
  return `<svg class="fl" viewBox="-1.5 -1 33 22" width="${w}" height="${h}" aria-hidden="true"><defs><clipPath id="cf-${id}-${w}"><path d="${clip}"/></clipPath></defs><g clip-path="url(#cf-${id}-${w})">${body}</g><path d="${clip}" fill="none" stroke="rgba(20,24,28,.55)" stroke-width="1"/><path d="M-0.5 -1V21" stroke="#3a2b1f" stroke-width="1.6" stroke-linecap="round"/></svg>`;}
 /* the key number of an order at a level, for a level-up's "before → after" */
-const OKEY={reserves:v=>`+${v}`,veterans:v=>`+${v}`,quarter:v=>`+${v}`,harbmaster:v=>`+${v}`,prize:v=>`+${RULES.spoils[Math.min(v,RULES.spoils.length-1)]}`,press:v=>`+${v}`,boarding:v=>`${v} throw${v>1?'s':''}`,advance:v=>`${v} island${v>1?'s':''}`,divide:v=>`${Math.round(v*100)} points`,fortify:v=>`${v} forts`};
+const OKEY={reserves:v=>`+${v}`,veterans:v=>`+${v}`,quarter:v=>`+${v}`,harbmaster:v=>`+${v}`,prize:v=>`+${RULES.spoils[Math.min(v,RULES.spoils.length-1)]}`,press:v=>`+${v}`,boarding:v=>`${v} throw${v>1?'s':''}`,advance:v=>`${v} island${v>1?'s':''}`,divide:v=>`${Math.round(v*100)} points`,fortify:v=>`${v} forts`,gunnery:v=>v>1?'harbour forts too':'rival forts ignored',owncharts:v=>v>1?'three charts':'two charts'};
 const keyAt=(id,l)=>OKEY[id]?OKEY[id](ORDERS[id].v[l-1]):'';
 function pipsHTML(id,have,mode){let h='';for(let k=1;k<=ordMax(id);k++){const c=k<=have?(mode==='lose'&&k===have?'l':'h'):(mode==='gain'&&k===have+1?'a':'');h+=`<i class="${c}"></i>`;}return `<span class="pips" aria-label="Level ${have} of ${ordMax(id)}">${h}</span>`;}
 /* a card in the draft (gain) or the strike (lose) */
 function orderCardHTML(id,have,mode,sel){const O=ORDERS[id],l=mode==='gain'?have+1:have,v=O.v[(mode==='gain'?l:Math.max(1,have-(mode==='lose'?1:0)))-1];
  let meta='',cls='';
  if(mode==='gain'){meta=have?`<em class="up">Level ${ROMAN[l]}: ${keyAt(id,have)} → ${keyAt(id,l)}</em>`:'<em>New order</em>';}
+ else if(mode==='drop'){meta='<em class="down">Struck off</em>';cls=' strike';}
  else{meta=have>1?`<em class="down">Down to level ${ROMAN[have-1]}${OKEY[id]?`: ${keyAt(id,have)} → ${keyAt(id,have-1)}`:''}</em>`:'<em class="down">Struck off</em>';cls=' strike';}
  const txt=mode==='gain'?O.t(O.v[l-1]):O.t(O.v[have-1]);
- return `<button class="oc${cls}${sel===id?' on':''}" data-id="${id}" aria-pressed="${sel===id}">${flagSVG(id,52)}<span><b>${O.n} ${ROMAN[l]}</b><span class="t">${txt}</span><span class="f">${pipsHTML(id,have,mode==='gain'?'gain':'lose')}${meta}</span></span></button>`;}
+ return `<button class="oc${cls}${sel===id?' on':''}" data-id="${id}" aria-pressed="${sel===id}">${flagSVG(id,52)}<span><b>${O.n} ${ROMAN[l]}</b><span class="t">${txt}</span><span class="f">${pipsHTML(id,have,mode==='gain'?'gain':mode==='drop'?'':'lose')}${meta}</span></span></button>`;}
 /* the orders sheet: what you hold, one dotted line apart like the lanes on the chart */
 function ordList(o,empty){const ids=Object.keys(o||{}).filter(id=>ORDERS[id]&&o[id]>0);
  return `<div class="sheet">${ids.length?ids.map(id=>`<div class="row">${flagSVG(id,30)}<b>${ORDERS[id].n} ${ROMAN[o[id]]}</b>${pipsHTML(id,o[id])}<small>${ORDERS[id].t(ORDERS[id].v[o[id]-1])}</small></div>`).join(''):`<div class="none">${empty||'No standing orders yet. Win a leg to choose your first.'}</div>`}</div>`;}
@@ -1372,6 +1438,7 @@ function seaCard(){$('top').hidden=true;$('dock').hidden=true;const S=seaState()
  const bindFoot=()=>{$('bk').addEventListener('click',home);$('nv').addEventListener('click',e=>{const b=e.currentTarget;if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Tap again: back to Open sea 1, no orders';return;}
   const best=S.best,runs=S.runs;meta.sea=freshSea();meta.sea.best=best;meta.sea.runs=runs+1;if(seaRun)clearRun();saveMeta();sfx('tap');seaCard();});};
  if(seaRun){showModal(head+`<div class="cta"><button class="cbtn pri" id="cont">Continue: ${CHARTS[run.st.c].name}, turn ${run.st.turn}</button></div>`+foot,'title',()=>{$('cont').addEventListener('click',()=>{goFS();auStart();resume(run);});bindFoot();});return;}
+ if(held(S.ord).length>HAND){trimCard();return;}
  if(S.strike){strikeCard();return;}
  if(S.draft){draftCard();return;}
  const offers=seaOffers(),canSeat=ordLv({ord:S.ord},'owncharts')>0;
@@ -1386,15 +1453,25 @@ function seaCard(){$('top').hidden=true;$('dock').hidden=true;const S=seaState()
   $('card').querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{const o=offers[+b.dataset.go];goFS();auStart();startSeaLeg(o.ci,o.deal,o.seat,S.retry?'retry':'new');S.retry=false;saveMeta();}));
   bindFoot();});}
 /* draft and strike: a tap picks a card, a second button confirms, so a slip of the thumb never takes or strikes the wrong order */
-function draftCard(sel){$('top').hidden=true;$('dock').hidden=true;const S=seaState(),ids=S.draft||[];
+function draftCard(sel,drop){$('top').hidden=true;$('dock').hidden=true;const S=seaState(),ids=S.draft||[],hand=held(S.ord),full=hand.length>=HAND,swap=sel&&!S.ord[sel]&&full;
  const cards=ids.map(id=>orderCardHTML(id,S.ord[id]||0,'gain',sel)).join('');
- showModal(`<h2>Open sea ${S.leg-1} is won</h2><p class="lede">Choose a standing order. It lasts the whole voyage; a lost leg costs one level of an order you pick.</p>
-  <div class="ocs">${cards||'<div class="sheet"><div class="none">Every order is at its top level.</div></div>'}</div>
-  <div class="kick">Your orders</div>${ordList(S.ord,'None yet: this will be your first.')}
-  <div class="cta">${cards?`<button class="cbtn pri" id="take" ${sel?'':'disabled'}>${sel?`Take ${ORDERS[sel].n} ${ROMAN[(S.ord[sel]||0)+1]}`:'Tap an order to choose it'}</button>`:'<button class="cbtn pri" id="on">Sail on</button>'}</div>`,'title',()=>{
+ const dropCards=swap?hand.map(id=>orderCardHTML(id,S.ord[id],'drop',drop).replace('data-id=','data-drop=')).join(''):'';
+ const btn=!sel?'Tap an order to choose it':swap?(drop?`Drop ${ORDERS[drop].n}, take ${ORDERS[sel].n} I`:'Tap an order to drop'):`Take ${ORDERS[sel].n} ${ROMAN[(S.ord[sel]||0)+1]}`;
+ showModal(`<h2>Open sea ${S.leg-1} is won</h2><p class="lede">Choose a standing order. You hold up to ${HAND}: level up one you have${full?', or take a new one in place of one you drop':''}. A lost leg costs one level of an order you pick.</p>
+  <div class="ocs">${cards||'<div class="sheet"><div class="none">Every order you hold is at its top level.</div></div>'}</div>
+  ${swap?`<div class="kick">Drop one to make room</div><div class="ocs">${dropCards}</div>`:`<div class="kick">Your orders · ${hand.length} of ${HAND}</div>${ordList(S.ord,'None yet: this will be your first.')}`}
+  <div class="cta">${cards?`<button class="cbtn pri" id="take" ${sel&&(!swap||drop)?'':'disabled'}>${btn}</button>${full?'<button class="cbtn" id="keep">Keep my orders</button>':''}`:'<button class="cbtn pri" id="on">Sail on</button>'}</div>`,'title',()=>{
   $('card').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{sfx('tap');const y=$('card').scrollTop;draftCard(b.dataset.id);$('card').scrollTop=y;}));
-  if($('take'))$('take').addEventListener('click',()=>{if(!sel)return;S.ord[sel]=Math.min(ordMax(sel),(S.ord[sel]||0)+1);S.draft=null;saveMeta();sfx('spoils');seaCard();});
-  if($('on'))$('on').addEventListener('click',()=>{S.draft=null;saveMeta();seaCard();});});}
+  $('card').querySelectorAll('[data-drop]').forEach(b=>b.addEventListener('click',()=>{sfx('tap');const y=$('card').scrollTop;draftCard(sel,b.dataset.drop);$('card').scrollTop=y;}));
+  if($('take'))$('take').addEventListener('click',()=>{if(!sel||(swap&&!drop))return;if(swap)delete S.ord[drop];S.ord[sel]=Math.min(ordMax(sel),(S.ord[sel]||0)+1);S.draft=null;saveMeta();sfx('spoils');seaCard();});
+  const skip=()=>{S.draft=null;saveMeta();seaCard();};if($('on'))$('on').addEventListener('click',skip);if($('keep'))$('keep').addEventListener('click',skip);});}
+/* a voyage begun before the hand limit, holding more than three orders: strike off whole orders until three are left */
+function trimCard(sel){$('top').hidden=true;$('dock').hidden=true;const S=seaState(),hand=held(S.ord),over=hand.length-HAND;
+ showModal(`<h2>Three standing orders</h2><p class="lede">A fleet now holds up to ${HAND} standing orders at a time. You hold ${hand.length}: choose ${over>1?`${over} to strike off, one at a time`:'one to strike off'}. The rest keep their levels.</p>
+  <div class="ocs">${hand.map(id=>orderCardHTML(id,S.ord[id],'drop',sel)).join('')}</div>
+  <div class="cta"><button class="cbtn pri" id="strike" ${sel?'':'disabled'}>${sel?`Strike off ${ORDERS[sel].n}`:'Tap an order to choose it'}</button></div>`,'title',()=>{
+  $('card').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{sfx('tap');const y=$('card').scrollTop;trimCard(b.dataset.id);$('card').scrollTop=y;}));
+  $('strike').addEventListener('click',()=>{if(!sel)return;delete S.ord[sel];saveMeta();sfx('tap');seaCard();});});}
 function strikeCard(sel){$('top').hidden=true;$('dock').hidden=true;const S=seaState(),ids=Object.keys(S.ord).filter(id=>S.ord[id]>0),c=S.last>=0?CHARTS[S.last]:null;
  showModal(`<h2>Driven from ${c?c.name:'the leg'}</h2><p class="lede">A lost leg costs one level of a standing order. Choose which; a level I order is struck off. Then you go again on a fresh deal.</p>
   <div class="ocs">${ids.map(id=>orderCardHTML(id,S.ord[id],'lose',sel)).join('')}</div>
@@ -1415,7 +1492,7 @@ function seaWinCard(){const S=seaState(),c=chartOf(st);
 function seaLossCard(){const S=seaState(),c=chartOf(st);
  showModal(`<div class="kick">Open sea ${S.leg}</div><h2>Driven from ${c.name}</h2><p>Your last island fell on turn ${st.turn}.${S.strike?' A lost leg costs one level of a standing order.':' You hold no orders, so nothing is lost: deal again and go back out.'}</p>
   <button class="cbtn pri" id="go">${S.strike?'Strike a level':'Deal again'}</button><div class="links">${homeLink}</div>`,'',()=>{$('go').addEventListener('click',()=>{st=null;D=null;seaCard();});});}
-function resetScene(){cam.turn=0;cam.man=null;ui={sel:-1,tgt:-1,mv:null,busy:false,blitzing:false,blitzStop:false,skipAsk:false,chains:ui.chains,changed:new Set(),coach:null,rival:-1,occShip:null};DT=null;ships=[];flyers=[];parts=[];floats=[];face=null;speedK=1;skipNow=false;cam.shake=0;unfocus();}
+function resetScene(){cam.turn=0;cam.man=null;ui={sel:-1,tgt:-1,mv:null,busy:false,blitzing:false,blitzStop:false,skipAsk:false,chains:ui.chains,changed:new Set(),coach:null,rival:-1,occShip:null};DT=null;ships=[];flyers=[];balls.length=0;parts=[];floats=[];face=null;speedK=1;skipNow=false;cam.shake=0;unfocus();}
 /* where this turn's troops came from, in words */
 function musterText(m){if(!m)return '';const c=chartOf(st),n=count(st,0),qm=ordV(st,'quarter'),bits=[`${m.base} for ${n} island${n>1?'s':''}`];m.held.forEach(k=>bits.push(`${c.chains[k].b+qm} ${c.chains[k].n}`));if(m.spoils)bits.push(`${m.spoils} spoils`);
  if(m.vet)bits.push(`${m.vet} Veterans`);if(m.reserves)bits.push(`${m.reserves} Reserves`);
@@ -1423,9 +1500,9 @@ function musterText(m){if(!m)return '';const c=chartOf(st),n=count(st,0),qm=ordV
  return bits.join(' · ')+(hb.length?(same?` · +${hb[0]} landed at ${hb.length>1?'each harbour':nm(m.harbs[0])}`:` · ${m.harbs.map((h,q)=>`+${hb[q]} at ${nm(h)}`).join(', ')}`):'');}
 function beginTurn(){if(!st||st.phase==='over')return;cps.push(JSON.stringify(st));if(cps.length>4)cps.shift();const m=startTurn(st,0);st.lastMuster=m;st.phase='reinforce';st.attacked=false;st.occ=null;
  ui.sel=ui.tgt=-1;ui.mv=null;ui.rival=-1;speedK=1;skipNow=false;landK=0;saveRun();dockUI();
- banner('Your turn',`+${m.total} troops to place<br>${musterText(m)}`,'puffin',3800);sfx('yourTurn');
+ banner('Your turn',`+${m.total} troops to place`,'puffin',1600);sfx('yourTurn');
  for(const h of m.harbs)for(let q=0;q<harbBonus(st,0,h);q++)flyIn(h,0,edgeFrom(h),350+q*140);
- if(m.spoils)setTimeout(()=>{note(`Three spoils chests cashed in: <b>+${m.spoils}</b> troops. The next three will be worth <b>+${nextCash()}</b>.`,6500);sfx('spoils');},1400);
+ if(m.spoils)setTimeout(()=>{sfx('spoils');const ch=$('chest');ch.classList.remove('pop');void ch.offsetWidth;ch.classList.add('pop');},900);  /* the cash-in shows in the troop total (musterText) */
  const inReinf=()=>st&&st.phase==='reinforce'&&ui.rival<0;
  if(st.turn>=2&&playerLeads(st))setTimeout(()=>sign('lead','They’re coming for you','You lead the chart, so the rivals have stopped fighting each other and are turning on you.',inReinf),1600);
  if(st.turn>=2&&!meta.set.rm)setTimeout(()=>sign('camera','Look around','Pinch or drag to look closer. Double-tap open sea for the whole chart.',inReinf),1600);
@@ -1436,7 +1513,7 @@ function chestEarned(i){const I=ISL[i],n=myChests(),v=nextCash();floatTxt(I.x,I.
  const ch=$('chest');ch.classList.remove('pop');void ch.offsetWidth;ch.classList.add('pop');strip();
  const first=!meta.seen.chest1;meta.seen.chest1=1;saveMeta();
  if(first)note(`<b>Spoils chest earned</b> (the chest at the top). You get one in any turn you take an island. Three cash in for <b>+${v}</b> troops.`,9000);
- else note(n>=3?`Spoils chest earned: <b>${n} of 3</b>. They cash in for <b>+${v}</b> troops at the start of your next turn.`:`Spoils chest earned: <b>${n} of 3</b>. Three cash in for <b>+${v}</b> troops.`,6000);}
+ /* after the first time the chest's pop and count say it */}
 function spoilsCard(){if(!st||st.phase==='over'||!$('modal').hidden)return;const n=myChests(),v=nextCash(),fresh=st.cur===0&&st.conq;
  const slot=k=>`<span class="${k<n?'':'off'}${fresh&&k===n-1?' new':''}">${CHEST_SVG}</span>`;
  const riv=st.fl.map((k,f)=>f&&st.alive[f]?`${FLEETS[k].name} ${st.spoils[f]}`:'').filter(Boolean).join(' · ');
@@ -1447,7 +1524,7 @@ function spoilsCard(){if(!st||st.phase==='over'||!$('modal').hidden)return;const
   <li><b>The bonus grows</b> each time you cash in: +4, +5, +6, +7, then +8.</li>
   <li><b>Knock a fleet out</b> and its chests are yours.</li></ol>
   ${riv?`<p class="sub" style="font-size:13px">Rivals’ chests: ${riv}</p>`:''}<button class="cbtn pri" id="bk">Back to the chart</button>`,'',()=>$('bk').addEventListener('click',()=>{goFS();hideModal();}));}
-function attackBanner(){banner('Attack','Take an island to earn a spoils chest','puffin',2000);}
+function attackBanner(){if(meta.stats.wins>0)return;banner('Attack','Take an island to earn a spoils chest','puffin',2000);}
 function place(i){if(!st||st.phase!=='reinforce'||st.own[i]!==0||st.pool<=0||ui.busy)return false;act();st.tr[i]++;st.pool--;st.placed.push(i);flyIn(i,0,dockFrom(),0);sfx('flutter');
  if(st.pool===0){st.phase='attack';ui.sel=-1;attackBanner();}dockUI();saveRun();return true;}
 function undo(){if(!st.placed.length||st.attacked||ui.busy)return;const i=st.placed.pop();st.tr[i]--;st.pool++;st.phase='reinforce';ui.sel=ui.tgt=-1;
@@ -1509,7 +1586,7 @@ async function endMyTurn(){if(ui.busy||!st||st.phase==='over')return;act();const
  meta.turnsPlayed++;if(!meta.coached&&st.c===0)meta.coached=true;saveMeta();ui.busy=true;ui.sel=ui.tgt=-1;ui.mv=null;hint('');
  const ev=rivalsTurn(st);st.phase='rivals-done';saveRun();st.phase='rival';
  const {lines,changed}=await replayRivals(ev);ui.busy=false;ui.changed=changed;
- if(lines.length){const lost=lines.filter(l=>l.includes('from you')).length;note(lines.slice(0,3).join('<br>')+(lines.length>3?`<br><small>${lines.length-3} more: tap the fleet bar</small>`:''),lost?9000:7000);}
+ if(lines.length){const lost=lines.filter(l=>l.includes('from you')).length;note(lines.slice(0,3).join('<br>')+(lines.length>3?`<br><small>${lines.length-3} more: tap the fleet bar</small>`:''),5000);}
  if(finishIfOver())return;
  /* give the rivals' report a moment on its own before your turn is announced */
  if(lines.length&&!TEST)await wait(1800);if(!st||st.phase==='over')return;beginTurn();}
@@ -1517,7 +1594,7 @@ async function replayRivals(ev){speedK=1;const lines=[],changed=new Set(),caps=[
  for(const blk of ev){skipNow=false;speedMul=1;st.cur=blk.f;ui.rival=blk.f;dockUI();const k=st.fl[blk.f];
   /* fights against you play in full with the camera; everything else (gulls, rival against rival, musters, moves) plays a little brisker */
   const hitsYou=blk.ev.some(e=>e.t==='attack'&&e.was===0);
-  if(!quick()){banner(FLEETS[k].name,hitsYou?'Coming for you':(FLEETS[k].mood||'Their move'),k,2400);sfx('rival',{b:{cormorant:196,gannet:247,skua:220}[k]||200});}await wait(1100);
+  if(!quick()){banner(FLEETS[k].name,hitsYou?'Coming for you':(FLEETS[k].mood||'Their move'),k,1600);sfx('rival',{b:{cormorant:196,gannet:247,skua:220}[k]||200});}await wait(1100);
   for(const e of blk.ev){const mine=e.t==='attack'&&e.was===0;speedMul=mine?1:.8;
    if(e.t==='start'){for(const h of e.harbs)for(let q=0;q<e.bonus;q++)flyIn(h,e.f,edgeFrom(h),q*45);if(e.harbs.length)await wait(240);}
    else if(e.t==='place'){let d0=0;for(const i in e.adds)for(let q=0;q<e.adds[i];q++){flyIn(+i,e.f,edgeFrom(+i),d0);d0+=25;}if(d0&&!quick())sfx('flutter');await wait(Math.min(900,d0*2.2+480));}
@@ -1530,13 +1607,13 @@ async function replayRivals(ev){speedK=1;const lines=[],changed=new Set(),caps=[
  const C=chartOf(st);caps.forEach((c,q)=>{const last=!caps.slice(q+1).some(d=>d.f===c.f&&d.ch===c.ch);lines[c.at]+=(last&&chainCount(st,c.f,c.ch)[1]>1&&chainHeld(st,c.f,c.ch)?`, completing ${C.chains[c.ch].n}`:'')+'.';});
  skipNow=false;speedK=1;speedMul=1;ui.rival=-1;ui.log={turn:st.turn-1,lines:lines.slice()};syncD();return {lines,changed};}
 function finishIfOver(){const r=over(st);if(!r)return false;endRound(r==='win');return true;}
-function endRound(win){if(st.phase==='over')return;st.phase='over';ui.busy=false;ui.rival=-1;const c=chartOf(st);let stars=0;syncD();
+function endRound(win){if(st.phase==='over')return;st.phase='over';ui.busy=false;ui.rival=-1;const c=chartOf(st);let stars=0;const sweep=win?gullsStrike():(syncD(),0);
  if(st.sea){seaEnd(win);if(win){meta.stats.wins++;meta.streak={c:-1,n:0};sfx('win');for(const I of ISL)confetti(I,FLEETS.puffin.col);}else sfx('lose');
-  saveMeta();clearRun();rndEnd(win,{orders:ordLevels(st.ord),losses:meta.sea.lost});dockUI();hint('');setTimeout(()=>win?seaWinCard():seaLossCard(),TEST?0:1100);return;}
+  saveMeta();clearRun();rndEnd(win,{orders:ordLevels(st.ord),losses:meta.sea.lost});dockUI();hint('');setTimeout(()=>win?seaWinCard():seaLossCard(),TEST?0:1100+sweep);return;}
  if(win&&st.deal){const d=meta.deals[c.id]||{w:0,b:0};d.w++;d.b=d.b?Math.min(d.b,st.turn):st.turn;meta.deals[c.id]=d;meta.stats.wins++;meta.streak={c:-1,n:0};sfx('win');for(const I of ISL)confetti(I,FLEETS.puffin.col);}
  else if(win){stars=st.turn<=c.par?3:st.turn<=c.par+3?2:1;st.firstWin=!meta.best[c.id];meta.best[c.id]=Math.max(meta.best[c.id]||0,stars);meta.unlocked=Math.max(meta.unlocked,st.c+2);meta.stats.wins++;meta.streak={c:-1,n:0};sfx('win');for(const I of ISL)confetti(I,FLEETS.puffin.col);}
  else{meta.streak=meta.streak.c===st.c?{c:st.c,n:meta.streak.n+1}:{c:st.c,n:1};sfx('lose');}
- saveMeta();clearRun();rndEnd(win,st.deal?{}:{stars});dockUI();hint('');setTimeout(()=>win?winCard(stars):lossCard(),TEST?0:1100);}
+ saveMeta();clearRun();rndEnd(win,st.deal?{}:{stars});dockUI();hint('');setTimeout(()=>win?winCard(stars):lossCard(),TEST?0:1100+sweep);}
 
 /* ---------- cards ---------- */
 let titleUp=false;
@@ -1651,11 +1728,11 @@ function settings(back){const s=meta.set;const sw=(id,on,l,sub)=>`<button class=
  showModal(`<div class="phead"><button class="cbtn" id="bk">‹ Back</button><h2>Settings</h2></div>
   ${sw('tS',s.snd,'Sound effects','Cannon, dice, birds and the sea')}${sw('tM',s.mus,'Music','A slow sea shanty')}${sw('tH',s.hap,'Vibration','A small buzz on hits, on phones that allow it')}${sw('tO',s.odds,'Chance chips','Show your chance of taking each target')}
   <div class="lbl">Rival strength<small>Applies from the next chart you start</small></div>${seg('mode',[['calm','Calm'],['standard','Standard'],['stormy','Stormy']])}
-  ${fsOK?sw('tF',s.fs,'Full screen','Hides the browser bars. Swipe from the edge to leave'):''}${sw('tR',s.rm,'Reduce motion','Calmer sea, no camera moves or shaking')}
+  ${sw('tC',s.cw,'Chain outlines always on','Off: they show at the start, when an island changes hands, and with the Chains button')}${fsOK?sw('tF',s.fs,'Full screen','Hides the browser bars. Swipe from the edge to leave'):''}${sw('tR',s.rm,'Reduce motion','Calmer sea, no camera moves or shaking')}
   ${meta.coached?`<button class="cbtn" id="tips">Show the first-chart tips again</button>`:''}`,'',()=>{
   $('bk').addEventListener('click',back);
   const tog=(id,k,after)=>{const b=$(id);if(!b)return;b.addEventListener('click',()=>{s[k]=!s[k];b.setAttribute('aria-checked',s[k]);saveMeta();audioPrefs();after&&after();});};
-  tog('tS','snd',()=>{if(s.snd){auStart();sfx('tap');}});tog('tM','mus',()=>auStart());tog('tH','hap',()=>buzz(20));tog('tO','odds');tog('tR','rm');tog('tF','fs',()=>{if(s.fs)goFS();else exitFS();});
+  tog('tS','snd',()=>{if(s.snd){auStart();sfx('tap');}});tog('tM','mus',()=>auStart());tog('tH','hap',()=>buzz(20));tog('tO','odds');tog('tC','cw');tog('tR','rm');tog('tF','fs',()=>{if(s.fs)goFS();else exitFS();});
   if($('tips'))$('tips').addEventListener('click',()=>{meta.coached=false;saveMeta();settings(back);});
   $('card').querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{s[b.dataset.k]=b.dataset.v;saveMeta();settings(back);}));});}
 function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">‹ Back</button><h2>How to play</h2></div>
@@ -1672,17 +1749,17 @@ function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">�
  <li><b>Camera:</b> each turn opens on the whole chart and it closes in on attacks. Pinch or drag to look around, and double-tap open sea to see the whole chart.</li></ol>`,'',()=>$('bk').addEventListener('click',back));}
 
 /* ---------- input: a tap picks the island under it; a held finger keeps sending troops;
-   two fingers pinch the camera, one finger drags it once it is close in, a double tap on open sea swaps views ---------- */
+   two fingers pinch the camera, one finger drags it (at any zoom, out into the open sea round the chart), a double tap on open sea swaps views ---------- */
 function pick(sx,sy){if(!st||!ISL.length)return -1;const [bx,by]=toBase(sx,sy);let best=-1,bd=1e9;ISL.forEach((I,i)=>{const d=Math.hypot(bx-I.x,(by-I.y)*1.1);const lim=Math.max(I.R+22,44/cam.z);if(d<lim&&d<bd){bd=d;best=i;}});return best;}
 let down=null,pinch=null,drag=null,lastSea=0;const pts=new Map();
-cv.addEventListener('pointerdown',e=>{if(!st)return;if(signCur){const r=$('sign').getBoundingClientRect(),on=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;signDone();if(on&&pick(e.clientX,e.clientY)<0)return;}try{cv.setPointerCapture(e.pointerId);}catch(x){}pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+cv.addEventListener('pointerdown',e=>{if(!st)return;clearMsgs();if(signCur){const r=$('sign').getBoundingClientRect(),on=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;signDone();if(on&&pick(e.clientX,e.clientY)<0)return;}try{cv.setPointerCapture(e.pointerId);}catch(x){}pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(pts.size>=2){if(down){clearTimeout(down.t);down=null;}drag=null;const [a,b]=[...pts.values()],[wx,wy]=toBase((a.x+b.x)/2,(a.y+b.y)/2);pinch={d0:Math.max(24,Math.hypot(a.x-b.x,a.y-b.y)),z0:cam.z,wx,wy};return;}
  const i=pick(e.clientX,e.clientY);down={x:e.clientX,y:e.clientY,i,held:false};drag={x:e.clientX,y:e.clientY,cx:cam.x,cy:cam.y,on:false};
  if(st.phase==='reinforce'&&i>=0&&st.own[i]===0&&!ui.busy){const go=()=>{if(!down||down.i!==i)return;down.held=true;if(!place(i))return;down.t=setTimeout(go,300);};down.t=setTimeout(go,450);}});
 cv.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(pinch){if(pts.size<2)return;const [a,b]=[...pts.values()],z=clamp(pinch.z0*Math.hypot(a.x-b.x,a.y-b.y)/pinch.d0,1,ZMAN);camManual(pinch.wx-((a.x+b.x)/2-MAP.cx)/z,pinch.wy-((a.y+b.y)/2-MAP.cy)/z,z);return;}
  if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>12){clearTimeout(down.t);down.held=true;}
- if(drag&&cam.z>1.02&&(drag.on||Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>12)){if(!drag.on){drag.on=true;drag.x=e.clientX;drag.y=e.clientY;drag.cx=cam.x;drag.cy=cam.y;}camManual(drag.cx-(e.clientX-drag.x)/cam.z,drag.cy-(e.clientY-drag.y)/cam.z,cam.z);}});
+ if(drag&&(drag.on||Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>12)){if(!drag.on){drag.on=true;drag.x=e.clientX;drag.y=e.clientY;drag.cx=cam.x;drag.cy=cam.y;}camManual(drag.cx-(e.clientX-drag.x)/cam.z,drag.cy-(e.clientY-drag.y)/cam.z,cam.z);}});
 function ptrEnd(e){pts.delete(e.pointerId);if(pinch){if(!pts.size)pinch=null;down=null;drag=null;return true;}drag=null;return false;}
 cv.addEventListener('pointerup',e=>{if(ptrEnd(e)||!down)return;clearTimeout(down.t);const d=down;down=null;if(d.held||Math.hypot(e.clientX-d.x,e.clientY-d.y)>=16)return;
  if(d.i<0){const now=performance.now();if(now-lastSea<330){lastSea=0;toggleView();return;}lastSea=now;}tap(d.i);});
@@ -1720,6 +1797,5 @@ if(TEST)window.__dg={
  sea:(leg,ord,ci)=>{meta.best=Object.fromEntries(CHARTS.map(c=>[c.id,meta.best[c.id]||1]));const S=seaState();S.leg=leg||1;S.ord=ord||{};S.offer=null;S.draft=null;S.strike=false;saveMeta();startSeaLeg(ci==null?1:ci,12345);},seaCard:()=>seaCard(),claimTap:i=>tap(i),fortTap:i=>{ui.fortify=true;tap(i);},seaState:()=>JSON.parse(JSON.stringify(meta.sea||null)),
  screen:i=>{const I=ISL[i];return [(I.x-cam.x)*cam.z+MAP.cx,(I.y-cam.y)*cam.z+MAP.cy];},setSpeed(v){meta.set.spd=v;},sfxNames:()=>Object.keys(SFX),cam:()=>({x:cam.x,y:cam.y,z:cam.z,man:!!cam.man,fx:cam.fx}),view:()=>toggleView()};
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
