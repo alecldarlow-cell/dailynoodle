@@ -99,16 +99,48 @@ a{color:inherit}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:999px;background:var(--pk);color:#fff;font-weight:700;font-size:14px;min-width:0}
 .chip svg{width:22px;height:22px;padding:3px;fill:#fff;flex:none}
 .chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.qn{margin-left:auto;font-weight:700;color:var(--ink2);font-size:15px}
+.qnav{margin-left:auto;display:flex;align-items:center}
+.qn{min-width:38px;text-align:center;font-weight:700;color:var(--ink2);font-size:15px}
+.navb{display:flex;align-items:center;justify-content:center;width:32px;height:44px;border-radius:10px;font-size:28px;font-weight:700;line-height:1;color:var(--ink)}
+.navb[disabled]{opacity:.2;pointer-events:none}
 .sc{min-width:58px;text-align:right;font-weight:800;font-size:22px}
 .meter{position:relative;height:8px;border-radius:4px;background:var(--line);margin-top:14px}
 .mf{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:4px;background:var(--ink);transition:width .5s}
 .meter i{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink2);margin-left:-1px}
 .meter i::before{content:attr(data-s);position:absolute;bottom:13px;left:50%;transform:translateX(-50%);font-style:normal;font-size:10px;line-height:1;color:#D99A16;white-space:nowrap;letter-spacing:.5px}
 .meter i.got{background:#D99A16}
-.pips{display:flex;gap:4px}
-.pips span{flex:1;height:6px;border-radius:3px;background:var(--line)}
-.pips span.cur{background:var(--ink2)}
+.pips{display:flex;gap:4px;margin:-9px 0}
+.pips button{flex:1;padding:9px 0;min-width:0}
+.pips button::before{content:"";display:block;height:6px;border-radius:3px;background:var(--pc,var(--line))}
+.pips button.live::before{background:var(--ink2)}
+.pips button.view::before{box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--ink)}
+.pips button[disabled]{pointer-events:none}
+.rvt{display:inline-block;margin:0 0 6px;padding:2px 8px;border-radius:6px;background:var(--ink);color:var(--paper);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.rhint{margin:0;text-align:center;font-size:13px;color:var(--ink2)}
+.res li{cursor:pointer}
+/* badges */
+.medal{display:block}
+.bdb{justify-content:flex-start;gap:12px;min-height:56px;padding:8px 14px}
+.bdm{display:flex}.bdm svg{width:32px;height:32px;margin-right:-8px}
+.bdl{flex:1;text-align:left;padding-left:8px}.bdl small{font-weight:600;color:var(--ink2);font-size:14px}
+.bdd{padding:2px 8px;border-radius:8px;background:var(--tom);color:#fff;font-size:13px;font-weight:800}
+.bh{text-align:center}.bh h1{margin:0;font-size:36px;font-weight:800;letter-spacing:-.02em}.bh p{margin:4px 0 0;color:var(--ink2);font-weight:600}
+.bgrid{display:grid;grid-template-columns:1fr;gap:8px}
+@media (min-width:560px){.bgrid{grid-template-columns:1fr 1fr}}
+.bdg{display:grid;grid-template-columns:56px 1fr;gap:3px 12px;align-items:center;padding:12px;border-radius:14px;background:var(--paper);border:1.5px solid var(--line)}
+.bdg svg{width:56px;height:56px;grid-row:1/5}
+.bdg b{font-size:16px;line-height:1.15}.bdg .bt{font-size:13px;font-weight:700}.bdg .bdsc{font-size:13px;color:var(--ink2);line-height:1.25}
+.bdg .bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:3px}.bdg .bar i{display:block;height:100%;border-radius:3px;background:var(--ink)}
+.bdg .bp{font-size:12px;color:var(--ink2);font-weight:600}
+.bdg.new{border-color:var(--tom);box-shadow:inset 0 0 0 1.5px var(--tom)}
+.earned{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.ech{display:inline-flex;align-items:center;gap:6px;padding:3px 12px 3px 3px;border-radius:999px;background:var(--paper);border:1.5px solid var(--line);font-weight:700;font-size:14px}
+.ech svg{width:30px;height:30px}
+.toast{position:fixed;left:0;right:0;margin:0 auto;width:max-content;top:calc(10px + env(safe-area-inset-top,0px));z-index:30;display:flex;align-items:center;gap:10px;max-width:calc(100% - 32px);
+  padding:7px 16px 7px 7px;border-radius:18px;background:var(--ink);color:var(--paper);box-shadow:0 8px 20px rgba(30,36,51,.3);
+  transform:translateY(-140px);visibility:hidden;transition:transform .35s cubic-bezier(.3,1.4,.5,1),visibility 0s .35s;pointer-events:none}
+.toast.on{transform:none;visibility:visible;transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.toast svg{width:42px;height:42px;flex:none}.toast b{display:block;font-size:16px}.toast small{display:block;font-size:13px;opacity:.85}
 .mid{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-bottom:4px}
 .qcard{background:var(--paper);border:1.5px solid var(--ink);border-radius:16px;padding:14px 16px;box-shadow:0 3px 0 var(--ink)}
 .q{margin:0;font-size:clamp(20px,2.6vh,25px);line-height:1.25;font-weight:700;text-wrap:balance}
@@ -136,6 +168,7 @@ a{color:inherit}
 @keyframes up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 .slz{position:relative;padding:38px 26px 0;touch-action:none;cursor:pointer}
+.slz.ro{cursor:default}
 .trk{position:relative;height:12px;border-radius:6px;background:var(--ink)}
 .zb{position:absolute;top:-16px;bottom:-16px;border-radius:6px;opacity:0;transition:opacity .35s}
 .show .zb{opacity:1}
@@ -223,6 +256,7 @@ a{color:inherit}
   </div>
   <button class="btn go play" data-act="play" id="playB"><span id="playL">Play</span><small id="playS">Earth · 10 questions</small></button>
   <div class="packs" id="packs"></div>
+  <button class="btn bdb" data-act="badges" id="bdB"><span class="bdm" id="bdM"></span><span class="bdl">Badges <small id="bdN"></small></span><span class="bdd" id="bdD" hidden>New</span></button>
   <div class="card">
    <h2>Scoring</h2>
    <div class="bands">
@@ -248,13 +282,13 @@ a{color:inherit}
   <div class="top">
    <button class="ib" data-act="pause" aria-label="Pause"><svg viewBox="0 0 18 18"><rect x="3" y="2" width="4" height="14" rx="1"/><rect x="11" y="2" width="4" height="14" rx="1"/></svg></button>
    <span class="chip" id="pchip"></span>
-   <span class="qn" id="qn">1/10</span>
+   <span class="qnav"><button class="navb" data-act="prev" id="prevB" aria-label="Previous question">‹</button><span class="qn" id="qn">1/10</span><button class="navb" data-act="fwd" id="fwdB" aria-label="Next question">›</button></span>
    <span class="sc" id="sc">0</span>
   </div>
   <div class="meter" aria-hidden="true"><div class="mf" id="mf"></div><i data-s="★" style="left:40%"></i><i data-s="★★" style="left:52.5%"></i><i data-s="★★★" style="left:62.5%"></i></div>
-  <div class="pips" id="pips" aria-hidden="true"></div>
+  <div class="pips" id="pips" aria-label="Questions"></div>
   <div class="mid">
-   <div class="qcard"><p class="q" id="q"></p></div>
+   <div class="qcard"><span class="rvt" id="rvt" hidden>Reviewing</span><p class="q" id="q"></p></div>
    <div class="fb" id="fb" role="status" aria-live="polite" hidden>
     <div class="fbv"><b id="fbV"></b><span id="fbP"></span></div>
     <div class="fbl" id="fbL"></div>
@@ -290,10 +324,23 @@ a{color:inherit}
    <p class="ev2" id="ev2"></p>
   </div>
   <div class="ctl2"><button class="btn go" data-act="next" id="nextB">Next</button><button class="btn" data-act="again" id="againB">Again</button></div>
+  <div class="earned" id="earned" hidden></div>
+  <p class="rhint">Tap a question to see it again.</p>
   <ol class="res" id="res"></ol>
   <button class="btn" data-act="home">All packs</button>
  </div>
 </section>
+
+<!-- ============ BADGES ============ -->
+<section id="badges" class="scr scroll" aria-label="Badges">
+ <div class="wrap">
+  <div class="hd"><button class="back" data-act="home">← All packs</button></div>
+  <div class="bh"><h1>Badges</h1><p id="bsum"></p></div>
+  <div class="bgrid" id="bgrid"></div>
+ </div>
+</section>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- ============ PAUSE ============ -->
 <div class="ov" id="pause" hidden>
@@ -561,7 +608,7 @@ const PACKS=[
 ['How much does an adult pet cat typically weigh, in kilograms?','kg',4.5,'About the weight of four and a half bags of sugar.',1],
 ['How much does a newborn African elephant weigh, in kilograms?','kg',100,'It can stand up within about an hour of being born.',0]]}
 ];
-const TOUR={k:'tour',name:'Grand Tour',sub:'Ten from all six packs',c:'#1E2433',ic:'<path d="M12 1.5l2.6 7.9 7.9 2.6-7.9 2.6-2.6 7.9-2.6-7.9L1.5 12l7.9-2.6z"/>'};
+const TOUR={k:'tour',name:'Grand Tour',sub:'Ten from every pack you’ve opened',c:'#1E2433',ic:'<path d="M12 1.5l2.6 7.9 7.9 2.6-7.9 2.6-2.6 7.9-2.6-7.9L1.5 12l7.9-2.6z"/>'};
 const ALLP=PACKS.concat([TOUR]);
 const NQ=10, CLEAR=400, S2=525, S3=625;
 const BAND=[1.1,1.25,1.5,3], PTS=[100,75,50,25,0], ZN=['Bullseye','Close','Ballpark','In range','Miss'];
@@ -597,6 +644,10 @@ function ladder(lo,isInt){const out=[],a=Math.pow(10,lo)*0.9999,b=Math.pow(10,lo
 // scale, where the slider starts, is no special hint. 0.15 keeps the 100- and 75-point zones fully on the scale.
 function mkLo(f){let lo=+(L10(f.a)-rand(0.15,1.85)).toFixed(3);if(f.int)lo=Math.max(lo,0);return lo}
 
+/* ---------- packs: any number, unlocked in a chain; the Grand Tour opens after the first six ---------- */
+const NP=PACKS.length, TI=NP, TOUR_NEEDS=6;
+const pIdx=k=>k==='tour'?TI:PACKS.findIndex(p=>p.k===k);
+
 /* ---------- save (digi-ballpark- prefix, site contract §7) ---------- */
 const KEY='digi-ballpark-v1';
 const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
@@ -607,11 +658,15 @@ if(typeof save.hap!=='boolean')save.hap=true;
 if(!save.age||typeof save.age!=='object')save.age={};
 if(save.last&&typeof save.last==='object')for(const k in save.last)if(!save.age[k]&&Array.isArray(save.last[k]))save.age[k]=save.last[k].slice();
 delete save.last;
+// rounds saved before packs were keyed: index 0-5 was a pack, 6 was the Grand Tour
+if(save.cur&&save.cur.ids&&!save.cur.k)save.cur.k=save.cur.p<6?['earth','space','places','body','build','animals'][save.cur.p]:'tour';
+if(save.cur&&save.cur.ids){save.cur.p=pIdx(save.cur.k);if(save.cur.p<0||!save.cur.ids.every(validId))save.cur=null}
+function validId(id){const s=String(id).split(':'),p=PACKS.find(x=>x.k===s[0]);return !!(p&&p.q[+s[1]])}
 function store(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
 function best(k){return (save.pk[k]&&save.pk[k].b)||0}
 function cleared(i){return best(ALLP[i].k)>=CLEAR}
-function unlocked(i){if(i===0)return true;if(i<6)return cleared(i-1);for(let j=0;j<6;j++)if(!cleared(j))return false;return true}
-function nextUp(){for(let i=0;i<6;i++)if(!cleared(i))return i;return 6}
+function unlocked(i){if(i===0)return true;if(i<NP)return cleared(i-1);for(let j=0;j<TOUR_NEEDS;j++)if(!cleared(j))return false;return true}
+function nextUp(){for(let i=0;i<NP;i++)if(!cleared(i))return i;return TI}
 
 /* ---------- reduced motion ---------- */
 const mq=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)')}catch(e){return{matches:false}}})();
@@ -644,12 +699,73 @@ const SND={
     else if(z<=2){tone(620,0,0.14,'triangle',0.09);tone(z===1?830:740,0.09,0.2,'triangle',0.08)}
     else if(z===3)tone(520,0,0.2,'triangle',0.07);else tone(150,0,0.25,'sine',0.14)},
   win(){[523,659,784,1047].forEach((f,i)=>tone(f,i*0.11,0.35,'triangle',0.09))},
-  lose(){tone(330,0,0.25,'triangle',0.08);tone(262,0.18,0.4,'triangle',0.08)}
+  lose(){tone(330,0,0.25,'triangle',0.08);tone(262,0.18,0.4,'triangle',0.08)},
+  badge(){[988,1319,1568].forEach((f,i)=>tone(f,i*0.08,0.3,'sine',0.07))}
 };
+
+/* ---------- badges ---------- */
+// Counted badges start when this version arrives; the derived ones (stars, packs, rounds, best round) count past play too.
+const TIER=['Bronze','Silver','Gold'], TCOL=['#CD8A50','#B7C0C9','#F2B92E'];
+const BG={  // 24px stroke glyphs drawn inside the medal
+  bull:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
+  spot:'<path d="M12 2.5v5M12 16.5v5M2.5 12h5M16.5 12h5"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/>',
+  streak:'<path d="M12 21c-4 0-6.5-2.6-6.5-6.2 0-3.4 2.6-5.4 3.8-8.8 1.4 1.6 1.7 3.2 1.6 4.4 1.6-1.2 2.6-3.6 2.4-6.4 3.6 2.6 5.2 6.4 5.2 10.4 0 3.8-2.6 6.6-6.5 6.6z"/>',
+  clean:'<path d="M12 2.5l7.5 3v5.6c0 4.8-3.2 8.6-7.5 10.4-4.3-1.8-7.5-5.6-7.5-10.4V5.5z"/><path d="M8.3 12.2l2.6 2.6 4.9-5.2"/>',
+  bigr:'<path d="M7 4h10v4.5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.8 3.4M17 6h2.5a2.5 2.5 0 0 1-2.8 3.4M12 13.5V17M8.5 20.5h7M9.5 17h5"/>',
+  bign:'<path d="M3 20.5h18M6 20.5V14M10 20.5V10M14 20.5V6.5M18 20.5V3"/>',
+  small:'<circle cx="10" cy="10" r="6.5"/><path d="M15 15l6 6"/><circle cx="10" cy="10" r="1.6" fill="currentColor"/>',
+  stars:'<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8 6.6 19.7l1.1-6.1-4.5-4.2 6.1-.8z"/>',
+  master:'<path d="M3.5 18.5h17M4.5 18.5L3 7.5l5 4 4-6.5 4 6.5 5-4-1.5 11"/>',
+  explore:'<circle cx="12" cy="12" r="9"/><path d="M15.8 8.2l-2.2 5.4-5.4 2.2 2.2-5.4z"/>',
+  regular:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 2.5V6.5M16 2.5V6.5M8.5 15l2.3 2.2 4.7-4.6"/>'};
+const BADGES=[
+  {k:'bull',n:'Bullseye',d:'Answers within 10%',lv:[1,25,100]},
+  {k:'spot',n:'Spot on',d:'Answers spot on',lv:[1,5,20]},
+  {k:'streak',n:'Hot streak',d:'Bullseyes in a row in one round',lv:[2,3,5]},
+  {k:'clean',n:'No misses',d:'Rounds where every answer scores',lv:[1,10,25]},
+  {k:'bigr',n:'Big round',d:'Points in a single round',lv:[600,750,900]},
+  {k:'bign',n:'Big numbers',d:'Bullseyes on answers of a million or more',lv:[1,10,30]},
+  {k:'small',n:'Small wonders',d:'Bullseyes on answers under 10',lv:[1,10,30]},
+  {k:'stars',n:'Star collector',d:'Stars across all the packs',lv:[6,15,30]},
+  {k:'master',n:'Pack master',d:'Packs with three stars',lv:[1,4,10]},
+  {k:'explore',n:'Explorer',d:'Different questions answered',lv:[100,500,1000]},
+  {k:'regular',n:'Regular',d:'Rounds played',lv:[10,50,200]}];
+const NB=BADGES.length*3;
+if(!save.bd||typeof save.bd!=='object'){
+  // first run of this version: Explorer counts the questions already asked, the rest of the counters start at zero
+  const seen=new Set();for(const k in save.age)if(Array.isArray(save.age[k]))save.age[k].forEach(id=>{if(validId(id))seen.add(id)});
+  save.bd={c:{bull:0,spot:0,streak:0,clean:0,bign:0,small:0},ans:[...seen],t:{},nw:[]};
+  BADGES.forEach(b=>{const l=bLevel(b);if(l){save.bd.t[b.k]=l;save.bd.nw.push(b.k)}});
+}
+const ANS=new Set(save.bd.ans);
+function bVal(k){const c=save.bd.c,P=Object.values(save.pk);
+  if(k==='bigr')return P.reduce((m,r)=>Math.max(m,r.b||0),0);
+  if(k==='stars')return ALLP.reduce((s,p)=>s+stars(best(p.k)),0);
+  if(k==='master')return ALLP.filter(p=>stars(best(p.k))===3).length;
+  if(k==='regular')return P.reduce((s,r)=>s+(r.n||0),0);
+  if(k==='explore')return save.bd?save.bd.ans.length:0;
+  return c[k]||0}
+function bLevel(b){const v=bVal(b.k);return b.lv.filter(t=>v>=t).length}
+function earnedCount(){return BADGES.reduce((s,b)=>s+(save.bd.t[b.k]||0),0)}
+function medal(b,l){const on=l>0,col=on?TCOL[l-1]:'var(--bg)',gl=on?'#1E2433':'#9C958A';
+  return '<svg class="medal" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21.5" fill="'+col+'" stroke="'+(on?'#1E2433':'#B9AE9C')+'" stroke-width="2.5"'+(on?'':' stroke-dasharray="4 3"')+'/>'+
+    (on?'<circle cx="24" cy="24" r="16.5" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>':'')+
+    '<g transform="translate(12 12)" fill="none" stroke="'+gl+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:'+gl+'">'+BG[b.k]+'</g></svg>'}
+let roundBadges=[], toastQ=[], toastOn=false;
+function checkBadges(live){
+  BADGES.forEach(b=>{const l=bLevel(b),had=save.bd.t[b.k]||0;
+    if(l>had){save.bd.t[b.k]=l;if(save.bd.nw.indexOf(b.k)<0)save.bd.nw.push(b.k);
+      roundBadges.push([b.k,l]);if(live)toastQ.push([b.k,l])}});   // a jump of several levels shows once, at the top one
+  store();if(live&&toastQ.length&&!toastOn)setTimeout(nextToast,650)}
+function nextToast(){if(scr!=='play')toastQ=[];const it=toastQ.shift();if(!it){toastOn=false;return}toastOn=true;
+  const b=BADGES.find(x=>x.k===it[0]),el=$('toast');
+  el.innerHTML=medal(b,it[1])+'<span><b>'+b.n+': '+TIER[it[1]-1]+'</b><small>'+b.d+'</small></span>';
+  el.classList.add('on');SND.badge();buzz([20,40,20]);
+  setTimeout(()=>{el.classList.remove('on');setTimeout(nextToast,isRM()?50:400)},2300)}
 
 /* ---------- Digi site tracking (site contract §5) ---------- */
 const GAME='ballpark';                        // = filename slug
-let LEVEL=1;                                  // pack number, 1-6; the Grand Tour is 7
+let LEVEL=1;                                  // pack number in unlock order; the Grand Tour is the last
 let rnd={armed:false,open:false,secs:0,how:'new'};
 function trk(ev,x){try{if(window.digi&&window.digi.track)window.digi.track(ev,Object.assign({game:GAME},x));}catch(e){}}
 function rndArm(how){rnd={armed:true,open:false,secs:0,how:how||'new'};}
@@ -659,9 +775,10 @@ function rndEnd(win,x){if(!rnd.open)rndStart();if(!rnd.open)return;rnd.open=fals
   trk('game_end',Object.assign({win:!!win,level:LEVEL,mode:ALLP[LEVEL-1].k,secs:Math.round(rnd.secs)},x));}
 
 /* ---------- screens ---------- */
-let scr='home', paused=false;
-function show(id){scr=id;['home','play','end'].forEach(s=>$(s).classList.toggle('on',s===id));
-  if(id==='home')renderHome()}
+let scr='home', paused=false, endScroll=0;
+function show(id){if(scr==='end'&&id!=='end')endScroll=$('end').scrollTop;scr=id;
+  ['home','play','end','badges'].forEach(s=>$(s).classList.toggle('on',s===id));
+  if(id==='home')renderHome();if(id==='badges')renderBadges();if(id==='end')$('end').scrollTop=endScroll}
 const icon=(p,cls)=>'<svg viewBox="0 0 24 24"'+(cls?' class="'+cls+'"':'')+'>'+p.ic+'</svg>';
 const starRow=n=>'<span class="st"><b>'+'★'.repeat(n)+'</b>'+'★'.repeat(3-n)+'</span>';
 
@@ -672,13 +789,27 @@ function renderHome(){
   const nu=cur?cur.p:nextUp();
   $('packs').innerHTML=ALLP.map((p,i)=>{
     const ok=unlocked(i),b=best(p.k),s=save.pk[p.k];
-    const wide=i===6?' wide':'';
+    const wide=i===TI?' wide':'';
     if(!ok)return '<div class="pack locked'+wide+'" style="--pk:'+p.c+'" aria-disabled="true"><span class="pic">'+icon(p)+'</span><span class="pn">'+p.name+'</span>'+
-      '<span class="pst">'+(i<6?'Clear '+ALLP[i-1].name+' to open':'Clear all six to open')+'</span></div>';
+      '<span class="pst">'+(i<NP?'Clear '+ALLP[i-1].name+' to open':'Clear the first six packs to open')+'</span></div>';
     return '<button class="pack'+wide+(i===nu?' now':'')+'" data-act="pack" data-p="'+i+'" style="--pk:'+p.c+'"><span class="pic">'+icon(p)+'</span>'+
       '<span class="pn">'+p.name+'</span><span class="ps">'+p.sub+'</span>'+
       '<span class="pst">'+(cur&&cur.p===i?'In progress · '+(cur.i+1)+' of '+NQ:s&&s.n?starRow(stars(b))+' best '+b:'New')+'</span></button>'}).join('');
+  // badges button: the three best medals so far
+  const top=BADGES.map(b=>[b,save.bd.t[b.k]||0]).sort((x,y)=>y[1]-x[1]).slice(0,3);
+  $('bdM').innerHTML=top.map(x=>medal(x[0],x[1])).join('');
+  $('bdN').textContent=earnedCount()+' of '+NB;$('bdD').hidden=!save.bd.nw.length;
   renderTogs()}
+
+function renderBadges(){
+  $('bsum').textContent=earnedCount()+' of '+NB+' earned';
+  $('bgrid').innerHTML=BADGES.map(b=>{const l=save.bd.t[b.k]||0,v=bVal(b.k),nx=b.lv[l];
+    const prev=l?b.lv[l-1]:0,frac=nx==null?1:Math.max(0,Math.min(1,(v-prev)/(nx-prev)));
+    const prog=nx==null?'Gold: complete':grp(Math.min(v,nx))+' of '+grp(nx)+' for '+TIER[l].toLowerCase();
+    return '<div class="bdg'+(save.bd.nw.indexOf(b.k)>=0?' new':'')+'">'+medal(b,l)+'<b>'+b.n+'</b>'+
+      '<span class="bt" style="color:'+(l?'var(--ink)':'var(--ink2)')+'">'+(l?TIER[l-1]:'Not yet earned')+'</span>'+
+      '<span class="bdsc">'+b.d+'</span><span><span class="bar"><i style="width:'+(frac*100).toFixed(1)+'%"></i></span><span class="bp">'+prog+'</span></span></div>'}).join('');
+  save.bd.nw=[];store()}
 
 function renderTogs(){
   const t=(act,label,on)=>'<button class="tog" data-act="'+act+'" role="switch" aria-checked="'+(on?'true':'false')+'"><span>'+label+'</span><i></i></button>';
@@ -687,10 +818,14 @@ function renderTogs(){
 
 /* ---------- round state ---------- */
 let R=null;              // = save.cur while a round is on
+let VR=null, Q=0;        // the round and question on screen: the live one, or one being reviewed
 let F=null, LAD=[], LOGS=[], CI=0;
+const live=()=>!!R&&VR===R&&Q===R.i;            // the question you can still play
+const endRev=()=>!!VR&&VR!==R;                  // reviewing a finished round from the end screen
 
 function pickIds(p){
-  let pool=p<6?PACKS[p].q.map((_,i)=>PACKS[p].k+':'+i):[].concat.apply([],PACKS.map(pk=>pk.q.map((_,i)=>pk.k+':'+i)));
+  const src=p<NP?[PACKS[p]]:PACKS.filter((_,i)=>unlocked(i));   // the Grand Tour draws from every pack you've opened
+  let pool=[].concat.apply([],src.map(pk=>pk.q.map((_,i)=>pk.k+':'+i)));
   // rotation: questions never asked come first, then the ones asked longest ago
   const age=save.age[ALLP[p].k]||[],at=new Map(age.map((id,i)=>[id,i]));
   pool=shuffle(pool.filter(id=>!at.has(id))).concat(pool.filter(id=>at.has(id)).sort((x,y)=>at.get(x)-at.get(y)));
@@ -698,26 +833,31 @@ function pickIds(p){
   if(ei<0)ei=pool.findIndex(id=>fact(id).easy);
   if(ei>0)pool.unshift(pool.splice(ei,1)[0]);
   let ids=pool.slice(0,NQ);
-  if(p===6){const first=ids[0];ids=shuffle(ids.slice(1));ids.unshift(first)}
+  if(p===TI){const first=ids[0];ids=shuffle(ids.slice(1));ids.unshift(first)}
   return ids}
 
 function startRound(p,how){
   const ids=pickIds(p);
-  R={p:p,sp:SPAN,ids:ids,lo:ids.map(id=>mkLo(fact(id))),i:0,ph:'g',cur:null,g:[],z:[]};
+  R={p:p,k:ALLP[p].k,sp:SPAN,ids:ids,lo:ids.map(id=>mkLo(fact(id))),i:0,ph:'g',cur:null,g:[],z:[]};
   const k=ALLP[p].k,ag=(save.age[k]||[]).filter(id=>ids.indexOf(id)<0).concat(ids);
   save.age[k]=ag;save.cur=R;store();
-  LEVEL=p+1;rndArm(how);paused=false;
+  LEVEL=p+1;rndArm(how);paused=false;roundBadges=[];VR=R;Q=0;
   show('play');renderQ()}
-function resumeRound(){R=save.cur;if(R.sp!==SPAN){R.lo=R.ids.map(id=>mkLo(fact(id)));R.sp=SPAN;R.cur=null}LEVEL=R.p+1;rndArm('resume');paused=false;show('play');renderQ()}
+function resumeRound(){R=save.cur;if(R.sp!==SPAN){R.lo=R.ids.map(id=>mkLo(fact(id)));R.sp=SPAN;R.cur=null}
+  LEVEL=R.p+1;rndArm('resume');paused=false;roundBadges=[];VR=R;Q=R.i;show('play');renderQ()}
 
-function score(){return R.z.reduce((s,z)=>s+PTS[z],0)}
+function score(r){r=r||R;return r.z.reduce((s,z)=>s+PTS[z],0)}
 function first(){rndStart();ac();hideTip()}    // every real input in a round goes through here
 
 function renderQ(){
-  F=fact(R.ids[R.i]);const lo=R.lo[R.i],p=ALLP[R.p];
+  F=fact(VR.ids[Q]);const lo=VR.lo[Q],p=ALLP[VR.p],L=live(),guessing=L&&R.ph==='g';
   document.documentElement.style.setProperty('--pk',p.c);
   $('pchip').innerHTML=icon(p)+'<span>'+p.name+'</span>';
-  $('qn').textContent=(R.i+1)+'/'+NQ;
+  $('qn').textContent=(Q+1)+'/'+NQ;
+  const maxQ=endRev()?NQ-1:R.i;
+  $('prevB').disabled=Q<=0;$('fwdB').disabled=Q>=maxQ;
+  $('rvt').hidden=L;$('rvt').textContent=endRev()?'Reviewing your round':'Reviewing';
+  document.querySelector('#play .ib').style.visibility=endRev()?'hidden':'';
   $('q').textContent=F.q;$('ru').textContent=F.u;
   LAD=ladder(lo,F.int);LOGS=LAD.map(L10);
   // scale
@@ -727,30 +867,43 @@ function renderQ(){
     if((k===1||k===3)&&x>4&&x<96)lb+='<span class="lab" style="left:'+x+'%">'+shortLab(k*Math.pow(10,d))+'</span>'}
   $('tks').innerHTML=tk;$('labs').innerHTML=lb;
   $('zbs').innerHTML='';$('slz').classList.remove('show');
-  CI=R.cur==null?nearest(lo+SPAN/2):Math.max(0,LAD.indexOf(R.cur));
-  if(R.ph==='g'){setIdx(CI,true);$('fb').hidden=true;$('ansC').hidden=true;$('read').classList.remove('two');$('ctl').classList.remove('rev');actLabel('Lock in',false);$('minus').disabled=$('plus').disabled=false}
-  else{setIdx(LAD.indexOf(R.g[R.i])>=0?LAD.indexOf(R.g[R.i]):nearest(L10(R.g[R.i])),true);reveal(false)}
-  $('tip').hidden=!!save.tip||R.i>0||R.ph!=='g';
+  if(guessing){CI=R.cur==null?nearest(lo+SPAN/2):Math.max(0,LAD.indexOf(R.cur));
+    setIdx(CI,true);$('fb').hidden=true;$('ansC').hidden=true;$('read').classList.remove('two');$('ctl').classList.remove('rev');actLabel('Lock in',false);$('minus').disabled=$('plus').disabled=false}
+  else{const g=VR.g[Q];setIdx(LAD.indexOf(g)>=0?LAD.indexOf(g):nearest(L10(g)),true);reveal(false)}
+  $('slz').classList.toggle('ro',!guessing);$('slz').setAttribute('aria-readonly',guessing?'false':'true');
+  $('tip').hidden=!!save.tip||Q>0||!guessing;
+  document.querySelector('.mid').scrollTop=0;
   renderMeter()}
 
 function nearest(lv){let a=0,b=LOGS.length-1;while(b-a>1){const m=(a+b)>>1;if(LOGS[m]<lv)a=m;else b=m}return (lv-LOGS[a]<=LOGS[b]-lv)?a:b}
-function posOf(v){return Math.max(0,Math.min(100,(L10(v)-R.lo[R.i])/SPAN*100))}
-function setIdx(i,quiet){i=Math.max(0,Math.min(LAD.length-1,i));const ch=i!==CI,prevV=LAD[CI];CI=i;R.cur=LAD[i];
+function posOf(v){return Math.max(0,Math.min(100,(L10(v)-VR.lo[Q])/SPAN*100))}
+function setIdx(i,quiet){i=Math.max(0,Math.min(LAD.length-1,i));const ch=i!==CI,prevV=LAD[CI];CI=i;
+  if(live()&&R.ph==='g')R.cur=LAD[i];          // only the live guess is ever changed
   $('th').style.left=posOf(LAD[i])+'%';$('rv').textContent=fmt(LAD[i]);
   if(ch&&!quiet&&CI>=0&&prevV&&Math.floor(L10(prevV)+1e-9)!==Math.floor(L10(LAD[i])+1e-9))buzz(10);
   const sl=$('slz');sl.setAttribute('aria-valuemin','0');sl.setAttribute('aria-valuemax',String(LAD.length-1));sl.setAttribute('aria-valuenow',String(i));
   sl.setAttribute('aria-valuetext',withU(fmt(LAD[i]),F.u));if(ch&&!quiet)SND.tick()}
 function actLabel(t,nx){const b=$('act');b.textContent=t;b.classList.toggle('nx',nx)}
 
-function renderMeter(){const s=score();$('sc').textContent=s;$('mf').style.width=(s/10)+'%';
+function renderMeter(){const s=score(VR);$('sc').textContent=s;$('mf').style.width=(s/10)+'%';
   document.querySelectorAll('.meter i').forEach((el,k)=>el.classList.toggle('got',s>=[CLEAR,S2,S3][k]));
-  let h='';for(let k=0;k<NQ;k++){const z=R.z[k];h+='<span'+(z!=null?' style="background:'+ZC[z]+'"':k===R.i?' class="cur"':'')+'></span>'}
+  const maxQ=endRev()?NQ-1:R.i;let h='';
+  for(let k=0;k<NQ;k++){const z=VR.z[k],can=k<=maxQ;
+    h+='<button data-act="pip" data-k="'+k+'"'+(can?'':' disabled')+' aria-label="Question '+(k+1)+'"'+
+      ' class="'+(k===Q?'view':'')+(z==null&&!endRev()&&k===R.i?' live':'')+'"'+(z!=null?' style="--pc:'+ZC[z]+'"':'')+'></button>'}
   $('pips').innerHTML=h}
 
 let lockedAt=-1e9;
-function lockIn(){if(!R||R.ph!=='g')return;first();lockedAt=performance.now();
-  const g=LAD[CI],z=zone(g,F.a);R.g[R.i]=g;R.z[R.i]=z;R.ph='r';store();
-  SND.lock();reveal(true);setTimeout(()=>{SND.res(z);buzz(z===0?[30,60,30,60,45]:z<=2?25:12)},120);renderMeter()}
+function lockIn(){if(!live()||R.ph!=='g')return;first();lockedAt=performance.now();
+  const g=LAD[CI],z=zone(g,F.a);R.g[R.i]=g;R.z[R.i]=z;R.ph='r';
+  // badge counters
+  const c=save.bd.c;if(z===0){c.bull++;if(F.a>=1e6)c.bign++;if(F.a<10)c.small++}
+  if(Math.abs(g/F.a-1)<0.005)c.spot++;
+  let run=0;for(let k=R.i;k>=0&&R.z[k]===0;k--)run++;c.streak=Math.max(c.streak,run);
+  if(!ANS.has(F.id)){ANS.add(F.id);save.bd.ans.push(F.id)}
+  store();
+  SND.lock();reveal(true);setTimeout(()=>{SND.res(z);buzz(z===0?[30,60,30,60,45]:z<=2?25:12)},120);renderMeter();
+  checkBadges(true)}
 
 // Gaps are measured from the smaller number, exactly as zone() scores them (and as the rules card says),
 // so a guess of 78 for 100 reads "the answer was 28% more", which is the 50-point band.
@@ -761,7 +914,7 @@ function offText(g,a){const r=g/a;if(Math.abs(r-1)<0.005)return 'Spot on.';
   return k<2?'Your guess was '+pc+'% more than the answer.':'Your guess was about '+x+'× the answer.'}
 
 function reveal(anim){
-  const g=R.g[R.i],z=R.z[R.i],a=F.a;
+  const g=VR.g[Q],z=VR.z[Q],a=F.a;
   let zb='';for(let k=BAND.length-1;k>=0;k--){const l=Math.max(0,posOf(a/BAND[k])),r=Math.min(100,posOf(a*BAND[k]));
     zb+='<span class="zb" style="left:'+l+'%;width:'+(r-l)+'%;background:'+ZC[k]+'"></span>'}
   $('zbs').innerHTML=zb;$('pin').style.left=posOf(a)+'%';
@@ -771,7 +924,9 @@ function reveal(anim){
   $('av').textContent=fmtA(a);$('au').textContent=F.u;$('ansC').hidden=false;$('read').classList.add('two');$('ctl').classList.add('rev');
   $('fbN').textContent=F.n;$('fbN').hidden=!F.n||/^(About |Around |Up to about )?[\d.,]+( [^ .]+)?\.$/.test(F.n);$('fb').hidden=false;
   $('minus').disabled=$('plus').disabled=true;$('tip').hidden=true;
-  actLabel(R.i<NQ-1?'Next':'See result',true);
+  if(endRev())actLabel('Back to results',true);
+  else if(!live())actLabel('Back to question '+(R.i+1),true);
+  else actLabel(R.i<NQ-1?'Next':'See result',true);
   if(anim&&z===0&&!isRM())burst();
   // bring the numbers into view (they sit under the verdict) if a very short screen still overflows
   setTimeout(()=>{try{$('read').scrollIntoView({block:'nearest',behavior:isRM()?'auto':'smooth'})}catch(e){}},anim?60:0)}
@@ -781,8 +936,14 @@ function burst(){const t=$('trk'),x=posOf(F.a);
     s.style.left='calc('+x+'% - 4px)';s.style.top='-4px';s.style.background=['#1E9E6A','#F0B43C','#E0533B','#4B4FC4'][k%4];
     s.style.setProperty('--dx',Math.cos(ang)*d+'px');s.style.setProperty('--dy',Math.sin(ang)*d+'px');t.appendChild(s);setTimeout(()=>s.remove(),800)}}
 
-function nextQ(){if(!R||R.ph!=='r')return;first();
-  if(R.i<NQ-1){R.i++;R.ph='g';R.cur=null;store();renderQ()}else finish()}
+function nextQ(){if(!live()||R.ph!=='r')return;first();
+  if(R.i<NQ-1){R.i++;R.ph='g';R.cur=null;Q=R.i;store();renderQ()}else finish()}
+
+/* review: look back at answered questions; nothing about them can change */
+function goTo(j){if(!VR)return;const maxQ=endRev()?NQ-1:R.i;j=Math.max(0,Math.min(maxQ,j));if(j===Q)return;Q=j;renderQ()}
+function goLive(){if(R){Q=R.i;renderQ()}}
+function reviewEnd(k){if(!lastEnd)return;VR=lastEnd.done;Q=k;paused=false;show('play');renderQ()}
+function backToResults(){VR=null;show('end')}
 
 let lastEnd=null;
 function finish(){
@@ -790,12 +951,15 @@ function finish(){
   const wasOpen=ALLP.map((_,i)=>unlocked(i));
   const rec=save.pk[k]||{b:0,s:0,n:0};const newBest=s>rec.b&&rec.n>0;
   rec.n++;if(s>rec.b)rec.b=s;rec.s=Math.max(rec.s||0,st);save.pk[k]=rec;
-  const done=R;save.cur=null;R=null;store();
+  if(R.z.every(z=>z<4))save.bd.c.clean++;
+  const done=R;save.cur=null;R=null;VR=null;store();
   rndEnd(win,{score:s,stars:st});
-  const opened=ALLP.findIndex((_,i)=>!wasOpen[i]&&unlocked(i));
-  lastEnd={p:p,s:s,st:st,win:win,opened:opened,newBest:newBest,done:done};
-  renderEnd(true);show('end');
-  if(win)setTimeout(()=>SND.win(),250);else setTimeout(()=>SND.lose(),250)}
+  checkBadges(false);
+  const opened=ALLP.map((_,i)=>i).filter(i=>!wasOpen[i]&&unlocked(i));
+  lastEnd={p:p,s:s,st:st,win:win,opened:opened,newBest:newBest,done:done,badges:roundBadges.slice()};
+  endScroll=0;renderEnd(true);show('end');
+  if(win)setTimeout(()=>SND.win(),250);else setTimeout(()=>SND.lose(),250);
+  if(lastEnd.badges.length)setTimeout(()=>buzz([20,40,20]),1100)}
 
 function renderEnd(anim){const E=lastEnd,p=ALLP[E.p];
   document.documentElement.style.setProperty('--pk',p.c);
@@ -803,13 +967,17 @@ function renderEnd(anim){const E=lastEnd,p=ALLP[E.p];
   let st='';for(let k=0;k<3;k++)st+='<svg viewBox="0 0 24 24" class="'+(k<E.st?'on'+(anim&&!isRM()?' pop':''):'')+'" style="animation-delay:'+(0.35+k*0.18)+'s"><path d="M12 2.2l2.9 6.2 6.8.8-5 4.7 1.3 6.7L12 17.3l-6 3.3 1.3-6.7-5-4.7 6.8-.8z"/></svg>';
   $('estars').innerHTML=st;
   $('ev').textContent=E.win?(E.st===3?'Three stars. Superb.':'Pack cleared!'):'Not quite: '+CLEAR+' clears the pack.';
-  $('ev2').textContent=E.opened>=0?ALLP[E.opened].name+' is now open.':(E.newBest?'New best score.':(E.win&&E.st<3?(E.st===1?S2:S3)+' for the next star. Best: '+best(p.k)+'.':'Best: '+best(p.k)+'.'));
-  const nx=E.win?(E.p<5?E.p+1:(E.p===5&&unlocked(6)?6:-1)):-1;
+  const op=E.opened.map(i=>ALLP[i].name);
+  $('ev2').textContent=op.length?op.join(' and ')+(op.length>1?' are':' is')+' now open.':(E.newBest?'New best score.':(E.win&&E.st<3?(E.st===1?S2:S3)+' for the next star. Best: '+best(p.k)+'.':'Best: '+best(p.k)+'.'));
+  const nx=E.win?(E.p<NP-1?E.p+1:(E.p===NP-1&&unlocked(TI)?TI:-1)):-1;
   $('nextB').hidden=nx<0;$('nextB').dataset.p=nx;if(nx>=0)$('nextB').textContent='Next: '+ALLP[nx].name;
   $('againB').classList.toggle('solo',nx<0);$('againB').classList.toggle('go',nx<0);
+  $('earned').hidden=!E.badges.length;
+  const top={};E.badges.forEach(x=>{if(!top[x[0]]||x[1]>top[x[0]])top[x[0]]=x[1]});
+  $('earned').innerHTML=Object.keys(top).map(k=>[k,top[k]]).map(x=>{const b=BADGES.find(y=>y.k===x[0]);return '<span class="ech">'+medal(b,x[1])+b.n+': '+TIER[x[1]-1]+'</span>'}).join('');
   const D=E.done;
   $('res').innerHTML=D.ids.map((id,k)=>{const f=fact(id),z=D.z[k];
-    return '<li><span class="rq">'+f.q+'</span><span class="ra">You '+withU(fmt(D.g[k]),f.u)+' · answer '+withU(fmtA(f.a),f.u)+'</span><span class="rp" style="background:'+ZC[z]+'">'+PTS[z]+'</span></li>'}).join('');
+    return '<li data-act="rq" data-k="'+k+'" role="button" tabindex="0"><span class="rq">'+f.q+'</span><span class="ra">You '+withU(fmt(D.g[k]),f.u)+' · answer '+withU(fmtA(f.a),f.u)+'</span><span class="rp" style="background:'+ZC[z]+'">'+PTS[z]+'</span></li>'}).join('');
   countUp($('es'),E.s,anim&&!isRM())}
 function countUp(el,to,anim){if(!anim){el.textContent=to;return}const t0=performance.now(),d=700;
   (function step(t){const k=Math.min(1,(t-t0)/d);el.textContent=Math.round(to*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(step)})(t0)}
@@ -820,7 +988,7 @@ function pause(on){paused=on;$('pause').hidden=!on;if(on){renderTogs();store()}}
 /* ---------- slider input ---------- */
 const slz=$('slz');let dragging=false;
 function fromX(cx){const r=$('trk').getBoundingClientRect();const fr=Math.max(0,Math.min(1,(cx-r.left)/r.width));return nearest(R.lo[R.i]+fr*SPAN)}
-slz.addEventListener('pointerdown',e=>{if(!R||R.ph!=='g'||paused)return;first();dragging=true;slz.classList.add('drag');
+slz.addEventListener('pointerdown',e=>{if(!live()||R.ph!=='g'||paused)return;first();dragging=true;slz.classList.add('drag');
   try{slz.setPointerCapture(e.pointerId)}catch(_){}setIdx(fromX(e.clientX));e.preventDefault()});
 slz.addEventListener('pointermove',e=>{if(!dragging)return;setIdx(fromX(e.clientX))});
 // a touch pointerdown doesn't unlock audio on Android; the pointerup that ends the first drag does
@@ -829,23 +997,33 @@ slz.addEventListener('pointerup',endDrag);slz.addEventListener('pointercancel',e
 
 /* nudge buttons: tap for one step, hold to run */
 let holdT=null,holdI=null,held=false;
-function step(d){if(!R||R.ph!=='g'||paused)return;first();setIdx(CI+d)}
+function step(d){if(!live()||R.ph!=='g'||paused)return;first();setIdx(CI+d)}
 function stopHold(){clearTimeout(holdT);clearInterval(holdI);holdT=holdI=null}
 ['minus','plus'].forEach((id,k)=>{const b=$(id),d=k?1:-1;
   b.addEventListener('pointerdown',()=>{held=false;stopHold();holdT=setTimeout(()=>{held=true;holdI=setInterval(()=>step(d),75)},380)});
   ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>{stopHold();store()}))});
 
-document.addEventListener('keydown',e=>{if(scr!=='play'||paused||!R)return;
+function act(){if(endRev()){backToResults();return}if(!R)return;if(!live()){goLive();return}
+  if(R.ph==='g')lockIn();else if(performance.now()-lockedAt>450)nextQ()}
+document.addEventListener('keydown',e=>{
+  if(scr==='end'&&(e.key==='Enter'||e.key===' ')&&e.target&&e.target.dataset&&e.target.dataset.act==='rq'){reviewEnd(+e.target.dataset.k);e.preventDefault();return}
+  if(scr!=='play'||paused||!VR)return;
   if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.closest&&e.target.closest('button'))return;
-  if(e.key==='ArrowLeft'||e.key==='ArrowDown'){step(-1);e.preventDefault()}
-  else if(e.key==='ArrowRight'||e.key==='ArrowUp'){step(1);e.preventDefault()}
-  else if(e.key==='Enter'){if(R.ph==='g')lockIn();else if(performance.now()-lockedAt>450)nextQ();e.preventDefault()}
-  else if(e.key==='Escape')pause(true)});
+  const guessing=live()&&R.ph==='g';
+  if(e.key==='ArrowLeft'||e.key==='ArrowDown'){if(guessing)step(-1);else goTo(Q-1);e.preventDefault()}
+  else if(e.key==='ArrowRight'||e.key==='ArrowUp'){if(guessing)step(1);else goTo(Q+1);e.preventDefault()}
+  else if(e.key==='Enter'){act();e.preventDefault()}
+  else if(e.key==='Escape'){if(endRev())backToResults();else pause(true)}});
 
 /* ---------- taps (click: the only place full screen is asked for) ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
   if(a==='minus'||a==='plus'){if(held){held=false;return}step(a==='plus'?1:-1);return}
-  if(a==='act'){if(!R)return;if(R.ph==='g')lockIn();else if(performance.now()-lockedAt>450)nextQ();return}
+  if(a==='act'){act();return}
+  if(a==='prev'){goTo(Q-1);return}
+  if(a==='fwd'){goTo(Q+1);return}
+  if(a==='pip'){goTo(+b.dataset.k);return}
+  if(a==='rq'){reviewEnd(+b.dataset.k);return}
+  if(a==='badges'){show('badges');return}
   if(a==='play'){goFS();if(save.cur&&save.cur.ids)resumeRound();else startRound(nextUp(),'new');return}
   if(a==='pack'){goFS();if(save.cur&&save.cur.ids&&save.cur.p===+b.dataset.p)resumeRound();else startRound(+b.dataset.p,'new');return}
   if(a==='again'){goFS();startRound(lastEnd?lastEnd.p:0,'retry');return}
@@ -853,7 +1031,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   if(a==='pause'){pause(true);return}
   if(a==='resume'){goFS();pause(false);return}
   if(a==='restart'){pause(false);goFS();startRound(R?R.p:0,'retry');return}
-  if(a==='home'){pause(false);if(R)store();R=null;rnd.armed=false;rnd.open=false;show('home');return}
+  if(a==='home'){pause(false);if(R)store();R=null;VR=null;rnd.armed=false;rnd.open=false;show('home');return}
   if(a==='thap'){save.hap=!save.hap;store();renderTogs();if(save.hap)buzz(20);return}
   if(a==='tsnd'){save.snd=!save.snd;if(!save.snd&&AC){try{AC.suspend()}catch(_){}}else ac();store();renderTogs();return}
   if(a==='trm'){save.rm=!isRM();applyRM();store();renderTogs();return}
@@ -867,21 +1045,23 @@ function loop(t){const dt=Math.min(0.25,Math.max(0,(t-last)/1000));last=t;
 requestAnimationFrame(loop);
 document.addEventListener('visibilitychange',()=>{last=performance.now();if(document.hidden){stopHold();endDrag();store()}});
 window.addEventListener('pagehide',store);
-window.addEventListener('resize',()=>{if(scr==='play'&&R)setIdx(CI,true)});
+window.addEventListener('resize',()=>{if(scr==='play'&&VR)setIdx(CI,true)});
 try{mq.addEventListener('change',()=>{applyRM();renderTogs()})}catch(e){}
 function hideTip(){if(!$('tip').hidden){$('tip').hidden=true;save.tip=1;store()}}
 
 /* ---------- test hook (site contract §5.5) ---------- */
 if(window.__DGTEST===true){
   window.__dg={
-    end(win){if(scr==='end')return;if(!R)startRound(nextUp(),'new');
+    end(win){if(scr==='end')return;if(endRev())backToResults();if(!R)startRound(nextUp(),'new');goLive();
       for(let k=0;k<NQ*2&&R;k++){if(R.ph==='g'){setIdx(win?nearest(L10(F.a)):(L10(F.a)-R.lo[R.i]>SPAN/2?0:LAD.length-1),true);lockIn()}nextQ()}},
-    state:()=>({scr:scr,R:R?JSON.parse(JSON.stringify(R)):null,save:JSON.parse(JSON.stringify(save)),secs:rnd.secs,open:rnd.open,armed:rnd.armed,lad:LAD.length}),
+    state:()=>({scr:scr,R:R?JSON.parse(JSON.stringify(R)):null,save:JSON.parse(JSON.stringify(save)),secs:rnd.secs,open:rnd.open,armed:rnd.armed,lad:LAD.length,
+      Q:Q,live:live(),endRev:endRev(),last:lastEnd?{p:lastEnd.p,s:lastEnd.s,badges:lastEnd.badges}:null}),
     answer:()=>F&&F.a,
-    guess(v){if(!R||R.ph!=='g')return;first();setIdx(nearest(L10(v)),true)},
+    guess(v){if(!live()||R.ph!=='g')return;first();setIdx(nearest(L10(v)),true)},
     lock:()=>lockIn(), next:()=>nextQ(),
-    facts:()=>PACKS.map(p=>({k:p.k,q:p.q.map(f=>({q:f[0],u:f[1],a:f[2],fl:f[4]}))})),
-    ladder:(lo,i)=>ladder(lo,i), zone:zone, fmt:fmt, fmtA:fmtA, off:offText
+    facts:()=>PACKS.map(p=>({k:p.k,q:p.q.map(f=>({q:f[0],u:f[1],a:f[2],n:f[3],fl:f[4]}))})),
+    ladder:(lo,i)=>ladder(lo,i), zone:zone, fmt:fmt, fmtA:fmtA, off:offText,
+    badges:()=>BADGES.map(b=>({k:b.k,v:bVal(b.k),t:save.bd.t[b.k]||0}))
   };
 }
 
@@ -889,6 +1069,5 @@ applyRM();
 show('home');
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
