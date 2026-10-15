@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-15T01:02:56.497Z",
+  "built": "2026-10-15T01:04:53.967Z",
   "today": "2026-10-15",
   "timezone": "Europe/London",
-  "count": 582,
+  "count": 583,
   "items": [
     {
       "path": "reports/2026-10-15-crossword-mini-0096.html",
@@ -93,6 +93,21 @@
       "statUnit": "",
       "statLabel": "",
       "mask": "....................o..............."
+    },
+    {
+      "path": "reports/2026-10-15-nhs-waits-benefits-ons.html",
+      "kind": "report",
+      "topic": "Medicine",
+      "headline": "Long NHS waits offset about 4% of treatment's fall in benefit claims",
+      "standfirst": "The Office for National Statistics estimates that waits above 2015–16 levels are linked to up to 60,572 extra years of benefit receipt among treated inpatients. Set against what treatment is linked to, that is a small share, and more tha…",
+      "date": "2026-10-15",
+      "updated": "",
+      "read": "~3 min",
+      "thumb": "",
+      "stat": "4.3",
+      "statUnit": "%",
+      "statLabel": "wait offset",
+      "mask": ""
     },
     {
       "path": "reports/2026-10-15-suicides-registered-vs-occurred.html",
