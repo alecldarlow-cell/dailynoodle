@@ -140,6 +140,8 @@ details.how p{margin:6px 0}
 #pathSvg polyline{fill:none;stroke:var(--thread);stroke-width:10;stroke-linecap:round;stroke-linejoin:round;opacity:.5}
 #veil{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
 #veil .btn{min-width:200px}
+#count{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;pointer-events:none;display:flex;align-items:center;justify-content:center;min-width:128px;height:128px;padding:0 22px;box-sizing:border-box;border-radius:64px;background:var(--paper);border:2px solid var(--edge);box-shadow:0 5px 0 var(--edge);font-family:var(--serif);font-size:76px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+#count.word{font-family:var(--sans);font-weight:700;font-size:30px}
 .locked #board{pointer-events:none}
 
 /* result */
@@ -208,7 +210,7 @@ details.bon summary{cursor:pointer;min-height:40px;display:flex;align-items:cent
   <div id="list" aria-live="polite"></div>
   <div id="cur"><span id="curWord" class="idle"></span><span id="toast" role="status"></span></div>
   <div id="boardWrap"><div id="board" aria-label="Letter grid"><svg id="pathSvg" aria-hidden="true"><polyline id="pathLine" points=""/></svg></div>
-   <div id="veil" hidden><button id="resumeBtn" class="btn primary">Resume</button></div></div>
+   <div id="veil" hidden><button id="resumeBtn" class="btn primary">Resume</button></div><div id="count" hidden aria-live="assertive"></div></div>
  </div>
 </section>
 
@@ -313,11 +315,12 @@ const sysRM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matc
 const reduced=()=>save.rm===null?sysRM:!!save.rm;
 function applyRM(){document.body.classList.toggle('rm',reduced());}
 applyRM();
-const fsOK=(()=>{try{return !!(document.fullscreenEnabled||document.webkitFullscreenEnabled)}catch(e){return false}})();
+const appFS=(()=>{try{return matchMedia('(display-mode: fullscreen)').matches}catch(e){return false}})();
+const fsOK=!appFS&&(()=>{try{return !!(document.fullscreenEnabled||document.webkitFullscreenEnabled)}catch(e){return false}})();
 const isFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
 function goFS(){if(!fsOK||!save.fs||isFS())return;try{const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;if(!rq)return;
  const lock=()=>{try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(()=>{});}catch(e){}};
- const p=rq.call(el,{navigationUI:'hide'});if(p&&p.then)p.then(lock,()=>{});else lock();}catch(e){}}
+ fsAt=performance.now();const p=rq.call(el,{navigationUI:'hide'});if(p&&p.then)p.then(lock,()=>{});else lock();}catch(e){}}
 function paintFS(){for(const id of ['fsHome','fsPlay']){const b=$(id);if(!b)continue;b.hidden=!fsOK;b.setAttribute('aria-pressed',String(isFS()));b.setAttribute('aria-label',isFS()?'Leave full screen':'Full screen');}}
 function exitFS(){try{if(!isFS())return;const x=document.exitFullscreen||document.webkitExitFullscreen;const p=x&&x.call(document);if(p&&p.catch)p.catch(()=>{});}catch(e){}}
 let actx=null;
@@ -356,7 +359,7 @@ const plural=(n,a,b)=>n+' '+(n===1?a:b);
 
 /* ---------- state ---------- */
 /* D = today's one round, saved: {state:'ready'|'playing'|'done', found:[], left, score}; R = D while it is on the board */
-let P=null, D=null, R=null, view='home', low=[], MAIN=null, BONUS=null, ALLW=null, tiles=[], paused=false, last=0;
+let P=null, D=null, R=null, view='home', low=[], MAIN=null, BONUS=null, ALLW=null, tiles=[], paused=false, last=0, counting=false, cdT=0, fsAt=-1e9;
 function day(){
   let d=save.days[P.id];
   if(!d||!Array.isArray(d.found)||!['ready','playing','done'].includes(d.state)){d={state:'ready',found:[],left:ROUND,score:0};save.days[P.id]=d;}
@@ -405,7 +408,7 @@ function hit(x,y,inner){
   return -1;
 }
 let path=[], drag=null, kb='';    // drag = {id, start, moved, lx, ly}; kb = letters typed on a keyboard
-const live=()=>view==='play'&&R&&R.state==='playing'&&!paused;
+const live=()=>view==='play'&&R&&R.state==='playing'&&!paused&&!counting;
 function findPath(w){
   const go=(i,pos,used)=>{const t=low[i];if(!w.startsWith(t,pos))return null;const p2=pos+t.length;
     if(p2===w.length)return[i];for(const j of NB[i])if(!(used>>j&1)){const r=go(j,p2,used|1<<j);if(r)return[i].concat(r);}return null;};
@@ -547,10 +550,35 @@ function renderScore(){
 /* ---------- the round ---------- */
 function setPaused(on){
   paused=on;
+  if(on)stopCount();
   $('veil').hidden=!on||!R||R.state!=='playing';
   $('board').classList.toggle('hide',on&&R&&R.state==='playing');
   if(on){if(drag)drag=null;path=[];kb='';paint();persist();}
-  else last=performance.now();
+  else{last=performance.now();if(R&&R.state==='playing')countIn();}
+}
+/* count-in: the clock holds at its time for 3-2-1 with the letters hidden. Chrome on Android shows a
+   "to exit full screen" notice whenever full screen starts, and no page can suppress it, so when
+   full screen has just been requested we wait for it to land and add a "Ready" beat, letting the
+   notice show and fade before the round runs. */
+function stopCount(){clearTimeout(cdT);if(!counting)return;counting=false;const c=$('count');c.hidden=true;c.textContent='';}
+function countIn(){
+  stopCount();counting=true;
+  const c=$('count'),b=$('board');
+  b.classList.add('hide');c.className='';c.textContent='';c.hidden=false;
+  if(drag)drag=null;path=[];kb='';paint();
+  const beats=['3','2','1'];
+  const fresh=performance.now()-fsAt<1500;
+  if(fresh)beats.unshift('Ready');
+  const step=()=>{
+    if(!counting)return;
+    if(!beats.length){counting=false;c.hidden=true;c.textContent='';b.classList.remove('hide');last=performance.now();paint();return;}
+    const s=beats.shift();c.textContent=s;c.className=s.length>1?'word':'';
+    if(s.length===1)sfx.tick();
+    cdT=setTimeout(step,1000);
+  };
+  // if full screen was just asked for, start the beats once it has arrived (or after 1s if it never does)
+  if(fresh&&!isFS()){const t0=performance.now();const wait=()=>{if(!counting)return;if(isFS()||performance.now()-t0>1000)step();else cdT=setTimeout(wait,50);};wait();}
+  else step();
 }
 function startPlay(){
   if(D.state==='done'){showResult(false);return;}
@@ -564,7 +592,7 @@ function enterBoard(){
 }
 function tick(){
   const now=performance.now(),dt=Math.min(1,Math.max(0,(now-last)/1000));last=now;
-  if(view!=='play'||!R||R.state!=='playing'||paused||document.hidden)return;
+  if(view!=='play'||!R||R.state!=='playing'||paused||counting||document.hidden){last=now;return;}
   const before=Math.ceil(R.left);
   R.left=Math.max(0,R.left-dt);
   const after=Math.ceil(R.left);
@@ -682,7 +710,7 @@ let rsT=0;function remeasureSoon(){clearTimeout(rsT);rsT=setTimeout(measure,80);
   if(window.visualViewport)visualViewport.addEventListener('resize',remeasure);
   last=performance.now();setInterval(tick,100);
   if(D.state==='done'&&save.done[P.id])showResult(false);else renderHome();
-  if(window.__DGTEST===true)window.__tg={state:()=>({view,path,D,R,save,P,paused}),submit:p=>submit(p),gate:GATE,rects:()=>rects};
+  if(window.__DGTEST===true)window.__tg={state:()=>({view,path,D,R,save,P,paused,counting}),submit:p=>submit(p),gate:GATE,rects:()=>rects};
 })();
 </script>
 <script src="../dn-track.js" defer></script>
