@@ -176,5 +176,6 @@ html.app-mode .key.wide{max-width:64px}
    random grid with no clues, and its solves counted towards the streak).
    Hidden rather than deleted: the engine binds to these ids, and the markup
    lives in each puzzle page, so the buttons stay in the HTML but never show. */
-#revealAll,#reset,#toggleKb,#bandSel,#newPuzzle,#winNew{display:none!important}
+#revealAll,#reset,#toggleKb{display:none!important}
+/* New grid and the difficulty picker were deleted outright (markup + handler), 15 Oct 2026. */
 footer{display:none!important}

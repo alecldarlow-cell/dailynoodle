@@ -200,4 +200,5 @@ html.app-mode .bank{padding:6px;gap:5px;min-height:0}
    lives in each puzzle page, so the elements stay in the HTML but never show.
    The footer was a build note ("SHELL vN · … code, not eye") meant for us, not players.
    Gone: Reveal all, Reset, Play again (both restarted the same puzzle). */
-#revealAll,#reset,#newPuzzle,#winNew,footer{display:none!important}
+#revealAll,#reset,footer{display:none!important}
+/* Play again (bar and result box) was deleted outright (markup + handler), 15 Oct 2026. */

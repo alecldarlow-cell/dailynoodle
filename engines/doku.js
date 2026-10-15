@@ -359,7 +359,6 @@ function revealAll(){
 }
 $("#revealAll").onclick=revealAll;
 $("#reset").onclick=()=>load(curSrc);
-$("#newPuzzle").onclick=()=>load(curSrc);
 $("#toggleHints").onclick=()=>{
   hints=!hints;
   const b=$("#toggleHints");b.textContent="Hints: "+(hints?"on":"off");b.setAttribute("aria-pressed",String(hints));
@@ -473,7 +472,6 @@ $("#winShare").onclick=async()=>{
   const txt="🔢 Doku "+dnNum(P.id)+" — "+dnTime($("#timer").textContent)+dnStreak($("#streak").textContent);
   doneCopy(txt,$("#winShare"));
 };
-$("#winNew").onclick=()=>{$("#winModal").classList.remove("on");load(curSrc);};
 $("#winModal").addEventListener("click",e=>{if(e.target===$("#winModal"))$("#winModal").classList.remove("on");});
 
 /* ---- app mode: board + bank in one screen, no scroll ---- */

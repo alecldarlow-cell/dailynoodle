@@ -302,18 +302,6 @@ async function refreshStreakUI(s){
   $("#streak").textContent=s.streak||0; $("#best").textContent=s.best||0;
 }
 
-/* ---- generate a fresh grid (demo of the engine gate) ---- */
-$("#newPuzzle").onclick=()=>{
-  const band=$("#bandSel").value;
-  const out=produce(band, (Date.now()>>>0));           // engine: fill -> validate -> only return on PASS
-  if(!out){$("#msg").textContent="Couldn't build a passing grid — try again.";return;}
-  const nums=numberGrid(out.sol);
-  // clues are authored by Digi Puzzles in production; demo stubs enumeration
-  const clues={};
-  entriesOf(out.sol,out.slots).forEach(e=>{clues[e.word.toLowerCase()]=`(${e.L}) — clue authored by Digi Puzzles`;});
-  load({id:"DP·MINI·"+String(Math.floor(Math.random()*9000+1000)), band, grid:out.sol, clues});
-  $("#msg").innerHTML=`Fresh <b>${band}</b> grid — generated & validated in-browser. Mean commonness ${out.meta.meanTier}. (Clues stubbed in demo.)`;
-};
 $("#reset").onclick=()=>load(curSrc);
 
 /* ---- device (native) keyboard via an off-screen input ---- */
@@ -432,7 +420,6 @@ $("#winShare").onclick=async()=>{
   const txt="✏️ Mini "+dnNum(P.id)+" — "+dnTime($("#timer").textContent)+dnStreak($("#streak").textContent);
   doneCopy(txt,$("#winShare"));
 };
-$("#winNew").onclick=()=>{$("#winModal").classList.remove("on");$("#newPuzzle").click();};
 $("#winModal").addEventListener("click",e=>{if(e.target===$("#winModal"))$("#winModal").classList.remove("on");});
 
 /* ---- app mode: fit clue + board + keyboard into one screen on touch ---- */
