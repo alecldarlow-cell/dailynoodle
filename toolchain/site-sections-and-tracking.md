@@ -31,8 +31,10 @@ Reference for any session that builds or publishes to the digi-news repo. Where 
 - Every puzzle shares one line, "emoji Name #N — result", no link and no "made with Digi Puzzles": ✏️ Mini, 🔢 Doku, 〰️ Path, 💣/💥 Sweep, 🔗 Link (one square per guess, ❌ for a miss), 🌍 Borders, 🧶 Tangle (unchanged). A streak of 2+ adds "· 🔥n".
 - `tools/share-v2.js` patches both share paths (result box and saved-result revisit) and runs in the build workflow, so a puzzle uploaded from an older template is patched on push. Update the templates in the Digi Puzzles project to match when convenient.
 
-## Shared engines (pilot: Mini, 15 Oct 2026)
-- `engines/mini.js` + `engines/mini.css` are the one copy of the Mini player. Each Mini in `reports/` is now a ~6 KB page (metas, markup, `window.DN_PUZZLE={…}`) that loads them. URLs, puzzle ids and localStorage keys are unchanged, so players keep their streaks and finished puzzles (tested: progress saved on the old page reopens finished on the new one).
-- To change every Mini, edit `engines/mini.js` once. Keep element ids (dn-track.js) and localStorage keys (saved progress) stable.
-- `tools/engine-shells.js mini` converts a puzzle only if its player is byte-identical to the engine; it runs in the build workflow so a Mini uploaded from the old self-contained template is converted on push. The three July prototype Minis stay self-contained.
+## Shared engines (15 Oct 2026)
+- Every puzzle type has one player in `engines/`: `mini`, `doku`, `sweep`, `link`, `path`, `tangle`, `borders` (.js + .css). Each puzzle in `reports/` is a thin page (metas, markup, `window.DN_PUZZLE={…}`) that loads its type's engine. reports/ went from ~227 MB to ~44 MB.
+- URLs, puzzle ids and localStorage keys are unchanged, so players keep streaks and finished puzzles. Tested per type: progress saved on the old self-contained page reopens finished on the engine page; pages render pixel-identical; tracking and share text unchanged; rebuilt feed.json identical.
+- To change every puzzle of a type, edit `engines/<type>.js` once. Keep element ids (dn-track.js) and localStorage keys (saved progress) stable.
+- `tools/engine-shells.js <type>` converts a puzzle only if its player is byte-identical to the engine, and runs for every type in the build workflow, so puzzles uploaded from the old self-contained templates are converted on push. Left self-contained on purpose (older players, all in the past): 3 July Minis, 3 July Dokus, 30 July Sweeps, Tangles 0001–0009, Borders 0001–0002.
+- When a template changes in a Digi Puzzles project, port the change into `engines/<type>.js` too; otherwise new uploads from the new template stay self-contained (they still work, they just don't share the engine).
 - `add-done-state.js --check` and `share-v2.js --check` look for their markers in the engine for thin pages.

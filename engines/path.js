@@ -1,0 +1,508 @@
+/* Digi Puzzles — path engine. One copy serves every path page in reports/.
+   Extracted 2026-10-15 from 2028-08-18-logic-path-0762.html by tools/engine-shells.js.
+   The page supplies its puzzle as window.DN_PUZZLE before loading this file.
+   Edit here to change every path; keep element ids and localStorage keys
+   stable (dn-track.js and players' saved progress depend on them). */
+
+(function(){
+"use strict";
+const N = 6, TOTAL = 36;
+
+// ---------- Puzzle data (generated, dual-prover verified — see chat answer key) ----------
+const PUZZLE = window.DN_PUZZLE;
+
+// ---------- Engine (shared shape with the shell's gate: validatePath / countSolutions / solveNoGuess / deduceStep) ----------
+function neighbors(r,c){
+  const out=[];
+  if(r>0) out.push([r-1,c]);
+  if(r<N-1) out.push([r+1,c]);
+  if(c>0) out.push([r,c-1]);
+  if(c<N-1) out.push([r,c+1]);
+  return out;
+}
+function manhattan(a,b){ return Math.abs(a[0]-b[0])+Math.abs(a[1]-b[1]); }
+
+function pathFromSolution(sol){
+  const cells = new Array(TOTAL+1);
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++) cells[sol[r][c]] = [r,c];
+  return cells.slice(1);
+}
+function turnCount(cells){
+  let turns=0, prevDir=null;
+  for(let i=1;i<cells.length;i++){
+    const dr=cells[i][0]-cells[i-1][0], dc=cells[i][1]-cells[i-1][1];
+    const dir=dr+","+dc;
+    if(prevDir!==null && dir!==prevDir) turns++;
+    prevDir=dir;
+  }
+  return turns;
+}
+function candidatesFor(v, valCell, cellUsed){
+  let prevA=null,nextA=null;
+  for(let a=v-1;a>=1;a--) if(valCell[a]){ prevA=a; break; }
+  for(let a=v+1;a<=TOTAL;a++) if(valCell[a]){ nextA=a; break; }
+  let cands=[];
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    if(cellUsed[r][c]) continue;
+    let okPrev=true, okNext=true;
+    if(prevA!==null){ const d=manhattan(valCell[prevA],[r,c]); const need=v-prevA; okPrev = d<=need && ((need-d)%2===0); }
+    if(nextA!==null){ const d=manhattan(valCell[nextA],[r,c]); const need=nextA-v; okNext = d<=need && ((need-d)%2===0); }
+    if(okPrev && okNext) cands.push([r,c]);
+  }
+  if(valCell[v-1]){
+    const set=new Set(neighbors(...valCell[v-1]).filter(([r,c])=>!cellUsed[r][c]).map(([r,c])=>r+","+c));
+    cands=cands.filter(([r,c])=>set.has(r+","+c));
+  }
+  if(valCell[v+1]){
+    const set=new Set(neighbors(...valCell[v+1]).filter(([r,c])=>!cellUsed[r][c]).map(([r,c])=>r+","+c));
+    cands=cands.filter(([r,c])=>set.has(r+","+c));
+  }
+  return cands;
+}
+function solveNoGuess(lockedList){
+  const valCell=new Array(TOTAL+1).fill(null);
+  const cellUsed=Array.from({length:N},()=>Array(N).fill(false));
+  for(const [r,c,v] of lockedList){ const rr=r-1,cc=c-1; valCell[v]=[rr,cc]; cellUsed[rr][cc]=true; }
+  let changed=true;
+  while(changed){
+    changed=false;
+    for(let v=1; v<=TOTAL; v++){
+      if(valCell[v]) continue;
+      const cands=candidatesFor(v, valCell, cellUsed);
+      if(cands.length===1){
+        const [r,c]=cands[0];
+        valCell[v]=[r,c]; cellUsed[r][c]=true; changed=true;
+      }
+    }
+  }
+  return { valCell, solved: valCell.slice(1).every(x=>x!==null) };
+}
+function countSolutions(lockedList, cap){
+  const lockedByValue=new Map(lockedList.map(([r,c,v])=>[v,[r-1,c-1]]));
+  const cellVal=Array.from({length:N},()=>Array(N).fill(0));
+  let count=0;
+  function bt(v,r,c){
+    if(count>=cap) return;
+    if(v>TOTAL){ count++; return; }
+    const forced=lockedByValue.get(v);
+    if(v===1){
+      if(forced){ const [fr,fc]=forced; cellVal[fr][fc]=1; bt(2,fr,fc); cellVal[fr][fc]=0; }
+      else{
+        for(let rr=0;rr<N;rr++) for(let cc=0;cc<N;cc++){
+          if(cellVal[rr][cc]===0){ cellVal[rr][cc]=1; bt(2,rr,cc); cellVal[rr][cc]=0; if(count>=cap) return; }
+        }
+      }
+      return;
+    }
+    if(forced){
+      const [fr,fc]=forced;
+      if(Math.abs(fr-r)+Math.abs(fc-c)!==1) return;
+      if(cellVal[fr][fc]!==0) return;
+      cellVal[fr][fc]=v; bt(v+1,fr,fc); cellVal[fr][fc]=0;
+      return;
+    }
+    for(const [nr,nc] of neighbors(r,c)){
+      if(cellVal[nr][nc]===0){ cellVal[nr][nc]=v; bt(v+1,nr,nc); cellVal[nr][nc]=0; if(count>=cap) return; }
+    }
+  }
+  bt(1,-1,-1);
+  return count;
+}
+function validatePath(p){
+  const checks = {};
+  // locked matches solution
+  checks.locks_match_solution = p.locked.every(([r,c,v]) => p.solution[r-1][c-1]===v);
+  // 1 and 36 both locked
+  const lockedVals = new Set(p.locked.map(l=>l[2]));
+  checks.endpoints_locked = lockedVals.has(1) && lockedVals.has(TOTAL);
+  // solution is a genuine 1..36 orthogonal Hamiltonian path
+  const cells = pathFromSolution(p.solution);
+  let connOk = true;
+  for(let i=1;i<cells.length;i++){
+    if(manhattan(cells[i-1],cells[i])!==1){ connOk=false; break; }
+  }
+  const seen = new Set(cells.map(c=>c[0]+","+c[1]));
+  checks.valid_hamiltonian_path = connOk && seen.size===TOTAL;
+  // sufficiently varied
+  const turns = turnCount(cells);
+  checks.sufficiently_varied = turns >= 14;
+  // no-guess solvable from locks alone
+  checks.solve_no_guess = solveNoGuess(p.locked).solved;
+  // exactly one completion
+  checks.unique_solution = countSolutions(p.locked, 2) === 1;
+  const pass = Object.values(checks).every(Boolean);
+  return { pass, checks, turns };
+}
+
+// ---------- Run the gate at load — a tampered/invalid Path must not render ----------
+const gate = validatePath(PUZZLE);
+if(!gate.pass){
+  document.body.innerHTML = '<div class="gate-fail"><b>Ship-gate check failed — this Path will not render.</b><br><br>'+
+    Object.entries(gate.checks).map(([k,v])=>k+": "+(v?"pass":"FAIL")).join("<br>")+'</div>';
+  throw new Error("Path failed ship gate");
+}
+
+// ---------- Player state (SHELL v2 — tap-only dual-head input, per typespec v4) ----------
+const state = {
+  cellValue: Array.from({length:N},()=>Array(N).fill(null)),  // null = empty
+  lowHead: 1, highHead: TOTAL,
+  lowCell: null, highCell: null,
+  activeEnd: "low",
+  history: [],
+  solved: false,
+  startTime: Date.now(),
+  timerHandle: null,
+  streak: 0
+};
+const lockedByValue = new Map(PUZZLE.locked.map(([r,c,v])=>[v,[r-1,c-1]]));
+for(const [r,c,v] of PUZZLE.locked) state.cellValue[r-1][c-1] = v;
+state.lowCell  = lockedByValue.get(1).slice();
+state.highCell = lockedByValue.get(TOTAL).slice();
+
+const gridEl = document.getElementById("grid");
+const linesEl = document.getElementById("lines");
+const msgEl = document.getElementById("msg");
+const timerEl = document.getElementById("timer");
+document.getElementById("pid").textContent = PUZZLE.id;
+document.getElementById("pband").textContent = PUZZLE.band;
+document.getElementById("modalsub").textContent = PUZZLE.id + " · " + PUZZLE.band.toUpperCase();
+document.getElementById("statTurns").textContent = gate.turns;
+
+const lockedSet = new Set(PUZZLE.locked.map(([r,c])=>`${r-1},${c-1}`));
+const oneKey  = state.lowCell[0]+","+state.lowCell[1];
+const endKeys = new Set([oneKey, state.highCell[0]+","+state.highCell[1]]);
+
+function setMsg(t){ msgEl.textContent = t; }
+function valueCellMap(){
+  const m = new Array(TOTAL+1).fill(null);
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    const v = state.cellValue[r][c];
+    if(v!==null) m[v]=[r,c];
+  }
+  return m;
+}
+
+// ---------- Grid ----------
+function buildGrid(){
+  gridEl.innerHTML="";
+  for(let r=0;r<N;r++){
+    for(let c=0;c<N;c++){
+      const cell=document.createElement("div");
+      cell.className="cell"+(lockedSet.has(r+","+c)?" locked":"");
+      cell.dataset.r=r; cell.dataset.c=c;
+      const num=document.createElement("span");
+      num.className="num";
+      cell.appendChild(num);
+      cell.addEventListener("click",()=>onTap(r,c));
+      gridEl.appendChild(cell);
+    }
+  }
+  paint();
+}
+
+function reject(r,c,text){
+  const cellEl = gridEl.children[r*N+c];
+  cellEl.classList.remove("shake");
+  void cellEl.offsetWidth;                 // restart the animation
+  cellEl.classList.add("shake");
+  setMsg(text);
+}
+
+// ---------- Tap-to-extend (the whole input model — no typing, per typespec v4) ----------
+function onTap(r,c){
+  if(state.solved) return;
+  const key = r+","+c;
+
+  // Selecting an end: only the 1-square and the 36-square are ever selectable.
+  if(endKeys.has(key)){
+    state.activeEnd = (key===oneKey) ? "low" : "high";
+    setMsg(state.activeEnd==="low"
+      ? "Counting up from 1 — tap an adjacent square to place "+(state.lowHead+1)+"."
+      : "Counting down from 36 — tap an adjacent square to place "+(state.highHead-1)+".");
+    paint();
+    return;
+  }
+
+  const low = state.activeEnd==="low";
+  const headCell = low ? state.lowCell : state.highCell;
+  const target   = low ? state.lowHead+1 : state.highHead-1;
+
+  if(manhattan([r,c], headCell)!==1){
+    reject(r,c,"Not next to the active end — the thread grows one square at a time.");
+    return;
+  }
+
+  const existing = state.cellValue[r][c];
+
+  if(existing!==null){
+    if(lockedSet.has(key) && existing===target){
+      // Pass-through arrival at a given checkpoint — nothing written, still a move.
+      state.history.push({end:state.activeEnd, prevHead:(low?state.lowHead:state.highHead),
+                          prevCell:headCell.slice(), newCell:[r,c], wasEmpty:false});
+      if(low){ state.lowHead=target; state.lowCell=[r,c]; }
+      else   { state.highHead=target; state.highCell=[r,c]; }
+      setMsg("Through the "+target+" checkpoint — keep going.");
+      paint(); checkWin();
+      return;
+    }
+    reject(r,c, lockedSet.has(key)
+      ? "That given is "+existing+", but the thread needs "+target+" next."
+      : "That square is already part of the thread.");
+    return;
+  }
+
+  // Empty square. If the target value is a given elsewhere, it can only go there.
+  if(lockedByValue.has(target)){
+    reject(r,c, target+" is already given elsewhere — the thread has to pass through it.");
+    return;
+  }
+  // The placed value must also sit next to its other neighbour, if that’s on the board.
+  const vmap = valueCellMap();
+  const other = low ? vmap[target+1] : vmap[target-1];
+  if(other && manhattan([r,c], other)!==1){
+    reject(r,c, "Placing "+target+" there would leave it stranded from "+(low?target+1:target-1)+".");
+    return;
+  }
+
+  state.cellValue[r][c] = target;
+  state.history.push({end:state.activeEnd, prevHead:(low?state.lowHead:state.highHead),
+                      prevCell:headCell.slice(), newCell:[r,c], wasEmpty:true});
+  if(low){ state.lowHead=target; state.lowCell=[r,c]; }
+  else   { state.highHead=target; state.highCell=[r,c]; }
+  setMsg("");
+  paint(); checkWin();
+}
+
+// ---------- Paint (guarded — never add an empty class token) ----------
+function paint(){
+  for(let r=0;r<N;r++){
+    for(let c=0;c<N;c++){
+      const cellEl = gridEl.children[r*N+c];
+      const numEl = cellEl.querySelector(".num");
+      const v = state.cellValue[r][c];
+      numEl.textContent = (v===null ? "" : v);
+      cellEl.classList.remove("active","endsel");
+      if(!state.solved){
+        const isActiveHead =
+          (state.activeEnd==="low"  && state.lowCell[0]===r  && state.lowCell[1]===c) ||
+          (state.activeEnd==="high" && state.highCell[0]===r && state.highCell[1]===c);
+        if(isActiveHead) cellEl.classList.add("active");
+        else if(endKeys.has(r+","+c)) cellEl.classList.add("endsel");
+      }
+    }
+  }
+  renderLines();
+}
+
+// ---------- The path draws itself as you go — two chains, meeting on the win ----------
+function cellCenter(r,c){
+  const size=600/N;
+  return [c*size+size/2, r*size+size/2];
+}
+function polyline(cells, stroke, width){
+  if(cells.length<2) return null;
+  const ns="http://www.w3.org/2000/svg";
+  const pl=document.createElementNS(ns,"polyline");
+  pl.setAttribute("points", cells.map(([r,c])=>cellCenter(r,c).join(",")).join(" "));
+  pl.setAttribute("fill","none");
+  pl.setAttribute("stroke",stroke);
+  pl.setAttribute("stroke-width",width);
+  pl.setAttribute("stroke-linecap","round");
+  pl.setAttribute("stroke-linejoin","round");
+  return pl;
+}
+function renderLines(){
+  linesEl.innerHTML="";
+  const vmap = valueCellMap();
+  if(state.solved){
+    const full=[]; for(let v=1;v<=TOTAL;v++) full.push(vmap[v]);
+    const pl=polyline(full,"#1F9E6B",6); if(pl) linesEl.appendChild(pl);
+    return;
+  }
+  const lowChain=[];  for(let v=1;v<=state.lowHead;v++)  if(vmap[v]) lowChain.push(vmap[v]);
+  const highChain=[]; for(let v=state.highHead;v<=TOTAL;v++) if(vmap[v]) highChain.push(vmap[v]);
+  const a=polyline(lowChain,"#2E5BFF",5);  if(a) linesEl.appendChild(a);
+  const b=polyline(highChain,"#1B3B9E",5); if(b) linesEl.appendChild(b);
+}
+
+// ---------- Undo ----------
+document.getElementById("undoBtn").addEventListener("click",()=>{
+  if(state.solved || state.history.length===0) return;
+  const m = state.history.pop();
+  if(m.wasEmpty) state.cellValue[m.newCell[0]][m.newCell[1]] = null;
+  if(m.end==="low"){ state.lowHead=m.prevHead; state.lowCell=m.prevCell; }
+  else             { state.highHead=m.prevHead; state.highCell=m.prevCell; }
+  state.activeEnd=m.end;
+  setMsg("Undone.");
+  paint();
+});
+
+// ---------- Hint — scoped to the two active ends, same bracket rule as the prover ----------
+document.getElementById("hintBtn").addEventListener("click",()=>{
+  if(state.solved) return;
+  const vmap = valueCellMap();
+  const known=[]; for(let v=1;v<=TOTAL;v++) if(vmap[v]) known.push(v);
+  function forcedFor(target){
+    let below=null, above=null;
+    for(let i=known.length-1;i>=0;i--){ if(known[i]<target){below=known[i];break;} }
+    for(let i=0;i<known.length;i++){ if(known[i]>target){above=known[i];break;} }
+    if(below===null||above===null) return null;
+    const aCell=vmap[below], bCell=vmap[above];
+    const da=target-below, db=above-target;
+    const cands=[];
+    for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+      if(state.cellValue[r][c]!==null) continue;
+      const dA=Math.abs(r-aCell[0])+Math.abs(c-aCell[1]);
+      const dB=Math.abs(r-bCell[0])+Math.abs(c-bCell[1]);
+      if(dA<=da && (da-dA)%2===0 && dB<=db && (db-dB)%2===0) cands.push([r,c]);
+    }
+    return cands.length===1 ? cands[0] : null;
+  }
+  const lowTarget=state.lowHead+1, highTarget=state.highHead-1;
+  let cell=null, end=null;
+  if(lowTarget<=highTarget){
+    cell=forcedFor(lowTarget);
+    if(cell) end="low";
+    else { cell=forcedFor(highTarget); if(cell) end="high"; }
+  }
+  if(!cell){ setMsg("Neither end’s next square is forced yet — trace what has to pass where."); return; }
+  state.activeEnd=end;
+  onTap(cell[0], cell[1]);
+});
+
+// ---------- Reset ----------
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  state.cellValue = Array.from({length:N},()=>Array(N).fill(null));
+  for(const [r,c,v] of PUZZLE.locked) state.cellValue[r-1][c-1]=v;
+  state.lowHead=1; state.highHead=TOTAL;
+  state.lowCell=lockedByValue.get(1).slice(); state.highCell=lockedByValue.get(TOTAL).slice();
+  state.activeEnd="low"; state.history=[]; state.solved=false;
+  state.startTime=Date.now();
+  clearInterval(state.timerHandle);
+  state.timerHandle=setInterval(tick,1000);
+  timerEl.textContent="0:00";
+  gridEl.classList.remove("celebrate");
+  setMsg("Reset. Tap the marigold square, then tap an adjacent square to place the next number.");
+  paint();
+});
+
+// ---------- Win ----------
+function checkWin(){
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    if(state.cellValue[r][c]===null) return;
+  }
+  // Belt and braces: the tap rules only ever build the one true thread,
+  // and the gate proved that thread unique — but verify anyway.
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    if(state.cellValue[r][c] !== PUZZLE.solution[r][c]) return;
+  }
+  state.solved=true;
+  clearInterval(state.timerHandle);
+  donePut(PUZZLE.id,{t:timerEl.textContent});
+  paint();                                 // clears the active-end highlight before the celebration
+  gridEl.classList.add("celebrate");
+  fireConfetti();
+  state.streak += 1;
+  document.getElementById("streakn").textContent = state.streak;
+  document.getElementById("statStreak").textContent = state.streak;
+  document.getElementById("statTime").textContent = timerEl.textContent;
+  setTimeout(()=>{ document.getElementById("modal").classList.add("on"); }, 900);
+}
+
+// ---------- Timer ----------
+function tick(){
+  if(state.solved) return;
+  const s = Math.floor((Date.now()-state.startTime)/1000);
+  const m = Math.floor(s/60), ss = String(s%60).padStart(2,"0");
+  timerEl.textContent = m+":"+ss;
+}
+state.timerHandle = setInterval(tick, 1000);
+
+// ---------- Confetti (simple canvas burst) ----------
+function fireConfetti(){
+  const canvas=document.getElementById("confetti");
+  canvas.classList.add("on");
+  const ctx=canvas.getContext("2d");
+  if(!ctx){ canvas.classList.remove("on"); return; }
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  const colors=["#2E5BFF","#FFD54A","#1F9E6B","#1B3B9E"];
+  const parts=Array.from({length:80},()=>({
+    x:canvas.width/2, y:canvas.height/2,
+    vx:(Math.random()-0.5)*14, vy:(Math.random()-1.4)*14,
+    g:0.4+Math.random()*0.3, size:4+Math.random()*4,
+    color:colors[Math.floor(Math.random()*colors.length)], life:60+Math.random()*30
+  }));
+  let frame=0;
+  function step(){
+    frame++;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    for(const p of parts){
+      if(p.life<=0) continue;
+      alive=true;
+      p.x+=p.vx; p.y+=p.vy; p.vy+=p.g; p.life--;
+      ctx.fillStyle=p.color;
+      ctx.fillRect(p.x,p.y,p.size,p.size);
+    }
+    if(alive && frame<140) requestAnimationFrame(step);
+    else { canvas.classList.remove("on"); ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  requestAnimationFrame(step);
+}
+
+document.getElementById("closeBtn").addEventListener("click",()=>{
+  document.getElementById("modal").classList.remove("on");
+});
+document.getElementById("shareBtn").addEventListener("click",()=>{
+  const text = "〰️ Path "+dnNum(PUZZLE.id)+" — "+dnTime(timerEl.textContent)+dnStreak(document.getElementById("statStreak").textContent);
+  if(navigator.share){ navigator.share({text}).catch(()=>{}); }
+  else { setMsg(text); document.getElementById("modal").classList.remove("on"); }
+});
+
+/* ---- digi-done-v1: a finished puzzle reopens finished (digi-path-v1 → done[id]) ---- */
+const DONE_KEY="digi-path-v1";
+function doneGet(id){try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");return (s&&s.v===1&&s.done&&s.done[id])||null;}catch(e){return null;}}
+function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=new Date().toISOString().slice(0,10);s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}doneShow();}
+let doneTried=false;
+/* ---- digi-done-share-v1: the day's saved result stays shareable after a revisit ---- */
+function doneId(){return PUZZLE.id;}
+function doneMMSS(s){s=Math.max(0,Math.min(359999,Math.floor(+s)||0));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+function doneUI(id){const e=document.getElementById(id);return (e&&e.textContent)||"0";}
+/* ---- digi-share-v2: one-line emoji share text ---- */
+function dnNum(id){const n=parseInt(String(id).split("·").pop(),10);return isNaN(n)?"":"#"+n;}
+function dnTime(t){return String(t||"").trim().replace(/^0+(\d)/,"$1");}
+function dnStreak(n){n=parseInt(String(n||"").replace(/\D/g,""),10)||0;return n>=2?" · 🔥"+n:"";}
+function doneText(rec){const t=(/^\d{1,4}:\d{2}$/.test(String(rec.t))?String(rec.t):null)||"0:00";return "〰️ Path "+dnNum(doneId())+" — "+dnTime(t)+dnStreak(doneUI("streakn"));}
+function doneCopy(txt,b){
+  const said=t=>{b.textContent=t;setTimeout(()=>{b.textContent="Share result";},1600);};
+  const fallback=()=>{try{const ta=document.createElement("textarea");ta.value=txt;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(ta);ta.select();const ok=document.execCommand&&document.execCommand("copy");document.body.removeChild(ta);said(ok?"Copied ✓":"Copy unavailable");}catch(e){said("Copy unavailable");}};
+  const coarse=!!(window.matchMedia&&window.matchMedia("(pointer:coarse)").matches);
+  if(coarse&&navigator.share){try{navigator.share({text:txt}).catch(e=>{if(!e||e.name!=="AbortError")fallback();});return;}catch(e){}}
+  try{navigator.clipboard.writeText(txt).then(()=>said("Copied ✓"),fallback);}catch(e){fallback();}
+}
+function doneShow(){
+  const id=doneId(); if(!doneGet(id))return;
+  try{document.documentElement.setAttribute("data-dn-done","");}catch(e){}
+  if(!document.getElementById("shareAgain")){
+    const host=document.querySelector(".controls"); if(!host)return;
+    const b=document.createElement("button"); b.type="button"; b.id="shareAgain"; b.className="primary"; b.textContent="Share result";
+    b.addEventListener("click",()=>{const r=doneGet(id); if(r)doneCopy(doneText(r),b);});
+    host.insertBefore(b,host.firstChild);
+  }
+  
+}
+function restoreDone(){
+  if(doneTried)return; doneTried=true;
+  const rec=doneGet(PUZZLE.id); if(!rec)return;
+  const t=(/^\d{1,4}:\d{2}$/.test(String(rec.t))?String(rec.t):null)||"0:00";
+  state.cellValue=PUZZLE.solution.map(row=>row.slice());
+  state.solved=true; state.history=[];
+  clearInterval(state.timerHandle);
+  timerEl.textContent=t; document.getElementById("statTime").textContent=t;
+  paint();
+  setMsg("Thread complete in "+t+".");
+}
+buildGrid();
+restoreDone();
+doneShow();
+})();

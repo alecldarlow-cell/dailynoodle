@@ -42,12 +42,44 @@ const ROOT = path.join(__dirname, '..');
 const REPORTS = path.join(ROOT, 'reports');
 const ENGINES = path.join(ROOT, 'engines');
 
+// Per type: which files, and how the page declares its puzzle data. Multi-line
+// objects end at the first "\n};" (inner lines are indented); single-line ones
+// are the whole line.
 const TYPES = {
   mini: {
     match: /^\d{4}-\d{2}-\d{2}-crossword-mini-\d+\.html$/,
-    // The puzzle's data object, as the page declares it.
     data: /\nconst SAMPLE=(\{[\s\S]*?\n\});\n/,
     dataDecl: '\nconst SAMPLE=window.DN_PUZZLE;\n',
+  },
+  doku: {
+    match: /^\d{4}-\d{2}-\d{2}-logic-doku-\d+\.html$/,
+    data: /\nconst SAMPLE = (\{[\s\S]*?\n\});\n/,
+    dataDecl: '\nconst SAMPLE = window.DN_PUZZLE;\n',
+  },
+  sweep: {
+    match: /^\d{4}-\d{2}-\d{2}-logic-sweep\.html$/,
+    data: /\nconst SAMPLE=(\{[\s\S]*?\n\});\n/,
+    dataDecl: '\nconst SAMPLE=window.DN_PUZZLE;\n',
+  },
+  link: {
+    match: /^\d{4}-\d{2}-\d{2}-word-link-\d+\.html$/,
+    data: /\nconst SAMPLE = (\{[\s\S]*?\n\});\n/,
+    dataDecl: '\nconst SAMPLE = window.DN_PUZZLE;\n',
+  },
+  path: {
+    match: /^\d{4}-\d{2}-\d{2}-logic-path-\d+\.html$/,
+    data: /\nconst PUZZLE = (\{[\s\S]*?\n\});\n/,
+    dataDecl: '\nconst PUZZLE = window.DN_PUZZLE;\n',
+  },
+  tangle: {
+    match: /^\d{4}-\d{2}-\d{2}-word-tangle-\d+\.html$/,
+    data: /\nconst PUZZLE=(\{[^\n]*\});\n/,
+    dataDecl: '\nconst PUZZLE=window.DN_PUZZLE;\n',
+  },
+  borders: {
+    match: /^\d{4}-\d{2}-\d{2}-geo-borders-\d+\.html$/,
+    data: /\nconst PUZZLE=(\{[^\n]*\});\n/,
+    dataDecl: '\nconst PUZZLE=window.DN_PUZZLE;\n',
   },
 };
 

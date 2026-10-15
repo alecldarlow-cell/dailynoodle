@@ -52,7 +52,7 @@ jobs:
       # Puzzles whose player matches a shared engine become thin pages that
       # load engines/<type>.js. Anything else is left self-contained.
       - name: Move new puzzles onto the shared engines
-        run: node tools/engine-shells.js mini || echo "::warning::engine-shells failed (see log)"
+        run: for t in mini doku sweep link path tangle borders; do node tools/engine-shells.js $t || echo "::warning::engine-shells $t failed (see log)"; done
 
       - name: Build feed.json
         run: node tools/build-feed.js

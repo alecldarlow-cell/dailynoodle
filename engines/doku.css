@@ -1,0 +1,196 @@
+/* Digi Puzzles — doku engine. One copy serves every doku page in reports/.
+   Extracted 2026-10-15 from 2028-08-15-logic-doku-0764.html by tools/engine-shells.js.
+   The page supplies its puzzle as window.DN_PUZZLE before loading this file.
+   Edit here to change every doku; keep element ids and localStorage keys
+   stable (dn-track.js and players' saved progress depend on them). */
+
+/* ---------- Digi Puzzles house style ----------
+   Cobalt + marigold on cool paper. Mono for the machinery (wordmark,
+   grid numbers, IDs), Space Grotesk for clues & UI. One bold move: the
+   marigold active cell. Everything else stays quiet. */
+:root{
+  --paper:#EDEEF2; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
+  --line:#141726; --brand:#2E5BFF; --brand-deep:#1B3B9E;
+  --active:#FFD54A; --active-word:#FFF0B8; --good:#1F9E6B; --bad:#E4483B;
+  --block:#141726; --radius:14px;
+  --mono:"Space Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Space Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+  line-height:1.45;-webkit-font-smoothing:antialiased;padding:18px;display:flex;justify-content:center}
+.app{width:100%;max-width:560px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:2px solid var(--ink);padding-bottom:11px}
+.masthead{display:flex;align-items:center;gap:10px}
+.mono-mark{flex:0 0 auto;width:32px;height:32px;border-radius:7px;background:var(--brand);color:#fff;
+  font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.04em;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18),0 1.5px 0 var(--brand-deep)}
+.mh-text{display:flex;flex-direction:column;line-height:1.05}
+.mh-name{font-family:var(--sans);font-size:20px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.mh-name .accent{color:var(--brand)}
+.mh-eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px}
+.streakbox{font-family:var(--mono);font-size:13px;color:var(--ink-soft);background:var(--card);border:1.5px solid var(--ink);border-radius:999px;padding:4px 12px}
+.streakbox b{color:var(--ink)}
+.meta{font-family:var(--mono);font-size:12px;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.tag{background:var(--brand);color:#fff;border-radius:5px;padding:1px 7px;text-transform:uppercase;font-weight:700;font-size:11px}
+#timer{margin-left:auto;color:var(--ink);font-weight:700}
+main{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px}
+/* grid */
+.grid{--n:5;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:0;width:min(100%,320px);aspect-ratio:1;
+  border:3px solid var(--line);background:var(--line);border-radius:10px;overflow:hidden}
+.cell{position:relative;min-width:0;min-height:0;background:var(--card);border:1px solid #cfd3dc;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none}
+.cell.block{background:var(--block);cursor:default;border-color:var(--block)}
+.cell .num{position:absolute;top:2px;left:4px;font-family:var(--mono);font-size:10px;color:var(--ink-soft);line-height:1}
+.cell .ltr{font-family:var(--sans);font-weight:700;font-size:min(6vw,26px);text-transform:uppercase}
+.cell.inword{background:var(--active-word)}
+.cell.active{background:var(--active)}
+.cell.good .ltr{color:var(--good)}
+.cell.bad .ltr{color:var(--bad)}
+.cell.bad::after{content:"";position:absolute;top:3px;right:3px;width:6px;height:6px;background:var(--bad);border-radius:50%}
+/* active-clue nav bar */
+.cluebox{display:flex;align-items:stretch;gap:8px;width:min(100%,340px)}
+.cluearrow{flex:0 0 auto;width:44px;font-family:var(--mono);font-weight:700;font-size:22px;line-height:1;
+  display:flex;align-items:center;justify-content:center;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:10px;cursor:pointer}
+.cluearrow:hover{background:#e3e6ee}
+.cluearrow:active{background:var(--active-word)}
+.cluebar{flex:1;display:flex;align-items:center;font-family:var(--sans);font-size:15px;padding:8px 14px;
+  background:var(--card);border:1.5px solid var(--ink);border-radius:10px;min-height:48px;cursor:pointer}
+.cluebar b{font-family:var(--mono);color:var(--brand);margin-right:8px;white-space:nowrap}
+.alltoggle{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);
+  background:none;border:0;border-radius:8px;padding:5px 10px;cursor:pointer}
+.alltoggle:hover{color:var(--ink);background:#e3e6ee}
+/* off-screen input that summons the device keyboard */
+.hiddeninput{position:absolute;top:0;left:50%;width:1px;height:1px;opacity:0;pointer-events:none;border:0;padding:0;margin:0;font-size:16px}
+/* clue lists (collapsed by default) */
+.clues{width:min(100%,340px)}
+.clues section{margin-bottom:14px}
+.clues h3{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 6px}
+.clue{display:flex;gap:8px;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:5px 8px;font-family:var(--sans);font-size:14px;color:var(--ink);cursor:pointer}
+.clue b{font-family:var(--mono);color:var(--ink-soft);min-width:18px}
+.clue:hover{background:#e3e6ee}
+.clue.sel{background:var(--active-word)}
+.clue.sel b{color:var(--brand-deep)}
+/* controls */
+.msg{min-height:22px;margin:14px 0 6px;font-size:15px;color:var(--brand-deep)}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+button,select{font-family:var(--sans);font-size:13px;font-weight:500;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:9px;padding:8px 12px;cursor:pointer}
+button:hover{background:#e3e6ee}
+button.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+button.primary:hover{background:var(--brand-deep)}
+.spacer{flex:1}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+/* on-screen keyboard */
+.kb{display:none;flex-direction:column;gap:6px;margin-top:4px;width:min(100%,340px)}
+.kb.show{display:flex}
+.kbrow{display:flex;gap:5px;justify-content:center}
+.key{flex:1;max-width:38px;height:46px;padding:0;font-family:var(--mono);font-weight:700;font-size:15px;border-radius:8px}
+.key.wide{max-width:56px}
+/* win celebration */
+.grid.celebrate .cell:not(.block){animation:cellwin .6s ease both}
+@keyframes cellwin{0%{transform:scale(1)}35%{transform:scale(1.14);background:var(--active)}70%{background:var(--active-word)}100%{transform:scale(1)}}
+.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60;display:none}
+.confetti.on{display:block}
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:20px;
+  background:rgba(20,23,38,.42);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.modal.on{display:flex}
+.modalcard{width:100%;max-width:340px;background:var(--card);border:2px solid var(--ink);border-radius:16px;
+  padding:22px 20px 18px;text-align:center;box-shadow:0 10px 0 var(--brand-deep),0 26px 44px rgba(20,23,38,.30);
+  animation:rise .48s cubic-bezier(.2,.9,.25,1.12)}
+@keyframes rise{from{transform:translateY(20px) scale(.95);opacity:0}to{transform:none;opacity:1}}
+.modalcard .check{width:54px;height:54px;border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:30px;line-height:1;box-shadow:0 4px 0 #157a52}
+.modalcard h2{font-family:var(--sans);font-size:25px;margin:0 0 3px;color:var(--ink);letter-spacing:-.01em}
+.modalcard .sub{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:15px}
+.statrow{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+.stat{flex:1;max-width:100px;background:var(--paper);border:1.5px solid var(--ink);border-radius:11px;padding:9px 6px}
+.stat b{display:block;font-family:var(--mono);font-size:21px;color:var(--ink);line-height:1.15}
+.stat span{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.modalbtns{display:flex;gap:8px}
+.modalbtns button{flex:1;margin:0}
+@media(prefers-reduced-motion:reduce){.grid.celebrate .cell:not(.block){animation:none}.modalcard{animation:none}}
+footer{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.05em;margin-top:6px;text-align:center}
+.gridwrap{display:contents}
+
+/* ---------- APP MODE ----------------------------------------------------
+   On touch devices we lock the whole game into one viewport-tall column so
+   the clue, the board and the keyboard are all visible at once — no scroll.
+   Height uses svh (the viewport height WHILE the browser bar is showing), so
+   it fits whether or not the address bar is present, and never jumps. The
+   board flexes to fill whatever height is left after the fixed chrome. */
+html.app-mode,html.app-mode body{height:100%;overflow:hidden;overscroll-behavior:none}
+html.app-mode body{padding:0;display:block}
+html.app-mode .app{
+  height:100vh;height:100dvh;height:100svh;   /* last supported wins → svh */
+  max-width:520px;margin:0 auto;
+  display:flex;flex-direction:column;
+  padding:calc(6px + env(safe-area-inset-top)) 12px calc(6px + env(safe-area-inset-bottom));
+}
+html.app-mode header{margin-bottom:8px;padding-bottom:8px}
+html.app-mode .mono-mark{width:28px;height:28px;font-size:12px}
+html.app-mode .mh-name{font-size:17px}
+html.app-mode .streakbox{font-size:12px;padding:3px 10px}
+html.app-mode .meta{margin-bottom:8px;font-size:11px}
+
+html.app-mode main{flex:1 1 auto;min-height:0;width:100%;gap:8px;justify-content:flex-start}
+html.app-mode .cluebox{order:1;width:100%;max-width:none}
+html.app-mode .cluebar{min-height:44px;font-size:15px}
+html.app-mode .cluearrow{width:42px;font-size:20px}
+html.app-mode .gridwrap{order:2;display:flex;flex:1 1 auto;min-height:0;width:100%;
+  align-items:center;justify-content:center}
+html.app-mode .grid{width:var(--side,320px);height:var(--side,320px);max-width:100%}
+html.app-mode .cell .ltr{font-size:calc(var(--cell,60px)*.46)}
+html.app-mode .cell .num{font-size:calc(var(--cell,60px)*.2)}
+/* the full clue list + footer don't earn their vertical space on a phone;
+   prev/next already walk every clue */
+html.app-mode #toggleClues,html.app-mode #cluesWrap,html.app-mode footer{display:none}
+
+html.app-mode .msg{order:4;min-height:0;margin:4px 0 0;font-size:12px;text-align:center;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* controls collapse to a single quiet, swipeable strip */
+html.app-mode .controls{order:5;flex-wrap:nowrap;overflow-x:auto;gap:6px;margin:6px 0 0;padding:1px 0;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+html.app-mode .controls::-webkit-scrollbar{display:none}
+html.app-mode .controls button,html.app-mode .controls select{flex:0 0 auto;
+  padding:6px 10px;font-size:12px;white-space:nowrap}
+html.app-mode .controls .spacer{display:none}
+
+/* keyboard is part of the layout, pinned at the foot */
+html.app-mode .kb{order:6;flex:0 0 auto;width:100%;max-width:none;margin-top:8px}
+html.app-mode .kb.show{display:flex}
+html.app-mode .key{max-width:none;height:clamp(40px,6.2svh,52px);font-size:16px}
+html.app-mode .key.wide{max-width:64px}
+
+/* very short viewports (small phones, landscape): tighten further */
+@media (max-height:660px){
+  html.app-mode header{margin-bottom:5px;padding-bottom:5px}
+  html.app-mode .mh-eyebrow{display:none}
+  html.app-mode .meta{margin-bottom:5px}
+  html.app-mode .kb{margin-top:5px}
+  html.app-mode .key{height:clamp(34px,5.6svh,46px)}
+}
+
+/* ---------- The Digi Doku: bank + placement layer (additive) ---------- */
+.cell.locked{background:#dfe3ec;cursor:default}
+.cell.locked .ltr{color:var(--ink-soft)}
+.cell.placed .ltr{color:var(--ink)}
+.cell.good .ltr{color:var(--good)}      /* wins over the locked/placed colours above */
+.cell.shake{animation:shake .3s ease}
+@keyframes shake{10%,90%{transform:translateX(-1.5px)}30%,70%{transform:translateX(3px)}50%{transform:translateX(-3px)}}
+.bankwrap{display:flex;flex-direction:column;align-items:center;gap:7px;width:min(100%,340px)}
+.banklabel{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.bank{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%;min-height:46px;
+  padding:8px;background:var(--card);border:1.5px dashed #b9bfcf;border-radius:12px}
+.tile{width:38px;height:42px;padding:0;font-family:var(--sans);font-weight:700;font-size:18px;text-transform:uppercase;
+  border:1.5px solid var(--ink);background:var(--card);border-radius:8px;cursor:pointer;line-height:1}
+.tile:hover{background:#e3e6ee}
+.tile.sel{background:var(--active);border-color:var(--ink);box-shadow:0 2px 0 var(--ink)}
+.bank.empty::after{content:"bank empty";font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink-soft);align-self:center}
+.gate{width:min(100%,340px);background:#fff;border:2px solid var(--bad);border-radius:12px;padding:14px 16px;
+  font-size:14px;color:var(--ink)}
+.gate b{font-family:var(--mono);color:var(--bad);display:block;margin-bottom:5px;letter-spacing:.08em;text-transform:uppercase;font-size:11px}
+html.app-mode .bankwrap{order:3;flex:0 0 auto;width:100%;max-width:none;margin-top:6px;gap:5px}
+html.app-mode .banklabel{display:none}
+html.app-mode .tile{width:clamp(30px,8.4vw,38px);height:clamp(36px,5.6svh,44px);font-size:16px}
+html.app-mode .bank{padding:6px;gap:5px;min-height:0}
+@media (max-height:660px){html.app-mode .tile{height:clamp(30px,5svh,40px);font-size:15px}}

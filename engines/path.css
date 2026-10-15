@@ -1,0 +1,80 @@
+/* Digi Puzzles — path engine. One copy serves every path page in reports/.
+   Extracted 2026-10-15 from 2028-08-18-logic-path-0762.html by tools/engine-shells.js.
+   The page supplies its puzzle as window.DN_PUZZLE before loading this file.
+   Edit here to change every path; keep element ids and localStorage keys
+   stable (dn-track.js and players' saved progress depend on them). */
+
+:root{
+  --paper:#EDEEF2; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
+  --line:#141726; --brand:#2E5BFF; --brand-deep:#1B3B9E;
+  --active:#FFD54A; --active-word:#FFF0B8; --good:#1F9E6B; --bad:#E4483B;
+  --radius:14px;
+  --mono:"Space Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Space Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.45;
+  -webkit-font-smoothing:antialiased;padding:18px;display:flex;justify-content:center}
+.app{width:100%;max-width:560px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:2px solid var(--ink);padding-bottom:11px}
+.masthead{display:flex;align-items:center;gap:10px}
+.mono-mark{flex:0 0 auto;width:32px;height:32px;border-radius:7px;background:var(--brand);color:#fff;
+  font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.04em;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18),0 1.5px 0 var(--brand-deep)}
+.mh-text{display:flex;flex-direction:column;line-height:1.05}
+.mh-name{font-family:var(--sans);font-size:20px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.mh-name .accent{color:var(--brand)}
+.mh-eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px}
+.streakbox{font-family:var(--mono);font-size:13px;color:var(--ink-soft);background:var(--card);border:1.5px solid var(--ink);border-radius:999px;padding:4px 12px}
+.streakbox b{color:var(--ink)}
+.meta{font-family:var(--mono);font-size:12px;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.tag{background:var(--brand);color:#fff;border-radius:5px;padding:1px 7px;text-transform:uppercase;font-weight:700;font-size:11px}
+#timer{margin-left:auto;color:var(--ink);font-weight:700}
+main{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px}
+.gridouter{position:relative;width:min(100%,340px);aspect-ratio:1}
+.grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(6,1fr);gap:0;
+  border:3px solid var(--line);background:var(--line);border-radius:10px;overflow:hidden}
+svg.pathlines{position:absolute;inset:0;pointer-events:none;z-index:5}
+.cell{position:relative;min-width:0;min-height:0;background:var(--card);border:1px solid #cfd3dc;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;
+  -webkit-user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.cell .num{font-family:var(--mono);font-weight:700;font-size:min(5.6vw,22px)}
+.cell.locked{background:#e3e6ee}
+.cell.locked .num{color:var(--ink-soft)}
+.cell.active{background:var(--active)}
+.cell.good .num{color:var(--good)}
+.cell.endsel{box-shadow:inset 0 0 0 2px var(--active)}
+.cell.shake{animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.msg{min-height:22px;margin:2px 0 0;font-size:14px;color:var(--brand-deep);text-align:center}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin-bottom:4px}
+button,select{font-family:var(--sans);font-size:13px;font-weight:500;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);border-radius:9px;padding:8px 12px;cursor:pointer}
+button:hover{background:#e3e6ee}
+button.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+button.primary:hover{background:var(--brand-deep)}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.grid.celebrate .cell:not(.locked){animation:cellwin .6s ease both}
+@keyframes cellwin{0%{transform:scale(1)}35%{transform:scale(1.14);background:var(--active)}70%{background:var(--active-word)}100%{transform:scale(1)}}
+.confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60;display:none}
+.confetti.on{display:block}
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:20px;
+  background:rgba(20,23,38,.42);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.modal.on{display:flex}
+.modalcard{width:100%;max-width:340px;background:var(--card);border:2px solid var(--ink);border-radius:16px;
+  padding:22px 20px 18px;text-align:center;box-shadow:0 10px 0 var(--brand-deep),0 26px 44px rgba(20,23,38,.30);
+  animation:rise .48s cubic-bezier(.2,.9,.25,1.12)}
+@keyframes rise{from{transform:translateY(20px) scale(.95);opacity:0}to{transform:none;opacity:1}}
+.modalcard .check{width:54px;height:54px;border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:30px;line-height:1;box-shadow:0 4px 0 #157a52}
+.modalcard h2{font-family:var(--sans);font-size:25px;margin:0 0 3px;color:var(--ink);letter-spacing:-.01em}
+.modalcard .sub{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:15px}
+.statrow{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+.stat{flex:1;max-width:100px;background:var(--paper);border:1.5px solid var(--ink);border-radius:11px;padding:9px 6px}
+.stat b{display:block;font-family:var(--mono);font-size:21px;color:var(--ink);line-height:1.15}
+.stat span{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.modalbtns{display:flex;gap:8px}
+.modalbtns button{flex:1;margin:0}
+@media(prefers-reduced-motion:reduce){.grid.celebrate .cell:not(.locked){animation:none}.modalcard{animation:none}}
+footer{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.05em;margin-top:6px;text-align:center}
+.gate-fail{max-width:560px;margin:40px auto;font-family:var(--mono);background:#fff;border:2px solid var(--bad);border-radius:12px;padding:20px}
