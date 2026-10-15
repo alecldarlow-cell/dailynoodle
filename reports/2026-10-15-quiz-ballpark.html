@@ -18,7 +18,7 @@
 <style>
 :root{
   --bg:#F5EFE4; --paper:#FFFCF6; --ink:#1E2433; --ink2:#5E5B55; --line:#E4DACA; --rule:#CBBDA6;
-  --tom:#E0533B; --pk:#2F8A5B;
+  --tom:#E0533B; --pk:#2D8457;
   --z0:#1E9E6A; --z1:#86BD4B; --z2:#F0B43C; --z3:#F08C50; --zm:#B1A99C;
   --f:"Bricolage Grotesque","Segoe UI",Roboto,system-ui,sans-serif;
 }
@@ -255,12 +255,12 @@ a{color:inherit}
   <div class="pips" id="pips" aria-hidden="true"></div>
   <div class="mid">
    <div class="qcard"><p class="q" id="q"></p></div>
-   <div class="fb" id="fb" hidden>
+   <div class="fb" id="fb" role="status" aria-live="polite" hidden>
     <div class="fbv"><b id="fbV"></b><span id="fbP"></span></div>
     <div class="fbl" id="fbL"></div>
     <p class="fbn" id="fbN"></p>
    </div>
-   <div class="read" id="read" aria-live="polite">
+   <div class="read" id="read">
     <div class="rc"><span class="rl"><i class="dg"></i>Your guess</span><span class="rw"><span class="rv" id="rv"></span><span class="ru" id="ru"></span></span></div>
     <div class="rc" id="ansC" hidden><span class="rl"><i class="da"></i>Answer</span><span class="rw"><span class="rv" id="av"></span><span class="ru" id="au"></span></span></div>
    </div>
@@ -314,7 +314,7 @@ a{color:inherit}
 /* ---------- facts ----------
    [question, unit, answer, note, flags]   flags: 1 = easy opener, 2 = whole number                          */
 const PACKS=[
-{k:'earth',name:'Earth',sub:'Mountains, rivers and seas',c:'#2F8A5B',ic:'<path d="M1 21 9 6l4 7 3-4 7 12z"/>',q:[
+{k:'earth',name:'Earth',sub:'Mountains, rivers and seas',c:'#2D8457',ic:'<path d="M1 21 9 6l4 7 3-4 7 12z"/>',q:[
 ['How tall is Mount Everest, in metres?','m',8849,'8,849 m: the height China and Nepal agreed after surveying it in 2020.',1],
 ['How long is the River Nile, in kilometres?','km',6650,'About 6,650 km. Its exact length is still argued over, because its source and mouth are hard to pin down.',0],
 ['How deep is the Challenger Deep, the lowest point in the ocean, in metres?','m',10935,'About 10,935 m below the surface. Surveys differ by a few tens of metres.',0],
@@ -396,7 +396,7 @@ const PACKS=[
 ['How close did Mars come to the Earth in 2003, in kilometres?','km',5.58e7,'About 55.8 million km, the closest in nearly 60,000 years.',0],
 ['How many kilometres are there in a light year?','km',9.46e12,'About 9.46 trillion km.',0],
 ['How hot is the surface of the Sun, in °C?','°C',5500,'About 5,500 °C.',0]]},
-{k:'places',name:'Places',sub:'People and places, dated',c:'#C9582F',ic:'<path d="M2 22V12h4V6h5v16h2V9h4v4h5v9z"/>',q:[
+{k:'places',name:'Places',sub:'People and places, dated',c:'#BF542D',ic:'<path d="M2 22V12h4V6h5v16h2V9h4v4h5v9z"/>',q:[
 ['How many people lived in London at the 2021 census?','',8799800,'About 8.8 million (8,799,800).',3],
 ['How many people lived in New York City at the 2020 census?','',8804190,'8,804,190, almost exactly the same as London a year later.',2],
 ['How many people were alive in the world at the end of 2022?','',8e9,'About 8 billion. The UN marked the milestone on 15 November 2022.',3],
@@ -473,7 +473,7 @@ const PACKS=[
 ['How many tiny air sacs (alveoli) are in a pair of adult lungs?','',4.8e8,'Around 480 million.',2],
 ['How many bones are in one human foot, ankle included?','',26,'26.',2],
 ['How much blood does a resting heart pump in a minute, in litres?','litres',5,'About 5 litres: all of your blood, roughly once a minute.',0],
-['How much blood does the heart pump in a day, in litres?','litres',7200,'About 7,000 litres.',0],
+['How much blood does the heart pump in a day, in litres?','litres',7200,'About 7,200 litres: 5 litres a minute, all day.',0],
 ['How much does a newborn baby weigh on average in the UK, in grams?','g',3350,'About 3.3 to 3.4 kg.',0],
 ['What percentage of the body’s energy does the brain use?','%',20,'About 20%, though it’s about 2% of body weight.',0],
 ['How many bones are in the human neck?','',7,'7, the same number as a giraffe.',2],
@@ -519,7 +519,7 @@ const PACKS=[
 ['How long is the Panama Canal, in kilometres?','km',82,'About 82 km.',0],
 ['How tall is Nelson’s Column, in metres?','m',52,'About 52 m including the statue.',0],
 ['How tall is the tallest pylon of the Millau Viaduct in France, in metres?','m',343,'343 m, taller than the Eiffel Tower.',0]]},
-{k:'animals',name:'Animals',sub:'Bigger, faster, longer',c:'#B9800F',ic:'<circle cx="5.5" cy="10" r="2.3"/><circle cx="9.5" cy="5.5" r="2.3"/><circle cx="14.5" cy="5.5" r="2.3"/><circle cx="18.5" cy="10" r="2.3"/><path d="M12 11c-4 0-7 5.5-6 8 1 2 3.5 1 6 1s5 1 6-1c1-2.5-2-8-6-8z"/>',q:[
+{k:'animals',name:'Animals',sub:'Bigger, faster, longer',c:'#9B6C0D',ic:'<circle cx="5.5" cy="10" r="2.3"/><circle cx="9.5" cy="5.5" r="2.3"/><circle cx="14.5" cy="5.5" r="2.3"/><circle cx="18.5" cy="10" r="2.3"/><path d="M12 11c-4 0-7 5.5-6 8 1 2 3.5 1 6 1s5 1 6-1c1-2.5-2-8-6-8z"/>',q:[
 ['How long can a blue whale grow, in metres?','m',30,'Up to about 30 m, the largest animal known to have lived.',1],
 ['How fast can a cheetah run, in km per hour?','km/h',105,'Around 100 to 110 km/h, but only in short bursts.',1],
 ['How much does an adult male African elephant weigh, in kilograms?','kg',6000,'Around 6,000 kg, sometimes more.',0],
@@ -561,7 +561,7 @@ const PACKS=[
 ['How much does an adult pet cat typically weigh, in kilograms?','kg',4.5,'About 4.5 kg.',1],
 ['How much does a newborn African elephant weigh, in kilograms?','kg',100,'About 100 kg.',0]]}
 ];
-const TOUR={k:'tour',name:'Grand Tour',sub:'Ten from every pack',c:'#1E2433',ic:'<path d="M12 1.5l2.6 7.9 7.9 2.6-7.9 2.6-2.6 7.9-2.6-7.9L1.5 12l7.9-2.6z"/>'};
+const TOUR={k:'tour',name:'Grand Tour',sub:'Ten from all six packs',c:'#1E2433',ic:'<path d="M12 1.5l2.6 7.9 7.9 2.6-7.9 2.6-2.6 7.9-2.6-7.9L1.5 12l7.9-2.6z"/>'};
 const ALLP=PACKS.concat([TOUR]);
 const NQ=10, CLEAR=400, S2=525, S3=625;
 const BAND=[1.1,1.25,1.5,3], PTS=[100,75,50,25,0], ZN=['Bullseye','Close','Ballpark','In range','Miss'];
@@ -672,7 +672,7 @@ function renderHome(){
       '<span class="pst">'+(i<6?'Clear '+ALLP[i-1].name+' to open':'Clear all six to open')+'</span></div>';
     return '<button class="pack'+wide+(i===nu?' now':'')+'" data-act="pack" data-p="'+i+'" style="--pk:'+p.c+'"><span class="pic">'+icon(p)+'</span>'+
       '<span class="pn">'+p.name+'</span><span class="ps">'+p.sub+'</span>'+
-      '<span class="pst">'+(s&&s.n?starRow(stars(b))+' best '+b:'New')+'</span></button>'}).join('');
+      '<span class="pst">'+(cur&&cur.p===i?'In progress · '+(cur.i+1)+' of '+NQ:s&&s.n?starRow(stars(b))+' best '+b:'New')+'</span></button>'}).join('');
   renderTogs()}
 
 function renderTogs(){
@@ -732,7 +732,8 @@ function nearest(lv){let a=0,b=LOGS.length-1;while(b-a>1){const m=(a+b)>>1;if(LO
 function posOf(v){return Math.max(0,Math.min(100,(L10(v)-R.lo[R.i])/SPAN*100))}
 function setIdx(i,quiet){i=Math.max(0,Math.min(LAD.length-1,i));const ch=i!==CI;CI=i;R.cur=LAD[i];
   $('th').style.left=posOf(LAD[i])+'%';$('rv').textContent=fmt(LAD[i]);
-  $('slz').setAttribute('aria-valuetext',withU(fmt(LAD[i]),F.u));if(ch&&!quiet)SND.tick()}
+  const sl=$('slz');sl.setAttribute('aria-valuemin','0');sl.setAttribute('aria-valuemax',String(LAD.length-1));sl.setAttribute('aria-valuenow',String(i));
+  sl.setAttribute('aria-valuetext',withU(fmt(LAD[i]),F.u));if(ch&&!quiet)SND.tick()}
 function actLabel(t,nx){const b=$('act');b.textContent=t;b.classList.toggle('nx',nx)}
 
 function renderMeter(){const s=score();$('sc').textContent=s;$('mf').style.width=(s/10)+'%';
@@ -816,7 +817,8 @@ function fromX(cx){const r=$('trk').getBoundingClientRect();const fr=Math.max(0,
 slz.addEventListener('pointerdown',e=>{if(!R||R.ph!=='g'||paused)return;first();dragging=true;slz.classList.add('drag');
   try{slz.setPointerCapture(e.pointerId)}catch(_){}setIdx(fromX(e.clientX));e.preventDefault()});
 slz.addEventListener('pointermove',e=>{if(!dragging)return;setIdx(fromX(e.clientX))});
-const endDrag=()=>{if(!dragging)return;dragging=false;slz.classList.remove('drag');store()};
+// a touch pointerdown doesn't unlock audio on Android; the pointerup that ends the first drag does
+const endDrag=()=>{if(!dragging)return;dragging=false;slz.classList.remove('drag');ac();store()};
 slz.addEventListener('pointerup',endDrag);slz.addEventListener('pointercancel',endDrag);slz.addEventListener('lostpointercapture',endDrag);
 
 /* nudge buttons: tap for one step, hold to run */
@@ -839,7 +841,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
   if(a==='minus'||a==='plus'){if(held){held=false;return}step(a==='plus'?1:-1);return}
   if(a==='act'){if(!R)return;if(R.ph==='g')lockIn();else if(performance.now()-lockedAt>450)nextQ();return}
   if(a==='play'){goFS();if(save.cur&&save.cur.ids)resumeRound();else startRound(nextUp(),'new');return}
-  if(a==='pack'){goFS();startRound(+b.dataset.p,'new');return}
+  if(a==='pack'){goFS();if(save.cur&&save.cur.ids&&save.cur.p===+b.dataset.p)resumeRound();else startRound(+b.dataset.p,'new');return}
   if(a==='again'){goFS();startRound(lastEnd?lastEnd.p:0,'retry');return}
   if(a==='next'){goFS();startRound(+b.dataset.p,'new');return}
   if(a==='pause'){pause(true);return}
@@ -880,6 +882,5 @@ applyRM();
 show('home');
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
