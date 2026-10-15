@@ -78,6 +78,10 @@ a{color:inherit}
 .bands i{display:block;width:14px;height:14px;border-radius:4px}
 .bands b{text-align:right}
 .card p{margin:10px 0 0;font-size:14px;color:var(--ink2)}
+.srow{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:6px;margin-top:12px}
+.srow span{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;border-radius:10px;background:var(--bg);font-weight:800;font-size:15px;text-align:center}
+.srow b{color:#D99A16;font-weight:inherit;letter-spacing:1px}
+.srow small{font-size:11px;font-weight:600;color:var(--ink2)}
 .togs{display:flex;flex-wrap:wrap;gap:8px}
 .tog{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 12px 0 14px;border-radius:22px;border:1.5px solid var(--line);
   background:var(--paper);font-weight:600;font-size:15px}
@@ -105,12 +109,24 @@ a{color:inherit}
 .pips{display:flex;gap:4px}
 .pips span{flex:1;height:6px;border-radius:3px;background:var(--line)}
 .pips span.cur{background:var(--ink2)}
-.mid{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.mid{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-bottom:4px}
 .qcard{background:var(--paper);border:1.5px solid var(--ink);border-radius:16px;padding:14px 16px;box-shadow:0 3px 0 var(--ink)}
-.q{margin:0;font-size:21px;line-height:1.25;font-weight:700;text-wrap:balance}
-.read{display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap;text-align:center;margin-bottom:-6px}
-.rv{font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.q{margin:0;font-size:clamp(20px,2.6vh,25px);line-height:1.25;font-weight:700;text-wrap:balance}
+.read{margin:auto 0;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding-top:8px}
+.rc{display:flex;flex-direction:column;align-items:center}
+.rl{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
+.rl i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.rl .dg{background:var(--tom);box-shadow:0 0 0 1.5px var(--ink)}
+.rl .da{background:var(--ink)}
+.rw{display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap}
+.rv{font-size:clamp(44px,7vh,64px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
 .ru{font-size:20px;font-weight:700;color:var(--ink2)}
+.read.two{flex-direction:row;justify-content:center;gap:10px;width:100%}
+.read.two .rc{flex:1;min-width:0;padding:8px 6px;border-radius:14px;background:var(--paper);border:1.5px solid var(--line)}
+.read.two .rv{font-size:clamp(24px,4.4vh,38px)}
+.read.two .ru{font-size:15px}
+.read.two #ansC .rv{color:var(--ink)}
+.read.two .rc:first-child .rv{color:#B8402B}
 .fb{border-radius:16px;padding:12px 14px;background:var(--paper);border:1.5px solid var(--line);animation:up .25s ease-out}
 .fbv{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .fbv b{font-size:22px;font-weight:800}
@@ -139,6 +155,7 @@ a{color:inherit}
 .tip{position:relative;align-self:center;max-width:300px;padding:10px 14px;border-radius:12px;background:var(--ink);color:var(--paper);font-size:15px;font-weight:600;text-align:center}
 .tip::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-7px;border:7px solid transparent;border-bottom:0;border-top-color:var(--ink)}
 .ctl{display:grid;grid-template-columns:60px 1fr 60px;gap:10px}
+.ctl.rev{grid-template-columns:1fr}.ctl.rev .nb{display:none}
 .nb{display:flex;align-items:center;justify-content:center;min-height:56px;border-radius:14px;border:1.5px solid var(--ink);background:var(--paper);box-shadow:0 3px 0 var(--ink);font-size:30px;font-weight:700;line-height:1}
 .nb:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
 .nb[disabled]{opacity:.3;pointer-events:none}
@@ -207,7 +224,8 @@ a{color:inherit}
     <i style="background:var(--z3)"></i><span>Within 3× either way</span><b>25</b>
     <i style="background:var(--zm)"></i><span>Further out</span><b>0</b>
    </div>
-   <p>Ten questions a round from a pack of 40, 1,000 points to play for. Score <b>400</b> to clear a pack and open the next: <span class="st"><b>★</b></span> 400, <span class="st"><b>★★</b></span> 525, <span class="st"><b>★★★</b></span> 625.</p>
+   <div class="srow"><span><b>★</b> 400<small>clears the pack</small></span><span><b>★★</b> 525</span><span><b>★★★</b> 625</span></div>
+   <p>Ten questions a round from a pack of 40, with 1,000 points to play for. Clearing a pack opens the next.</p>
    <p>The scale is logarithmic: each big mark is ten times the last, so a drag can cover anything from a few to a few billion.</p>
   </div>
   <div class="togs" data-togs></div>
@@ -233,14 +251,17 @@ a{color:inherit}
     <div class="fbl" id="fbL"></div>
     <p class="fbn" id="fbN"></p>
    </div>
+   <div class="read" id="read" aria-live="polite">
+    <div class="rc"><span class="rl"><i class="dg"></i>Your guess</span><span class="rw"><span class="rv" id="rv"></span><span class="ru" id="ru"></span></span></div>
+    <div class="rc" id="ansC" hidden><span class="rl"><i class="da"></i>Answer</span><span class="rw"><span class="rv" id="av"></span><span class="ru" id="au"></span></span></div>
+   </div>
   </div>
-  <div class="read" aria-live="polite"><span class="rv" id="rv"></span><span class="ru" id="ru"></span></div>
   <div class="tip" id="tip" hidden>Drag along the scale to guess. Fine-tune with − and +, then lock it in.</div>
   <div class="slz" id="slz" role="slider" tabindex="0" aria-label="Your guess">
    <div class="trk" id="trk"><div id="zbs"></div><div id="tks"></div><div class="pin" id="pin"></div><div class="th" id="th"></div></div>
    <div class="labs" id="labs"></div>
   </div>
-  <div class="ctl">
+  <div class="ctl" id="ctl">
    <button class="nb" data-act="minus" id="minus" aria-label="Smaller">−</button>
    <button class="btn go act" data-act="act" id="act">Lock in</button>
    <button class="nb" data-act="plus" id="plus" aria-label="Bigger">+</button>
@@ -554,7 +575,7 @@ function fmtA(a){if(a>=1e6)return fmt(a);if(a>=1000)return grp(a);return String(
 function withU(s,u){return u?s+' '+u:s}
 function shortLab(v){if(v>=1e12)return trim(v/1e12)+'tn';if(v>=1e9)return trim(v/1e9)+'bn';if(v>=1e6)return trim(v/1e6)+'M';if(v>=1e3)return trim(v/1e3)+'k';return trim(v)}
 function fact(id){const s=id.split(':'),p=PACKS.find(x=>x.k===s[0]),f=p.q[+s[1]];
-  return{id:id,q:f[0],u:f[1],a:f[2],n:f[3],easy:!!(f[4]&1),int:!!(f[4]&2),pk:p}}
+  return{id:id,q:f[0],u:f[1]||(/^How many people/.test(f[0])?'people':''),a:f[2],n:f[3],easy:!!(f[4]&1),int:!!(f[4]&2),pk:p}}
 function zone(g,a){const r=Math.max(g/a,a/g);for(let i=0;i<BAND.length;i++)if(r<=BAND[i]+1e-9)return i;return 4}
 function stars(s){return s>=S3?3:s>=S2?2:s>=CLEAR?1:0}
 function ladder(lo,isInt){const out=[],a=Math.pow(10,lo)*0.9999,b=Math.pow(10,lo+SPAN)*1.0001;
@@ -693,7 +714,7 @@ function renderQ(){
   $('tks').innerHTML=tk;$('labs').innerHTML=lb;
   $('zbs').innerHTML='';$('slz').classList.remove('show');
   CI=R.cur==null?nearest(lo+SPAN/2):Math.max(0,LAD.indexOf(R.cur));
-  if(R.ph==='g'){setIdx(CI,true);$('fb').hidden=true;actLabel('Lock in',false);$('minus').disabled=$('plus').disabled=false}
+  if(R.ph==='g'){setIdx(CI,true);$('fb').hidden=true;$('ansC').hidden=true;$('read').classList.remove('two');$('ctl').classList.remove('rev');actLabel('Lock in',false);$('minus').disabled=$('plus').disabled=false}
   else{setIdx(LAD.indexOf(R.g[R.i])>=0?LAD.indexOf(R.g[R.i]):nearest(L10(R.g[R.i])),true);reveal(false)}
   $('tip').hidden=!!save.tip||R.i>0||R.ph!=='g';
   renderMeter()}
@@ -710,7 +731,8 @@ function renderMeter(){const s=score();$('sc').textContent=s;$('mf').style.width
   let h='';for(let k=0;k<NQ;k++){const z=R.z[k];h+='<span'+(z!=null?' style="background:'+ZC[z]+'"':k===R.i?' class="cur"':'')+'></span>'}
   $('pips').innerHTML=h}
 
-function lockIn(){if(!R||R.ph!=='g')return;first();
+let lockedAt=-1e9;
+function lockIn(){if(!R||R.ph!=='g')return;first();lockedAt=performance.now();
   const g=LAD[CI],z=zone(g,F.a);R.g[R.i]=g;R.z[R.i]=z;R.ph='r';store();
   SND.lock();reveal(true);setTimeout(()=>SND.res(z),120);renderMeter()}
 
@@ -725,7 +747,8 @@ function reveal(anim){
   $('zbs').innerHTML=zb;$('pin').style.left=posOf(a)+'%';
   if(anim&&!isRM())requestAnimationFrame(()=>requestAnimationFrame(()=>$('slz').classList.add('show')));else $('slz').classList.add('show');
   $('fbV').textContent=ZN[z];$('fbP').textContent='+'+PTS[z];$('fbP').style.background=ZC[z];
-  $('fbL').textContent='Answer '+withU(fmtA(a),F.u)+' · you were '+offText(g,a);
+  const off=offText(g,a);$('fbL').textContent='You were '+off+'.';
+  $('av').textContent=fmtA(a);$('au').textContent=F.u;$('ansC').hidden=false;$('read').classList.add('two');$('ctl').classList.add('rev');
   $('fbN').textContent=F.n;$('fbN').hidden=!F.n||/^(About |Around |Up to about )?[\d.,]+( [^ .]+)?\.$/.test(F.n);$('fb').hidden=false;
   $('minus').disabled=$('plus').disabled=true;$('tip').hidden=true;
   actLabel(R.i<NQ-1?'Next':'See result',true);
@@ -794,13 +817,13 @@ document.addEventListener('keydown',e=>{if(scr!=='play'||paused||!R)return;
   if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.closest&&e.target.closest('button'))return;
   if(e.key==='ArrowLeft'||e.key==='ArrowDown'){step(-1);e.preventDefault()}
   else if(e.key==='ArrowRight'||e.key==='ArrowUp'){step(1);e.preventDefault()}
-  else if(e.key==='Enter'){if(R.ph==='g')lockIn();else nextQ();e.preventDefault()}
+  else if(e.key==='Enter'){if(R.ph==='g')lockIn();else if(performance.now()-lockedAt>450)nextQ();e.preventDefault()}
   else if(e.key==='Escape')pause(true)});
 
 /* ---------- taps (click: the only place full screen is asked for) ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
   if(a==='minus'||a==='plus'){if(held){held=false;return}step(a==='plus'?1:-1);return}
-  if(a==='act'){if(!R)return;if(R.ph==='g')lockIn();else nextQ();return}
+  if(a==='act'){if(!R)return;if(R.ph==='g')lockIn();else if(performance.now()-lockedAt>450)nextQ();return}
   if(a==='play'){goFS();if(save.cur&&save.cur.ids)resumeRound();else startRound(nextUp(),'new');return}
   if(a==='pack'){goFS();startRound(+b.dataset.p,'new');return}
   if(a==='again'){goFS();startRound(lastEnd?lastEnd.p:0,'retry');return}
@@ -843,6 +866,5 @@ applyRM();
 show('home');
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
