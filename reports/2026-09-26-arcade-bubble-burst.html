@@ -229,79 +229,79 @@ const PER_WORLD = 25;
 const L = (name, o) => Object.assign({ name }, o);
 const LEVELS = [
   // Meadow: the basics, the falling ceiling, star rescues
-  L('First Pops', { seed: 0, shape: 'full', rows: 7, colors: 3, p: 0.6, tip: 'Drag to aim, let go to shoot. Match 3 or more of a colour to pop them.' }),
-  L('Bank Shot', { seed: 1, shape: 'pillars', rows: 8, colors: 3, p: 0.6, tip: 'Bounce shots off the side walls to reach into the gaps.' }),
-  L('Daisy Chain', { seed: 102, shape: 'full', rows: 7, colors: 3, p: 0.6 }),
-  L('Chandelier', { seed: 2, shape: 'chandelier', rows: 10, colors: 3, p: 0.55, tip: 'Pop the thin threads at the top and everything below falls. Drops score more than pops.' }),
-  L('Buttercups', { seed: 104, shape: 'waves', rows: 8, colors: 3, p: 0.55 }),
-  L('Swap Meet', { seed: 3, shape: 'funnel', rows: 10, colors: 4, p: 0.55, tip: 'Tap the Swap bubble (or press S) to swap it with the one you are holding.' }),
-  L('Clover', { seed: 106, shape: 'diamond', rows: 9, colors: 4, p: 0.55 }),
-  L('Picnic', { seed: 107, shape: 'towers', rows: 9, colors: 4, p: 0.55 }),
-  L('Low Ceiling', { seed: 4, shape: 'full', rows: 9, colors: 4, p: 0.5, anchors: 1, drop: 8 }),
-  L('Hedgerow', { seed: 109, shape: 'full', rows: 9, colors: 4, p: 0.5, anchors: 2, drop: 7 }),
-  L('Heartfelt', { seed: 5, shape: 'heart', rows: 12, canopy: 1, colors: 4, p: 0.5, anchors: 2, drop: 8 }),
-  L('Molehills', { seed: 111, shape: 'waves', rows: 10, colors: 4, p: 0.5, anchors: 2, drop: 7 }),
-  L('Star Rescue', { seed: 6, shape: 'full', rows: 10, colors: 4, p: 0.5, goal: 'rescue', stars: 3, anchors: 2 }),
-  L('Wildflowers', { seed: 113, shape: 'zigzag', rows: 10, colors: 4, p: 0.5, anchors: 2, drop: 7 }),
-  L('Kite String', { seed: 114, shape: 'chandelier', rows: 11, canopy: 1, colors: 4, p: 0.5, anchors: 2, drop: 7 }),
-  L('Meadow Waves', { seed: 7, shape: 'waves', rows: 9, colors: 4, p: 0.45, anchors: 2, drop: 7, tip: 'Stones hold everything up. Bigger drops score far more.' }),
-  L('Lost Lambs', { seed: 116, shape: 'funnel', rows: 11, colors: 4, p: 0.5, goal: 'rescue', stars: 3, anchors: 2, drop: 7 }),
-  L('Haystack', { seed: 117, shape: 'full', rows: 11, colors: 4, p: 0.45, anchors: 2, drop: 7 }),
-  L('Brook', { seed: 118, shape: 'xshape', rows: 12, colors: 4, p: 0.48, anchors: 2, drop: 7 }),
-  L('Dandelion', { seed: 119, shape: 'ring', rows: 12, colors: 4, p: 0.45, anchors: 2, drop: 7 }),
-  L('Sheepdog', { seed: 120, shape: 'waves', rows: 11, colors: 4, p: 0.45, goal: 'rescue', stars: 4, anchors: 2, drop: 7 }),
-  L('Windmill', { seed: 121, shape: 'xshape', rows: 12, canopy: 1, colors: 4, p: 0.45, anchors: 3, drop: 7 }),
-  L('Long Grass', { seed: 122, shape: 'full', rows: 12, colors: 4, p: 0.42, anchors: 3, drop: 7 }),
-  L('Sunflower', { seed: 123, shape: 'heart', rows: 13, canopy: 1, colors: 4, p: 0.45, goal: 'rescue', stars: 3, anchors: 2, drop: 7 }),
-  L('Meadow Crown', { seed: 124, shape: 'diamond', rows: 13, canopy: 2, colors: 4, p: 0.42, anchors: 3, drop: 7 }),
+  L('First Pops', { seed: 0, shape: 'full', rows: 7, colors: 3, p: 0.6, par: 11, tip: 'Drag to aim, let go to shoot. Match 3 or more of a colour to pop them.' }),
+  L('Bank Shot', { seed: 1, shape: 'pillars', rows: 8, colors: 3, p: 0.6, par: 22, tip: 'Bounce shots off the side walls to reach into the gaps.' }),
+  L('Daisy Chain', { seed: 102, shape: 'full', rows: 7, colors: 3, p: 0.6, par: 8 }),
+  L('Chandelier', { seed: 2, shape: 'chandelier', rows: 10, colors: 3, p: 0.55, par: 23, tip: 'Pop the thin threads at the top and everything below falls. Drops score more than pops.' }),
+  L('Buttercups', { seed: 104, shape: 'waves', rows: 8, colors: 3, p: 0.55, par: 6 }),
+  L('Swap Meet', { seed: 3, shape: 'funnel', rows: 10, colors: 4, p: 0.55, par: 20, tip: 'Tap the Swap bubble (or press S) to swap it with the one you are holding.' }),
+  L('Clover', { seed: 106, shape: 'diamond', rows: 9, colors: 4, p: 0.55, par: 28 }),
+  L('Picnic', { seed: 107, shape: 'towers', rows: 9, colors: 4, p: 0.55, par: 21 }),
+  L('Low Ceiling', { seed: 4, shape: 'full', rows: 9, colors: 4, p: 0.5, anchors: 1, drop: 8, par: 43 }),
+  L('Hedgerow', { seed: 109, shape: 'full', rows: 9, colors: 4, p: 0.5, anchors: 2, drop: 7, par: 40 }),
+  L('Heartfelt', { seed: 5, shape: 'heart', rows: 12, canopy: 1, colors: 4, p: 0.5, anchors: 2, drop: 8, par: 47 }),
+  L('Molehills', { seed: 111, shape: 'waves', rows: 10, colors: 4, p: 0.5, anchors: 2, drop: 7, par: 62 }),
+  L('Star Rescue', { seed: 6, shape: 'full', rows: 10, colors: 4, p: 0.5, goal: 'rescue', stars: 3, anchors: 2, par: 13 }),
+  L('Wildflowers', { seed: 113, shape: 'zigzag', rows: 10, colors: 4, p: 0.5, anchors: 2, drop: 7, par: 27 }),
+  L('Kite String', { seed: 114, shape: 'chandelier', rows: 11, canopy: 1, colors: 4, p: 0.5, anchors: 2, drop: 7, par: 40 }),
+  L('Meadow Waves', { seed: 7, shape: 'waves', rows: 9, colors: 4, p: 0.45, anchors: 2, drop: 7, par: 52, tip: 'Stones hold everything up. Bigger drops score far more.' }),
+  L('Lost Lambs', { seed: 116, shape: 'funnel', rows: 11, colors: 4, p: 0.5, goal: 'rescue', stars: 3, anchors: 2, drop: 7, par: 15 }),
+  L('Haystack', { seed: 117, shape: 'full', rows: 11, colors: 4, p: 0.45, anchors: 2, drop: 7, par: 51 }),
+  L('Brook', { seed: 118, shape: 'xshape', rows: 12, colors: 4, p: 0.48, anchors: 2, drop: 7, par: 66 }),
+  L('Dandelion', { seed: 119, shape: 'ring', rows: 12, colors: 4, p: 0.45, anchors: 2, drop: 7, par: 54 }),
+  L('Sheepdog', { seed: 120, shape: 'waves', rows: 11, colors: 4, p: 0.45, goal: 'rescue', stars: 4, anchors: 2, drop: 7, par: 15 }),
+  L('Windmill', { seed: 121, shape: 'xshape', rows: 12, canopy: 1, colors: 4, p: 0.45, anchors: 3, drop: 7, par: 35 }),
+  L('Long Grass', { seed: 122, shape: 'full', rows: 12, colors: 4, p: 0.42, anchors: 3, drop: 7, par: 67 }),
+  L('Sunflower', { seed: 123, shape: 'heart', rows: 13, canopy: 1, colors: 4, p: 0.45, goal: 'rescue', stars: 3, anchors: 2, drop: 7, par: 32 }),
+  L('Meadow Crown', { seed: 124, shape: 'diamond', rows: 13, canopy: 2, colors: 4, p: 0.42, anchors: 3, drop: 7, par: 63 }),
   // Lagoon: ice, rainbows, fog, shot limits, five colours
-  L('Thin Ice', { seed: 8, shape: 'full', rows: 8, colors: 4, p: 0.5, ice: 7, anchors: 2 }),
-  L('Ripples', { seed: 126, shape: 'waves', rows: 9, colors: 4, p: 0.5, ice: 5, anchors: 2 }),
-  L('Sandbar', { seed: 127, shape: 'pillars', rows: 9, colors: 4, p: 0.5, ice: 4, anchors: 2, drop: 6 }),
-  L('Rainbow Road', { seed: 9, shape: 'diamond', rows: 12, canopy: 2, colors: 4, p: 0.45, anchors: 2, specials: ['rainbow'], meter: 16, start: 'rainbow' }),
-  L('Sea Glass', { seed: 129, shape: 'diamond', rows: 10, colors: 4, p: 0.48, ice: 6, anchors: 2, specials: ['rainbow'] }),
-  L('Rock Pool', { seed: 130, shape: 'ring', rows: 11, colors: 4, p: 0.45, ice: 5, anchors: 2, drop: 6, specials: ['rainbow'] }),
-  L('Fog Bank', { seed: 10, shape: 'full', rows: 11, colors: 4, fill: 'bands', band: 2, noise: 0.25, mys: 12, anchors: 2 }),
-  L('Sea Mist', { seed: 132, shape: 'full', rows: 10, colors: 4, p: 0.45, mys: 8, anchors: 2, drop: 6, specials: ['rainbow'] }),
-  L('Ice Rescue', { seed: 11, shape: 'full', rows: 11, colors: 4, p: 0.45, goal: 'rescue', stars: 4, ice: 10, anchors: 3, drop: 8, specials: ['rainbow'] }),
+  L('Thin Ice', { seed: 8, shape: 'full', rows: 8, colors: 4, p: 0.5, ice: 7, anchors: 2, par: 60 }),
+  L('Ripples', { seed: 126, shape: 'waves', rows: 9, colors: 4, p: 0.5, ice: 5, anchors: 2, par: 38 }),
+  L('Sandbar', { seed: 127, shape: 'pillars', rows: 9, colors: 4, p: 0.5, ice: 4, anchors: 2, drop: 6, par: 69 }),
+  L('Rainbow Road', { seed: 9, shape: 'diamond', rows: 12, canopy: 2, colors: 4, p: 0.45, anchors: 2, specials: ['rainbow'], meter: 16, start: 'rainbow', par: 16 }),
+  L('Sea Glass', { seed: 129, shape: 'diamond', rows: 10, colors: 4, p: 0.48, ice: 6, anchors: 2, specials: ['rainbow'], par: 11 }),
+  L('Rock Pool', { seed: 130, shape: 'ring', rows: 11, colors: 4, p: 0.45, ice: 5, anchors: 2, drop: 6, specials: ['rainbow'], par: 36 }),
+  L('Fog Bank', { seed: 10, shape: 'full', rows: 11, colors: 4, fill: 'bands', band: 2, noise: 0.25, mys: 12, anchors: 2, par: 36 }),
+  L('Sea Mist', { seed: 132, shape: 'full', rows: 10, colors: 4, p: 0.45, mys: 8, anchors: 2, drop: 6, specials: ['rainbow'], par: 54 }),
+  L('Ice Rescue', { seed: 11, shape: 'full', rows: 11, colors: 4, p: 0.45, goal: 'rescue', stars: 4, ice: 10, anchors: 3, drop: 8, specials: ['rainbow'], par: 24 }),
   L('Shot Count', { seed: 13, shape: 'full', rows: 10, colors: 4, p: 0.45, anchors: 2, shots: 44, specials: ['rainbow'] }),
-  L('Tide Pools', { seed: 12, shape: 'ring', rows: 13, colors: 4, p: 0.45, ice: 6, anchors: 2, drop: 7, specials: ['rainbow'] }),
+  L('Tide Pools', { seed: 12, shape: 'ring', rows: 13, colors: 4, p: 0.45, ice: 6, anchors: 2, drop: 7, specials: ['rainbow'], par: 46 }),
   L('Pearl Divers', { seed: 136, shape: 'funnel', rows: 11, colors: 4, p: 0.45, goal: 'rescue', stars: 3, ice: 5, mys: 4, anchors: 2, shots: 7, specials: ['rainbow'] }),
   L('Low Tide', { seed: 137, shape: 'full', rows: 10, colors: 4, p: 0.45, ice: 4, anchors: 2, shots: 70, specials: ['rainbow'] }),
-  L('Kelp Forest', { seed: 138, shape: 'towers', rows: 12, colors: 4, p: 0.42, mys: 6, anchors: 2, drop: 6, specials: ['rainbow'] }),
-  L('Undertow', { seed: 14, shape: 'zigzag', rows: 12, canopy: 1, colors: 4, p: 0.4, ice: 6, mys: 6, anchors: 3, drop: 7, specials: ['rainbow'] }),
-  L('Coral Garden', { seed: 140, shape: 'heart', rows: 12, canopy: 1, colors: 4, p: 0.42, ice: 6, mys: 4, anchors: 2, drop: 6, specials: ['rainbow'] }),
+  L('Kelp Forest', { seed: 138, shape: 'towers', rows: 12, colors: 4, p: 0.42, mys: 6, anchors: 2, drop: 6, specials: ['rainbow'], par: 36 }),
+  L('Undertow', { seed: 14, shape: 'zigzag', rows: 12, canopy: 1, colors: 4, p: 0.4, ice: 6, mys: 6, anchors: 3, drop: 7, specials: ['rainbow'], par: 39 }),
+  L('Coral Garden', { seed: 140, shape: 'heart', rows: 12, canopy: 1, colors: 4, p: 0.42, ice: 6, mys: 4, anchors: 2, drop: 6, specials: ['rainbow'], par: 33 }),
   L('Message in a Bottle', { seed: 141, shape: 'zigzag', rows: 11, colors: 4, p: 0.42, goal: 'rescue', stars: 3, anchors: 2, shots: 16, specials: ['rainbow'] }),
-  L('Lagoon Deep', { seed: 15, shape: 'towers', rows: 11, colors: 5, p: 0.45, ice: 6, mys: 4, anchors: 2, drop: 8, specials: ['rainbow'] }),
-  L('Riptide', { seed: 143, shape: 'waves', rows: 11, colors: 5, p: 0.45, ice: 5, anchors: 2, drop: 6, specials: ['rainbow'] }),
-  L('Shell Game', { seed: 144, shape: 'full', rows: 11, colors: 5, p: 0.45, mys: 10, anchors: 2, drop: 6, specials: ['rainbow'] }),
+  L('Lagoon Deep', { seed: 15, shape: 'towers', rows: 11, colors: 5, p: 0.45, ice: 6, mys: 4, anchors: 2, drop: 8, specials: ['rainbow'], par: 76 }),
+  L('Riptide', { seed: 143, shape: 'waves', rows: 11, colors: 5, p: 0.45, ice: 5, anchors: 2, drop: 6, specials: ['rainbow'], par: 67 }),
+  L('Shell Game', { seed: 144, shape: 'full', rows: 11, colors: 5, p: 0.45, mys: 10, anchors: 2, drop: 6, specials: ['rainbow'], par: 55 }),
   L('Glass Bottom', { seed: 145, shape: 'diamond', rows: 12, canopy: 1, colors: 5, p: 0.42, ice: 6, anchors: 3, shots: 90, specials: ['rainbow'] }),
   L('Starfish', { seed: 146, shape: 'ring', rows: 12, colors: 5, p: 0.42, goal: 'rescue', stars: 4, ice: 4, anchors: 3, shots: 12, specials: ['rainbow'] }),
-  L('Whirlpool', { seed: 147, shape: 'chandelier', rows: 12, canopy: 1, colors: 5, p: 0.42, ice: 5, mys: 5, anchors: 3, drop: 7, specials: ['rainbow'] }),
+  L('Whirlpool', { seed: 147, shape: 'chandelier', rows: 12, canopy: 1, colors: 5, p: 0.42, ice: 5, mys: 5, anchors: 3, drop: 7, specials: ['rainbow'], par: 81 }),
   L('Deep Blue', { seed: 148, shape: 'full', rows: 12, colors: 5, p: 0.4, ice: 7, mys: 4, anchors: 3, shots: 150, specials: ['rainbow'] }),
   L('Lagoon Crown', { seed: 149, shape: 'xshape', rows: 13, colors: 5, p: 0.42, goal: 'rescue', stars: 4, ice: 6, mys: 5, anchors: 3, shots: 25, specials: ['rainbow'] }),
   // Orchard: stones, blasts, bombs, vaults and the Drop goal
-  L('Stone Fruit', { seed: 16, shape: 'full', rows: 9, colors: 4, p: 0.55, stones: 4, anchors: 2 }),
-  L('Windfall', { seed: 151, shape: 'full', rows: 9, colors: 4, p: 0.5, stones: 3, anchors: 2, specials: ['rainbow'] }),
-  L('Cider Press', { seed: 152, shape: 'pillars', rows: 10, colors: 4, p: 0.5, stones: 4, anchors: 2, drop: 6, specials: ['rainbow'] }),
-  L('Blast Off', { seed: 17, shape: 'full', rows: 11, colors: 4, p: 0.45, stones: 10, blast: 4, anchors: 2, specials: ['bomb'], meter: 16, start: 'bomb' }),
+  L('Stone Fruit', { seed: 16, shape: 'full', rows: 9, colors: 4, p: 0.55, stones: 4, anchors: 2, par: 56 }),
+  L('Windfall', { seed: 151, shape: 'full', rows: 9, colors: 4, p: 0.5, stones: 3, anchors: 2, specials: ['rainbow'], par: 57 }),
+  L('Cider Press', { seed: 152, shape: 'pillars', rows: 10, colors: 4, p: 0.5, stones: 4, anchors: 2, drop: 6, specials: ['rainbow'], par: 52 }),
+  L('Blast Off', { seed: 17, shape: 'full', rows: 11, colors: 4, p: 0.45, stones: 10, blast: 4, anchors: 2, specials: ['bomb'], meter: 16, start: 'bomb', par: 48 }),
   L('Bramble', { seed: 154, shape: 'zigzag', rows: 11, colors: 4, p: 0.45, stones: 5, blast: 2, anchors: 2, shots: 41, specials: ['bomb', 'rainbow'] }),
-  L('Shake the Tree', { seed: 155, shape: 'chandelier', rows: 12, canopy: 1, colors: 4, p: 0.45, goal: 'drop', target: 55, anchors: 3, drop: 6, specials: ['bomb', 'rainbow'] }),
-  L('Orchard Rows', { seed: 18, shape: 'full', rows: 7, colors: 5, fill: 'bands', band: 2, noise: 0.25, stones: 6, anchors: 3, drop: 8, specials: ['bomb', 'rainbow'] }),
+  L('Shake the Tree', { seed: 155, shape: 'chandelier', rows: 12, canopy: 1, colors: 4, p: 0.45, goal: 'drop', target: 55, anchors: 3, drop: 6, specials: ['bomb', 'rainbow'], par: 51 }),
+  L('Orchard Rows', { seed: 18, shape: 'full', rows: 7, colors: 5, fill: 'bands', band: 2, noise: 0.25, stones: 6, anchors: 3, drop: 8, specials: ['bomb', 'rainbow'], par: 65 }),
   L('Pick Your Own', { seed: 157, shape: 'waves', rows: 11, colors: 4, p: 0.45, goal: 'drop', target: 45, anchors: 2, shots: 36, specials: ['bomb', 'rainbow'] }),
-  L('The Vault', { seed: 19, shape: 'full', rows: 11, colors: 4, p: 0.45, goal: 'rescue', vault: true, anchors: 2, specials: ['bomb'], meter: 18 }),
-  L('Plum Tree', { seed: 159, shape: 'full', rows: 11, colors: 5, p: 0.45, stones: 5, blast: 3, anchors: 2, drop: 6, specials: ['bomb', 'rainbow'] }),
+  L('The Vault', { seed: 19, shape: 'full', rows: 11, colors: 4, p: 0.45, goal: 'rescue', vault: true, anchors: 2, specials: ['bomb'], meter: 18, par: 15 }),
+  L('Plum Tree', { seed: 159, shape: 'full', rows: 11, colors: 5, p: 0.45, stones: 5, blast: 3, anchors: 2, drop: 6, specials: ['bomb', 'rainbow'], par: 57 }),
   L('Tight Budget', { seed: 20, shape: 'diamond', rows: 13, canopy: 2, colors: 5, p: 0.4, anchors: 2, shots: 59, specials: ['bomb', 'rainbow'] }),
   L('Falling Apples', { seed: 161, shape: 'full', rows: 12, colors: 5, p: 0.45, goal: 'drop', target: 55, anchors: 3, shots: 73, specials: ['bomb', 'rainbow'] }),
-  L('Crossroads', { seed: 21, shape: 'xshape', rows: 13, colors: 5, p: 0.4, stones: 4, anchors: 3, drop: 7, specials: ['bomb', 'rainbow'] }),
+  L('Crossroads', { seed: 21, shape: 'xshape', rows: 13, colors: 5, p: 0.4, stones: 4, anchors: 3, drop: 7, specials: ['bomb', 'rainbow'], par: 52 }),
   L('Pear Shaped', { seed: 163, shape: 'heart', rows: 12, canopy: 1, colors: 5, p: 0.42, stones: 4, blast: 2, anchors: 2, shots: 64, specials: ['bomb', 'rainbow'] }),
-  L('Strongroom', { seed: 164, shape: 'full', rows: 12, colors: 5, p: 0.45, goal: 'rescue', vault: true, anchors: 3, drop: 6, specials: ['bomb', 'rainbow'], meter: 18 }),
-  L('Harvest', { seed: 22, shape: 'full', rows: 11, colors: 5, p: 0.4, goal: 'rescue', stars: 5, ice: 4, stones: 5, anchors: 3, drop: 8, specials: ['bomb', 'rainbow'] }),
+  L('Strongroom', { seed: 164, shape: 'full', rows: 12, colors: 5, p: 0.45, goal: 'rescue', vault: true, anchors: 3, drop: 6, specials: ['bomb', 'rainbow'], meter: 18, par: 29 }),
+  L('Harvest', { seed: 22, shape: 'full', rows: 11, colors: 5, p: 0.4, goal: 'rescue', stars: 5, ice: 4, stones: 5, anchors: 3, drop: 8, specials: ['bomb', 'rainbow'], par: 41 }),
   L('Hayloft', { seed: 166, shape: 'funnel', rows: 12, colors: 5, p: 0.45, goal: 'drop', target: 35, stones: 3, anchors: 3, shots: 55, specials: ['bomb', 'rainbow'] }),
-  L('Grafting', { seed: 167, shape: 'towers', rows: 12, colors: 5, p: 0.42, stones: 6, blast: 3, anchors: 2, drop: 6, specials: ['bomb', 'rainbow'] }),
+  L('Grafting', { seed: 167, shape: 'towers', rows: 12, colors: 5, p: 0.42, stones: 6, blast: 3, anchors: 2, drop: 6, specials: ['bomb', 'rainbow'], par: 54 }),
   L('Apple Bob', { seed: 168, shape: 'ring', rows: 12, colors: 5, p: 0.42, goal: 'rescue', stars: 4, ice: 3, stones: 4, anchors: 3, shots: 25, specials: ['bomb', 'rainbow'] }),
-  L('Bushel', { seed: 169, shape: 'full', rows: 12, colors: 5, p: 0.42, goal: 'drop', target: 55, stones: 3, anchors: 3, drop: 6, specials: ['bomb', 'rainbow'] }),
-  L('Orchard Canopy', { seed: 23, shape: 'chandelier', rows: 13, canopy: 1, colors: 5, p: 0.4, mys: 4, stones: 6, blast: 2, anchors: 3, drop: 7, specials: ['bomb', 'rainbow'] }),
+  L('Bushel', { seed: 169, shape: 'full', rows: 12, colors: 5, p: 0.42, goal: 'drop', target: 55, stones: 3, anchors: 3, drop: 6, specials: ['bomb', 'rainbow'], par: 47 }),
+  L('Orchard Canopy', { seed: 23, shape: 'chandelier', rows: 13, canopy: 1, colors: 5, p: 0.4, mys: 4, stones: 6, blast: 2, anchors: 3, drop: 7, specials: ['bomb', 'rainbow'], par: 60 }),
   L('Cider Cellar', { seed: 171, shape: 'full', rows: 12, colors: 5, p: 0.42, goal: 'rescue', vault: true, ice: 4, anchors: 3, shots: 28, specials: ['bomb', 'rainbow'], meter: 18 }),
   L('Hedge Maze', { seed: 172, shape: 'zigzag', rows: 13, colors: 5, p: 0.4, mys: 4, stones: 6, blast: 3, anchors: 3, shots: 54, specials: ['bomb', 'rainbow'] }),
   L('Last Orchard', { seed: 173, shape: 'diamond', rows: 13, canopy: 2, colors: 5, p: 0.42, goal: 'drop', target: 40, stones: 3, anchors: 3, shots: 80, specials: ['bomb', 'rainbow'] }),
@@ -333,74 +333,74 @@ const LEVELS = [
   L('Sunset Strip', { seed: 198, shape: 'chandelier', rows: 13, canopy: 1, colors: 5, p: 0.4, ice: 4, stones: 4, blast: 2, anchors: 3, time: 290, specials: ['bomb', 'rainbow'] }),
   L('Canyon Crown', { seed: 199, shape: 'towers', rows: 13, colors: 5, p: 0.4, goal: 'rescue', stars: 5, ice: 4, stones: 5, anchors: 3, time: 150, specials: ['bomb', 'rainbow'] }),
   // Aurora: zaps, and Double lock (shots and a clock together)
-  L('Zap!', { seed: 25, shape: 'funnel', rows: 12, colors: 5, p: 0.4, anchors: 3, specials: ['zap', 'rainbow'], start: 'zap' }),
-  L('First Light', { seed: 201, shape: 'full', rows: 10, colors: 5, p: 0.45, anchors: 2, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Polar Night', { seed: 202, shape: 'ring', rows: 11, colors: 5, p: 0.42, ice: 5, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Double Helix', { seed: 27, shape: 'zigzag', rows: 13, canopy: 1, colors: 5, p: 0.38, mys: 8, anchors: 3, drop: 7, specials: ['zap', 'bomb'] }),
+  L('Zap!', { seed: 25, shape: 'funnel', rows: 12, colors: 5, p: 0.4, anchors: 3, specials: ['zap', 'rainbow'], start: 'zap', par: 25 }),
+  L('First Light', { seed: 201, shape: 'full', rows: 10, colors: 5, p: 0.45, anchors: 2, specials: ['rainbow', 'bomb', 'zap'], par: 43 }),
+  L('Polar Night', { seed: 202, shape: 'ring', rows: 11, colors: 5, p: 0.42, ice: 5, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'], par: 52 }),
+  L('Double Helix', { seed: 27, shape: 'zigzag', rows: 13, canopy: 1, colors: 5, p: 0.38, mys: 8, anchors: 3, drop: 7, specials: ['zap', 'bomb'], par: 35 }),
   L('Double Lock', { seed: 204, shape: 'full', rows: 10, colors: 5, p: 0.45, anchors: 2, shots: 50, time: 170, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Snow Globe', { seed: 205, shape: 'diamond', rows: 12, canopy: 1, colors: 5, p: 0.42, mys: 6, anchors: 3, shots: 56, time: 195, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Frostbite', { seed: 29, shape: 'full', rows: 12, colors: 5, p: 0.38, ice: 10, anchors: 3, drop: 9, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Frostbite', { seed: 29, shape: 'full', rows: 12, colors: 5, p: 0.38, ice: 10, anchors: 3, drop: 9, specials: ['rainbow', 'bomb', 'zap'], par: 48 }),
   L('Glimmer', { seed: 207, shape: 'waves', rows: 11, colors: 5, p: 0.42, ice: 4, anchors: 3, shots: 68, time: 235, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Moonbeam', { seed: 208, shape: 'funnel', rows: 12, colors: 5, p: 0.42, goal: 'rescue', stars: 4, anchors: 3, shots: 16, time: 55, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Halo', { seed: 30, shape: 'ring', rows: 11, colors: 5, p: 0.35, stones: 4, anchors: 3, shots: 63, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Starlight Drop', { seed: 210, shape: 'chandelier', rows: 12, canopy: 1, colors: 5, p: 0.42, goal: 'drop', target: 55, anchors: 3, shots: 44, time: 150, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Ribbons', { seed: 211, shape: 'zigzag', rows: 12, colors: 5, p: 0.4, ice: 5, mys: 5, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Ribbons', { seed: 211, shape: 'zigzag', rows: 12, colors: 5, p: 0.4, ice: 5, mys: 5, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'], par: 39 }),
   L('Comet', { seed: 212, shape: 'xshape', rows: 12, colors: 5, p: 0.42, stones: 3, blast: 2, anchors: 3, shots: 61, time: 210, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Ice Palace', { seed: 213, shape: 'full', rows: 12, colors: 5, p: 0.4, ice: 10, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Ice Palace', { seed: 213, shape: 'full', rows: 12, colors: 5, p: 0.4, ice: 10, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'], par: 52 }),
   L('Constellation', { seed: 214, shape: 'ring', rows: 12, colors: 5, p: 0.42, goal: 'rescue', stars: 5, anchors: 3, shots: 14, time: 50, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Night Owl', { seed: 215, shape: 'towers', rows: 12, colors: 5, p: 0.4, mys: 8, anchors: 3, shots: 38, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Solstice', { seed: 216, shape: 'diamond', rows: 13, canopy: 2, colors: 5, p: 0.42, goal: 'drop', target: 40, anchors: 3, shots: 45, time: 155, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Frost Fern', { seed: 217, shape: 'heart', rows: 13, canopy: 1, colors: 5, p: 0.4, ice: 6, anchors: 3, shots: 46, time: 160, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Glacier Vault', { seed: 218, shape: 'full', rows: 12, colors: 5, p: 0.42, goal: 'rescue', vault: true, ice: 4, anchors: 3, shots: 21, time: 75, specials: ['rainbow', 'bomb', 'zap'], meter: 18 }),
-  L('Shimmer', { seed: 219, shape: 'waves', rows: 12, colors: 5, p: 0.4, ice: 4, mys: 4, stones: 3, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Shimmer', { seed: 219, shape: 'waves', rows: 12, colors: 5, p: 0.4, ice: 4, mys: 4, stones: 3, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'], par: 59 }),
   L('Polar Express', { seed: 220, shape: 'pillars', rows: 13, colors: 5, p: 0.4, ice: 6, anchors: 3, shots: 44, time: 150, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Northern Lights', { seed: 221, shape: 'full', rows: 13, colors: 5, p: 0.38, ice: 4, mys: 6, stones: 3, blast: 2, anchors: 3, drop: 7, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Northern Lights', { seed: 221, shape: 'full', rows: 13, colors: 5, p: 0.38, ice: 4, mys: 6, stones: 3, blast: 2, anchors: 3, drop: 7, specials: ['rainbow', 'bomb', 'zap'], par: 50 }),
   L('Star Map', { seed: 222, shape: 'xshape', rows: 13, colors: 5, p: 0.4, goal: 'rescue', stars: 5, anchors: 3, shots: 11, time: 40, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Midnight Sun', { seed: 223, shape: 'ring', rows: 13, colors: 5, p: 0.4, goal: 'drop', target: 35, ice: 3, anchors: 3, shots: 39, time: 135, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Aurora Crown', { seed: 224, shape: 'diamond', rows: 13, canopy: 2, colors: 5, p: 0.38, goal: 'rescue', stars: 6, ice: 5, mys: 5, stones: 3, blast: 2, anchors: 3, shots: 17, time: 60, specials: ['rainbow', 'bomb', 'zap'] }),
   // Summit: six colours, everything at once
-  L('Thin Air', { seed: 32, shape: 'full', rows: 9, colors: 6, p: 0.45, anchors: 3, drop: 8, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Base Camp', { seed: 226, shape: 'full', rows: 9, colors: 6, p: 0.5, anchors: 2, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Foothills', { seed: 227, shape: 'waves', rows: 10, colors: 6, p: 0.45, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Avalanche', { seed: 33, shape: 'chandelier', rows: 12, canopy: 1, colors: 6, p: 0.4, stones: 5, blast: 3, anchors: 3, drop: 8, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Thin Air', { seed: 32, shape: 'full', rows: 9, colors: 6, p: 0.45, anchors: 3, drop: 8, specials: ['rainbow', 'bomb', 'zap'], par: 52 }),
+  L('Base Camp', { seed: 226, shape: 'full', rows: 9, colors: 6, p: 0.5, anchors: 2, specials: ['rainbow', 'bomb', 'zap'], par: 64 }),
+  L('Foothills', { seed: 227, shape: 'waves', rows: 10, colors: 6, p: 0.45, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'], par: 45 }),
+  L('Avalanche', { seed: 33, shape: 'chandelier', rows: 12, canopy: 1, colors: 6, p: 0.4, stones: 5, blast: 3, anchors: 3, drop: 8, specials: ['rainbow', 'bomb', 'zap'], par: 70 }),
   L('Scree', { seed: 229, shape: 'pillars', rows: 11, colors: 6, p: 0.42, stones: 4, blast: 2, anchors: 3, shots: 52, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Rope Line', { seed: 230, shape: 'chandelier', rows: 12, canopy: 1, colors: 6, p: 0.42, goal: 'rescue', stars: 4, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Rope Line', { seed: 230, shape: 'chandelier', rows: 12, canopy: 1, colors: 6, p: 0.42, goal: 'rescue', stars: 4, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'], par: 25 }),
   L('Crevasse', { seed: 34, shape: 'pillars', rows: 13, colors: 6, p: 0.38, ice: 8, anchors: 3, shots: 73, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Ice Fall', { seed: 232, shape: 'full', rows: 11, colors: 6, p: 0.42, ice: 8, anchors: 3, time: 270, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Whiteout', { seed: 35, shape: 'full', rows: 8, colors: 6, p: 0.45, mys: 10, anchors: 3, drop: 8, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Whiteout', { seed: 35, shape: 'full', rows: 8, colors: 6, p: 0.45, mys: 10, anchors: 3, drop: 8, specials: ['rainbow', 'bomb', 'zap'], par: 70 }),
   L('Snow Bridge', { seed: 234, shape: 'full', rows: 12, colors: 6, p: 0.42, goal: 'drop', target: 55, anchors: 3, shots: 53, time: 185, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Cornice', { seed: 235, shape: 'diamond', rows: 12, canopy: 1, colors: 6, p: 0.42, ice: 5, anchors: 3, shots: 55, time: 190, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Summit Rescue', { seed: 36, shape: 'towers', rows: 13, colors: 6, p: 0.35, goal: 'rescue', stars: 6, stones: 6, anchors: 4, drop: 15, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Summit Rescue', { seed: 36, shape: 'towers', rows: 13, colors: 6, p: 0.35, goal: 'rescue', stars: 6, stones: 6, anchors: 4, drop: 15, specials: ['rainbow', 'bomb', 'zap'], par: 43 }),
   L('Sherpa', { seed: 237, shape: 'towers', rows: 12, colors: 6, p: 0.4, mys: 6, anchors: 3, shots: 70, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Thin Ridge', { seed: 238, shape: 'zigzag', rows: 12, colors: 6, p: 0.4, ice: 5, stones: 3, anchors: 3, shots: 47, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Rockface', { seed: 37, shape: 'xshape', rows: 13, colors: 6, p: 0.35, stones: 8, blast: 3, anchors: 4, time: 250, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Snowfield', { seed: 240, shape: 'full', rows: 12, colors: 6, p: 0.42, goal: 'drop', target: 55, anchors: 3, shots: 52, time: 180, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Ice Cave', { seed: 241, shape: 'full', rows: 12, colors: 6, p: 0.42, goal: 'rescue', vault: true, ice: 4, anchors: 3, drop: 8, specials: ['rainbow', 'bomb', 'zap'], meter: 18 }),
-  L('Spindrift', { seed: 242, shape: 'ring', rows: 12, colors: 6, p: 0.4, ice: 5, mys: 5, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('Ice Cave', { seed: 241, shape: 'full', rows: 12, colors: 6, p: 0.42, goal: 'rescue', vault: true, ice: 4, anchors: 3, drop: 8, specials: ['rainbow', 'bomb', 'zap'], meter: 18, par: 30 }),
+  L('Spindrift', { seed: 242, shape: 'ring', rows: 12, colors: 6, p: 0.4, ice: 5, mys: 5, anchors: 3, drop: 6, specials: ['rainbow', 'bomb', 'zap'], par: 57 }),
   L('False Summit', { seed: 243, shape: 'heart', rows: 13, canopy: 1, colors: 6, p: 0.4, goal: 'rescue', stars: 5, anchors: 3, shots: 25, time: 85, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Windchill', { seed: 244, shape: 'full', rows: 12, colors: 6, p: 0.4, ice: 6, mys: 4, anchors: 3, time: 245, specials: ['rainbow', 'bomb', 'zap'] }),
   L('High Camp', { seed: 245, shape: 'funnel', rows: 12, colors: 6, p: 0.4, stones: 5, blast: 3, anchors: 3, shots: 51, time: 175, specials: ['rainbow', 'bomb', 'zap'] }),
   L('Summit Push', { seed: 246, shape: 'diamond', rows: 13, canopy: 2, colors: 6, p: 0.4, goal: 'drop', target: 40, anchors: 3, shots: 62, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('The Peak', { seed: 39, shape: 'funnel', rows: 9, colors: 6, p: 0.32, ice: 6, mys: 6, stones: 5, blast: 2, anchors: 4, drop: 7, specials: ['rainbow', 'bomb', 'zap'] }),
+  L('The Peak', { seed: 39, shape: 'funnel', rows: 9, colors: 6, p: 0.32, ice: 6, mys: 6, stones: 5, blast: 2, anchors: 4, drop: 7, specials: ['rainbow', 'bomb', 'zap'], par: 76 }),
   L('Final Ascent', { seed: 248, shape: 'xshape', rows: 13, colors: 6, p: 0.38, goal: 'rescue', stars: 4, ice: 5, mys: 5, stones: 4, anchors: 3, shots: 26, time: 90, specials: ['rainbow', 'bomb', 'zap'] }),
-  L('Blizzard', { seed: 38, shape: 'full', rows: 11, colors: 6, p: 0.36, ice: 6, mys: 3, stones: 3, anchors: 4, drop: 6, specials: ['rainbow', 'bomb', 'zap'], tip: 'The final climb. Good luck!' }),
+  L('Blizzard', { seed: 38, shape: 'full', rows: 11, colors: 6, p: 0.36, ice: 6, mys: 3, stones: 3, anchors: 4, drop: 6, specials: ['rainbow', 'bomb', 'zap'], par: 56, tip: 'The final climb. Good luck!' }),
 ];
 const MARKS = [
-  [2050, 2200], [1450, 1600], [2300, 2500], [3350, 3750], [1850, 2000], [2150, 2350], [2200, 2750], [2050, 2350], [2750, 2950], [2550, 2750],
-  [2650, 2850], [2800, 3100], [3200, 3450], [1950, 2400], [3250, 3500], [2550, 2750], [2550, 2750], [3450, 3750], [2450, 2700], [2850, 3100],
-  [3150, 3400], [2100, 2300], [3950, 4350], [3350, 3650], [3050, 3350], [2700, 2900], [2550, 2750], [2250, 2450], [2900, 4050], [3400, 3650],
-  [2350, 2550], [3550, 4000], [3400, 3700], [4200, 4550], [3950, 4250], [3550, 3900], [2800, 3000], [4500, 4850], [2700, 3100], [3300, 3650],
-  [2650, 2900], [3550, 3850], [2800, 3050], [3050, 3350], [3600, 3950], [6750, 7950], [3400, 3650], [3700, 4000], [6350, 6950], [3700, 4050],
-  [2950, 3200], [2950, 3200], [2350, 2550], [3250, 3500], [3450, 3750], [3400, 3650], [2700, 2950], [3350, 3650], [3650, 3950], [3400, 3650],
-  [3800, 4400], [4200, 4750], [2550, 2750], [3900, 4250], [4000, 4550], [4250, 4600], [3200, 3600], [2400, 2600], [3750, 4100], [4700, 5100],
-  [4300, 4800], [4350, 4800], [4350, 5100], [3850, 4150], [4800, 5400], [3650, 4100], [4050, 4350], [2850, 3150], [4450, 5050], [5350, 5850],
-  [4800, 5200], [4600, 5050], [4700, 5100], [4750, 5150], [3350, 3700], [3850, 4600], [3350, 3600], [3950, 4350], [5200, 5750], [3900, 4750],
-  [4050, 4600], [4050, 4450], [3450, 4050], [5250, 6050], [4800, 5300], [4850, 5600], [4450, 4800], [3900, 4250], [5200, 5650], [5050, 5950],
-  [2850, 3950], [3300, 3700], [2350, 2550], [3000, 3500], [4400, 5000], [4500, 5450], [3650, 3950], [5850, 7100], [3800, 4100], [3800, 4100],
-  [4850, 5400], [2850, 3100], [4300, 5100], [3800, 4200], [3850, 4250], [3050, 3450], [4300, 4650], [4400, 4850], [5500, 6100], [3450, 3800],
-  [4600, 5600], [4100, 4950], [3950, 4350], [4350, 5250], [4900, 6000], [3800, 4100], [2700, 2950], [2650, 2900], [3700, 4000], [2800, 3200],
-  [3850, 4200], [4350, 4850], [4950, 5700], [2750, 3050], [4850, 5750], [5450, 6500], [4400, 5100], [3950, 4350], [3250, 3700], [4000, 4450],
-  [6100, 8150], [3750, 4250], [2800, 3200], [4600, 5300], [5000, 5600], [4350, 5600], [3650, 4300], [2300, 2500], [4300, 4950], [3750, 4200],
+  [2225, 2400], [1725, 1925], [2325, 2525], [3450, 4000], [1950, 1975], [2325, 2450], [2425, 3350], [2275, 2725], [3000, 3500], [2875, 3225],
+  [3100, 3525], [3200, 3675], [3450, 3625], [2150, 2700], [3475, 3950], [2850, 3150], [2725, 2900], [3800, 4275], [2975, 3350], [3175, 3750],
+  [3400, 3725], [2475, 2850], [4325, 4825], [3600, 3975], [3650, 4175], [3225, 3525], [2900, 3125], [2550, 2850], [3100, 3500], [2825, 3150],
+  [2725, 3050], [3900, 4500], [3775, 4200], [4450, 5000], [3725, 4250], [4050, 4575], [2850, 2875], [4300, 4825], [2925, 3300], [3550, 3975],
+  [2925, 3300], [3550, 3800], [3250, 3700], [3525, 4000], [4050, 4550], [6250, 7900], [3400, 3500], [4150, 4625], [6250, 7000], [3675, 3975],
+  [3525, 3950], [3425, 3825], [2775, 3150], [3550, 4075], [3375, 4075], [3750, 4300], [3425, 3925], [3400, 3675], [3825, 4200], [3650, 4200],
+  [3900, 4650], [4425, 4950], [3000, 3500], [3625, 4225], [4225, 4850], [4600, 5075], [3250, 3650], [2875, 3225], [3750, 4150], [5350, 5975],
+  [4800, 5550], [4225, 4650], [4425, 5075], [3900, 4375], [4650, 5100], [3675, 4175], [4050, 4575], [2850, 3275], [4350, 4950], [5250, 6075],
+  [4650, 5200], [4650, 5400], [4650, 5125], [4500, 5225], [3400, 3825], [3950, 4575], [3250, 3475], [3850, 4425], [5250, 5975], [4200, 4925],
+  [4000, 4650], [3925, 4550], [3400, 4025], [4850, 6125], [5025, 5700], [4975, 5625], [4550, 4925], [3925, 4575], [5100, 5875], [4850, 5800],
+  [3150, 4775], [3800, 4425], [2950, 3250], [3300, 3950], [4375, 5325], [4350, 5350], [4075, 4675], [5625, 6750], [3800, 4075], [3675, 4025],
+  [4975, 5925], [3325, 3725], [4150, 5175], [4150, 5150], [4000, 4425], [3075, 3575], [4450, 5150], [4250, 5250], [5375, 6250], [4000, 4800],
+  [4975, 5825], [4875, 5700], [3950, 4350], [4550, 5400], [5250, 5925], [4325, 4850], [3475, 3875], [3100, 3500], [4200, 5000], [2900, 3200],
+  [4175, 4775], [4275, 5250], [4850, 5675], [3450, 4025], [4825, 5775], [5375, 6800], [4875, 6025], [4025, 4625], [3300, 3750], [3975, 4650],
+  [6450, 8325], [4300, 4750], [3350, 3750], [4600, 5225], [5150, 5925], [4675, 5850], [3600, 4300], [2700, 3225], [4325, 4925], [3900, 4600],
 ];
 const OLD2NEW = [0, 1, 3, 5, 8, 10, 12, 15, 25, 28, 31, 33, 35, 34, 39, 42, 50, 53, 56, 58, 60, 62, 65, 70, 75, 100, 79, 103, 83, 106, 109, 91, 125, 128, 131, 133, 136, 139, 147, 149];
 /*LEVELS-END*/
@@ -640,6 +640,9 @@ function shotPoints(res, combo) {
   const popM = Math.round(pop * mult);
   return { pts: popM + drop, pop, combo: popM - pop, drop, mult };
 }
+// Shots that pay the shot bonus: shots left on a shot-limit level, or shots under the
+// level's shot target (par) on a level with no shot limit, so efficient play always scores more.
+const spareShots = (sp, fired, shotsLeft) => shotsLeft != null ? Math.max(0, shotsLeft) : sp.par ? Math.max(0, sp.par - fired) : 0;
 // The bonus paid for clearing the level now (leftover stones etc. falling pay a little extra on top).
 function finishBonus(shotsLeft, timeLeft) {
   return CLEAR_BONUS + (shotsLeft > 0 ? shotsLeft * SHOT_BONUS : 0) + (timeLeft > 0 ? Math.floor(timeLeft) * SEC_BONUS : 0);
@@ -793,6 +796,7 @@ function loseLine(idx) {
 function scoreTip(sp) {
   const p = pressureOf(sp), b = [];
   if (p === 'shots' || p === 'double') b.push('each shot left pays ' + SHOT_BONUS);
+  else if (sp.par) b.push('each shot under ' + sp.par + ' pays ' + SHOT_BONUS);
   if (p === 'time' || p === 'double') b.push('each second left pays ' + SEC_BONUS);
   return 'Drops score most and combos multiply' + (b.length ? '; ' + b.join(' and ') : '') + '. Clearing pays ' + CLEAR_BONUS + '.';
 }
@@ -1000,7 +1004,7 @@ function land(sim, b) {
   updHud();
 }
 const goalLeft = () => goalLeftOf(S, S.spec, S.dropped);
-const pendingBonus = () => S.kind === 'level' && S.mode !== 'over' ? finishBonus(S.shotsLeft, S.timeLeft) : 0;
+const pendingBonus = () => S.kind === 'level' && S.mode !== 'over' ? finishBonus(spareShots(S.spec, S.fired, S.shotsLeft), S.timeLeft) : 0;
 function starRow(n) {
   let h = '<p class="stars" aria-hidden="true">';
   for (let i = 0; i < 3; i++) h += i < n ? '<span class="on">★</span>' : '<span class="off">☆</span>';
@@ -1027,11 +1031,11 @@ function finish(win, reason) {
       addFall({ r, c, cell }); S.grid[r][c] = null; left++;
     }
     if (left) snd('drop');
-    const why = ['clear ' + CLEAR_BONUS];
-    if (S.shotsLeft > 0) why.push(S.shotsLeft + ' shots left');
+    const why = ['clear ' + CLEAR_BONUS], spare = spareShots(S.spec, S.fired, S.shotsLeft);
+    if (spare > 0) why.push(spare + (S.shotsLeft != null ? ' shots left' : ' shots under ' + S.spec.par));
     if (S.timeLeft > 0) why.push(Math.floor(S.timeLeft) + 's left');
     if (left) why.push(left + ' more fell');
-    const bonus = finishBonus(S.shotsLeft, S.timeLeft) + left * LEFT_BONUS;
+    const bonus = finishBonus(spare, S.timeLeft) + left * LEFT_BONUS;
     S.br.bonus = bonus; S.score += bonus;
     const st = starsFor(S.score, S.marks), i = S.idx, prevBest = save.best[i] || 0;
     save.stars[i] = Math.max(save.stars[i] || 0, st);
@@ -1700,7 +1704,7 @@ function updHud() {
   else if (p === 'time') { lab = icon('time') + 'Time'; val = fmtTime(S.timeLeft); warn = S.timeLeft <= 15; }
   else if (p === 'shots') { lab = icon('shots') + 'Shots left'; val = S.shotsLeft; warn = S.shotsLeft <= 5; }
   else if (p === 'ceiling') { lab = icon('ceiling') + 'Ceiling drops in'; val = S.dropIn; warn = S.dropIn <= 2; }
-  else { lab = icon('line') + 'Shots'; val = S.fired; }
+  else { lab = icon('line') + (sp.par ? 'Shots · bonus under ' + sp.par : 'Shots'); val = S.fired; }
   $('hPresL').innerHTML = lab; pv.textContent = warn ? '! ' + val : val; $('press').classList.toggle('warn', warn);
   // score bar: solid = score so far, pale = the bonus clearing now would add; stars light as marks are passed
   const bar = $('sbar'), show = !e && S.kind === 'level';
@@ -1912,6 +1916,5 @@ showOverlay(homeHtml());
 requestAnimationFrame(t => { last = t; requestAnimationFrame(tick); });
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
