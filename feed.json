@@ -1,5 +1,5 @@
 {
-  "built": "2026-10-15T12:08:07.955Z",
+  "built": "2026-10-15T12:37:21.654Z",
   "today": "2026-10-15",
   "timezone": "Europe/London",
   "count": 584,
@@ -129,7 +129,7 @@
       "kind": "game",
       "topic": "Quiz",
       "headline": "Ballpark",
-      "standfirst": "How tall, how far, how many? Drag the scale to guess the number, and score more the closer you land. Clear six packs of ten to open the Grand Tour.",
+      "standfirst": "How tall, how far, how many? Drag the scale to guess the number, and score more the closer you land. Clear all six packs to open the Grand Tour.",
       "date": "2026-10-15",
       "updated": "",
       "read": "~3 min",
