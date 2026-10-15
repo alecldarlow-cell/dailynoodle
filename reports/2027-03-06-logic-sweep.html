@@ -728,9 +728,8 @@ function confettiLoop(){
   else{_cf.raf=0; _cf.parts.length=0; ctx.clearRect(0,0,W,H); _cf.cv.classList.remove("on");}
 }
 $("#winShare").onclick=async()=>{
-  const txt=`The Digi Sweep · ${P.id}\n${won?`Swept in ${$("#timer").textContent}`:"Hit a mine"} · streak ${$("#streak").textContent}\nmade with Digi Puzzles`;
-  try{await navigator.clipboard.writeText(txt);const b=$("#winShare");b.textContent="Copied ✓";setTimeout(()=>b.textContent="Share result",1500);}
-  catch(_){const b=$("#winShare");b.textContent="Copy unavailable";setTimeout(()=>b.textContent="Share result",1500);}
+  const txt=dnSweep(won?"win":"loss",$("#timer").textContent,$("#streak").textContent,P.id);
+  doneCopy(txt,$("#winShare"));
 };
 $("#winNew").onclick=()=>{$("#winModal").classList.remove("on"); if(!won)load(curSrc);};
 $("#winModal").addEventListener("click",e=>{if(e.target===$("#winModal"))$("#winModal").classList.remove("on");});
@@ -781,7 +780,13 @@ let doneTried=false;
 function doneId(){return SAMPLE.id;}
 function doneMMSS(s){s=Math.max(0,Math.min(359999,Math.floor(+s)||0));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
 function doneUI(id){const e=document.getElementById(id);return (e&&e.textContent)||"0";}
-function doneText(rec){const how=rec.o==="win"?"Swept in "+doneMMSS(rec.s):rec.o==="loss"?"Hit a mine":"Revealed the board";return `The Digi Sweep · ${doneId()}\n${how} · streak ${doneUI("streak")}\nmade with Digi Puzzles`;}
+/* ---- digi-share-v2: one-line emoji share text ---- */
+function dnNum(id){const n=parseInt(String(id).split("·").pop(),10);return isNaN(n)?"":"#"+n;}
+function dnTime(t){return String(t||"").trim().replace(/^0+(\d)/,"$1");}
+function dnStreak(n){n=parseInt(String(n||"").replace(/\D/g,""),10)||0;return n>=2?" · 🔥"+n:"";}
+function dnSweepDay(id){const m=String(id).match(/(\d{4})-(\d{2})-(\d{2})/);return m?(+m[3])+" "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m[2]-1]:dnNum(id);}
+function dnSweep(o,t,streak,id){const d=dnSweepDay(id);return o==="win"?"💣 Sweep "+d+" — swept in "+dnTime(t)+dnStreak(streak):o==="loss"?"💥 Sweep "+d+" — boom":"💣 Sweep "+d+" — revealed";}
+function doneText(rec){return dnSweep(rec.o==="win"?"win":rec.o==="loss"?"loss":"gave",doneMMSS(rec.s),doneUI("streak"),doneId());}
 function doneCopy(txt,b){
   const said=t=>{b.textContent=t;setTimeout(()=>{b.textContent="Share result";},1600);};
   const fallback=()=>{try{const ta=document.createElement("textarea");ta.value=txt;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(ta);ta.select();const ok=document.execCommand&&document.execCommand("copy");document.body.removeChild(ta);said(ok?"Copied ✓":"Copy unavailable");}catch(e){said("Copy unavailable");}};

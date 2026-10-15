@@ -44,6 +44,11 @@ jobs:
       - name: Add reader-activity script to new pieces
         run: node tools/inject-tracker.js
 
+      # New puzzles uploaded from an older template still get the one-line
+      # emoji share text. A file it can't patch is reported, not fatal.
+      - name: One-line share text on new puzzles
+        run: node tools/share-v2.js || echo "::warning::share-v2 refused some files (see log)"
+
       - name: Build feed.json
         run: node tools/build-feed.js
 

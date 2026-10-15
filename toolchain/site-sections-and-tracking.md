@@ -26,3 +26,7 @@ Reference for any session that builds or publishes to the digi-news repo. Where 
 - Figures come from `public.admin_dashboard(p_from, p_to)`; reporting views live in the private `insights` schema. `insights.excluded_readers` removes Alec's own test browsers from all figures.
 - Retention: raw events 13 months, then rolled into `public.daily_stats` by the nightly `digi-roll-up-old-events` cron job.
 - Plan doc: "Digi reader data plan" (Claude Docs).
+
+## Share text (digi-share-v2, 15 Oct 2026)
+- Every puzzle shares one line, "emoji Name #N — result", no link and no "made with Digi Puzzles": ✏️ Mini, 🔢 Doku, 〰️ Path, 💣/💥 Sweep, 🔗 Link (one square per guess, ❌ for a miss), 🌍 Borders, 🧶 Tangle (unchanged). A streak of 2+ adds "· 🔥n".
+- `tools/share-v2.js` patches both share paths (result box and saved-result revisit) and runs in the build workflow, so a puzzle uploaded from an older template is patched on push. Update the templates in the Digi Puzzles project to match when convenient.
