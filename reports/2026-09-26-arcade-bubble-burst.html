@@ -123,6 +123,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offs
 .marks{display:flex;flex-wrap:wrap;gap:5px 12px;margin:3px 0 0;font:700 14px 'Fredoka',system-ui,sans-serif}
 .card>.marks{justify-content:center;margin:8px 0 2px}
 .marks .st{color:#E39A00;letter-spacing:-1px;margin-right:2px}
+.guide{color:var(--ink);font-weight:800}
 .tipline{text-align:left;margin-top:10px !important}
 .note{background:rgba(255,236,170,.55);border-radius:14px;padding:8px 10px;font-size:13.5px;font-weight:800;color:var(--ink)}
 .big{font:600 26px 'Fredoka',system-ui,sans-serif;margin:4px 0 !important}
@@ -223,6 +224,8 @@ const SPECIAL_NAMES = { bomb: 'Bomb', rainbow: 'Rainbow', zap: 'Zap' };
    Six worlds of 25. LEVELS, MARKS and OLD2NEW are generated from the level spec;
    shot limits, clocks, ceiling speeds and the star marks were set by simulated
    play. MARKS[i] = [score for ★★, score for ★★★]; ★ is for clearing the level.
+   GUIDES[i] = [★★, ★★★, timed]: the most shots (or seconds, on clock-only levels)
+   at which at least half of simulated clears still earned that many stars.
    OLD2NEW maps a level of the 40-level game to its place here (save migration). */
 const PER_WORLD = 25;
 /*LEVELS-BEGIN*/
@@ -386,22 +389,23 @@ const LEVELS = [
   L('Blizzard', { seed: 38, shape: 'full', rows: 11, colors: 6, p: 0.36, ice: 6, mys: 3, stones: 3, anchors: 4, drop: 6, specials: ['rainbow', 'bomb', 'zap'], par: 56, tip: 'The final climb. Good luck!' }),
 ];
 const MARKS = [
-  [2225, 2400], [1725, 1925], [2325, 2525], [3450, 4000], [1950, 1975], [2325, 2450], [2425, 3350], [2275, 2725], [3000, 3500], [2875, 3225],
-  [3100, 3525], [3200, 3675], [3450, 3625], [2150, 2700], [3475, 3950], [2850, 3150], [2725, 2900], [3800, 4275], [2975, 3350], [3175, 3750],
-  [3400, 3725], [2475, 2850], [4325, 4825], [3600, 3975], [3650, 4175], [3225, 3525], [2900, 3125], [2550, 2850], [3100, 3500], [2825, 3150],
-  [2725, 3050], [3900, 4500], [3775, 4200], [4450, 5000], [3725, 4250], [4050, 4575], [2850, 2875], [4300, 4825], [2925, 3300], [3550, 3975],
-  [2925, 3300], [3550, 3800], [3250, 3700], [3525, 4000], [4050, 4550], [6250, 7900], [3400, 3500], [4150, 4625], [6250, 7000], [3675, 3975],
-  [3525, 3950], [3425, 3825], [2775, 3150], [3550, 4075], [3375, 4075], [3750, 4300], [3425, 3925], [3400, 3675], [3825, 4200], [3650, 4200],
-  [3900, 4650], [4425, 4950], [3000, 3500], [3625, 4225], [4225, 4850], [4600, 5075], [3250, 3650], [2875, 3225], [3750, 4150], [5350, 5975],
-  [4800, 5550], [4225, 4650], [4425, 5075], [3900, 4375], [4650, 5100], [3675, 4175], [4050, 4575], [2850, 3275], [4350, 4950], [5250, 6075],
-  [4650, 5200], [4650, 5400], [4650, 5125], [4500, 5225], [3400, 3825], [3950, 4575], [3250, 3475], [3850, 4425], [5250, 5975], [4200, 4925],
-  [4000, 4650], [3925, 4550], [3400, 4025], [4850, 6125], [5025, 5700], [4975, 5625], [4550, 4925], [3925, 4575], [5100, 5875], [4850, 5800],
-  [3150, 4775], [3800, 4425], [2950, 3250], [3300, 3950], [4375, 5325], [4350, 5350], [4075, 4675], [5625, 6750], [3800, 4075], [3675, 4025],
-  [4975, 5925], [3325, 3725], [4150, 5175], [4150, 5150], [4000, 4425], [3075, 3575], [4450, 5150], [4250, 5250], [5375, 6250], [4000, 4800],
-  [4975, 5825], [4875, 5700], [3950, 4350], [4550, 5400], [5250, 5925], [4325, 4850], [3475, 3875], [3100, 3500], [4200, 5000], [2900, 3200],
-  [4175, 4775], [4275, 5250], [4850, 5675], [3450, 4025], [4825, 5775], [5375, 6800], [4875, 6025], [4025, 4625], [3300, 3750], [3975, 4650],
-  [6450, 8325], [4300, 4750], [3350, 3750], [4600, 5225], [5150, 5925], [4675, 5850], [3600, 4300], [2700, 3225], [4325, 4925], [3900, 4600],
+  [2475, 3075], [2475, 3225], [2725, 3200], [4000, 4950], [2225, 2375], [2975, 3675], [3950, 5325], [3175, 3950], [3950, 5425], [3075, 4425],
+  [4050, 5775], [4175, 5650], [3975, 4500], [3025, 4125], [4425, 5775], [3325, 4975], [3150, 3800], [5275, 6525], [3950, 5725], [4025, 5550],
+  [4025, 4825], [3125, 4525], [5375, 7300], [3975, 5150], [5575, 7150], [3900, 5800], [4100, 5225], [3475, 5275], [3750, 4600], [3525, 4700],
+  [3600, 4475], [4975, 5850], [4525, 5825], [4950, 5900], [5625, 6775], [4575, 6075], [3125, 3400], [6875, 8475], [3975, 5150], [4125, 5675],
+  [3700, 4675], [4200, 4900], [4625, 6250], [4900, 6025], [5650, 6925], [11025, 13175], [3900, 4200], [5700, 7275], [12300, 14675], [4700, 5450],
+  [5150, 6950], [4900, 6125], [3900, 5225], [4425, 6425], [5675, 6900], [4800, 6175], [5125, 7200], [4525, 5400], [4350, 5250], [4825, 6650],
+  [5900, 7475], [7225, 8450], [4150, 5825], [6150, 8175], [5000, 6500], [5425, 6575], [6000, 7325], [3700, 5425], [5175, 5875], [6075, 7875],
+  [5325, 7675], [5300, 6150], [6900, 9075], [6675, 8350], [6125, 7225], [5825, 6725], [5325, 6400], [3950, 4800], [6850, 9025], [7625, 9375],
+  [6650, 7875], [6975, 8825], [5600, 6950], [6100, 7325], [5025, 6350], [5050, 7125], [3975, 4350], [5100, 6950], [7850, 9550], [6650, 8025],
+  [5725, 7400], [5525, 7325], [4875, 6300], [5625, 7625], [7225, 8800], [6725, 8075], [5800, 6850], [5625, 7075], [7200, 8575], [6450, 9100],
+  [4025, 5425], [4750, 7200], [4900, 6450], [4275, 5425], [8025, 11075], [7625, 10700], [4950, 7425], [10750, 14525], [5125, 6000], [6900, 8400],
+  [7350, 10925], [4075, 5900], [7900, 11675], [5875, 8500], [4950, 5800], [4325, 5400], [7550, 10200], [7150, 9800], [7225, 9175], [5875, 7975],
+  [7775, 9975], [5900, 7325], [4725, 5475], [7675, 9800], [6500, 7600], [4975, 7525], [5925, 7425], [4200, 6125], [6025, 8450], [4575, 5925],
+  [5375, 6400], [6125, 8550], [6975, 8775], [4925, 6800], [8425, 10600], [9600, 12350], [5650, 8025], [6575, 8225], [5000, 6100], [6150, 7900],
+  [10575, 14775], [5725, 6725], [4525, 6300], [6650, 7950], [6625, 8450], [7800, 11900], [5300, 7325], [3100, 5075], [7075, 8725], [4625, 7100],
 ];
+const GUIDES = [[7, 4, 0], [15, 9, 0], [5, 2, 0], [17, 12, 0], [4, 2, 0], [14, 9, 0], [14, 10, 0], [12, 8, 0], [34, 25, 0], [36, 26, 0], [38, 23, 0], [51, 40, 0], [9, 5, 0], [18, 12, 0], [31, 24, 0], [46, 35, 0], [10, 6, 0], [37, 31, 0], [56, 42, 0], [45, 37, 0], [9, 5, 0], [29, 17, 0], [56, 44, 0], [26, 18, 0], [48, 35, 0], [52, 39, 0], [27, 20, 0], [60, 48, 0], [10, 6, 0], [4, 3, 0], [27, 21, 0], [29, 21, 0], [46, 36, 0], [20, 15, 0], [29, 21, 0], [37, 27, 0], [4, 3, 0], [45, 34, 0], [25, 19, 0], [33, 23, 0], [27, 18, 0], [8, 4, 0], [63, 51, 0], [56, 47, 0], [41, 34, 0], [50, 35, 0], [6, 4, 0], [70, 54, 0], [93, 80, 0], [15, 11, 0], [38, 27, 0], [43, 35, 0], [41, 30, 0], [39, 27, 0], [21, 14, 0], [41, 32, 0], [46, 34, 0], [26, 19, 0], [11, 5, 0], [47, 34, 0], [39, 26, 0], [48, 38, 0], [41, 29, 0], [40, 27, 0], [20, 15, 0], [32, 25, 0], [31, 22, 0], [46, 32, 0], [12, 9, 0], [33, 26, 0], [50, 35, 0], [20, 13, 0], [30, 17, 0], [55, 44, 0], [20, 15, 0], [110, 80, 1], [90, 60, 1], [80, 60, 1], [230, 170, 1], [170, 130, 1], [190, 160, 1], [210, 160, 1], [180, 140, 1], [40, 20, 1], [120, 70, 1], [110, 80, 1], [20, 10, 1], [190, 150, 1], [200, 160, 1], [70, 40, 1], [180, 140, 1], [190, 140, 1], [110, 80, 1], [40, 20, 1], [200, 170, 1], [190, 150, 1], [60, 40, 1], [170, 130, 1], [210, 170, 1], [90, 40, 1], [15, 8, 0], [34, 17, 0], [33, 24, 0], [26, 18, 0], [33, 22, 0], [40, 30, 0], [37, 21, 0], [43, 29, 0], [9, 7, 0], [34, 24, 0], [29, 17, 0], [28, 19, 0], [43, 29, 0], [38, 22, 0], [9, 6, 0], [25, 19, 0], [30, 20, 0], [32, 23, 0], [11, 5, 0], [41, 29, 0], [28, 21, 0], [36, 27, 0], [7, 5, 0], [23, 16, 0], [11, 6, 0], [43, 24, 0], [43, 33, 0], [34, 22, 0], [51, 36, 0], [34, 23, 0], [14, 7, 0], [50, 36, 0], [180, 120, 1], [56, 37, 0], [36, 29, 0], [36, 23, 0], [33, 17, 0], [42, 32, 0], [31, 23, 0], [160, 120, 1], [28, 19, 0], [19, 11, 0], [45, 31, 0], [15, 11, 0], [170, 120, 1], [33, 20, 0], [46, 28, 0], [69, 49, 0], [12, 6, 0], [43, 32, 0]];
 const OLD2NEW = [0, 1, 3, 5, 8, 10, 12, 15, 25, 28, 31, 33, 35, 34, 39, 42, 50, 53, 56, 58, 60, 62, 65, 70, 75, 100, 79, 103, 83, 106, 109, 91, 125, 128, 131, 133, 136, 139, 147, 149];
 /*LEVELS-END*/
 const worldIdx = i => Math.max(0, Math.min(WORLDS.length - 1, Math.floor(i / PER_WORLD)));
@@ -629,7 +633,7 @@ function endlessRow(B, n, rnd) {
   return row;
 }
 /* ---------- rules and scoring (shared with the tuning bot) ---------- */
-const CLEAR_BONUS = 500, SHOT_BONUS = 40, SEC_BONUS = 15, LEFT_BONUS = 20;
+const CLEAR_BONUS = 500, SHOT_BONUS = 150, SEC_BONUS = 40, LEFT_BONUS = 20;
 // Points for one landed shot; combo counts matched shots in a row, this one included.
 function shotPoints(res, combo) {
   const mult = res.matched ? 1 + Math.min(combo - 1, 4) * .5 : 1;
@@ -846,6 +850,12 @@ function newFeats(i) { return featsOf(LEVELS[i], i).filter(f => FIRST[f] === i);
 function cellPic(cell) {  // a bubble sprite as a small picture for the cards
   try { const c = document.createElement('canvas'), s = 34, g = c.getContext('2d'); c.width = c.height = s * 2; g.scale(2, 2); g.translate(s / 2, s / 2); paintBubble(g, keyOf(cell)); return '<img class="pic" alt="" src="' + c.toDataURL() + '">'; } catch (e) { return ''; }
 }
+function guideText(idx, short) {   // what the stars usually take, in shots (or time on clock-only levels)
+  const g = GUIDES[idx]; if (!g) return '';
+  const u = n => g[2] ? fmtTime(n) : n + (n === 1 ? ' shot' : ' shots');
+  return short ? '★★★ usually ' + (g[2] ? 'within ' : 'in ') + u(g[1]) + (g[2] ? '' : ' or fewer') + ' · ★★ ' + (g[2] ? 'within ' : 'in ') + u(g[0])
+    : '★★★ usually means clearing ' + (g[2] ? 'within ' + u(g[1]) : 'in ' + u(g[1]) + ' or fewer') + '; ★★ ' + (g[2] ? 'within ' : 'in about ') + u(g[0]) + '.';
+}
 function marksHtml(idx) {
   const m = MARKS[idx];
   return '<div class="marks" role="list"><span role="listitem"><b class="st">★</b> clear it</span><span role="listitem"><b class="st">★★</b> ' + fmtNum(m[0]) + '</span><span role="listitem"><b class="st">★★★</b> ' + fmtNum(m[1]) + '</span></div>';
@@ -854,7 +864,7 @@ function rulesHtml(idx) {
   const sp = LEVELS[idx], g = goalOf(sp), p = pressureOf(sp), gl = goalLine(idx), ll = loseLine(idx);
   return '<div class="rule"><span class="badge g-' + g + '">' + icon(g) + '</span><div><p class="rk">Goal</p><p class="rt">' + gl[0] + '</p><p class="rd">' + gl[1] + '</p></div></div>' +
     '<div class="rule"><span class="badge p-' + p + '">' + icon(p) + '</span><div><p class="rk">You lose if</p><p class="rt">' + ll[0] + '</p><p class="rd">' + ll[1] + '</p></div></div>' +
-    '<div class="rule"><span class="badge st-b">★</span><div><p class="rk">Stars</p>' + marksHtml(idx) + '<p class="rd">' + scoreTip(sp) + '</p></div></div>';
+    '<div class="rule"><span class="badge st-b">★</span><div><p class="rk">Stars</p>' + marksHtml(idx) + '<p class="rd"><b class="guide">' + guideText(idx) + '</b> ' + scoreTip(sp) + '</p></div></div>';
 }
 function cardHtml(idx) {
   const sp = LEVELS[idx], wd = worldOf(idx), j = idx % PER_WORLD, nf = newFeats(idx);
@@ -1050,6 +1060,7 @@ function finish(win, reason) {
       '<div class="brk"><span>Pops<b>' + fmtNum(S.br.pop) + '</b></span><span>Drops<b>' + fmtNum(S.br.drop) + '</b></span><span>Combos<b>' + fmtNum(S.br.combo) + '</b></span><span>Bonus<b>' + fmtNum(bonus) + '</b></span></div>' +
       '<p class="small">Bonus: ' + why.join(' · ') + '</p>' +
       '<p class="small">★★ at ' + fmtNum(S.marks[0]) + ' · ★★★ at ' + fmtNum(S.marks[1]) + ' · ' + toNext + '</p>' +
+      '<p class="small">You used ' + (GUIDES[i][2] ? fmtTime((S.spec.time || 0) - S.timeLeft) : S.fired + (S.fired === 1 ? ' shot' : ' shots')) + '. ' + guideText(i, true) + '</p>' +
       (last ? '<p class="sub">All ' + LEVELS.length + ' levels done. Try Endless for a high score.</p><button class="btn primary" data-act="endless" data-focus>Play Endless</button>'
             : '<button class="btn primary" data-act="next" data-focus>' + (worldEnd ? 'On to ' + worldOf(i + 1).name : 'Next level') + '</button>') +
       '<div class="row2"><button class="btn" data-act="retry">Replay</button><button class="btn ghost" data-act="levels">Levels</button></div>';
@@ -1786,7 +1797,7 @@ function pauseHtml() {
   else {
     const i = S.idx, sp = S.spec, g = goalOf(sp), p = pressureOf(sp);
     h += '<p class="sub">' + lvName(i) + ' · ' + sp.name + '</p>' +
-      '<div class="mini"><p>' + icon(g) + goalLine(i)[0] + '</p><p>' + icon(p) + 'Lose if: ' + loseLine(i)[0].replace(/^./, c => c.toLowerCase()) + '</p></div>' + marksHtml(i);
+      '<div class="mini"><p>' + icon(g) + goalLine(i)[0] + '</p><p>' + icon(p) + 'Lose if: ' + loseLine(i)[0].replace(/^./, c => c.toLowerCase()) + '</p></div>' + marksHtml(i) + '<p class="small">' + guideText(i, true) + '</p>';
   }
   return h + '<button class="btn primary" data-act="resume" data-focus>Resume</button>' +
     '<div class="row2"><button class="btn" data-act="retry">Restart</button><button class="btn" data-act="levels">Levels</button></div>' +
@@ -1897,7 +1908,7 @@ if (window.__DGTEST === true) window.__dg = { end: win => { if (S.mode === 'over
 
 /* ---------- test hook (only with #test in the URL) ---------- */
 if (location.hash === '#test') {
-  window.BB = { S, LEVELS, MARKS, OLD2NEW, FIRST, save, persist, startLevel, beginPlay, startEndless, pushRow, finish, nextLevelIdx, levelsHtml, cardHtml, simulate, resolveShot, presentColours, countWhere, isColour, goalLeft, lowestEff, nbrs,
+  window.BB = { S, LEVELS, MARKS, GUIDES, OLD2NEW, FIRST, updHud, save, persist, startLevel, beginPlay, startEndless, pushRow, finish, nextLevelIdx, levelsHtml, cardHtml, simulate, resolveShot, presentColours, countWhere, isColour, goalLeft, lowestEff, nbrs,
     clone: () => ({ grid: S.grid.map(r => r.slice()), parity: S.parity, ceil: S.ceil }),
     shootNow(angle, doSwap) { if (doSwap) swap(); S.angle = angle; const sim = simulate(S, angle); if (!sim) return false; const b = S.cur; S.cur = S.next; S.next = newBubble(); land(sim, b); return true; },
     step, draw, MIN_A, MAX_A, DEAD, geo: () => ({ X0, scale, LX, LY, NX, NY, BT, DEADY }) };
@@ -1916,6 +1927,5 @@ showOverlay(homeHtml());
 requestAnimationFrame(t => { last = t; requestAnimationFrame(tick); });
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
