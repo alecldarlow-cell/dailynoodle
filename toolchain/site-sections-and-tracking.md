@@ -38,3 +38,6 @@ Reference for any session that builds or publishes to the digi-news repo. Where 
 - `tools/engine-shells.js <type>` converts a puzzle only if its player is byte-identical to the engine, and runs for every type in the build workflow, so puzzles uploaded from the old self-contained templates are converted on push. Left self-contained on purpose (older players, all in the past): 3 July Minis, 3 July Dokus, 30 July Sweeps, Tangles 0001–0009, Borders 0001–0002.
 - When a template changes in a Digi Puzzles project, port the change into `engines/<type>.js` too; otherwise new uploads from the new template stay self-contained (they still work, they just don't share the engine).
 - `add-done-state.js --check` and `share-v2.js --check` look for their markers in the engine for thin pages.
+
+## Trimmed controls (15 Oct 2026)
+- Hidden in each `engines/<type>.css` (the engine binds to the ids, so the elements stay in the markup): Mini — Reveal all, Reset, on-screen-keys toggle, difficulty picker, New grid; Doku — Reveal all, Reset, Play again; Sweep — Reveal all, Restart, Flag check toggle (stays on); Path — Reset. The build-note `<footer>` is hidden on every type.

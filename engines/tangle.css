@@ -150,3 +150,9 @@ details.bon summary{cursor:pointer;min-height:40px;display:flex;align-items:cent
 .rm *,.rm *::before,.rm *::after{transition:none!important;animation:none!important}
 @media (prefers-reduced-motion: reduce){ .btn,.tile{transition:none} }
 @media (max-height:640px){ #play .wrap{gap:6px;padding-top:6px} #curWord{font-size:26px} #score{font-size:34px} }
+
+/* 15 Oct 2026 — trimmed controls (Alec): one daily puzzle, nothing extra.
+   Hidden rather than deleted: the engine binds to these ids, and the markup
+   lives in each puzzle page, so the elements stay in the HTML but never show.
+   The footer was a build note ("SHELL vN · … code, not eye") meant for us, not players. */
+footer{display:none!important}

@@ -177,3 +177,4 @@ html.app-mode .key.wide{max-width:64px}
    Hidden rather than deleted: the engine binds to these ids, and the markup
    lives in each puzzle page, so the buttons stay in the HTML but never show. */
 #revealAll,#reset,#toggleKb,#bandSel,#newPuzzle,#winNew{display:none!important}
+footer{display:none!important}

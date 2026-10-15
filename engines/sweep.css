@@ -151,3 +151,10 @@ html.app-mode .controls .spacer{display:none}
   html.app-mode .meta{margin-bottom:5px}
   html.app-mode .modebtn{min-height:44px}
 }
+
+/* 15 Oct 2026 — trimmed controls (Alec): one daily puzzle, nothing extra.
+   Hidden rather than deleted: the engine binds to these ids, and the markup
+   lives in each puzzle page, so the elements stay in the HTML but never show.
+   The footer was a build note ("SHELL vN · … code, not eye") meant for us, not players.
+   Gone: Reveal all (giving up), Restart, and the Flag check toggle (it stays on). */
+#revealAll,#reset,#flagCheck,footer{display:none!important}

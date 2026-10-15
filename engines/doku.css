@@ -194,3 +194,10 @@ html.app-mode .banklabel{display:none}
 html.app-mode .tile{width:clamp(30px,8.4vw,38px);height:clamp(36px,5.6svh,44px);font-size:16px}
 html.app-mode .bank{padding:6px;gap:5px;min-height:0}
 @media (max-height:660px){html.app-mode .tile{height:clamp(30px,5svh,40px);font-size:15px}}
+
+/* 15 Oct 2026 — trimmed controls (Alec): one daily puzzle, nothing extra.
+   Hidden rather than deleted: the engine binds to these ids, and the markup
+   lives in each puzzle page, so the elements stay in the HTML but never show.
+   The footer was a build note ("SHELL vN · … code, not eye") meant for us, not players.
+   Gone: Reveal all, Reset, Play again (both restarted the same puzzle). */
+#revealAll,#reset,#newPuzzle,#winNew,footer{display:none!important}
