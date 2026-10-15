@@ -169,3 +169,11 @@ html.app-mode .key.wide{max-width:64px}
   html.app-mode .kb{margin-top:5px}
   html.app-mode .key{height:clamp(34px,5.6svh,46px)}
 }
+
+/* 15 Oct 2026 — trimmed controls (Alec): one daily puzzle, nothing extra.
+   Gone: Reveal all, Reset, the on-screen-keys toggle (phones always get the
+   keys; computers type), the difficulty picker, and New grid (it made a
+   random grid with no clues, and its solves counted towards the streak).
+   Hidden rather than deleted: the engine binds to these ids, and the markup
+   lives in each puzzle page, so the buttons stay in the HTML but never show. */
+#revealAll,#reset,#toggleKb,#bandSel,#newPuzzle,#winNew{display:none!important}
