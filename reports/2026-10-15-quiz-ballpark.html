@@ -130,7 +130,7 @@ a{color:inherit}
 .fb{border-radius:16px;padding:12px 14px;background:var(--paper);border:1.5px solid var(--line);animation:up .25s ease-out}
 .fbv{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .fbv b{font-size:22px;font-weight:800}
-.fbv span{font-size:20px;font-weight:800;padding:2px 10px;border-radius:10px;color:#fff}
+.fbv span{font-size:20px;font-weight:800;padding:2px 10px;border-radius:10px;color:var(--ink)}
 .fbl{margin-top:4px;font-size:15px;font-weight:600}
 .fbn{margin:6px 0 0;font-size:14px;color:var(--ink2)}
 @keyframes up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -182,7 +182,7 @@ a{color:inherit}
 .res li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 12px;border-radius:12px;background:var(--paper);border:1.5px solid var(--line)}
 .res .rq{font-size:14px;font-weight:600;line-height:1.25}
 .res .ra{font-size:13px;color:var(--ink2)}
-.res .rp{grid-row:1/3;grid-column:2;align-self:center;min-width:46px;text-align:center;padding:4px 8px;border-radius:9px;color:#fff;font-weight:800;font-size:15px}
+.res .rp{grid-row:1/3;grid-column:2;align-self:center;min-width:46px;text-align:center;padding:4px 8px;border-radius:9px;color:var(--ink);font-weight:800;font-size:15px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
 /* ---------- sheets ---------- */
@@ -196,6 +196,14 @@ a{color:inherit}
 .rm *,.rm *::before,.rm *::after{animation:none!important;transition:none!important}
 @media (prefers-reduced-motion: reduce){.burst{display:none}}
 @media (max-height:640px){.rv{font-size:36px}.q{font-size:19px}.logo h1{font-size:40px}.slz{padding-top:34px}}
+/* short screens (browser bars showing, iPhone Safari): keep the verdict and both numbers in view after Lock in */
+@media (max-height:600px){
+  .pw{gap:8px;padding-top:6px}.mid{gap:8px}.meter{margin-top:12px}
+  .qcard{padding:10px 14px}.q{font-size:18px}
+  .fb{padding:8px 12px}.fbv b{font-size:19px}.fbv span{font-size:17px}.fbl{margin-top:2px;font-size:14px}.fbn{margin-top:3px;font-size:13px;line-height:1.3}
+  .read.two{padding-top:0}.read.two .rc{padding:4px 6px}.read.two .rl{font-size:11px}.read.two .rv{font-size:23px}.read.two .ru{font-size:13px}
+  .labs{height:34px}.nb,.act{min-height:50px}
+}
 </style>
 </head>
 <body>
@@ -226,7 +234,8 @@ a{color:inherit}
    </div>
    <div class="srow"><span><b>★</b> 400<small>clears the pack</small></span><span><b>★★</b> 525</span><span><b>★★★</b> 625</span></div>
    <p>Ten questions a round from a pack of 40, with 1,000 points to play for. Clearing a pack opens the next.</p>
-   <p>The scale is logarithmic: each big mark is ten times the last, so a drag can cover anything from a few to a few billion.</p>
+   <p>Gaps are measured from the smaller number, so a guess of 80 for an answer of 100 is 25% out, and half the answer scores the same as double it.</p>
+   <p>The scale is logarithmic: each big mark is ten times the last, and every question gets its own stretch of it.</p>
   </div>
   <div class="togs" data-togs></div>
   <div class="foot">Figures are rounded; dated ones say when they're from.</div>
@@ -736,9 +745,13 @@ function lockIn(){if(!R||R.ph!=='g')return;first();lockedAt=performance.now();
   const g=LAD[CI],z=zone(g,F.a);R.g[R.i]=g;R.z[R.i]=z;R.ph='r';store();
   SND.lock();reveal(true);setTimeout(()=>SND.res(z),120);renderMeter()}
 
-function offText(g,a){const r=g/a;if(Math.abs(r-1)<0.005)return 'spot on';
-  if(r<1)return r>0.5?Math.round((1-r)*100)+'% under':'about '+trim(+(1/r).toPrecision(2))+'× too low';
-  return r<2?Math.round((r-1)*100)+'% over':'about '+trim(+r.toPrecision(2))+'× too high'}
+// Gaps are measured from the smaller number, exactly as zone() scores them (and as the rules card says),
+// so a guess of 78 for 100 reads "the answer was 28% more", which is the 50-point band.
+// Figures round up, so a gap scored as just over a band edge never reads as inside it.
+function offText(g,a){const r=g/a;if(Math.abs(r-1)<0.005)return 'Spot on.';
+  const k=Math.max(r,1/r),pc=Math.ceil((k-1)*100-1e-6),x=String(Math.ceil(k*10-1e-6)/10);
+  if(r<1)return k<2?'The answer was '+pc+'% more than your guess.':'The answer was about '+x+'× your guess.';
+  return k<2?'Your guess was '+pc+'% more than the answer.':'Your guess was about '+x+'× the answer.'}
 
 function reveal(anim){
   const g=R.g[R.i],z=R.z[R.i],a=F.a;
@@ -747,13 +760,14 @@ function reveal(anim){
   $('zbs').innerHTML=zb;$('pin').style.left=posOf(a)+'%';
   if(anim&&!isRM())requestAnimationFrame(()=>requestAnimationFrame(()=>$('slz').classList.add('show')));else $('slz').classList.add('show');
   $('fbV').textContent=ZN[z];$('fbP').textContent='+'+PTS[z];$('fbP').style.background=ZC[z];
-  const off=offText(g,a);$('fbL').textContent='You were '+off+'.';
+  $('fbL').textContent=offText(g,a);
   $('av').textContent=fmtA(a);$('au').textContent=F.u;$('ansC').hidden=false;$('read').classList.add('two');$('ctl').classList.add('rev');
   $('fbN').textContent=F.n;$('fbN').hidden=!F.n||/^(About |Around |Up to about )?[\d.,]+( [^ .]+)?\.$/.test(F.n);$('fb').hidden=false;
   $('minus').disabled=$('plus').disabled=true;$('tip').hidden=true;
   actLabel(R.i<NQ-1?'Next':'See result',true);
   if(anim&&z===0&&!isRM())burst();
-  setTimeout(()=>{try{$('fb').scrollIntoView({block:'nearest',behavior:isRM()?'auto':'smooth'})}catch(e){}},anim?60:0)}
+  // bring the numbers into view (they sit under the verdict) if a very short screen still overflows
+  setTimeout(()=>{try{$('read').scrollIntoView({block:'nearest',behavior:isRM()?'auto':'smooth'})}catch(e){}},anim?60:0)}
 
 function burst(){const t=$('trk'),x=posOf(F.a);
   for(let k=0;k<16;k++){const s=document.createElement('span');s.className='burst';const ang=Math.PI*(1.05+k/15*0.9),d=40+Math.random()*50;
@@ -858,7 +872,7 @@ if(window.__DGTEST===true){
     guess(v){if(!R||R.ph!=='g')return;first();setIdx(nearest(L10(v)),true)},
     lock:()=>lockIn(), next:()=>nextQ(),
     facts:()=>PACKS.map(p=>({k:p.k,q:p.q.map(f=>({q:f[0],u:f[1],a:f[2],fl:f[4]}))})),
-    ladder:(lo,i)=>ladder(lo,i), zone:zone, fmt:fmt, fmtA:fmtA
+    ladder:(lo,i)=>ladder(lo,i), zone:zone, fmt:fmt, fmtA:fmtA, off:offText
   };
 }
 
@@ -866,6 +880,5 @@ applyRM();
 show('home');
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
