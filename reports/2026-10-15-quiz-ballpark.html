@@ -6,7 +6,7 @@
 <title>Ballpark</title>
 <meta name="dn:kind"       content="game">
 <meta name="dn:headline"   content="Ballpark">
-<meta name="dn:standfirst" content="How tall, how far, how many? Drag the scale to guess the number, and score more the closer you land. Clear six packs of ten to open the Grand Tour.">
+<meta name="dn:standfirst" content="How tall, how far, how many? Drag the scale to guess the number, and score more the closer you land. Clear all six packs to open the Grand Tour.">
 <meta name="dn:topic"      content="Quiz">
 <meta name="dn:date"       content="2026-10-15">
 <meta name="dn:read"       content="~3 min">
@@ -124,7 +124,7 @@ a{color:inherit}
 .zb{position:absolute;top:-16px;bottom:-16px;border-radius:6px;opacity:0;transition:opacity .35s}
 .show .zb{opacity:1}
 .tk{position:absolute;top:14px;width:2px;margin-left:-1px;height:7px;background:var(--ink2)}
-.tk.mj{height:13px;width:2.5px;background:var(--ink)}
+.tk.mj{height:13px;width:2.5px;background:var(--ink)}.tk.md{height:10px;background:var(--ink)}
 .lab{position:absolute;top:18px;transform:translateX(-50%);font-size:13px;font-weight:700;color:var(--ink2);white-space:nowrap}
 .labs{position:relative;height:40px}
 .th{position:absolute;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:var(--tom);
@@ -204,10 +204,10 @@ a{color:inherit}
     <i style="background:var(--z0)"></i><span>Within 10%</span><b>100</b>
     <i style="background:var(--z1)"></i><span>Within 25%</span><b>75</b>
     <i style="background:var(--z2)"></i><span>Within 50%</span><b>50</b>
-    <i style="background:var(--z3)"></i><span>Within double or half</span><b>25</b>
+    <i style="background:var(--z3)"></i><span>Within 3× either way</span><b>25</b>
     <i style="background:var(--zm)"></i><span>Further out</span><b>0</b>
    </div>
-   <p>Ten questions a pack, 1,000 points to play for. Score <b>400</b> to clear a pack and open the next: <span class="st"><b>★</b></span> 400, <span class="st"><b>★★</b></span> 600, <span class="st"><b>★★★</b></span> 800.</p>
+   <p>Ten questions a round from a pack of 40, 1,000 points to play for. Score <b>400</b> to clear a pack and open the next: <span class="st"><b>★</b></span> 400, <span class="st"><b>★★</b></span> 525, <span class="st"><b>★★★</b></span> 625.</p>
    <p>The scale is logarithmic: each big mark is ten times the last, so a drag can cover anything from a few to a few billion.</p>
   </div>
   <div class="togs" data-togs></div>
@@ -224,7 +224,7 @@ a{color:inherit}
    <span class="qn" id="qn">1/10</span>
    <span class="sc" id="sc">0</span>
   </div>
-  <div class="meter" aria-hidden="true"><div class="mf" id="mf"></div><i data-s="★" style="left:40%"></i><i data-s="★★" style="left:60%"></i><i data-s="★★★" style="left:80%"></i></div>
+  <div class="meter" aria-hidden="true"><div class="mf" id="mf"></div><i data-s="★" style="left:40%"></i><i data-s="★★" style="left:52.5%"></i><i data-s="★★★" style="left:62.5%"></i></div>
   <div class="pips" id="pips" aria-hidden="true"></div>
   <div class="mid">
    <div class="qcard"><p class="q" id="q"></p></div>
@@ -300,7 +300,31 @@ const PACKS=[
 ['How tall is Kilimanjaro, Africa’s highest mountain, in metres?','m',5895,'5,895 m. It\u2019s a lone volcano, not part of a mountain range.',0],
 ['What is the area of the Caspian Sea, the largest lake on Earth, in square kilometres?','km²',371000,'About 371,000 km², a little larger than Germany.',0],
 ['How deep is the ocean on average, in metres?','m',3700,'About 3,700 m. Most of the sea floor is a deep, dark plain.',0],
-['How tall is Yr Wyddfa (Snowdon), the highest peak in Wales, in metres?','m',1085,'',1]]},
+['How tall is Yr Wyddfa (Snowdon), the highest peak in Wales, in metres?','m',1085,'',1],
+['How long is the Amazon River, in kilometres?','km',6400,'About 6,400 km. Some surveys make it longer than the Nile.',1],
+['How tall is Mont Blanc, in metres?','m',4806,'About 4,806 m. The snow cap rises and falls by a metre or two between surveys.',1],
+['How tall is K2, the world’s second-highest mountain, in metres?','m',8611,'8,611 m.',0],
+['How high above sea level is Lake Titicaca, in metres?','m',3812,'3,812 m, among the highest navigable lakes in the world.',0],
+['What is the area of Lough Neagh, the UK’s largest lake, in square kilometres?','km²',392,'About 392 km².',0],
+['How long is the River Severn, in kilometres?','km',354,'About 354 km, the longest river in Britain.',0],
+['What is the area of Australia, in square kilometres?','km²',7.69e6,'About 7.69 million km².',0],
+['How deep is Loch Ness at its deepest, in metres?','m',230,'About 230 m.',0],
+['What is the area of Antarctica, in square kilometres?','km²',1.4e7,'About 14 million km², larger than Europe.',0],
+['How tall is Hyperion, the tallest known living tree, in metres?','m',116,'About 116 m, a coast redwood in California.',0],
+['How long is the Great Barrier Reef, in kilometres?','km',2300,'About 2,300 km.',0],
+['How tall is the Matterhorn, in metres?','m',4478,'4,478 m.',0],
+['How deep is the Grand Canyon at its deepest, in metres?','m',1800,'About 1,800 m.',0],
+['How long is the Grand Canyon, in kilometres?','km',446,'446 km.',0],
+['What is the area of Lake Superior, in square kilometres?','km²',82100,'About 82,100 km², the largest freshwater lake by area.',0],
+['How tall is Scafell Pike, England’s highest mountain, in metres?','m',978,'978 m.',1],
+['How wide is Victoria Falls, in metres?','m',1708,'About 1,708 m, the widest single curtain of falling water.',0],
+['How long is the River Danube, in kilometres?','km',2850,'About 2,850 km, through ten countries.',0],
+['How long is the Mississippi River, in kilometres?','km',3730,'About 3,730 km.',0],
+['How high is Beacon Hill near West Runton, Norfolk’s highest point, in metres?','m',103,'103 m.',0],
+['How far is it from Land’s End to John o’ Groats by road, in kilometres?','km',1407,'About 1,407 km (874 miles) by the usual road route.',1],
+['How tall is Aconcagua, the highest mountain outside Asia, in metres?','m',6961,'6,961 m, in the Andes.',0],
+['How deep is Lake Tanganyika at its deepest, in metres?','m',1470,'About 1,470 m, the second-deepest lake on Earth.',0],
+['What is the area of the Atlantic Ocean, in square kilometres?','km²',1.06e8,'About 106 million km².',0]]},
 {k:'space',name:'Space',sub:'Planets, light and time',c:'#4B4FC4',ic:'<circle cx="12" cy="12" r="6.5"/><path d="M1.5 16.5c-1-2.5 6-6.5 11.5-8.4S23 5.7 22.6 7.7c-.2 1-1.7 2.2-4 3.6l-.3-1.4c1.6-1 2.4-1.7 2.3-2.1-.3-1-5.5.3-10.6 2.7-5.2 2.4-8.2 4.6-7.8 5.6.2.4 1.4.5 3.2.1l1.1 1c-2.6.7-4.6.6-5-.7z"/>',q:[
 ['How far away is the Moon, on average, in kilometres?','km',384400,'384,400 km on average. Light covers it in about 1.3 seconds.',1],
 ['How far is the Earth from the Sun, on average, in kilometres?','km',149.6e6,'About 149.6 million km, the distance astronomers call one astronomical unit.',1],
@@ -317,7 +341,31 @@ const PACKS=[
 ['How tall is Olympus Mons on Mars, the tallest volcano in the solar system, in kilometres?','km',22,'About 22 km, roughly two and a half times the height of Everest.',0],
 ['How far away is Proxima Centauri, the nearest star after the Sun, in light years?','light years',4.24,'4.24 light years, about 40 trillion km.',0],
 ['How many Moons would it take to match the mass of the Earth?','',81,'',2],
-['How many Earths could fit inside the Sun?','',1.3e6,'',2]]},
+['How many Earths could fit inside the Sun?','',1.3e6,'',2],
+['How long is a day on Mars, in hours?','hours',24.6,'About 24.6 hours, barely longer than ours.',1],
+['How wide is the Earth, in kilometres?','km',12742,'12,742 km on average.',1],
+['How far is Mars from the Sun, on average, in kilometres?','km',2.28e8,'About 228 million km.',0],
+['How far is Neptune from the Sun, on average, in kilometres?','km',4.5e9,'About 4.5 billion km, 30 times further than the Earth.',0],
+['How many Earth years does Neptune take to go round the Sun?','years',165,'About 165 years.',0],
+['How many Earth years does Jupiter take to go round the Sun?','years',11.9,'About 11.9 years.',0],
+['How many Earth days does Mercury take to go round the Sun?','days',88,'88 days.',0],
+['How many times stronger is gravity on the Earth than on the Moon?','',6,'About 6 times.',0],
+['How wide is Mars, in kilometres?','km',6779,'6,779 km, about half the width of the Earth.',0],
+['How many people have walked on the Moon?','',12,'12, all between 1969 and 1972.',3],
+['How fast does the Earth travel round the Sun, in kilometres per second?','km/s',29.8,'About 29.8 km every second, over 100,000 km/h.',0],
+['How fast does the Earth’s surface spin at the equator, in km per hour?','km/h',1670,'About 1,670 km/h.',0],
+['How many times heavier than the Earth is the Sun?','',333000,'About 333,000 times.',2],
+['How wide is the Milky Way, in light years?','light years',100000,'About 100,000 light years.',0],
+['How far away is the Andromeda Galaxy, in light years?','light years',2.5e6,'About 2.5 million light years.',0],
+['How many Earth days does Venus take to spin once?','days',243,'243 days, longer than its year of 225 days.',0],
+['How tall was the Saturn V Moon rocket, in metres?','m',111,'About 111 m.',0],
+['How long is a day on Jupiter, in hours?','hours',9.9,'About 9.9 hours, the shortest of any planet.',0],
+['How much does the International Space Station weigh, in tonnes?','tonnes',420,'About 420 tonnes.',0],
+['How wide is Pluto, in kilometres?','km',2377,'2,377 km, smaller than our Moon.',0],
+['How fast must a rocket go to escape the Earth’s gravity, in kilometres per second?','km/s',11.2,'About 11.2 km every second.',0],
+['How close did Mars come to the Earth in 2003, in kilometres?','km',5.58e7,'About 55.8 million km, the closest in nearly 60,000 years.',0],
+['How many kilometres are there in a light year?','km',9.46e12,'About 9.46 trillion km.',0],
+['How hot is the surface of the Sun, in °C?','°C',5500,'About 5,500 °C.',0]]},
 {k:'places',name:'Places',sub:'People and places, dated',c:'#C9582F',ic:'<path d="M2 22V12h4V6h5v16h2V9h4v4h5v9z"/>',q:[
 ['How many people lived in London at the 2021 census?','',8799800,'About 8.8 million (8,799,800).',3],
 ['How many people lived in New York City at the 2020 census?','',8804190,'8,804,190, almost exactly the same as London a year later.',2],
@@ -334,7 +382,31 @@ const PACKS=[
 ['How many people lived in India in mid-2023, when it overtook China?','',1.4286e9,'About 1.43 billion, by the UN’s estimate.',2],
 ['How many countries are members of the United Nations?','',193,'',3],
 ['How many people lived in Norwich at the 2021 census?','',143900,'About 143,900, up from 132,500 in 2011.',2],
-['How many people lived in Greenland on 1 January 2024?','',56699,'56,699, according to Statistics Greenland.',2]]},
+['How many people lived in Greenland on 1 January 2024?','',56699,'56,699, according to Statistics Greenland.',2],
+['How many London boroughs are there, not counting the City of London?','',32,'32.',3],
+['How many people lived in Northern Ireland at the 2021 census?','',1903175,'About 1.9 million (1,903,175).',2],
+['How many people lived in England at the 2021 census?','',56489800,'About 56.5 million.',2],
+['How many people lived in the Republic of Ireland at the 2022 census?','',5149139,'About 5.15 million (5,149,139).',2],
+['How many people lived in the city of Paris in January 2023?','',2102650,'About 2.1 million in the city itself, and over 12 million in the wider region.',2],
+['What is the area of Wales, in square kilometres?','km²',20779,'About 20,800 km².',0],
+['What is the area of Norfolk, in square kilometres?','km²',5371,'About 5,370 km².',0],
+['How many countries are there in Africa?','',54,'54.',2],
+['How many countries were in the European Union in 2024?','',27,'27.',3],
+['How many states are there in the United States?','',50,'50.',3],
+['How many people lived in Birmingham at the 2021 census?','',1144900,'About 1.14 million.',2],
+['How many people lived in Manchester at the 2021 census?','',551900,'About 551,900.',2],
+['How many people lived in Canada at the 2021 census?','',36991981,'About 37 million.',2],
+['How many people lived in the United States at the 2020 census?','',331449281,'About 331 million.',2],
+['How many people lived in Brazil at the 2022 census?','',203080756,'About 203 million.',2],
+['How many people lived in Japan at the 2020 census?','',126146099,'About 126 million.',2],
+['How many people lived in New Zealand at the 2023 census?','',4993923,'About 5 million (4,993,923).',2],
+['What is the area of China, in square kilometres?','km²',9.6e6,'About 9.6 million km².',0],
+['What is the area of Iceland, in square kilometres?','km²',103000,'About 103,000 km².',0],
+['What is the area of the Isle of Man, in square kilometres?','km²',572,'About 572 km².',0],
+['How long is the London Underground network, in kilometres?','km',402,'About 402 km (250 miles).',0],
+['How many seats are there in the House of Commons (2024)?','',650,'650.',2],
+['How many people lived in Norfolk at the 2021 census?','',916200,'About 916,200.',2],
+['What is the area of Texas, in square kilometres?','km²',695662,'About 696,000 km², nearly three times the size of the UK.',0]]},
 {k:'body',name:'Body',sub:'The numbers inside you',c:'#C9406B',ic:'<path d="M12 21.5S3 16 3 9.5A4.8 4.8 0 0 1 12 7a4.8 4.8 0 0 1 9 2.5C21 16 12 21.5 12 21.5z"/>',q:[
 ['How many bones are in an adult human skeleton?','',206,'206. Babies are born with around 300, and many fuse as they grow.',3],
 ['How many times does a resting heart beat in a day?','',100000,'About 100,000, at around 70 beats a minute.',2],
@@ -351,7 +423,31 @@ const PACKS=[
 ['How tall was Robert Wadlow, the tallest person on record, in centimetres?','cm',272,'272 cm, or 8 ft 11 in.',0],
 ['How many days does a typical pregnancy last, counted from the last period?','days',280,'About 280 days, or 40 weeks.',0],
 ['How many bones are in one human hand, wrist included?','',27,'27, so your two hands hold more than a quarter of all your bones.',2],
-['How wide is a red blood cell, in micrometres (thousandths of a millimetre)?','µm',7.5,'',0]]},
+['How wide is a red blood cell, in micrometres (thousandths of a millimetre)?','µm',7.5,'',0],
+['What is normal human body temperature, in °C?','°C',37,'About 37 °C.',1],
+['How much air can an adult’s lungs hold, in litres?','litres',6,'About 6 litres.',0],
+['How many baby teeth does a child have?','',20,'20.',2],
+['How long is the large intestine, in metres?','m',1.5,'About 1.5 m.',0],
+['How many bones are in the human skull?','',22,'22: 8 in the cranium and 14 in the face.',2],
+['How many ribs does a person usually have?','',24,'24, in 12 pairs.',3],
+['How much does an adult human heart weigh, in grams?','g',300,'About 300 g.',0],
+['How much does an adult liver weigh, in grams?','g',1500,'About 1.5 kg, the heaviest organ inside the body.',0],
+['How long is an adult’s thigh bone (femur), in centimetres?','cm',48,'About 48 cm, the longest bone in the body.',0],
+['How tall is the average man in the UK, in centimetres?','cm',175,'About 175 cm (5 ft 9 in).',1],
+['How fast can the fastest nerve signals travel, in metres per second?','m/s',120,'Up to about 120 m/s.',0],
+['What percentage of an adult’s body is water?','%',60,'About 60%.',0],
+['How long is the spinal cord, in centimetres?','cm',45,'About 45 cm.',0],
+['What is the surface area of an adult’s skin, in square metres?','m²',1.8,'About 1.8 m².',0],
+['How much does a fingernail grow in a month, in millimetres?','mm',3.5,'About 3.5 mm.',0],
+['How much does hair on your head grow in a year, in centimetres?','cm',15,'About 15 cm.',0],
+['How many tiny air sacs (alveoli) are in a pair of adult lungs?','',4.8e8,'Around 480 million.',2],
+['How many bones are in one human foot, ankle included?','',26,'26.',2],
+['How much blood does a resting heart pump in a minute, in litres?','litres',5,'About 5 litres: all of your blood, roughly once a minute.',0],
+['How much blood does the heart pump in a day, in litres?','litres',7200,'About 7,000 litres.',0],
+['How much does a newborn baby weigh on average in the UK, in grams?','g',3350,'About 3.3 to 3.4 kg.',0],
+['What percentage of the body’s energy does the brain use?','%',20,'About 20%, though it’s about 2% of body weight.',0],
+['How many bones are in the human neck?','',7,'7, the same number as a giraffe.',2],
+['How long is the stapes, the smallest bone in the body, in millimetres?','mm',3,'About 3 mm. It sits deep in the ear.',0]]},
 {k:'build',name:'Engineering',sub:'Things people built',c:'#2F6F9E',ic:'<path d="M1 16h22v3H1zM3 16v-2.5a9 9 0 0 1 18 0V16h-2.5v-2.5a6.5 6.5 0 0 0-13 0V16z"/><path d="M5 19h2v3H5zM17 19h2v3h-2z"/>',q:[
 ['How tall is the Burj Khalifa in Dubai, the world’s tallest building, in metres?','m',828,'828 m, about two and a half Eiffel Towers.',1],
 ['How tall is the Eiffel Tower, in metres?','m',330,'About 330 m, since a new antenna went on top in 2022.',1],
@@ -368,7 +464,31 @@ const PACKS=[
 ['How tall is Blackpool Tower, in metres?','m',158,'158 m. It opened in 1894.',0],
 ['How long is the Forth Bridge, the red rail bridge near Edinburgh, in metres?','m',2500,'About 2.5 km. It opened in 1890.',0],
 ['How wide are the wings of the Angel of the North, in metres?','m',54,'54 m, about the length of five London buses.',0],
-['How long is the Suez Canal, in kilometres?','km',193,'',0]]},
+['How long is the Suez Canal, in kilometres?','km',193,'',0],
+['How tall is the Empire State Building to its roof, in metres?','m',381,'381 m, or 443 m to the tip of its antenna.',0],
+['How tall is One World Trade Center in New York, in metres?','m',541,'541 m, or 1,776 ft, after the year of US independence.',0],
+['How tall is the Leaning Tower of Pisa, in metres?','m',56,'About 56 m.',0],
+['How tall is the Spinnaker Tower in Portsmouth, in metres?','m',170,'170 m.',0],
+['How tall is the London Eye, in metres?','m',135,'135 m.',1],
+['How tall is the dome of St Paul’s Cathedral, in metres?','m',111,'About 111 m to the top of its cross.',0],
+['How tall is the spire of Norwich Cathedral, in metres?','m',96,'96 m, the second tallest in England after Salisbury.',0],
+['How tall is the Hoover Dam, in metres?','m',221,'221 m.',0],
+['How long is the Gotthard Base Tunnel in Switzerland, in kilometres?','km',57,'About 57 km, the world’s longest railway tunnel.',0],
+['How long is the Three Gorges Dam in China, in metres?','m',2335,'About 2.3 km.',0],
+['How long is the M25 around London, in kilometres?','km',188,'About 188 km (117 miles).',1],
+['How long was Hadrian’s Wall, in kilometres?','km',117,'About 117 km (73 miles), coast to coast.',0],
+['How long is Southend Pier, in metres?','m',2158,'About 2.16 km, the longest pleasure pier in the world.',0],
+['How tall is Tower Bridge, in metres?','m',65,'65 m.',1],
+['What is the wingspan of an Airbus A380, in metres?','m',80,'About 80 m.',0],
+['How long was the Titanic, in metres?','m',269,'About 269 m.',0],
+['How fast do the fastest Japanese bullet trains run in service, in km per hour?','km/h',320,'320 km/h.',0],
+['How fast did the record-breaking Japanese maglev train go in 2015, in km per hour?','km/h',603,'603 km/h.',0],
+['How many rivets hold the Eiffel Tower together?','',2.5e6,'About 2.5 million.',2],
+['How much does the Eiffel Tower’s ironwork weigh, in tonnes?','tonnes',7300,'About 7,300 tonnes.',0],
+['How long is the Øresund Bridge between Denmark and Sweden, in kilometres?','km',7.8,'About 7.8 km, before the road and rail dive into a tunnel.',0],
+['How long is the Panama Canal, in kilometres?','km',82,'About 82 km.',0],
+['How tall is Nelson’s Column, in metres?','m',52,'About 52 m including the statue.',0],
+['How tall is the tallest pylon of the Millau Viaduct in France, in metres?','m',343,'343 m, taller than the Eiffel Tower.',0]]},
 {k:'animals',name:'Animals',sub:'Bigger, faster, longer',c:'#B9800F',ic:'<circle cx="5.5" cy="10" r="2.3"/><circle cx="9.5" cy="5.5" r="2.3"/><circle cx="14.5" cy="5.5" r="2.3"/><circle cx="18.5" cy="10" r="2.3"/><path d="M12 11c-4 0-7 5.5-6 8 1 2 3.5 1 6 1s5 1 6-1c1-2.5-2-8-6-8z"/>',q:[
 ['How long can a blue whale grow, in metres?','m',30,'Up to about 30 m, the largest animal known to have lived.',1],
 ['How fast can a cheetah run, in km per hour?','km/h',105,'Around 100 to 110 km/h, but only in short bursts.',1],
@@ -385,16 +505,40 @@ const PACKS=[
 ['How many eggs can a queen honeybee lay in a day?','',2000,'',2],
 ['How many teeth can a great white shark have in its jaws at once?','',300,'About 300, in rows; lost teeth are replaced.',2],
 ['How far does an Arctic tern fly on its yearly migration, in kilometres?','km',70000,'Around 70,000 km, from the Arctic to the Antarctic and back.',0],
-['How much can a Galápagos giant tortoise weigh, in kilograms?','kg',400,'',0]]}
+['How much can a Galápagos giant tortoise weigh, in kilograms?','kg',400,'',0],
+['How much can a blue whale weigh, in tonnes?','tonnes',150,'Commonly up to about 150 tonnes; the heaviest weighed was nearer 190.',0],
+['How fast can a racing greyhound run, in km per hour?','km/h',72,'About 72 km/h.',1],
+['How much does a bee hummingbird, the smallest bird, weigh, in grams?','g',2,'About 2 g, lighter than a 1p coin.',0],
+['How long is an adult giraffe’s neck, in metres?','m',1.8,'About 1.8 m, yet it has only seven bones.',0],
+['How many teeth does an adult dog have?','',42,'42.',2],
+['About how many species of mammal are known?','',6500,'About 6,500, and still rising.',2],
+['How much does an adult male polar bear weigh, in kilograms?','kg',500,'Usually about 350 to 700 kg.',0],
+['How long is a giraffe’s pregnancy, in days?','days',450,'About 450 days, around 15 months.',0],
+['How tall is an emperor penguin, in centimetres?','cm',115,'About 115 cm.',0],
+['How deep can a Cuvier’s beaked whale dive, in metres?','m',2992,'2,992 m, the deepest dive recorded by any mammal.',0],
+['About how many species of ant have been described?','',14000,'More than 14,000.',2],
+['How much does an adult hippo weigh, in kilograms?','kg',1500,'About 1,500 kg.',0],
+['What is the wingspan of a golden eagle, in metres?','m',2,'About 2 m.',0],
+['How long can a saltwater crocodile grow, in metres?','m',6,'Up to about 6 m.',0],
+['How long can a sperm whale hold its breath, in minutes?','minutes',90,'Up to about 90 minutes.',0],
+['About how many species of fish are known?','',35000,'About 35,000, more than all other vertebrates put together.',2],
+['How long can a bowhead whale live, in years?','years',200,'Over 200 years; one was estimated at 211.',0],
+['How fast does a mouse’s heart beat?','beats a minute',600,'About 600 beats a minute.',0],
+['How much does an elephant’s brain weigh, in grams?','g',5000,'About 5 kg, the largest of any land animal.',0],
+['How many feathers does a swan have?','',25000,'About 25,000.',2],
+['How fast can a racehorse gallop, in km per hour?','km/h',70,'About 70 km/h at full stretch.',0],
+['How long is a newborn kangaroo, in centimetres?','cm',2,'About 2 cm, the size of a jelly bean.',0],
+['How much does an adult pet cat typically weigh, in kilograms?','kg',4.5,'About 4.5 kg.',1],
+['How much does a newborn African elephant weigh, in kilograms?','kg',100,'About 100 kg.',0]]}
 ];
 const TOUR={k:'tour',name:'Grand Tour',sub:'Ten from every pack',c:'#1E2433',ic:'<path d="M12 1.5l2.6 7.9 7.9 2.6-7.9 2.6-2.6 7.9-2.6-7.9L1.5 12l7.9-2.6z"/>'};
 const ALLP=PACKS.concat([TOUR]);
-const NQ=10, CLEAR=400, S2=600, S3=800;
-const BAND=[1.1,1.25,1.5,2], PTS=[100,75,50,25,0], ZN=['Bullseye','Close','Ballpark','In range','Miss'];
+const NQ=10, CLEAR=400, S2=525, S3=625;
+const BAND=[1.1,1.25,1.5,3], PTS=[100,75,50,25,0], ZN=['Bullseye','Close','Ballpark','In range','Miss'];
 const ZC=['var(--z0)','var(--z1)','var(--z2)','var(--z3)','var(--zm)'];
 const ZH=['#1E9E6A','#86BD4B','#F0B43C','#F08C50','#B1A99C'];
 const MANT=[1,1.05,1.1,1.15,1.2,1.25,1.3,1.35,1.4,1.5,1.6,1.7,1.8,1.9,2,2.1,2.2,2.3,2.4,2.5,2.6,2.8,3,3.2,3.4,3.6,3.8,4,4.2,4.4,4.6,4.8,5,5.2,5.4,5.6,5.8,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75];
-const SPAN=3;            // decades shown on the scale
+const SPAN=2;            // decades shown on the scale
 
 /* ---------- small helpers ---------- */
 const $=id=>document.getElementById(id);
@@ -408,25 +552,29 @@ function fmt(v){const A=Math.abs(v);
   if(A>=1000)return grp(v);return trim(v)}
 function fmtA(a){if(a>=1e6)return fmt(a);if(a>=1000)return grp(a);return String(a)}
 function withU(s,u){return u?s+' '+u:s}
-function shortLab(d){const v=Math.pow(10,d);
-  if(d>=12)return (v/1e12)+'tn';if(d>=9)return (v/1e9)+'bn';if(d>=6)return (v/1e6)+'M';if(d>=3)return (v/1e3)+'k';return trim(v)}
+function shortLab(v){if(v>=1e12)return trim(v/1e12)+'tn';if(v>=1e9)return trim(v/1e9)+'bn';if(v>=1e6)return trim(v/1e6)+'M';if(v>=1e3)return trim(v/1e3)+'k';return trim(v)}
 function fact(id){const s=id.split(':'),p=PACKS.find(x=>x.k===s[0]),f=p.q[+s[1]];
   return{id:id,q:f[0],u:f[1],a:f[2],n:f[3],easy:!!(f[4]&1),int:!!(f[4]&2),pk:p}}
 function zone(g,a){const r=Math.max(g/a,a/g);for(let i=0;i<BAND.length;i++)if(r<=BAND[i]+1e-9)return i;return 4}
 function stars(s){return s>=S3?3:s>=S2?2:s>=CLEAR?1:0}
-function ladder(lo,isInt){const out=[];
-  for(let d=lo;d<lo+SPAN;d++)for(const m of MANT){let v=+(m*Math.pow(10,d)).toPrecision(3);
+function ladder(lo,isInt){const out=[],a=Math.pow(10,lo)*0.9999,b=Math.pow(10,lo+SPAN)*1.0001;
+  for(let d=Math.floor(lo);d<=Math.ceil(lo+SPAN);d++)for(const m of MANT){let v=+(m*Math.pow(10,d)).toPrecision(3);
     if(isInt){if(v<10&&v!==Math.round(v))continue;v=Math.round(v);if(v<1)continue}
+    if(v<a||v>b)continue;
     if(!out.length||out[out.length-1]!==v)out.push(v)}
-  out.push(+Math.pow(10,lo+SPAN).toPrecision(3));return out}
-function mkLo(f){let lo=Math.floor(L10(f.a)-rand(0.55,1.45));if(f.int)lo=Math.max(lo,0);return lo}
+  return out}
+// the scale starts somewhere between 0.4 and 1.6 decades below the answer, so it never sits near an end
+function mkLo(f){let lo=+(L10(f.a)-rand(0.4,1.6)).toFixed(3);if(f.int)lo=Math.max(lo,0);return lo}
 
 /* ---------- save (digi-ballpark- prefix, site contract §7) ---------- */
 const KEY='digi-ballpark-v1';
 const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
-let save={v:1,pk:{},snd:true,rm:null,fs:coarse,tip:0,last:{},cur:null};
+let save={v:1,pk:{},snd:true,rm:null,fs:coarse,tip:0,age:{},cur:null};
 try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);if(o&&o.v===1)save=Object.assign(save,o)}}catch(e){}
 if(typeof save.fs!=='boolean')save.fs=coarse;
+if(!save.age||typeof save.age!=='object')save.age={};
+if(save.last&&typeof save.last==='object')for(const k in save.last)if(!save.age[k]&&Array.isArray(save.last[k]))save.age[k]=save.last[k].slice();
+delete save.last;
 function store(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
 function best(k){return (save.pk[k]&&save.pk[k].b)||0}
 function cleared(i){return best(ALLP[i].k)>=CLEAR}
@@ -508,10 +656,11 @@ let F=null, LAD=[], LOGS=[], CI=0;
 
 function pickIds(p){
   let pool=p<6?PACKS[p].q.map((_,i)=>PACKS[p].k+':'+i):[].concat.apply([],PACKS.map(pk=>pk.q.map((_,i)=>pk.k+':'+i)));
-  shuffle(pool);
-  const seen=new Set(save.last[ALLP[p].k]||[]);
-  pool.sort((x,y)=>(seen.has(x)?1:0)-(seen.has(y)?1:0));          // last round's questions go to the back
-  const ei=pool.findIndex(id=>fact(id).easy);                      // an easy opener for an early win
+  // rotation: questions never asked come first, then the ones asked longest ago
+  const age=save.age[ALLP[p].k]||[],at=new Map(age.map((id,i)=>[id,i]));
+  pool=shuffle(pool.filter(id=>!at.has(id))).concat(pool.filter(id=>at.has(id)).sort((x,y)=>at.get(x)-at.get(y)));
+  let ei=pool.findIndex((id,i)=>i<NQ&&fact(id).easy);              // an easy opener for an early win
+  if(ei<0)ei=pool.findIndex(id=>fact(id).easy);
   if(ei>0)pool.unshift(pool.splice(ei,1)[0]);
   let ids=pool.slice(0,NQ);
   if(p===6){const first=ids[0];ids=shuffle(ids.slice(1));ids.unshift(first)}
@@ -519,11 +668,12 @@ function pickIds(p){
 
 function startRound(p,how){
   const ids=pickIds(p);
-  R={p:p,ids:ids,lo:ids.map(id=>mkLo(fact(id))),i:0,ph:'g',cur:null,g:[],z:[]};
-  save.cur=R;save.last[ALLP[p].k]=ids;store();
+  R={p:p,sp:SPAN,ids:ids,lo:ids.map(id=>mkLo(fact(id))),i:0,ph:'g',cur:null,g:[],z:[]};
+  const k=ALLP[p].k,ag=(save.age[k]||[]).filter(id=>ids.indexOf(id)<0).concat(ids);
+  save.age[k]=ag;save.cur=R;store();
   LEVEL=p+1;rndArm(how);paused=false;
   show('play');renderQ()}
-function resumeRound(){R=save.cur;LEVEL=R.p+1;rndArm('resume');paused=false;show('play');renderQ()}
+function resumeRound(){R=save.cur;if(R.sp!==SPAN){R.lo=R.ids.map(id=>mkLo(fact(id)));R.sp=SPAN;R.cur=null}LEVEL=R.p+1;rndArm('resume');paused=false;show('play');renderQ()}
 
 function score(){return R.z.reduce((s,z)=>s+PTS[z],0)}
 function first(){rndStart();ac();hideTip()}    // every real input in a round goes through here
@@ -537,8 +687,9 @@ function renderQ(){
   LAD=ladder(lo,F.int);LOGS=LAD.map(L10);
   // scale
   let tk='',lb='';
-  for(let d=0;d<=SPAN;d++){const x=d/SPAN*100;tk+='<span class="tk mj" style="left:'+x+'%"></span>';lb+='<span class="lab" style="left:'+x+'%">'+shortLab(lo+d)+'</span>';
-    if(d<SPAN)for(let k=2;k<=9;k++)tk+='<span class="tk" style="left:'+((d+L10(k))/SPAN*100)+'%"></span>'}
+  for(let d=Math.floor(lo);d<=Math.ceil(lo+SPAN);d++)for(let k=1;k<=9;k++){const lv=d+L10(k),x=(lv-lo)/SPAN*100;if(x<-0.01||x>100.01)continue;
+    tk+='<span class="tk'+(k===1?' mj':k===3?' md':'')+'" style="left:'+x+'%"></span>';
+    if((k===1||k===3)&&x>4&&x<96)lb+='<span class="lab" style="left:'+x+'%">'+shortLab(k*Math.pow(10,d))+'</span>'}
   $('tks').innerHTML=tk;$('labs').innerHTML=lb;
   $('zbs').innerHTML='';$('slz').classList.remove('show');
   CI=R.cur==null?nearest(lo+SPAN/2):Math.max(0,LAD.indexOf(R.cur));
@@ -548,7 +699,7 @@ function renderQ(){
   renderMeter()}
 
 function nearest(lv){let a=0,b=LOGS.length-1;while(b-a>1){const m=(a+b)>>1;if(LOGS[m]<lv)a=m;else b=m}return (lv-LOGS[a]<=LOGS[b]-lv)?a:b}
-function posOf(v){return (L10(v)-R.lo[R.i])/SPAN*100}
+function posOf(v){return Math.max(0,Math.min(100,(L10(v)-R.lo[R.i])/SPAN*100))}
 function setIdx(i,quiet){i=Math.max(0,Math.min(LAD.length-1,i));const ch=i!==CI;CI=i;R.cur=LAD[i];
   $('th').style.left=posOf(LAD[i])+'%';$('rv').textContent=fmt(LAD[i]);
   $('slz').setAttribute('aria-valuetext',withU(fmt(LAD[i]),F.u));if(ch&&!quiet)SND.tick()}
@@ -575,7 +726,7 @@ function reveal(anim){
   if(anim&&!isRM())requestAnimationFrame(()=>requestAnimationFrame(()=>$('slz').classList.add('show')));else $('slz').classList.add('show');
   $('fbV').textContent=ZN[z];$('fbP').textContent='+'+PTS[z];$('fbP').style.background=ZC[z];
   $('fbL').textContent='Answer '+withU(fmtA(a),F.u)+' · you were '+offText(g,a);
-  $('fbN').textContent=F.n;$('fbN').hidden=!F.n;$('fb').hidden=false;
+  $('fbN').textContent=F.n;$('fbN').hidden=!F.n||/^(About |Around |Up to about )?[\d.,]+( [^ .]+)?\.$/.test(F.n);$('fb').hidden=false;
   $('minus').disabled=$('plus').disabled=true;$('tip').hidden=true;
   actLabel(R.i<NQ-1?'Next':'See result',true);
   if(anim&&z===0&&!isRM())burst();
@@ -692,6 +843,5 @@ applyRM();
 show('home');
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
