@@ -5,7 +5,7 @@
   "description": "Data journalism. Facts first, fully sourced, honest about uncertainty.",
   "start_url": "./",
   "scope": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#FCFCFB",
   "theme_color": "#FCFCFB",
   "icons": [
