@@ -69,6 +69,9 @@ a{color:inherit}
 .pst{margin-top:auto;padding-top:4px;font-size:13px;font-weight:700;display:flex;gap:6px;align-items:center}
 .pack.locked{background:transparent;border-style:dashed;box-shadow:none;color:var(--ink2);cursor:default}
 .pack.locked .pic{background:var(--rule)}
+.pack.slim{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px;min-height:0;padding:9px 12px}
+.pack.slim .pic{width:30px;height:30px;margin:0;flex:none}.pack.slim .pic svg{width:18px;height:18px}
+.pack.slim .lt{display:flex;flex-direction:column;min-width:0}.pack.slim .pn{font-size:16px}.pack.slim .pst{margin:0;padding:0;font-size:13px;font-weight:600}
 .pack.now{outline:3px solid var(--tom);outline-offset:2px}
 .st{color:var(--rule);letter-spacing:1px}
 .st b{color:#D99A16;font-weight:inherit}
@@ -1754,14 +1757,16 @@ function renderHome(){
   if(cur){const p=ALLP[cur.p];$('playL').textContent='Resume';$('playS').textContent=p.name+' · question '+(cur.i+1)+' of '+NQ}
   else{const n=nextUp();$('playL').textContent='Play';$('playS').textContent=ALLP[n].name+' · '+NQ+' questions'}
   const nu=cur?cur.p:nextUp();
-  $('packs').innerHTML=ALLP.map((p,i)=>{
-    const ok=unlocked(i),b=best(p.k),s=save.pk[p.k];
-    const wide=i===TI?' wide':'';
-    if(!ok)return '<div class="pack locked'+wide+'" style="--pk:'+p.c+'" aria-disabled="true"><span class="pic">'+icon(p)+'</span><span class="pn">'+p.name+'</span>'+
-      '<span class="pst">'+(i<NP?'Clear '+ALLP[i-1].name+' to open':'Clear the first six packs to open')+'</span></div>';
+  const idx=ALLP.map((_,i)=>i),open=idx.filter(i=>i<NP&&unlocked(i)),shut=idx.filter(i=>i<NP&&!unlocked(i));
+  // order: the Grand Tour first once it's open; open packs in unlock order; locked ones as slim rows at the end
+  const tile=i=>{const p=ALLP[i],b=best(p.k),s=save.pk[p.k],wide=i===TI||(open.length%2&&i===open[open.length-1])?' wide':'';
+    if(!unlocked(i))return '<div class="pack locked slim" style="--pk:'+p.c+'" aria-disabled="true"><span class="pic">'+icon(p)+'</span>'+
+      '<span class="lt"><span class="pn">'+p.name+'</span><span class="pst">'+(i<NP?'Clear '+ALLP[i-1].name+' to open':'Clear the first six packs to open')+'</span></span></div>';
     return '<button class="pack'+wide+(i===nu?' now':'')+'" data-act="pack" data-p="'+i+'" style="--pk:'+p.c+'"><span class="pic">'+icon(p)+'</span>'+
       '<span class="pn">'+p.name+'</span><span class="ps">'+p.sub+'</span>'+
-      '<span class="pst">'+(cur&&cur.p===i?'In progress · '+(cur.i+1)+' of '+NQ:s&&s.n?starRow(stars(b))+' best '+b:'New')+'</span></button>'}).join('');
+      '<span class="pst">'+(cur&&cur.p===i?'In progress · '+(cur.i+1)+' of '+NQ:s&&s.n?starRow(stars(b))+' best '+b:'New')+'</span></button>'};
+  const order=unlocked(TI)?[TI].concat(open,shut):open.concat(shut,[TI]);
+  $('packs').innerHTML=order.map(tile).join('');
   // badges button: the three best medals so far
   const top=BADGES.map(b=>[b,save.bd.t[b.k]||0]).sort((x,y)=>y[1]-x[1]).slice(0,3);
   $('bdM').innerHTML=top.map(x=>medal(x[0],x[1])).join('');
@@ -2036,6 +2041,5 @@ applyRM();
 show('home');
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
