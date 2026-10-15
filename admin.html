@@ -72,6 +72,8 @@
   .dates{display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--muted)}
   .dates input{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--hair);border-radius:6px;background:var(--paper);color:var(--ink)}
   .ghost{background:none;border:1px solid var(--hair);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--ink)}
+  .me{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted)}
+  .me b{color:var(--ink);font-weight:600}
   .updated{font-size:12px;color:var(--faint);margin-left:auto}
   .jump{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;font-size:13px;font-weight:600}
   .jump::-webkit-scrollbar{display:none}
@@ -196,6 +198,7 @@
         <button class="chip sec" data-filter="news" data-sec="news">News</button>
         <button class="chip sec" data-filter="puzzles" data-sec="puzzles">Puzzles</button>
         <button class="chip sec" data-filter="games" data-sec="games">Games</button>
+        <span class="me" id="meDev" aria-live="polite"></span>
       </div>
       <nav class="jump" aria-label="Jump to">
         <a href="#overview">Overview</a><a href="#news">News</a><a href="#puzzles">Puzzles</a>
@@ -326,7 +329,7 @@
           <li><b>Visit.</b> A run of activity by one reader with no gap longer than 30 minutes.</li>
           <li><b>Page load.</b> One opening of one page. Reloading, or returning via the back button after the page was discarded, counts again.</li>
           <li><b>Dates.</b> UK dates (Europe/London). A range includes both its start and end date.</li>
-          <li><b>Not counted.</b> Readers who switched recording off, browsers sending Global Privacy Control or Do Not Track, readers whose browser blocked the script, visits to this admin page, and any browser on the exclusion list (<span id="exclCount">0</span> at present, e.g. your own test phone).</li>
+          <li><b>Not counted.</b> Readers who switched recording off, browsers sending Global Privacy Control or Do Not Track, readers whose browser blocked the script, visits to this admin page, and any browser on the exclusion list (<span id="exclCount">0</span> at present, e.g. your own test phone; add the device you're on with "Exclude this device" at the top).</li>
           <li><b>Losses.</b> Events are sent in small batches. Some are lost when a phone closes a page abruptly or goes offline, most often the "left the page" event that carries time on page. Timings are averaged over page loads where that event arrived; loads without it are left out of those averages rather than counted as zero.</li>
           <li><b>Bots.</b> Automated traffic is not filtered. Most crawlers don't run the script, so they are largely absent, but treat sudden spikes with care.</li>
           <li><b>Small numbers.</b> Percentages from a handful of readers swing wildly. Signals ignore anything with fewer than 5 readers or starts.</li>
@@ -365,14 +368,17 @@
     ['returning','Returning readers','Readers in the period who had also been seen on an earlier day.','Shown as a share of readers. Can include days before the period.'],
     ['loads','Page loads','Openings of any page, including the three front pages.','Reloads count again.'],
     ['visits','Visits','Runs of activity by one reader with no gap over 30 minutes.',''],
-    ['time','Time on page','Seconds the page was on screen and in the foreground, summed across the reader leaving and coming back. Medians are used in tables so one open-all-night tab doesn’t distort them.','Only page loads where the leaving event arrived are included.'],
+    ['time','Time on page','Seconds the page was on screen and in the foreground, summed across the reader leaving and coming back. Medians are used throughout so one open-all-night tab doesn’t distort them.','Only page loads where the leaving event arrived are included.'],
     ['read75','Read to 75%','Share of article page loads that scrolled at least 75% of the way down the page.','Pages shorter than the screen count as fully read.'],
     ['bounced','Bounced','Share of page loads that were on screen for under 10 seconds.','Only page loads with a timing are included.'],
     ['charts','Charts seen','Number of times an exhibit (chart) came at least half into view.','Counted once per chart per page load.'],
     ['sources','Sources opened','Taps on links to other websites from an article, mostly its footnoted sources.',''],
-    ['started','Started','A puzzle page load where the player tapped or typed in the puzzle at least once.','Opening a puzzle without touching it is not a start.'],
-    ['solved','Solved','The puzzle’s result box appeared with a winning title, without “Reveal all” having been used.','Share is solved ÷ started.'],
-    ['failed','Failed','The result box appeared with a losing title (Sweep “Boom.”, Link and Borders “So close.”).','Only some types can be failed.'],
+    ['started','Started','A puzzle page load where the player tapped inside the play area (grid, board, letters, clues or the Play card) or typed.','Before 15 Oct 2026 any tap counted, including the masthead or the start of a scroll. For those older loads, a start with no result and under 15 seconds on the page is not counted.'],
+    ['solved','Solved','The puzzle’s result box appeared with a winning title, without “Reveal all” having been used.','Share is solved ÷ started, for types that can be solved (not Tangle or Borders).'],
+    ['failed','Failed','The result box appeared with a losing title (Sweep “Boom.”, Link “So close.”).','Only some types can be failed.'],
+    ['scored','Scored','Tangle and Borders are timed rounds with a score, not puzzles that are solved or failed. Every finished round is “scored”; the Result column shows the typical score.','Scores are recorded from 15 Oct 2026; earlier rounds count as scored with no score.'],
+    ['result','Result','Typical result per type: median points and words (Tangle), median countries named out of the total and points (Borders), average mistakes used (Link, out of 4).','Medians of the rounds that recorded a result.'],
+    ['events','Events','Raw records stored in the period, of every kind.','A technical count, not a measure of use.'],
     ['revealed','Revealed','The player used “Reveal all” before the result box appeared.',''],
     ['abandoned','Abandoned','Started, but no result by the time the page was last seen.','Includes puzzles left open in a tab to finish later.'],
     ['solvetime','Solve time','The time shown on the puzzle’s own result box for solved puzzles (median).','Falls back to seconds since the first tap if the box shows no time.'],
@@ -384,7 +390,7 @@
     ['furthest','Furthest level','The highest level any player reached in the period. Each game says what a level is (Lighthouse Keeper: the headland number).','Games with no levels leave this blank.'],
     ['taps','Card taps','Taps on a card on the News, Puzzles or Games list.','Position 1 is the top of the list at the time.'],
     ['avgpos','Average position','Mean list position of the card when it was tapped.','Lower means it was tapped from nearer the top.'],
-    ['ref','Referrer','The site that linked to the page, when the browser reports one.','Many apps and social sites report nothing, so they appear as direct.'],
+    ['ref','Source','Where the page load came from: a shared link tagged ?via=… (e.g. Share result), else an in-app browser that names itself (Facebook, Instagram), else the referring site.','WhatsApp and most apps send nothing, so untagged links from them appear as direct. Tags and app names recorded from 15 Oct 2026.'],
     ['signals','Signals','Automatic flags. Low read-through: an article with at least 5 readers and under 30% reaching 75%. High bounce: at least 5 readers and over 60% bounced. Hard puzzle type: at least 5 starts and under 40% solved. High abandonment: at least 5 starts and over 40% abandoned. Top item: the most-read piece in each section.','Rules are fixed thresholds, not statistical tests.']
   ];
   function defLink(id){ return '<a class="def" href="#def-'+id+'" title="How this is measured" aria-label="How this is measured">i</a>'; }
@@ -555,7 +561,9 @@
     var puz  = (D.items || []).filter(function(i){ return i.section==='puzzles'; });
     var types = D.puzzle_types || [];
     var ret = share(K.returning_readers, K.readers);
-    var solveRate = share(K.puzzles_solved, K.puzzle_starts);
+    // Solve rate covers only types that can be solved (not Tangle or Borders).
+    var solveRate = share(K.puzzles_solved, K.solvable_starts != null ? K.solvable_starts : K.puzzle_starts);
+    var artSecs = K.median_article_secs != null ? K.median_article_secs : K.avg_article_secs;
 
     /* KPI tiles */
     var tiles = [
@@ -563,12 +571,12 @@
       ['New readers', n(K.new_readers), K.readers ? share(K.new_readers,K.readers)+'% of readers' : '', 'new'],
       ['Returning', ret==null?'<span class="dash">–</span>':ret+'<small>%</small>', (K.returning_readers||0)+' readers seen before', 'returning'],
       ['Page loads', n(K.page_loads), K.readers ? (K.page_loads/K.readers).toFixed(1)+' per reader' : '', 'loads'],
-      ['Article time', K.avg_article_secs==null?'<span class="dash">–</span>':dur(K.avg_article_secs), 'average on screen', 'time'],
+      ['Article time', artSecs==null?'<span class="dash">–</span>':dur(artSecs), 'median on screen', 'time'],
       ['Read to 75%', K.pct_articles_read_75==null?'<span class="dash">–</span>':K.pct_articles_read_75+'<small>%</small>', 'of article loads', 'read75'],
-      ['Puzzles started', n(K.puzzle_starts), '', 'started'],
+      ['Puzzles started', n(K.puzzle_starts), K.puzzles_scored ? K.puzzles_scored+' timed rounds scored' : '', 'started'],
       ['Solve rate', solveRate==null?'<span class="dash">–</span>':solveRate+'<small>%</small>', (K.puzzles_solved||0)+' solved', 'solved'],
       ['Game rounds', n(K.game_runs), '', 'runs'],
-      ['Events', n(K.events), 'raw records in range', 'loads']
+      ['Events', n(K.events), 'raw records in range', 'events']
     ];
     $('#kpis').innerHTML = tiles.map(function(t){
       return '<div class="kpi"><div class="k"><span>'+t[0]+'</span>'+defLink(t[3])+'</div><div class="v">'+t[1]+'</div><div class="n">'+esc(t[2])+'</div></div>';
@@ -595,7 +603,7 @@
       if (i.readers>=5 && i.pct_bounced!=null && i.pct_bounced>60) sig.push(['bad','High bounce','“'+title(i.item_path)+'”: '+i.pct_bounced+'% left within 10 seconds.']);
     });
     types.forEach(function(t){
-      var sr = share(t.solved,t.starts), ab = share(t.abandoned,t.starts);
+      var sr = t.is_scored ? null : share(t.solved,t.starts), ab = share(t.abandoned,t.starts);
       if (t.starts>=5 && sr!=null && sr<40) sig.push(['warn','Hard puzzle type', (TYPE_NAMES[t.type]||t.type)+': '+sr+'% of '+t.starts+' starts solved.']);
       if (t.starts>=5 && ab!=null && ab>40) sig.push(['bad','High abandonment', (TYPE_NAMES[t.type]||t.type)+': '+ab+'% of starts not finished.']);
     });
@@ -632,15 +640,17 @@
         { label:'Abandoned', data:tOrder.map(function(t){return t.abandoned;}), backgroundColor:'#E8B04B', stack:'s' },
         { label:'Revealed', data:tOrder.map(function(t){return t.revealed;}), backgroundColor:'#9AA0A6', stack:'s' },
         { label:'Failed', data:tOrder.map(function(t){return t.failed;}), backgroundColor:C.bad, stack:'s' },
-        { label:'Solved', data:tOrder.map(function(t){return t.solved;}), backgroundColor:C.puzzles, stack:'s' } ]},
+        { label:'Solved', data:tOrder.map(function(t){return t.solved;}), backgroundColor:C.puzzles, stack:'s' },
+        { label:'Scored (timed round)', data:tOrder.map(function(t){return t.scored||0;}), backgroundColor:'#6FB892', stack:'s' } ]},
         options:{ maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}, scales:{ x:{stacked:true,grid:{display:false}}, y:{stacked:true,beginAtZero:true,ticks:{precision:0}} } } });
     }
     table($('#tTypes'), [
       {key:'type', label:'Type', left:true, fmt:function(r){ return esc(TYPE_NAMES[r.type]||r.type); }, sort:function(r){ return TYPE_NAMES[r.type]||r.type; }},
       {key:'players', label:'Players', def:'readers', fmt:function(r){return n(r.players);}},
       {key:'starts', label:'Started', def:'started', fmt:function(r){return n(r.starts);}},
-      {key:'sr', label:'Solved', def:'solved', sort:function(r){return share(r.solved,r.starts);}, fmt:function(r){ var v=share(r.solved,r.starts); return v==null?pct(v):'<span class="pill '+tone(v,60,40,true)+'">'+v+'%</span>'; }},
+      {key:'sr', label:'Solved', def:'solved', sort:function(r){return r.is_scored?null:share(r.solved,r.starts);}, fmt:function(r){ if(r.is_scored) return '<span class="dash" title="Timed round: scored, not solved">scored</span>'; var v=share(r.solved,r.starts); return v==null?pct(v):'<span class="pill '+tone(v,60,40,true)+'">'+v+'%</span>'; }},
       {key:'ab', label:'Abandoned', def:'abandoned', sort:function(r){return share(r.abandoned,r.starts);}, fmt:function(r){ var v=share(r.abandoned,r.starts); return v==null?pct(v):'<span class="pill '+tone(v,20,40,false)+'">'+v+'%</span>'; }},
+      {key:'res', label:'Result', def:'result', left:true, sort:function(r){return r.median_score!=null?r.median_score:r.median_got!=null?r.median_got:r.avg_mistakes;}, fmt:resultCell},
       {key:'median_solve_secs', label:'Solve time', def:'solvetime', fmt:function(r){return dur(r.median_solve_secs);}},
       {key:'help', label:'Used help', def:'help', sort:function(r){return share(r.used_help,r.finished);}, fmt:function(r){return pct(share(r.used_help,r.finished));}}
     ], types, { sortKey:'starts' });
@@ -702,6 +712,15 @@
     ], (D.cards || []).filter(function(c){ return F==='all' || c.section===F; }), { sortKey:'taps', limit:10 });
   }
 
+  // Typical result for a puzzle type or a single puzzle (see def-result).
+  function resultCell(r){
+    var bits = [];
+    if (r.median_got != null) bits.push(r.median_got + (r.of_n ? ' of ' + r.of_n : '') + ' named');
+    if (r.median_score != null) bits.push(r.median_score + ' pts');
+    if (r.median_words != null) bits.push(r.median_words + ' words');
+    if (r.avg_mistakes != null) bits.push(r.avg_mistakes + ' mistakes');
+    return bits.length ? esc(bits.join(' · ')) : '<span class="dash">–</span>';
+  }
   function itemCell(r){
     var d = pubDate(r.item_path);
     return '<a class="hl" href="'+esc(r.item_path)+'" target="_blank" rel="noopener">'+esc(title(r.item_path))+'</a><span class="meta">'+esc([r.topic, d?fmtDate(d):''].filter(Boolean).join(' · '))+'</span>';
@@ -730,11 +749,42 @@
       {key:'readers', label:'Players', def:'readers', fmt:function(r){return n(r.readers);}},
       {key:'starts', label:'Started', def:'started', fmt:function(r){return n(r.starts);}},
       {key:'solved', label:'Solved', def:'solved', fmt:function(r){return n(r.solved);}},
-      {key:'pct_solved', label:'Solve rate', def:'solved', fmt:function(r){ return r.pct_solved==null?pct(null):'<span class="pill '+tone(r.pct_solved,60,40,true)+'">'+r.pct_solved+'%</span>'; }},
+      {key:'pct_solved', label:'Solve rate', def:'solved', fmt:function(r){ if(r.is_scored) return '<span class="dash">scored</span>'; return r.pct_solved==null?pct(null):'<span class="pill '+tone(r.pct_solved,60,40,true)+'">'+r.pct_solved+'%</span>'; }},
       {key:'failed', label:'Failed', def:'failed', fmt:function(r){return n(r.failed);}},
       {key:'revealed', label:'Revealed', def:'revealed', fmt:function(r){return n(r.revealed);}},
+      {key:'res', label:'Result', def:'result', left:true, sort:function(r){return r.median_score!=null?r.median_score:r.median_got!=null?r.median_got:r.avg_mistakes;}, fmt:resultCell},
       {key:'median_solve_secs', label:'Solve time', def:'solvetime', fmt:function(r){return dur(r.median_solve_secs);}}
     ], rows, { sortKey:'readers' });
+  }
+
+  /* ---------------- this device: counted or excluded ----------------
+     The site's tracker keeps this browser's reader ID in localStorage
+     (digi.aid) on the same origin as this page, so the admin page can read
+     it and add or remove it from the exclusion list. */
+  function renderMe(state){
+    var el = $('#meDev'); if (!el) return;
+    var aid = store('digi.aid'), off = store('digi.optout') === '1';
+    if (off) { el.innerHTML = 'This device: <b>not recorded</b> (switched off)'; return; }
+    if (!aid) { el.innerHTML = 'This device: <b>no reader ID yet</b> (open any Digi page first)'; return; }
+    if (state == null) { el.innerHTML = 'This device: checking…'; return; }
+    el.innerHTML = 'This device: <b>' + (state ? 'excluded' : 'counted') + '</b> '
+      + '<button type="button" class="ghost" id="meToggle">' + (state ? 'Count it again' : 'Exclude this device') + '</button>';
+    $('#meToggle').onclick = function(){
+      this.disabled = true;
+      sb.rpc('admin_exclude_device', { p_anon: aid, p_exclude: !state }).then(function(r){
+        if (r.error) { $('#meDev').innerHTML = 'This device: couldn’t update (' + esc(r.error.message) + ')'; return; }
+        renderMe(r.data); load();
+      });
+    };
+  }
+  function checkMe(){
+    var aid = store('digi.aid');
+    if (!aid || store('digi.optout') === '1') { renderMe(); return; }
+    renderMe(null);
+    sb.rpc('admin_exclude_device', { p_anon: aid, p_exclude: null }).then(function(r){
+      if (r.error) { $('#meDev').textContent = ''; return; }
+      renderMe(r.data);
+    });
   }
 
   /* ---------------- controls ---------------- */
@@ -761,6 +811,7 @@
     if (booted) return; booted = true;
     showApp(session.user && session.user.email || '');
     feedP.then(load);
+    checkMe();
     if (location.hash && /access_token|error/.test(location.hash)) history.replaceState(null, '', location.pathname);
   }
   var errHash = /error_description=([^&]+)/.exec(location.hash);

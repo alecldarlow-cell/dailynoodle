@@ -1,6 +1,17 @@
 /* ==========================================================================
-   DIGI — reader activity (dn-track.js)  v2
+   DIGI — reader activity (dn-track.js)  v3
    --------------------------------------------------------------------------
+   v3 (15 Oct 2026, MI audit):
+     - puzzle_start only counts a tap inside the play area (grid, board,
+       letter bank, keyboard, clue list, the Play card). v2 counted any tap,
+       including the masthead or the start of a scroll, which inflated starts.
+       Events carry tv:3 so the dashboard can tell old starts from new.
+     - puzzle_end carries the result where a type has one: score, got/of
+       (Borders "7 of 10"), words (Tangle), mistakes (Link). Tangle and
+       Borders end as outcome "scored": a timed round can't be solved or
+       failed, and v2 logged every round as "solved".
+     - page_view carries via (?via=… on shared links) and app (in-app
+       browser, e.g. Facebook or Instagram), since apps send no referrer.
    Anonymous, first-party usage events for Digi News, Puzzles and Games,
    sent to the `digi` Supabase project (London, eu-west-2) through one
    write-only function, log_events. The page can add events; it can never
@@ -11,14 +22,15 @@
    together. None is linked to a name, email or IP address.
 
    Automatic events
-     all pages   page_view   {pv, topic, kind, new, ref, screen}
+     all pages   page_view   {pv, topic, kind, new, ref, screen, [via], [app]}
                  page_exit   {pv, secs, depth, [started, ended]}   each time the page is hidden (running totals)
      front pages card_click  {to, pos, topic, searched}
      articles    read_depth  {pv, pct: 25|50|75|100}
                  exhibit_view{pv, n}      a chart scrolled half into view
                  source_click{pv, domain} an outbound link
-     puzzles     puzzle_start{pv, type}   first tap or key press (not on a reopened, already-finished puzzle)
-                 puzzle_end  {pv, type, outcome: solved|failed|revealed, secs, checks, reveals, hints}
+     puzzles     puzzle_start{pv, type, tv}  first tap in the play area or key press (not on a reopened, already-finished puzzle)
+                 puzzle_end  {pv, type, tv, outcome: solved|failed|revealed|scored, secs, checks, reveals, hints,
+                              [score], [got, of], [words], [mistakes]}
    Games call digi.track('game_start' | 'game_end', {...}) themselves.
 
    Never sent: names, emails, IP addresses, answers, keystrokes.
@@ -113,9 +125,26 @@
     try { var r = new URL(document.referrer); return r.host === location.host ? '' : r.host; }
     catch (e) { return ''; }
   }
+  // Shared links can carry ?via=share (or any short tag); keep it tidy.
+  function viaTag(){
+    try { var v = new URLSearchParams(location.search).get('via') || '';
+          return v.toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 24); }
+    catch (e) { return ''; }
+  }
+  // In-app browsers send no referrer, so name the app when it says who it is.
+  // (WhatsApp mostly opens links in the phone's own browser and can't be seen.)
+  function inApp(){
+    var u = navigator.userAgent || '';
+    return /FBAN|FBAV|FB_IAB/.test(u) ? 'facebook' : /Instagram/.test(u) ? 'instagram'
+         : /WhatsApp/i.test(u) ? 'whatsapp' : /Snapchat/.test(u) ? 'snapchat' : /\bLine\//.test(u) ? 'line' : '';
+  }
   if (!optedOut()) ids();   // sets isNew before the first event
-  track('page_view', { topic: meta('dn:topic'), kind: KIND, new: isNew,
-                       ref: refDomain(), screen: band(window.innerWidth) });
+  var pvProps = { topic: meta('dn:topic'), kind: KIND, new: isNew,
+                  ref: refDomain(), screen: band(window.innerWidth), tv: 3 };
+  var VIA = viaTag(), APP = inApp();
+  if (VIA) pvProps.via = VIA;
+  if (APP) pvProps.app = APP;
+  track('page_view', pvProps);
   flush();
 
   /* ---------- time on page + depth, sent once when the page is first hidden ---------- */
@@ -201,6 +230,18 @@
     if (!m) return null;
     return m[3] ? (+m[1])*3600 + (+m[2])*60 + (+m[3]) : (+m[1])*60 + (+m[2]);
   }
+  /* Where play happens, across all seven types: Mini (#grid, #kb, clues),
+     Doku (#grid, #bank), Path (#grid, #lines), Sweep (#grid), Link (#board),
+     Tangle (#playCard / #resumeBtn start the clock, #board) and Borders
+     (#playCard starts the round, #opts, #qmap). A tap anywhere else (the
+     masthead, the instructions, the first touch of a scroll) is not a start. */
+  var PLAY_AREA = '#grid,#board,#bank,#kb,#cluesWrap,#cluebar,#lines,#playCard,#resumeBtn,#opts,#qmap';
+  var SCORED = { 'word-tangle': 1, 'geo-borders': 1 };
+  function num(id){
+    var el = document.getElementById(id);
+    var m = el && String(el.textContent).replace(/,/g, '').match(/-?\d+/);
+    return m ? +m[0] : null;
+  }
   if (PTYPE) {
     var startPuzzle = function(e){
       if (puz.started) return;
@@ -210,8 +251,15 @@
       if (document.documentElement.hasAttribute('data-dn-done')) return;
       var t = e.target;
       if (t && t.closest && t.closest('a, .modal, footer, .foot')) return;
+      if (e.type === 'keydown') {
+        // Typing counts; Tab, Escape, modifiers and function keys don't.
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        if (!(e.key && (e.key.length === 1 || /^(Arrow|Backspace|Delete|Enter)/.test(e.key)))) return;
+      } else if (document.querySelector(PLAY_AREA)) {
+        if (!(t && t.closest && t.closest(PLAY_AREA))) return;
+      }
       puz.started = true; puz.t0 = Date.now();
-      track('puzzle_start', { type: PTYPE });
+      track('puzzle_start', { type: PTYPE, tv: 3 });
     };
     document.addEventListener('pointerdown', startPuzzle, true);
     document.addEventListener('keydown', startPuzzle, true);
@@ -231,14 +279,34 @@
       new MutationObserver(function(){
         if (puz.ended || !box.classList.contains('on')) return;
         puz.ended = true;
+        // A finish with no recorded start means the play-area list missed
+        // how this puzzle is played. Count the start anyway, flagged, so the
+        // funnel stays whole and the gap shows up in the data.
+        if (!puz.started) {
+          puz.started = true;
+          track('puzzle_start', { type: PTYPE, tv: 3, late: true });
+        }
         var title = (document.getElementById('winTitle') || {}).textContent || '';
         var shown = mmss((document.getElementById('winTime') || document.getElementById('statTime') || {}).textContent);
-        var outcome = puz.revealedAll ? 'revealed' : LOSS_TITLES.test(title.trim()) ? 'failed' : 'solved';
-        track('puzzle_end', {
-          type: PTYPE, outcome: outcome,
+        var outcome = puz.revealedAll ? 'revealed'
+                    : SCORED[PTYPE] ? 'scored'
+                    : LOSS_TITLES.test(title.trim()) ? 'failed' : 'solved';
+        var end = {
+          type: PTYPE, tv: 3, outcome: outcome,
           secs: shown != null ? shown : (puz.t0 ? Math.round((Date.now() - puz.t0) / 1000) : null),
           checks: puz.checks, reveals: puz.reveals, hints: puz.hints
-        });
+        };
+        // The result itself, read from the result box the page has just filled.
+        if (PTYPE === 'word-tangle') {
+          end.score = num('rBig'); end.words = num('rWords');
+        } else if (PTYPE === 'geo-borders') {
+          var big = String((document.getElementById('rBig') || {}).textContent || '').match(/(\d+)\s*of\s*(\d+)/);
+          if (big) { end.got = +big[1]; end.of = +big[2]; }
+          end.score = num('rPts');
+        } else if (PTYPE === 'word-link') {
+          end.mistakes = document.querySelectorAll('#pips .pip.gone').length;
+        }
+        track('puzzle_end', end);
         flush();
       }).observe(box, { attributes: true, attributeFilter: ['class'] });
     };

@@ -13,11 +13,16 @@ Reference for any session that builds or publishes to the digi-news repo. Where 
 - The nightly/push workflow `build-feed.yml` runs `tools/inject-tracker.js` first, which adds `<script src="../dn-track.js" defer></script>` before `</body>` of every file in `reports/` that lacks it. Do NOT add it by hand; do NOT remove it from live files.
 - Rubric exception agreed by Alec: the tracker line is the one permitted non-self-contained dependency. It is optional at runtime. If dn-lint flags it on a rebuilt shipped piece, strip the line before the gates; the workflow re-adds it on upload.
 - Automatic: page_view, page_exit (time on page, depth), card_click, read_depth, exhibit_view (figure.exhibit), source_click, puzzle_start / puzzle_end (all puzzle types, detected from the #winModal / #modal result box and #winTitle).
+- Tracker v3 (15 Oct 2026, MI audit): puzzle_start only counts a tap inside the play area (`PLAY_AREA` in dn-track.js: #grid, #board, #bank, #kb, clues, #playCard, #resumeBtn, #opts, #qmap) or typing. **A new puzzle type must put its play area in one of those ids, or add its id to `PLAY_AREA`.** A finish with no recorded start logs a flagged `late:true` start, so gaps show up in the data.
+- puzzle_end carries the result where a type has one: Tangle `score` + `words` (from #rBig, #rWords), Borders `got` / `of` + `score` (from #rBig "7 of 10", #rPts), Link `mistakes` (#pips .pip.gone). Tangle and Borders end as outcome `scored`, never solved/failed. **Keep those ids if the result boxes are redesigned.**
+- page_view carries `via` (from `?via=` on a link) and `app` (in-app browser name) because apps send no referrer.
+- Reporting logic for these is in `toolchain/sql/2026-10-15-mi-audit-fixes.sql` (applied to Supabase as migration `mi_audit_fixes`).
 - Games must call the tracker themselves: `window.digi&&digi.track('game_start',{game:'<slug>',...})` when a round starts and `digi.track('game_end',{game:'<slug>',win:true|false,...})` when it ends. Lighthouse Keeper already does.
 - Opt-out: footer "Don't record my visits" switch and `privacy.html`; GPC / Do Not Track respected.
 
 ## Admin
 - `admin.html` (linked in front-page footers): email magic-link sign-in; data only for emails in `insights.admins` (the two admin addresses; not listed here because this repo is public).
+- "This device: counted / excluded" at the top of the admin page adds or removes the browser you're on from `insights.excluded_readers` (`public.admin_exclude_device`). Use it on every phone, tablet or laptop you test with.
 - Figures come from `public.admin_dashboard(p_from, p_to)`; reporting views live in the private `insights` schema. `insights.excluded_readers` removes Alec's own test browsers from all figures.
 - Retention: raw events 13 months, then rolled into `public.daily_stats` by the nightly `digi-roll-up-old-events` cron job.
 - Plan doc: "Digi reader data plan" (Claude Docs).
