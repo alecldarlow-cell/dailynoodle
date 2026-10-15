@@ -322,8 +322,18 @@ if (require.main === module) {
     const type = forced || typeOf(path.basename(p));
     if (!type || (!forced && LEGACY.has(path.basename(p)))) continue;
     const html = fs.readFileSync(p, 'utf8');
-    const r = patch(html, type);
     const k = tally[type] || (tally[type] = { patched: 0, already: 0, refused: 0 });
+    // A thin page on a shared engine (tools/engine-shells.js): the player
+    // code, and so this patch, lives in engines/<type>.js. Check it there.
+    const eng = html.match(/<script src="\.\.\/engines\/([a-z]+)\.js"><\/script>/);
+    if (eng) {
+      const ep = path.join(__dirname, '..', 'engines', eng[1] + '.js');
+      const e = fs.existsSync(ep) ? fs.readFileSync(ep, 'utf8') : '';
+      if (e.includes(MARK) && e.includes(SHARE_MARK)) k.already++;
+      else { k.refused++; refused.push(path.basename(p) + ' — engines/' + eng[1] + '.js lacks the done-state patch'); }
+      continue;
+    }
+    const r = patch(html, type);
     if (!r.ok) { k.refused++; refused.push(path.basename(p) + ' — ' + r.why); continue; }
     if (r.skipped) { k.already++; continue; }
     k.patched++;

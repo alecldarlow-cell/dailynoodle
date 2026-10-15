@@ -177,6 +177,16 @@ if (require.main === module) {
     if (!type || LEGACY.has(path.basename(f))) continue;
     const src = fs.readFileSync(f, 'utf8');
     if (src.includes(MARK)) { done++; continue; }
+    // A thin page on a shared engine (tools/engine-shells.js): the share code
+    // lives in engines/<type>.js, so that is where the marker must be.
+    const eng = src.match(/<script src="\.\.\/engines\/([a-z]+)\.js"><\/script>/);
+    if (eng) {
+      const ep = path.join(__dirname, '..', 'engines', eng[1] + '.js');
+      if (fs.existsSync(ep) && fs.readFileSync(ep, 'utf8').includes(MARK)) { done++; continue; }
+      if (CHECK) { missing++; console.log('missing ' + MARK + ' in engines/' + eng[1] + '.js: ' + path.basename(f)); }
+      else refused.push(path.basename(f) + ' — engines/' + eng[1] + '.js lacks ' + MARK);
+      continue;
+    }
     if (CHECK) { missing++; console.log('missing ' + MARK + ': ' + path.basename(f)); continue; }
     const r = patch(src, type);
     if (r.error) { refused.push(path.basename(f) + ' — ' + r.error); continue; }

@@ -49,6 +49,11 @@ jobs:
       - name: One-line share text on new puzzles
         run: node tools/share-v2.js || echo "::warning::share-v2 refused some files (see log)"
 
+      # Puzzles whose player matches a shared engine become thin pages that
+      # load engines/<type>.js. Anything else is left self-contained.
+      - name: Move new puzzles onto the shared engines
+        run: node tools/engine-shells.js mini || echo "::warning::engine-shells failed (see log)"
+
       - name: Build feed.json
         run: node tools/build-feed.js
 
