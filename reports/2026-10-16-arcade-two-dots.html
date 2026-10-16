@@ -356,7 +356,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   function drawTree(ctx2, node, rootKey) {
     walk(ctx2, node, rootKey, { alpha: 1 });
   }
-  var WORLD_TRANSITION_GAP = Math.ceil(195), WORLD_TRANSITION_FADE_PX = 390, WORLD_TRANSITION_STRIP_W = Math.ceil(390 * 4), PIPES_PER_WORLD = 10;
+  var WORLD_TRANSITION_GAP = Math.ceil(58.5), WORLD_TRANSITION_FADE_PX = 390 * 0.5, WORLD_TRANSITION_STRIP_W = Math.ceil(390 * 3), PIPES_PER_WORLD = 10;
   var TIER_STARTS = [0, 5, 10, 15, 20, 25, 30, 35], TIER_BOUNDARY_SCORES = TIER_STARTS.filter((v) => v > 0);
   function tierFor(score) {
     return score < 5 ? 1 : score < 10 ? 2 : score < 15 ? 3 : score < 20 ? 4 : score < 25 ? 5 : score < 30 ? 6 : score < 35 ? 7 : 8;
@@ -495,7 +495,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     let gap = gapSize(score), minY = gap / 2 + 60, maxY = visH - gap / 2 - 60, rawCY = pipeGapCY(score, gap, visH, spawner, rng), safeCY = clampToReachable(rawCY, score, minY, maxY, spawner.lastGapCY, gravityMul);
     return spawner.lastGapCY = safeCY, {
       id: spawner.pipeCount++,
-      x: 390 + 36 / 2,
+      x: 390 - 36 / 2,
       pauseUntil: now + pipePauseMs(score),
       gapCY: safeCY,
       gap,
@@ -546,7 +546,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     s2.vyL += gravity, s2.dotLY += s2.vyL, s2.vyR += gravity, s2.dotRY += s2.vyR, advanceVisualCounters(s2);
     let died = !1;
     return s2.pipes = s2.pipes.filter((p) => {
-      if (input.now >= p.pauseUntil && (p.x -= p.speed), p.clearFlash > 0 && p.clearFlash--, !p.scored && p.x + 36 / 2 < 142)
+      if (input.now >= p.pauseUntil && (p.x -= p.speed), p.clearFlash > 0 && p.clearFlash--, !p.scored && p.x + 36 / 2 < 97.5 - 14)
         if (p.scored = !0, p.clearFlash = 20, s2.score++, effects.scored = !0, s2.scorePop = 18, (s2.score === PIPES_PER_WORLD || s2.score === PIPES_PER_WORLD * 2) && (s2.worldTransitionStripX = 390 + WORLD_TRANSITION_GAP), s2.score % 5 === 0) {
           let isTierBoundary = TIER_BOUNDARY_SCORES.includes(s2.score);
           s2.milestonePop = isTierBoundary ? 90 : 40, effects.audio.push(
@@ -554,7 +554,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
           ), effects.haptics.push({ kind: "milestone" });
         } else
           effects.audio.push({ kind: "score-blip", tier: tierFor(s2.score) });
-      return !p.closeCalledByL && isCloseCall(s2.dotLY, 156, p.x, p.gapCY, p.gap, 18) && (p.closeCalledByL = !0, s2.closeL === 0 && (s2.closeL = 12, effects.audio.push({ kind: "close-call", side: "L" }))), !p.closeCalledByR && isCloseCall(s2.dotRY, 234, p.x, p.gapCY, p.gap, 18) && (p.closeCalledByR = !0, s2.closeR === 0 && (s2.closeR = 12, effects.audio.push({ kind: "close-call", side: "R" }))), dotHitsPipe(156, s2.dotLY, p.x, p.gapCY, p.gap, input.visH) && (died = !0, s2.deathFlashL = 20), dotHitsPipe(234, s2.dotRY, p.x, p.gapCY, p.gap, input.visH) && (died = !0, s2.deathFlashR = 20), p.x + 36 / 2 > 0;
+      return !p.closeCalledByL && isCloseCall(s2.dotLY, 97.5, p.x, p.gapCY, p.gap, 18) && (p.closeCalledByL = !0, s2.closeL === 0 && (s2.closeL = 12, effects.audio.push({ kind: "close-call", side: "L" }))), !p.closeCalledByR && isCloseCall(s2.dotRY, 292.5, p.x, p.gapCY, p.gap, 18) && (p.closeCalledByR = !0, s2.closeR === 0 && (s2.closeR = 12, effects.audio.push({ kind: "close-call", side: "R" }))), dotHitsPipe(97.5, s2.dotLY, p.x, p.gapCY, p.gap, input.visH) && (died = !0, s2.deathFlashL = 20), dotHitsPipe(292.5, s2.dotRY, p.x, p.gapCY, p.gap, input.visH) && (died = !0, s2.deathFlashR = 20), p.x + 36 / 2 > 0;
     }), isOutOfBounds(s2.dotLY, input.visH) && (died = !0, s2.deathFlashL = 20), isOutOfBounds(s2.dotRY, input.visH) && (died = !0, s2.deathFlashR = 20), died && (transitionToDead(s2), effects.died = !0, effects.audio.push({ kind: "death" }), effects.haptics.push({ kind: "death" })), effects;
   }
   function advanceVisualCounters(s2) {
@@ -569,7 +569,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   }
   function buildDeathParticles(s2, diedL, diedR) {
     let COL_L2 = "#FFB13B", COL_R2 = "#7FE5E8", sources = [];
-    diedL && sources.push({ x: 156, y: s2.dotLY, col: COL_L2 }), diedR && sources.push({ x: 234, y: s2.dotRY, col: COL_R2 }), sources.length === 0 && sources.push({ x: 156, y: s2.dotLY, col: COL_L2 });
+    diedL && sources.push({ x: 97.5, y: s2.dotLY, col: COL_L2 }), diedR && sources.push({ x: 292.5, y: s2.dotRY, col: COL_R2 }), sources.length === 0 && sources.push({ x: 97.5, y: s2.dotLY, col: COL_L2 });
     let particles = [];
     return sources.forEach(({ x, y, col }) => {
       for (let i = 0; i < 16; i++) {
@@ -2387,38 +2387,14 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
           nowMs
         }
       ),
-      stripX !== null && /* @__PURE__ */ react_default.createElement(Group, null, /* @__PURE__ */ react_default.createElement(Rect, { x: stripXScreen, y: 0, width: FEATHER_SCREEN, height: GAME_H }, /* @__PURE__ */ react_default.createElement(
+      stripX !== null && /* @__PURE__ */ react_default.createElement(Rect, { x: stripXScreen, y: 0, width: STRIP_W_SCREEN, height: GAME_H }, /* @__PURE__ */ react_default.createElement(
         LinearGradient,
         {
           start: vec(stripXScreen, 0),
-          end: vec(stripXScreen + FEATHER_SCREEN, 0),
-          colors: ["#00000000", "#000000"]
+          end: vec(stripXScreen + STRIP_W_SCREEN, 0),
+          colors: ["#00000000", "#000000", "#000000", "#00000000"],
+          positions: [0, FEATHER_SCREEN / STRIP_W_SCREEN, 1 - FEATHER_SCREEN / STRIP_W_SCREEN, 1]
         }
-      )), /* @__PURE__ */ react_default.createElement(
-        Rect,
-        {
-          x: stripXScreen + FEATHER_SCREEN,
-          y: 0,
-          width: STRIP_W_SCREEN - FEATHER_SCREEN * 2,
-          height: GAME_H,
-          color: "#000000"
-        }
-      ), /* @__PURE__ */ react_default.createElement(
-        Rect,
-        {
-          x: stripXScreen + STRIP_W_SCREEN - FEATHER_SCREEN,
-          y: 0,
-          width: FEATHER_SCREEN,
-          height: GAME_H
-        },
-        /* @__PURE__ */ react_default.createElement(
-          LinearGradient,
-          {
-            start: vec(stripXScreen + STRIP_W_SCREEN - FEATHER_SCREEN, 0),
-            end: vec(stripXScreen + STRIP_W_SCREEN, 0),
-            colors: ["#000000", "#00000000"]
-          }
-        )
       ))
     );
   }
@@ -2603,7 +2579,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       /* @__PURE__ */ react_default.createElement(
         Dot,
         {
-          cx: sx(156),
+          cx: sx(97.5),
           cy: dotLDisplayY * SCALE,
           col: (worldTheme == null ? void 0 : worldTheme.palette.dotL) ?? COL_L,
           pulse: display.pulseL,
@@ -2614,7 +2590,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       /* @__PURE__ */ react_default.createElement(
         Dot,
         {
-          cx: sx(234),
+          cx: sx(292.5),
           cy: dotRDisplayY * SCALE,
           col: (worldTheme == null ? void 0 : worldTheme.palette.dotR) ?? COL_R,
           pulse: display.pulseR,
@@ -3007,7 +2983,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     }
     let idle = display.phase === "idle";
     if (show($("idle"), idle), idle)
-      for (let [id, lane] of [["thL", 156], ["thR", 234]]) {
+      for (let [id, lane] of [["thL", 97.5], ["thR", 292.5]]) {
         let el = $(id);
         set(el, "left", sx(lane) - thumbR + "px"), set(el, "top", thumbY - thumbR + "px"), set(el, "width", thumbR * 2 + "px"), set(el, "height", thumbR * 2 + "px"), set(el, "borderRadius", thumbR + "px"), set(el, "backgroundColor", `rgba(255,255,255,${thumbFillAlpha})`);
       }
@@ -3120,6 +3096,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
