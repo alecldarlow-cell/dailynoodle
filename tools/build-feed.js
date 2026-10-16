@@ -18,6 +18,9 @@
        so typo fixes don't reorder the list. The card sorts by the later of
        dn:date and dn:updated and reads "Updated …". dn:date never changes.)
      <meta name="dn:thumb"      content="url">          (optional)
+     <meta name="dn:badge"      content="In development">  (optional — a short label
+       (24 chars max) shown on the card's thumbnail, e.g. for a game still being built.
+       Remove the tag to remove the badge.)
      <meta name="dn:statlabel"  content="of patients">  (optional — overrides the
        caption read off the piece's own hero stat; keep it to ~16 characters)
 
@@ -369,7 +372,8 @@ for (const { dir, kind } of DIRS) {
       stat: hs ? hs.figure : '',
       statUnit: hs ? hs.unit : '',
       statLabel: hs ? statLabel : '',
-      mask
+      mask,
+      ...(meta(head, 'dn:badge') ? { badge: meta(head, 'dn:badge').trim().slice(0, 24) } : {})
     });
   }
 }

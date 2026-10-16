@@ -203,6 +203,8 @@
     } else {
       thumb = '<div class="thumb glyph" aria-hidden="true">'+(it.kind==='report'?'Chart':'Play')+'</div>';
     }
+    // Optional dn:badge (e.g. "In development") sits on the thumbnail.
+    if(it.badge) thumb = '<div class="thumbwrap">'+thumb+'<span class="badge">'+esc(it.badge)+'</span></div>';
     return '<li><a class="card" href="'+esc(it.path)+'">'
       + thumb
       + '<div>'
