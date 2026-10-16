@@ -418,6 +418,136 @@
     .turnbar .who { font-size: 20px; }
   }
 
+
+  /* ======================================================
+     v2.1 GAME SCREEN — one fixed screen, board first.
+     Top bar · board (fills what's left) · hand tray.
+     ====================================================== */
+  @property --lr{syntax:'<percentage>';inherits:false;initial-value:60%;}
+  html.ingame, body.ingame{height:100%;overflow:hidden;overscroll-behavior:none;}
+  body.ingame #app{max-width:560px;height:100vh;height:100dvh;display:flex;
+    padding:max(6px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));}
+  .gscreen{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;gap:6px;width:100%;}
+
+  /* top bar */
+  .topbar{flex:0 0 auto;display:flex;gap:6px;}
+  .topbar .stat{flex:1 1 0;display:flex;align-items:center;justify-content:center;gap:7px;padding:3px 6px;border-radius:11px;
+    min-height:44px;text-align:left;box-shadow:none;}
+  .topbar .stat.fire{flex:1.7 1 0;}
+  .topbar .stat .lab{font-size:9px;letter-spacing:1.1px;}
+  .topbar .stat .val{font-size:21px;margin-top:0;}
+  .topbar .stat .val .unit{font-size:11px;margin-top:3px;}
+  .topbar .pips{margin-top:0;gap:3px;}
+  .topbar .pip{width:15px;height:15px;font-size:9px;border-width:1.5px;}
+  .topbar .menubtn{flex:0 0 46px;padding:0;font-size:19px;}
+
+  /* board: fills the zone, rings become ovals on tall phones (capped at 1.42:1) */
+  .boardzone{flex:1 1 auto;min-height:0;position:relative;container-type:size;display:flex;align-items:center;justify-content:center;}
+  .gscreen .board{position:relative;padding-top:0;width:100%;height:100%;
+    width:min(100cqw,120cqh);height:min(100cqh,150cqw);
+    border-radius:26px;overflow:hidden;border:2px solid var(--board-edge);
+    background:radial-gradient(ellipse at 50% 48%, #34465d 0%, var(--board-bg1) 30%, var(--board-bg2) 78%);
+    box-shadow:inset 0 0 50px rgba(0,0,0,.6), 0 4px 18px rgba(0,0,0,.3);}
+  .gscreen .board .decor{position:absolute;inset:0;pointer-events:none;z-index:1;}
+  .gscreen .board .tree{position:absolute;transform:translate(-50%,-60%);opacity:.32;filter:saturate(.5) brightness(.55);}
+  .gscreen .board .moon{position:absolute;width:22px;height:22px;border-radius:50%;transform:translate(-50%,-50%);z-index:2;pointer-events:none;
+    background:radial-gradient(circle at 36% 34%,#fffbea,#ece2bd 58%,#cbbf95);box-shadow:0 0 16px 5px rgba(255,246,214,.32);}
+  .gscreen .ring{border-radius:50%;}
+  .gscreen .lightmask{position:absolute;inset:0;z-index:3;pointer-events:none;
+    background:radial-gradient(ellipse closest-side at 50% 50%, rgba(3,6,11,0) var(--lr), rgba(3,6,11,.5) calc(var(--lr) + 14%), rgba(3,6,11,.68) 100%);}
+  .gscreen .firepit .glow{width:min(48cqw,210px);height:min(48cqw,210px);}
+  .firepit.out .flame{filter:grayscale(1) brightness(.45);opacity:.5;animation:none;transition:opacity 1s, filter 1s;}
+  .firepit.out .glow{opacity:.1 !important;}
+  .board.dawn::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,200,130,.78) 0%,rgba(255,160,100,.32) 42%,rgba(255,220,170,0) 78%);animation:dawnup 1.6s ease forwards;}
+  @keyframes dawnup{from{opacity:0}to{opacity:1}}
+
+  /* creatures: idle breathing, eyes in the dark, walking, lunging */
+  .gscreen .creature .body{animation:idle 2.8s ease-in-out infinite;animation-delay:var(--d,0s);}
+  @keyframes idle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2.5px) scale(1.04)}}
+  .gscreen .creature.unlit .body{opacity:1;filter:brightness(.16) saturate(.3);border-color:rgba(120,135,155,.35);}
+  .creature .eyes{display:none;position:absolute;top:17px;left:50%;transform:translateX(-50%);gap:8px;z-index:2;pointer-events:none;}
+  .creature.unlit .eyes{display:flex;}
+  .creature .eyes i{width:6px;height:4px;border-radius:50%;background:#ffd34d;box-shadow:0 0 6px 2px rgba(255,196,60,.75);
+    animation:blink 4.6s infinite;animation-delay:var(--d,0s);}
+  @keyframes blink{0%,90%,100%{transform:scaleY(1)}93%{transform:scaleY(.1)}96%{transform:scaleY(1)}}
+  .creature.unlit .nm{opacity:.45;} .creature.unlit .hp{opacity:.35;}
+  .creature.walking .body{animation:hop .17s ease-in-out 3 alternate;}
+  @keyframes hop{from{transform:translateY(0)}to{transform:translateY(-6px) rotate(3deg)}}
+  .creature.lunge .body{animation:lunge .5s ease-in forwards;}
+  @keyframes lunge{0%{transform:scale(1)}40%{transform:scale(1.25);box-shadow:0 0 22px #ff4a2a}100%{transform:scale(.6)}}
+  .creature.ghost{position:fixed;z-index:44;pointer-events:none;animation:ghostdie .55s ease-in forwards;}
+  @keyframes ghostdie{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}25%{transform:translate(-50%,-50%) scale(1.22) rotate(-8deg);filter:brightness(2.2)}
+    100%{opacity:0;transform:translate(-50%,-70%) scale(.35) rotate(24deg)}}
+
+  /* floating info card + ticker over the foot of the board */
+  .gscreen .creatureinfo{position:absolute;left:8px;right:8px;bottom:8px;z-index:9;margin:0;
+    background:var(--modal-bg);box-shadow:0 8px 24px rgba(0,0,0,.5);animation:fade .2s;}
+  .ticker{position:absolute;left:12px;right:12px;bottom:9px;z-index:8;pointer-events:none;text-align:center;
+    font-family:var(--serif);font-style:italic;font-size:12.5px;line-height:1.3;color:#f1e8d3;text-shadow:0 1px 3px #000,0 0 8px #000;opacity:.72;}
+  .ticker.bad{color:#ff9f8a;} .ticker.good{color:#c4e8a0;} .ticker.fire{color:#ffc670;} .ticker.night{color:#a9d4ec;}
+  .ticker.new{animation:tickin 3.4s ease forwards;}
+  @keyframes tickin{0%{opacity:0;transform:translateY(8px)}10%{opacity:1;transform:none}75%{opacity:1}100%{opacity:.72}}
+
+  /* tray: who's on watch, the prompt, a one-row hand, one action row */
+  .tray{flex:0 0 auto;display:flex;flex-direction:column;gap:4px;}
+  .tray .wholine{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:0 4px;}
+  .tray .whoname{font-family:var(--serif);font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tray .whorole{font-size:11.5px;color:var(--moss);font-weight:700;white-space:nowrap;}
+  .gscreen .prompt{margin:0;min-height:34px;display:flex;align-items:center;justify-content:center;font-size:13.5px;line-height:1.22;padding:0 6px;}
+  .gscreen .hand{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:12px 1px 3px;margin-top:-10px;scroll-snap-type:none;}
+  .gscreen .card{flex:1 1 0;min-width:56px;max-width:100px;width:auto;height:clamp(100px,12.6vh,124px);padding:6px 4px 6px 9px;border-radius:11px;}
+  .gscreen .card .zonebar{width:5px;}
+  .gscreen .card .chip{top:5px;left:9px;width:18px;height:18px;font-size:10px;}
+  .gscreen .card .dmg{top:5px;right:5px;font-size:11px;}
+  .gscreen .card .cic{font-size:25px;margin:22px 0 3px;}
+  .gscreen .card .cn{font-size:11.5px;}
+  .gscreen .card .czone{font-size:8.5px;letter-spacing:.2px;line-height:1.1;}
+  .gscreen .card.armed{transform:translateY(-9px);}
+  .gscreen .nohand{flex:1;text-align:center;color:var(--parch-2);font-style:italic;font-family:var(--serif);padding:30px 0;}
+  .card.deal{animation:deal .44s cubic-bezier(.2,.8,.3,1.18) both;animation-delay:calc(var(--i)*65ms);}
+  @keyframes deal{from{opacity:0;transform:translateY(50px) rotate(-12deg) scale(.7)}to{opacity:1;transform:none}}
+  .gscreen .controls{flex-wrap:nowrap;margin-top:2px;gap:6px;}
+  .gscreen .controls .btn{min-width:0;padding:10px 8px;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .gscreen .controls .btn.role{flex:1.15 1 0;}
+  .gscreen .controls .btn.undo{flex:0 0 52px;font-size:19px;padding:6px;}
+  .gscreen .controls .btn.cancel{flex:0 0 52px;font-size:17px;padding:6px;}
+  .gscreen .controls .btn.endturn{flex:1.6 1 0;}
+
+  /* effects layers */
+  .fxc{position:fixed;left:0;top:0;z-index:35;pointer-events:none;}
+  .fly{position:fixed;z-index:46;pointer-events:none;font-size:25px;line-height:1;transform:translate(-50%,-50%);
+    will-change:transform;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6));}
+  .fly.bolt{width:13px;height:13px;border-radius:50%;filter:none;
+    background:radial-gradient(circle,#fff 0%,#ffe08a 35%,#ff8a1f 70%,rgba(255,120,20,0) 72%);box-shadow:0 0 14px 6px rgba(255,170,60,.65);}
+  .boardfx{position:fixed;z-index:30;pointer-events:none;border-radius:26px;overflow:hidden;}
+  .boardfx.veil i{position:absolute;inset:0;background:rgba(2,4,12,.62);animation:veil 1.2s ease forwards;}
+  @keyframes veil{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
+  .boardfx.sweep i{position:absolute;inset:-40%;animation:sweep 1s ease-out forwards;
+    background:conic-gradient(from 0deg at 50% 50%, rgba(255,226,150,0) 0deg, rgba(255,226,150,.5) 26deg, rgba(255,226,150,0) 64deg);}
+  @keyframes sweep{from{transform:rotate(-30deg);opacity:1}to{transform:rotate(330deg);opacity:0}}
+
+  /* tablets: bigger cards; landscape puts the board left and the tray right */
+  @media (min-width: 620px){
+    body.ingame #app{max-width:760px;}
+    .gscreen .card{height:122px;max-width:118px;}
+    .gscreen .card .cic{font-size:30px;margin-top:26px;}
+    .gscreen .card .cn{font-size:13px;}
+    .gscreen .card .czone{font-size:9.5px;}
+    .topbar .stat .val{font-size:24px;}
+  }
+  @media (min-width: 700px) and (orientation: landscape){
+    body.ingame #app{max-width:100%;padding:12px 18px;min-height:0;display:flex;flex-direction:row;}
+    .gscreen{display:grid;grid-template-columns:1fr minmax(320px,38%);grid-template-rows:auto 1fr;gap:12px;
+      grid-template-areas:"board top" "board tray";}
+    .topbar{grid-area:top;} .boardzone{grid-area:board;} .tray{grid-area:tray;justify-content:flex-end;}
+    .gscreen .hand{flex-wrap:wrap;overflow:visible;margin-top:0;padding-top:4px;}
+    .gscreen .card{flex:1 1 28%;max-width:none;height:128px;}
+  }
+  /* banners float over the board as a pill */
+  .nightbanner{left:50%;right:auto;top:30%;transform:translateX(-50%);padding:10px 20px;border-radius:999px;white-space:nowrap;max-width:92vw;
+    overflow:hidden;text-overflow:ellipsis;background:rgba(8,12,20,.86);box-shadow:0 6px 24px rgba(0,0,0,.45);font-size:19px;animation:banner2 1.8s ease forwards;}
+  @keyframes banner2{0%{opacity:0;transform:translate(-50%,-10px) scale(.92)}20%,72%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-6px)}}
 </style>
 </head>
 <body class="day">
@@ -465,13 +595,23 @@
            a game in progress survives a reload ("Continue"),
            full screen on Android, reduced-motion toggle, and
            44px tap targets. Rules and balance unchanged.
+   v2.1.0  One-screen layout: slim top bar, the board fills the
+           rest (rings stretch to ovals on tall phones), a one-row
+           hand and one action row; legend, log and footer moved
+           out of the way (full log in the menu). Animations: cards
+           fly to their target, sparks and embers from the fire,
+           firelight that visibly reaches out, creatures that
+           breathe, show only their eyes in the dark, walk in and
+           lunge, kill bursts, lantern sweep, moon across the
+           nights, dawn on a win, hands dealt on each hand-off,
+           haptics. Rules, balance, saves and tracking unchanged.
 
    ROUND (for tracking): one run — from the first card, role or
    End Watch tap after "Light the Fire" (or Play Again / Continue)
    to dawn (win) or the fire dying / camp falling (loss).
    level = the night reached. Quitting mid-run sends no game_end.
    ========================================================= */
-const VERSION = "2.0.0";
+const VERSION = "2.1.0";
 
 const DIFFS = {
   easy:     { name:"Gentle Night", tag:"Forgiving", fuel:9, camp:7, rounds:7, hand:5,
@@ -544,13 +684,13 @@ function setTheme(t){ saveNames(); theme=t; render(); }
 // Returns the colour bar, badge chip, damage/effect text and zone label for a card.
 function cardVisual(def){
   if(def.kind==="attack"){
-    if(def.target==="anyLit") return { bar:"var(--wild)", chip:"✦", dmg:def.dmg+"⚔", zlabel:"Any lit ring" };
+    if(def.target==="anyLit") return { bar:"var(--wild)", chip:"✦", dmg:def.dmg+"⚔", zlabel:"Any lit ring" };   // labels kept short for the compact hand
     const z=ZONES[def.ring];
     return { bar:z.color, chip:z.num, dmg:def.dmg+"⚔", zlabel:z.name };
   }
-  if(def.kind==="fuel")    return { bar:"var(--wood)",  chip:"🪵", dmg:"+"+def.amt, zlabel:"Feed the fire" };
-  if(def.kind==="lantern") return { bar:"var(--frost)", chip:"🏮", dmg:"☀",        zlabel:"Light all rings" };
-  return                          { bar:"var(--frost)", chip:"↺",  dmg:"↺"+def.amt, zlabel:"Draw "+def.amt+" cards" };
+  if(def.kind==="fuel")    return { bar:"var(--wood)",  chip:"🪵", dmg:"+"+def.amt, zlabel:"Feed fire" };
+  if(def.kind==="lantern") return { bar:"var(--frost)", chip:"🏮", dmg:"☀",        zlabel:"Light all" };
+  return                          { bar:"var(--frost)", chip:"↺",  dmg:"↺"+def.amt, zlabel:"Draw "+def.amt };
 }
 
 // Coloured light-reach pips for the campfire HUD (which zones the firelight reaches).
@@ -573,7 +713,7 @@ function pick(arr){ return arr[rand(arr.length)]; }
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
 function beginTurn(){ S.acted=false; turnSnapshot = clone(S); }   // call when a fresh acting turn starts
 function undoTurn(){
-  if(S && !S.over && !nightAnimating && turnSnapshot){ S = clone(turnSnapshot); render(); }
+  if(S && !S.over && !nightAnimating && !fxLock && turnSnapshot){ S = clone(turnSnapshot); render(); }
 }
 
 function newGame(diffKey, names, roles){
@@ -833,9 +973,182 @@ function setLabels(){
 }
 
 /* ---------- Page lifecycle: pause the clock when hidden, save on the way out ---------- */
-document.addEventListener('visibilitychange',()=>{ if(document.hidden){ clockOff(); persist(); } else clockOn(); });
+document.addEventListener('visibilitychange',()=>{ if(document.hidden){ clockOff(); persist(); } else { clockOn(); kickFx(); } });
 window.addEventListener('pagehide',()=>{ clockOff(); persist(); });
-window.addEventListener('resize',()=>{ if(S && !nightAnimating && !S.over) render(); });   // re-measure when the bars go
+window.addEventListener('resize',()=>{ sizeFx(); if(S && !nightAnimating && !fxLock){ flipSkip=true; render(); } });   // re-measure when the bars go
+
+/* ---------------- FX (v2.1): flights, sparks, light, deal, FLIP ----------------
+   Purely visual. Every effect is skipped when motion is reduced, and every
+   call is guarded so a missing node or API never touches the game state.     */
+let fxLock=false;          // a card is in the air; input waits for it to land
+let dealMode=null;         // "all" → whole hand deals in; {n} → last n cards
+let flipSkip=false;        // skip the creature slide on this render (resize, new night)
+let lastLR=null, lastMoon=null, lastTick="";
+let overlayAt=0, overlayTimer=null;
+let fireC=null, fireScaleNow=1;
+const fxOn=()=>!motionReduced;
+function buzz(p){ if(!soundOn) return; try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+function rectOf(sel){ const n=document.querySelector(sel); return n ? n.getBoundingClientRect() : null; }
+function centreOf(r){ return r ? { x:r.left+r.width/2, y:r.top+r.height/2 } : null; }
+function sndThrow(){ _n(0.16,1300,0.07,0,'bandpass'); }
+
+// Fly a glyph (or a glowing bolt) along an arc. Returns the flight time in ms (0 = no flight).
+function fly(from, to, glyph, cls, dur){
+  if(!fxOn() || !from || !to) return 0;
+  const a=centreOf(from), b=centreOf(to); dur=dur||340;
+  const d=document.createElement('div');
+  d.className='fly '+(cls||''); d.textContent=glyph||"";
+  d.style.left=a.x+'px'; d.style.top=a.y+'px';
+  document.body.appendChild(d);
+  const dx=b.x-a.x, dy=b.y-a.y, lift=Math.min(140, 50+Math.hypot(dx,dy)*0.3);
+  const kf=[];
+  for(let i=0;i<=8;i++){
+    const t=i/8, x=dx*t, y=dy*t - lift*4*t*(1-t);
+    kf.push({ transform:`translate(-50%,-50%) translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${cls==='spin'?Math.round(t*560):0}deg) scale(${(1.25-0.35*t).toFixed(2)})`,
+              opacity: t===0 ? 0.5 : 1 });
+  }
+  try{ d.animate(kf,{ duration:dur, easing:'cubic-bezier(.35,.1,.65,1)', fill:'forwards' }); }catch(e){}
+  setTimeout(()=>d.remove(), dur+40);
+  return dur;
+}
+function afterFlight(ms, fn){
+  if(ms<=0){ fn(); return; }
+  fxLock=true;
+  setTimeout(()=>{ fxLock=false; if(S) fn(); }, ms);
+}
+
+// A body-level layer over the board that survives the re-render (night veil, lantern sweep).
+function boardOverlay(kind, ms){
+  if(!fxOn()) return;
+  const r=rectOf('.gscreen .board'); if(!r) return;
+  const w=document.createElement('div');
+  w.className='boardfx '+kind;
+  w.style.left=r.left+'px'; w.style.top=r.top+'px'; w.style.width=r.width+'px'; w.style.height=r.height+'px';
+  w.innerHTML='<i></i>';
+  document.body.appendChild(w);
+  setTimeout(()=>w.remove(), ms);
+}
+function lanternSweep(){ boardOverlay("sweep", 1000); }
+
+function fireFlare(n){
+  if(!fxOn()) return;
+  const f=document.querySelector('.firepit .flame'), g=document.querySelector('.firepit .glow');
+  try{
+    if(f) f.animate([{transform:'scale(1)'},{transform:'scale(1.55) translateY(-5px)',filter:'brightness(1.5) drop-shadow(0 0 20px #ffb347)'},{transform:'scale(1)'}],{duration:650,easing:'ease-out'});
+    if(g) g.animate([{transform:'scale(1)'},{transform:'scale(1.7)',opacity:1},{transform:'scale(1)'}],{duration:750,easing:'ease-out'});
+  }catch(e){}
+  if(fireC) burst(fireC.x, fireC.y-8, n||20, { up:true });
+}
+function burstAt(rect, n){ const c=centreOf(rect); if(c) burst(c.x, c.y, n, { hue:38 }); }
+
+function makeGhost(id){
+  if(!fxOn()) return;
+  const n=document.querySelector('.board .creature[data-id="'+id+'"]'); if(!n) return;
+  const r=n.getBoundingClientRect();
+  const g=n.cloneNode(true);
+  g.removeAttribute('onclick'); g.removeAttribute('data-id');
+  g.classList.remove('aimable','target','spawning');
+  g.classList.add('ghost');
+  g.style.left=(r.left+r.width/2)+'px'; g.style.top=(r.top+r.height/2)+'px';
+  document.body.appendChild(g);
+  setTimeout(()=>g.remove(), 600);
+}
+function shakeBoard(){
+  if(!fxOn()) return;
+  const b=document.querySelector('.gscreen .board'); if(!b) return;
+  try{ b.animate([{transform:'none'},{transform:'translate(-7px,2px)'},{transform:'translate(6px,-2px)'},{transform:'translate(-4px,1px)'},{transform:'translate(2px,0)'},{transform:'none'}],{duration:440}); }catch(e){}
+}
+function nudgeCard(i){
+  if(!fxOn()) return;
+  const n=cardEl(i); if(!n) return;
+  try{ n.animate([{transform:'none'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(-3px)'},{transform:'none'}],{duration:300}); }catch(e){}
+}
+
+function creatureCentres(){
+  const m={};
+  document.querySelectorAll('.board .creature').forEach(n=>{ m[n.getAttribute('data-id')]=centreOf(n.getBoundingClientRect()); });
+  return m;
+}
+// After each game render: slide moved creatures (FLIP), ease the light and the moon, note the fire.
+function afterGameRender(prev, lr, moon){
+  const fl=rectOf('.firepit .flame'); fireC=centreOf(fl);
+  if(!fxOn()){ lastLR=lr; lastMoon=moon; return; }
+  if(prev){
+    document.querySelectorAll('.board .creature').forEach(n=>{
+      const p=prev[n.getAttribute('data-id')]; if(!p) return;
+      const c=centreOf(n.getBoundingClientRect()), dx=p.x-c.x, dy=p.y-c.y;
+      if(Math.abs(dx)+Math.abs(dy)<3) return;
+      try{ n.animate([{transform:`translate(-50%,-50%) translate(${dx}px,${dy}px)`},{transform:'translate(-50%,-50%)'}],
+                     {duration:520,easing:'cubic-bezier(.2,.9,.3,1.15)'}); }catch(e){}
+    });
+  }
+  const m=document.querySelector('.board .lightmask');
+  if(m && lastLR!==null && lastLR!==lr){
+    try{ m.animate([{'--lr':lastLR+'%'},{'--lr':lr+'%'}],{duration:S&&S.over&&!S.over.won?1100:650,easing:'ease-out'}); }catch(e){}
+  }
+  lastLR=lr;
+  const mo=document.querySelector('.board .moon');
+  if(mo && lastMoon && (lastMoon.x!==moon.x || lastMoon.y!==moon.y)){
+    try{ mo.animate([{left:lastMoon.x+'%',top:lastMoon.y+'%'},{left:moon.x+'%',top:moon.y+'%'}],{duration:1400,easing:'ease-in-out'}); }catch(e){}
+  }
+  lastMoon=moon;
+}
+function scheduleOverlay(){
+  if(document.getElementById("ovl")) return;
+  const wait=overlayAt-performance.now();
+  if(wait<=0){ renderOverlay(); return; }
+  if(!overlayTimer) overlayTimer=setTimeout(()=>{ overlayTimer=null; if(S && S.over) renderOverlay(); }, wait);
+}
+function clearOverlayTimer(){ if(overlayTimer){ clearTimeout(overlayTimer); overlayTimer=null; } }
+
+/* Sparks and embers: one canvas over the page, drawn only while there is something to draw. */
+const fxc=document.createElement('canvas'); fxc.className='fxc';
+let fctx=null, parts=[], fxRaf=0, emitAcc=0, lastT=0;
+function initFx(){ try{ document.body.appendChild(fxc); fctx=fxc.getContext('2d'); sizeFx(); }catch(e){ fctx=null; } }
+function sizeFx(){
+  if(!fctx) return;
+  const d=Math.min(2, window.devicePixelRatio||1);
+  fxc.width=Math.round(innerWidth*d); fxc.height=Math.round(innerHeight*d);
+  fxc.style.width=innerWidth+'px'; fxc.style.height=innerHeight+'px';
+  fctx.setTransform(d,0,0,d,0,0);
+}
+function burst(x, y, n, o){
+  o=o||{}; if(!fctx || !fxOn()) return;
+  for(let i=0;i<n;i++){
+    const a=o.up ? (-Math.PI/2 + (Math.random()-.5)*1.7) : Math.random()*Math.PI*2;
+    const sp=60+Math.random()*(o.up?190:150);
+    parts.push({ x, y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp, life:0, max:.45+Math.random()*.6,
+                 r:1+Math.random()*2.2, g:o.up?160:240, h:o.hue!=null?o.hue+Math.random()*12:28+Math.random()*26 });
+  }
+  if(parts.length>400) parts.splice(0, parts.length-400);
+  kickFx();
+}
+function emitEmber(){
+  const s=Math.max(.6, fireScaleNow);
+  parts.push({ x:fireC.x+(Math.random()-.5)*20*s, y:fireC.y-8*s, vx:(Math.random()-.5)*12, vy:-(26+Math.random()*46)*s,
+               life:0, max:1+Math.random()*1.4, r:.7+Math.random()*1.5, g:-5, h:22+Math.random()*28, sw:Math.random()*6.28 });
+}
+function fxLoop(t){
+  fxRaf=0; if(!fctx) return;
+  const dt=lastT ? Math.min(.05,(t-lastT)/1000) : .016; lastT=t;
+  const live=!!(S && !S.over && fxOn() && !document.hidden && !menuOpen && fireC && S.fuel>0);
+  if(live){ emitAcc+=dt*(1+S.fuel*.7); while(emitAcc>=1){ emitAcc-=1; emitEmber(); } }
+  fctx.clearRect(0,0,innerWidth,innerHeight);
+  fctx.globalCompositeOperation='lighter';
+  parts=parts.filter(p=>{
+    p.life+=dt; if(p.life>=p.max) return false;
+    p.vy+=p.g*dt; if(p.sw!=null){ p.sw+=dt*3; p.x+=Math.sin(p.sw)*14*dt; }
+    p.x+=p.vx*dt; p.y+=p.vy*dt;
+    const k=1-p.life/p.max;
+    fctx.globalAlpha=Math.max(0,k*k);
+    fctx.fillStyle=`hsl(${p.h|0},100%,${(55+28*k)|0}%)`;
+    fctx.beginPath(); fctx.arc(p.x,p.y,p.r*(.55+.45*k),0,6.2832); fctx.fill();
+    return true;
+  });
+  fctx.globalAlpha=1;
+  if(parts.length || live) fxRaf=requestAnimationFrame(fxLoop); else lastT=0;
+}
+function kickFx(){ if(fctx && !fxRaf && !document.hidden && (fxOn() || parts.length)) fxRaf=requestAnimationFrame(fxLoop); }
 
 /* ---------------- CARD VALIDITY ---------------- */
 function canTarget(cardKey, creature, rangerIdx){
@@ -856,9 +1169,17 @@ function hasAnyTarget(cardKey, rangerIdx){
    - Non-targeted cards (fuel/lantern/draw): a "Play" button confirms.
    - Attack cards: tap a glowing creature to resolve.
    Tapping the selected card again, or Cancel, puts it back.
+   v2.1: the rules resolve at once; the card then flies to its target
+   and the board catches up on landing (fxLock holds input ~0.35s).
 */
+function busy(){ return !S || !!S.over || nightAnimating || fxLock; }
+function cardEl(i){ return document.querySelectorAll('.hand .card')[i] || null; }
+function cardRect(i){ const n=cardEl(i); return n ? n.getBoundingClientRect() : null; }
+function hideCard(i){ const n=cardEl(i); if(n) n.style.visibility='hidden'; }
+const PROJ = { stone:"🪨", heavy:"🪓", snare:"🪤" };   // thrown things; bows fire a glowing bolt
+
 function tapCard(handIdx){
-  if(S.over || nightAnimating) return;
+  if(busy()) return;
   rndStart();
   const r=S.cur;
   const key=S.rangers[r].hand[handIdx];
@@ -867,11 +1188,14 @@ function tapCard(handIdx){
 
   // Forager "burn a card" mode consumes the tapped card
   if(S.mode==="forager"){
+    const from=cardRect(handIdx), to=rectOf('.firepit');
     S.rangers[r].hand.splice(handIdx,1); S.discard.push(key);
     S.fuel=Math.min(MAX_FUEL,S.fuel+1);
-    S.foragerUsed=true; S.mode=null; S.armedCard=null; S.acted=true; sndFuel();
+    S.foragerUsed=true; S.mode=null; S.armedCard=null; S.acted=true;
     pushLog(S.rangers[r].name+" feeds a spare "+def.name+" to the fire (+1 fuel).","fire");
-    render(); return;
+    hideCard(handIdx); sndThrow();
+    afterFlight(fly(from,to,def.ic,'spin',360), ()=>{ sndFuel(); buzz(12); render(); fireFlare(14); });
+    return;
   }
 
   // tapping the already-selected card cancels the selection
@@ -882,6 +1206,7 @@ function tapCard(handIdx){
       const where = def.target==="anyLit"?"any lit ring":RING_NAMES[def.ring];
       const tooDark = def.ring && !litFor(def.ring,r);
       flashPrompt("No creature you can reach in the "+where+(tooDark?" — it's too dark there":"")+".");
+      nudgeCard(handIdx);
       return;
     }
     S.armedCard=handIdx; S.mode="attack";
@@ -892,32 +1217,41 @@ function tapCard(handIdx){
 }
 
 function playSelected(){
-  if(S.over || nightAnimating || S.mode!=="confirm" || S.armedCard===null) return;
+  if(busy() || S.mode!=="confirm" || S.armedCard===null) return;
   const r=S.cur, idx=S.armedCard, key=S.rangers[r].hand[idx], def=CARD_DEFS[key];
+  const from=cardRect(idx), to=rectOf('.firepit');
+  let land=()=>{};
   if(def.kind==="fuel"){
-    sndFuel(); let amt=def.amt; if(S.rangers[r].role==="forager") amt+=1;
+    let amt=def.amt; if(S.rangers[r].role==="forager") amt+=1;
     const before=S.fuel; S.fuel=Math.min(MAX_FUEL,S.fuel+amt); const g=S.fuel-before;
     pushLog(S.rangers[r].name+" adds "+def.name+" to the fire (+"+g+" fuel"+(g<amt?", capped":"")+").","fire");
     S.rangers[r].hand.splice(idx,1); S.discard.push(key);
+    land=()=>{ sndFuel(); buzz(12); fireFlare(10+g*6); };
   } else if(def.kind==="lantern"){
-    sndLantern(); S.lantern=true;
+    S.lantern=true;
     pushLog(S.rangers[r].name+" raises a lantern — every ring is lit until night deepens.","good");
     S.rangers[r].hand.splice(idx,1); S.discard.push(key);
+    land=()=>{ sndLantern(); buzz(10); lanternSweep(); };
   } else if(def.kind==="draw"){
     sndDraw(); S.rangers[r].hand.splice(idx,1); S.discard.push(key);
     let got=0; for(let i=0;i<def.amt;i++){ const c=drawCard(); if(c){S.rangers[r].hand.push(c);got++;} }
     pushLog(S.rangers[r].name+" catches a second wind (drew "+got+").","good");
+    S.armedCard=null; S.mode=null; S.acted=true;
+    dealMode={ n:got };
+    render(); return;
   }
-  S.armedCard=null; S.mode=null; S.acted=true; render();
+  S.armedCard=null; S.mode=null; S.acted=true;
+  hideCard(idx); sndThrow();
+  afterFlight(fly(from,to,def.ic,'spin',380), ()=>{ render(); land(); });
 }
 
 function cancelSelection(){
-  if(S.over || nightAnimating) return;
+  if(busy()) return;
   S.armedCard=null; S.mode=null; render();
 }
 
 function tapCreature(id){
-  if(S.over || nightAnimating) return;
+  if(busy()) return;
   rndStart();
   const r=S.cur;
   const c=S.creatures.find(x=>x.id===id);
@@ -925,46 +1259,55 @@ function tapCreature(id){
 
   if(S.mode==="keeper"){
     if(c.ring>=3){ flashPrompt("Already at the forest edge."); return; }
+    const from=rectOf('.controls .btn.role'), to=bodyRect(c.id);
     c.ring+=1;
-    S.keeperUsed=true; S.mode=null; S.acted=true; sndPush();
+    S.keeperUsed=true; S.mode=null; S.acted=true;
     pushLog(S.rangers[r].name+" brandishes a torch — the "+CREATURES[c.key].name+" recoils to the "+RING_NAMES[c.ring]+".","good");
-    render(); return;
+    sndThrow();
+    afterFlight(fly(from,to,"🔥",'spin',360), ()=>{ sndPush(); buzz(15); render(); });   // FLIP slides it back a ring
+    return;
   }
 
   if(S.mode==="attack" && S.armedCard!==null){
-    const key=S.rangers[r].hand[S.armedCard];
+    const idx=S.armedCard, key=S.rangers[r].hand[idx];
     if(!canTarget(key,c,r)){ flashPrompt("That strike can't reach this creature."); return; }
     let dmg=CARD_DEFS[key].dmg;
     if(S.rangers[r].role==="hunter") dmg+=1;
-    const rect=bodyRect(c.id);          // capture on-screen position before the repaint
+    const from=cardRect(idx), to=bodyRect(c.id);
     const hpBefore=c.hp;
     c.hp-=dmg;
     S.stats.dmg += Math.min(dmg, hpBefore);   // effective damage (no overkill)
-    // discard card
-    S.rangers[r].hand.splice(S.armedCard,1); S.discard.push(key);
+    S.rangers[r].hand.splice(idx,1); S.discard.push(key);
     S.armedCard=null; S.mode=null; S.acted=true;
     const killed = c.hp<=0;
     if(killed){
       S.stats.kills++;
-      sndKill(); S.creatures=S.creatures.filter(x=>x.id!==c.id);
+      S.creatures=S.creatures.filter(x=>x.id!==c.id);
       pushLog(S.rangers[r].name+" downs the "+CREATURES[c.key].name+"! ("+CARD_DEFS[key].name+")","good");
     } else {
-      sndAttack(); pushLog(S.rangers[r].name+" hits the "+CREATURES[c.key].name+" for "+dmg+". ("+c.hp+" left)","");
+      pushLog(S.rangers[r].name+" hits the "+CREATURES[c.key].name+" for "+dmg+". ("+c.hp+" left)","");
     }
-    spawnFloat(rect, "−"+dmg, killed?"kill":"hit");
-    if(killed) spawnPoof(rect);
-    render();
-    if(!killed) flashCreature(c.id);    // shake the survivor on the fresh node
+    hideCard(idx); sndThrow();
+    const glyph=PROJ[key]||"";
+    const ms=fly(from,to,glyph,glyph?'spin':'bolt', key==="farshot"?440:key==="arrow"?380:340);
+    afterFlight(ms, ()=>{
+      const rect=bodyRect(c.id)||to;          // still on the board until this render
+      if(killed){ makeGhost(c.id); sndKill(); buzz(28); } else { sndAttack(); buzz(14); }
+      render();
+      spawnFloat(rect, "−"+dmg, killed?"kill":"hit");
+      if(killed){ spawnPoof(rect); burstAt(rect, 18); }
+      else flashCreature(c.id);
+    });
     return;
   }
   // just select for info
   S.selected = (S.selected===id)?null:id;
   render();
 }
-function clearSelected(){ if(nightAnimating) return; S.selected=null; render(); }
+function clearSelected(){ if(busy()) return; S.selected=null; render(); }
 
 function roleAction(){
-  if(S.over || nightAnimating) return;
+  if(busy()) return;
   rndStart();
   const r=S.cur, role=S.rangers[r].role;
   if(role==="keeper"){
@@ -981,7 +1324,7 @@ function roleAction(){
 }
 
 function endTurn(){
-  if(S.over || nightAnimating) return;
+  if(busy()) return;
   rndStart();
   const r=S.cur;
   drawUp(r);
@@ -990,7 +1333,8 @@ function endTurn(){
     S.turnInRound=1; S.cur=1;
     pushLog("— "+S.rangers[0].name+" passes the watch to "+S.rangers[1].name+" —","");
     beginTurn();
-    sndPass(); showBanner("🤝 Hand the watch to "+S.rangers[1].name);
+    sndPass(); buzz(8); showBanner("🤝 Hand the watch to "+S.rangers[1].name);
+    dealMode="all";
     render();
   } else {
     nightPhase();
@@ -1000,8 +1344,8 @@ function endTurn(){
 /* ---------------- NIGHT (THREAT) PHASE ----------------
    Split in two so the advance can be *seen*:
    1. nightPhase()  — fire burns down, board redraws, then creatures
-      glide one ring inward (breaching ones slide into the fire).
-   2. nightResolve() — once the glide finishes, apply the damage,
+      walk one ring inward (breaching ones lunge into the fire).
+   2. nightResolve() — once the walk finishes, apply the damage,
       lose/win checks, spawn the next wave and start the round.
    nightAnimating locks all input for the ~1s in between.            */
 function nightPhase(){
@@ -1014,14 +1358,16 @@ function nightPhase(){
   S.armedCard=null; S.mode=null; S.selected=null;
   nightAnimating=true;
   render();
+  boardOverlay("veil", 1250);
+  buzz(10);
   advanceCreaturesVisually(nightResolve);
 }
 
-// Glide each creature to where its next ring will be, then call done().
+// Walk each creature to where its next ring will be, then call done().
 function advanceCreaturesVisually(done){
-  const STEP_MS=motionReduced?140:480, STAGGER=motionReduced?0:55;
-  const nodes=Array.from(document.querySelectorAll('.creature'));
-  if(nodes.length===0){ setTimeout(done, 260); return; }
+  const STEP_MS=motionReduced?140:520, STAGGER=motionReduced?0:60;
+  const nodes=Array.from(document.querySelectorAll('.board .creature'));
+  if(nodes.length===0){ setTimeout(done, motionReduced?120:420); return; }
   // Force a layout flush so the browser locks in current positions
   // before we change them — otherwise the transition is skipped.
   void nodes[0].offsetWidth;
@@ -1034,6 +1380,8 @@ function advanceCreaturesVisually(done){
     if(target>=1){ const rad=RING_RADIUS[target]; x=50+rad*Math.cos(c.angle); y=50+rad*Math.sin(c.angle); }
     const delay=i*STAGGER; maxDelay=Math.max(maxDelay,delay);
     node.style.transitionDelay=delay+'ms';
+    node.style.transitionDuration=STEP_MS+'ms';
+    node.classList.add(target<1?'lunge':'walking');
     node.style.left=x+'%'; node.style.top=y+'%';
     if(target<1) node.style.opacity='0';  // fade as it reaches camp
   });
@@ -1053,6 +1401,7 @@ function nightResolve(){
   if(reached.length){
     S.stats.breaches+=reached.length;
     S.stats.lowestCamp=Math.min(S.stats.lowestCamp, S.camp);
+    buzz([40,40,70]);
   }
   if(reached.length) flashBreach(reached.length);   // red vignette even if this breach is fatal
   // 3. lose checks
@@ -1078,9 +1427,10 @@ function nightResolve(){
   beginTurn();
   showNightBanner("Night "+S.round);
   pushLog("— Night "+S.round+" —","night");
+  dealMode="all"; flipSkip=true;
   render();
   animateSpawns(S.creatures.filter(c=>!prevIds.has(c.id)).map(c=>c.id));
-  if(reached.length) shakeCamp();   // recoil the Camp stat on the fresh node (only reached if not game over)
+  if(reached.length){ shakeCamp(); shakeBoard(); }   // recoil on the fresh nodes (only reached if not game over)
 }
 
 function gameOver(won, msg){
@@ -1088,7 +1438,9 @@ function gameOver(won, msg){
   rndEnd(won);                         // before S.over is set, so a run that ends untouched still opens first
   S.over = { won, msg };
   recordResult();
+  overlayAt = performance.now() + (motionReduced ? 0 : (won ? 1700 : 1000));   // let dawn break / the fire die first
   if(won) sndWin(); else sndLose();
+  buzz(won ? [30,60,30,60,90] : [120]);
   render();
 }
 
@@ -1119,6 +1471,8 @@ function defaultPrompt(){
 function showBanner(text){
   const b=document.createElement("div");
   b.className="nightbanner"; b.textContent=text;
+  const br=rectOf('.gscreen .board');          // sit over the top of the board, clear of the top bar
+  if(br) b.style.top=Math.round(br.top+br.height*0.2)+'px';
   document.body.appendChild(b);
   setTimeout(()=>b.remove(),1900);
 }
@@ -1184,11 +1538,18 @@ function shakeCamp(){
    RENDER
    =========================================================== */
 function render(){
-  document.body.className = theme + (motionReduced ? " rm" : "");
+  document.body.className = theme + (motionReduced ? " rm" : "") + (S ? " ingame" : "");
+  document.documentElement.classList.toggle("ingame", !!S);
+  const prev = (S && !nightAnimating && !flipSkip && fxOn()) ? creatureCentres() : null;
   if(!S){ renderSetup(); }
-  else if(S.over){ renderGame(); renderOverlay(); }
-  else renderGame();
+  else{
+    const g=renderGame();
+    afterGameRender(prev, g.lr, g.moon);
+    if(S.over) scheduleOverlay();
+  }
+  flipSkip=false; dealMode=null;
   persist();
+  kickFx();
 }
 
 function renderSetup(){
@@ -1292,6 +1653,7 @@ function startGame(){
   saveNames();
   newGame(setupState.diff, setupState.names, setupState.roles);
   rndArm('new'); goFS();
+  clearOverlayTimer(); dealMode='all'; flipSkip=true; lastLR=null; lastMoon=null;
   render();
 }
 function continueGame(){
@@ -1304,8 +1666,20 @@ function continueGame(){
   beginTurn();                       // Undo rewinds to where the run was resumed
   rndArm('resume'); goFS();
   pushLog("— The watch resumes —","night");
+  clearOverlayTimer(); dealMode='all'; flipSkip=true; lastLR=null; lastMoon=null;
   render();
 }
+
+// How far the firelight reaches, as % of the board's half-size (rings sit at 32 / 58 / 84).
+function lightReach(){
+  if(S.over) return S.over.won ? 150 : 0;
+  if(S.lantern) return 135;
+  if(S.fuel>=LIGHT[3]) return 92;
+  if(S.fuel>=LIGHT[2]) return 66;
+  if(S.fuel>=LIGHT[1]) return 40;
+  return 14;
+}
+const TREES=[[5,6,1.1],[15,2.5,.8],[93,5,1.15],[83,2,.8],[4,94,1.1],[14,98,.85],[95,93,1],[86,98,.8],[2,50,.9],[98,46,.85]];
 
 function renderGame(){
   const app=document.getElementById("app");
@@ -1315,10 +1689,14 @@ function renderGame(){
   const fuelFrac = Math.max(0,S.fuel)/MAX_FUEL;
   const litByFuel = (S.fuel>=LIGHT[1]?1:0)+(S.fuel>=LIGHT[2]?1:0)+(S.fuel>=LIGHT[3]?1:0);
   const fireScale = (0.66 + fuelFrac*0.62).toFixed(3);
+  fireScaleNow = parseFloat(fireScale);
   const glowOp    = Math.min(1, 0.4 + litByFuel*0.17 + fuelFrac*0.08).toFixed(2);
   const flickDur  = (S.fuel<=3 ? 1.05 : S.fuel<=6 ? 1.4 : 1.7);
+  const lr = lightReach();
+  const p = S.totalRounds>1 ? (S.round-1)/(S.totalRounds-1) : 1;
+  const moon = { x: +(10+80*p).toFixed(1), y: +(3+11*Math.pow(2*p-1,2)).toFixed(1) };
 
-  // Tap-for-info panel: reads out the selected creature so both players can talk targets.
+  // Tap-for-info panel: floats over the foot of the board so nothing below moves.
   let creatureInfoHtml="";
   const sel = S.selected ? S.creatures.find(c=>c.id===S.selected) : null;
   if(sel){
@@ -1340,8 +1718,14 @@ function renderGame(){
         <div class="ci-close" onclick="clearSelected()">✕</div>
       </div>`;
   }
+  // One-line ticker: the latest log entry, fading in only when it's new.
+  let tickerHtml="";
+  if(!sel && S.log.length){
+    const top=S.log[0], isNew = top.text!==lastTick;
+    lastTick=top.text;
+    tickerHtml=`<div class="ticker ${top.cls||''} ${isNew?'new':''}">${escapeHtml(top.text)}</div>`;
+  }
 
-  // creatures html
   const creaturesHtml=S.creatures.map(c=>{
     const z=ZONES[c.ring];
     const rad=RING_RADIUS[c.ring];
@@ -1357,8 +1741,10 @@ function renderGame(){
     if(c.ring===1) cls.push("breach");
     const hpDots=Array.from({length:c.hp}).map(()=>"<i></i>").join("");
     const nm = c.ring===1 ? "⚠ reaches camp" : CREATURES[c.key].name;
-    return `<div class="${cls.join(' ')}" data-id="${c.id}" style="left:${x}%;top:${y}%;--zc:${z.color}" onclick="tapCreature('${c.id}')">
+    const ph = -((Math.abs(c.angle*1000)|0)%28)/10;     // desynchronise the idle bob
+    return `<div class="${cls.join(' ')}" data-id="${c.id}" style="left:${x}%;top:${y}%;--zc:${z.color};--d:${ph}s" onclick="tapCreature('${c.id}')">
         <div class="body">${CREATURES[c.key].ic}</div>
+        <div class="eyes"><i></i><i></i></div>
         <div class="hp">${hpDots}</div>
         <div class="nm">${nm}</div>
       </div>`;
@@ -1372,7 +1758,8 @@ function renderGame(){
   };
 
   // hand
-  const handHtml=ranger.hand.map((key,i)=>{
+  const hand=ranger.hand;
+  const handHtml=hand.map((key,i)=>{
     const def=CARD_DEFS[key];
     const v=cardVisual(def);
     const selected = S.armedCard===i;
@@ -1382,31 +1769,32 @@ function renderGame(){
     if(selected) cls.push("armed");
     if(noTarget) cls.push("dim");
     if(faded) cls.push("faded");
-    return `<div class="${cls.join(' ')}" style="--bar:${v.bar}" onclick="tapCard(${i})">
+    let di=-1;
+    if(dealMode==="all") di=i;
+    else if(dealMode && dealMode.n && i>=hand.length-dealMode.n) di=i-(hand.length-dealMode.n);
+    if(di>=0) cls.push("deal");
+    return `<div class="${cls.join(' ')}" style="--bar:${v.bar};--i:${Math.max(0,di)}" onclick="tapCard(${i})">
         <div class="zonebar"></div>
         <div class="chip">${v.chip}</div>
         <div class="dmg">${v.dmg}</div>
         <div class="cic">${def.ic}</div>
         <div class="cn">${def.name}</div>
         <div class="czone">${v.zlabel}</div>
-        <div class="cd">${def.desc}</div>
       </div>`;
   }).join("");
 
   // role button
   let roleBtn="";
   if(ranger.role==="keeper"){
-    roleBtn=`<button class="btn role" onclick="roleAction()" ${S.keeperUsed?'disabled':''}>${S.mode==='keeper'?'✕ Cancel torch':'🔥 Scare back'}</button>`;
+    roleBtn=`<button class="btn role" onclick="roleAction()" ${S.keeperUsed?'disabled':''}>${S.mode==='keeper'?'✕ Cancel':'🔥 Scare back'}</button>`;
   } else if(ranger.role==="forager"){
-    roleBtn=`<button class="btn role" onclick="roleAction()" ${S.foragerUsed?'disabled':''}>${S.mode==='forager'?'✕ Cancel':'🪵 Burn a card +1'}</button>`;
+    roleBtn=`<button class="btn role" onclick="roleAction()" ${S.foragerUsed?'disabled':''}>${S.mode==='forager'?'✕ Cancel':'🪵 Burn +1'}</button>`;
   } else {
     roleBtn=`<button class="btn role" disabled>${ROLES[ranger.role].ic} ${ROLES[ranger.role].name.replace('The ','')}</button>`;
   }
 
-  const logHtml=S.log.slice(0,9).map(l=>`<div class="l ${l.cls}">${escapeHtml(l.text)}</div>`).join("");
-
-  // mode-aware action bar
-  const undoBtn=`<button class="btn ghost" onclick="undoTurn()" ${S.acted?'':'disabled'} style="flex:0 0 auto;min-width:78px">↶ Undo</button>`;
+  // mode-aware action bar: one row, always in thumb reach
+  const undoBtn=`<button class="btn ghost undo" onclick="undoTurn()" ${S.acted?'':'disabled'} aria-label="Undo">↶</button>`;
   let controlsHtml;
   if(S.mode==="confirm" && S.armedCard!==null){
     const def=CARD_DEFS[ranger.hand[S.armedCard]];
@@ -1415,72 +1803,50 @@ function renderGame(){
     else if(def.kind==="lantern") eff="light every ring";
     else eff="draw "+def.amt;
     controlsHtml=`
-      <button class="btn ghost" onclick="cancelSelection()" style="flex:0 0 auto;min-width:96px">✕ Cancel</button>
-      <button class="btn play" onclick="playSelected()">▶ Play · ${def.name} (${eff})</button>`;
+      <button class="btn ghost cancel" onclick="cancelSelection()">✕</button>
+      <button class="btn play" onclick="playSelected()">▶ Play ${def.name} · ${eff}</button>`;
   } else if(S.mode==="attack"){
-    controlsHtml=`
-      <button class="btn ghost" onclick="cancelSelection()" style="flex:1">✕ Cancel — pick another card</button>`;
+    controlsHtml=`<button class="btn ghost" onclick="cancelSelection()" style="flex:1">✕ Cancel — pick another card</button>`;
   } else {
     controlsHtml=`${roleBtn}${undoBtn}<button class="btn endturn" onclick="endTurn()">End Watch ▸</button>`;
   }
 
+  const trees=TREES.map(([x,y,s])=>`<span class="tree" style="left:${x}%;top:${y}%;font-size:${(26*s).toFixed(0)}px">🌲</span>`).join("");
+  const boardCls = S.over ? (S.over.won ? "dawn" : "dusk") : "";
+
   app.innerHTML=`
-    <div class="game-layout"><div class="left-col">
-    <div class="hud">
-      <div class="stat fire">
-        <div class="lab">Campfire</div>
-        <div class="val">${S.fuel}<span class="unit">/${MAX_FUEL}🔥</span></div>
-        <div class="pips">${lightPips()}</div>
+    <div class="gscreen">
+      <div class="topbar">
+        <div class="stat fire">
+          <div><div class="lab">Fire</div><div class="val">${S.fuel}<span class="unit">/${MAX_FUEL}</span></div></div>
+          <div class="pips">${lightPips()}</div>
+        </div>
+        <div class="stat camp"><div><div class="lab">Camp</div><div class="val">${S.camp}<span class="unit">/${S.d.camp}</span></div></div></div>
+        <div class="stat dawn"><div><div class="lab">Night</div><div class="val">${S.round}<span class="unit">/${S.totalRounds}</span></div></div></div>
+        <button class="btn ghost icon menubtn" onclick="openHelp()" aria-label="Menu">☰</button>
       </div>
-      <div class="stat camp">
-        <div class="lab">Camp</div>
-        <div class="val">${S.camp}<span class="unit">/${S.d.camp}🛡</span></div>
-        <div class="sublab">integrity</div>
-      </div>
-      <div class="stat dawn">
-        <div class="lab">Night</div>
-        <div class="val">${S.round}/${S.totalRounds}</div>
-        <div class="sublab">until dawn</div>
-      </div>
-    </div>
 
-        <div class="board-wrap">
-      <div class="board">
-        ${ring(3)}${ring(2)}${ring(1)}
-        <div class="firepit ${fireLow?'low':''}" style="--fire-scale:${fireScale};--flick-dur:${flickDur}s"><div class="glow" style="--glow-op:${glowOp}"></div><span class="flame">🔥</span></div>
-        ${creaturesHtml}
+      <div class="boardzone">
+        <div class="board ${boardCls}">
+          <div class="decor">${trees}</div>
+          <div class="moon" style="left:${moon.x}%;top:${moon.y}%"></div>
+          ${ring(3)}${ring(2)}${ring(1)}
+          <div class="lightmask" style="--lr:${lr}%"></div>
+          <div class="firepit ${fireLow?'low':''} ${S.over&&!S.over.won?'out':''}" style="--fire-scale:${fireScale};--flick-dur:${flickDur}s"><div class="glow" style="--glow-op:${glowOp}"></div><span class="flame">🔥</span></div>
+          ${creaturesHtml}
+          ${creatureInfoHtml}${tickerHtml}
+        </div>
       </div>
-    </div>
 
-    <div class="zlegend">
-      <span class="zchip" style="background:#e23b2e"><b>1</b> Clearing</span>
-      <span class="zchip" style="background:#e09114"><b>2</b> Treeline</span>
-      <span class="zchip" style="background:#15a06f"><b>3</b> Deep Woods</span>
-    </div>
-    ${creatureInfoHtml}
-    </div><!-- /left-col --><div class="right-col">
-
-    <div class="turnbar">
-      <div class="who">${escapeHtml(ranger.name)}<div class="role">${ROLES[ranger.role].ic} ${ROLES[ranger.role].name}</div></div>
-      <div style="display:flex;gap:6px;flex:0 0 auto">
-        <button class="btn ghost icon" onclick="toggleSound()">${soundOn?'🔊':'🔇'}</button>
-        <button class="btn ghost icon" onclick="toggleTheme()">${theme==='day'?'☾':'☀'}</button>
-        <button class="btn ghost icon" onclick="openHelp()" aria-label="Menu">☰</button>
+      <div class="tray">
+        <div class="wholine"><span class="whoname">${escapeHtml(ranger.name)}</span><span class="whorole">${ROLES[ranger.role].ic} ${ROLES[ranger.role].name}</span></div>
+        <div class="prompt" id="prompt">${defaultPrompt()}</div>
+        <div class="hand">${handHtml||'<div class="nohand">No cards — end the watch to draw.</div>'}</div>
+        <div class="controls">${controlsHtml}</div>
       </div>
     </div>
-
-    <div class="prompt" id="prompt">${defaultPrompt()}</div>
-
-    <div class="hand">${handHtml||'<div style="color:var(--parch-2);font-style:italic;padding:20px;font-family:var(--serif)">No cards — end the watch to draw.</div>'}</div>
-
-    <div class="controls">
-      ${controlsHtml}
-    </div>
-
-    <div class="log">${logHtml}</div>
-    <div class="footnote">Campfire Watch v${VERSION} · ${(typeof window!=='undefined'&&window.innerWidth>=700)?'Huddle around the screen':'pass the phone or huddle close'}</div>
-    </div><!-- /right-col --></div><!-- /game-layout -->
   `;
+  return { lr, moon };
 }
 
 function confettiPieces(){
@@ -1542,16 +1908,17 @@ function restart(){
   const ov=document.getElementById("ovl"); if(ov) ov.remove();
   newGame(S.diffKey, [S.rangers[0].name,S.rangers[1].name], [S.rangers[0].role,S.rangers[1].role]);
   rndArm('retry'); goFS();
+  clearOverlayTimer(); dealMode='all'; flipSkip=true; lastLR=null; lastMoon=null;
   render();
 }
 function toSetup(){
   const ov=document.getElementById("ovl"); if(ov) ov.remove();
-  rndDrop(); S=null; render();
+  clearOverlayTimer(); rndDrop(); S=null; render();
 }
 
 /* Pause menu: rules, settings, back link and quit. The play clock stops while it's open. */
 function openHelp(){
-  if(nightAnimating || document.getElementById("helpovl")) return;
+  if(nightAnimating || fxLock || document.getElementById("helpovl")) return;
   const div=document.createElement("div");
   div.className="overlay"; div.id="helpovl";
   document.body.appendChild(div);
@@ -1583,6 +1950,7 @@ function refreshMenu(){
         <li><b>Tap a card to pick it up.</b> A wood/lantern card then shows a <b>▶ Play</b> button; an attack card asks you to <b>tap a glowing creature</b>. Tap the card again to put it back.</li>
         <li>Mis-tap? <b>↶ Undo</b> rewinds everything back to the start of the current turn.</li>
       </ul></details>
+      ${S&&S.log.length?`<details><summary>Night log</summary><div class="log">${S.log.map(l=>`<div class="l ${l.cls}">${escapeHtml(l.text)}</div>`).join('')}</div></details>`:''}
       <button class="btn ghost" style="width:100%;margin-top:8px" onclick="quitRun()">Quit to Setup</button>
       <div class="backrow"><a class="backlink" href="../games.html">← Digi Games</a></div>
     </div>`;
@@ -1610,8 +1978,8 @@ if(window.__DGTEST===true){
 }
 
 /* ---------------- BOOT ---------------- */
+initFx();
 render();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
