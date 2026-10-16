@@ -1,5 +1,5 @@
 {
-  "built": "2026-10-16T13:17:03.768Z",
+  "built": "2026-10-16T13:40:21.335Z",
   "today": "2026-10-16",
   "timezone": "Europe/London",
   "count": 595,
@@ -137,7 +137,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-16-word-link-0069.html",
