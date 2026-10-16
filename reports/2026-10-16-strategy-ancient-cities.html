@@ -6,7 +6,7 @@
 <title>Ancient Cities</title>
 <meta name="dn:kind"       content="game">
 <meta name="dn:headline"   content="Ancient Cities">
-<meta name="dn:standfirst" content="See a unique city emerge in this turn-based strategy game.">
+<meta name="dn:standfirst" content="Build a city of floating gardens tile by tile against a rival. Close gardens to sell maize, chilli and amaranth, and time your sales against a market that moves with every trade.">
 <meta name="dn:topic"      content="Strategy">
 <meta name="dn:date"       content="2026-10-16">
 <meta name="dn:read"       content="~5 min">
@@ -239,38 +239,42 @@ function scaleBag(b,n){ // keep the mix, change the size (largest remainder)
  const tot=Object.values(b).reduce((a,v)=>a+v,0),o={},rem=[];let got=0;
  for(const k in b){const x=b[k]*n/tot,f=Math.floor(x);o[k]=f;got+=f;rem.push([x-f,k]);}
  rem.sort((a,c)=>c[0]-a[0]);for(let i=0;got<n;i++,got++)o[rem[i%rem.length][1]]++;return o;}
-const SIZES=[16,20,24,28,30,34,40,54],WARDS=[1,1,2,2,2,3,3,4];
+/* Islands: three sizes, all 2:3 portrait like a phone's play area, each about 80% filled by its bag. */
+const ISLAND={S:{n:'Small',lim:[4,6],tiles:19,wards:1,mins:3},M:{n:'Medium',lim:[6,9],tiles:43,wards:3,mins:7},L:{n:'Large',lim:[8,12],tiles:76,wards:5,mins:12}};
+const SIZES=['S','S','M','M','M','M','M','M'];
 function withWards(b,n){b=Object.assign({},b);for(let i=0;i<n;i++){let k=null;for(const t in b)if(t!=='ward'&&(!k||b[t]>b[k]))k=t;b[k]--;b.ward=(b.ward||0)+1;}return b;}
 /* Bags tuned for finished cities (see sim): more garden closers, more road ends, fewer pure extenders, plus wards. */
 function tuneBag(b,n){b=Object.assign({},b);const m=Object.values(b).reduce((a,v)=>a+v,0);
  b.cap=(b.cap||0)+Math.round(m*.12);b.capsOpp=(b.capsOpp||0)+1;if(b.three>1)b.three--;if(b.band>1)b.band--;
  if(b.straight||b.curve){let k=0;for(const t of['straight','curve','capRoad'])if(b[t]>1){b[t]--;k++;}b.capGate=(b.capGate||0)+Math.ceil(k/2);if(b.pyrRoad!=null)b.pyrRoad++;else b.threeGate=(b.threeGate||0)+1;}
  return scaleBag(b,n);}
-const WB=(b,n)=>withWards(tuneBag(b,n),WARDS[SIZES.indexOf(n)]);
+const WB=(b,z)=>withWards(tuneBag(b,ISLAND[z].tiles),ISLAND[z].wards);
 const LEVELS=[
- {bag:WB(B1,SIZES[0]),goods:2,start:'market',market:false},     // First Gardens: fixed prices
- {bag:WB(B1,SIZES[1]),goods:2,start:'market',market:true},      // Market Day: prices move
- {bag:WB(B2,SIZES[2]),goods:3,start:'marketRoad',market:true},
- {bag:WB(B3,SIZES[3]),goods:3,start:'marketRoad',market:true},
- {bag:WB(B3,SIZES[4]),goods:3,start:'marketRoad',market:true,docks:.3},
- {bag:WB(B5,SIZES[5]),goods:3,start:'marketRoad',market:true,docks:.25},
- {bag:WB(B6,SIZES[6]),goods:3,start:'marketRoad',market:true,docks:.25},
- {bag:WB(B7,SIZES[7]),goods:3,start:'marketRoad',market:true,docks:.25,players:3}
+ {size:SIZES[0],bag:WB(B1,SIZES[0]),goods:2,start:'market',market:false,lim:null},     // First Gardens: fixed prices
+ {size:SIZES[1],bag:WB(B1,SIZES[1]),goods:2,start:'market',market:true,lim:null},      // Market Day: prices move
+ {size:SIZES[2],bag:WB(B2,SIZES[2]),goods:3,start:'marketRoad',market:true,lim:null},
+ {size:SIZES[3],bag:WB(B3,SIZES[3]),goods:3,start:'marketRoad',market:true,lim:null},
+ {size:SIZES[4],bag:WB(B3,SIZES[4]),goods:3,start:'marketRoad',market:true,docks:.3,lim:null},
+ {size:SIZES[5],bag:WB(B5,SIZES[5]),goods:3,start:'marketRoad',market:true,docks:.25,lim:null},
+ {size:SIZES[6],bag:WB(B6,SIZES[6]),goods:3,start:'marketRoad',market:true,docks:.25,lim:null},
+ {size:'M',pick:true,bags:{S:WB(B7,'S'),M:WB(B7,'M'),L:WB(B7,'L')},bag:WB(B7,'M'),goods:3,start:'marketRoad',market:true,docks:.25,players:3,lim:null}   // Grand Market: the player picks the island
 ];
 const DIRECTOR={on:0,win:6,lateWin:14,lateAt:.6,str:.7,close:2.2,snug:.7,hole:1.6,late:1.4,shape:1};
 const CLOSER={ward:1.3,cap:1,capsOpp:1,capsAdj:1,capGate:1,pyrRoad:.6,tee:.8,cross:.8,lake:.5,pyr:.3};
 const RULES={start:[3,4,5],lo:1,hi:6,drop:1,bigDrop:4,rise:1,revert:1,lmBonus:3,pyrVal:9,dockBonus:1};
 
-function starTh(lv,diff){const u=bagSize(lv)/40,b={calm:[20,40],fair:[10,25],sharp:[6,18]}[diff]||[10,25];return [1,Math.round(b[0]*u),Math.round(b[1]*u)];}
-function starsFor(lv,diff,m){const t=starTh(lv,diff);return m>=t[2]?3:m>=t[1]?2:m>=t[0]?1:0;}
-function headStart(lv){return Math.round(Math.min(10,10*bagSize(lv)/40));}
-function bagSize(lv){let n=0;for(const k in LEVELS[lv].bag)n+=LEVELS[lv].bag[k];return n;}
+function bagOf(lv,isl){const L=LEVELS[lv];return L.bags&&isl&&L.bags[isl]?L.bags[isl]:L.bag;}
+function islandOf(lv,isl){const L=LEVELS[lv];return L.pick&&isl&&ISLAND[isl]?isl:L.size;}
+function starTh(lv,diff,isl){const u=bagSize(lv,isl)/40,b={calm:[20,40],fair:[10,25],sharp:[6,18]}[diff]||[10,25];return [1,Math.round(b[0]*u),Math.round(b[1]*u)];}
+function starsFor(lv,diff,m,isl){const t=starTh(lv,diff,isl);return m>=t[2]?3:m>=t[1]?2:m>=t[0]?1:0;}
+function headStart(lv,isl){return Math.round(Math.min(10,10*bagSize(lv,isl)/40));}
+function bagSize(lv,isl){const b=bagOf(lv,isl);let n=0;for(const k in b)n+=b[k];return n;}
 
 /* ---- deck ---- */
-function buildDeck(lv,rnd){
- const L=LEVELS[lv],deck=[];
+function buildDeck(lv,rnd,isl){
+ const L=LEVELS[lv],deck=[],BAG=bagOf(lv,isl);
  const pick=()=>{const r=rnd();if(L.goods===2)return r<.58?'m':'c';return r<.5?'m':r<.82?'c':'j';};
- for(const t in L.bag)for(let i=0;i<L.bag[t];i++){
+ for(const t in BAG)for(let i=0;i<BAG[t];i++){
   const g=[],d=[];
   const roads=T[t].segs.some(x=>x.k==='C');
   for(const sg of T[t].segs){if(sg.k==='G'){const a=[];for(let k=0;k<sg.n;k++)a.push(pick());a.sort();g.push(a);d.push(L.docks&&!roads&&rnd()<L.docks*1.4?1:0);}else{g.push(null);d.push(0);}}
@@ -287,10 +291,10 @@ const K=(x,y)=>(x+2048)*4096+(y+2048);
 /* ---- match ---- */
 function newMatch(lv,seed,opt){
  opt=opt||{};const L=LEVELS[lv],np=L.players||2,rnd=mulberry(seed);
- let deck=buildDeck(lv,rnd);
+ const isl=islandOf(lv,opt.island);let deck=buildDeck(lv,rnd,isl);
  if(opt.lead){const lead=opt.lead.map((x,i)=>({t:x.t,g:T[x.t].segs.map((sg,k)=>sg.k==='G'?(x.g&&x.g[k]||['m']):null),d:T[x.t].segs.map(()=>0)}));deck=lead.concat(deck.slice(0,Math.max(0,(opt.size||deck.length)-lead.length)));
   deck.forEach((x,i)=>{x.id=i;x.key=x.t+'|'+x.g.map(a=>a?a.join(''):'').join(',')+'|'+x.d.join('');});}
- const st={lv,seed,np,deck,di:0,drng:mulberry(seed^0x2c1b3c6d),offer:[],turn:0,turnNo:0,over:false,
+ const st={maxed:[false,false],frame:opt.frame?{x0:-Math.floor((opt.frame[0]-1)/2),y0:-Math.floor((opt.frame[1]-1)/2),w:opt.frame[0],h:opt.frame[1]}:null,island:isl,lim:opt.lim===undefined?ISLAND[isl].lim:opt.lim,lv,seed,np,deck,di:0,drng:mulberry(seed^0x2c1b3c6d),offer:[],turn:0,turnNo:0,over:false,
   scores:new Array(np).fill(0),br:[],prices:RULES.start.slice(),act:[1,1,L.goods>2?1:0],
   tiles:[],grid:new Map(),front:new Set(),par:[],F:[],pyrs:[],moves:[],discards:0,head:opt.head||0,lastSale:null};
  for(let p=0;p<np;p++)st.br.push({G:0,C:0,P:0,E:0,H:0});
@@ -306,8 +310,10 @@ function union(st,a,b){a=find(st,a);b=find(st,b);if(a===b)return a;const A=st.F[
  st.par[b]=a;st.F[b]=null;return a;}
 function goodsCount(arr){const g=[0,0,0];if(arr)for(const x of arr)g[GOODS.indexOf(x)]++;return g;}
 
-function canPlace(st,inst,x,y,rot){
- if(st.grid.has(K(x,y)))return false;const e=edgesOf(inst,rot);let n=0;
+const inFrame=(st,x,y)=>!st.frame||(x>=st.frame.x0&&y>=st.frame.y0&&x<st.frame.x0+st.frame.w&&y<st.frame.y0+st.frame.h);
+const shore=(st,x,y)=>{if(st.frame)return !inFrame(st,x,y);if(!st.lim||!st.bb)return false;const b=st.bb;return (b.x1-b.x0+1>=st.lim[0]&&(x<b.x0||x>b.x1))||(b.y1-b.y0+1>=st.lim[1]&&(y<b.y0||y>b.y1));};
+function canPlace(st,inst,x,y,rot){if(!inFrame(st,x,y))return false;
+ if(st.grid.has(K(x,y)))return false;if(st.lim&&st.bb){const b=st.bb;if(Math.max(b.x1,x)-Math.min(b.x0,x)+1>st.lim[0]||Math.max(b.y1,y)-Math.min(b.y0,y)+1>st.lim[1])return false;}const e=edgesOf(inst,rot);let n=0;
  for(let s=0;s<4;s++){const ti=st.grid.get(K(x+DX[s],y+DY[s]));if(ti===undefined)continue;n++;
   const a=st.tiles[ti].e[(s+2)%4],b=e[s];if(a!==b&&a!=='X'&&b!=='X')return false;}
  return n>0;
@@ -326,13 +332,14 @@ function hasLegal(st,inst){for(const k of st.front){const x=Math.floor(k/4096)-2
 function putTile(st,inst,x,y,rot,owner){
  const ti=st.tiles.length,e=edgesOf(inst,rot),tile={x,y,inst,rot,owner,e,side:[-1,-1,-1,-1],nodes:[],turn:st.turnNo};
  st.tiles.push(tile);st.grid.set(K(x,y),ti);st.front.delete(K(x,y));
+ if(!st.bb)st.bb={x0:x,y0:y,x1:x,y1:y};else{st.bb.x0=Math.min(st.bb.x0,x);st.bb.y0=Math.min(st.bb.y0,y);st.bb.x1=Math.max(st.bb.x1,x);st.bb.y1=Math.max(st.bb.y1,y);}
  for(let s=0;s<4;s++){const k=K(x+DX[s],y+DY[s]);if(!st.grid.has(k))st.front.add(k);}
  const def=T[inst.t];
  def.segs.forEach((sg,i)=>{const n=st.par.length;st.par.push(n);
   st.F.push({k:sg.k,open:sg.s.length,tiles:new Set([ti]),goods:goodsCount(inst.g[i]),dock:inst.d[i]?1:0,lm:(sg.end==='pyr'||sg.end==='market')?1:0,closed:false});
   tile.nodes.push(n);for(const s of sg.s)tile.side[(s+rot)%4]=n;});
  const touched=new Set(),sealed=[];
- for(let s=0;s<4;s++){const nb=st.grid.get(K(x+DX[s],y+DY[s]));if(nb===undefined)continue;const ne=st.tiles[nb].e[(s+2)%4];
+ for(let s=0;s<4;s++){if(shore(st,x+DX[s],y+DY[s])){if(e[s]==='G'||e[s]==='C')st.F[find(st,tile.side[s])].open-=1;continue;}const nb=st.grid.get(K(x+DX[s],y+DY[s]));if(nb===undefined)continue;const ne=st.tiles[nb].e[(s+2)%4];
   if(e[s]==='X'){if(ne==='G'||ne==='C'){const n=st.tiles[nb].side[(s+2)%4];st.F[find(st,n)].open-=1;sealed.push(n);}continue;}
   if(e[s]==='W')continue;
   if(ne==='X'){st.F[find(st,tile.side[s])].open-=1;continue;}
@@ -361,6 +368,10 @@ function play(st,oi,x,y,rot){
  const inst=st.offer[oi];if(!inst||!canPlace(st,inst,x,y,rot))throw new Error('illegal move');
  const p=st.turn,ev=[];st.offer.splice(oi,1);st.moves.push([oi,x,y,rot]);
  const {ti,roots}=putTile(st,inst,x,y,rot,p);
+ if(st.lim&&st.bb){const b=st.bb,mx=[b.x1-b.x0+1>=st.lim[0],b.y1-b.y0+1>=st.lim[1]];
+  for(let a=0;a<2;a++){if(!mx[a]||st.maxed[a])continue;st.maxed[a]=true;ev.push({type:'shore',axis:a});   // the shore appears on this axis: seal edges already facing it
+   st.tiles.forEach((t,k)=>{if(k===ti)return;for(const d of(a?[0,2]:[1,3])){const nx=t.x+DX[d],ny=t.y+DY[d];if(!shore(st,nx,ny)||st.grid.has(K(nx,ny)))continue;
+    if(t.e[d]==='G'||t.e[d]==='C'){const r=find(st,t.side[d]);st.F[r].open-=1;if(!roots.includes(r))roots.push(r);}}});}}
  ev.push({type:'place',ti,p,x,y,rot,inst});
  const prices=st.prices.slice(),sold=[0,0,0];
  for(const r of roots){const f=st.F[r];if(!f||f.closed||f.open!==0)continue;f.closed=true;
@@ -401,6 +412,7 @@ function draw(st){
 function refill(st,ev){
  for(;;){while(st.offer.length<3&&st.di<st.deck.length)st.offer.push(draw(st));
   const dead=st.offer.findIndex(o=>!hasLegal(st,o));if(dead<0)break;
+  if((st.frame||st.lim)&&[...st.front].some(k=>{const x=Math.floor(k/4096)-2048,y=k%4096-2048;return canPlace(st,{t:'ward',g:[],d:[]},x,y,0);})&&[...st.front].some(k=>inFrame(st,Math.floor(k/4096)-2048,k%4096-2048))){const o=st.offer[dead];st.offer[dead]={t:'ward',g:[],d:[],id:o.id,key:'ward'};ev.push({type:'toward',inst:o});st.discards++;continue;}
   ev.push({type:'discard',inst:st.offer[dead]});st.offer.splice(dead,1);st.discards++;
   if(!st.offer.length&&st.di>=st.deck.length)break;}
 }
@@ -430,7 +442,7 @@ function hypo(st,inst,x,y,rot,p){
  const rootsOf=segs.map(()=>new Set()),match=segs.map(()=>0),sideSeg=[-1,-1,-1,-1];
  segs.forEach((s,i)=>s.sides.forEach(sd=>sideSeg[sd]=i));
  const rootOwner=new Map(),sealN=new Map(),selfSeal=segs.map(()=>0);
- for(let s=0;s<4;s++){const nb=st.grid.get(K(x+DX[s],y+DY[s]));if(nb===undefined)continue;const ne=st.tiles[nb].e[(s+2)%4];
+ for(let s=0;s<4;s++){if(shore(st,x+DX[s],y+DY[s])){if(e[s]==='G'||e[s]==='C')selfSeal[sideSeg[s]]++;continue;}const nb=st.grid.get(K(x+DX[s],y+DY[s]));if(nb===undefined)continue;const ne=st.tiles[nb].e[(s+2)%4];
   if(e[s]==='X'){if(ne==='G'||ne==='C'){const r=find(st,st.tiles[nb].side[(s+2)%4]);sealN.set(r,(sealN.get(r)||0)+1);}continue;}
   if(e[s]==='W')continue;
   if(ne==='X'){selfSeal[sideSeg[s]]++;continue;}
@@ -505,7 +517,7 @@ function aiChoose(st,diff,rnd,w){
  return {oi:pick.oi,x:pick.x,y:pick.y,r:pick.r};
 }
 
-return {T,LEVELS,RULES,GOODS,DX,DY,K,mulberry,newMatch,play,replay,legal,canPlace,edgesOf,find,tileInfo,preview,aiChoose,bagSize,PROF,split,starTh,starsFor,hypo,headStart,DIRECTOR,CLOSER};
+return {T,LEVELS,RULES,GOODS,DX,DY,K,mulberry,newMatch,play,replay,legal,canPlace,edgesOf,find,tileInfo,preview,aiChoose,bagSize,PROF,split,starTh,starsFor,hypo,headStart,DIRECTOR,CLOSER,inFrame,shore,ISLAND};
 })();
 
 /* ================= Cities: names, palette and tile painter (presentation only) =================
@@ -743,7 +755,7 @@ let rnd={armed:false,open:false,secs:0,how:'new'};
 function trk(ev,x){try{if(window.digi&&window.digi.track)window.digi.track(ev,Object.assign({game:GAME},x));}catch(e){}}
 function rndArm(how){rnd={armed:true,open:false,secs:0,how:how||'new'};}
 function rndStart(){if(!rnd.armed||rnd.open)return;rnd.armed=false;rnd.open=true;
- trk('game_start',{level:M?M.lv+1:1,start:rnd.how,mode:M?M.diff:S.diff,city:CITY.id});}
+ trk('game_start',{level:M?M.lv+1:1,start:rnd.how,mode:M?M.diff:S.diff,city:CITY.id,size:M?M.st.island:'S'});}
 function rndEnd(win,x){if(!rnd.open)rndStart();if(!rnd.open)return;rnd.open=false;
  trk('game_end',Object.assign({win:!!win,level:M?M.lv+1:1,secs:Math.round(rnd.secs)},x));}
 
@@ -790,7 +802,11 @@ function viewRect(){
 function resize(){DPR=Math.min(2.5,window.devicePixelRatio||1);W=app.clientWidth||innerWidth;H=app.clientHeight||innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);viewRect();
  $('bFit').style.top=(VR.y+6)+'px';fitCam(true,true);}
 function bbox(st){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const t of st.tiles){x0=Math.min(x0,t.x);y0=Math.min(y0,t.y);x1=Math.max(x1,t.x+1);y1=Math.max(y1,t.y+1);}return[x0,y0,x1,y1];}
-function fitCam(snap,keepMan){const st=M?M.st:DEMO;if(!st)return;const[x0,y0,x1,y1]=bbox(st),m=M?1:0;
+function fitCam(snap,keepMan){const st=M?M.st:DEMO;if(!st)return;
+ if(M&&st.lim){const[x0,y0,x1,y1]=bbox(st),W=st.lim[0],Hh=st.lim[1];cam.ts=clamp(Math.min(VR.w/(W+.8),VR.h/(Hh+.8)),24,140);
+  const w=limWin(st);cam.tx=(Math.max(w[0],x0-(W-(x1-x0))/2)+Math.min(w[2],x1+(W-(x1-x0))/2))/2;cam.ty=(Math.max(w[1],y0-(Hh-(y1-y0))/2)+Math.min(w[3],y1+(Hh-(y1-y0))/2))/2;
+  if(!keepMan)cam.man=false;if(snap||S.rm){cam.s=cam.ts;cam.x=cam.tx;cam.y=cam.ty;}return;}
+ const[x0,y0,x1,y1]=bbox(st),m=M?1:0;
  const bw=x1-x0+2*m,bh=y1-y0+2*m,mx=M?Math.min(96,VR.w/3.4):40;let s=Math.min(VR.w/bw,VR.h/bh);s=clamp(s,M?30:24,mx);
  cam.ts=s;cam.tx=(x0+x1)/2;cam.ty=(y0+y1)/2;if(!keepMan)cam.man=false;if(snap||S.rm){cam.s=cam.ts;cam.x=cam.tx;cam.y=cam.ty;}}
 function ensureVisible(x,y){if(!cam.man){fitCam(false);return;}const[sx,sy]=w2s(x+.5,y+.5),m=cam.s*.6;if(sx<m||sx>W-m||sy<VR.y+m||sy>VR.y+VR.h-m)fitCam(false);}
@@ -824,7 +840,18 @@ function drawWater(st,path){const s=cam.s;
  if(!RIP){try{RIP=ctx.createPattern(PAINT.rippleTex(),'repeat');}catch(e){RIP=0;}}
  if(RIP&&RIP.setTransform){const[ox,oy]=w2s(0,0),k=s/100;try{RIP.setTransform(new DOMMatrix().translate(ox+(S.rm?0:Math.sin(boardT*.25)*s*.06),oy).scale(k));ctx.fillStyle=RIP;ctx.fillRect(0,0,W,H);}catch(e){}}
  ctx.restore();}
+function limWin(st){const[x0,y0,x1,y1]=bbox(st),W=st.lim[0],H2=st.lim[1];return[x1-W,y1-H2,x0+W,y0+H2];}
 function bboxC(st){const b=bbox(st);return[(b[0]+b[2])/2,(b[1]+b[3])/2];}
+function drawLimit(st){const s=cam.s,[a0,b0,a1,b1]=limWin(st),[x0,y0,x1,y1]=bbox(st),fw=x1-x0>=st.lim[0],fh=y1-y0>=st.lim[1];
+ const[sx0,sy0]=w2s(a0,b0),[sx1,sy1]=w2s(a1,b1);ctx.save();
+ ctx.setLineDash([7,6]);ctx.lineWidth=1.6;ctx.strokeStyle='rgba(140,100,50,.55)';PAINT.rr(ctx,sx0-3,sy0-3,sx1-sx0+6,sy1-sy0+6,10);ctx.stroke();ctx.setLineDash([]);
+ const bank=(xa,ya,xb,yb)=>{const t=Math.max(5,s*.11);ctx.lineCap='butt';ctx.strokeStyle='rgba(90,70,40,.35)';ctx.lineWidth=t+3;ctx.beginPath();ctx.moveTo(xa,ya);ctx.lineTo(xb,yb);ctx.stroke();
+  ctx.strokeStyle='#d8c39a';ctx.lineWidth=t;ctx.stroke();ctx.strokeStyle='rgba(120,95,55,.45)';ctx.lineWidth=t;ctx.setLineDash([2,Math.max(6,s*.16)]);ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1.2;ctx.stroke();};
+ const o=Math.max(3,s*.06);
+ if(fw){bank(sx0-o,sy0,sx0-o,sy1);bank(sx1+o,sy0,sx1+o,sy1);}
+ if(fh){bank(sx0,sy0-o,sx1,sy0-o);bank(sx0,sy1+o,sx1,sy1+o);}
+ ctx.restore();}
 function drawRim(st){const s=cam.s,w=Math.max(2,s*.045);ctx.save();ctx.lineCap='square';
  for(const pass of [0,1]){ctx.strokeStyle=pass?CITY.pal.rim:CITY.pal.rimE;ctx.lineWidth=pass?w*.55:w;ctx.beginPath();
   for(const t of st.tiles){const[sx,sy]=w2s(t.x,t.y);for(let d=0;d<4;d++){if(st.grid.has(AC.K(t.x+AC.DX[d],t.y+AC.DY[d])))continue;
@@ -844,7 +871,8 @@ function wait(ms){if(FAST)return Promise.resolve();return new Promise(r=>TIMERS.
 let M=null,DEMO=null,mid=0,homeY=0;
 function names(lv){const L=CITY.levels[lv];return ['You'].concat(L.rivals||[L.rival]);}
 function startMatch(lv,how,cur,tut){$('tray').hidden=false;$('bRes').hidden=true;
- const seed=cur?cur.seed:((Math.random()*2147483647)>>>0)||7,diff=tut?'calm':cur?cur.diff:S.diff,opt={head:!tut&&diff==='calm'?AC.headStart(lv):0};
+ const seed=cur?cur.seed:((Math.random()*2147483647)>>>0)||7,diff=tut?'calm':cur?cur.diff:S.diff,isl=cur&&cur.island||(typeof how==='object'?how.island:null)||S.island||'M',opt={island:isl,head:!tut&&diff==='calm'?AC.headStart(lv,isl):0};
+ if(typeof how==='object')how=how.how;
  if(tut){opt.lead=TUT_LEAD;opt.size=10;}
  let st;try{st=cur?AC.replay(lv,seed,opt,cur.moves):AC.newMatch(lv,seed,opt);}catch(e){st=AC.newMatch(lv,seed,opt);}
  M={id:++mid,lv,diff,seed,opt,st,sel:-1,ghost:null,legal:null,busy:false,info:null,lastRv:null,rvSlot:null,ai:AC.mulberry(seed^0x5bd1e995),fast:false,ended:false,
@@ -857,7 +885,7 @@ function startMatch(lv,how,cur,tut){$('tray').hidden=false;$('bRes').hidden=true
  refresh();
  if(st.over)finish();else if(st.turn!==0)rivalTurn();
 }
-function saveCur(){if(!M||M.tutorial)return;S.cur={city:CITY.id,lv:M.lv,diff:M.diff,seed:M.seed,moves:M.st.moves};save();}
+function saveCur(){if(!M||M.tutorial)return;S.cur={city:CITY.id,lv:M.lv,diff:M.diff,seed:M.seed,island:M.st.island,moves:M.st.moves};save();}
 function myTurn(){return M&&!M.busy&&!M.st.over&&M.st.turn===0&&!M.ended;}
 function selSlot(i){if(!myTurn()||!M.st.offer[i])return;if(M.tut){const T=TUT[M.tut.i];if(!T.slot||i!==M.tut.slot){nudge('.slot[data-i="'+i+'"]');return;}}rndStart();hideBanner();hideInfo();
  if(M.sel===i){return;}
@@ -900,14 +928,16 @@ async function runEvents(ev,p){const id=M.id,st=M.st;
    refreshScores();await wait(fin?360:640);}
   else if(e.type==='market'){marketAnim(e);if(!e.drift){await wait(240);if(!M.tutorial&&!S.mkTip&&!FAST){S.mkTip=1;save();await tip(marketTip(e));if(!M||M.id!==id)return;}}}
   else if(e.type==='discard'){toast('A tile that fitted nowhere was set aside');await wait(380);}
+  else if(e.type==='toward'){toast('No space fitted a tile, so it was rebuilt as a walled ward');await wait(500);}
+  else if(e.type==='shore'){toast(e.axis?'The city is full height: the shore is set top and bottom':'The city is full width: the shore is set left and right');sfx('road');await wait(600);}
   else if(e.type==='over'){await wait(500);}}
  if(M&&M.id===id){M.shown=M.st.scores.slice();refresh();}}
 function finish(forced){if(!M||M.ended)return;if(M.tutorial){M.ended=true;M.busy=false;S.tut=2;save();sfx('win');refresh();return setTimeout(()=>{if(M&&M.ended)showTutEnd();},FAST?0:500);}
  M.ended=true;M.busy=false;const st=M.st;
- const opp=Math.max(...st.scores.slice(1)),margin=st.scores[0]-opp,win=margin>0,stars=win?AC.starsFor(M.lv,M.diff,margin):0;
+ const opp=Math.max(...st.scores.slice(1)),margin=st.scores[0]-opp,win=margin>0,stars=win?AC.starsFor(M.lv,M.diff,margin,M.st.island):0;
  const P=prog();const prev=P.st[M.lv];if(stars>P.st[M.lv])P.st[M.lv]=stars;let best=false;if(win&&(P.best[M.lv]==null||margin>P.best[M.lv])){best=P.best[M.lv]!=null;P.best[M.lv]=margin;}
  S.cur=null;save();
- rndEnd(win,{score:st.scores[0],stars,mode:M.diff,city:CITY.id,margin:clamp(margin,-999,999)});
+ rndEnd(win,{score:st.scores[0],stars,mode:M.diff,city:CITY.id,size:M.st.island,margin:clamp(margin,-999,999)});
  sfx(win?'win':'lose');refresh();
  setTimeout(()=>{if(M&&M.ended)showEnd({win,margin,stars,prev,best,draw:margin===0});},forced||FAST?0:500);}
 function forceEnd(win){ // test hook: finish the round through finish()
@@ -987,9 +1017,9 @@ function refreshPrev(){if(!M)return;const st=M.st;if(M.tut){setPrev('&nbsp;');re
 function refresh(){if(!M)return;refreshScores();refreshMarket();refreshTray();refreshPrev();$('bagN').textContent=M.st.deck.length-M.st.di;}
 
 /* ---------- banner, info, toast ---------- */
-function showBanner(){const L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff);const b=$('banner');
+function showBanner(){const L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff,M.st.island);const b=$('banner');
  b.innerHTML=`<button class="x" id="bnX" aria-label="Close">×</button><h3>${lvLabel(M.lv)}${esc(L.name)}</h3><p>${esc(L.rule)}</p>
- <p>Rival: <span class="rv">${esc(L.rival)}</span>, ${esc(L.style)} · ${DIFFS[M.diff].n}</p><p>★ win · ★★ win by ${th[1]} · ★★★ by ${th[2]}</p>`;
+ <p>Rival: <span class="rv">${esc(L.rival)}</span>, ${esc(L.style)} \u00b7 ${DIFFS[M.diff].n}</p><p>${AC.ISLAND[M.st.island].n} island: the city can grow to ${M.st.lim[0]} wide and ${M.st.lim[1]} tall, any way you choose.</p><p>★ win · ★★ win by ${th[1]} · ★★★ by ${th[2]}</p>`;
  b.hidden=false;$('bFit').hidden=true;$('bnX').onclick=e=>{e.stopPropagation();hideBanner();};b.style.top=(VR.y+6)+'px';}
 function hideBanner(){$('banner').hidden=true;$('bFit').hidden=false;}
 let toastT=0;function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2200);}
@@ -1017,7 +1047,7 @@ function draw(){ctx.setTransform(DPR,0,0,DPR,0,0);const st=M?M.st:DEMO;drawPaper
   if(FX.drops.has(i)){const k=FX.drops.get(i),sc=1+.16*(1-k)*(1-k),d=(sc-1)*s/2;ctx.save();ctx.shadowColor='rgba(60,40,10,.3)';ctx.shadowBlur=14*(1-k);ctx.shadowOffsetY=8*(1-k);
    drawTileAt(ctx,t.inst,t.rot,sx-d,sy-d-6*(1-k),s*sc,Math.min(1,.35+k*1.4),true);ctx.restore();}
   else drawTileAt(ctx,t.inst,t.rot,sx,sy,s);});
- drawRim(st);
+ drawRim(st);if(M&&st.lim)drawLimit(st);
  if(M){
   for(const g of FX.glows){const a=g.t<.25?g.t/.25:Math.max(0,1-(g.t-.25)/1.1);ctx.fillStyle=g.col+(.5*a)+')';for(const ti of g.tiles){const t=st.tiles[ti],[sx,sy]=w2s(t.x,t.y);ctx.fillRect(sx,sy,s,s);}}
   if(M.info){ctx.fillStyle='rgba(255,255,255,.3)';ctx.strokeStyle='#fff';ctx.lineWidth=2;for(const ti of M.info.tiles){const t=st.tiles[ti],[sx,sy]=w2s(t.x,t.y);ctx.fillRect(sx,sy,s,s);ctx.strokeRect(sx+1,sy+1,s-2,s-2);}}
@@ -1083,17 +1113,20 @@ function renderHome(){const P=prog(),L=CITY.levels;if(S.cur&&!L[S.cur.lv])S.cur=
  <div class="dnote">${esc(DIFFS[S.diff].d)}</div>
  <h2 class="lh">${esc(CITY.name)}</h2>
  <button class="lv" id="hTut"><span class="num">?</span><span class="nm"><b>Learn to play</b><span>A one-minute guided game</span></span><span class="stars">${S.tut>=2?'<i>\u2713</i>':''}</span></button>
- ${L.map((l,i)=>{const lk=!unlocked(i);return `<button class="lv${lk?' lock':''}${l.grand?' grand':''}" data-l="${i}" ${lk?'aria-disabled="true"':''}><span class="num">${l.grand?'✦':i+1}</span><span class="nm"><b>${esc(l.name)}</b><span>${lk?(l.grand?'Win The Great City to unlock':'Win level '+i+' to unlock'):'vs '+esc(l.rival)+', '+esc(l.style)}</span></span><span class="stars">${lk?'\u{1F512}':stars(P.st[i])}</span></button>`;}).join('')}
+ ${L.map((l,i)=>{const lk=!unlocked(i);return `<button class="lv${lk?' lock':''}${l.grand?' grand':''}" data-l="${i}" ${lk?'aria-disabled="true"':''}><span class="num">${l.grand?'✦':i+1}</span><span class="nm"><b>${esc(l.name)}</b><span>${lk?(l.grand?'Win The Great City to unlock':'Win level '+i+' to unlock'):(l.grand?'Choose a small, medium or large island':'vs '+esc(l.rival)+' \u00b7 '+AC.ISLAND[AC.LEVELS[i].size].n+' island')}</span></span><span class="stars">${lk?'\u{1F512}':stars(P.st[i])}</span></button>`;}).join('')}
  <div class="foot"><button class="chip" id="hHelp">How to play</button><button class="chip${S.snd?'':' off'}" id="hSnd">${S.snd?'Sound on':'Sound off'}</button><button class="chip${S.rm?' off':''}" id="hRm">${S.rm?'Motion off':'Motion on'}</button>${fsOK?`<button class="chip${S.fs?'':' off'}" id="hFs">${S.fs?'Full screen on':'Full screen off'}</button>`:''}</div>
  <a class="back" href="../games.html">← Digi Games</a></div>`;
  $('hPlay').onclick=()=>{goFS();sfx('sel');if(cur)startMatch(cur.lv,'resume',cur);else if(S.tut<2)startMatch(0,'new',null,true);else startMatch(next,'new');};
  if($('hTut'))$('hTut').onclick=()=>{goFS();sfx('sel');startMatch(0,'new',null,true);};
  $('hDiff').querySelectorAll('button').forEach(b=>b.onclick=()=>{S.diff=b.dataset.d;save();sfx('tap');renderHome();});
- $('home').querySelectorAll('.lv').forEach(b=>b.onclick=()=>{const i=+b.dataset.l;if(!unlocked(i)){toastHome(b);return;}goFS();sfx('sel');startMatch(i,'new');});
+ $('home').querySelectorAll('.lv').forEach(b=>b.onclick=()=>{const i=+b.dataset.l;if(!unlocked(i)){toastHome(b);return;}if(CITY.levels[i]&&CITY.levels[i].grand){pickIsland(i);return;}goFS();sfx('sel');startMatch(i,'new');});
  $('hHelp').onclick=()=>showHelp(false);
  $('hSnd').onclick=()=>{S.snd=!S.snd;save();if(S.snd)sfx('sel');renderHome();};
  $('hRm').onclick=()=>{S.rm=!S.rm;save();renderHome();};
  if($('hFs'))$('hFs').onclick=()=>{S.fs=!S.fs;save();if(S.fs)goFS();else exitFS();renderHome();};}
+function pickIsland(lv){const I=AC.ISLAND;
+ openModal(`<h2>Grand Market</h2><p class="lead">You against two rivals. Choose your island.</p>${['S','M','L'].map(k=>`<button class="mbtn${k==='M'?' pri':''}" data-isl="${k}" style="height:60px;line-height:1.15;display:flex;flex-direction:column;justify-content:center;align-items:center"><span>${I[k].n} island \u00b7 ${I[k].lim[0]}\u00d7${I[k].lim[1]}</span><small style="font-weight:700;opacity:.8;font-size:13px">${AC.bagSize(lv,k)} tiles \u00b7 about ${I[k].mins} min</small></button>`).join('')}<button class="mbtn" id="pkX">Back</button>`);
+ document.querySelectorAll('[data-isl]').forEach(b=>b.onclick=()=>{S.island=b.dataset.isl;save();goFS();sfx('sel');startMatch(lv,{how:'new',island:b.dataset.isl});});$('pkX').onclick=()=>closeModal();}
 function toastHome(b){b.animate&&!S.rm&&b.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:260});}
 let demoC=[0,0];
 function buildDemo(){if(DEMO)return;const st=AC.newMatch(5,20261016),r=AC.mulberry(5);for(let i=0;i<16&&!st.over;i++){const m=AC.aiChoose(st,'fair',r);AC.play(st,m.oi,m.x,m.y,m.r);}DEMO=st;const b=bbox(st);demoC=[(b[0]+b[2])/2,(b[1]+b[3])/2+.6];}
@@ -1108,7 +1141,7 @@ function pause(){if(!M||M.ended)return;paused=true;hideInfo();const L=CITY.level
  ${fsOK?`<div class="tg"><span>Full screen</span><button id="tFs" class="${S.fs?'on':''}" aria-label="Full screen"></button></div>`:''}</div>
  <a class="mbtn" href="../games.html">← Digi Games</a>`);
  $('mRes').onclick=()=>{goFS();resume();};$('mHelp').onclick=()=>showHelp(true);
- $('mRe').onclick=()=>{goFS();const lv=M.lv;S.cur=null;startMatch(lv,'retry');};
+ $('mRe').onclick=()=>{goFS();const lv=M.lv,isl=M.st.island;S.cur=null;startMatch(lv,{how:'retry',island:isl});};
  $('mLv').onclick=()=>{saveCur();home();};
  $('tSnd').onclick=e=>{S.snd=!S.snd;save();e.target.classList.toggle('on',S.snd);if(S.snd)sfx('sel');};
  $('tRm').onclick=e=>{S.rm=!S.rm;save();e.target.classList.toggle('on',!S.rm);};
@@ -1123,6 +1156,7 @@ function showHelp(fromPause){const g=CITY.goods;
  <p>Finishing a garden pays its owner — even if your rival lays the last tile. So timing matters: a rival may finish your garden while its crops are cheap.</p>
  <h3>Causeways</h3><p>1 point per tile once both ends finish, plus 3 for each end at ${esc(CITY.market)} or a pyramid.</p>
  <h3>Pyramids</h3><p>A pyramid quarter is the pyramid and the eight spaces around it. It scores 9 once all nine are filled.</p>
+ <h3>Island limits</h3><p>Each level is an island with room to spare: the city can grow in any direction, up to its size (Small 4×6, Medium 6×9, Large 8×12). The dashed line shows how far it can still grow. When the city reaches full width, the shore is set along both sides, and any garden or causeway touching the shore is finished. The same happens top and bottom at full height. A tile that would fit nowhere is rebuilt as a walled ward.</p>
  <h3>Walled wards</h3><p>A ward fits against any edge. A garden touching it is closed by its wall, and a causeway ends at its gate. It scores nothing itself, so laying one can finish a rival\u2019s garden as easily as yours.</p>
  <h3>Docks</h3><p>A garden with a dock sells for 1 more per crop.</p>
  <h3>The end</h3><p>When the bag is empty, unfinished gardens pay 1 per crop, unfinished causeways 1 per tile, and unfinished pyramid quarters 1 per tile, to whoever leads them (runner-up half).</p>
@@ -1130,7 +1164,7 @@ function showHelp(fromPause){const g=CITY.goods;
  <h3>Controls</h3><p>Drag to look around, pinch to zoom, tap any tile to see what it belongs to and what it’s worth. The ⤢ button fits the whole city in view.</p></div>
  <button class="mbtn pri" id="hlpOk">${fromPause?'Back':'Got it'}</button>${fromPause?'':'<button class="mbtn" id="hlpTut">Play the guided game</button>'}`);
  $('hlpOk').onclick=()=>{if(fromPause)pause();else closeModal();};if($('hlpTut'))$('hlpTut').onclick=()=>{goFS();startMatch(0,'new',null,true);};}
-function showEnd(r){M.reopen=()=>showEnd(r);const st=M.st,L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff),winner=r.win?'You win!':r.draw?'A draw':`${esc(M.names[st.scores.indexOf(Math.max(...st.scores))])} wins`;
+function showEnd(r){M.reopen=()=>showEnd(r);const st=M.st,L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff,M.st.island),winner=r.win?'You win!':r.draw?'A draw':`${esc(M.names[st.scores.indexOf(Math.max(...st.scores))])} wins`;
  const hasNext=M.lv<GRAND()&&unlocked(M.lv+1);const rows=[['Gardens','G'],['Causeways','C'],['Pyramids','P'],['Unfinished','E'],['Head start','H']].filter(([,k])=>st.br.some(b=>b[k]));
  openModal(`<h2>${winner}</h2><p class="lead">${lvLabel(M.lv)}${esc(L.name)} · ${DIFFS[M.diff].n}</p>
  <div class="bigstars">${stars(r.stars)}</div><div class="th">★ win · ★★ by ${th[1]} · ★★★ by ${th[2]}${r.win?` · you won by ${r.margin}${r.best?' (best yet)':''}`:''}</div>
@@ -1140,7 +1174,7 @@ function showEnd(r){M.reopen=()=>showEnd(r);const st=M.st,L=CITY.levels[M.lv],th
  <button class="mbtn jd" id="eView">See your city</button>
  <div class="mrow"><button class="mbtn pri" id="eAgain">Again</button>${hasNext?'<button class="mbtn jd" id="eNext">Next level</button>':''}</div>
  <button class="mbtn" id="eLv">Levels</button><a class="mbtn" href="../games.html">← Digi Games</a>`);
- $('eView').onclick=()=>viewCity(true);$('eAgain').onclick=()=>{goFS();viewCity(false);startMatch(M.lv,'retry');};if($('eNext'))$('eNext').onclick=()=>{goFS();startMatch(M.lv+1,'new');};$('eLv').onclick=()=>home();}
+ $('eView').onclick=()=>viewCity(true);$('eAgain').onclick=()=>{goFS();viewCity(false);startMatch(M.lv,{how:'retry',island:M.st.island});};if($('eNext'))$('eNext').onclick=()=>{goFS();startMatch(M.lv+1,'new');};$('eLv').onclick=()=>home();}
 
 /* ---------- lifecycle ---------- */
 let rsT=0;addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{resize();if(M&&!$('banner').hidden)$('banner').style.top=(VR.y+6)+'px';},60);});
@@ -1164,6 +1198,5 @@ if(TEST)window.__dg={
  tut:()=>M&&M.tut&&{i:M.tut.i,cell:M.tut.cell,slot:M.tut.slot},home:()=>home(),zoom:k=>{cam.s=cam.ts=k;cam.man=true;}};
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
