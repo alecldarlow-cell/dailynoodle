@@ -864,7 +864,7 @@ function coach(){const c=$('coach');if(!M||!M.tut){c.hidden=true;return;}const T
  const sel=T.slot&&M.tut.slot!=null?'.slot[data-i="'+M.tut.slot+'"]':T.hi;if(sel){const e=document.querySelector(sel);if(e)e.classList.add('hi');}
  setPrev('&nbsp;');refreshTray();viewRect();fitCam(false);}
 function hideCoach(){const was=!$('coach').hidden;$('coach').hidden=true;document.querySelectorAll('.hi').forEach(e=>e.classList.remove('hi'));if(was&&M){viewRect();fitCam(false);}}
-function tutGo(i){M.tut.i=i;if(i===1){M.tut.slot=0;M.tut.cell=[0,-1];}if(i===5)tutTarget();if(M.tut)coach();}
+function tutGo(i){M.tut.i=i;if(i===6&&M.tut.mk)marketAnim(M.tut.mk,true);else clearMarketMarks();if(i===1){M.tut.slot=0;M.tut.cell=[0,-1];}if(i===5)tutTarget();if(M.tut)coach();}
 function tutNext(){const i=M.tut.i;if(i===TUT.length-1){M.tut=null;hideCoach();refresh();if(M.st.over)finish();else if(M.st.turn!==0)rivalTurn();return;}tutGo(i+1);}
 function tutTarget(){const st=M.st,t=st.tiles.find(x=>x.owner===0);M.tut.cell=null;M.tut.slot=null;
  if(t)for(let d=0;d<4;d++){if(t.e[d]!=='G')continue;const x=t.x+AC.DX[d],y=t.y+AC.DY[d];if(st.grid.has(AC.K(x,y)))continue;M.tut.cell=[x,y];break;}
@@ -878,7 +878,7 @@ async function tutAfter(ev){const id=M.id;
   if(!M||M.id!==id)return;M.busy=false;tutGo(4);return;}
  if(M.tut.i===5){const cl=ev.find(e=>e.type==='close'&&e.kind==='G'),mk=ev.find(e=>e.type==='market'&&!e.drift);
   if(cl){const g=CITY.goods,parts=cl.goods.map((n,i)=>n?`${n} ${g[i].n} at ${cl.prices[i]}`:'').filter(Boolean).join(' and ');
-   M.tut.sold=`Sold! ${parts} makes <b>${cl.value}</b> points, all yours because you laid both tiles.`+(mk?` Selling pushed ${g.map((x,i)=>mk.after[i]<mk.before[i]?x.n+' down to '+mk.after[i]:'').filter(Boolean).join(', ')}, and crops that didn’t sell went up. Timing your sales pays.`:'');}
+   M.tut.sold=`Sold! Your ${parts} each makes <b>${cl.value}</b> points, all yours because you laid both tiles.`+(mk?` <b>After</b> the sale the market moves: ${g.map((x,i)=>mk.after[i]!==mk.before[i]&&M.st.act[i]?`${x.n} ${mk.before[i]} → ${mk.after[i]}`:'').filter(Boolean).join(', ')}. Crops that sell get cheaper; the rest get dearer.`:'');M.tut.mk=mk;}
   tutGo(6);return;}
  refresh();}
 function showTutEnd(){const st=M.st,me=st.scores[0],op=st.scores[1];
@@ -892,8 +892,9 @@ function buildScore(){const el=$('score');el.className=M.names.length>2?'three':
  document.querySelectorAll('.mk').forEach((m,i)=>{const c=m.querySelector('canvas'),g=c.getContext('2d');g.clearRect(0,0,48,48);PAINT.good(g,AC.GOODS[i],24,24,20);m.title=CITY.goods[i].N;});}
 function refreshScores(){if(!M)return;M.names.forEach((n,i)=>{const e=$('pl'+i);if(!e)return;e.querySelector('span').textContent=M.shown[i];e.classList.toggle('on',!M.st.over&&M.st.turn===i);});}
 function refreshMarket(){if(!M)return;document.querySelectorAll('.mk').forEach((m,i)=>{m.classList.toggle('off',!M.st.act[i]);m.querySelector('b').textContent=M.st.prices[i];});}
-function marketAnim(e){document.querySelectorAll('.mk').forEach((m,i)=>{const d=e.after[i]-e.before[i];m.querySelector('b').textContent=e.after[i];if(!d)return;const em=m.querySelector('em');
- em.textContent=(d>0?'+':'')+d;em.className=d>0?'up':'dn';m.classList.add('flash');clearTimeout(m._t);m._t=setTimeout(()=>{em.className='';m.classList.remove('flash');},1400);});}
+function marketAnim(e,keep){document.querySelectorAll('.mk').forEach((m,i)=>{const d=e.after[i]-e.before[i];m.querySelector('b').textContent=e.after[i];if(!d)return;const em=m.querySelector('em');
+ em.textContent=(d>0?'+':'')+d;em.className=d>0?'up':'dn';m.classList.add('flash');clearTimeout(m._t);if(!keep)m._t=setTimeout(()=>{em.className='';m.classList.remove('flash');},1400);});}
+function clearMarketMarks(){document.querySelectorAll('.mk').forEach(m=>{clearTimeout(m._t);m.querySelector('em').className='';m.classList.remove('flash');});}
 function refreshTray(){if(!M)return;const st=M.st;document.querySelectorAll('.slot').forEach((b,i)=>{const inst=st.offer[i],c=b.querySelector('canvas'),g=c.getContext('2d');g.clearRect(0,0,116,116);
  b.classList.toggle('empty',!inst);b.classList.toggle('sel',M.sel===i);b.classList.toggle('rv',!!(M.rvSlot&&M.rvSlot.i===i&&M.rvSlot.p===1));b.classList.toggle('rv2',!!(M.rvSlot&&M.rvSlot.i===i&&M.rvSlot.p===2));
  b.disabled=!inst||!myTurn();if(!inst)return;const r=M.sel===i&&M.ghost?M.ghost.r:0;
@@ -1083,6 +1084,5 @@ if(TEST)window.__dg={
  tut:()=>M&&M.tut&&{i:M.tut.i,cell:M.tut.cell,slot:M.tut.slot},home:()=>home(),zoom:k=>{cam.s=cam.ts=k;cam.man=true;}};
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
