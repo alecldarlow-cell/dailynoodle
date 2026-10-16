@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-16T00:59:30.665Z",
+  "built": "2026-10-16T01:04:20.440Z",
   "today": "2026-10-16",
   "timezone": "Europe/London",
-  "count": 592,
+  "count": 593,
   "items": [
     {
       "path": "reports/2026-10-16-crossword-mini-0097.html",
@@ -93,6 +93,21 @@
       "statUnit": "",
       "statLabel": "",
       "mask": "..........................o........."
+    },
+    {
+      "path": "reports/2026-10-16-prison-population-recalls-remand.html",
+      "kind": "report",
+      "topic": "Society",
+      "headline": "Prison numbers are flat since 2015, but recalls have nearly doubled",
+      "standfirst": "England and Wales held 85,858 prisoners on 30 June 2026, almost exactly as many as in June 2015, but nearly twice as many were there on recall. Fewer people are serving ordinary sentences, and more are on remand.",
+      "date": "2026-10-16",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "97",
+      "statUnit": "%",
+      "statLabel": "recalls",
+      "mask": ""
     },
     {
       "path": "reports/2026-10-16-word-link-0069.html",
