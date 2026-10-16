@@ -128,7 +128,7 @@ function artSVG(){
 function liveStreak(){const s=save.streak||{n:0},t=today();return (s.last===t||s.last===dayBefore(t))?s.n:0;}
 function renderHome(){
   show('home');
-  $('numLabel').textContent='No. '+P.id.slice(-4);
+  $('numLabel').textContent='No. '+parseInt(P.id.slice(-4),10);
   $('dateLine').textContent=longDate(P.date);
   $('homeArt').innerHTML=artSVG();
   if(D.state==='done'){$('playHead').textContent=plural(D.score,'point','points');$('playStatus').textContent=`${plural(D.found.length,'word','words')} today. See the answers; a new board arrives at midnight.`;$('playGo').textContent='View';}
@@ -373,7 +373,7 @@ function wordsHTML(found){
 function showResult(fresh){
   const r=D;
   // fill every field first: the tracker reads #winTitle and #winTime the moment "on" lands
-  $('rKick').textContent='Tangle '+P.id.slice(-4)+', '+longDate(P.date);
+  $('rKick').textContent='Tangle '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date);
   $('rBig').innerHTML=r.score+'<small>'+(r.score===1?'point':'points')+'</small>';
   $('winTitle').textContent='Time\'s up';
   $('winTime').textContent=mmss(ROUND-Math.max(0,r.left));

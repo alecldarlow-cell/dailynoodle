@@ -163,9 +163,9 @@ const gridEl = document.getElementById("grid");
 const linesEl = document.getElementById("lines");
 const msgEl = document.getElementById("msg");
 const timerEl = document.getElementById("timer");
-document.getElementById("pid").textContent = PUZZLE.id;
+document.getElementById("pid").textContent = dnLabel(PUZZLE.id);
 document.getElementById("pband").textContent = PUZZLE.band;
-document.getElementById("modalsub").textContent = PUZZLE.id + " · " + PUZZLE.band.toUpperCase();
+document.getElementById("modalsub").textContent = dnLabel(PUZZLE.id) + " · " + PUZZLE.band.toUpperCase();
 document.getElementById("statTurns").textContent = gate.turns;
 
 const lockedSet = new Set(PUZZLE.locked.map(([r,c])=>`${r-1},${c-1}`));
@@ -469,6 +469,7 @@ function doneId(){return PUZZLE.id;}
 function doneMMSS(s){s=Math.max(0,Math.min(359999,Math.floor(+s)||0));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
 function doneUI(id){const e=document.getElementById(id);return (e&&e.textContent)||"0";}
 /* ---- digi-share-v2: one-line emoji share text ---- */
+function dnLabel(id){var s=String(id),m=s.match(/·(\d+)$/),n=m?parseInt(m[1],10):NaN;if(isNaN(n)){var h=document.querySelector('meta[name="dn:headline"]'),k=h&&String(h.content).match(/(\d+)\s*$/);n=k?parseInt(k[1],10):NaN;}var t={MINI:"Mini",LEXI:"Doku",SWEEP:"Sweep",PATH:"Path",LINK:"Link",BORD:"Borders",TANG:"Tangle"}[s.split("·")[1]]||"";return isNaN(n)?s:(t?t+" "+n:String(n));}
 function dnNum(id){const n=parseInt(String(id).split("·").pop(),10);return isNaN(n)?"":"#"+n;}
 function dnTime(t){return String(t||"").trim().replace(/^0+(\d)/,"$1");}
 function dnStreak(n){n=parseInt(String(n||"").replace(/\D/g,""),10)||0;return n>=2?" · 🔥"+n:"";}

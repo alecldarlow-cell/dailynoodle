@@ -394,7 +394,7 @@ function load(){
   const first=slots.find(s=>s.t==="A")||slots[0];
   const fc=first.cells.find(([r,c])=>!placed[r][c])||first.cells[0];
   sel={r:fc[0],c:fc[1],dir:first.t};
-  $("#pid").textContent=PUZZLE.id;$("#pband").textContent=PUZZLE.band;
+  $("#pid").textContent=dnLabel(PUZZLE.id);$("#pband").textContent=PUZZLE.band;
   $("#winModal").classList.remove("on");$("#grid").classList.remove("celebrate");
   buildGrid();buildBank();paint();refreshStreakUI();$("#msg").textContent="";
 }
@@ -581,7 +581,7 @@ function celebrate(){
   paint();
   $$("#grid .cell").forEach(cell=>{const r=+cell.dataset.r,c=+cell.dataset.c;if(SOL[r][c]!=="#")cell.classList.add("good");});
   $("#winTime").textContent=$("#timer").textContent;$("#winStreak").textContent=$("#streak").textContent;
-  $("#winBest").textContent=$("#best").textContent;$("#winSub").textContent=`${PUZZLE.id} \u00b7 ${PUZZLE.band}`;
+  $("#winBest").textContent=$("#best").textContent;$("#winSub").textContent=`${dnLabel(PUZZLE.id)} \u00b7 ${PUZZLE.band}`;
   if(reduceMotion){$("#winModal").classList.add("on");return;}
   const g=$("#grid");g.classList.add("celebrate");
   $$("#grid .cell").forEach(cell=>{const r=+cell.dataset.r,c=+cell.dataset.c;if(SOL[r][c]==="#")return;cell.style.animationDelay=((r+c)*90)+"ms";});
@@ -616,5 +616,6 @@ $("#winNew").onclick=()=>{$("#winModal").classList.remove("on");load();};
 $("#winModal").addEventListener("click",e=>{if(e.target===$("#winModal"))$("#winModal").classList.remove("on");});
 
 load();
+function dnLabel(id){var s=String(id),m=s.match(/·(\d+)$/),n=m?parseInt(m[1],10):NaN;if(isNaN(n)){var h=document.querySelector('meta[name="dn:headline"]'),k=h&&String(h.content).match(/(\d+)\s*$/);n=k?parseInt(k[1],10):NaN;}var t={MINI:"Mini",LEXI:"Doku",SWEEP:"Sweep",PATH:"Path",LINK:"Link",BORD:"Borders",TANG:"Tangle"}[s.split("·")[1]]||"";return isNaN(n)?s:(t?t+" "+n:String(n));}
 </script></div><script src="../dn-track.js" defer></script>
 </body></html>

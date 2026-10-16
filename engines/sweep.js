@@ -175,7 +175,7 @@ function load(pz){
   over=false; won=false; started=false; seconds=0; stopTimer(); renderTime();
   document.body.classList.remove("win");
   $("#winModal").classList.remove("on"); $("#grid").classList.remove("celebrate");
-  $("#pid").textContent=P.id; $("#pband").textContent=P.band;
+  $("#pid").textContent=dnLabel(P.id); $("#pband").textContent=P.band;
   buildGrid(); paint(); refreshStreakUI(); initRanked();
   $("#msg").textContent="Tap the highlighted cell to begin — it's proven safe.";
   scheduleFit();
@@ -379,7 +379,7 @@ function showEnd(win){
   $("#endIcon").className="check"+(win?"":" miss");
   $("#endIcon").textContent=win?"✓":"✕";
   $("#winTitle").textContent=win?"Swept!":"Boom.";
-  $("#winSub").textContent=`${P.id}${ranked?"":" · replay"}`;
+  $("#winSub").textContent=`${dnLabel(P.id)}${ranked?"":" · replay"}`;
   $("#winTime").textContent=$("#timer").textContent;
   $("#winStreak").textContent=$("#streak").textContent;
   $("#winBest").textContent=$("#best").textContent;
@@ -479,6 +479,7 @@ function doneId(){return SAMPLE.id;}
 function doneMMSS(s){s=Math.max(0,Math.min(359999,Math.floor(+s)||0));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
 function doneUI(id){const e=document.getElementById(id);return (e&&e.textContent)||"0";}
 /* ---- digi-share-v2: one-line emoji share text ---- */
+function dnLabel(id){var s=String(id),m=s.match(/·(\d+)$/),n=m?parseInt(m[1],10):NaN;if(isNaN(n)){var h=document.querySelector('meta[name="dn:headline"]'),k=h&&String(h.content).match(/(\d+)\s*$/);n=k?parseInt(k[1],10):NaN;}var t={MINI:"Mini",LEXI:"Doku",SWEEP:"Sweep",PATH:"Path",LINK:"Link",BORD:"Borders",TANG:"Tangle"}[s.split("·")[1]]||"";return isNaN(n)?s:(t?t+" "+n:String(n));}
 function dnNum(id){const n=parseInt(String(id).split("·").pop(),10);return isNaN(n)?"":"#"+n;}
 function dnTime(t){return String(t||"").trim().replace(/^0+(\d)/,"$1");}
 function dnStreak(n){n=parseInt(String(n||"").replace(/\D/g,""),10)||0;return n>=2?" · 🔥"+n:"";}

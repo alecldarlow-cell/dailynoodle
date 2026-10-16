@@ -445,7 +445,7 @@ function celebrate(){
   $("#winTime").textContent=$("#timer").textContent;
   $("#winStreak").textContent=$("#streak").textContent;
   $("#winBest").textContent=$("#best").textContent;
-  $("#winSub").textContent=`${PUZZLE.id} · ${PUZZLE.band}`;
+  $("#winSub").textContent=`${dnLabel(PUZZLE.id)} · ${PUZZLE.band}`;
   paintGrid();
   if(reduceMotion){$("#winModal").classList.add("on");return;}
   // beat 1 — green cascade sweeps diagonally across the grid (~1.2s)
@@ -539,11 +539,12 @@ function init(){
   selTile=null; active=null; solved=false; started=false; seconds=0;
   if(tHandle)clearInterval(tHandle); tHandle=null;
   wordCells=buildWords(); solvedKeys=new Set();
-  $("#pid").textContent=PUZZLE.id; $("#pband").textContent=PUZZLE.band;
+  $("#pid").textContent=dnLabel(PUZZLE.id); $("#pband").textContent=PUZZLE.band;
   $("#msg").textContent=""; $("#winModal").classList.remove("on");
   renderTime(); paintGrid(); paintBank();
 }
 init();
 refreshStreakUI();
+function dnLabel(id){var s=String(id),m=s.match(/·(\d+)$/),n=m?parseInt(m[1],10):NaN;if(isNaN(n)){var h=document.querySelector('meta[name="dn:headline"]'),k=h&&String(h.content).match(/(\d+)\s*$/);n=k?parseInt(k[1],10):NaN;}var t={MINI:"Mini",LEXI:"Doku",SWEEP:"Sweep",PATH:"Path",LINK:"Link",BORD:"Borders",TANG:"Tangle"}[s.split("·")[1]]||"";return isNaN(n)?s:(t?t+" "+n:String(n));}
 </script></div><script src="../dn-track.js" defer></script>
 </body></html>

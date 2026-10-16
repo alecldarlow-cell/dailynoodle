@@ -158,7 +158,7 @@ function tileSVG(c){return `<svg viewBox="0 0 600 600" aria-hidden="true"><path 
 /* ---------- home ---------- */
 function renderHome(){
   show('home');
-  $('numLabel').textContent='No. '+P.id.slice(-4);
+  $('numLabel').textContent='No. '+parseInt(P.id.slice(-4),10);
   $('dateLine').textContent=longDate(P.date);
   worldSVG($('homeWorld'),null);
   const c=save.cur&&save.cur.id===P.id?save.cur:null;
@@ -230,7 +230,7 @@ function abandon(){closePause();cur=null;renderHome();}
 function starSVG(on){return `<svg viewBox="0 0 20 20"><path d="M10 1.8l2.5 5.3 5.7.7-4.2 3.9 1.1 5.7L10 14.6l-5.1 2.8 1.1-5.7L1.8 7.8l5.7-.7z" fill="${on?'#1F3A4A':'none'}" stroke="#1F3A4A" stroke-width="1.4" stroke-linejoin="round"/></svg>`;}
 function showResult(rec,fresh){
   // fill every field first: the tracker reads #winTitle and #winTime the moment "on" lands
-  $('rKick').textContent='Borders '+P.id.slice(-4)+', '+longDate(P.date);
+  $('rKick').textContent='Borders '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date);
   $('rBig').textContent=rec.c+' of '+NQ;
   $('winTitle').textContent='named today';
   $('winTime').textContent=mmss(rec.secs);

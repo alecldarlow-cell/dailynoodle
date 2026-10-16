@@ -281,11 +281,14 @@ for (const { dir, kind } of DIRS) {
     const head = html.slice(0, 20000);
     const fn = fromFilename(file);
 
-    const headline =
+    // Puzzle numbers display without leading zeros ("Mini 0021" -> "Mini 21");
+    // the dn:headline meta and puzzle ids keep the padded serial.
+    const headline = (
       meta(head, 'dn:headline') ||
       firstMatch(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) ||
       firstMatch(head, /<title[^>]*>([\s\S]*?)<\/title>/i).replace(/\s*[—–-]\s*Digi News\s*$/i, '').replace(/^\s*Digi News\s*[—–-]\s*/i, '') ||
-      titleCase(fn.slug);
+      titleCase(fn.slug)
+    ).replace(/^(Mini|Doku|Sweep|Path|Link|Borders|Tangle)\s+0*(\d+)$/, '$1 $2');
 
     const standfirst =
       meta(head, 'dn:standfirst') ||
