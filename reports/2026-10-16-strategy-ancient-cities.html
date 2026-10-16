@@ -43,6 +43,7 @@ button:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
 #bag{display:flex;align-items:center;gap:3px;padding:0 4px 0 6px;margin-left:2px;border-left:1px solid var(--line);font-weight:900;font-size:15px;height:28px;color:var(--ink2)}
 #bag svg{width:18px;height:18px}
 #mkt{position:absolute;left:50%;transform:translateX(-50%);top:calc(var(--safe-t) + 60px);display:flex;gap:6px;align-items:center;background:rgba(255,248,234,.94);border-radius:16px;padding:4px 6px 4px 10px;box-shadow:0 2px 8px rgba(40,60,70,.16)}
+#mkt.fixed .mk{background:#efe6d2}
 #mkt .ml{font-family:var(--disp);font-weight:700;font-size:11px;letter-spacing:.06em;color:var(--ink2);text-transform:uppercase;margin-right:2px}
 .mk{display:flex;align-items:center;gap:3px;padding:2px 7px 2px 3px;border-radius:12px;background:var(--paper2);position:relative;transition:background .3s}
 .mk canvas{width:24px;height:24px}
@@ -153,6 +154,7 @@ table.bd th{font-size:12px;font-weight:900}
 #coach .nx{height:44px;padding:0 22px;border-radius:13px;background:var(--terra);color:#fff;font-weight:900;font-size:16px;box-shadow:0 3px 0 var(--terra2)}
 .hi{animation:hi 1.1s ease-in-out infinite;z-index:4}
 @keyframes hi{0%,100%{box-shadow:0 0 0 3px rgba(198,90,51,.95),0 0 0 7px rgba(198,90,51,.25)}50%{box-shadow:0 0 0 3px rgba(198,90,51,.95),0 0 0 13px rgba(198,90,51,0)}}
+#bRes{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(var(--safe-b) + 18px);height:52px;padding:0 30px;border-radius:16px;background:var(--terra);color:#fff;font-weight:900;font-size:17px;box-shadow:0 4px 0 var(--terra2),0 8px 20px rgba(120,60,20,.25);z-index:5}
 #toast{position:absolute;left:50%;transform:translateX(-50%);top:calc(var(--safe-t) + 110px);background:rgba(58,42,30,.88);color:#fff;font-weight:800;font-size:14px;padding:9px 14px;border-radius:12px;opacity:0;transition:opacity .3s;pointer-events:none;max-width:86%;text-align:center}
 #toast.on{opacity:1}
 [hidden]{display:none!important}
@@ -174,6 +176,7 @@ table.bd th{font-size:12px;font-weight:900}
  <div id="info" class="card" hidden></div>
  <div id="coach" class="card" hidden></div>
  <div id="toast"></div>
+ <button id="bRes" hidden>Results</button>
  <div id="tray"><div class="wrap">
   <div id="prev"></div>
   <div class="row">
@@ -235,15 +238,16 @@ function scaleBag(b,n){ // keep the mix, change the size (largest remainder)
  const tot=Object.values(b).reduce((a,v)=>a+v,0),o={},rem=[];let got=0;
  for(const k in b){const x=b[k]*n/tot,f=Math.floor(x);o[k]=f;got+=f;rem.push([x-f,k]);}
  rem.sort((a,c)=>c[0]-a[0]);for(let i=0;got<n;i++,got++)o[rem[i%rem.length][1]]++;return o;}
-const SIZES=[16,20,24,28,32,40,54];
+const SIZES=[16,20,24,28,30,34,40,54];
 const LEVELS=[
- {bag:scaleBag(B1,SIZES[0]),goods:2,start:'market'},
- {bag:scaleBag(B2,SIZES[1]),goods:3,start:'marketRoad'},
- {bag:scaleBag(B3,SIZES[2]),goods:3,start:'marketRoad'},
- {bag:scaleBag(B3,SIZES[3]),goods:3,start:'marketRoad',docks:.3},
- {bag:scaleBag(B5,SIZES[4]),goods:3,start:'marketRoad',docks:.25},
- {bag:scaleBag(B6,SIZES[5]),goods:3,start:'marketRoad',docks:.25},
- {bag:scaleBag(B7,SIZES[6]),goods:3,start:'marketRoad',docks:.25,players:3}
+ {bag:scaleBag(B1,SIZES[0]),goods:2,start:'market',market:false},     // First Gardens: fixed prices
+ {bag:scaleBag(B1,SIZES[1]),goods:2,start:'market',market:true},      // Market Day: prices move
+ {bag:scaleBag(B2,SIZES[2]),goods:3,start:'marketRoad',market:true},
+ {bag:scaleBag(B3,SIZES[3]),goods:3,start:'marketRoad',market:true},
+ {bag:scaleBag(B3,SIZES[4]),goods:3,start:'marketRoad',market:true,docks:.3},
+ {bag:scaleBag(B5,SIZES[5]),goods:3,start:'marketRoad',market:true,docks:.25},
+ {bag:scaleBag(B6,SIZES[6]),goods:3,start:'marketRoad',market:true,docks:.25},
+ {bag:scaleBag(B7,SIZES[7]),goods:3,start:'marketRoad',market:true,docks:.25,players:3}
 ];
 const RULES={start:[3,4,5],lo:1,hi:6,drop:1,bigDrop:4,rise:1,revert:1,lmBonus:3,pyrVal:9,dockBonus:1};
 
@@ -351,12 +355,13 @@ function play(st,oi,x,y,rot){
   ev.push({type:'close',kind:f.k,root:r,tiles:[...f.tiles],counts:c,value:v,gains:g,goods:f.goods.slice(),dock:f.dock,lm:f.lm,prices});}
  for(const P of st.pyrs){if(P.done)continue;if(Math.abs(P.x-x)>1||Math.abs(P.y-y)>1)continue;const tl=pyrTiles(st,P);
   if(tl.length===9){P.done=true;const c=counts(st,tl),g=split(c,RULES.pyrVal);award(st,g,'P');ev.push({type:'close',kind:'P',pyr:P,tiles:tl,counts:c,value:RULES.pyrVal,gains:g});}}
- if(sold[0]+sold[1]+sold[2]>0){const before=st.prices.slice();
+ const mkt=LEVELS[st.lv].market!==false;
+ if(mkt&&sold[0]+sold[1]+sold[2]>0){const before=st.prices.slice();
   for(let i=0;i<3;i++){if(!st.act[i])continue;
    if(sold[i]>0)st.prices[i]=Math.max(RULES.lo,st.prices[i]-RULES.drop-(sold[i]>=RULES.bigDrop?1:0));
    else st.prices[i]=Math.min(RULES.hi,st.prices[i]+RULES.rise);}
   st.lastSale={before,after:st.prices.slice(),sold};ev.push({type:'market',before,after:st.prices.slice(),sold});}
- else if(RULES.revert){const before=st.prices.slice();let ch=false;   // a quiet turn: prices drift one step back toward normal
+ else if(mkt&&RULES.revert){const before=st.prices.slice();let ch=false;   // a quiet turn: prices drift one step back toward normal
   for(let i=0;i<3;i++){if(!st.act[i])continue;const b=RULES.start[i];if(st.prices[i]<b){st.prices[i]++;ch=true;}else if(st.prices[i]>b){st.prices[i]--;ch=true;}}
   if(ch)ev.push({type:'market',before,after:st.prices.slice(),sold:[0,0,0],drift:true});}
  st.turnNo++;st.turn=(st.turn+1)%st.np;
@@ -479,7 +484,9 @@ const CITIES={
   feat:{G:'Garden',C:'Causeway',P:'Pyramid'},
   levels:[
    {name:'First Gardens',rival:'Xochitl',style:'a patient gardener',w:{G:1.15,C:.9,P:1},
-    rule:'Finish gardens to sell their crops. End the bag ahead of Xochitl to win.'},
+    rule:'Finish gardens to sell their crops. Prices stay fixed here. End the bag ahead of Xochitl to win.'},
+   {name:'Market Day',rival:'Nochtli',style:'a market haggler',w:{G:1.15,C:.9,P:1},
+    rule:'New: the market moves. Selling a crop lowers its price and raises the others; quiet turns drift back. Time your sales.'},
    {name:'Causeways',rival:'Ollin',style:'a road builder',w:{G:.95,C:1.25,P:1},
     rule:'New: causeways score 1 a tile, +3 for each end at the market or a pyramid. Jade arrives, rare and dear.'},
    {name:'Temple Quarter',rival:'Citlali',style:'a temple keeper',w:{G:1,C:1,P:1.3},
@@ -669,8 +676,13 @@ const KEY='digi-ancient-cities-v1';
 let S={v:1,snd:true,rm:sysRM,fs:coarse,diff:'calm',tut:0,city:'jade',prog:{},cur:null};
 function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);if(o&&o.v===1)S=Object.assign(S,o);}}catch(e){}if(!DIFFS[S.diff])S.diff='calm';}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
-function prog(){const c=CITY.id;if(!S.prog[c]||!Array.isArray(S.prog[c].st))S.prog[c]={st:[0,0,0,0,0,0,0],best:[null,null,null,null,null,null,null]};return S.prog[c];}
-function unlocked(lv){if(lv===0)return true;return prog().st[lv-1]>0;}
+const NL=()=>CITY.levels.length,GRAND=()=>NL()-1;
+function prog(){const c=CITY.id,n=NL();let P=S.prog[c];if(!P||!Array.isArray(P.st))P=S.prog[c]={st:[],best:[],un:0};
+ if(!P.lv2){P.lv2=1;if(P.st.length===7){   // Market Day inserted as level 2: shift old levels 2..Grand down one, keep what was unlocked
+   const won=P.st.reduce((a,v,i)=>v>0?i:a,-1);P.st=[P.st[0],0].concat(P.st.slice(1));P.best=[P.best[0],null].concat(P.best.slice(1));P.un=won<0?0:won+2;S.cur=null;}}
+ while(P.st.length<n){P.st.push(0);P.best.push(null);}return P;}
+function unlocked(lv){if(lv===0)return true;const P=prog();return P.st[lv-1]>0||P.st[lv]>0||(P.un||0)>=lv;}
+const lvLabel=lv=>lv<GRAND()?'Level '+(lv+1)+' \u00b7 ':'';
 
 /* ---------- Digi site tracking (site contract §5) ---------- */
 let rnd={armed:false,open:false,secs:0,how:'new'};
@@ -718,7 +730,7 @@ const cam={x:.5,y:.5,s:80,tx:.5,ty:.5,ts:80,man:false};
 const w2s=(x,y)=>[(x-cam.x)*cam.s+VR.x+VR.w/2,(y-cam.y)*cam.s+VR.y+VR.h/2];
 const s2w=(x,y)=>[(x-VR.x-VR.w/2)/cam.s+cam.x,(y-VR.y-VR.h/2)/cam.s+cam.y];
 function viewRect(){
- if(M&&!$('game').hidden){const top=$('mkt').getBoundingClientRect().bottom+6,co=$('coach'),bot=(!co.hidden?co.getBoundingClientRect().top:$('tray').querySelector('.wrap').getBoundingClientRect().top)-4;VR={x:0,y:top,w:W,h:Math.max(120,bot-top)};}
+ if(M&&!$('game').hidden){const top=$('mkt').getBoundingClientRect().bottom+6,co=$('coach'),bot=M.viewCity?H-86:(!co.hidden?co.getBoundingClientRect().top:$('tray').querySelector('.wrap').getBoundingClientRect().top)-4;VR={x:0,y:top,w:W,h:Math.max(120,bot-top)};}
  else VR={x:W*.08,y:H*.215,w:W*.84,h:H*.28};
 }
 function resize(){DPR=Math.min(2.5,window.devicePixelRatio||1);W=app.clientWidth||innerWidth;H=app.clientHeight||innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);viewRect();
@@ -774,7 +786,7 @@ function wait(ms){if(FAST)return Promise.resolve();return new Promise(r=>TIMERS.
 /* ---------- match ---------- */
 let M=null,DEMO=null,mid=0;
 function names(lv){const L=CITY.levels[lv];return ['You'].concat(L.rivals||[L.rival]);}
-function startMatch(lv,how,cur,tut){
+function startMatch(lv,how,cur,tut){$('tray').hidden=false;$('bRes').hidden=true;
  const seed=cur?cur.seed:((Math.random()*2147483647)>>>0)||7,diff=tut?'calm':cur?cur.diff:S.diff,opt={head:!tut&&diff==='calm'?AC.headStart(lv):0};
  if(tut){opt.lead=TUT_LEAD;opt.size=10;}
  let st;try{st=cur?AC.replay(lv,seed,opt,cur.moves):AC.newMatch(lv,seed,opt);}catch(e){st=AC.newMatch(lv,seed,opt);}
@@ -829,7 +841,7 @@ async function runEvents(ev,p){const id=M.id,st=M.st;
    let k=0;e.gains.forEach((g,i)=>{if(g>0){pop(cx,cy-k*.42,'+'+g,COLS[i],k*.12);k++;M.shown[i]+=g;}});
    if(!fin){sfx(e.kind==='G'?'sale':e.kind==='C'?'road':'temple',e.value);if(e.kind==='G'&&e.dock)toast('Dock: +1 per crop');}
    refreshScores();await wait(fin?360:640);}
-  else if(e.type==='market'){marketAnim(e);if(!e.drift)await wait(240);}
+  else if(e.type==='market'){marketAnim(e);if(!e.drift){await wait(240);if(!M.tutorial&&!S.mkTip&&!FAST){S.mkTip=1;save();await tip(marketTip(e));if(!M||M.id!==id)return;}}}
   else if(e.type==='discard'){toast('A tile that fitted nowhere was set aside');await wait(380);}
   else if(e.type==='over'){await wait(500);}}
  if(M&&M.id===id){M.shown=M.st.scores.slice();refresh();}}
@@ -855,7 +867,7 @@ const TUT=[
  {t:()=>`${esc(M.names[1])} takes a turn. Her houses have <b style="color:#2f62d4">blue roofs</b>; yours are <b style="color:#c65a33">terracotta</b>.`,next:'Next'},
  {t:()=>'A garden is finished when water surrounds it. Take the other garden tile and close yours off.',slot:true,cell:true},
  {t:()=>M.tut.sold||'Sold!',hi:'#mkt',next:'Next'},
- {t:()=>'Every garden, causeway and pyramid pays <b>whoever laid the most of its tiles</b>. The runner-up gets half, so building onto a rival’s garden earns you a share.',next:'Next'},
+ {t:()=>'Every garden, causeway and pyramid pays <b>whoever laid the most of its tiles</b>. The runner-up gets half, and if you’ve laid the same number, you both get it all. So building onto a rival’s garden earns you a share.',next:'Next'},
  {t:()=>`That’s the game. Sell more, and better, than ${esc(M.names[1])} before the bag runs out. Over to you!`,next:'Play on'}];
 function coach(){const c=$('coach');if(!M||!M.tut){c.hidden=true;return;}const T=TUT[M.tut.i];
  c.innerHTML=`<div class="step">Learn to play · ${M.tut.i+1} of ${TUT.length}</div><p>${T.t()}</p><div class="cb"><button class="skip" id="cSkip">Skip tutorial</button>${T.next?`<button class="nx" id="cNext">${T.next}</button>`:''}</div>`;
@@ -864,7 +876,7 @@ function coach(){const c=$('coach');if(!M||!M.tut){c.hidden=true;return;}const T
  const sel=T.slot&&M.tut.slot!=null?'.slot[data-i="'+M.tut.slot+'"]':T.hi;if(sel){const e=document.querySelector(sel);if(e)e.classList.add('hi');}
  setPrev('&nbsp;');refreshTray();viewRect();fitCam(false);}
 function hideCoach(){const was=!$('coach').hidden;$('coach').hidden=true;document.querySelectorAll('.hi').forEach(e=>e.classList.remove('hi'));if(was&&M){viewRect();fitCam(false);}}
-function tutGo(i){M.tut.i=i;if(i===6&&M.tut.mk)marketAnim(M.tut.mk,true);else clearMarketMarks();if(i===1){M.tut.slot=0;M.tut.cell=[0,-1];}if(i===5)tutTarget();if(M.tut)coach();}
+function tutGo(i){M.tut.i=i;clearMarketMarks();if(i===1){M.tut.slot=0;M.tut.cell=[0,-1];}if(i===5)tutTarget();if(M.tut)coach();}
 function tutNext(){const i=M.tut.i;if(i===TUT.length-1){M.tut=null;hideCoach();refresh();if(M.st.over)finish();else if(M.st.turn!==0)rivalTurn();return;}tutGo(i+1);}
 function tutTarget(){const st=M.st,t=st.tiles.find(x=>x.owner===0);M.tut.cell=null;M.tut.slot=null;
  if(t)for(let d=0;d<4;d++){if(t.e[d]!=='G')continue;const x=t.x+AC.DX[d],y=t.y+AC.DY[d];if(st.grid.has(AC.K(x,y)))continue;M.tut.cell=[x,y];break;}
@@ -878,20 +890,27 @@ async function tutAfter(ev){const id=M.id;
   if(!M||M.id!==id)return;M.busy=false;tutGo(4);return;}
  if(M.tut.i===5){const cl=ev.find(e=>e.type==='close'&&e.kind==='G'),mk=ev.find(e=>e.type==='market'&&!e.drift);
   if(cl){const g=CITY.goods,parts=cl.goods.map((n,i)=>n?`${n} ${g[i].n} at ${cl.prices[i]}`:'').filter(Boolean).join(' and ');
-   M.tut.sold=`Sold! Your ${parts} each makes <b>${cl.value}</b> points, all yours because you laid both tiles.`+(mk?` <b>After</b> the sale the market moves: ${g.map((x,i)=>mk.after[i]!==mk.before[i]&&M.st.act[i]?`${x.n} ${mk.before[i]} → ${mk.after[i]}`:'').filter(Boolean).join(', ')}. Crops that sell get cheaper; the rest get dearer.`:'');M.tut.mk=mk;}
+   M.tut.sold=`Sold! Your ${parts} each makes <b>${cl.value}</b> points, all yours because you laid both tiles. Crop prices are shown at the top. Here they stay fixed; from Market Day they move.`;M.tut.mk=mk;}
   tutGo(6);return;}
  refresh();}
-function showTutEnd(){const st=M.st,me=st.scores[0],op=st.scores[1];
+function showTutEnd(){M.reopen=()=>showTutEnd();const st=M.st,me=st.scores[0],op=st.scores[1];
  openModal(`<h2>Tutorial done</h2><p class="lead">You ${me} · ${esc(M.names[1])} ${op}</p><p class="th" style="font-size:14px">Level 1 is a short match against ${esc(CITY.levels[0].rival)}. Win it to unlock Causeways.</p>
- <button class="mbtn pri" id="tL1">Start level 1</button><button class="mbtn" id="tLv">Levels</button><a class="mbtn" href="../games.html">← Digi Games</a>`);
- $('tL1').onclick=()=>{goFS();startMatch(0,'new');};$('tLv').onclick=()=>home();}
+ <button class="mbtn jd" id="eView">See your city</button><button class="mbtn pri" id="tL1">Start level 1</button><button class="mbtn" id="tLv">Levels</button><a class="mbtn" href="../games.html">← Digi Games</a>`);
+ $('eView').onclick=()=>viewCity(true);$('tL1').onclick=()=>{goFS();viewCity(false);startMatch(0,'new');};$('tLv').onclick=()=>home();}
 function nudge(sel){const e=document.querySelector(sel);if(e&&e.animate&&!S.rm)e.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:240});}
 
+function marketTip(e){const g=CITY.goods,mv=g.map((x,i)=>e.after[i]!==e.before[i]&&M.st.act[i]?`${x.n} ${e.before[i]} \u2192 ${e.after[i]}`:'').filter(Boolean).join(', ');
+ return `<b>The market just moved:</b> ${mv}. The crops sold at the old price; selling lowers that crop\u2019s price and raises the others. On a turn with no sale, prices drift one step back to normal. Time your sales.`;}
+function tip(html){return new Promise(res=>{const c=$('coach');c.innerHTML=`<div class="step">Market tip</div><p>${html}</p><div class="cb"><span></span><button class="nx" id="cNext">Got it</button></div>`;
+ c.hidden=false;$('mkt').classList.add('hi');viewRect();$('cNext').onclick=()=>{sfx('tap');c.hidden=true;$('mkt').classList.remove('hi');viewRect();res();};});}
+
+function viewCity(on){if(!M)return;M.viewCity=on;$('tray').hidden=on;$('bRes').hidden=!on;$('bFit').hidden=false;hideInfo();
+ if(on){closeModal();M.lastRv=null;FX.glows=[];sfx('tap');}viewRect();$('bFit').style.top=(VR.y+6)+'px';fitCam(false);if(!on&&M.reopen&&M.ended&&!$('modal').hidden){}}
 /* ---------- HUD ---------- */
 function buildScore(){const el=$('score');el.className=M.names.length>2?'three':'';el.innerHTML=M.names.map((n,i)=>`<div class="pl p${i}" id="pl${i}" title="${esc(n)}"><i></i><b>${esc(M.names.length>2&&i>0?n.slice(0,3):n)}</b><span>0</span></div>`).join('');
  document.querySelectorAll('.mk').forEach((m,i)=>{const c=m.querySelector('canvas'),g=c.getContext('2d');g.clearRect(0,0,48,48);PAINT.good(g,AC.GOODS[i],24,24,20);m.title=CITY.goods[i].N;});}
 function refreshScores(){if(!M)return;M.names.forEach((n,i)=>{const e=$('pl'+i);if(!e)return;e.querySelector('span').textContent=M.shown[i];e.classList.toggle('on',!M.st.over&&M.st.turn===i);});}
-function refreshMarket(){if(!M)return;document.querySelectorAll('.mk').forEach((m,i)=>{m.classList.toggle('off',!M.st.act[i]);m.querySelector('b').textContent=M.st.prices[i];});}
+function refreshMarket(){if(!M)return;const fx=AC.LEVELS[M.lv].market===false;$('mkt').classList.toggle('fixed',fx);$('mkt').querySelector('.ml').textContent=fx?'Prices':'Market';document.querySelectorAll('.mk').forEach((m,i)=>{m.classList.toggle('off',!M.st.act[i]);m.querySelector('b').textContent=M.st.prices[i];});}
 function marketAnim(e,keep){document.querySelectorAll('.mk').forEach((m,i)=>{const d=e.after[i]-e.before[i];m.querySelector('b').textContent=e.after[i];if(!d)return;const em=m.querySelector('em');
  em.textContent=(d>0?'+':'')+d;em.className=d>0?'up':'dn';m.classList.add('flash');clearTimeout(m._t);if(!keep)m._t=setTimeout(()=>{em.className='';m.classList.remove('flash');},1400);});}
 function clearMarketMarks(){document.querySelectorAll('.mk').forEach(m=>{clearTimeout(m._t);m.querySelector('em').className='';m.classList.remove('flash');});}
@@ -912,7 +931,7 @@ function refresh(){if(!M)return;refreshScores();refreshMarket();refreshTray();re
 
 /* ---------- banner, info, toast ---------- */
 function showBanner(){const L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff);const b=$('banner');
- b.innerHTML=`<button class="x" id="bnX" aria-label="Close">×</button><h3>${M.lv<6?'Level '+(M.lv+1)+' · ':''}${esc(L.name)}</h3><p>${esc(L.rule)}</p>
+ b.innerHTML=`<button class="x" id="bnX" aria-label="Close">×</button><h3>${lvLabel(M.lv)}${esc(L.name)}</h3><p>${esc(L.rule)}</p>
  <p>Rival: <span class="rv">${esc(L.rival)}</span>, ${esc(L.style)} · ${DIFFS[M.diff].n}</p><p>★ win · ★★ win by ${th[1]} · ★★★ by ${th[2]}</p>`;
  b.hidden=false;$('bFit').hidden=true;$('bnX').onclick=e=>{e.stopPropagation();hideBanner();};b.style.top=(VR.y+6)+'px';}
 function hideBanner(){$('banner').hidden=true;$('bFit').hidden=false;}
@@ -989,17 +1008,18 @@ document.querySelectorAll('.slot').forEach(b=>b.addEventListener('click',()=>sel
 $('bRot').addEventListener('click',()=>{rndStart();rotate();});
 $('bOk').addEventListener('click',()=>{rndStart();confirmMove();});
 $('bFit').addEventListener('click',()=>{fitCam(false);sfx('tap');});
+$('bRes').addEventListener('click',()=>{if(!M||!M.reopen)return;M.viewCity=false;$('tray').hidden=false;$('bRes').hidden=true;viewRect();fitCam(false);sfx('tap');M.reopen();});
 $('bPause').addEventListener('click',()=>pause());
 $('game').addEventListener('pointerdown',e=>{if(e.target.closest('#tray'))rndStart();},true);
 addEventListener('keydown',e=>{if(!M)return;if(e.key==='Escape'){if($('modal').hidden)pause();else if(!M.ended)resume();}else if(e.key==='r'||e.key==='R')rotate();else if(e.key==='Enter')confirmMove();else if('123'.includes(e.key))selSlot(+e.key-1);});
 
 /* ---------- screens ---------- */
 function stars(n){let s='';for(let i=0;i<3;i++)s+=i<n?'<i>★</i>':'★';return s;}
-function home(){M=null;paused=false;hideCoach();TIMERS.length=0;hideInfo();closeModal();$('game').hidden=true;$('home').hidden=false;buildDemo();renderHome();viewRect();fitCam(true);}
-function renderHome(){const P=prog(),L=CITY.levels,cur=S.cur&&S.cur.city===CITY.id?S.cur:null;
- let next=0;for(let i=0;i<7;i++)if(unlocked(i)&&P.st[i]===0){next=i;break;}else next=Math.min(6,i);
+function home(){if(M&&M.viewCity)viewCity(false);M=null;paused=false;hideCoach();TIMERS.length=0;hideInfo();closeModal();$('game').hidden=true;$('home').hidden=false;buildDemo();renderHome();viewRect();fitCam(true);}
+function renderHome(){const P=prog(),L=CITY.levels;if(S.cur&&!L[S.cur.lv])S.cur=null;const cur=S.cur&&S.cur.city===CITY.id?S.cur:null;
+ let next=0;for(let i=0;i<NL();i++)if(unlocked(i)&&P.st[i]===0){next=i;break;}else next=Math.min(GRAND(),i);
  if(!unlocked(next))next=0;
- const playLbl=cur?`Continue<small>${cur.lv<6?'Level '+(cur.lv+1)+' · ':''}${esc(L[cur.lv].name)} · turn ${cur.moves.length+1} · ${DIFFS[cur.diff].n}</small>`:S.tut<2?'Play<small>Start with a one-minute guided game</small>':`Play<small>${next<6?'Level '+(next+1)+' \u00b7 ':''}${esc(L[next].name)}</small>`;
+ const playLbl=cur?`Continue<small>${lvLabel(cur.lv)}${esc(L[cur.lv].name)} · turn ${cur.moves.length+1} · ${DIFFS[cur.diff].n}</small>`:S.tut<2?'Play<small>Start with a one-minute guided game</small>':`Play<small>${lvLabel(next)}${esc(L[next].name)}</small>`;
  $('home').innerHTML=`<div class="hwrap"><div class="htop"><h1><em>DIGI GAMES</em>Ancient Cities</h1><div><span class="sub"><b>${esc(CITY.name)}</b> · ${esc(CITY.tag)}</span></div></div>
  <button class="big" id="hPlay" style="flex-direction:column;gap:0">${playLbl}</button>
  <div class="seg" id="hDiff">${Object.keys(DIFFS).map(k=>`<button data-d="${k}" class="${S.diff===k?'on':''}">${DIFFS[k].n}</button>`).join('')}</div>
@@ -1023,7 +1043,7 @@ function buildDemo(){if(DEMO)return;const st=AC.newMatch(5,20261016),r=AC.mulber
 function openModal(h){$('mbox').innerHTML=h;$('modal').hidden=false;$('modal').scrollTop=0;}
 function closeModal(){$('modal').hidden=true;}
 function pause(){if(!M||M.ended)return;paused=true;hideInfo();const L=CITY.levels[M.lv];
- openModal(`<h2>Paused</h2><p class="lead">${M.lv<6?'Level '+(M.lv+1)+' · ':''}${esc(L.name)} · ${DIFFS[M.diff].n}</p>
+ openModal(`<h2>Paused</h2><p class="lead">${lvLabel(M.lv)}${esc(L.name)} · ${DIFFS[M.diff].n}</p>
  <button class="mbtn pri" id="mRes">Resume</button><button class="mbtn" id="mHelp">How to play</button>
  <div class="mrow"><button class="mbtn" id="mRe">Restart</button><button class="mbtn" id="mLv">Levels</button></div>
  <div style="margin-top:10px"><div class="tg"><span>Sound &amp; haptics</span><button id="tSnd" class="${S.snd?'on':''}" aria-label="Sound"></button></div>
@@ -1041,7 +1061,7 @@ function showHelp(fromPause){const g=CITY.goods;
  openModal(`<div class="help"><h2>How to play</h2>
  <h3>Your turn</h3><p>Pick one of the three tiles in the tray. Glowing spaces show where it fits: every edge must match its neighbour — water to water, garden to garden, causeway to causeway. Tap a space, tap the tile to turn it, then tap <b>✓</b> to set it. Once it’s set, it stays.</p>
  <h3>Who scores</h3><p>Every tile you lay flies your flag. When a garden, causeway or pyramid quarter is finished, <b>whoever laid the most of its tiles scores it in full</b> and the runner-up scores <b>half</b>. A tie pays both in full.</p>
- <h3>Gardens and the market</h3><p>A garden is finished when water surrounds it. It sells every crop in it at today’s prices: ${g.map(x=>x.n).join(', ')}.</p>
+ <h3>Gardens and the market</h3><p>A garden is finished when water surrounds it. It sells every crop in it at today’s prices: ${g.map(x=>x.n).join(', ')}. On level 1 prices are fixed; from Market Day on they move:</p>
  <ul><li>Each crop that sells drops 1 in price (2 if four or more sell at once).</li><li>Crops that didn’t sell rise 1.</li><li>On a turn with no sale, prices drift one step back to normal (${AC.RULES.start.map((v,i)=>g[i].n+' '+v).join(', ')}).</li></ul>
  <p>Finishing a garden pays its owner — even if your rival lays the last tile. So timing matters: a rival may finish your garden while its crops are cheap.</p>
  <h3>Causeways</h3><p>1 point per tile once both ends finish, plus 3 for each end at ${esc(CITY.market)} or a pyramid.</p>
@@ -1052,16 +1072,17 @@ function showHelp(fromPause){const g=CITY.goods;
  <h3>Controls</h3><p>Drag to look around, pinch to zoom, tap any tile to see what it belongs to and what it’s worth. The ⤢ button fits the whole city in view.</p></div>
  <button class="mbtn pri" id="hlpOk">${fromPause?'Back':'Got it'}</button>${fromPause?'':'<button class="mbtn" id="hlpTut">Play the guided game</button>'}`);
  $('hlpOk').onclick=()=>{if(fromPause)pause();else closeModal();};if($('hlpTut'))$('hlpTut').onclick=()=>{goFS();startMatch(0,'new',null,true);};}
-function showEnd(r){const st=M.st,L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff),winner=r.win?'You win!':r.draw?'A draw':`${esc(M.names[st.scores.indexOf(Math.max(...st.scores))])} wins`;
- const hasNext=M.lv<6&&unlocked(M.lv+1);const rows=[['Gardens','G'],['Causeways','C'],['Pyramids','P'],['Unfinished','E'],['Head start','H']].filter(([,k])=>st.br.some(b=>b[k]));
- openModal(`<h2>${winner}</h2><p class="lead">${M.lv<6?'Level '+(M.lv+1)+' · ':''}${esc(L.name)} · ${DIFFS[M.diff].n}</p>
+function showEnd(r){M.reopen=()=>showEnd(r);const st=M.st,L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff),winner=r.win?'You win!':r.draw?'A draw':`${esc(M.names[st.scores.indexOf(Math.max(...st.scores))])} wins`;
+ const hasNext=M.lv<GRAND()&&unlocked(M.lv+1);const rows=[['Gardens','G'],['Causeways','C'],['Pyramids','P'],['Unfinished','E'],['Head start','H']].filter(([,k])=>st.br.some(b=>b[k]));
+ openModal(`<h2>${winner}</h2><p class="lead">${lvLabel(M.lv)}${esc(L.name)} · ${DIFFS[M.diff].n}</p>
  <div class="bigstars">${stars(r.stars)}</div><div class="th">★ win · ★★ by ${th[1]} · ★★★ by ${th[2]}${r.win?` · you won by ${r.margin}${r.best?' (best yet)':''}`:''}</div>
  <div class="res">${M.names.map((n,i)=>`<div class="pl p${i}"><i></i><b>${esc(n)}</b><span>${st.scores[i]}</span></div>`).join('')}</div>
  <table class="bd"><tr><th></th>${M.names.map((n,i)=>`<th style="color:${COLS[i]}">${esc(n)}</th>`).join('')}</tr>${rows.map(([lab,k])=>`<tr><td>${lab}</td>${st.br.map(b=>`<td>${b[k]}</td>`).join('')}</tr>`).join('')}</table>
  ${!r.win&&M.diff!=='calm'?'<p class="th">Calm gives you a head start and a gentler rival.</p>':''}
+ <button class="mbtn jd" id="eView">See your city</button>
  <div class="mrow"><button class="mbtn pri" id="eAgain">Again</button>${hasNext?'<button class="mbtn jd" id="eNext">Next level</button>':''}</div>
  <button class="mbtn" id="eLv">Levels</button><a class="mbtn" href="../games.html">← Digi Games</a>`);
- $('eAgain').onclick=()=>{goFS();startMatch(M.lv,'retry');};if($('eNext'))$('eNext').onclick=()=>{goFS();startMatch(M.lv+1,'new');};$('eLv').onclick=()=>home();}
+ $('eView').onclick=()=>viewCity(true);$('eAgain').onclick=()=>{goFS();viewCity(false);startMatch(M.lv,'retry');};if($('eNext'))$('eNext').onclick=()=>{goFS();startMatch(M.lv+1,'new');};$('eLv').onclick=()=>home();}
 
 /* ---------- lifecycle ---------- */
 let rsT=0;addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{resize();if(M&&!$('banner').hidden)$('banner').style.top=(VR.y+6)+'px';},60);});
@@ -1084,6 +1105,5 @@ if(TEST)window.__dg={
  tut:()=>M&&M.tut&&{i:M.tut.i,cell:M.tut.cell,slot:M.tut.slot},home:()=>home(),zoom:k=>{cam.s=cam.ts=k;cam.man=true;}};
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
