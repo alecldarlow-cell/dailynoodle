@@ -423,7 +423,6 @@
      v2.1 GAME SCREEN — one fixed screen, board first.
      Top bar · board (fills what's left) · hand tray.
      ====================================================== */
-  @property --lr{syntax:'<percentage>';inherits:false;initial-value:60%;}
   html.ingame, body.ingame{height:100%;overflow:hidden;overscroll-behavior:none;}
   body.ingame #app{max-width:560px;height:100vh;height:100dvh;display:flex;
     padding:max(6px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));}
@@ -441,20 +440,43 @@
   .topbar .pip{width:15px;height:15px;font-size:9px;border-width:1.5px;}
   .topbar .menubtn{flex:0 0 46px;padding:0;font-size:19px;}
 
-  /* board: fills the zone, rings become ovals on tall phones (capped at 1.42:1) */
+  /* board: a night scene filling the zone — sky and treeline beyond, the clearing on tilted ground.
+     --rx/--ry are the Deep Woods ring's radii; every ring, creature, the fire and the light derive from them. */
   .boardzone{flex:1 1 auto;min-height:0;position:relative;container-type:size;display:flex;align-items:center;justify-content:center;}
   .gscreen .board{position:relative;padding-top:0;width:100%;height:100%;
-    width:min(100cqw,120cqh);height:min(100cqh,150cqw);
-    border-radius:26px;overflow:hidden;border:2px solid var(--board-edge);
-    background:radial-gradient(ellipse at 50% 48%, #34465d 0%, var(--board-bg1) 30%, var(--board-bg2) 78%);
-    box-shadow:inset 0 0 50px rgba(0,0,0,.6), 0 4px 18px rgba(0,0,0,.3);}
-  .gscreen .board .decor{position:absolute;inset:0;pointer-events:none;z-index:1;}
-  .gscreen .board .tree{position:absolute;transform:translate(-50%,-60%);opacity:.32;filter:saturate(.5) brightness(.55);}
-  .gscreen .board .moon{position:absolute;width:22px;height:22px;border-radius:50%;transform:translate(-50%,-50%);z-index:2;pointer-events:none;
-    background:radial-gradient(circle at 36% 34%,#fffbea,#ece2bd 58%,#cbbf95);box-shadow:0 0 16px 5px rgba(255,246,214,.32);}
-  .gscreen .ring{border-radius:50%;}
+    --rx:min(41.5cqw,44cqh); --ry:calc(var(--rx) * .95); --cy:max(56%, calc(100% - var(--ry) - 64px)); --hz:calc(var(--cy) - var(--ry) * 1.12);
+    border-radius:24px;overflow:hidden;border:2px solid var(--board-edge);
+    background:#0e1a16;
+    box-shadow:0 4px 18px rgba(0,0,0,.3);}
+  .gscreen .board .sky{position:absolute;left:0;right:0;top:0;height:calc(var(--hz) + 6px);z-index:4;pointer-events:none;
+    background:linear-gradient(180deg,#050a14 0%,#0b1527 45%,#1a2c47 85%,#22385a 100%);}
+  .gscreen .board .stars{position:absolute;left:0;right:0;top:0;height:calc(var(--hz) - 20px);z-index:4;pointer-events:none;}
+  .gscreen .board .stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#f4efe0;opacity:.55;
+    animation:twinkle 3.6s ease-in-out infinite;animation-delay:var(--t,0s);}
+  @keyframes twinkle{0%,100%{opacity:.55}50%{opacity:.15}}
+  .gscreen .board .moon{position:absolute;width:24px;height:24px;border-radius:50%;transform:translate(-50%,-50%);z-index:4;pointer-events:none;
+    background:radial-gradient(circle at 36% 34%,#fffbea,#ece2bd 58%,#cbbf95);box-shadow:0 0 18px 6px rgba(255,246,214,.28);}
+  .gscreen .board .ground{position:absolute;left:0;right:0;bottom:0;top:var(--hz);z-index:1;pointer-events:none;
+    background:linear-gradient(180deg,#16251f 0%,#121f1a 40%,#0c1512 100%);}
+  .gscreen .board .brush{position:absolute;left:0;bottom:-2px;width:100%;height:min(44px,8cqh);z-index:4;pointer-events:none;}
+  .gscreen .board .treeline{position:absolute;left:0;width:100%;height:min(86px,17cqh);z-index:4;pointer-events:none;
+    top:calc(var(--hz) - min(86px,17cqh) + 8px);}
+  .gscreen .board .clearing{position:absolute;left:50%;top:var(--cy);width:calc(var(--rx) * 2.45);height:calc(var(--ry) * 2.45);
+    transform:translate(-50%,-50%);z-index:1;pointer-events:none;border-radius:50%;
+    background:radial-gradient(closest-side, rgba(110,88,58,.55) 0%, rgba(74,72,48,.42) 45%, rgba(38,52,38,.25) 75%, rgba(20,34,29,0) 100%);}
+  .gscreen .board .tent{position:absolute;left:calc(50% - var(--rx) * .2);top:calc(var(--cy) - var(--ry) * .17);z-index:2;
+    transform:translate(-50%,-50%);font-size:clamp(20px,6cqw,30px);pointer-events:none;filter:brightness(.85);}
+  .gscreen .ring{border-radius:50%;left:50%;top:var(--cy);z-index:2;
+    width:calc(var(--rx) * 2 * var(--f));height:calc(var(--ry) * 2 * var(--f));}
+  .gscreen .ring.lit{border-width:2.5px;box-shadow:inset 0 0 22px var(--zsoft), 0 0 10px var(--zsoft);}
+  .gscreen .firepit{top:var(--cy);}
+  .gscreen .creature{left:calc(50% + var(--rx) * var(--ux));top:calc(var(--cy) + var(--ry) * var(--uy));
+    transform:translate(-50%,-50%) scale(var(--s,1));}
+  .gscreen .creature .body{width:50px;height:50px;}
+  @property --lr{syntax:'<number>';inherits:false;initial-value:1;}
   .gscreen .lightmask{position:absolute;inset:0;z-index:3;pointer-events:none;
-    background:radial-gradient(ellipse closest-side at 50% 50%, rgba(3,6,11,0) var(--lr), rgba(3,6,11,.5) calc(var(--lr) + 14%), rgba(3,6,11,.68) 100%);}
+    background:radial-gradient(calc(var(--rx) * var(--lr)) calc(var(--ry) * var(--lr)) at 50% var(--cy),
+      rgba(3,6,11,0) 0%, rgba(3,6,11,0) 60%, rgba(3,6,11,.42) 88%, rgba(3,6,11,.6) 100%);}
   .gscreen .firepit .glow{width:min(48cqw,210px);height:min(48cqw,210px);}
   .firepit.out .flame{filter:grayscale(1) brightness(.45);opacity:.5;animation:none;transition:opacity 1s, filter 1s;}
   .firepit.out .glow{opacity:.1 !important;}
@@ -605,13 +627,17 @@
            lunge, kill bursts, lantern sweep, moon across the
            nights, dawn on a win, hands dealt on each hand-off,
            haptics. Rules, balance, saves and tracking unchanged.
+   v2.2.0  Board redrawn as a night scene: round rings on gently
+           tilted ground (no more stretched ovals), sky with stars
+           and moon, a pine treeline, the camp tent by the fire, and
+           creatures a touch smaller towards the back.
 
    ROUND (for tracking): one run — from the first card, role or
    End Watch tap after "Light the Fire" (or Play Again / Continue)
    to dawn (win) or the fire dying / camp falling (loss).
    level = the night reached. Quitting mid-run sends no game_end.
    ========================================================= */
-const VERSION = "2.1.0";
+const VERSION = "2.2.0";
 
 const DIFFS = {
   easy:     { name:"Gentle Night", tag:"Forgiving", fuel:9, camp:7, rounds:7, hand:5,
@@ -1049,7 +1075,7 @@ function makeGhost(id){
   g.removeAttribute('onclick'); g.removeAttribute('data-id');
   g.classList.remove('aimable','target','spawning');
   g.classList.add('ghost');
-  g.style.left=(r.left+r.width/2)+'px'; g.style.top=(r.top+r.height/2)+'px';
+  g.style.left=(r.left+r.width/2)+'px'; g.style.top=(r.top+r.height/2)+'px'; g.style.zIndex='44';
   document.body.appendChild(g);
   setTimeout(()=>g.remove(), 600);
 }
@@ -1078,13 +1104,14 @@ function afterGameRender(prev, lr, moon){
       const p=prev[n.getAttribute('data-id')]; if(!p) return;
       const c=centreOf(n.getBoundingClientRect()), dx=p.x-c.x, dy=p.y-c.y;
       if(Math.abs(dx)+Math.abs(dy)<3) return;
-      try{ n.animate([{transform:`translate(-50%,-50%) translate(${dx}px,${dy}px)`},{transform:'translate(-50%,-50%)'}],
+      const sc=n.style.getPropertyValue('--s')||'1';
+      try{ n.animate([{transform:`translate(-50%,-50%) translate(${dx}px,${dy}px) scale(${sc})`},{transform:`translate(-50%,-50%) scale(${sc})`}],
                      {duration:520,easing:'cubic-bezier(.2,.9,.3,1.15)'}); }catch(e){}
     });
   }
   const m=document.querySelector('.board .lightmask');
   if(m && lastLR!==null && lastLR!==lr){
-    try{ m.animate([{'--lr':lastLR+'%'},{'--lr':lr+'%'}],{duration:S&&S.over&&!S.over.won?1100:650,easing:'ease-out'}); }catch(e){}
+    try{ m.animate([{'--lr':String(lastLR)},{'--lr':String(lr)}],{duration:S&&S.over&&!S.over.won?1100:650,easing:'ease-out'}); }catch(e){}
   }
   lastLR=lr;
   const mo=document.querySelector('.board .moon');
@@ -1376,13 +1403,12 @@ function advanceCreaturesVisually(done){
     const c=S.creatures.find(x=>x.id===node.getAttribute('data-id'));
     if(!c) return;
     const target=c.ring-1;
-    let x=50, y=50;                       // ring 0 = breach → into the fire
-    if(target>=1){ const rad=RING_RADIUS[target]; x=50+rad*Math.cos(c.angle); y=50+rad*Math.sin(c.angle); }
+    const to = target>=1 ? ringPos(target, c.angle) : { ux:0, uy:0 };   // ring 0 = breach → into the fire
     const delay=i*STAGGER; maxDelay=Math.max(maxDelay,delay);
     node.style.transitionDelay=delay+'ms';
     node.style.transitionDuration=STEP_MS+'ms';
     node.classList.add(target<1?'lunge':'walking');
-    node.style.left=x+'%'; node.style.top=y+'%';
+    node.style.setProperty('--ux', to.ux); node.style.setProperty('--uy', to.uy);
     if(target<1) node.style.opacity='0';  // fade as it reaches camp
   });
   setTimeout(done, STEP_MS + maxDelay + 60);
@@ -1671,15 +1697,44 @@ function continueGame(){
 }
 
 // How far the firelight reaches, as % of the board's half-size (rings sit at 32 / 58 / 84).
+// How far the firelight reaches, in units of the Deep Woods ring (rings sit at .38 / .69 / 1).
 function lightReach(){
-  if(S.over) return S.over.won ? 150 : 0;
-  if(S.lantern) return 135;
-  if(S.fuel>=LIGHT[3]) return 92;
-  if(S.fuel>=LIGHT[2]) return 66;
-  if(S.fuel>=LIGHT[1]) return 40;
-  return 14;
+  if(S.over) return S.over.won ? 3 : 0.06;
+  if(S.lantern) return 1.9;
+  if(S.fuel>=LIGHT[3]) return 1.16;
+  if(S.fuel>=LIGHT[2]) return 0.84;
+  if(S.fuel>=LIGHT[1]) return 0.52;
+  return 0.3;
 }
-const TREES=[[5,6,1.1],[15,2.5,.8],[93,5,1.15],[83,2,.8],[4,94,1.1],[14,98,.85],[95,93,1],[86,98,.8],[2,50,.9],[98,46,.85]];
+/* The clearing is drawn as ground seen from slightly above: round rings tilted to 0.86,
+   centred a little below the middle of the board, with sky and treeline beyond.
+   A creature's place is (ux, uy) in ring units; CSS turns that into pixels via --rx/--ry/--cy. */
+const RING_F = { 1:16/42, 2:29/42, 3:1 };
+function ringPos(ring, angle){ const f=RING_F[ring]||0; return { ux:+(Math.cos(angle)*f).toFixed(4), uy:+(Math.sin(angle)*f).toFixed(4) }; }
+function depthScale(uy){ return +(0.9 + 0.16*(uy+1)/2).toFixed(3); }   // further back = a little smaller
+function pinePath(seed, n, minH, maxH, edgeH){
+  let x=0, d="M0 100", s=seed;
+  const rnd=()=>{ s=(s*9301+49297)%233280; return s/233280; };
+  const step=400/n;
+  for(let i=0;i<=n;i++){
+    const cx=i*step+(rnd()-.5)*step*.5;
+    const edge = i<2 || i>n-2;
+    const h=edge ? edgeH*(0.85+rnd()*.15) : minH+rnd()*(maxH-minH);
+    const hw=step*(edge?0.95:0.7);
+    // a pine: three stacked tiers
+    d+=` L${(cx-hw).toFixed(1)} 100 L${(cx-hw*.55).toFixed(1)} ${(100-h*.45).toFixed(1)} L${(cx-hw*.75).toFixed(1)} ${(100-h*.42).toFixed(1)}`
+      +` L${(cx-hw*.35).toFixed(1)} ${(100-h*.75).toFixed(1)} L${(cx-hw*.5).toFixed(1)} ${(100-h*.72).toFixed(1)} L${cx.toFixed(1)} ${(100-h).toFixed(1)}`
+      +` L${(cx+hw*.5).toFixed(1)} ${(100-h*.72).toFixed(1)} L${(cx+hw*.35).toFixed(1)} ${(100-h*.75).toFixed(1)} L${(cx+hw*.75).toFixed(1)} ${(100-h*.42).toFixed(1)}`
+      +` L${(cx+hw*.55).toFixed(1)} ${(100-h*.45).toFixed(1)} L${(cx+hw).toFixed(1)} 100`;
+  }
+  return d+" L400 100 Z";
+}
+const TREELINE = `<svg class="treeline" viewBox="0 0 400 100" preserveAspectRatio="none" aria-hidden="true">
+  <path d="${pinePath(7,15,34,58,70)}" fill="#1b2d46"/>
+  <path d="${pinePath(31,9,46,78,98)}" fill="#0d1822"/></svg>`;
+const STARS = (()=>{ let s=11; const rnd=()=>{ s=(s*16807)%2147483647; return s/2147483647; };
+  return Array.from({length:26},(_,i)=>`<i style="left:${(rnd()*100).toFixed(1)}%;top:${(rnd()*92).toFixed(1)}%;--t:${(rnd()*3.6).toFixed(1)}s;${rnd()<.25?'width:3px;height:3px;':''}"></i>`).join(""); })();
+const BRUSH = `<svg class="brush" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 L0 22 Q14 8 26 20 Q34 4 48 18 Q58 12 66 24 Q80 14 92 26 L110 30 Q124 22 136 32 L270 34 Q286 22 300 30 Q312 14 326 22 Q336 6 350 18 Q362 10 372 22 Q386 8 400 18 L400 40 Z" fill="#08110e"/></svg>`;
 
 function renderGame(){
   const app=document.getElementById("app");
@@ -1694,7 +1749,7 @@ function renderGame(){
   const flickDur  = (S.fuel<=3 ? 1.05 : S.fuel<=6 ? 1.4 : 1.7);
   const lr = lightReach();
   const p = S.totalRounds>1 ? (S.round-1)/(S.totalRounds-1) : 1;
-  const moon = { x: +(10+80*p).toFixed(1), y: +(3+11*Math.pow(2*p-1,2)).toFixed(1) };
+  const moon = { x: +(12+76*p).toFixed(1), y: +(4+6*Math.pow(2*p-1,2)).toFixed(1) };
 
   // Tap-for-info panel: floats over the foot of the board so nothing below moves.
   let creatureInfoHtml="";
@@ -1728,9 +1783,7 @@ function renderGame(){
 
   const creaturesHtml=S.creatures.map(c=>{
     const z=ZONES[c.ring];
-    const rad=RING_RADIUS[c.ring];
-    const x=50+rad*Math.cos(c.angle);
-    const y=50+rad*Math.sin(c.angle);
+    const pos=ringPos(c.ring, c.angle), sc=depthScale(pos.uy);
     const aimable = (S.mode==="attack" && S.armedCard!==null)
        ? canTarget(S.rangers[r].hand[S.armedCard], c, r) : false;
     const lit = litFor(c.ring, r);
@@ -1742,7 +1795,7 @@ function renderGame(){
     const hpDots=Array.from({length:c.hp}).map(()=>"<i></i>").join("");
     const nm = c.ring===1 ? "⚠ reaches camp" : CREATURES[c.key].name;
     const ph = -((Math.abs(c.angle*1000)|0)%28)/10;     // desynchronise the idle bob
-    return `<div class="${cls.join(' ')}" data-id="${c.id}" style="left:${x}%;top:${y}%;--zc:${z.color};--d:${ph}s" onclick="tapCreature('${c.id}')">
+    return `<div class="${cls.join(' ')}" data-id="${c.id}" style="--ux:${pos.ux};--uy:${pos.uy};--s:${sc};z-index:${6+Math.round((pos.uy+1)*5)};--zc:${z.color};--d:${ph}s" onclick="tapCreature('${c.id}')">
         <div class="body">${CREATURES[c.key].ic}</div>
         <div class="eyes"><i></i><i></i></div>
         <div class="hp">${hpDots}</div>
@@ -1752,7 +1805,7 @@ function renderGame(){
 
   const ring=(n)=>{
     const z=ZONES[n], lit=litFor(n,r);
-    return `<div class="ring r${n} ${lit?'lit':'dark'}" style="--zc:${z.color};--zsoft:${z.soft}">
+    return `<div class="ring r${n} ${lit?'lit':'dark'}" style="--f:${RING_F[n].toFixed(4)};--zc:${z.color};--zsoft:${z.soft}">
         <span class="rnum" style="background:${lit?z.color:'#6b7787'}">${z.num}</span>
       </div>`;
   };
@@ -1811,7 +1864,6 @@ function renderGame(){
     controlsHtml=`${roleBtn}${undoBtn}<button class="btn endturn" onclick="endTurn()">End Watch ▸</button>`;
   }
 
-  const trees=TREES.map(([x,y,s])=>`<span class="tree" style="left:${x}%;top:${y}%;font-size:${(26*s).toFixed(0)}px">🌲</span>`).join("");
   const boardCls = S.over ? (S.over.won ? "dawn" : "dusk") : "";
 
   app.innerHTML=`
@@ -1828,10 +1880,16 @@ function renderGame(){
 
       <div class="boardzone">
         <div class="board ${boardCls}">
-          <div class="decor">${trees}</div>
+          <div class="sky"></div>
+          <div class="stars">${STARS}</div>
           <div class="moon" style="left:${moon.x}%;top:${moon.y}%"></div>
+          <div class="ground"></div>
+          ${TREELINE}
+          <div class="clearing"></div>
+          <div class="tent">⛺</div>
+          ${BRUSH}
           ${ring(3)}${ring(2)}${ring(1)}
-          <div class="lightmask" style="--lr:${lr}%"></div>
+          <div class="lightmask" style="--lr:${lr}"></div>
           <div class="firepit ${fireLow?'low':''} ${S.over&&!S.over.won?'out':''}" style="--fire-scale:${fireScale};--flick-dur:${flickDur}s"><div class="glow" style="--glow-op:${glowOp}"></div><span class="flame">🔥</span></div>
           ${creaturesHtml}
           ${creatureInfoHtml}${tickerHtml}
@@ -1981,6 +2039,5 @@ if(window.__DGTEST===true){
 initFx();
 render();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
