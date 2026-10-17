@@ -15,7 +15,7 @@
     --news:#1C46C2;    --news-soft:#ECF0FC;
     --puzzles:#0E7A4B; --puzzles-soft:#E4F4EB;
     --games:#6A2BC9;   --games-soft:#F1EAFC;
-    --lab:#B45309;     --lab-soft:#FDF0E1;
+    --lab:#C2185B;     --lab-soft:#FCE7EF;
     --accent:var(--news); --accent-soft:var(--news-soft);
     --mono-bg:var(--accent); --mono-ink:#fff;
   }
