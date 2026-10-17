@@ -1,0 +1,1377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Paper Planes</title>
+<meta name="dn:kind"       content="game">
+<meta name="dn:headline"   content="Paper Planes">
+<meta name="dn:standfirst" content="Five throws to fly from the back garden to the mountains. Fold better planes as you go.">
+<meta name="dn:topic"      content="Arcade">
+<meta name="dn:date"       content="2026-10-17">
+<meta name="dn:read"       content="~4 min">
+<meta name="dn:thumb"      content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3Y2M0ZWYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlM2Y0ZmQiLz48L2xpbmVhckdyYWRpZW50PjxnIGlkPSJjIj48Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNyIvPjxjaXJjbGUgY3g9IjgiIGN5PSItMyIgcj0iOC41Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIwIiByPSI2LjUiLz48cmVjdCB4PSIwIiB5PSItMiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjgiLz48L2c+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI3MpIi8+PGNpcmNsZSBjeD0iOTgiIGN5PSIyMiIgcj0iMTEiIGZpbGw9IiNmZmY2Y2YiLz48dXNlIGhyZWY9IiNjIiB4PSIxNCIgeT0iMjYiIGZpbGw9IiNmZmYiLz48dXNlIGhyZWY9IiNjIiB4PSI3MCIgeT0iNDgiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44NSIvPjxwYXRoIGQ9Ik0wIDk4IFEzMCA4NiA2MiA5NCBUMTIwIDkwIFYxMjAgSDAgWiIgZmlsbD0iIzdjYzE3MyIvPjxwYXRoIGQ9Ik0wIDEwNiBRNDAgOTggODAgMTA2IFQxMjAgMTA0IFYxMjAgSDAgWiIgZmlsbD0iIzVhYTk1YSIvPjxwYXRoIGQ9Ik05MiA5MiBWNzAiIHN0cm9rZT0iIzI5MzAzZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTkyIDcwIEwxMDYgNzQgTDkyIDc4IFoiIGZpbGw9IiNmMzljMzIiIHN0cm9rZT0iIzI5MzAzZCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNNiAxMDQgUTI0IDY0IDUyIDU4IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZjZmZDYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWRhc2hhcnJheT0iNSA2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyBzdHJva2U9IiMyOTMwM2QiIHN0cm9rZS13aWR0aD0iMi40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNTAgNjIgTDkyIDM4IEw2NiA2MCBaIiBmaWxsPSIjY2ZkOGUzIi8+PHBhdGggZD0iTTQyIDU0IEw5MiAzOCBMNjYgNjAgWiIgZmlsbD0iI2ZmZiIvPjwvZz48cGF0aCBkPSJNNDQgNTUgTDkxIDM5IiBzdHJva2U9IiNiOWM0ZDIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PC9zdmc+">
+<meta name="theme-color" content="#bfe6ff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fffdf6;--desk:#efe7d6;--ink:#29303d;--soft:#5b6372;--rule:#cfe0f2;--margin:#f0a0a0;--blue:#2f6fd6;--orange:#f39c32;--good:#2e9a5a;--bad:#d4553e;--gold:#e7b53b;--silver:#a9b4c2;--bronze:#c98450;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:#bfe6ff;color:var(--ink);font:600 15px/1.35 Nunito,system-ui,sans-serif;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body{height:100dvh;touch-action:none;overscroll-behavior:none}
+#cv{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.hand{font-family:"Patrick Hand",Nunito,cursive;font-weight:400;letter-spacing:.2px}
+button{font:inherit;color:inherit}
+.btn{min-height:44px;min-width:44px;padding:8px 16px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);box-shadow:0 3px 0 var(--ink);font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;touch-action:manipulation}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.btn.pri{background:var(--blue);color:#fff}
+.btn.org{background:var(--orange);color:#1f1a10}
+.btn.ghost{background:transparent;box-shadow:none;border-color:transparent;text-decoration:underline}
+.btn[disabled]{opacity:.45;pointer-events:none}
+a.back{color:var(--ink);font-weight:800;text-decoration:none;display:inline-flex;align-items:center;min-height:44px;padding:0 8px}
+a.back:active{opacity:.6}
+/* HUD */
+#hud{position:fixed;left:0;right:0;top:0;display:none;align-items:flex-start;gap:6px;flex-wrap:wrap;padding:calc(6px + var(--st)) calc(8px + var(--sr)) 0 calc(8px + var(--sl));pointer-events:none}
+#hud.on{display:flex}
+#hud .chip{pointer-events:none;background:rgba(255,253,246,.92);border:2px solid var(--ink);border-radius:12px;padding:3px 10px;min-height:40px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 0 rgba(41,48,61,.5)}
+#pauseBtn{pointer-events:auto;width:44px;height:44px;padding:0;border-radius:12px}
+#hudPlace{flex-direction:column;align-items:flex-start;justify-content:center;gap:0;line-height:1.05}
+#hudPlace b{font-size:13px}#hudPlace span{font-size:20px}
+#hudDist{margin-left:auto;font-size:28px;min-width:92px;justify-content:center}
+@media (max-width:560px){#hudDist{order:9;margin:0 auto;font-size:26px}#hudPlace b{font-size:12px}#hudPlace span{font-size:18px}}
+#hudThrows{gap:3px}
+#hudThrows i{display:block;width:20px;height:14px;background:no-repeat center/contain;opacity:.25}
+#hudThrows i.on{opacity:1}
+#hudClips{font-size:20px}
+.clipI{width:18px;height:18px;display:inline-block;background:no-repeat center/contain}
+/* toasts */
+#toasts{position:fixed;left:0;right:0;top:calc(56px + var(--st));display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:6}
+.toast{background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:6px 14px;box-shadow:0 3px 0 var(--ink);font-weight:800;max-width:92vw;text-align:center;animation:tin .25s ease-out}
+.toast.wr{background:#fff2c4;font-size:16px}
+@keyframes tin{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
+#banner{position:fixed;left:0;right:0;bottom:calc(10px + var(--sb));display:none;justify-content:center;pointer-events:none;z-index:5}
+#banner.on{display:flex}
+#banner .in{background:rgba(255,253,246,.95);border:2px solid var(--ink);border-radius:14px;padding:6px 8px 6px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 3px 0 var(--ink);pointer-events:auto;max-width:94vw}
+#intro{position:fixed;left:0;right:0;top:36%;display:flex;justify-content:center;pointer-events:none;z-index:4;opacity:0;transition:opacity .35s}
+#intro.on{opacity:1}
+#intro .in{background:var(--paper);border:2px solid var(--ink);border-radius:16px;padding:8px 18px;text-align:center;box-shadow:0 4px 0 var(--ink)}
+#intro .p{font-size:14px;color:var(--soft)}#intro .pn{font-size:30px;line-height:1.05}#intro .t{font-size:18px}
+#tut{position:fixed;inset:0;pointer-events:none;z-index:4;display:none}
+#tut.on{display:block}
+#tut .msg{position:absolute;left:50%;transform:translateX(-50%);top:calc(60px + var(--st));background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:8px 10px 8px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 3px 0 var(--ink);pointer-events:auto;font-size:16px;max-width:92vw}
+#hand{position:absolute;width:46px;height:46px;border-radius:50%;background:rgba(47,111,214,.25);border:3px solid var(--blue);display:none}
+/* overlays */
+.ov{position:fixed;inset:0;display:none;z-index:8;align-items:center;justify-content:center;padding:calc(10px + var(--st)) calc(10px + var(--sr)) calc(10px + var(--sb)) calc(10px + var(--sl))}
+.ov.on{display:flex}
+.ov.dim{background:rgba(31,41,60,.42)}
+.card{touch-action:pan-y;background-color:var(--paper);background-image:linear-gradient(90deg,transparent 30px,var(--margin) 30px,var(--margin) 32px,transparent 32px),repeating-linear-gradient(180deg,transparent 0,transparent 25px,var(--rule) 25px,var(--rule) 26px);border:2px solid var(--ink);border-radius:16px;box-shadow:0 5px 0 var(--ink);padding:12px 14px 12px 42px;max-height:100%;overflow:auto}
+.card h2{margin:0 0 4px;font-size:30px;line-height:1.05}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pause .card{width:min(560px,100%)}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.pgrid .btn{width:100%}
+.sw{justify-content:space-between}
+.sw .k{font-size:13px;padding:2px 8px;border-radius:8px;background:#e8ecf2}
+.sw .k.on{background:var(--good);color:#fff}
+/* splash */
+#splash{flex-direction:column;text-align:center;background:linear-gradient(#bfe6ff,#eaf7ff)}
+#splash h1{font-size:clamp(46px,12vmin,84px);margin:0;line-height:.95}
+#splash p{margin:6px 0 14px;font-size:17px;color:var(--soft);max-width:520px}
+#splash .tap{font-size:20px;padding:12px 26px}
+#splash .foot{position:absolute;bottom:calc(8px + var(--sb));left:calc(8px + var(--sl))}
+#splashPlane{width:min(200px,40vmin);height:auto}
+/* end */
+.end .card{width:min(640px,100%)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0 8px}
+.stat{background:rgba(255,255,255,.8);border:1.5px solid #c9cfd8;border-radius:10px;padding:4px 6px;text-align:center}
+.stat b{display:block;font-size:12px;color:var(--soft);font-weight:800}
+.stat span{font-size:24px;line-height:1.1}
+.dots{display:flex;gap:4px;justify-content:center;margin:2px 0 6px}
+.dots i{width:22px;height:8px;border-radius:4px;background:#d7dce4}
+.dots i.on{background:var(--good)}
+.dots i.cur{background:var(--orange)}
+.medals{display:flex;gap:10px;justify-content:center;margin:4px 0}
+.medal{width:40px;height:40px;border-radius:50%;border:3px solid #c9cfd8;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#8a93a1;background:#f4f6f9}
+.medal.b{border-color:var(--bronze);background:#f6dcc6;color:#6b3f1c}.medal.s{border-color:var(--silver);background:#eef1f5;color:#4a5462}.medal.g{border-color:var(--gold);background:#fff0bf;color:#6e5208}
+/* hangar */
+#hangar{display:none;position:fixed;inset:0;z-index:7;touch-action:pan-y;background-color:var(--desk);background-image:radial-gradient(rgba(0,0,0,.04) 1px,transparent 1px);background-size:14px 14px;flex-direction:column;padding:calc(4px + var(--st)) calc(10px + var(--sr)) calc(8px + var(--sb)) calc(10px + var(--sl));overflow:auto}
+#hangar.on{display:flex}
+.htop{display:flex;align-items:center;gap:8px;min-height:44px;flex:0 0 auto}
+.htop h1{margin:0;font-size:30px;line-height:1}
+.htop .cl{margin-left:auto;font-size:22px;display:flex;align-items:center;gap:6px;background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:2px 10px;min-height:40px}
+.hbody{display:grid;grid-template-columns:minmax(260px,1fr) minmax(280px,1.15fr);gap:10px;flex:1 1 auto;min-height:0}
+.foldCard{display:flex;flex-direction:column;padding:8px 10px 8px 40px;min-height:0}
+.foldHead{display:flex;align-items:center;gap:6px}
+.foldHead .nm{flex:1;text-align:center;font-size:24px;line-height:1.05}
+.foldHead .ct{font-size:12px;color:var(--soft)}
+#foldCv{width:100%;height:96px;display:block}
+.blurb{font-size:13px;color:var(--soft);text-align:center;min-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bars{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:3px 8px;font-size:12px;align-items:center;margin:4px 0}
+.bar{height:8px;border-radius:4px;background:#e1e6ee;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue);border-radius:4px}
+.fly{display:flex;gap:8px;margin-top:6px}
+.fly .btn{flex:1}
+.fly .btn.pri{font-size:20px}
+.ups{padding:8px 10px 8px 40px;display:flex;flex-direction:column;gap:4px;min-height:0}
+.ups h3{margin:0;font-size:15px;color:var(--soft);font-weight:800}
+.up{display:flex;align-items:center;gap:8px;min-height:44px}
+.up .tx{flex:1;min-width:0}
+.up .tx b{display:block;font-size:14px}
+.up .tx span{display:block;font-size:11.5px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pips{display:flex;gap:3px}
+.pips i{width:9px;height:14px;border-radius:3px;background:#dfe4ec;border:1px solid #b9c1cc}
+.pips i.on{background:var(--good);border-color:#227445}
+.up .btn{min-width:78px;padding:4px 8px;font-size:14px}
+.bests{font-size:12.5px;color:var(--soft);text-align:center;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-aspect-ratio:1/1){
+  .hbody{grid-template-columns:1fr}
+  #foldCv{height:110px}
+}
+@media (max-height:400px) and (min-aspect-ratio:1/1){
+  .htop h1{font-size:24px}
+  #foldCv{height:64px}
+  .foldHead .nm{font-size:21px}
+  .ups{gap:2px}
+  .card h2{font-size:24px}
+  .stat span{font-size:20px}
+  .bars{margin:2px 0}
+}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<canvas id="cv" aria-label="Paper Planes play area"></canvas>
+
+<div id="hud" aria-live="polite">
+  <button class="btn" id="pauseBtn" aria-label="Pause">&#10074;&#10074;</button>
+  <div class="chip hand" id="hudPlace"><b>Place 1 of 8</b><span>Back garden</span></div>
+  <div class="chip hand" id="hudThrows" aria-label="Throws left"></div>
+  <div class="chip hand" id="hudDist">0.0 m</div>
+  <div class="chip hand" id="hudClips"><i class="clipI"></i><span>0</span></div>
+</div>
+<div id="toasts"></div>
+<div id="intro"><div class="in hand"><div class="p" id="introP">Place 1 of 8</div><div class="pn" id="introN">Back garden</div><div class="t" id="introT">Beat 12 m</div></div></div>
+<div id="tut"><div class="msg"><span id="tutTxt">Pull back and let go to throw</span><button class="btn" id="tutSkip">Skip</button></div><div id="hand"></div></div>
+<div id="banner"><div class="in"><span>&#8635; Turn your phone sideways for the best view</span><button class="btn" id="uprightBtn">Play upright</button></div></div>
+
+<div class="ov" id="splash">
+  <svg id="splashPlane" viewBox="0 0 200 90" aria-hidden="true"><path d="M8 52 L190 30 L70 62 Z" fill="#fff" stroke="#29303d" stroke-width="3" stroke-linejoin="round"/><path d="M70 62 L190 30 L86 78 Z" fill="#dfe6ee" stroke="#29303d" stroke-width="3" stroke-linejoin="round"/><path d="M8 52 L190 30" stroke="#b9c4d2" stroke-width="2"/><path d="M4 70 q40 -30 80 -10" fill="none" stroke="#2f6fd6" stroke-width="3" stroke-dasharray="6 7" stroke-linecap="round"/></svg>
+  <h1 class="hand">Paper Planes</h1>
+  <p>Five throws to fly from the back garden to the mountains. Fold better planes as you go.</p>
+  <button class="btn pri tap" id="splashGo">Throw your first plane</button>
+  <div class="foot"><a class="back" href="../games.html">← Digi Games</a></div>
+</div>
+
+<div id="hangar">
+  <div class="htop">
+    <h1 class="hand">Hangar</h1>
+    <button class="btn" id="setBtn" aria-label="Settings">&#9881;</button>
+    <div class="cl hand"><i class="clipI"></i><span id="hClips">0</span></div>
+  </div>
+  <div class="hbody">
+    <div class="card foldCard">
+      <div class="foldHead">
+        <button class="btn" id="fPrev" aria-label="Previous fold">&#8249;</button>
+        <div class="nm hand"><span id="fName">Classroom Dart</span><div class="ct" id="fCount">Fold 1 of 5</div></div>
+        <button class="btn" id="fNext" aria-label="Next fold">&#8250;</button>
+      </div>
+      <canvas id="foldCv"></canvas>
+      <div class="blurb" id="fBlurb"></div>
+      <div class="bars" id="fBars"></div>
+      <div class="fly" id="flyRow">
+        <button class="btn pri" id="flyBtn">Fly &#10148;</button>
+        <button class="btn org hidden" id="towerBtn">Skyscraper</button>
+      </div>
+      <div class="bests" id="bests"></div>
+    </div>
+    <div class="card ups" id="ups"></div>
+  </div>
+</div>
+
+<div class="ov dim pause" id="pause">
+  <div class="card">
+    <h2 class="hand" id="pTitle">Paused</h2>
+    <div class="pgrid">
+      <button class="btn pri" id="pResume">Resume</button>
+      <button class="btn" id="pHangar">Hangar</button>
+      <button class="btn sw" id="pSound">Sound <span class="k">On</span></button>
+      <button class="btn sw" id="pMotion">Reduced motion <span class="k">Off</span></button>
+      <button class="btn sw" id="pFS">Full screen <span class="k">On</span></button>
+      <button class="btn sw" id="pUpright">Upright play <span class="k">Off</span></button>
+    </div>
+    <div class="row" style="margin-top:6px"><a class="back" href="../games.html">← Digi Games</a></div>
+  </div>
+</div>
+
+<div class="ov dim end" id="end">
+  <div class="card">
+    <h2 class="hand" id="eTitle">Run over</h2>
+    <div class="dots" id="eDots"></div>
+    <div class="medals hidden" id="eMedals"></div>
+    <div class="stats" id="eStats"></div>
+    <div class="row" id="eNote" style="font-size:13px;color:var(--soft);justify-content:center"></div>
+    <div class="row" style="margin-top:8px;justify-content:center">
+      <button class="btn pri" id="eAgain">Fly again</button>
+      <button class="btn" id="eHangar">Hangar</button>
+      <a class="back" href="../games.html">← Digi Games</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== Paper Planes — flight model, places and economy (shared by the game and the balance sim) ===== */
+const G = 9.81;
+
+/* Five folds, bought in order. cla: lift slope /rad; cd0: base drag; k: induced drag; as: stall angle (rad);
+   kq: area/mass factor (higher = lighter, slower, pushed about more); lift/fall: hold/release pitch rates (rad/s);
+   dive: nose angle it eases down to when released (rad); v: top launch speed (m/s) before the Throwing arm. */
+const FOLDS = [
+  { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 28,  cla: 2.9, cd0: 0.050, k: 0.20,  as: 0.27, kq: 0.30, lift: 1.10, fall: 0.62, dive: -0.27, v: 13.5,
+    blurb: 'Fast off the hand, little lift, noses down early.' },
+  { id: 'nakamura', name: 'Nakamura Lock',  cost: 200,  base: 56,  cla: 3.1, cd0: 0.046, k: 0.17,  as: 0.33, kq: 0.31, lift: 1.00, fall: 0.55, dive: -0.26, v: 13.5,
+    blurb: 'Locked nose: steadier, forgiving when you pull too hard.' },
+  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.044, k: 0.12,  as: 0.30, kq: 0.40, lift: 0.95, fall: 0.50, dive: -0.20, v: 14.0,
+    blurb: 'Big wings: floats and rides thermals, but slow.' },
+  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.036, k: 0.095, as: 0.30, kq: 0.34, lift: 1.00, fall: 0.52, dive: -0.22, v: 15.5,
+    blurb: 'Long, clean glides. Needs a hard throw to wake it up.' },
+  { id: 'rdart',    name: 'Record Dart',    cost: 3500, base: 420, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, lift: 1.05, fall: 0.62, dive: -0.28, v: 18.0,
+    blurb: 'Fastest and furthest. Twitchy: rewards a good pilot.' }
+];
+const FOLD_STATS = [
+  { id: 'paper', name: 'Paper weight', what: 'More momentum, less push from wind' },
+  { id: 'crease', name: 'Creases', what: 'Sharper folds, less drag' },
+  { id: 'trim', name: 'Trim', what: 'More lift and a later stall' }
+];
+const FOLD_MAX = 4, FOLD_MULT = [1, 2, 4, 7];
+const SHARED = [
+  { id: 'arm', name: 'Throwing arm', max: 5, base: 50, what: 'Faster launch, +7% a level' },
+  { id: 'magnet', name: 'Clip magnet', max: 3, base: 70, what: 'Pulls in clips from further away' }
+];
+function foldCost(fi, lvl) { return FOLDS[fi].base * FOLD_MULT[lvl]; }          // cost of going from lvl to lvl+1
+function sharedCost(si, lvl) { return SHARED[si].base * Math.pow(2, lvl); }
+
+/* Effective plane parameters for a fold and its upgrade levels. */
+function planeParams(fi, up, arm) {
+  const f = FOLDS[fi], p = up.paper || 0, c = up.crease || 0, t = up.trim || 0;
+  return {
+    cla: f.cla * (1 + 0.04 * t),
+    cd0: f.cd0 * (1 - 0.07 * c),
+    k: f.k * (1 - 0.03 * c),
+    as: f.as + 0.015 * t,
+    kq: f.kq / (1 + 0.12 * p),            // heavier paper: less aero push per unit mass
+    lift: f.lift,
+    fall: f.fall * (1 - 0.05 * t),
+    dive: f.dive + 0.02 * t,
+    v: f.v * (1 + 0.035 * p) * (1 + 0.07 * (arm || 0)),
+    fi
+  };
+}
+
+/* ---------- places ---------- */
+/* ground: [[x,y],...] piecewise linear, flat beyond the ends. zones: air movement. obs: things that end a flight. */
+function mkPlaces() {
+  return [
+    { n: 1, id: 'garden', name: 'Back garden', target: 10, y0: 1.6,
+      ground: [[-20, 0], [400, 0]], zones: [], obs: [], clips: 0,
+      pal: { sky0: '#bfe6ff', sky1: '#eaf7ff', far: '#9fd39a', mid: '#7cc173', near: '#5aa95a', ground: '#6fbf62', soil: '#8a6a45', accent: '#a0784c' } },
+    { n: 2, id: 'playground', name: 'Playground', target: 25, y0: 1.6,
+      ground: [[-20, 0], [400, 0]], zones: [], obs: [], clips: 3,
+      pal: { sky0: '#a9dcff', sky1: '#e6f5ff', far: '#ffcf5c', mid: '#ff7b6b', near: '#4fa3ff', ground: '#e3c88f', soil: '#b99a63', accent: '#ff5d73' } },
+    { n: 3, id: 'green', name: 'Village green', target: 45, y0: 1.6,
+      ground: [[-20, 0], [400, 0]], zones: [],
+      obs: [{ t: 'tree', x: 38, h: 4.6, r: 2 }, { t: 'tree', x: 96, h: 10, r: 3 }], clips: 4,
+      pal: { sky0: '#b6dcf0', sky1: '#eef6f4', far: '#a7c4a0', mid: '#8fb586', near: '#6e9e66', ground: '#7fb36b', soil: '#7a6248', accent: '#9aa3ab' } },
+    { n: 4, id: 'park', name: 'Park', target: 70, y0: 1.6,
+      ground: [[-20, 0], [400, 0]], zones: [{ t: 'thermal', x0: 30, x1: 54, top: 34, w: 2.4 }],
+      obs: [{ t: 'tree', x: 82, h: 9, r: 3 }], clips: 5, pond: [30, 54],
+      pal: { sky0: '#f3d9a4', sky1: '#fbf1d8', far: '#d7b46a', mid: '#c49a4e', near: '#9d7a3a', ground: '#c8b25c', soil: '#8a6a3c', accent: '#6fa8c9' } },
+    { n: 5, id: 'beach', name: 'Beach', target: 100, y0: 3.2,
+      ground: [[-20, 1.6], [6, 1.6], [16, 0], [400, 0]], wind: -1.6,
+      zones: [{ t: 'thermal', x0: 44, x1: 64, top: 30, w: 2.2 }],
+      obs: [{ t: 'gull', x: 58, y: 13, a: 3, p: 3.2 }, { t: 'gull', x: 92, y: 8, a: 2.5, p: 2.7 }], clips: 5,
+      pal: { sky0: '#8fd0f0', sky1: '#e4f6fb', far: '#5fb2d6', mid: '#3d93c0', near: '#f2dfae', ground: '#f0dca4', soil: '#d9bf82', accent: '#ffffff' } },
+    { n: 6, id: 'cliff', name: 'Clifftop', target: 150, y0: 16.6,
+      ground: [[-20, 15], [8, 15], [11, 3], [15, 0], [600, 0]],
+      zones: [{ t: 'updraft', x0: 6, x1: 30, top: 32, w: 1.8 }, { t: 'thermal', x0: 92, x1: 112, top: 34, w: 1.8 }],
+      obs: [{ t: 'gull', x: 66, y: 18, a: 4, p: 3.6 }, { t: 'gull', x: 128, y: 10, a: 3, p: 3.0 }], clips: 6, sea: 15,
+      pal: { sky0: '#6fb3e8', sky1: '#dff0fb', far: '#2f6fa8', mid: '#1f5a92', near: '#f7f4ec', ground: '#7fae5e', soil: '#efeadd', accent: '#1d4f86' } },
+    { n: 7, id: 'valley', name: 'Valley', target: 220, y0: 21.6,
+      ground: [[-20, 20], [6, 20], [44, 0], [240, 0], [300, 34], [600, 34]],
+      zones: [{ t: 'down', x0: 66, x1: 96, top: 60, w: 2.0 }, { t: 'thermal', x0: 106, x1: 126, top: 48, w: 2.8 },
+              { t: 'down', x0: 140, x1: 166, top: 60, w: 1.3 }, { t: 'thermal', x0: 178, x1: 198, top: 52, w: 2.6 }],
+      obs: [{ t: 'tree', x: 62, h: 7, r: 2.6 }], clips: 7,
+      pal: { sky0: '#9fb2c4', sky1: '#dfe6ec', far: '#94aaa4', mid: '#71917c', near: '#4f7356', ground: '#6a8f5a', soil: '#5a5146', accent: '#c5ced6' } },
+    { n: 8, id: 'mountains', name: 'Mountains', target: 300, y0: 29.6,
+      ground: [[-20, 28], [6, 28], [40, 6], [96, 0], [140, 18], [158, 24], [200, 4], [262, 0], [330, 22], [360, 30], [700, 30]],
+      zones: [{ t: 'ridge', x0: 96, x1: 158, top: 52, w: 2.2 }, { t: 'thermal', x0: 200, x1: 224, top: 50, w: 2.3 },
+              { t: 'ridge', x0: 262, x1: 330, top: 54, w: 2.0 }],
+      obs: [{ t: 'kite', x: 74, y: 20, a: 2, p: 4 }, { t: 'kite', x: 236, y: 22, a: 2.5, p: 4.4 }], clips: 8,
+      pal: { sky0: '#4b4a7d', sky1: '#f2b9a4', far: '#7f78a8', mid: '#5f5b8a', near: '#e9ecf4', ground: '#cfd6e6', soil: '#8a86a8', accent: '#ffd38a' } }
+  ];
+}
+/* Skyscraper: a city with seeded towers, endless. */
+function mkTower(seed) {
+  const rnd = mulberry(seed || 7), ground = [[-20, 0], [4000, 0]], towers = [], zones = [];
+  let x = 24;
+  while (x < 3800) {
+    const w = 9 + rnd() * 12, h = 10 + rnd() * 26 + (rnd() < 0.12 ? 18 : 0);
+    towers.push({ x0: x, x1: x + w, h, seed: Math.floor(rnd() * 1e6) });
+    if (rnd() < 0.3) zones.push({ t: 'thermal', x0: x - 3, x1: x + w + 3, top: h + 60, w: 1.4 + rnd() * 1.2, vent: 1 });
+    x += w + 14 + rnd() * 40;
+  }
+  return { n: 9, id: 'tower', name: 'Skyscraper', target: 500, medals: [500, 800, 1000], y0: 121.6, wind: -0.8,
+    roof: [-20, 6, 120], ground, zones, towers, obs: [], clips: 14,
+    pal: { sky0: '#2b3a67', sky1: '#ffb38a', far: '#3b4a78', mid: '#2a355c', near: '#1c2442', ground: '#2a2f45', soil: '#1c2033', accent: '#ffd36b' } };
+}
+function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+function groundAt(pl, x) {
+  const g = pl.ground;
+  if (x <= g[0][0]) return g[0][1];
+  for (let i = 1; i < g.length; i++) if (x <= g[i][0]) { const a = g[i - 1], b = g[i]; return a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]); }
+  let y = g[g.length - 1][1];
+  if (pl.towers) for (const t of pl.towers) if (x >= t.x0 && x <= t.x1) y = Math.max(y, t.h);
+  if (pl.roof && x >= pl.roof[0] && x <= pl.roof[1]) y = Math.max(y, pl.roof[2]);
+  return y;
+}
+function groundAtFull(pl, x) {
+  let y = groundAt(pl, x);
+  if (pl.towers) for (const t of pl.towers) if (x >= t.x0 && x <= t.x1) y = Math.max(y, t.h);
+  if (pl.roof && x >= pl.roof[0] && x <= pl.roof[1]) y = Math.max(y, pl.roof[2]);
+  return y;
+}
+
+/* Per-throw variation: thermals and clips shift a little each throw. */
+function rollThrow(pl, seed) {
+  const r = mulberry(seed), zones = pl.zones.map(z => {
+    const s = (r() - 0.5) * 6;
+    return Object.assign({}, z, { x0: z.x0 + (z.t === 'thermal' && !z.vent ? s : 0), x1: z.x1 + (z.t === 'thermal' && !z.vent ? s : 0) });
+  });
+  const clips = [];
+  const span = pl.n === 9 ? 900 : pl.target * 1.15;
+  for (let i = 0; i < pl.clips; i++) {
+    const cx = span * (0.15 + 0.8 * (i + r() * 0.6) / pl.clips);
+    const gy = groundAtFull(pl, cx);
+    const top = Math.max(gy + 2.5, pl.y0 * (1 - cx / (span * 1.3)) + 3);
+    const cy = gy + 2 + r() * Math.max(2, (top - gy) * 0.9 + 4);
+    for (let j = 0; j < 3; j++) clips.push({ x: cx + j * 1.6, y: cy + Math.sin(j) * 0.4, got: false });
+  }
+  return { zones, clips, seed };
+}
+
+/* Air movement at a point: returns [wx, wy] (m/s). */
+function airAt(pl, roll, x, y) {
+  let wx = pl.wind || 0, wy = 0;
+  for (const z of roll.zones) {
+    if (x < z.x0 || x > z.x1) continue;
+    const u = (x - z.x0) / (z.x1 - z.x0), bell = Math.sin(Math.PI * u);
+    const gy = groundAtFull(pl, x), top = z.top;
+    if (y > top + 8) continue;
+    const fade = y > top ? 1 - (y - top) / 8 : 1;
+    if (z.t === 'thermal') wy += z.w * bell * fade * Math.min(1, (y - gy + 1) / 4);
+    else if (z.t === 'updraft' || z.t === 'ridge') wy += z.w * (0.5 + 0.5 * bell) * fade;
+    else if (z.t === 'down') wy -= z.w * bell * fade;
+  }
+  return [wx, wy];
+}
+
+/* ---------- one flight ---------- */
+function newFlight(pl, P, angDeg, power) {
+  const a = angDeg * Math.PI / 180, v = P.v * Math.max(0.15, Math.min(1, power));
+  return { x: 0, y: pl.y0, vx: v * Math.cos(a), vy: v * Math.sin(a), th: a, a: 0, c: 0, stall: 0, t: 0, done: false, why: '', maxY: pl.y0, clips: 0, hold: false, flutter: 0 };
+}
+const DT = 1 / 120;
+function step(f, P, pl, roll, hold, magnet) {
+  if (f.done) return;
+  f.hold = hold;
+  // pitch control. Hold: the nose lifts against the airflow. Release: it eases back (soft gravity)
+  // towards the fold's gentle dive line. The nose then follows the commanded angle quickly (the plane weathervanes).
+  const [wx, wy] = airAt(pl, roll, f.x, f.y);
+  const rx = f.vx - wx, ry = f.vy - wy, v = Math.hypot(rx, ry) || 0.001, gam = Math.atan2(ry, rx);
+  const eq = Math.min(P.as * 0.85, G * Math.cos(gam) / (P.kq * v * v * P.cla));
+  if (f.stall > 0) { f.stall -= DT; f.c -= P.fall * 2.5 * DT; }
+  else if (hold) f.c += P.lift * DT;
+  else {
+    const auto = Math.max(-0.04, Math.min(Math.max(0.02, eq), 1.0 * (P.dive - gam) + 0.8 * eq));
+    const d = auto - f.c, s = P.fall * DT;
+    f.c += Math.abs(d) <= s ? d : Math.sign(d) * s;
+  }
+  if (f.c < -0.25) f.c = -0.25; if (f.c > P.as * 1.7) f.c = P.as * 1.7;
+  f.a += (f.c - f.a) * Math.min(1, 12 * DT);
+  const a = f.a;
+  f.th = gam + a;
+  let cl;
+  const aa = Math.abs(a);
+  if (aa <= P.as) cl = P.cla * a;
+  else cl = Math.sign(a) * P.cla * P.as * Math.max(0.3, 1 - (aa - P.as) * 4);
+  if (a > P.as && f.stall <= 0) { f.stall = 0.6; f.stalls = (f.stalls || 0) + 1; } // stall: lift collapses and the nose drops
+  if (v < 3.0 && f.stall <= 0 && f.t > 0.4 && a > 0.12) f.stall = 0.45; // too slow
+  let cd = P.cd0 + P.k * cl * cl;
+  if (f.stall > 0) { cl *= 0.45; cd += 0.22; f.flutter += DT * 30; }
+  const q = P.kq * v * v;
+  const ax = q * (cl * (-ry / v) - cd * (rx / v));
+  const ay = q * (cl * (rx / v) - cd * (ry / v)) - G;
+  f.vx += ax * DT; f.vy += ay * DT;
+  f.x += f.vx * DT; f.y += f.vy * DT; f.t += DT;
+  if (f.y > f.maxY) f.maxY = f.y;
+  // clips
+  const mr = 1.3 + 1.1 * (magnet || 0);
+  for (const c of roll.clips) if (!c.got && Math.abs(c.x - f.x) < mr && Math.abs(c.y - f.y) < mr && Math.hypot(c.x - f.x, c.y - f.y) < mr) { c.got = true; f.clips++; f.lastClip = f.t; }
+  // collisions
+  const gy = groundAtFull(pl, f.x);
+  if (f.y <= gy) { f.y = gy; f.done = true; f.why = pl.sea && f.x > pl.sea ? 'sea' : 'ground'; return; }
+  for (const o of pl.obs) {
+    if (o.t === 'tree') {
+      const cy = o.h * 0.62, dx = (f.x - o.x) / o.r, dy = (f.y - cy) / (o.h * 0.45);
+      if (dx * dx + dy * dy < 1 || (Math.abs(f.x - o.x) < 0.35 && f.y < cy)) { f.done = true; f.why = 'tree'; return; }
+    } else {
+      const [ox, oy] = obsPos(o, f.t);
+      const rr = o.t === 'kite' ? 1.6 : 1.1;
+      if (Math.hypot(f.x - ox, f.y - oy) < rr) { f.done = true; f.why = o.t; return; }
+    }
+  }
+  if (f.x < -15 || f.t > 240) { f.done = true; f.why = 'ground'; }
+}
+function obsPos(o, t) {
+  if (o.t === 'gull') return [o.x + Math.sin(t * 2 * Math.PI / o.p) * o.a * 1.5, o.y + Math.sin(t * 2 * Math.PI / (o.p * 0.7)) * o.a * 0.6];
+  return [o.x + Math.sin(t * 2 * Math.PI / o.p) * o.a * 0.6, o.y + Math.cos(t * 2 * Math.PI / o.p) * o.a];
+}
+function bestAlpha(P) { return Math.sqrt(P.cd0 / P.k) / P.cla; }
+function sinkAlpha(P) { return Math.min(P.as * 0.92, Math.sqrt(3 * P.cd0 / P.k) / P.cla); }
+
+/* Clips earned for a throw */
+function throwClips(dist, pickups) { return Math.floor(Math.max(0, dist) / 4) + pickups * 3; }
+function clearBonus(n) { return 6 * n; }
+
+
+/* ===================== Paper Planes — game ===================== */
+(function () {
+'use strict';
+const GAME = 'paper-planes';
+const SAVE_KEY = 'digi-paper-planes-v1';
+const ORIENT = 'landscape';
+const WR = 88.3;
+const PLACES = mkPlaces();
+const TOWER = mkTower(7);
+const $ = id => document.getElementById(id);
+const cv = $('cv'), cx = cv.getContext('2d');
+
+/* ---------- save ---------- */
+const coarse = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } })();
+function defaults() {
+  return { v: 1, clips: 0, owned: [true, false, false, false, false], fold: 0, up: [0, 1, 2, 3, 4].map(() => ({ paper: 0, crease: 0, trim: 0 })),
+    arm: 0, magnet: 0, bestPlace: 0, bestThrow: 0, towerBest: 0, medals: 0, wr: false, runs: 0, clears: 0,
+    tut1: false, tut2: false, upright: false, snd: true, rm: null, fs: coarse, run: null, seen: false };
+}
+function loadSave() { try { const s = localStorage.getItem(SAVE_KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
+function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
+let save = defaults();
+(function () {
+  const s = loadSave();
+  if (s && typeof s === 'object') {
+    for (const k in save) if (k in s) save[k] = s[k];
+    if (!Array.isArray(save.owned) || save.owned.length !== 5) save.owned = defaults().owned;
+    save.owned[0] = true;
+    if (!Array.isArray(save.up) || save.up.length !== 5) save.up = defaults().up;
+    save.up = save.up.map(u => ({ paper: clampI(u && u.paper, 0, 4), crease: clampI(u && u.crease, 0, 4), trim: clampI(u && u.trim, 0, 4) }));
+    save.fold = save.owned[clampI(save.fold, 0, 4)] ? clampI(save.fold, 0, 4) : 0;
+    save.arm = clampI(save.arm, 0, 5); save.magnet = clampI(save.magnet, 0, 3); save.clips = Math.max(0, Math.floor(+save.clips || 0));
+    if (typeof save.fs !== 'boolean') save.fs = coarse;
+  }
+})();
+function clampI(v, a, b) { v = Math.floor(+v || 0); return v < a ? a : v > b ? b : v; }
+
+/* ---------- Digi site tracking (site contract §5) ---------- */
+let rnd = { armed: false, open: false, secs: 0, how: 'new' };
+function trk(ev, x) { try { if (window.digi && window.digi.track) window.digi.track(ev, Object.assign({ game: GAME }, x)); } catch (e) {} }
+function rndArm(how) { rnd = { armed: true, open: false, secs: 0, how: how || 'new' }; }
+function curLevel() { return run ? (run.mode === 'tower' ? 9 : Math.min(8, run.place + 1)) : 1; }
+function trkBase() { const b = { level: curLevel(), mode: FOLDS[save.fold].id }; if (run && run.mode === 'tower') b.run = 'tower'; return b; }
+function rndStart() {
+  if (!rnd.armed || rnd.open) return; rnd.armed = false; rnd.open = true;
+  trk('game_start', Object.assign(trkBase(), { start: rnd.how }));
+}
+function rndEnd(win, x) {
+  if (!rnd.open) rndStart(); if (!rnd.open) return; rnd.open = false;
+  trk('game_end', Object.assign(trkBase(), { win: !!win, secs: Math.round(rnd.secs) }, x));
+}
+
+/* ---------- reduced motion ---------- */
+const sysRM = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+const RM = () => save.rm === null ? sysRM : !!save.rm;
+
+/* ---------- full screen (site contract §10) ---------- */
+const fsOK = (() => { try { return !!(document.fullscreenEnabled || document.webkitFullscreenEnabled); } catch (e) { return false; } })();
+const isFS = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+let fsAt = -1e9;
+function goFS() {
+  if (!fsOK || !save.fs || isFS()) return;
+  try {
+    const el = document.documentElement, rq = el.requestFullscreen || el.webkitRequestFullscreen; if (!rq) return;
+    fsAt = performance.now();
+    const lock = () => { try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock(ORIENT).catch(() => {}); } catch (e) {} };
+    const p = rq.call(el, { navigationUI: 'hide' }); if (p && p.then) p.then(lock, () => {}); else lock();
+  } catch (e) {}
+}
+function exitFS() { try { if (!isFS()) return; const x = document.exitFullscreen || document.webkitExitFullscreen; const p = x && x.call(document); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
+
+/* ---------- sound (Web Audio, starts after a tap) ---------- */
+let AC = null, master = null, noiseBuf = null, windG = null, windF = null;
+function initAudio() {
+  if (AC) { if (AC.state === 'suspended') try { AC.resume(); } catch (e) {} return; }
+  try {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    AC = new C(); master = AC.createGain(); master.gain.value = save.snd ? 0.55 : 0; master.connect(AC.destination);
+    noiseBuf = AC.createBuffer(1, AC.sampleRate * 2, AC.sampleRate);
+    const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const src = AC.createBufferSource(); src.buffer = noiseBuf; src.loop = true;
+    windF = AC.createBiquadFilter(); windF.type = 'lowpass'; windF.frequency.value = 400;
+    windG = AC.createGain(); windG.gain.value = 0;
+    src.connect(windF); windF.connect(windG); windG.connect(master); src.start();
+  } catch (e) { AC = null; }
+}
+function setSound(on) { save.snd = on; persist(); try { if (master) master.gain.setTargetAtTime(on ? 0.55 : 0, AC.currentTime, 0.05); } catch (e) {} }
+function noiseHit(dur, f0, f1, vol, q) {
+  if (!AC || !save.snd) return;
+  try {
+    const t = AC.currentTime, s = AC.createBufferSource(), f = AC.createBiquadFilter(), g = AC.createGain();
+    s.buffer = noiseBuf; f.type = 'bandpass'; f.Q.value = q || 1.2; f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(master); s.start(t, Math.random()); s.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+function tone(freq, dur, vol, type, when) {
+  if (!AC || !save.snd) return;
+  try {
+    const t = AC.currentTime + (when || 0), o = AC.createOscillator(), g = AC.createGain();
+    o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.05);
+  } catch (e) {}
+}
+const sWhoosh = p => noiseHit(0.45, 600 + 900 * p, 250, 0.35 + 0.35 * p, 0.8);
+const sTick = () => { tone(1320, 0.08, 0.12, 'triangle'); tone(1760, 0.08, 0.08, 'triangle', 0.05); };
+const sChime = () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.35, 0.14, 'triangle', i * 0.08)); };
+const sThud = () => noiseHit(0.2, 300, 120, 0.3, 0.7);
+const sFlutter = () => noiseHit(0.25, 1600, 900, 0.18, 4);
+const sBuy = () => { tone(880, 0.1, 0.12, 'square'); tone(1320, 0.12, 0.1, 'square', 0.07); };
+function setWind(level) { try { if (windG && AC) { windG.gain.setTargetAtTime(save.snd ? Math.min(0.22, level) : 0, AC.currentTime, 0.15); windF.frequency.setTargetAtTime(300 + 1400 * Math.min(1, level * 4), AC.currentTime, 0.2); } } catch (e) {} }
+function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+
+/* ---------- layout ---------- */
+let W = 0, H = 0, DPR = 1, lastLand = null;
+function resize() {
+  W = Math.max(1, window.innerWidth); H = Math.max(1, window.innerHeight);
+  DPR = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  const land = W > H;
+  if (lastLand !== null && land !== lastLand && (state === 'aim' || state === 'fly') && !paused && performance.now() - fsAt > 2500) pausePlay();
+  lastLand = land;
+  updateBanner();
+  if (state === 'hangar') drawFoldPreview();
+}
+window.addEventListener('resize', resize);
+const planeSize = () => Math.max(15, Math.min(30, Math.min(W, H) * 0.058));
+
+/* ---------- game state ---------- */
+let state = 'boot', paused = false;
+let run = null, pl = null, roll = null, P = null, fl = null, aim = null, lastPath = null, path = [];
+const holdPtrs = new Set(); let keyHold = false;
+let cam = { x: -6, y: -2, s: 12 }, camT = null;
+let resultT = 0, result = null, timeT = 0, introT = 0, prevClips = 0, stallSnd = 0;
+let parts = [];
+
+function placeOf(r) { return r.mode === 'tower' ? TOWER : PLACES[Math.min(7, r.place)]; }
+function towerUnlocked() { return save.clears > 0; }
+
+function startRun(how, mode) {
+  run = { mode: mode || 'run', place: 0, throws: mode === 'tower' ? 3 : 5, best: 0, total: 0, clips: 0, cleared: 0, n: 0, newBest: false, newPlace: false, wrNow: false, medal0: save.medals };
+  save.run = runSnap(); save.seen = true; persist();
+  rndArm(how);
+  hideAllOverlays(); $('hud').classList.add('on');
+  beginAim(true);
+}
+function runSnap() { return run ? { mode: run.mode, place: run.place, throws: run.throws, best: run.best, total: run.total, clips: run.clips, cleared: run.cleared, n: run.n, fold: save.fold } : null; }
+function beginAim(intro) {
+  pl = placeOf(run);
+  roll = rollThrow(pl, (Date.now() & 0xffff) + run.n * 31 + 1);
+  P = planeParams(save.fold, save.up[save.fold], save.arm);
+  fl = null; aim = null; path = []; prevClips = 0; result = null;
+  state = 'aim';
+  camT = null;
+  updateHud();
+  if (intro) showIntro();
+  updateBanner();
+  showTut();
+}
+function showIntro() {
+  if (run.mode === 'tower') { $('introP').textContent = 'Final mode'; $('introN').textContent = 'Skyscraper'; $('introT').textContent = 'Three throws · best counts'; }
+  else { $('introP').textContent = 'Place ' + (run.place + 1) + ' of 8'; $('introN').textContent = pl.name; $('introT').textContent = 'Beat ' + pl.target + ' m'; }
+  $('intro').classList.add('on'); introT = 2.2;
+  const hb = $('hud').getBoundingClientRect(); $('intro').style.top = Math.round(Math.max(hb.bottom + 70, H * 0.3)) + 'px';
+}
+function aimVec() {
+  if (!aim) return null;
+  const dx = aim.sx - aim.cx, dy = aim.cy - aim.sy, len = Math.hypot(dx, dy);
+  const Lmax = Math.max(90, Math.min(170, Math.min(W, H) * 0.34));
+  let ang = Math.atan2(dy, Math.max(0.001, dx)) * 180 / Math.PI;
+  if (dx <= 0) ang = dy > 0 ? 60 : 0;
+  ang = Math.max(0, Math.min(60, ang));
+  return { ang, pow: Math.min(1, len / Lmax), len };
+}
+function launch(v) {
+  fl = newFlight(pl, P, v.ang, Math.max(0.15, v.pow));
+  fl.ang0 = v.ang; fl.pow0 = v.pow;
+  state = 'fly'; aim = null; path = [];
+  run.n++;
+  sWhoosh(v.pow);
+  if (!save.tut1) { save.tut1 = true; persist(); }
+  showTut();
+}
+function land() {
+  const d = Math.max(0, Math.round(fl.x * 10) / 10);
+  lastPath = path.slice();
+  state = 'result'; resultT = 0; setWind(0); sThud();
+  if (!RM()) for (let i = 0; i < 10; i++) parts.push({ x: fl.x, y: fl.y + 0.2, vx: (Math.random() - 0.5) * 3, vy: Math.random() * 2.5, t: 0, life: 0.7, c: '#d9cfb8', r: 2 });
+  const got = fl.clips, earned = throwClips(d, got);
+  run.clips += earned; save.clips += earned;
+  run.total += d;
+  const prevBest = save.bestThrow;
+  if (d > run.best) run.best = d;
+  const msgs = [];
+  if (d >= WR && !save.wr) { save.wr = true; msgs.push(['wr', "You've beaten the world record — 88.3 m, set by Boeing engineers in 2022."]); }
+  else if (d > prevBest && prevBest > 0) msgs.push(['', 'New personal best: ' + fmt(d) + ' m']);
+  if (d > save.bestThrow) { save.bestThrow = d; run.newBest = true; }
+  if (save.tut1 && !save.tut2) { save.tut2 = true; }
+  hideTut();
+  let next = 'aim', outcome = '';
+  if (run.mode === 'tower') {
+    run.throws--;
+    const m = medalFor(run.best);
+    if (d > save.towerBest) save.towerBest = d;
+    if (m > save.medals) { save.medals = m; msgs.push(['', ['', 'Bronze', 'Silver', 'Gold'][m] + ' medal!']); sChime(); buzz(40); }
+    outcome = fmt(d) + ' m';
+    if (run.throws <= 0) next = 'end';
+  } else {
+    const tgt = pl.target;
+    if (d >= tgt) {
+      const bonus = clearBonus(pl.n); run.clips += bonus; save.clips += bonus;
+      run.cleared = Math.max(run.cleared, run.place + 1);
+      let extra = '';
+      if (d >= 2 * tgt) { if (run.throws < 5) { run.throws++; extra = ' · 2× target: +1 throw'; } else extra = ' · 2× target'; }
+      outcome = 'Cleared! ' + fmt(d) + ' m' + extra;
+      sChime(); buzz(30);
+      if (!RM()) confetti();
+      run.place++;
+      const reached = Math.min(8, run.place + 1);
+      if (reached > save.bestPlace) { save.bestPlace = reached; run.newPlace = true; }
+      if (run.place >= 8) next = 'win';
+    } else {
+      run.throws--;
+      outcome = fmt(d) + ' m — short by ' + fmt(tgt - d) + ' m';
+      if (run.place === 0 && save.runs === 0 && run.n <= 2) msgs.push(['', fl.pow0 < 0.75 ? 'Pull back further for a harder throw' : 'Hold to lift the nose and stretch the glide']);
+      if (run.throws <= 0) next = 'end';
+    }
+  }
+  const gain = earned + (run.mode === 'run' && d >= pl.target ? clearBonus(pl.n) : 0);
+  result = { d, outcome, next, earned };
+  toast(outcome + '  (+' + gain + ' clips)');
+  for (const m of msgs) toast(m[1], m[0]);
+  save.run = next === 'aim' ? runSnap() : null;
+  persist();
+  updateHud();
+}
+function medalFor(d) { const m = TOWER.medals; return d >= m[2] ? 3 : d >= m[1] ? 2 : d >= m[0] ? 1 : 0; }
+function afterResult() {
+  if (!result) return;
+  const nx = result.next; result = null;
+  if (nx === 'aim') beginAim(run.mode === 'run' && pl !== placeOf(run));
+  else endRun(nx === 'win');
+}
+function endRun(win) {
+  if (!run) return;
+  const r = run;
+  if (r.mode === 'tower') win = r.best >= TOWER.medals[0];
+  rndEnd(win, { score: Math.round(r.mode === 'tower' ? r.best : r.total), best: Math.round(r.best), level: r.mode === 'tower' ? 9 : Math.min(8, r.place + (win ? 0 : 1)) });
+  save.runs++;
+  if (r.mode === 'run' && win) save.clears++;
+  save.run = null; persist();
+  state = 'end'; fl = null; aim = null; setWind(0); hideTut();
+  showEnd(r, win);
+}
+function abandonRun() {
+  // leaving mid-run: no game_end (the dashboard counts it as abandoned)
+  rnd = { armed: false, open: false, secs: 0, how: 'new' };
+  run = null; save.run = null; persist(); fl = null; aim = null; setWind(0);
+  openHangar();
+}
+
+/* ---------- UI: toasts, hud, banner, tutorial ---------- */
+function fmt(d) { return d >= 100 ? Math.round(d).toString() : (Math.round(d * 10) / 10).toFixed(1); }
+function toast(t, cls) {
+  const el = document.createElement('div'); el.className = 'toast hand' + (cls ? ' ' + cls : ''); el.textContent = t;
+  const box = $('toasts'); box.appendChild(el); while (box.children.length > 3) box.removeChild(box.firstChild);
+  setTimeout(() => { try { el.remove(); } catch (e) {} }, cls === 'wr' ? 4200 : 2600);
+}
+const PLANE_ICON = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><path d="M1 12 L29 3 L11 15 Z" fill="#fff" stroke="#29303d" stroke-width="2" stroke-linejoin="round"/><path d="M11 15 L29 3 L14 19 Z" fill="#cfd8e3" stroke="#29303d" stroke-width="2" stroke-linejoin="round"/></svg>');
+const CLIP_ICON = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 15V5a3 3 0 0 1 6 0v9a2 2 0 0 1-4 0V6" fill="none" stroke="#5c6f86" stroke-width="2.2" stroke-linecap="round"/></svg>');
+document.querySelectorAll('.clipI').forEach(e => e.style.backgroundImage = 'url("' + CLIP_ICON + '")');
+function updateHud() {
+  if (!run) return;
+  const tower = run.mode === 'tower';
+  const p = placeOf(run);
+  let tgt;
+  if (tower) { const m = medalFor(run.best); tgt = m >= 3 ? 'gold ✓' : ['bronze', 'silver', 'gold'][m] + ' ' + TOWER.medals[m] + ' m'; }
+  else tgt = 'beat ' + p.target + ' m';
+  $('hudPlace').innerHTML = tower ? '<b>Skyscraper · ' + tgt + '</b><span>Best ' + fmt(run.best) + ' m</span>' : '<b>Place ' + (run.place + 1) + ' of 8 · ' + tgt + '</b><span>' + p.name + '</span>';
+  const n = tower ? 3 : 5; let h = '';
+  for (let i = 0; i < n; i++) h += '<i class="' + (i < run.throws ? 'on' : '') + '" style="background-image:url(&quot;' + PLANE_ICON + '&quot;)"></i>';
+  $('hudThrows').innerHTML = h;
+  $('hudClips').lastElementChild.textContent = save.clips;
+}
+function updateBanner() {
+  const show = H > W && !save.upright && (state === 'hangar' || state === 'aim');
+  $('banner').classList.toggle('on', show);
+}
+let tutStage = 0;
+function placeBelowHud(el) {
+  const hb = $('hud').getBoundingClientRect();
+  el.style.top = Math.round((hb.height > 0 ? hb.bottom : 50) + 8) + 'px';
+}
+function showTut() {
+  const t = $('tut'); placeBelowHud(t.querySelector('.msg'));
+  if (state === 'aim' && !save.tut1 && run) { tutStage = 1; $('tutTxt').textContent = 'Pull back anywhere and let go to throw'; t.classList.add('on'); $('hand').style.display = 'block'; }
+  else if (state === 'fly' && !save.tut2) { tutStage = 2; $('tutTxt').textContent = 'Hold anywhere to lift the nose · let go to glide down'; t.classList.add('on'); $('hand').style.display = 'none'; }
+  else hideTut();
+}
+function hideTut() { tutStage = 0; $('tut').classList.remove('on'); }
+$('tutSkip').addEventListener('click', e => { e.stopPropagation(); save.tut1 = save.tut2 = true; persist(); hideTut(); });
+$('uprightBtn').addEventListener('click', () => { save.upright = true; persist(); updateBanner(); });
+
+/* ---------- overlays ---------- */
+function hideAllOverlays() { ['splash', 'pause', 'end'].forEach(i => $(i).classList.remove('on')); $('hangar').classList.remove('on'); }
+function pausePlay(settingsOnly) {
+  if (!settingsOnly && !(state === 'aim' || state === 'fly' || state === 'result')) return;
+  paused = !settingsOnly; holdPtrs.clear(); keyHold = false; setWind(0);
+  $('pTitle').textContent = settingsOnly ? 'Settings' : (resumeMenu ? 'Run in progress' : 'Paused');
+  $('pResume').textContent = settingsOnly ? 'Close' : 'Resume';
+  $('pHangar').classList.toggle('hidden', !!settingsOnly);
+  $('pHangar').textContent = resumeMenu ? 'New run' : 'Hangar';
+  pauseMode = settingsOnly ? 'settings' : 'pause';
+  refreshSwitches();
+  $('pause').classList.add('on');
+}
+let pauseMode = 'pause', resumeMenu = false;
+function refreshSwitches() {
+  const set = (id, on) => { const k = $(id).querySelector('.k'); k.textContent = on ? 'On' : 'Off'; k.classList.toggle('on', on); };
+  set('pSound', save.snd); set('pMotion', RM()); set('pFS', save.fs && (isFS() || true)); set('pUpright', save.upright);
+  $('pFS').classList.toggle('hidden', !fsOK);
+}
+$('pauseBtn').addEventListener('click', () => { initAudio(); pausePlay(); });
+$('pResume').addEventListener('click', () => {
+  initAudio();
+  $('pause').classList.remove('on');
+  if (pauseMode === 'settings') return;
+  if (resumeMenu) { resumeMenu = false; goFS(); hideAllOverlays(); $('hud').classList.add('on'); rndArm('resume'); beginAim(true); paused = false; return; }
+  paused = false; goFS();
+});
+$('pHangar').addEventListener('click', () => { $('pause').classList.remove('on'); paused = false; resumeMenu = false; abandonRun(); });
+$('pSound').addEventListener('click', () => { initAudio(); setSound(!save.snd); refreshSwitches(); });
+$('pMotion').addEventListener('click', () => { save.rm = !RM(); persist(); refreshSwitches(); });
+$('pFS').addEventListener('click', () => { save.fs = !save.fs; persist(); if (save.fs) goFS(); else exitFS(); refreshSwitches(); });
+$('pUpright').addEventListener('click', () => { save.upright = !save.upright; persist(); refreshSwitches(); updateBanner(); });
+
+/* splash */
+$('splash').addEventListener('click', e => {
+  if (e.target.closest('a')) return;
+  initAudio(); goFS(); $('splash').classList.remove('on'); startRun('new', 'run');
+});
+
+/* end screen */
+function showEnd(r, win) {
+  $('hud').classList.remove('on'); $('toasts').innerHTML = '';
+  const tower = r.mode === 'tower';
+  $('eTitle').textContent = tower ? 'Skyscraper' : win ? 'Mountains cleared!' : 'Run over';
+  const dots = $('eDots'); dots.innerHTML = '';
+  dots.classList.toggle('hidden', tower);
+  if (!tower) for (let i = 0; i < 8; i++) { const d = document.createElement('i'); if (i < r.cleared) d.className = 'on'; else if (i === r.place && !win) d.className = 'cur'; dots.appendChild(d); }
+  const md = $('eMedals'); md.classList.toggle('hidden', !tower);
+  if (tower) { const m = medalFor(r.best); md.innerHTML = ['b', 's', 'g'].map((c, i) => '<div class="medal ' + (m > i ? c : '') + '">' + TOWER.medals[i] + '</div>').join(''); }
+  const st = tower
+    ? [['Best throw', fmt(r.best) + ' m'], ['Personal best', fmt(save.towerBest) + ' m'], ['Throws', r.n], ['Clips', '+' + r.clips]]
+    : [['Places', Math.min(8, r.cleared) + ' / 8'], ['Best throw', fmt(r.best) + ' m'], ['Total flown', Math.round(r.total) + ' m'], ['Clips', '+' + r.clips]];
+  $('eStats').innerHTML = st.map(s => '<div class="stat"><b>' + s[0] + '</b><span class="hand">' + s[1] + '</span></div>').join('');
+  const notes = [];
+  if (r.newBest) notes.push('New best throw!');
+  if (!tower && win && save.clears === 1) notes.push('Skyscraper unlocked in the hangar.');
+  if (!tower && !win) notes.push('Spend your clips in the hangar, then go again.');
+  $('eNote').textContent = notes.join('  ');
+  $('end').classList.add('on');
+}
+$('eAgain').addEventListener('click', () => { initAudio(); goFS(); const m = lastMode; startRun('retry', m); });
+$('eHangar').addEventListener('click', () => { run = null; openHangar(); });
+let lastMode = 'run';
+
+/* ---------- hangar ---------- */
+let viewFold = 0;
+function openHangar() {
+  hideAllOverlays(); hideTut(); $('hud').classList.remove('on');
+  state = 'hangar'; paused = false; run = null; fl = null;
+  viewFold = save.fold;
+  $('hangar').classList.add('on');
+  renderHangar(); updateBanner();
+}
+function foldStats(fi) {
+  const Q = planeParams(fi, save.owned[fi] ? save.up[fi] : { paper: 0, crease: 0, trim: 0 }, save.arm);
+  const ab = bestAlpha(Q), ld = Q.cla * ab / (2 * Q.cd0);
+  return [['Speed', (Q.v - 12) / 18], ['Glide', (ld - 4) / 8], ['Lift', (Q.cla * Q.as - 0.7) / 0.9], ['Steadiness', (Q.as - 0.24) / 0.2 * 0.6 + (0.75 - Q.fall) / 0.5 * 0.4]];
+}
+function renderHangar() {
+  $('hClips').textContent = save.clips;
+  const fi = viewFold, f = FOLDS[fi], own = save.owned[fi];
+  $('fName').textContent = f.name; $('fCount').textContent = 'Fold ' + (fi + 1) + ' of 5' + (own ? (fi === save.fold ? ' · flying' : ' · owned') : '');
+  $('fBlurb').textContent = f.blurb;
+  $('fBars').innerHTML = foldStats(fi).map(s => '<span>' + s[0] + '</span><div class="bar"><i style="width:' + Math.round(100 * Math.max(0.05, Math.min(1, s[1]))) + '%"></i></div>').join('');
+  $('fPrev').disabled = fi === 0; $('fNext').disabled = fi === 4;
+  const fly = $('flyBtn');
+  if (own) { fly.textContent = 'Fly ➤'; fly.className = 'btn pri'; fly.disabled = false; fly.dataset.act = 'fly'; }
+  else if (save.owned[fi - 1]) { fly.innerHTML = 'Buy · ' + f.cost + ' <i class="clipI" style="background-image:url(&quot;' + CLIP_ICON + '&quot;)"></i>'; fly.className = 'btn org'; fly.disabled = save.clips < f.cost; fly.dataset.act = 'buy'; }
+  else { fly.textContent = 'Buy ' + FOLDS[fi - 1].name + ' first'; fly.className = 'btn'; fly.disabled = true; fly.dataset.act = ''; }
+  $('towerBtn').classList.toggle('hidden', !(towerUnlocked() && own));
+  const bp = save.bestPlace ? PLACES[Math.min(8, save.bestPlace) - 1].name + ' (' + save.bestPlace + ')' : '—';
+  $('bests').textContent = 'Furthest place: ' + bp + ' · Best throw: ' + (save.bestThrow ? fmt(save.bestThrow) + ' m' : '—') + (towerUnlocked() ? ' · Skyscraper: ' + (save.towerBest ? fmt(save.towerBest) + ' m' : '—') : '');
+  // upgrades
+  const ups = $('ups'); let h = '';
+  const ownF = save.owned[fi], u = save.up[fi];
+  h += '<h3>' + (ownF ? 'Tune the ' + f.name : f.name + ' (not owned yet)') + '</h3>';
+  FOLD_STATS.forEach((s, i) => {
+    const lv = u[s.id], max = lv >= FOLD_MAX, cost = max ? 0 : foldCost(fi, lv);
+    h += row('f' + i, s.name, s.what, lv, FOLD_MAX, max, cost, !ownF || max || save.clips < cost);
+  });
+  h += '<h3>Pilot (every fold)</h3>';
+  SHARED.forEach((s, i) => {
+    const lv = i === 0 ? save.arm : save.magnet, max = lv >= s.max, cost = max ? 0 : sharedCost(i, lv);
+    h += row('s' + i, s.name, s.what, lv, s.max, max, cost, max || save.clips < cost);
+  });
+  ups.innerHTML = h;
+  ups.querySelectorAll('button[data-up]').forEach(b => b.addEventListener('click', () => buyUp(b.dataset.up)));
+  drawFoldPreview();
+}
+function row(id, name, what, lv, max, isMax, cost, dis) {
+  let p = ''; for (let i = 0; i < max; i++) p += '<i class="' + (i < lv ? 'on' : '') + '"></i>';
+  return '<div class="up"><div class="tx"><b>' + name + '</b><span>' + what + '</span></div><div class="pips">' + p + '</div>' +
+    '<button class="btn" data-up="' + id + '"' + (dis ? ' disabled' : '') + '>' + (isMax ? 'Max' : '▲ ' + cost) + '</button></div>';
+}
+function buyUp(id) {
+  initAudio();
+  if (id[0] === 'f') {
+    const fi = viewFold; if (!save.owned[fi]) return;
+    const s = FOLD_STATS[+id[1]].id, lv = save.up[fi][s]; if (lv >= FOLD_MAX) return;
+    const c = foldCost(fi, lv); if (save.clips < c) return;
+    save.clips -= c; save.up[fi][s]++;
+  } else {
+    const i = +id[1], lv = i === 0 ? save.arm : save.magnet; if (lv >= SHARED[i].max) return;
+    const c = sharedCost(i, lv); if (save.clips < c) return;
+    save.clips -= c; if (i === 0) save.arm++; else save.magnet++;
+  }
+  sBuy(); persist(); renderHangar();
+}
+$('fPrev').addEventListener('click', () => { if (viewFold > 0) { viewFold--; if (save.owned[viewFold]) { save.fold = viewFold; persist(); } renderHangar(); } });
+$('fNext').addEventListener('click', () => { if (viewFold < 4) { viewFold++; if (save.owned[viewFold]) { save.fold = viewFold; persist(); } renderHangar(); } });
+$('flyBtn').addEventListener('click', () => {
+  initAudio();
+  const act = $('flyBtn').dataset.act;
+  if (act === 'buy') {
+    const f = FOLDS[viewFold]; if (save.clips < f.cost || !save.owned[viewFold - 1]) return;
+    save.clips -= f.cost; save.owned[viewFold] = true; save.fold = viewFold; persist(); sChime(); renderHangar(); return;
+  }
+  if (act !== 'fly') return;
+  save.fold = viewFold; persist(); goFS(); lastMode = 'run'; startRun('new', 'run');
+});
+$('towerBtn').addEventListener('click', () => { initAudio(); save.fold = viewFold; persist(); goFS(); lastMode = 'tower'; startRun('new', 'tower'); });
+$('setBtn').addEventListener('click', () => { initAudio(); pausePlay(true); });
+
+function drawFoldPreview() {
+  const c = $('foldCv'); if (!c || !$('hangar').classList.contains('on')) return;
+  const r = c.getBoundingClientRect(); if (r.width < 2) return;
+  c.width = Math.round(r.width * DPR); c.height = Math.round(r.height * DPR);
+  const g = c.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, r.width, r.height);
+  g.strokeStyle = 'rgba(47,111,214,.5)'; g.setLineDash([5, 6]); g.lineWidth = 2; g.beginPath();
+  g.moveTo(10, r.height * 0.85); g.quadraticCurveTo(r.width * 0.45, r.height * 0.05, r.width * 0.9, r.height * 0.55); g.stroke(); g.setLineDash([]);
+  const L = Math.min(r.width * 0.28, r.height * 0.75);
+  g.globalAlpha = save.owned[viewFold] ? 1 : 0.55;
+  drawPlane(g, r.width * 0.5, r.height * 0.5, -0.12, viewFold, L, 0, false);
+  g.globalAlpha = 1;
+}
+
+/* ---------- input ---------- */
+cv.addEventListener('pointerdown', e => {
+  initAudio();
+  if (paused) return;
+  if (state === 'aim') {
+    if (aim) return;
+    rndStart();
+    introT = Math.min(introT, 0.01);
+    aim = { id: e.pointerId, sx: e.clientX, sy: e.clientY, cx: e.clientX, cy: e.clientY };
+    try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+    if (tutStage === 1) $('hand').style.display = 'none';
+  } else if (state === 'fly') { holdPtrs.add(e.pointerId); }
+  else if (state === 'result') { if (resultT > 0.45) afterResult(); }
+});
+cv.addEventListener('pointermove', e => { if (aim && e.pointerId === aim.id) { aim.cx = e.clientX; aim.cy = e.clientY; } });
+function ptrUp(e) {
+  holdPtrs.delete(e.pointerId);
+  if (aim && e.pointerId === aim.id) {
+    if (state === 'aim' && !paused) { const v = aimVec(); if (v && v.len >= 18) launch(v); else { aim = null; if (tutStage === 1) $('hand').style.display = 'block'; } }
+    else aim = null;
+  }
+}
+cv.addEventListener('pointerup', ptrUp);
+cv.addEventListener('pointercancel', ptrUp);
+cv.addEventListener('contextmenu', e => e.preventDefault());
+window.addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'ArrowUp') { if (state === 'fly') keyHold = true; else if (state === 'result' && resultT > 0.45) afterResult(); e.preventDefault(); }
+  if (e.code === 'Escape' || e.code === 'KeyP') { if (paused) $('pResume').click(); else pausePlay(); }
+});
+window.addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowUp') keyHold = false; });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { if (state === 'aim' || state === 'fly' || state === 'result') pausePlay(); persist(); try { if (AC) AC.suspend(); } catch (e) {} }
+  else { try { if (AC && save.snd) AC.resume(); } catch (e) {} }
+});
+window.addEventListener('pagehide', () => { if (run && (state === 'aim' || state === 'fly' || state === 'result')) save.run = runSnap(); persist(); });
+
+/* ---------- simulation tick ---------- */
+function tick(dt) {
+  if (introT > 0) { introT -= dt; if (introT <= 0) $('intro').classList.remove('on'); }
+  if (state === 'aim' || state === 'fly' || state === 'result') { if (rnd.open) rnd.secs += dt; }
+  if (state === 'fly') {
+    const hold = holdPtrs.size > 0 || keyHold || autoHold();
+    let n = Math.round(dt / DT);
+    for (let i = 0; i < n && !fl.done; i++) {
+      const pr = fl.clips;
+      step(fl, P, pl, roll, hold, save.magnet);
+      if (fl.clips > pr) { sTick(); if (!RM()) for (let k = 0; k < 6; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4, t: 0, life: 0.5, c: '#ffd34d', r: 2.2 }); }
+      if (fl.stall > 0 && stallSnd <= 0) { sFlutter(); stallSnd = 0.5; }
+    }
+    if (stallSnd > 0) stallSnd -= dt;
+    const tNow = fl.t;
+    if (!path.length || tNow - path[path.length - 1][2] > 0.06) { path.push([fl.x, fl.y, tNow]); if (path.length > 900) path.shift(); }
+    setWind(Math.min(0.25, Math.hypot(fl.vx, fl.vy) / 120));
+    if (fl.done) land();
+  } else if (state === 'result') {
+    resultT += dt;
+    if (resultT > 2.1) afterResult();
+  }
+  for (const p of parts) { p.t += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy -= 6 * dt; }
+  parts = parts.filter(p => p.t < p.life);
+}
+function confetti() {
+  const cols = ['#f39c32', '#2f6fd6', '#2e9a5a', '#e64a6b', '#ffd34d'];
+  for (let i = 0; i < 26; i++) parts.push({ x: fl.x, y: fl.y + 1, vx: (Math.random() - 0.5) * 8, vy: 3 + Math.random() * 6, t: 0, life: 1.2, c: cols[i % 5], r: 2.6, sq: 1 });
+}
+
+/* ---------- camera ---------- */
+function updateCam(dt) {
+  if (!pl) return;
+  const land = W >= H;
+  let fx, fy, spd = 0;
+  if (fl) { fx = fl.x; fy = fl.y; spd = Math.hypot(fl.vx, fl.vy); }
+  else { fx = 0; fy = pl.y0; }
+  const gy = groundAtFull(pl, fx);
+  const alt = Math.max(0, fy - gy);
+  let visW = land ? 46 + spd * 2.2 : 34 + spd * 1.8;
+  if (state === 'aim' && run) { visW = land ? Math.min(70, Math.max(40, (pl.target || 40) * 0.55)) : Math.min(90, Math.max(30, (pl.target || 40) * 1.15)); }
+  let visH = Math.max(land ? 22 : 30, alt * 1.7 + 10);
+  visH = Math.min(visH, 150); visW = Math.min(visW, 260);
+  const s = Math.min(W / visW, H / visH);
+  const viewH = H / s, viewW = W / s;
+  const left = fx - viewW * (state === 'aim' ? (land ? 0.18 : 0.1) : 0.3);
+  let bottom = gy - viewH * (land ? 0.12 : 0.2);
+  if (fy - bottom > viewH * 0.82) bottom = fy - viewH * 0.82;
+  const t = { x: left, y: bottom, s };
+  if (!camT) { cam = Object.assign({}, t); camT = t; return; }
+  const k = Math.min(1, dt * (RM() ? 9 : 4.5));
+  cam.s += (t.s - cam.s) * k; cam.x += (t.x - cam.x) * Math.min(1, k * 1.6); cam.y += (t.y - cam.y) * k;
+  // keep the plane on screen whatever the smoothing
+  const vw = W / cam.s, vh = H / cam.s;
+  if (fx < cam.x + vw * 0.08) cam.x = fx - vw * 0.08; if (fx > cam.x + vw * 0.85) cam.x = fx - vw * 0.85;
+  if (fy > cam.y + vh * 0.9) cam.y = fy - vh * 0.9; if (fy < cam.y + vh * 0.05) cam.y = fy - vh * 0.05;
+}
+const SX = x => (x - cam.x) * cam.s, SY = y => H - (y - cam.y) * cam.s;
+
+/* ---------- drawing ---------- */
+const FOLD_PAPER = ['#ffffff', '#fff4d6', '#e4f0ff', '#fff1b3', '#f1f3f6'];
+const SHAPES = [
+  { w: [[1, 0], [-1, -0.13], [-0.82, 0.03]], k: [[1, 0], [-0.82, 0.03], [-0.92, 0.22]] },
+  { w: [[0.92, -0.03], [1, 0.05], [-0.9, -0.18], [-0.74, 0.05]], k: [[1, 0.05], [-0.74, 0.05], [-0.82, 0.22]] },
+  { w: [[0.85, 0], [-0.62, -0.36], [-0.95, -0.32], [-0.78, 0.03]], k: [[0.85, 0], [-0.78, 0.03], [-0.7, 0.2]] },
+  { w: [[0.95, 0], [-0.55, -0.4], [-0.92, -0.38], [-0.82, 0.03]], k: [[0.95, 0], [-0.82, 0.03], [-0.75, 0.18]], let: [[-0.92, -0.38], [-1.02, -0.5], [-0.98, -0.34]] },
+  { w: [[1, 0], [-1, -0.15], [-0.96, 0.01]], k: [[1, 0], [-0.96, 0.01], [-1, 0.17]], can: [[0.45, -0.02], [0.2, -0.1], [0.24, -0.01]] }
+];
+function poly(g, pts, ox, oy, L, ca, sa) {
+  g.beginPath();
+  pts.forEach((p, i) => { const x = p[0] * L, y = p[1] * L; const X = ox + x * ca - y * sa, Y = oy + x * sa + y * ca; if (i) g.lineTo(X, Y); else g.moveTo(X, Y); });
+  g.closePath();
+}
+function drawPlane(g, x, y, ang, fi, L, flutter, shadow) {
+  const sh = SHAPES[fi];
+  const a = -ang + (flutter ? Math.sin(flutter) * 0.12 : 0);
+  const ca = Math.cos(a), sa = Math.sin(a);
+  g.lineJoin = 'round'; g.lineWidth = Math.max(1.2, Math.min(2.6, L * 0.06)); g.strokeStyle = '#29303d';
+  poly(g, sh.k, x, y, L, ca, sa); g.fillStyle = '#cfd8e3'; g.fill(); g.stroke();
+  poly(g, sh.w, x, y, L, ca, sa); g.fillStyle = FOLD_PAPER[fi]; g.fill(); g.stroke();
+  if (sh.let) { poly(g, sh.let, x, y, L, ca, sa); g.fillStyle = '#e8c95a'; g.fill(); g.stroke(); }
+  if (sh.can) { poly(g, sh.can, x, y, L, ca, sa); g.fillStyle = '#c9d2de'; g.fill(); g.stroke(); }
+  // crease
+  g.strokeStyle = 'rgba(41,48,61,.35)'; g.lineWidth = Math.max(1, Math.min(1.6, L * 0.03));
+  const p0 = sh.w[0], p1 = sh.w[sh.w.length - 1];
+  g.beginPath(); g.moveTo(x + (p0[0] * ca - p0[1] * sa) * L, y + (p0[0] * sa + p0[1] * ca) * L); g.lineTo(x + (p1[0] * ca - p1[1] * sa) * L, y + (p1[0] * sa + p1[1] * ca) * L); g.stroke();
+  if (fi === 4) { g.strokeStyle = '#2f6fd6'; g.lineWidth = Math.max(1, L * 0.05); g.beginPath(); g.moveTo(x + (-0.2 * ca + 0.06 * sa) * L, y + (-0.2 * sa - 0.06 * ca) * L); g.lineTo(x + (-0.85 * ca + 0.11 * sa) * L, y + (-0.85 * sa - 0.11 * ca) * L); g.stroke(); }
+}
+function hash(n) { const s = Math.sin(n * 127.1) * 43758.5453; return s - Math.floor(s); }
+function hills(seed, base, amp, par, col, wl) {
+  cx.fillStyle = col; cx.beginPath(); cx.moveTo(0, H);
+  const off = cam.x * par;
+  for (let px = 0; px <= W + 8; px += 8) {
+    const wx = px / cam.s + off;
+    const h = base + amp * (0.55 * Math.sin(wx / wl + seed) + 0.3 * Math.sin(wx / (wl * 0.43) + seed * 2.1) + 0.15 * Math.sin(wx / (wl * 0.19) + seed * 3.7));
+    cx.lineTo(px, H - (h - cam.y * par * 0.4) * cam.s * 0.6 - H * 0.12);
+  }
+  cx.lineTo(W, H); cx.closePath(); cx.fill();
+}
+function drawSky() {
+  const p = pl.pal, g = cx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, p.sky0); g.addColorStop(1, p.sky1); cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+  // sun
+  const sunX = W * 0.82, sunY = H * 0.18;
+  cx.fillStyle = pl.id === 'tower' || pl.id === 'mountains' ? 'rgba(255,214,150,.9)' : 'rgba(255,248,214,.95)';
+  cx.beginPath(); cx.arc(sunX, sunY, Math.min(W, H) * 0.07, 0, 7); cx.fill();
+  // clouds (parallax drift)
+  const tt = RM() ? 0 : timeT * 0.6;
+  for (let i = 0; i < 5; i++) {
+    const wx = ((i * 211 + 40 - cam.x * 2.5 * 0.12 + tt * (6 + i)) % (W + 260) + W + 260) % (W + 260) - 130;
+    const wy = H * (0.1 + 0.08 * (i % 3)) + i * 7;
+    cloud(wx, wy, 0.7 + 0.25 * (i % 2), 'rgba(255,255,255,.85)');
+  }
+}
+function cloud(x, y, s, col) {
+  cx.fillStyle = col; cx.beginPath();
+  const r = 22 * s * Math.max(0.8, Math.min(1.6, Math.min(W, H) / 400));
+  cx.arc(x, y, r, 0, 7); cx.arc(x + r * 1.1, y - r * 0.4, r * 1.2, 0, 7); cx.arc(x + r * 2.2, y, r * 0.95, 0, 7); cx.rect(x, y - r * 0.2, r * 2.2, r * 1.0);
+  cx.fill();
+}
+function drawFar() {
+  const p = pl.pal, id = pl.id;
+  if (id === 'beach' || id === 'cliff') {
+    cx.fillStyle = p.far; const sy = SY(id === 'cliff' ? 0.4 : 0.6); cx.fillRect(0, Math.min(H, sy - H * 0.06), W, H);
+    hills(pl.n, 2, 6, 0.1, p.mid, 40);
+    return;
+  }
+  if (id === 'tower') {
+    // distant skyline
+    cx.fillStyle = 'rgba(70,82,130,.45)';
+    const sh = H * 0.22, off = cam.x * 0.15;
+    for (let i = -1; i < W / 30 + 2; i++) { const k = i + Math.floor(off / 30); const wx = i * 30 - (off % 30); const h = sh * (0.35 + 0.65 * hash(k * 1.37)); cx.fillRect(wx, H - h, 22, h); }
+    return;
+  }
+  hills(pl.n, id === 'mountains' ? 40 : 10, id === 'mountains' ? 30 : 8, 0.12, p.far, id === 'mountains' ? 70 : 50);
+  if (id === 'mountains') {
+    // snow caps on far ridge: second lighter layer
+    hills(pl.n + 9, 18, 16, 0.25, p.mid, 46);
+  } else hills(pl.n + 4, 3, 5, 0.3, p.mid, 34);
+}
+function groundPath(x0, x1, step) {
+  cx.beginPath(); cx.moveTo(SX(x0), H + 10);
+  for (let x = x0; x <= x1; x += step) cx.lineTo(SX(x), SY(groundAt(pl, x)));
+  cx.lineTo(SX(x1), H + 10); cx.closePath();
+}
+function drawGround() {
+  const p = pl.pal, x0 = cam.x - 2, x1 = cam.x + W / cam.s + 2, st = Math.max(0.5, 4 / cam.s);
+  groundPath(x0, x1, st); cx.fillStyle = p.soil; cx.fill();
+  // top band
+  cx.strokeStyle = p.ground; cx.lineWidth = Math.max(4, 0.9 * cam.s); cx.lineJoin = 'round';
+  cx.beginPath(); let first = true;
+  for (let x = x0; x <= x1; x += st) { const X = SX(x), Y = SY(groundAt(pl, x)) + cx.lineWidth / 2; if (first) { cx.moveTo(X, Y); first = false; } else cx.lineTo(X, Y); }
+  cx.stroke();
+  if (pl.sea != null && x1 > pl.sea) {
+    const sx = SX(Math.max(pl.sea, x0)), sy = SY(0.4);
+    cx.fillStyle = '#2f7fbf'; cx.fillRect(sx, sy, W - sx, H - sy);
+    cx.strokeStyle = 'rgba(255,255,255,.6)'; cx.lineWidth = 2; cx.beginPath();
+    for (let x = Math.max(pl.sea, x0); x < x1; x += 3) { const X = SX(x), Y = sy + 3 + Math.sin(x * 0.8 + (RM() ? 0 : timeT * 2)) * 2; if (x === Math.max(pl.sea, x0)) cx.moveTo(X, Y); else cx.lineTo(X, Y); }
+    cx.stroke();
+  }
+  if (pl.pond) {
+    const a = SX(pl.pond[0] + 3), b = SX(pl.pond[1] - 3), y = SY(0) + 2;
+    cx.fillStyle = '#6fb3d9'; cx.beginPath(); cx.ellipse((a + b) / 2, y + 4, (b - a) / 2, Math.max(4, 0.7 * cam.s), 0, 0, 7); cx.fill();
+  }
+  if (pl.towers) {
+    for (const t of pl.towers) {
+      if (t.x1 < x0 || t.x0 > x1) continue;
+      const X = SX(t.x0), w = (t.x1 - t.x0) * cam.s, Y = SY(t.h);
+      cx.fillStyle = p.near; cx.fillRect(X, Y, w, H - Y + 10);
+      cx.fillStyle = 'rgba(255,211,107,.55)';
+      const ws = Math.max(2, 1.2 * cam.s), gap = Math.max(4, 3 * cam.s);
+      for (let yy = Y + gap * 0.6; yy < H; yy += gap) for (let xx = X + gap * 0.4; xx < X + w - ws; xx += gap) if (hash(t.seed + xx * 0.13 + yy * 0.071) > 0.45) cx.fillRect(xx, yy, ws, ws * 1.3);
+    }
+    // launch roof
+    const r = pl.roof, X = SX(r[0]), Y = SY(r[2]);
+    cx.fillStyle = '#3a4466'; cx.fillRect(X, Y, SX(r[1]) - X, H - Y + 10);
+    cx.fillStyle = '#8a93ad'; cx.fillRect(X, Y - 3, SX(r[1]) - X, 4);
+  }
+  if (pl.id === 'cliff') { // chalk face
+    cx.fillStyle = p.soil; cx.beginPath(); cx.moveTo(SX(8), SY(15)); cx.lineTo(SX(11), SY(3)); cx.lineTo(SX(15), SY(0)); cx.lineTo(SX(8), SY(0)); cx.closePath(); cx.fill();
+  }
+}
+function drawProps() {
+  const id = pl.id, gy = SY(groundAt(pl, 0)), m = cam.s;
+  cx.save();
+  if (id === 'garden') {
+    cx.fillStyle = '#b48a5a';
+    for (let x = -12; x < 30; x += 0.6) cx.fillRect(SX(x), SY(1.3), Math.max(2, 0.4 * m), 1.3 * m);
+    cx.fillRect(SX(-12), SY(1.1), 42 * m, 0.15 * m);
+    cx.fillStyle = '#8e6f4a'; cx.fillRect(SX(-7), SY(2.4), 3 * m, 2.4 * m); cx.fillStyle = '#6b4f33'; cx.beginPath(); cx.moveTo(SX(-7.3), SY(2.4)); cx.lineTo(SX(-5.5), SY(3.3)); cx.lineTo(SX(-3.7), SY(2.4)); cx.fill();
+  } else if (id === 'playground') {
+    cx.strokeStyle = '#ff5d73'; cx.lineWidth = Math.max(2, 0.25 * m);
+    cx.beginPath(); cx.moveTo(SX(14), SY(0)); cx.lineTo(SX(15.5), SY(3)); cx.lineTo(SX(17), SY(0)); cx.moveTo(SX(18), SY(0)); cx.lineTo(SX(19.5), SY(3)); cx.lineTo(SX(21), SY(0)); cx.moveTo(SX(15.5), SY(3)); cx.lineTo(SX(19.5), SY(3)); cx.stroke();
+    cx.strokeStyle = '#4fa3ff'; cx.beginPath(); cx.moveTo(SX(34), SY(2.6)); cx.lineTo(SX(38), SY(0.2)); cx.moveTo(SX(33.5), SY(0)); cx.lineTo(SX(33.5), SY(2.8)); cx.stroke();
+  } else if (id === 'green') {
+    const bx = SX(130 - cam.x * 0.7), by = H * 0.62; cx.fillStyle = '#a3abb3'; cx.fillRect(bx, by - 30, 26, 60); cx.beginPath(); cx.moveTo(bx - 2, by - 30); cx.lineTo(bx + 13, by - 70); cx.lineTo(bx + 28, by - 30); cx.fill();
+  } else if (id === 'beach') {
+    cx.fillStyle = '#f7e6b8'; cx.beginPath(); cx.moveTo(SX(-20), SY(1.6)); cx.lineTo(SX(6), SY(1.6)); cx.lineTo(SX(16), SY(0)); cx.lineTo(SX(-20), SY(0)); cx.fill();
+  }
+  cx.restore();
+}
+function drawZones() {
+  const tt = RM() ? 0 : timeT;
+  for (const z of roll.zones) {
+    if (z.x1 < cam.x - 5 || z.x0 > cam.x + W / cam.s + 5) continue;
+    const a = SX(z.x0), b = SX(z.x1), gT = SY(z.top), gB = SY(groundAtFull(pl, (z.x0 + z.x1) / 2));
+    if (z.t === 'thermal' || z.t === 'updraft' || z.t === 'ridge') {
+      const g = cx.createLinearGradient(0, gB, 0, gT);
+      const col = z.t === 'thermal' ? '255,200,120' : '160,210,255';
+      g.addColorStop(0, 'rgba(' + col + ',.26)'); g.addColorStop(1, 'rgba(' + col + ',0)');
+      cx.fillStyle = g; cx.fillRect(a, gT, b - a, gB - gT);
+      cx.fillStyle = 'rgba(' + col + ',.75)';
+      const n = Math.max(6, Math.round((z.x1 - z.x0) / 2));
+      for (let i = 0; i < n; i++) {
+        const fx = z.x0 + (z.x1 - z.x0) * hash(i * 3.1 + z.x0);
+        const span = z.top - groundAtFull(pl, fx);
+        const fy = groundAtFull(pl, fx) + ((hash(i * 7.7) * span + tt * z.w * 3) % span);
+        if (z.t === 'thermal') { cx.beginPath(); cx.arc(SX(fx), SY(fy), Math.max(1.5, 0.18 * cam.s), 0, 7); cx.fill(); }
+        else { const X = SX(fx), Y = SY(fy), s = Math.max(3, 0.5 * cam.s); cx.strokeStyle = 'rgba(' + col + ',.8)'; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(X - s, Y + s * 0.6); cx.lineTo(X, Y); cx.lineTo(X + s, Y + s * 0.6); cx.stroke(); }
+      }
+      if (z.vent) { cx.fillStyle = '#9aa6c2'; cx.fillRect((a + b) / 2 - 0.8 * cam.s, gB - 1.2 * cam.s, 1.6 * cam.s, 1.2 * cam.s); }
+    } else if (z.t === 'down') {
+      const top = Math.min(z.top, 30), cyy = SY(top - 2);
+      cx.fillStyle = 'rgba(90,100,120,.16)'; cx.fillRect(a, cyy, b - a, gB - cyy);
+      cx.strokeStyle = 'rgba(80,95,120,.55)'; cx.lineWidth = 1.5;
+      const n = Math.round((z.x1 - z.x0) / 1.5);
+      for (let i = 0; i < n; i++) {
+        const fx = z.x0 + (z.x1 - z.x0) * hash(i * 2.3 + 1);
+        const span = top - groundAtFull(pl, fx);
+        const fy = top - ((hash(i * 5.1) * span + tt * 9) % span);
+        cx.beginPath(); cx.moveTo(SX(fx), SY(fy)); cx.lineTo(SX(fx - 0.2), SY(fy - 1.2)); cx.stroke();
+      }
+      const w = b - a; cloud(a + w * 0.05, cyy, Math.max(0.6, w / 110), 'rgba(120,130,148,.92)');
+    }
+  }
+}
+function drawObs() {
+  const t = fl ? fl.t : 0;
+  for (const o of pl.obs) {
+    if (o.t === 'tree') {
+      if (o.x + o.r < cam.x || o.x - o.r > cam.x + W / cam.s) continue;
+      const gy = groundAt(pl, o.x);
+      cx.fillStyle = '#6b4f33'; cx.fillRect(SX(o.x - 0.3), SY(gy + o.h * 0.4), 0.6 * cam.s, o.h * 0.4 * cam.s);
+      cx.fillStyle = pl.id === 'valley' ? '#3f6b48' : '#4f8f4a';
+      cx.beginPath(); cx.ellipse(SX(o.x), SY(gy + o.h * 0.62), o.r * cam.s, o.h * 0.45 * cam.s, 0, 0, 7); cx.fill();
+      cx.fillStyle = 'rgba(255,255,255,.12)'; cx.beginPath(); cx.ellipse(SX(o.x - o.r * 0.3), SY(gy + o.h * 0.75), o.r * 0.45 * cam.s, o.h * 0.18 * cam.s, 0, 0, 7); cx.fill();
+    } else {
+      const [ox, oy] = obsPos(o, t);
+      if (ox < cam.x - 5 || ox > cam.x + W / cam.s + 5) continue;
+      const X = SX(ox), Y = SY(oy), s = Math.max(8, 1.2 * cam.s);
+      if (o.t === 'gull') {
+        const fl2 = RM() ? 0.4 : Math.sin(timeT * 9 + o.x) * 0.5;
+        cx.strokeStyle = '#3b4250'; cx.lineWidth = Math.max(2, s * 0.18); cx.lineCap = 'round';
+        cx.beginPath(); cx.moveTo(X - s, Y - s * fl2); cx.quadraticCurveTo(X - s * 0.4, Y - s * 0.5, X, Y); cx.quadraticCurveTo(X + s * 0.4, Y - s * 0.5, X + s, Y - s * fl2); cx.stroke();
+      } else {
+        const gy = SY(groundAtFull(pl, ox - 8));
+        cx.strokeStyle = 'rgba(41,48,61,.5)'; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(X, Y + s); cx.lineTo(SX(ox - 8), gy); cx.stroke();
+        cx.fillStyle = '#e8553e'; cx.beginPath(); cx.moveTo(X, Y - s * 1.2); cx.lineTo(X + s * 0.8, Y); cx.lineTo(X, Y + s * 1.2); cx.lineTo(X - s * 0.8, Y); cx.closePath(); cx.fill();
+        cx.strokeStyle = '#ffd34d'; cx.lineWidth = 2; cx.beginPath(); cx.moveTo(X, Y + s * 1.2); for (let i = 1; i < 5; i++) cx.lineTo(X + Math.sin(i + (RM() ? 0 : timeT * 4)) * s * 0.4, Y + s * 1.2 + i * s * 0.45); cx.stroke();
+      }
+    }
+  }
+}
+function drawClips() {
+  const r = Math.max(5, 0.55 * cam.s);
+  cx.lineCap = 'round';
+  for (const c of roll.clips) {
+    if (c.got) continue;
+    if (c.x < cam.x - 2 || c.x > cam.x + W / cam.s + 2) continue;
+    const X = SX(c.x), Y = SY(c.y) + (RM() ? 0 : Math.sin(timeT * 3 + c.x) * 2);
+    cx.strokeStyle = '#5c6f86'; cx.lineWidth = Math.max(1.6, r * 0.28);
+    cx.beginPath(); cx.moveTo(X - r * 0.35, Y + r * 0.6); cx.lineTo(X - r * 0.35, Y - r * 0.55); cx.arc(X, Y - r * 0.55, r * 0.35, Math.PI, 0); cx.lineTo(X + r * 0.35, Y + r * 0.45); cx.arc(X + r * 0.1, Y + r * 0.45, r * 0.25, 0, Math.PI); cx.lineTo(X - 0.15 * r, Y - r * 0.35); cx.stroke();
+    cx.fillStyle = 'rgba(255,255,255,.8)'; cx.beginPath(); cx.arc(X + r * 0.2, Y - r * 0.7, Math.max(1, r * 0.12), 0, 7); cx.fill();
+  }
+}
+function drawMarkers() {
+  const x0 = cam.x, x1 = cam.x + W / cam.s;
+  // ruler
+  const stepM = cam.s > 9 ? 5 : cam.s > 4 ? 10 : cam.s > 2 ? 25 : 50;
+  cx.font = '600 ' + Math.max(10, Math.min(13, cam.s * 1.2)) + 'px Nunito, sans-serif'; cx.textAlign = 'center';
+  for (let m = Math.ceil(Math.max(0, x0) / stepM) * stepM; m <= x1; m += stepM) {
+    const X = SX(m), Y = SY(groundAt(pl, m));
+    cx.fillStyle = 'rgba(41,48,61,.45)'; cx.fillRect(X - 1, Y + 3, 2, m % (stepM * 2) === 0 ? 9 : 5);
+    if (m % (stepM * 2) === 0 && Y + 24 < H) { cx.fillStyle = 'rgba(41,48,61,.65)'; cx.fillText(m + ' m', X, Y + 24); }
+  }
+  // world record line
+  if (WR > x0 && WR < x1) {
+    const X = SX(WR);
+    const ly = hudBottom + 22;
+    cx.strokeStyle = 'rgba(214,85,62,.55)'; cx.lineWidth = 2; cx.setLineDash([6, 6]); cx.beginPath(); cx.moveTo(X, SY(groundAtFull(pl, WR))); cx.lineTo(X, ly + 6); cx.stroke(); cx.setLineDash([]);
+    cx.font = '400 15px "Patrick Hand", cursive'; const tw = cx.measureText('World record 88.3 m').width;
+    cx.fillStyle = 'rgba(255,253,246,.85)'; rr(X - tw / 2 - 6, ly - 15, tw + 12, 20, 6); cx.fill();
+    cx.fillStyle = 'rgba(190,70,50,.95)'; cx.fillText('World record 88.3 m', X, ly);
+  }
+  if (!run) return;
+  if (run.mode === 'tower') {
+    TOWER.medals.forEach((m, i) => { if (m > x0 && m < x1) flag(m, ['#c98450', '#a9b4c2', '#e7b53b'][i], ['Bronze', 'Silver', 'Gold'][i] + ' ' + m + ' m'); });
+  } else {
+    const tg = pl.target;
+    if (tg * 2 > x0 && tg * 2 < x1) { const X = SX(tg * 2), Y = SY(groundAtFull(pl, tg * 2)); cx.strokeStyle = 'rgba(46,154,90,.6)'; cx.setLineDash([4, 5]); cx.lineWidth = 2; cx.beginPath(); cx.moveTo(X, Y); cx.lineTo(X, Y - 40); cx.stroke(); cx.setLineDash([]); cx.fillStyle = 'rgba(30,110,64,.9)'; cx.font = '400 14px "Patrick Hand", cursive'; cx.fillText('2× = +1 throw', X, Y - 44); }
+    if (tg > x0 - 5 && tg < x1 + 5) flag(tg, '#f39c32', tg + ' m');
+  }
+}
+function flag(x, col, label) {
+  const X = SX(x), Y = SY(groundAtFull(pl, x)), h = Math.max(40, Math.min(70, H * 0.14));
+  cx.strokeStyle = '#29303d'; cx.lineWidth = 2.5; cx.beginPath(); cx.moveTo(X, Y); cx.lineTo(X, Y - h); cx.stroke();
+  cx.fillStyle = col; cx.beginPath(); cx.moveTo(X, Y - h); cx.lineTo(X + 34, Y - h + 9); cx.lineTo(X, Y - h + 18); cx.closePath(); cx.fill(); cx.stroke();
+  cx.font = '400 16px "Patrick Hand", cursive'; cx.textAlign = 'left';
+  const tw = cx.measureText(label).width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - 3, Y - h - 22, tw + 12, 20, 6); cx.fill();
+  cx.fillStyle = '#29303d'; cx.fillText(label, X + 3, Y - h - 7); cx.textAlign = 'center';
+}
+function rr(x, y, w, h, r) { cx.beginPath(); cx.moveTo(x + r, y); cx.arcTo(x + w, y, x + w, y + h, r); cx.arcTo(x + w, y + h, x, y + h, r); cx.arcTo(x, y + h, x, y, r); cx.arcTo(x, y, x + w, y, r); cx.closePath(); }
+function drawTrail(pts, col, w) {
+  if (!pts || pts.length < 2) return;
+  cx.fillStyle = col;
+  for (let i = 0; i < pts.length; i += 2) { const X = SX(pts[i][0]), Y = SY(pts[i][1]); if (X < -5 || X > W + 5) continue; cx.beginPath(); cx.arc(X, Y, w, 0, 7); cx.fill(); }
+}
+function drawAim() {
+  const L = planeSize();
+  const X0 = SX(0), Y0 = SY(pl.y0);
+  const v = aimVec();
+  let ang = v ? v.ang : 25;
+  if (v && v.len >= 18) {
+    // ballistic guide
+    const sp = P.v * Math.max(0.15, v.pow), a = ang * Math.PI / 180;
+    cx.fillStyle = 'rgba(47,111,214,.75)';
+    for (let i = 1; i <= 14; i++) { const t = i * 0.09; const x = sp * Math.cos(a) * t, y = pl.y0 + sp * Math.sin(a) * t - 4.9 * t * t; cx.beginPath(); cx.arc(SX(x), SY(y), Math.max(2, 3.2 - i * 0.12), 0, 7); cx.fill(); }
+    // pull band
+    cx.strokeStyle = 'rgba(41,48,61,.35)'; cx.lineWidth = 2; cx.setLineDash([4, 5]); cx.beginPath(); cx.moveTo(aim.sx, aim.sy); cx.lineTo(aim.cx, aim.cy); cx.stroke(); cx.setLineDash([]);
+    cx.fillStyle = '#29303d'; cx.font = '400 18px "Patrick Hand", cursive'; cx.textAlign = 'left';
+    cx.fillText(Math.round(ang) + '°  ·  ' + Math.round(v.pow * 100) + '%', X0 + L * 1.4, Y0 - L * 1.5); cx.textAlign = 'center';
+  }
+  drawPlane(cx, X0, Y0, ang * Math.PI / 180, save.fold, L, 0);
+}
+let hudShown = '', hudBottom = 60, hudMeasured = 0;
+function render() {
+  cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  const hd = fl ? fmt(Math.max(0, fl.x)) + ' m' : '0.0 m';
+  if (hd !== hudShown) { hudShown = hd; $('hudDist').textContent = hd; }
+  if (timeT - hudMeasured > 0.5) { hudMeasured = timeT; const r = $('hud').getBoundingClientRect(); if (r.height > 0) hudBottom = r.bottom; }
+  if (!pl || state === 'hangar' || state === 'boot') { cx.fillStyle = '#bfe6ff'; cx.fillRect(0, 0, W, H); return; }
+  drawSky(); drawFar(); drawZones(); drawGround(); drawProps(); drawObs(); drawClips(); drawMarkers();
+  drawTrail(lastPath, 'rgba(41,48,61,.16)', 1.6);
+  if (state === 'aim') drawAim();
+  else if (fl) {
+    drawTrail(path, 'rgba(47,111,214,.45)', 2);
+    drawPlane(cx, SX(fl.x), SY(fl.y), fl.th, save.fold, planeSize(), fl.stall > 0 && !RM() ? fl.flutter : 0);
+    if (fl.stall > 0) { cx.fillStyle = '#d4553e'; cx.font = '400 16px "Patrick Hand", cursive'; cx.fillText('stall!', SX(fl.x), SY(fl.y) - planeSize() * 1.2); }
+    const alt = fl.y - groundAtFull(pl, fl.x);
+    if (alt > 25 && SY(groundAtFull(pl, fl.x)) > H) { cx.fillStyle = 'rgba(41,48,61,.7)'; cx.font = '400 15px "Patrick Hand", cursive'; cx.fillText('↓ ' + Math.round(alt) + ' m up', SX(fl.x), H - 14); }
+  }
+  for (const p of parts) { cx.globalAlpha = Math.max(0, 1 - p.t / p.life); cx.fillStyle = p.c; if (p.sq) cx.fillRect(SX(p.x), SY(p.y), p.r * 2, p.r * 1.4); else { cx.beginPath(); cx.arc(SX(p.x), SY(p.y), p.r, 0, 7); cx.fill(); } }
+  cx.globalAlpha = 1;
+  if (pl.wind) { cx.fillStyle = 'rgba(41,48,61,.65)'; cx.font = '400 15px "Patrick Hand", cursive'; cx.textAlign = 'right'; cx.fillText('← headwind', W - 12, H - 12); cx.textAlign = 'center'; }
+}
+
+/* ---------- tutorial hand animation ---------- */
+function animHand() {
+  if (tutStage !== 1) return;
+  const h = $('hand'); const k = (timeT % 1.8) / 1.8, e = k < 0.15 ? 0 : k > 0.75 ? 1 : (k - 0.15) / 0.6;
+  const sx = W * 0.5, sy = H * 0.6, ex = sx - Math.min(W, H) * 0.22, ey = sy + Math.min(W, H) * 0.14;
+  h.style.left = (sx + (ex - sx) * e - 23) + 'px'; h.style.top = (sy + (ey - sy) * e - 23) + 'px';
+  h.style.opacity = k > 0.85 ? 0 : 1;
+}
+
+/* ---------- loop ---------- */
+let lastT = performance.now(), acc = 0;
+function frame(now) {
+  let dt = Math.min(0.1, (now - lastT) / 1000); lastT = now;
+  if (!paused) {
+    timeT += dt;
+    acc += dt * (TEST.speed || 1);
+    let guard = 0;
+    while (acc >= DT && guard++ < 1200) { tick(DT); acc -= DT; }
+    updateCam(dt);
+  }
+  render(); animHand();
+  requestAnimationFrame(frame);
+}
+
+/* ---------- test hooks (only with window.__DGTEST) ---------- */
+const TEST = { speed: 1, auto: null };
+function autoHold() {
+  if (!TEST.auto || !fl) return false;
+  const v2 = fl.vx * fl.vx + fl.vy * fl.vy, ab = bestAlpha(P), as = sinkAlpha(P);
+  const [, wy] = airAt(pl, roll, fl.x, fl.y);
+  let tgt = wy > 0.4 && v2 < 100 ? as : Math.min(ab, G / (P.kq * v2 * P.cla));
+  const vg = Math.sqrt(G / (P.kq * P.cla * ab)), gam = Math.atan2(fl.vy, fl.vx);
+  if (Math.sqrt(v2) < vg * 1.15 && gam > 0.05 && !(wy > 0.4)) tgt = Math.min(tgt, 0);
+  if (fl.a > P.as * 0.85) tgt = -1;
+  const ahead = groundAtFull(pl, fl.x + 8); if (fl.y - ahead < 3 && fl.vy < 0) tgt = Math.min(P.as * 0.92, Math.max(tgt, ab) * 1.2);
+  for (const o of pl.obs) if (o.t === 'tree' && o.x - fl.x > 0 && o.x - fl.x < 14 && fl.y < o.h * 1.1 + 1) tgt = Math.min(P.as * 0.9, Math.max(tgt, ab) * 1.3);
+  return fl.a < tgt;
+}
+if (window.__DGTEST === true) {
+  window.__dg = {
+    end: win => {
+      if (run && (state === 'aim' || state === 'fly' || state === 'result')) endRun(!!win);
+      else if (state === 'splash' || state === 'hangar') { startRun('new', 'run'); endRun(!!win); }
+    },
+    state: () => ({ state, paused, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done } }),
+    give: o => { Object.assign(save, o); persist(); if (state === 'hangar') renderHangar(); },
+    speed: s => { TEST.speed = s; },
+    auto: on => { TEST.auto = on; },
+    throwAt: (ang, pow) => { if (state !== 'aim') return false; rndStart(); launch({ ang, pow, len: 100 }); return true; },
+    next: () => { if (state === 'result') afterResult(); },
+    hangar: () => openHangar(),
+    startRun: (how, mode) => startRun(how || 'new', mode || 'run'),
+    place: n => { if (!run || run.mode !== 'run') return; run.place = Math.max(0, Math.min(7, n)); beginAim(true); },
+    model: { FOLDS, PLACES, TOWER }
+  };
+}
+
+/* ---------- boot ---------- */
+resize();
+if (!save.seen) { state = 'splash'; $('splash').classList.add('on'); }
+else if (save.run && save.run.mode) {
+  // a run was in progress: offer to resume it (a resumed run is a new round)
+  const s = save.run;
+  run = { mode: s.mode, place: clampI(s.place, 0, 7), throws: clampI(s.throws, 1, 5), best: +s.best || 0, total: +s.total || 0, clips: +s.clips || 0, cleared: clampI(s.cleared, 0, 8), n: clampI(s.n, 0, 999), newBest: false, newPlace: false, medal0: save.medals };
+  if (save.owned[clampI(s.fold, 0, 4)]) save.fold = clampI(s.fold, 0, 4);
+  lastMode = run.mode;
+  pl = placeOf(run); roll = rollThrow(pl, 1); P = planeParams(save.fold, save.up[save.fold], save.arm);
+  state = 'aim'; paused = true; resumeMenu = true; camT = null;
+  $('hud').classList.add('on'); updateHud();
+  pausePlay();
+} else openHangar();
+requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>
