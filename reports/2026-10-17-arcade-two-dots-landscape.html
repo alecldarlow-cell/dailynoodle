@@ -33,12 +33,13 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
 /* band edges when the wide view is letterboxed (phone held upright) */
 #edgeT,#edgeB{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,208,70,.35),transparent);pointer-events:none}
 /* transition card */
-#xfer{display:flex;flex-direction:column;align-items:center;justify-content:center}
+#xfer{display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
 #xName{color:#fff;text-align:center;display:flex;justify-content:center;width:100%}
-#xStats{display:flex;flex-direction:column;align-items:center}
+#xStats{display:flex;flex-direction:row;align-items:baseline;flex-wrap:wrap;justify-content:center}
 .xRow{display:flex;flex-direction:row;align-items:baseline}
-.xL{font-weight:600;color:rgba(232,212,200,.7);text-align:right}
-.xV{font-weight:700;color:var(--label);text-align:left}
+.xL{font-weight:600;color:rgba(232,212,200,.7)}
+.xV{font-weight:700;color:var(--label)}
+#xName,.xRow{text-shadow:0 1px 10px rgba(0,0,0,.55)}
 /* HUD */
 #score{position:absolute;left:0;right:0;display:flex;justify-content:center;padding-bottom:8px}
 #scoreT{font-size:42px;letter-spacing:4px;text-align:center}
@@ -380,8 +381,8 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
         return;
     }
   }
-  function drawTree(ctx2, node, rootKey) {
-    walk(ctx2, node, rootKey, { alpha: 1 });
+  function drawTree(ctx2, node, rootKey, alpha = 1) {
+    walk(ctx2, node, rootKey, { alpha });
   }
   /* ---------- Two Dots Landscape: game logic ----------
      World units: GEO.H tall (fixed), GEO.W wide (from the screen), dots at GEO.LANE_L / GEO.LANE_R.
@@ -389,26 +390,26 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   var GEO = { W: 889, H: 400, LANE_L: 213, LANE_R: 676 };
   var PHYS = 0.55;                                   // hop scale: same rhythm as portrait, smaller hop for the shorter view
   var PIPE_W = 32, DOT_R = 12, FLAP_V = -4.2 * PHYS, GRAV = 0.12 * PHYS, EDGE_MARGIN = 30, CLOSE_PX = 12;
-  /* Lanes sit a fixed distance apart so the two thumbs alternate (about 1.5 pipe spacings); on a wide
-     screen that puts each dot just inside where the thumbs rest. Narrow (upright) views use the portrait spacing. */
-  var LANE_GAP_WIDE = 480, LANE_GAP_NARROW = 195;
+  /* Lane spacing: close enough to watch both dots from one point (see build notes), and set so the thumbs
+     alternate. LANE_C places the pair across the view; the space right of the pair is look-ahead. */
+  var LANE_GAP_WIDE = 210, LANE_GAP_NARROW = 195, LANE_C = 0.5, LANE_C_NARROW = 0.5;
   function layoutLanes(W) {
-    let d = W >= 760 ? LANE_GAP_WIDE : LANE_GAP_NARROW;
-    GEO.W = W, GEO.LANE_L = W / 2 - d / 2, GEO.LANE_R = W / 2 + d / 2;
+    let wide = W >= 760, d = wide ? LANE_GAP_WIDE : LANE_GAP_NARROW, c = W * (wide ? LANE_C : LANE_C_NARROW);
+    c = Math.max(d / 2 + 90, Math.min(W - d / 2 - 90, c));
+    GEO.W = W, GEO.LANE_L = c - d / 2, GEO.LANE_R = c + d / 2;
   }
   function setPhys(k) { PHYS = k, FLAP_V = -4.2 * k, GRAV = 0.12 * k; }
-  var PIPES_PER_WORLD = 10, WORLD_TRANSITION_GAP = 39, WORLD_TRANSITION_FADE = 136;
+  var INTRO_ON = !0, TRANS_FRAMES = 150, TRANS_FADE = [12, 66], PIPES_PER_WORLD = 10, WORLD_TRANSITION_GAP = 39, WORLD_TRANSITION_FADE = 136;
   var TIER_STARTS = [0, 5, 10, 15, 20, 25, 30, 35], TIER_BOUNDARY_SCORES = TIER_STARTS.filter((v) => v > 0);
   /* per tier 1..8 (index 0..7); the last entry also drives the endless ramp */
   var TUNE = {
-    gap:     [272, 244, 234, 210, 180, 156, 142, 132],
+    gap:     [272, 244, 250, 228, 194, 162, 146, 134],   // tiers 1-2 are the scripted Moon opening
     gapEnd:  122,               // endless floor, reached over 20 pipes after 35
     speed:   [1.8, 1.8, 2.0, 2.0, 2.05, 2.05, 2.05, 2.05],
     pauseMs: [1000, 850, 700, 600, 540, 510, 500, 490],
     periodMs: [2800, 2800, 2800, 2800, 2800, 2800, 2800, 2800],  // one pipe every period, like the portrait game
     amp:     [0, 20, 30, 40, 50, 60, 66, 0],              // alternating offset from centre
     ampJit:  [20, 16, 18, 22, 30, 30, 34, 0],
-    stripSpeed: 3.2
   };
   function tierFor(n) {
     return n < 5 ? 1 : n < 10 ? 2 : n < 15 ? 3 : n < 20 ? 4 : n < 25 ? 5 : n < 30 ? 6 : n < 35 ? 7 : 8;
@@ -422,7 +423,6 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   function pipeSpeed(n) { return TUNE.speed[tierFor(n) - 1]; }
   function pipePauseMs(n) { return TUNE.pauseMs[tierFor(n) - 1]; }
   function pipePeriodMs(n) { return TUNE.periodMs[tierFor(n) - 1]; }
-  function stripWidth() { return Math.ceil(GEO.W * 1.25 + 2 * WORLD_TRANSITION_FADE); }
   function gateInTier(score) {
     let t = tierFor(score);
     if (t === 8) return score - 35;
@@ -470,8 +470,29 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     let lowestReachable = lastGapCY - maxUpReach(n);
     return Math.max(minY, Math.min(maxY, Math.max(candidateY, lowestReachable)));
   }
+  /* The Moon teaches: posts from the ground (stay up), then from the sky (stay down), then gaps high and low,
+     alternating with the swing narrowing. Fractions of the view height. */
+  var INTRO = [
+    { bottom: 0.86 }, { bottom: 0.80 },
+    { top: 0.14 }, { top: 0.20 },
+    { cy: 0.44, gap: 270 }, { cy: 0.56, gap: 270 },
+    { cy: 0.43, gap: 262 }, { cy: 0.57, gap: 262 },
+    { cy: 0.42, gap: 254 }, { cy: 0.58, gap: 254 }
+  ];
+  function introGap(n, visH) {
+    let k = INTRO[n];
+    if (!k) return null;
+    if (k.bottom != null) { let yb = k.bottom * visH; return { gapCY: (yb - 60) / 2, gap: yb + 60 }; }
+    if (k.top != null) { let yt = k.top * visH; return { gapCY: (yt + visH + 60) / 2, gap: visH + 60 - yt }; }
+    return { gapCY: k.cy * visH, gap: k.gap };
+  }
   function spawnPipe(now, visH, spawner, rng) {
-    let n = spawner.pipeCount, gap = gapSize(n), [minY, maxY] = gapBounds(gap, visH), rawCY = pipeGapCY(n, gap, visH, spawner, rng), safeCY = clampToReachable(rawCY, n, minY, maxY, spawner.lastGapCY);
+    let n = spawner.pipeCount, intro = INTRO_ON ? introGap(n, visH) : null;
+    if (intro) {
+      spawner.lastGapCY = intro.gapCY, spawner.lastSide = intro.gapCY < visH / 2 ? -1 : 1;
+      return { id: spawner.pipeCount++, x: GEO.W - PIPE_W / 2, pauseUntil: now + pipePauseMs(n), gapCY: intro.gapCY, gap: intro.gap, speed: pipeSpeed(n), scored: !1, clearFlash: 0, closeCalledByL: !1, closeCalledByR: !1 };
+    }
+    let gap = gapSize(n), [minY, maxY] = gapBounds(gap, visH), rawCY = pipeGapCY(n, gap, visH, spawner, rng), safeCY = clampToReachable(rawCY, n, minY, maxY, spawner.lastGapCY);
     spawner.lastGapCY = safeCY;
     return {
       id: spawner.pipeCount++,
@@ -514,11 +535,12 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       scoreCountFrames: 0,
       scoreDisplay: 0,
       worldTransitionStripX: null,
-      stripW: 0,
+      trans: null,
+      prevWorld: 0,
       spawner: initSpawnerState()
     };
   }
-  /* the strip takes the slot of the first pipe of each new world */
+  /* the world change takes the slot of the first pipe of each new world */
   function atWorldBoundary(s2) {
     let n = s2.spawner.pipeCount;
     return n > 0 && n % PIPES_PER_WORLD === 0 && n / PIPES_PER_WORLD <= 2 && s2.world < n / PIPES_PER_WORLD;
@@ -529,11 +551,9 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       return advanceVisualCounters(s2), effects;
     let visH = input.visH;
     let ready = s2.spawner.pipeCount === 0 && s2.pipes.length === 0 || input.now - s2.lastSpawn >= pipePeriodMs(s2.spawner.pipeCount);
-    let stripClear = s2.worldTransitionStripX === null || s2.worldTransitionStripX + s2.stripW <= GEO.W;
-    if (ready && stripClear) {
-      if (atWorldBoundary(s2)) {
-        if (s2.worldTransitionStripX === null) s2.stripW = stripWidth(), s2.worldTransitionStripX = GEO.W + WORLD_TRANSITION_GAP, s2.stripCovered = !1, s2.lastSpawn = input.now;
-      } else s2.pipes.push(spawnPipe(input.now, visH, s2.spawner, input.rng)), s2.lastSpawn = input.now;
+    if (ready) {
+      if (atWorldBoundary(s2)) s2.prevWorld = s2.world, s2.world = Math.min(2, s2.world + 1), s2.trans = 0, s2.lastSpawn = input.now;
+      else s2.pipes.push(spawnPipe(input.now, visH, s2.spawner, input.rng)), s2.lastSpawn = input.now;
     }
     s2.vyL += GRAV, s2.dotLY += s2.vyL, s2.vyR += GRAV, s2.dotRY += s2.vyR, advanceVisualCounters(s2);
     let died = !1, LX = GEO.LANE_L, RX = GEO.LANE_R;
@@ -561,12 +581,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   }
   function advanceVisualCounters(s2) {
     s2.pulseL > 0 && s2.pulseL--, s2.pulseR > 0 && s2.pulseR--, s2.scorePop > 0 && s2.scorePop--, s2.milestonePop > 0 && s2.milestonePop--, s2.closeL > 0 && s2.closeL--, s2.closeR > 0 && s2.closeR--, s2.flash > 0 && s2.flash--, s2.deathFlashL > 0 && s2.deathFlashL--, s2.deathFlashR > 0 && s2.deathFlashR--;
-    if (s2.worldTransitionStripX !== null && s2.phase === "playing" && !s2.paused) {
-      s2.worldTransitionStripX -= TUNE.stripSpeed;
-      /* the new world appears while the strip covers the whole view */
-      if (!s2.stripCovered && s2.worldTransitionStripX + s2.stripW / 2 <= GEO.W / 2) s2.stripCovered = !0, s2.world = Math.min(2, s2.world + 1);
-      s2.worldTransitionStripX + s2.stripW < -WORLD_TRANSITION_GAP && (s2.worldTransitionStripX = null);
-    }
+    s2.trans !== null && s2.phase === "playing" && !s2.paused && ++s2.trans >= TRANS_FRAMES && (s2.trans = null);
   }
   function transitionToDead(s2) {
     s2.phase = "dead", s2.flash = 12;
@@ -603,10 +618,10 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   }
   function startPlaying(s2, now, visH) {
     s2.phase = "playing", s2.lastSpawn = now, s2.dotLY = idleY(now, 0), s2.dotRY = idleY(now, 1), s2.vyL = FLAP_V, s2.pulseL = 8, s2.vyR = FLAP_V, s2.pulseR = 8;
-    s2.spawner = initSpawnerState(), s2.world = 0;
+    s2.spawner = initSpawnerState(), s2.world = 0, s2.prevWorld = 0, s2.trans = null;
   }
   function resetForNewRun(s2) {
-    s2.pipes = [], s2.score = 0, s2.world = 0, s2.flash = 0, s2.scorePop = 0, s2.milestonePop = 0, s2.closeL = 0, s2.closeR = 0, s2.deathSide = "", s2.deathFlashL = 0, s2.deathFlashR = 0, s2.deathParticles = [], s2.deathGateInTier = 0, s2.deathCountFrames = 0, s2.scoreCountFrames = 0, s2.scoreDisplay = 0, s2.worldTransitionStripX = null, s2.paused = !1;
+    s2.pipes = [], s2.score = 0, s2.world = 0, s2.flash = 0, s2.scorePop = 0, s2.milestonePop = 0, s2.closeL = 0, s2.closeR = 0, s2.deathSide = "", s2.deathFlashL = 0, s2.deathFlashR = 0, s2.deathParticles = [], s2.deathGateInTier = 0, s2.deathCountFrames = 0, s2.scoreCountFrames = 0, s2.scoreDisplay = 0, s2.worldTransitionStripX = null, s2.trans = null, s2.prevWorld = 0, s2.paused = !1;
   }
   function stepDead(s2) {
     if (s2.deathParticles = s2.deathParticles.filter((p) => (p.x += p.vx, p.y += p.vy, p.vy += 0.1, p.vx *= 0.94, p.life--, p.life > 0)), s2.deathCountFrames > 0) {
@@ -1781,6 +1796,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
         }
       )));
     }
+    if (band.kind === "lineae") return /* @__PURE__ */ react_default.createElement(LineaeBand, { band, preColor, t });
     if (band.kind === "craters" && craters) {
       let baseOklch = sampleOklchCurve(preColor, t), bowlCol = oklchToHex(baseOklch), rimCol = oklchToHex([baseOklch[0] * 0.75 + 0.25, baseOklch[1] * 0.75, baseOklch[2]]);
       return /* @__PURE__ */ react_default.createElement(Group, null, craters.map((c, i) => {
@@ -2309,8 +2325,8 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
         preColorBot: auroraEntry.colorBot,
         t
       }
-    ), skyCelestials.map(
-      (c) => c.celestial.kind === "earth" ? /* @__PURE__ */ react_default.createElement(
+    ), starsSpec && /* @__PURE__ */ react_default.createElement(Starfield, { stars, spec: starsSpec, t, nowMs }), skyCelestials.map(
+      (c) => c.celestial.kind === "giant" ? /* @__PURE__ */ react_default.createElement(GiantPlanet, { key: c.celestial.id, celestial: c.celestial, preColor: c.color, t, rawT: positionT }) : c.celestial.kind === "earth" ? /* @__PURE__ */ react_default.createElement(
         EarthBody,
         {
           key: c.celestial.id,
@@ -2329,7 +2345,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
           rawT: positionT
         }
       )
-    ), starsSpec && /* @__PURE__ */ react_default.createElement(Starfield, { stars, spec: starsSpec, t, nowMs }), cloudsSpec && cloudsColor && /* @__PURE__ */ react_default.createElement(CloudField, { clouds, spec: cloudsSpec, preColor: cloudsColor, t, nowMs }), birdsSpec && birdsColor && /* @__PURE__ */ react_default.createElement(BirdFlock, { birds, spec: birdsSpec, preColor: birdsColor, t, nowMs }), pre.bands.map((b) => {
+    ), cloudsSpec && cloudsColor && /* @__PURE__ */ react_default.createElement(CloudField, { clouds, spec: cloudsSpec, preColor: cloudsColor, t, nowMs }), birdsSpec && birdsColor && /* @__PURE__ */ react_default.createElement(BirdFlock, { birds, spec: birdsSpec, preColor: birdsColor, t, nowMs }), pre.bands.map((b) => {
       if (b.band.kind === "cloudBand") {
         let seed2 = cloudBandSeeds.get(b.band.id);
         return seed2 ? /* @__PURE__ */ react_default.createElement(
@@ -2399,6 +2415,128 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       }
     ), stormEyes.map((c) => /* @__PURE__ */ react_default.createElement(StormEye, { key: c.celestial.id, celestial: c.celestial, preColor: c.color, t })), dustSpec && /* @__PURE__ */ react_default.createElement(DriftDust, { dust, spec: dustSpec, t, scrollX }));
   }
+  /* ---------- Jupiter, seen from the ice of Europa ----------
+     A giant banded Jupiter rising over an icy horizon, its lit side turning with the time of day; Io in the sky;
+     Europa's reddish crack lines (lineae) across the ice. Drawn in the same virtual portrait pixels as the other
+     worlds, so shapes keep their proportions on any screen. */
+  var JUPITER_BANDS = [
+    [-1.0, "#7d7468"], [-0.8, "#b9a78c"], [-0.63, "#8f6247"], [-0.5, "#e2d4ba"], [-0.33, "#a2573a"],
+    [-0.11, "#f2e7d1"], [0.12, "#9c5a3d"], [0.31, "#e5d3b5"], [0.5, "#aa8160"], [0.62, "#cbb898"], [0.8, "#857b6c"], [1.01, null]
+  ];
+  function GiantPlanet({ celestial, t }) {
+    let E = react_default.createElement, r = celestial.radiusPct * SC_H, cx = Math.max(r * 0.3, Math.min(SC_W - r * 0.4, celestial.xPct * SC_W)), cy = celestial.yPct * SC_H;
+    let disc = useMemo(() => {
+      let p = Skia.Path.Make();
+      return p.addCircle(cx, cy, r), p;
+    }, [cx, cy, r]);
+    /* belts and zones with gently wavy edges */
+    let belts = useMemo(() => {
+      let rng = mulberry32(5150), edge = (yf, ph) => (x) => cy + yf * r + Math.sin((x - cx) / r * 9 + ph) * r * 0.012 + Math.sin((x - cx) / r * 23 + ph * 2) * r * 0.005, out = [];
+      for (let i = 0; i < JUPITER_BANDS.length - 1; i++) {
+        let [y0, col] = JUPITER_BANDS[i], y1 = JUPITER_BANDS[i + 1][0], e0 = edge(y0, rng() * 6), e1 = edge(y1, rng() * 6), p = Skia.Path.Make(), N = 40;
+        p.moveTo(cx - r, e0(cx - r));
+        for (let k = 1; k <= N; k++) { let x = cx - r + 2 * r * k / N; p.lineTo(x, i === 0 ? cy - r * 1.02 : e0(x)); }
+        for (let k = N; k >= 0; k--) { let x = cx - r + 2 * r * k / N; p.lineTo(x, i === JUPITER_BANDS.length - 2 ? cy + r * 1.02 : e1(x)); }
+        p.close(), out.push({ p, col });
+      }
+      /* festoons: dark wisps trailing from the north equatorial belt into the bright zone */
+      let fest = Skia.Path.Make();
+      for (let k = 0; k < 7; k++) {
+        let x = cx - r * 0.8 + k * r * 0.25 + rng() * r * 0.08, y = cy - 0.11 * r;
+        fest.moveTo(x, y), fest.quadTo(x + r * 0.07, y + r * 0.07, x + r * 0.16, y + r * 0.05);
+      }
+      /* small white ovals in the southern belts */
+      let ovals = Skia.Path.Make();
+      for (let k = 0; k < 4; k++) ovals.addOval({ x: cx - r * 0.1 + k * r * 0.2, y: cy + r * (0.52 + (k % 2) * 0.03), width: r * 0.07, height: r * 0.035 });
+      return { out, fest, ovals };
+    }, [cx, cy, r]);
+    let grs = { x: cx - r * 0.3, y: cy + r * 0.405, rx: r * 0.19, ry: r * 0.095 };
+    /* lighting: the sunlit fraction follows the time of day (full by day, a thick crescent at night) */
+    let lit = sampleScalarCurve(celestial.litCurve, t), sx0 = cx + r * 2.1 * lit;
+    return E(
+      Group,
+      null,
+      E(Circle, { cx, cy, r: r * 1.16 }, E(RadialGradient, { c: vec(cx, cy), r: r * 1.16, colors: ["#f0dcb800", "#f0dcb800", "#f0dcb838", "#f0dcb800"], positions: [0, 0.84, 0.88, 1] })),
+      E(
+        Group,
+        { clip: disc },
+        belts.out.map((b, i) => E(Path, { key: i, path: b.p, color: b.col, style: "fill" })),
+        E(Path, { path: belts.fest, color: "#7a3f28", style: "stroke", strokeWidth: r * 0.012, strokeCap: "round", opacity: 0.55 }),
+        E(Path, { path: belts.ovals, color: "#f6efe0", style: "fill", opacity: 0.8 }),
+        /* the Great Red Spot, with its pale hollow around it */
+        E(Group, { transform: [{ translate: [grs.x, grs.y] }, { scaleY: grs.ry / grs.rx }] }, E(Circle, { cx: 0, cy: 0, r: grs.rx * 1.3, color: "#efe2c8", opacity: 0.85 }), E(Circle, { cx: 0, cy: 0, r: grs.rx }, E(RadialGradient, { c: vec(0, 0), r: grs.rx, colors: ["#d9886a", "#c0583c", "#93351f"], positions: [0, 0.55, 1] })), E(Circle, { cx: -grs.rx * 0.12, cy: 0, r: grs.rx * 0.42, color: "#e2a080", opacity: 0.45 })),
+        /* limb darkening, then the night side */
+        E(Circle, { cx, cy, r }, E(RadialGradient, { c: vec(cx, cy), r, colors: ["#00000000", "#00000000", "#1a0e0855", "#0d0705aa"], positions: [0, 0.62, 0.9, 1] })),
+        E(Circle, { cx: sx0, cy, r: r * 1.12 }, E(RadialGradient, { c: vec(sx0, cy), r: r * 1.12, colors: ["#05060deb", "#05060deb", "#05060d00"], positions: [0, 0.78, 1] }))
+      )
+    );
+  }
+  /* Europa's lineae: long double ridges of reddish ice, flatter towards the horizon */
+  function LineaeBand({ band, preColor, t }) {
+    let E = react_default.createElement, yPx = band.yPct * SC_H, h = band.heightPct * SC_H, col = oklchToHex(sampleOklchCurve(preColor, t));
+    let lines = useMemo(() => {
+      let rng = mulberry32(0xe0e0 ^ themeSeed(band.id)), out = [], n = scCount(band.count || 8);
+      for (let i = 0; i < n; i++) {
+        let d = Math.pow(rng(), 1.35), y0 = yPx + h * (0.06 + 0.9 * d), len = FEAT * (0.8 + rng() * 1.9) * (0.6 + d), x0 = rng() * (SC_W + len) - len, slope = (rng() - 0.5) * h * 0.55 * (0.4 + d), wig = h * 0.02 * (0.5 + d), ph = rng() * 6, w = 1 + d * 3.4, gap = w * (1.3 + rng() * 0.6), p1 = Skia.Path.Make(), p2 = Skia.Path.Make();
+        for (let k = 0; k <= 24; k++) {
+          let u = k / 24, x = x0 + len * u, y = y0 + slope * u + Math.sin(u * 7 + ph) * wig;
+          k ? (p1.lineTo(x, y), p2.lineTo(x, y + gap)) : (p1.moveTo(x, y), p2.moveTo(x, y + gap));
+        }
+        out.push({ p1, p2, w, a: 0.26 + d * 0.38 });
+      }
+      return out;
+    }, [band.id, yPx, h]);
+    return E(Group, null, lines.map((l, i) => E(Group, { key: i, opacity: l.a }, E(Path, { path: l.p1, color: col, style: "stroke", strokeWidth: l.w, strokeCap: "round" }), E(Path, { path: l.p2, color: col, style: "stroke", strokeWidth: l.w * 0.8, strokeCap: "round", opacity: 0.8 }))));
+  }
+  var europaTheme = {
+    id: "jupiter",
+    label: "Jupiter",
+    tagline: "giant \xB7 icy \xB7 silent",
+    difficulty: "Hard",
+    gravityMul: 1,
+    scoreMul: 1.5,
+    cycleProfile: "airless",
+    sky: {
+      topCurve: [{ t: 0, color: "#070912" }, { t: 0.25, color: "#0b1020" }, { t: 0.5, color: "#0e0a18" }, { t: 0.75, color: "#030409" }],
+      midCurve: [{ t: 0, color: "#121628" }, { t: 0.25, color: "#18213a" }, { t: 0.5, color: "#1d1528" }, { t: 0.75, color: "#070912" }],
+      bottomCurve: [{ t: 0, color: "#262a40" }, { t: 0.25, color: "#2e3a58" }, { t: 0.5, color: "#3a2a3e" }, { t: 0.75, color: "#10131f" }]
+    },
+    bands: [
+      { id: "iceRidge", kind: "silhouette", yPct: 0.6, heightPct: 0.1, parallax: 0.18, profile: "cratered-horizon",
+        colorCurve: [{ t: 0, color: "#4c5468" }, { t: 0.25, color: "#66728c" }, { t: 0.5, color: "#5a4f62" }, { t: 0.75, color: "#22273a" }] },
+      { id: "iceNear", kind: "silhouette", yPct: 0.655, heightPct: 0.09, parallax: 0.34, profile: "hills",
+        colorCurve: [{ t: 0, color: "#5e6578" }, { t: 0.25, color: "#7f8aa2" }, { t: 0.5, color: "#6c6070" }, { t: 0.75, color: "#2c3244" }] },
+      { id: "icePlain", kind: "plain", yPct: 0.71, heightPct: 0.29, parallax: 0.5,
+        colorCurve: [{ t: 0, color: "#6a6f80" }, { t: 0.25, color: "#8a93a8" }, { t: 0.5, color: "#776a78" }, { t: 0.75, color: "#30364a" }],
+        hazeCurve: [{ t: 0, color: "#8a8c9a" }, { t: 0.25, color: "#b4bccc" }, { t: 0.5, color: "#9a8892" }, { t: 0.75, color: "#454b60" }] },
+      { id: "lineae", kind: "lineae", yPct: 0.71, heightPct: 0.29, count: 7,
+        colorCurve: [{ t: 0, color: "#7a4634" }, { t: 0.25, color: "#9a5038" }, { t: 0.5, color: "#7e3e32" }, { t: 0.75, color: "#3e2422" }] }
+    ],
+    particles: [
+      { id: "stars", kind: "starfield", count: 90, sizeMul: 0.9, twinkle: !0,
+        densityCurve: [{ t: 0, value: 0.6 }, { t: 0.25, value: 0.45 }, { t: 0.5, value: 0.7 }, { t: 0.75, value: 1 }] }
+    ],
+    celestials: [
+      { id: "jupiter", kind: "giant", xPct: 0.06, yPct: 0.41, radiusPct: 0.3,
+        colorCurve: [{ t: 0, color: "#e8d8bc" }, { t: 0.5, color: "#e8d8bc" }],
+        glowCurve: [{ t: 0, value: 1 }, { t: 0.5, value: 1 }],
+        litCurve: [{ t: 0, value: 0.55 }, { t: 0.25, value: 0.9 }, { t: 0.5, value: 0.5 }, { t: 0.75, value: 0.28 }] },
+      { id: "io", kind: "moon", xPct: 0.83, yPct: 0.16, radius: 8,
+        colorCurve: [{ t: 0, color: "#e2c56a" }, { t: 0.25, color: "#ecd27a" }, { t: 0.5, color: "#e0b060" }, { t: 0.75, color: "#c8a858" }],
+        glowCurve: [{ t: 0, value: 0.5 }, { t: 0.25, value: 0.6 }, { t: 0.5, value: 0.5 }, { t: 0.75, value: 0.45 }],
+        phaseCurve: [{ t: 0, value: 0.7 }, { t: 0.25, value: 0.95 }, { t: 0.5, value: 0.55 }, { t: 0.75, value: 0.35 }] }
+    ],
+    palette: {
+      pipeWall: "#10355c",
+      pipeEdge: "#7ac0e8",
+      dotL: "#FFB13B",
+      dotR: "#7FE5E8",
+      dividerGlowL: "#FFB13B",
+      dividerGlowR: "#7FE5E8",
+      bgFlash: "#2a0c14"
+    }
+  };
+  themes.jupiter = europaTheme;
   function BackgroundCanvas({ worldTheme, worldTod = 0.25, worldScrollX = 0, nowMs }) {
     return /* @__PURE__ */ react_default.createElement(
       Canvas,
@@ -2411,19 +2549,6 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
         nowMs
       })
     );
-  }
-  /* the black strip that carries the world name across; drawn in screen pixels over the scenery */
-  function TransitionStrip({ stripX, stripW }) {
-    let x = sx(stripX), w = sx(stripW), feather = sx(WORLD_TRANSITION_FADE), f = Math.min(0.45, feather / w), colors = [], positions = [], N = 12;
-    for (let i = 0; i <= N; i++) {
-      let u = i / N, a = Math.round(u * u * (3 - 2 * u) * 255);
-      colors.push("#000000" + a.toString(16).padStart(2, "0")), positions.push(u * f);
-    }
-    for (let i = 0; i <= N; i++) {
-      let u = i / N, a = Math.round((1 - u * u * (3 - 2 * u)) * 255);
-      colors.push("#000000" + a.toString(16).padStart(2, "0")), positions.push(1 - f + u * f);
-    }
-    return /* @__PURE__ */ react_default.createElement(Rect, { x, y: 0, width: w, height: GAME_H }, /* @__PURE__ */ react_default.createElement(LinearGradient, { start: vec(x, 0), end: vec(x + w, 0), colors, positions }));
   }
   function Dot({ cx, cy, col, pulse, closeCall, deathFlash }) {
     let r = sx(DOT_R) + (pulse > 0 ? pulse * SCALE * 0.45 : 0), strokeCircle = (radius, strokeW, color, opacity) => /* @__PURE__ */ react_default.createElement(Circle, { cx, cy, r: radius, color, opacity, style: "stroke", strokeWidth: strokeW });
@@ -2520,9 +2645,9 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       flash: s2.flash,
       scorePop: s2.scorePop,
       milestonePop: s2.milestonePop,
-      worldTransitionStripX: s2.worldTransitionStripX,
-      stripW: s2.stripW,
-      stripCovered: !!s2.stripCovered,
+      worldTransitionStripX: null,
+      trans: s2.trans,
+      prevWorld: s2.prevWorld,
       world: s2.world
     };
   }
@@ -2751,7 +2876,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     }
     if (tod.lastScore = display.score, display.phase !== "playing") return 0;
     let tweenDuration = Math.max(TWEEN_MIN_MS, Math.min(tod.ema, TWEEN_MAX_MS)), msSinceClear = tod.activeMs - tod.lastClearActiveMs, tween = Math.min(msSinceClear / tweenDuration, 1);
-    let base = display.score - 10 * display.world;
+    let base = Math.max(0, display.score - 10 * display.world);
     return display.world === 2 && (base = (base % 10 + 10) % 10), Math.min(0.999, (base + tween) / 10);
   }
   var stillThemes = /* @__PURE__ */ new Map();
@@ -2806,8 +2931,9 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     scoreFont = clampN(GAME_H * 0.105, 26, 42), hudTop = Math.max(6, ins.t) + (BAND ? 4 : GAME_H * 0.02);
     px($("scoreT"), { fontSize: scoreFont, letterSpacing: scoreFont * 0.09 }), px($("score"), { top: hudTop }), px($("pdots"), { top: hudTop + scoreFont * 1.32 }), px($("pbtn"), { top: hudTop - 6, right: Math.max(10, ins.r) });
     /* world card riding on the transition strip */
-    let k = GAME_H, nameF = clampN(k * 0.15, 30, 72), lf = clampN(k * 0.034, 10, 14), vf = clampN(k * 0.04, 11, 16);
-    px($("xName"), { fontSize: nameF, letterSpacing: nameF * 0.08, marginBottom: k * 0.05 }), px($("xStats"), { gap: k * 0.02 }), document.querySelectorAll(".xRow").forEach((r) => px(r, { gap: lf * 0.9 })), document.querySelectorAll(".xL").forEach((r) => px(r, { fontSize: lf, letterSpacing: 3, width: lf * 8.6 })), document.querySelectorAll(".xV").forEach((r) => px(r, { fontSize: vf, letterSpacing: 2, width: vf * 5 }));
+    /* world card: a compact banner under the score, clear of the dots */
+    let k = GAME_H, nameF = clampN(k * 0.1, 24, 52), lf = clampN(k * 0.028, 10, 13), vf = clampN(k * 0.032, 11, 14);
+    px($("xfer"), { paddingTop: hudTop + scoreFont * 1.55 }), px($("xName"), { fontSize: nameF, letterSpacing: nameF * 0.1, marginBottom: k * 0.012 }), px($("xStats"), { columnGap: lf * 1.6, rowGap: 2 }), document.querySelectorAll(".xRow").forEach((r) => px(r, { gap: lf * 0.6 })), document.querySelectorAll(".xL").forEach((r) => px(r, { fontSize: lf, letterSpacing: 2 })), document.querySelectorAll(".xV").forEach((r) => px(r, { fontSize: vf, letterSpacing: 1 }));
     /* title: inside the view when it fills the screen, above the view when it's letterboxed */
     let titleF = BAND ? clampN(vw * 0.13, 30, 56) : clampN(GAME_H * 0.15, 30, 66), cx = vw / 2, gap = titleF * 0.42;
     let titleMid = BAND ? Math.max(ins.t + 50 + titleF * 0.6, gameTop * 0.52) : gameTop + GAME_H * 0.2;
@@ -2829,7 +2955,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     return sp ? sp.getBoundingClientRect().width : box.scrollWidth;
   }
   function fitXName() {
-    let el = $("xName"), max = SCREEN_W * 0.9, size = clampN(GAME_H * 0.15, 30, 72);
+    let el = $("xName"), max = SCREEN_W * 0.9, size = clampN(GAME_H * 0.1, 24, 52);
     px(el, { fontSize: size });
     for (let i = 0; i < 3; i++) {
       let w = textWidth(el);
@@ -2849,9 +2975,11 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   var pdots = Array.from($("pdots").children);
   pdots.forEach((d, i) => d.id = "pd" + i);
   function render() {
-    let nowMs = Date.now(), display = snap(s), worldTheme = getTheme(WORLD_IDS[display.world]), stripX = display.worldTransitionStripX;
-    let incoming = getTheme(WORLD_IDS[Math.min(2, display.world + (stripX !== null && !display.stripCovered ? 1 : 0))]);
-    let displayedWorldTheme = worldTheme, stripTranslateX = stripX !== null ? (stripX + display.stripW / 2 - GEO.W / 2) * SCALE : 0, worldTod = worldTodFor(display, nowMs), pauseSubOpacity = 0.45 + 0.55 * Math.sin(nowMs / 500);
+    let nowMs = Date.now(), display = snap(s), worldTheme = getTheme(WORLD_IDS[display.world]), tr = display.trans;
+    /* world change: the old scenery fades out over the new one while the world card shows */
+    let ease = (u) => (u = Math.max(0, Math.min(1, u)), u * u * (3 - 2 * u)), fadeOld = tr === null ? 0 : 1 - ease((tr - TRANS_FADE[0]) / (TRANS_FADE[1] - TRANS_FADE[0]));
+    let cardA = tr === null ? 0 : Math.min(ease(tr / 18), ease((TRANS_FRAMES - tr) / 34)), oldTheme = getTheme(WORLD_IDS[display.prevWorld]);
+    let displayedWorldTheme = worldTheme, worldTod = worldTodFor(display, nowMs), pauseSubOpacity = 0.45 + 0.55 * Math.sin(nowMs / 500);
     let dotLDisplayY = display.phase === "idle" ? idleY(nowMs, 0) : display.dotLY, dotRDisplayY = display.phase === "idle" ? idleY(nowMs, 1) : display.dotRY;
     let bgColor = display.flash > 6 ? worldTheme.palette.bgFlash ?? COL_BG_FLASH : COL_BG, scoreScale = 1 + display.scorePop / 18 * 0.4, scoreColor = display.scorePop > 12 ? "#ffffff" : GOLD, isTierBoundary = TIER_BOUNDARY_SCORES.includes(display.score), milestoneFrames = isTierBoundary ? 90 : 40, mT = display.milestonePop / milestoneFrames, mAlpha = display.milestonePop > 0 ? isTierBoundary ? display.milestonePop > 30 ? 1 : display.milestonePop / 30 : mT > 0.15 ? 1 : mT / 0.15 : 0, mDriftY = (1 - mT) * 24 * Math.min(1, SCALE), showDeathOverlay = display.phase === "dead" && display.deathCountFrames <= display.scoreCountFrames, countDone = display.deathCountFrames === 0;
     let thumbR = Math.max(24, (30 + 4 * Math.sin(nowMs / 700)) * SCALE), thumbY = gameTop + VIS_H * 0.84 * SCALE, thumbFillAlpha = (0.2 + 0.05 * Math.sin(nowMs / 700)).toFixed(3), pauseShimmerOpacity = 0.08 + 0.08 * Math.sin(nowMs / 120), freezeWindowFrames = display.deathCountFrames - display.scoreCountFrames, freezeAlpha = display.phase === "dead" && freezeWindowFrames > 0 ? (1 - freezeWindowFrames / 20) * 0.45 : 0, still = reducedMotion();
@@ -2860,14 +2988,15 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     still && (displayedWorldTheme = stillTheme(displayedWorldTheme)), set(root, "background", bgColor);
     /* scenery in virtual portrait pixels, zoomed to fit the view height (shapes keep their proportions) */
     bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0), bgCtx.clearRect(0, 0, SCREEN_W, GAME_H), bgCtx.setTransform(dpr * SC_Z, 0, 0, dpr * SC_Z, 0, 0);
-    drawTree(bgCtx, createElement(BackgroundCanvas, { worldTheme: displayedWorldTheme, worldTod, worldScrollX: bgNow * 0.04 * Math.max(1, SCALE) / SC_Z, nowMs: bgNow }), "bg");
+    let scroll = bgNow * 0.04 * Math.max(1, SCALE) / SC_Z;
+    drawTree(bgCtx, createElement(BackgroundCanvas, { worldTheme: displayedWorldTheme, worldTod, worldScrollX: scroll, nowMs: bgNow }), "bg-" + displayedWorldTheme.id);
+    fadeOld > 0.005 && oldTheme !== worldTheme && drawTree(bgCtx, createElement(BackgroundCanvas, { worldTheme: still ? stillTheme(oldTheme) : oldTheme, worldTod: 0.97, worldScrollX: scroll, nowMs: bgNow }), "bg-" + oldTheme.id, fadeOld);
     bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    stripX !== null && drawTree(bgCtx, createElement(TransitionStrip, { stripX, stripW: display.stripW }), "strip");
     let xfer = $("xfer"), xferWasShown = cache.get("xfer|show") === "1";
-    if (show(xfer, stripX !== null), stripX !== null) {
-      xferWasShown || fitXName(), set(xfer, "transform", `translateX(${stripTranslateX.toFixed(2)}px)`);
-      let nm = incoming.label.toUpperCase();
-      $("xNameT").textContent !== nm && ($("xNameT").textContent = nm, fitXName()), set($("xD"), "text", incoming.difficulty), set($("xS"), "text", `\xD7${incoming.scoreMul.toFixed(1)}`), set($("xG"), "text", `\xD7${incoming.gravityMul.toFixed(1)}`);
+    if (show(xfer, cardA > 0.01), cardA > 0.01) {
+      xferWasShown || fitXName(), set(xfer, "opacity", cardA.toFixed(3)), set(xfer, "transform", `scale(${(0.96 + 0.04 * cardA).toFixed(3)})`);
+      let nm = worldTheme.label.toUpperCase();
+      $("xNameT").textContent !== nm && ($("xNameT").textContent = nm, fitXName()), set($("xD"), "text", worldTheme.difficulty), set($("xS"), "text", `\xD7${worldTheme.scoreMul.toFixed(1)}`), set($("xG"), "text", `\xD7${worldTheme.gravityMul.toFixed(1)}`);
     }
     fgCtx.setTransform(dpr, 0, 0, dpr, 0, 0), fgCtx.clearRect(0, 0, SCREEN_W, GAME_H);
     drawTree(fgCtx, createElement(GameCanvas, { display, nowMs, dotLDisplayY, dotRDisplayY, pauseShimmerOpacity, freezeAlpha, worldTheme: displayedWorldTheme }), "fg");
@@ -2881,7 +3010,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       if (show(mile, display.milestonePop > 0), display.milestonePop > 0) {
         set(mile, "top", hudTop + scoreFont * 2.25 + 12 - mDriftY + "px"), set(mile, "opacity", mAlpha.toFixed(3)), set($("mileT"), "text", `★ ${display.score} ★`);
         let named = display.score === 10 || display.score === 20;
-        show($("mileN"), named), named && set($("mileN"), "text", display.score === 10 ? "EARTH" : "JUPITER");
+        show($("mileN"), !1);
       }
     }
     let pause = $("pause");
@@ -3012,6 +3141,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
