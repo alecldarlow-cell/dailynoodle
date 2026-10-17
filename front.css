@@ -15,11 +15,13 @@
     --news:#1C46C2;    --news-soft:#ECF0FC;
     --puzzles:#0E7A4B; --puzzles-soft:#E4F4EB;
     --games:#6A2BC9;   --games-soft:#F1EAFC;
+    --lab:#B45309;     --lab-soft:#FDF0E1;
     --accent:var(--news); --accent-soft:var(--news-soft);
     --mono-bg:var(--accent); --mono-ink:#fff;
   }
   html[data-section="puzzles"]{--accent:var(--puzzles);--accent-soft:var(--puzzles-soft)}
   html[data-section="games"]{--accent:var(--games);--accent-soft:var(--games-soft)}
+  html[data-section="lab"]{--accent:var(--lab);--accent-soft:var(--lab-soft)}
 
   *{margin:0;padding:0;box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -52,13 +54,17 @@
     font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;padding:6px 11px;
     border:1px solid var(--hair);background:var(--paper);color:var(--muted);border-radius:999px}
   .sec::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--dot)}
-  .sec.news{--dot:var(--news)} .sec.puzzles{--dot:var(--puzzles)} .sec.games{--dot:var(--games)}
+  .sec.news{--dot:var(--news)} .sec.puzzles{--dot:var(--puzzles)} .sec.games{--dot:var(--games)} .sec.lab{--dot:var(--lab)}
+  /* four pills (News, Puzzles, Games, Lab) on one row down to 320px */
+  @media(max-width:399px){.sections{gap:4px}.sec{padding:6px 9px;gap:5px;letter-spacing:.05em}}
+  @media(max-width:345px){.sec{font-size:10.5px;padding:6px 7px;gap:4px}}
   .sec[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:#fff}
   .sec:not([aria-current]):hover{border-color:var(--ink);color:var(--ink)}
   /* search: an icon at the end of the section row; tapping it opens the field
      underneath. The field stays open while it holds a query. */
   .sbtn{margin-left:auto;flex:none;width:34px;height:34px;display:grid;place-content:center;
     border:1px solid var(--hair);background:var(--paper);color:var(--muted);border-radius:999px;cursor:pointer}
+  .sbtn[hidden]{display:none}   /* search parked for now: remove `hidden` on the button to bring it back */
   .sbtn svg{width:16px;height:16px;display:block}
   .sbtn[aria-expanded="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
   .searchrow{display:flex;gap:8px;align-items:center;margin-top:8px}
@@ -149,6 +155,11 @@
     display:flex;flex-wrap:wrap;align-items:center;gap:7px}
   .meta .t{color:var(--accent);text-transform:uppercase;letter-spacing:.06em;font-size:11.5px}
   .meta .dot{color:var(--hair)}
+  /* Lab mixes all three desks, so each card's topic and fallback tile take
+     that desk's colour rather than the page accent. */
+  html[data-section="lab"] li[data-kind="report"]{--accent:var(--news);--accent-soft:var(--news-soft)}
+  html[data-section="lab"] li[data-kind="puzzle"]{--accent:var(--puzzles);--accent-soft:var(--puzzles-soft)}
+  html[data-section="lab"] li[data-kind="game"]{--accent:var(--games);--accent-soft:var(--games-soft)}
   .thumbwrap{position:relative;width:96px;align-self:start}
   .thumbwrap .thumb{display:block}
   .badge{position:absolute;left:5px;right:5px;bottom:5px;text-align:center;background:rgba(20,22,26,.82);color:#fff;

@@ -9,6 +9,10 @@
 
    You should never need to edit this file to publish. Upload a piece to
    /reports, /puzzles or /games and it appears on the right page.
+
+   LAB: anything carrying <meta name="dn:badge" content="In development"> is
+   unfinished. It is left off News, Puzzles and Games and listed on lab.html
+   instead, whatever its kind. Delete the tag and it moves to its own page.
    ========================================================================== */
 (function(){
   'use strict';
@@ -28,9 +32,20 @@
     puzzles: { kind:'puzzle', dir:'puzzles', noun:['puzzle','puzzles'],
                empty:'No puzzles published yet.' },
     games:   { kind:'game',   dir:'games',   noun:['game','games'],
-               empty:'No games yet — the first ones are on their way.' }
+               empty:'No games yet — the first ones are on their way.' },
+    lab:     { kind:'*',      dir:'',        noun:['item','items'],
+               empty:'Nothing in the lab right now — everything is finished.' }
   };
   var SEC = SECTIONS[document.documentElement.dataset.section] || SECTIONS.news;
+  var LAB = SEC.kind === '*';
+  var KIND_LABEL = { report:'News', puzzle:'Puzzles', game:'Games' };
+  // An item is in the lab while its dn:badge reads "In development".
+  function inLab(it){ return /^\s*in development\s*$/i.test(it.badge||''); }
+  // Which items this page lists: the lab takes every unfinished item; each
+  // desk takes its own kind, minus anything still in the lab.
+  function mine(it){ return LAB ? inLab(it) : (it.kind===SEC.kind && !inLab(it)); }
+  // The lab filters by desk; the desks filter by topic.
+  function facet(it){ return LAB ? (KIND_LABEL[it.kind]||'') : (it.topic||''); }
 
   var state = { items:[], kind:SEC.kind, topic:'all', q:'', provisional:false, built:'' };
 
@@ -128,8 +143,8 @@
   function topics(){
     var seen = {}, out = [];
     state.items.forEach(function(it){
-      if(it.kind!==state.kind) return;
-      var t = it.topic||'';
+      if(!mine(it)) return;
+      var t = facet(it);
       if(t && !seen[t]){ seen[t]=1; out.push(t); }
     });
     return out.sort();
@@ -138,7 +153,7 @@
   function renderChips(){
     var list = topics();
     if(state.topic!=='all' && list.indexOf(state.topic)===-1) state.topic='all';
-    var html = ['<button class="chip" data-topic="all" aria-pressed="'+(state.topic==='all')+'">All topics</button>'];
+    var html = ['<button class="chip" data-topic="all" aria-pressed="'+(state.topic==='all')+'">'+(LAB?'Everything':'All topics')+'</button>'];
     list.forEach(function(t){
       html.push('<button class="chip" data-topic="'+esc(t)+'" aria-pressed="'+(state.topic===t)+'">'+esc(t)+'</button>');
     });
@@ -149,8 +164,8 @@
   function visible(){
     var q = state.q.trim().toLowerCase();
     return state.items.filter(function(it){
-      if(it.kind!==state.kind) return false;
-      if(state.topic!=='all' && it.topic!==state.topic) return false;
+      if(!mine(it)) return false;
+      if(state.topic!=='all' && facet(it)!==state.topic) return false;
       if(q && (it.headline+' '+it.standfirst+' '+it.topic).toLowerCase().indexOf(q)===-1) return false;
       return true;
     });
@@ -204,8 +219,9 @@
       thumb = '<div class="thumb glyph" aria-hidden="true">'+(it.kind==='report'?'Chart':'Play')+'</div>';
     }
     // Optional dn:badge (e.g. "In development") sits on the thumbnail.
-    if(it.badge) thumb = '<div class="thumbwrap">'+thumb+'<span class="badge">'+esc(it.badge)+'</span></div>';
-    return '<li><a class="card" href="'+esc(it.path)+'">'
+    // In the lab every card is in development, so that badge would be noise.
+    if(it.badge && !(LAB && inLab(it))) thumb = '<div class="thumbwrap">'+thumb+'<span class="badge">'+esc(it.badge)+'</span></div>';
+    return '<li data-kind="'+esc(it.kind)+'"><a class="card" href="'+esc(it.path)+'">'
       + thumb
       + '<div>'
       +   '<h2 class="hl">'+esc(it.headline)+'</h2>'
@@ -222,7 +238,7 @@
     var v = visible();
     $feed.innerHTML = v.length
       ? v.map(card).join('')
-      : '<li class="empty">'+esc(state.items.some(function(it){ return it.kind===state.kind; })
+      : '<li class="empty">'+esc(state.items.some(mine)
           ? 'Nothing matches that filter yet.' : SEC.empty)+'</li>';
     $count.textContent = v.length
       ? v.length + ' ' + SEC.noun[v.length===1?0:1] + (state.q?' matching':'')

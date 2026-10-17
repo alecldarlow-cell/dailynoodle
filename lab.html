@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-section="lab">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#FCFCFB">
+<title>Digi Lab — work in progress</title>
+<meta name="description" content="Digi Lab: games, puzzles and pieces still being built. Try them early.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  DIGI LAB — FRONT PAGE  (lab.html)
+  The fourth section page. It lists every item, of any kind, whose file carries
+  <meta name="dn:badge" content="In development">. Those items are left off
+  News, Puzzles and Games until the tag is deleted. Layout, styles and script
+  are shared in front.css and front.js. You should never need to edit it to publish.
+-->
+<link rel="stylesheet" href="front.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mono" aria-hidden="true">DL</div>
+    <div class="word">Digi<b>Lab</b></div>
+    <div class="kick">The workshop<span class="k2">Unfinished · try it early</span></div>
+  </header>
+
+  <nav class="controls" aria-label="Sections and filters">
+    <div class="bar">
+      <div class="sections" aria-label="Sections">
+        <a class="sec news" href="index.html">News</a>
+        <a class="sec puzzles" href="puzzles.html">Puzzles</a>
+        <a class="sec games" href="games.html">Games</a>
+        <a class="sec lab" href="lab.html" aria-current="page">Lab</a>
+      </div>
+      <button class="sbtn" id="sbtn" type="button" hidden aria-label="Search" aria-expanded="false" aria-controls="searchrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    </div>
+    <div class="searchrow" id="searchrow" hidden>
+      <input class="search" id="q" type="search" placeholder="Search the lab…" aria-label="Search the lab">
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Section"></div>
+  </nav>
+
+  <div id="status"></div>
+  <p class="count" id="count" aria-live="polite"></p>
+  <ul class="feed" id="feed">
+    <li class="skel"></li><li class="skel"></li><li class="skel"></li>
+  </ul>
+
+  <footer class="foot">
+    <p><b>Digi Lab</b> — things still being built. Expect rough edges and changes;
+    when something is finished it moves to News, Puzzles or Games.</p>
+    <p style="margin-top:8px" id="built"></p>
+    <p class="privacy"><a href="privacy.html">Privacy</a> · <a href="admin.html" rel="nofollow">Admin</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
+  </footer>
+
+</div>
+<script src="front.js"></script>
+<script src="dn-track.js" defer></script>
+</body>
+</html>
