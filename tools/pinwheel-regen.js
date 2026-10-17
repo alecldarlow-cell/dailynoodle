@@ -138,6 +138,9 @@ function plan(outFile, opts) {
   // vetoes above), its 3-letter words mostly are not (abbreviations).
   const DOKU3 = new Set(["ark", "bow", "gig", "ore", "pig", "wan", "yay"]);
   const vetted = new Set(all.filter(p => p.type === "mini").flatMap(p => p.words));
+  // approved additions (tools/mini-word-additions.json) join the shipped answers
+  const ADD = JSON.parse(fs.readFileSync(path.join(ROOT, "tools", "mini-word-additions.json"), "utf8")).words;
+  for (const L of ["3", "4", "5"]) for (const w of ADD[L]) vetted.add(w);
   for (const p of all) if (p.type === "doku") for (const w of p.words) if (w.length > 3 || DOKU3.has(w)) vetted.add(w);
   for (const t of ["mini", "doku"]) for (const L of ["3", "4", "5"]) {
     // generation pool only; the gate below still validates against the full engine dictionary
