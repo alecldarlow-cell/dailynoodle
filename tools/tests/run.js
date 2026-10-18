@@ -175,6 +175,29 @@ const TESTS = {
     await ctx.close();
     await shareNative(b, F.doku, p2 => play.grid(p2), 'doku');
   },
+  async 'finish:sweep'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.sweep, { events: ev });
+    await play.sweep(p);
+    await sheetChecks(p, ev, { type: 'sweep', ids: ['winTitle', 'winTime', 'winStreak', 'winBest'],
+      shareRe: /^💣 Sweep 18 Oct — swept in \d:\d\d$/,
+      endCheck: x => ok(x && x.outcome === 'solved', `sweep: tracker read ${x && x.outcome}`) });
+    ok(await text(p, '#winTitle') === 'Swept' && await text(p, '.fin-note') === 'All seven mines found, no hints.', 'sweep: Swept, note');
+    ok(await p.locator('.fin-grid.sw i.flag').count() === 7, 'sweep: board with seven flags');
+    await shareClipboard(p, ctx, 'sweep');
+    await reopen(p, ev, 'sweep');
+    ok(!p.errs.length, 'sweep: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+    await shareNative(b, F.sweep, p2 => play.sweep(p2), 'sweep');
+  },
+  async 'finish:sweep-boom'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.sweep, { events: ev });
+    await play.sweep(p, { boom: true });
+    ok(await text(p, '#winTitle') === 'Boom.' && ends(ev)[0] && ends(ev)[0].x.outcome === 'failed', 'sweep: loss keeps the exact title and logs failed');
+    ok(/^💥 Sweep 18 Oct — boom$/.test(await text(p, '.fin-share-text')) && await p.locator('.fin-grid.sw i.boom').count() === 1, 'sweep: boom share line and the mine marked');
+    await tap(p, p.locator('.fin > .fin-link').first()); await wait(p, 800);
+    ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'sweep: Play again closes the sheet and marks the replay');
+    await ctx.close();
+  },
   /* ---------- the five fixes of 18 Oct ---------- */
   async 'fix:link-replay'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });

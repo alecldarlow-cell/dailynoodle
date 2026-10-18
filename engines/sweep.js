@@ -3,6 +3,9 @@
    The page supplies its puzzle as window.DN_PUZZLE before loading this file.
    Edit here to change every sweep; keep element ids and localStorage keys
    stable (dn-track.js and players' saved progress depend on them). */
+/* the shared finish sheet (engines/finish.js): calls made before it loads are queued */
+window.dnFinish=window.dnFinish||{q:[],show(c){this.q.push(c)},hide(){}};
+document.write('<link rel="stylesheet" href="../engines/finish.css"><script src="../engines/finish.js"><\/script>');
 
 /* ================= The Digi Sweep engine (gate only) ===============
    The GENERATOR does not ship. This file cannot mint a puzzle — it can only
@@ -138,6 +141,7 @@ const MINE_SVG=`<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true" focusa
 
 /* ================= The Digi Sweep player =========================== */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let usedHints=0;   // for the finish sheet's one line
 let P=null,revealed=null,flagged=null,boomed=null,NUM=null,MS=null;
 let started=false,tHandle=null,seconds=0,over=false,won=false,flagMode=false,flagCheck=true;
 /* ranked = today's result is not yet on the books. A loss sticks; everything
@@ -291,6 +295,7 @@ $("#modeFlag").onclick=()=>{flagMode=true;paint();};
 /* Hint reuses the prover: it doesn't peek at the mines, it finds the next
    step you could have found — from what's on your board right now. */
 $("#hint").onclick=()=>{
+  if(!over)usedHints++;
   if(over)return;
   const d=deduceStep(revealed,flagged,NUM,MS.size,true);
   const safe=d.safe.filter(x=>!revealed.has(x)&&!flagged.has(x));
@@ -389,13 +394,37 @@ const reduceMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion
 function showEnd(win){
   $("#endIcon").className="check"+(win?"":" miss");
   $("#endIcon").textContent=win?"✓":"✕";
-  $("#winTitle").textContent=win?"Swept!":"Boom.";
+  $("#winTitle").textContent=win?"Swept":"Boom.";      // "Boom." is the tracker's loss title: keep it exact
   $("#winSub").textContent=`${dnLabel(P.id)}${endRanked?"":" · replay"}`;
-  $("#winTime").textContent=$("#timer").textContent;
+  $("#winTime").textContent=dnTime($("#timer").textContent);
   $("#winStreak").textContent=$("#streak").textContent;
   $("#winBest").textContent=$("#best").textContent;
   $("#winNew").textContent=win?"Done":"Play again";
+  finishSheet(win?"win":"loss",true);
   $("#winModal").classList.add("on");
+}
+/* ---- the shared finish sheet (engines/finish.js) ---- */
+function finishSheet(o,fresh){
+  const W=["no","one","two","three","four","five","six","seven","eight","nine","ten"],m=W[MS.size]||MS.size;
+  let note=o==="win"?(fresh?`All ${m} mines found, ${usedHints?(usedHints===1?"with one hint":`with ${W[usedHints]||usedHints} hints`):"no hints"}.`:`All ${m} mines found.`)
+    :"That was a mine. The grid never needed a guess; the step was there to find.";
+  let played=0;try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");played=s&&s.done?Object.keys(s.done).length:0;}catch(e){}
+  const FLAG='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2M4 2.5l8 2.8-8 2.9" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  const g=document.createElement("div");g.className="fin-grid g6 sw";
+  let h="";for(let k=0;k<CELLS;k++){
+    if(MS.has(k))h+=boomed.has(k)?'<i class="boom" aria-label="the mine you hit">✕</i>':`<i class="flag" aria-label="mine">${FLAG}</i>`;
+    else{const v=NUM[k];h+=`<i class="n${v}">${v||""}</i>`;}
+  }
+  g.innerHTML=h;
+  let after=null;
+  if(o!=="win"){after=document.createElement("button");after.type="button";after.className="fin-link";after.textContent="Play again (not recorded)";
+    after.addEventListener("click",()=>{window.dnFinish.hide();$("#winModal").classList.remove("on");replayStarted=true;load(curSrc);});}
+  window.dnFinish.show({type:"sweep",id:P.id,n:parseInt(((document.querySelector('meta[name="dn:headline"]')||{}).content||"").replace(/\D+/g,""),10)||"",
+    date:(document.querySelector('meta[name="dn:date"]')||{}).content||"",
+    box:"winModal",title:"winTitle",hero:"winTime",note,
+    share:{text:()=>dnSweep(o,$("#timer").textContent,$("#streak").textContent,P.id)},
+    stats:[{id:"winStreak",label:"day streak"},{id:"winBest",label:"best streak"},{value:played,label:"Sweeps played"}],
+    recap:{title:"The board",node:g},after});
 }
 function celebrate(){
   if(reduceMotion){showEnd(true);return;}
@@ -532,5 +561,11 @@ function restoreDone(){
   if(won){$("#msg").innerHTML=`Swept in <b>${$("#timer").textContent}</b>.`;document.body.classList.add("win");}
   else if(rec.o==="loss")$("#msg").innerHTML="That was a mine. The grid never needed a guess — the step was there.";
   else $("#msg").innerHTML="Revealed.";
+  if(rec.o==="gave")return;
+  // reopen on the finish sheet (no "on": the tracker logged this finish the first time)
+  $("#winTitle").textContent=won?"Swept":"Boom.";$("#winTime").textContent=dnTime($("#timer").textContent);
+  (async()=>{const st=await store(true)||{streak:0,best:0};await refreshStreakUI(st);
+    $("#winStreak").textContent=$("#streak").textContent;$("#winBest").textContent=$("#best").textContent;
+    finishSheet(won?"win":"loss",false);})();
 }
 load(SAMPLE);
