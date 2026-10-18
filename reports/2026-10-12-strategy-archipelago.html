@@ -245,7 +245,15 @@ button.ord.on{background:var(--ink);color:var(--paper)}button.ord.on small{color
 .tlinks{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:2px}
 .tlinks .link{color:var(--paper)}
 .tlinks .link.home{color:rgba(244,233,204,.9)}
-@media (prefers-reduced-motion:reduce){#chest.pop{animation:none}.rib{animation:ribfade 1.5s forwards}@keyframes ribfade{0%,100%{opacity:0}15%,80%{opacity:1}}.hero canvas,#hint.coach,.btn.glow{animation:none}#note,.chip{transition:none}}
+/* a portrait game held sideways on a phone: the chart can't fit, so a card asks for the phone upright (approved 18 Oct 2026) */
+#turn{display:none;position:fixed;inset:0;z-index:30;align-items:center;justify-content:center;padding:16px;background:rgba(8,46,68,.86);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#turn .card{max-width:340px;flex-direction:row;align-items:center;gap:14px;padding:16px 18px}
+#turn img{width:64px;height:64px;flex:none;animation:tilt 2.4s ease-in-out infinite}
+#turn b{display:block;font-family:var(--f-chart);font-weight:400;font-size:24px;line-height:1.05}
+#turn span{font-size:14.5px;line-height:1.4;color:var(--ink-2);font-weight:700}
+@keyframes tilt{0%,30%{transform:rotate(-90deg)}55%,100%{transform:rotate(0)}}
+@media (orientation:landscape) and (max-height:500px){#turn{display:flex}}
+@media (prefers-reduced-motion:reduce){#chest.pop{animation:none}.rib{animation:ribfade 1.5s forwards}@keyframes ribfade{0%,100%{opacity:0}15%,80%{opacity:1}}.hero canvas,#hint.coach,.btn.glow,#turn img{animation:none}#note,.chip{transition:none}}
 </style>
 <!-- og:start (tools/og-tags.js — do not edit by hand) -->
 <meta property="og:site_name" content="The Daily Noodle">
@@ -278,6 +286,7 @@ button.ord.on{background:var(--ink);color:var(--paper)}button.ord.on small{color
  <button class="btn" id="b2" type="button" hidden></button><button class="btn pri" id="b1" type="button" hidden></button></div>
 </section>
 <div id="modal" hidden><div id="card"></div></div>
+<div id="turn" role="alert"><div class="card"><img id="turnImg" alt=""><div><b>Turn your phone upright</b><span>Archipelago is played in portrait. Your game waits for you.</span></div></div></div>
 <script>
 /* ---------- Archipelago rules engine: no DOM, so the balance bot and tests can run it anywhere ---------- */
 const FLEETS={
@@ -1818,7 +1827,11 @@ $('chainsBtn').addEventListener('click',()=>{ui.chains=!ui.chains;$('chainsBtn')
 addEventListener('keydown',e=>{if(e.key==='Escape'){if($('modal').hidden)pause();else if($('modal').className!=='title'){if($('dock').hidden)home();else if(st&&st.phase!=='over')hideModal();}}
  else if((e.key==='Enter'||e.key===' ')&&$('modal').hidden&&!$('b1').hidden&&!$('b1').disabled){e.preventDefault();$('b1').click();}
  else if((e.key==='z'||e.key==='Z')&&$('modal').hidden&&st&&st.phase==='reinforce')undo();});
-let rsT=null;addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{layout();if(st)dockUI();},80);});
+const sideways=()=>innerWidth>innerHeight&&innerHeight<=500;
+let rsT=null;addEventListener('resize',()=>{clearTimeout(rsT);rsT=setTimeout(()=>{layout();if(st)dockUI();
+ /* turned sideways mid-round: pause, so nothing happens behind the turn-upright card */
+ if(sideways()){try{$('turnImg').src=iconURL('puffin');}catch(e){}if(st&&st.phase!=='over'&&$('modal').hidden&&!ui.busy)pause();}},80);});
+if(sideways())try{$('turnImg').src=iconURL('puffin');}catch(e){}
 document.addEventListener('visibilitychange',()=>{if(document.hidden){saveRun();if(st&&st.phase!=='over'&&$('modal').hidden)pause();}});
 addEventListener('pagehide',saveRun);
 
