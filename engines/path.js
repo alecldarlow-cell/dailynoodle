@@ -6,7 +6,7 @@
 
 /* the shared finish sheet (engines/finish.js): calls made before it loads are queued */
 window.dnFinish=window.dnFinish||{q:[],show(c){this.q.push(c)},hide(){}};
-document.write('<link rel="stylesheet" href="../engines/finish.css"><script src="../engines/finish.js"><\/script>');
+document.write('<link rel="stylesheet" href="../engines/finish.css"><link rel="stylesheet" href="../engines/house.css"><script src="../engines/finish.js"><\/script><script src="../engines/house.js"><\/script>');
 (function(){
 "use strict";
 const N = 6, TOTAL = 36;
