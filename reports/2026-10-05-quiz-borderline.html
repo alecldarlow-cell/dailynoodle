@@ -541,7 +541,7 @@ function answer(k,fast){
   if(fast)return;
   $('quiz').classList.add('locked');
   [...$('opts').children].forEach((b,j)=>{if(q.o[j]===q.c)b.classList.add('right');else if(j===k)b.classList.add('wrong');else b.classList.add('dim');});
-  $('nameplate').innerHTML=c.n+'<small>'+(ok?(isNew?'New in your atlas. ':'')+'+'+gain+' points':'Not this time.')+'</small>';
+  $('nameplate').innerHTML=c.n+'<small>'+(ok?(isNew?'New in your atlas. ':'')+'+'+gain+' points'+(quiz.run>1?', '+quiz.run+' in a row':''):'Not this time.')+'</small>';   // the run is what earns the bonus
   $('sheet').classList.add('revealed');$('inset').classList.add('on');
   $('hintBtn').hidden=true;$('nextBtn').hidden=false;$('nextBtn').textContent=quiz.i===NQ-1?'See results':'Next';
   buildTicks();updatePts();
@@ -648,6 +648,5 @@ if(window.__DGTEST===true){window.__dg={
 
 renderHome();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
