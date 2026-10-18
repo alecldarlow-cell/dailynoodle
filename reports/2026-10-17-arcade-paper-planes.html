@@ -2054,6 +2054,10 @@ function render() {
     pm.setAttribute('aria-valuenow',(Math.min(P.as,Math.abs(fl.a))*180/Math.PI).toFixed(1));
     pm.title='Wing angle to the airflow · stall near ±'+(P.as*180/Math.PI).toFixed(1)+'°';
   }
+  if (state === 'aim' && aim) {   // the LAUNCH readout follows the drag
+    const v = aimVec(), t = v && v.len >= 10 ? Math.round(v.ang) + '°' : '—°';
+    if ($('hudPitch').textContent !== t) { $('hudPitch').textContent = t; $('pitchFill').style.width = v && v.len >= 10 ? (v.ang / 60 * 100).toFixed(0) + '%' : '0%'; }
+  }
   if (timeT - hudMeasured > 0.5) { hudMeasured = timeT; const r = $('hud').getBoundingClientRect(); if (r.height > 0) hudBottom = r.bottom; }
   if (!pl || state === 'hangar' || state === 'boot') { cx.fillStyle = '#bfe6ff'; cx.fillRect(0, 0, W, H); return; }
   bx.setTransform(BDPR, 0, 0, BDPR, 0, 0);
