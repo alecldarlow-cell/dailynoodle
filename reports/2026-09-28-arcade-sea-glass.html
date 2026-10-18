@@ -129,7 +129,7 @@ body{overflow:hidden;overscroll-behavior:none;background:transparent}
 (()=>{'use strict';
 /* ---------- engine: pure board logic (shared with the balance simulator) ---------- */
 const COLS=7,ROWS=8,NC=6;
-const TIDE_SECS=240;
+const TIDE_SECS=240,TIDE_FULL_SECS=180;   // the tide comes in faster once the jar has reached full size (BAL.jarCap)
 const BAL={jar0:24,jarStep:2,jarCap:40,k4At:99,findRow:6,findAdj:1};
 /* animation timings in seconds; the simulator uses the same numbers */
 const TIMES={swap:.2,back:.2,clear:.4,fallBase:.22,fallRow:.05,shuffle:1.5};
@@ -187,6 +187,7 @@ function jarPlan(filled,rng){const total=Math.min(BAL.jarCap,BAL.jar0+BAL.jarSte
  for(let i=5;i>0;i--){const j=Math.floor(rng()*(i+1));[cols[i],cols[j]]=[cols[j],cols[i]];}
  const pick=cols.slice(0,k),base=Math.floor(total/k),targets={};let rem=total-base*k;for(const c of pick){targets[c]=base+(rem>0?1:0);rem--;}return targets;}
 /* a random layout can box itself in (the first two leave no room for the third), so start again until every find fits */
+function tideSecs(targets){let t=0;for(const k in targets)t+=targets[k];return t>=BAL.jarCap?TIDE_FULL_SECS:TIDE_SECS;}
 function placeFinds(rng,items,avoid){let out=[];
  for(let tries=0;tries<40&&out.length<items.length;tries++){out=[];let guard=0;
   while(out.length<items.length&&guard++<500){const r=BAL.findRow+Math.floor(rng()*(ROWS-BAL.findRow)),c=Math.floor(rng()*COLS);
@@ -532,7 +533,7 @@ function finish(win){if(mode!=='play')return;pendingEnd=false;hideTutorial();
 /* ---------- update ---------- */
 function update(dt){toastTick(dt);if(mode!=='play'||modalOpen)return;clock+=dt;const T=TM();
  if(rnd.open)rnd.secs+=dt;
- if(rnd.open&&run.p<1&&!pendingEnd){run.p=Math.min(1,run.p+dt/TIDE_SECS);
+ if(rnd.open&&run.p<1&&!pendingEnd){run.p=Math.min(1,run.p+dt/tideSecs(run.targets));
   if(!srHalf&&run.p>=.5){srHalf=true;say('The tide is halfway up the shore.');}if(!srNear&&run.p>=.85){srNear=true;say('The tide is near the sandcastle.');}}
  if(phase==='swap'||phase==='back'){anim.t+=dt;const tot=phase==='swap'?T.swap:T.swap+T.back;let k;
   if(phase==='swap')k=ease(Math.min(1,anim.t/T.swap));else{const amp=.42;k=anim.t<T.swap?ease(anim.t/T.swap)*amp:ease(Math.max(0,1-(anim.t-T.swap)/T.back))*amp;}
@@ -700,7 +701,9 @@ function showTitle(){mode='title';const cont=run&&run.started;
  <button class="btn" id="tLooks"><span>Beaches and jars<small>${esc(beachOf(meta.beach).name)}</small></span></button></div>
  <p class="foot">${meta.total} piece${meta.total===1?'':'s'} of sea glass gathered so far</p></div>`,()=>{
   on('go',()=>{audioInit();goFS();startPlay();});on('tShelf',()=>showShelf(showTitle));on('tLooks',()=>showLooks(showTitle));});}
-function startPlay(){mode='play';hideCard();if(!meta.tutDone&&!tutEl)showTutorial();if(!run.started&&run.easy&&!meta.tutDone)hint=run.easy;}
+let fastTold=false;   // once a visit, say so when a tide with a full-size jar begins
+function noteFast(){if(!fastTold&&run&&tideSecs(run.targets)<TIDE_SECS){fastTold=true;toast('Full-size jar: the tide comes in faster');}}
+function startPlay(){mode='play';hideCard();noteFast();if(!meta.tutDone&&!tutEl)showTutorial();if(!run.started&&run.easy&&!meta.tutDone)hint=run.easy;}
 function showTutorial(){tutEl=document.createElement('div');tutEl.className='card tut';tutEl.setAttribute('role','note');
  placeTut();
  tutEl.innerHTML='<p>Swap two pieces to line up three</p><button class="btn primary" type="button" id="tutOk">Got it</button>';stage.appendChild(tutEl);placeTut();
@@ -757,7 +760,7 @@ function showEnd(win,done,stars,unlocked){
  <a class="btn" id="eBack" href="../games.html"><span>&larr; Digi Games</span></a></div>`,el=>{
   el.querySelectorAll('[data-g]').forEach(r=>r.prepend(glassIcon(+r.dataset.g,26)));
   el.querySelectorAll('[data-fd]').forEach(r=>{const f=FIND[r.dataset.fd],fr=done.finds.find(x=>x.id===f.id).freed;const ic=findIcon(fr?f:TYPE_GHOST[f.type],52,!fr);ic.setAttribute('aria-hidden','true');r.prepend(ic);});
-  on('next',()=>{newRun('new');goFS();mode='play';hideCard();});on('eShelf',()=>showShelf(card));on('eLooks',()=>showLooks(card));});
+  on('next',()=>{newRun('new');goFS();mode='play';hideCard();noteFast();});on('eShelf',()=>showShelf(card));on('eLooks',()=>showLooks(card));});
  /* the card opens the moment the last piece lands, often under a finger still playing: ignore taps on it for a moment */
  card();const c=$('card');c.classList.add('settling');setTimeout(()=>c.classList.remove('settling'),450);}
 
@@ -795,6 +798,5 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{}).catch(
 
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
