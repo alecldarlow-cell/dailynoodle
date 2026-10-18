@@ -754,7 +754,7 @@ function hud(){const cue=$('cue');let t='';
  if(S.mode==='ready')t='Hold anywhere to breathe in';else if(S.mode==='play')t=(S.tau%CYCLE)<IN?'Breathe in':'Breathe out';else if(um)t=uCueText();
  if(um!==lastU){lastU=um;cue.classList.toggle('u',um);}
  const sk=S.mode==='uplay'&&!S.paused&&(U.ph==='cue'||U.ph==='wait');if(sk!==lastSk){lastSk=sk;$('uskip').hidden=!sk;}
- const sb=S.mode==='uplay'&&U.ph==='tense'&&!U.susp&&U.ht<UBELL;if(sb!==lastSb){lastSb=sb;$('sub').style.opacity=sb?0.5:0;}
+ const sb=S.mode==='uplay'&&U.ph==='tense'&&!U.susp&&U.ht<UBELL;if(sb!==lastSb){lastSb=sb;$('sub').style.opacity=sb?0.8:0;}
  if(t!==lastCue){lastCue=t;cue.style.opacity=0;if(t)setTimeout(()=>{if(lastCue===t){cue.textContent=t;cue.style.opacity=0.7;}},meta.rm?0:350);}
  const n=S.mode==='play'||S.mode==='end'?S.got:0;if(n!==lastCnt){lastCnt=n;$('cnt').textContent='✦ '+n;}
  const vis=S.mode+'|'+(S.mode==='play');if(vis!==lastVis){lastVis=vis;$('cnt').style.opacity=S.mode==='play'?0.85:0;$('pz').hidden=!(S.mode==='play'||S.mode==='ready'||S.mode==='uplay'||S.mode==='uready');}
@@ -787,6 +787,5 @@ addEventListener('resize',resize);
 resize();showTitle();requestAnimationFrame(frame);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
