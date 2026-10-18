@@ -1415,7 +1415,25 @@ function assistFor(ci){const s=meta.streak;return s.c===ci&&s.n>=1?Math.min(.3,.
 const newDeal=()=>((Math.random()*4294967295)>>>0)||1;
 function startChart(ci,how,deal){$('top').hidden=false;st=newGame(ci,(Math.random()*4294967295)>>>0,meta.set.mode,deal);st.assist=assistFor(ci);cps=[];
  resetScene();meta.stats.played++;saveMeta();rndArm(how||'new');hideModal();$('dock').hidden=false;layout();syncD();
- banner(chartOf(st).name,(chartOf(st).real?'A real chart':'An invented chart')+(st.deal?' · shuffled':''),'puffin',2400);setTimeout(()=>beginTurn(),TEST?0:2000);}
+ const go=()=>{banner(chartOf(st).name,(chartOf(st).real?'A real chart':'An invented chart')+(st.deal?' · shuffled':''),'puffin',2400);setTimeout(()=>beginTurn(),TEST?0:2000);};
+ /* a newcomer's first chart opens on the three-card quick start, over the real chart */
+ if(ci===0&&!st.deal&&!meta.coached&&!meta.seen.primer&&(!TEST||window.__PRIMER))primer(go);else go();}
+/* ---------- the quick start (approved 18 Oct 2026): three cards before a newcomer's first turn, skippable, replayable from How to play ---------- */
+const DIE=(n,f,s)=>{const P={1:[[10,10]],2:[[6,6],[14,14]],3:[[5,5],[10,10],[15,15]],4:[[6,6],[14,6],[6,14],[14,14]],5:[[5,5],[15,5],[10,10],[5,15],[15,15]],6:[[6,5],[14,5],[6,10],[14,10],[6,15],[14,15]]}[n];
+ return `<svg viewBox="0 0 20 20" width="34" height="34" aria-hidden="true"><rect x="1" y="1" width="18" height="18" rx="4" fill="${f}" stroke="#2a221b" stroke-width="1.2"/>${P.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.8" fill="${s}"/>`).join('')}</svg>`;};
+const PRIMER=[
+ {h:'Reinforce',p:'Each turn brings new troops: at least 3, more for every three islands you hold. Tap your own islands to place them.',art:()=>`<img src="${iconURL('puffin')}" alt="" style="width:56px;height:56px"><img src="${iconURL('puffin')}" alt="" style="width:56px;height:56px;margin-left:-22px"><img src="${iconURL('puffin')}" alt="" style="width:56px;height:56px;margin-left:-22px">`},
+ {h:'Attack',p:'Tap an island next to yours to attack it. The chip shows your chance of taking it; Blitz keeps rolling until it falls. Dice are matched highest against highest, and ties go to the defender.',art:()=>`${DIE(6,'#e4572e','#fff8ef')}${DIE(5,'#e4572e','#fff8ef')}${DIE(2,'#e4572e','#fff8ef')}<b style="font:900 15px var(--f-ui);color:var(--ink-2);margin:0 4px">vs</b>${DIE(4,'#efe3c6','#1d2a31')}${DIE(1,'#efe3c6','#1d2a31')}`},
+ {h:'Rule the chart',p:'Hold a whole chain (the islands sharing a coloured stretch of water) and it pays extra troops every turn. Knock every rival fleet out to win.',art:()=>'<canvas id="prMini" style="width:150px;height:96px;border-radius:12px;background:#2a86b0"></canvas>'}];
+let primerOn=null;
+function primer(done,k,end){k=k||0;end=end||'Set sail';primerOn=done;const P=PRIMER[k],last=k===PRIMER.length-1;
+ showModal(`<div class="kick">Quick start · ${k+1} of ${PRIMER.length}</div><div class="prArt" style="display:flex;align-items:center;justify-content:center;min-height:96px;gap:4px">${P.art()}</div><h2>${P.h}</h2><p>${P.p}</p>
+  <div class="prDots" aria-hidden="true" style="display:flex;justify-content:center;gap:7px;margin:2px 0">${PRIMER.map((x,q)=>`<i style="width:8px;height:8px;border-radius:50%;background:${q===k?'var(--ink)':'rgba(29,42,49,.22)'}"></i>`).join('')}</div>
+  <button class="cbtn pri" id="prN">${last?end:'Next'}</button><button class="cbtn" id="prS">${last?'Back':'Skip'}</button>`,'',()=>{
+  if($('prMini'))drawMini($('prMini'),0);
+  $('prN').addEventListener('click',()=>{sfx('tap');if(last)primerDone();else primer(done,k+1,end);});
+  $('prS').addEventListener('click',()=>{sfx('tap');if(last)primer(done,k-1,end);else primerDone();});});}
+function primerDone(){const d=primerOn;primerOn=null;meta.seen.primer=1;saveMeta();hideModal();if(d)d();}
 /* ---------- the open sea: runs, legs, the draft and the strike (spec 14 Oct 2026) ---------- */
 const allCharted=()=>CHARTS.slice(0,CAMP).every(c=>(meta.best[c.id]||0)>0);
 const freshSea=()=>({leg:1,ord:{},won:0,lost:0,best:0,offer:null,draft:null,strike:false,last:-1,runs:1});
@@ -1781,6 +1799,7 @@ function settings(back){const s=meta.set;const sw=(id,on,l,sub)=>`<button class=
   if($('tips'))$('tips').addEventListener('click',()=>{meta.coached=false;saveMeta();settings(back);});
   $('card').querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{s[b.dataset.k]=b.dataset.v;saveMeta();settings(back);}));});}
 function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">‹ Back</button><h2>How to play</h2></div>
+ <button class="cbtn" id="prA">Show the quick start</button>
  <ol class="rules"><li><b>Win</b> by knocking every rival fleet out of the fight; any gull islands left then strike their colours. You are out if you lose all your islands.</li>
  <li><b>Reinforce:</b> each turn you get your islands ÷ 3 (at least 3), plus a bonus for every whole chain you hold. Tap your islands to send them.</li>
  <li><b>Chains</b> are the groups of islands sharing a coloured stretch of water. The small tag (+4) is what holding the whole chain adds every turn; it takes a fleet’s colour once that fleet holds it all. Tap Chains for names and who is closest.</li>
@@ -1791,7 +1810,7 @@ function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">�
  <li><b>Rivals</b> fight each other, but if you pull ahead they turn on you together. Tap the fleet bar to see who’s winning, and tap the chart during their turn to hurry it along.</li>
  <li><b>Shuffled deals:</b> once you’ve won a chart, its card offers Shuffled as well as Charted: the same islands, but your harbour, your rivals, their harbours and the gull garrisons are dealt fresh. Deal again until you like the look of it. Stars come from the charted start; shuffled wins keep their own record.</li>
  <li><b>The open sea</b> opens once every chart is won: endless legs, each a shuffled deal, with the rivals mustering a little more every leg. Win a leg and choose a standing order (new, or the next level of one you hold); lose one and you strike a level of your choice, then deal again.</li>
- <li><b>Camera:</b> each turn opens on the whole chart and it closes in on attacks. Pinch or drag to look around, and double-tap open sea to see the whole chart.</li></ol>`,'',()=>$('bk').addEventListener('click',back));}
+ <li><b>Camera:</b> each turn opens on the whole chart and it closes in on attacks. Pinch or drag to look around, and double-tap open sea to see the whole chart.</li></ol>`,'',()=>{$('bk').addEventListener('click',back);$('prA').addEventListener('click',()=>primer(()=>how(back),0,'Done'));});}
 
 /* ---------- input: a tap picks the island under it; a held finger keeps sending troops;
    two fingers pinch the camera, one finger drags it (at any zoom, out into the open sea round the chart), a double tap on open sea swaps views ---------- */
@@ -1824,7 +1843,7 @@ $('pz').addEventListener('click',()=>{sfx('tap');pause();});
 $('chest').addEventListener('click',()=>{if(ui.busy&&ui.rival<0)return;sfx('tap');spoilsCard();});
 $('fleets').addEventListener('click',()=>{if(ui.busy&&ui.rival<0)return;sfx('tap');standings();});
 $('chainsBtn').addEventListener('click',()=>{ui.chains=!ui.chains;$('chainsBtn').setAttribute('aria-pressed',ui.chains);sfx('tap');});
-addEventListener('keydown',e=>{if(e.key==='Escape'){if($('modal').hidden)pause();else if($('modal').className!=='title'){if($('dock').hidden)home();else if(st&&st.phase!=='over')hideModal();}}
+addEventListener('keydown',e=>{if(e.key==='Escape'){if(primerOn){primerDone();return;}if($('modal').hidden)pause();else if($('modal').className!=='title'){if($('dock').hidden)home();else if(st&&st.phase!=='over')hideModal();}}
  else if((e.key==='Enter'||e.key===' ')&&$('modal').hidden&&!$('b1').hidden&&!$('b1').disabled){e.preventDefault();$('b1').click();}
  else if((e.key==='z'||e.key==='Z')&&$('modal').hidden&&st&&st.phase==='reinforce')undo();});
 const sideways=()=>innerWidth>innerHeight&&innerHeight<=500;
