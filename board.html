@@ -73,9 +73,15 @@
   .btn.go{background:var(--accent);border-color:var(--accent);color:#fff}
   .btn.warn{color:#B3261E}
   .btn:disabled{opacity:.5;cursor:default}
-  .card{margin-top:18px;padding:18px 16px;background:var(--paper);border:1px solid var(--hair);border-radius:12px}
-  .card h2{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.01em;line-height:1.25}
-  .card p{margin-top:8px;font-size:15px;color:var(--muted);line-height:1.5}
+  .bcard{margin-top:18px;padding:18px 16px;background:var(--paper);border:1px solid var(--hair);border-radius:12px}
+  .bcard h2{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.01em;line-height:1.25}
+  .bcard p{margin-top:8px;font-size:15px;color:var(--muted);line-height:1.5}
+  .bcard .acts .btn{flex:1 1 140px}
+  .bcard .ico{font-size:30px;line-height:1;margin-bottom:10px}
+  .steps{list-style:none;margin:16px 0 4px;counter-reset:s}
+  .steps li{position:relative;padding:0 0 10px 34px;font-size:15px;line-height:1.45;color:var(--ink)}
+  .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:23px;height:23px;
+    border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 12.5px/23px var(--body);text-align:center}
   .field{display:block;margin-top:14px}
   .field span{display:block;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
   .field input{width:100%;font:500 16px var(--body);padding:10px 12px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);color:var(--ink)}
@@ -199,15 +205,16 @@
   function intro() {
     document.getElementById('pillbar').hidden = true;
     $app.innerHTML =
-      '<div class="card"><h2>Daily leaderboards for your group</h2>' +
-      '<p>Start a league for your family or friends, share the link in your group chat, and everyone’s results ' +
-      'land on one board per puzzle, every day. No sign-up: just a nickname.</p>' +
+      '<div class="bcard"><div class="ico" aria-hidden="true">🏆</div><h2>Daily leaderboards for your group</h2>' +
+      '<p>See how your family or friends did on each day’s puzzles. No sign-up, just a nickname.</p>' +
+      '<ol class="steps"><li>Start a league and give it a name.</li><li>Share its link in your group chat.</li>' +
+      '<li>Everyone’s results appear on a board for each puzzle, every day.</li></ol>' +
       '<div class="acts"><button class="btn go" data-go="start">Start a league</button>' +
       '<button class="btn" data-go="code">Join with a code</button></div></div>';
   }
   function startForm() {
     $app.innerHTML =
-      '<form class="card" id="f"><h2>Start a league</h2>' +
+      '<form class="bcard" id="f"><h2>Start a league</h2>' +
       '<label class="field"><span>League name</span><input name="lname" maxlength="30" placeholder="e.g. Noodle family" required></label>' +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" placeholder="e.g. Alec" required></label>' +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Start league</button>' +
@@ -217,7 +224,7 @@
   }
   function codeForm() {
     $app.innerHTML =
-      '<form class="card" id="f"><h2>Join a league</h2><p>Ask someone in the league for its link or 8-letter code.</p>' +
+      '<form class="bcard" id="f"><h2>Join a league</h2><p>Ask someone in the league for its link or 8-letter code.</p>' +
       '<label class="field"><span>League code</span><input name="code" maxlength="12" autocapitalize="characters" required></label>' +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join</button>' +
@@ -228,7 +235,7 @@
   function joinForm(info) {
     document.getElementById('pillbar').hidden = true;
     $app.innerHTML =
-      '<form class="card" id="f"><h2>Join ' + esc(info.name) + '</h2>' +
+      '<form class="bcard" id="f"><h2>Join ' + esc(info.name) + '</h2>' +
       '<p>' + info.members + (info.members === 1 ? ' player' : ' players') + ' so far. Pick a nickname and your ' +
       'results will appear on the league’s daily boards.</p>' +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
@@ -300,7 +307,7 @@
     var played = d.ranked.concat(d.unranked).some(function (r) { return r.me; });
     var h = '';
     if (S.created === L.code) {
-      h += '<div class="card"><h2>' + esc(L.name) + ' is ready</h2><p>Share the link in your group chat. Anyone who taps it ' +
+      h += '<div class="bcard"><h2>' + esc(L.name) + ' is ready</h2><p>Share the link in your group chat. Anyone who taps it ' +
            'picks a nickname and joins.</p><div class="acts"><button class="btn go" data-act="invite">Invite people</button></div></div>';
       S.created = '';
     }
@@ -389,7 +396,7 @@
       if (have) { NB.setCurrent(have.code); S.join = ''; return loadBoard(); }
       return NB.peek(S.join).then(joinForm, function () {
         S.join = '';
-        $app.innerHTML = '<div class="card"><h2>That link has expired</h2><p>The league may have closed or changed its code. ' +
+        $app.innerHTML = '<div class="bcard"><h2>That link has expired</h2><p>The league may have closed or changed its code. ' +
           'Ask for a new link.</p></div>';
       });
     }
