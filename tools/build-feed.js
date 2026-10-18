@@ -366,7 +366,9 @@ for (const { dir, kind } of DIRS) {
       date,
       updated,
       read: meta(head, 'dn:read') || (firstMatch(html, /<div class="dateline"[^>]*>([\s\S]*?)<\/div>/i).match(/~\s*\d+\s*min/i) || [''])[0].replace(/\s+/g, ' '),
-      thumb: meta(head, 'dn:thumb') || '',
+      // Tangle pages carry their card tile as a data: URI, which can't follow dark mode; the same tile with a
+      // dark version lives in assets/tangle-thumb.svg (18 Oct 2026), so Tangle cards use that instead.
+      thumb: (/-word-tangle-\d+\.html$/.test(file) && /^data:image\/svg/.test(meta(head, 'dn:thumb'))) ? 'assets/tangle-thumb.svg' : (meta(head, 'dn:thumb') || ''),
       // stat is now the FIGURE only — the tile sizes itself by its length, so a
       // trailing "%" or "×" must not count. unit and label are set separately.
       stat: hs ? hs.figure : '',
