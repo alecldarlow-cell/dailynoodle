@@ -3,6 +3,9 @@
    Dark values follow the phone from the first paint (all seven players have a
    dark palette; it used to wait for the engine to set html.dn-dark, which
    showed a light frame first). */
+/* the sheet's faces, requested with the page's own CSS rather than by script after it has shown, and
+   held (display=block) rather than drawn in a stand-in face first, which made the headline jump */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Serif:ital@0;1&display=block");
 .fin-box{
   --f-bg:#EDEEF2; --f-paper:#FFFFFF; --f-ink:#141726; --f-ink2:#545A6E; --f-line:#C6CAD6; --f-hair:#DCDFE7;
   --f-act:#2E5BFF; --f-onAct:#FFFFFF; --f-actInk:#1B3B9E; --f-actT:#DCE4FF;
@@ -31,7 +34,7 @@ html:not(.fin-ready) #winModal,html:not(.fin-ready) #modal{visibility:hidden;ani
 html.fin-ready .fin-box:not(.fin-open){display:none!important}
 html.fin-ready .fin-box.fin-open{display:block!important;position:fixed!important;inset:0!important;z-index:60;
   overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--f-bg)!important;color:var(--f-ink);
-  opacity:1!important;visibility:visible!important;transform:none!important;padding:0!important;margin:0!important;
+  opacity:1!important;transform:none!important;padding:0!important;margin:0!important;
   max-width:none!important;width:auto!important;height:auto!important;border-radius:0!important;box-shadow:none!important;
   backdrop-filter:none!important;align-items:initial!important;justify-content:initial!important}
 html.fin-shown body{overflow:hidden}
@@ -166,3 +169,12 @@ details.fin-rare p{font-size:14px;line-height:1.7;color:var(--f-ink2);margin:0 0
 
 /* the title takes focus when the sheet opens (finish.js); no ring for that programmatic focus */
 .fin-box .fin-title:focus{outline:none}
+
+/* no scrollbar drawn on the sheet or the start card: they scroll by touch, and Android flashed one as they opened */
+.fin-box.fin-open,.dn-start{scrollbar-width:none}
+.fin-box.fin-open::-webkit-scrollbar,.dn-start::-webkit-scrollbar{display:none}
+
+/* the open sheet shows once its fonts are in (finish.js adds dn-fonts after at most a second), so the
+   headline never re-flows in front of you */
+html.fin-ready.dn-fonts .fin-box.fin-open{visibility:visible!important}
+html.fin-ready:not(.dn-fonts) .fin-box.fin-open{visibility:hidden!important}

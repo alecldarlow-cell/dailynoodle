@@ -22,7 +22,7 @@ html.dn-house body{font-variant-numeric:tabular-nums}
    the old masthead, a light sheet, then the real thing was the flash);
    only the background shows, in the phone's theme. If house.js never runs,
    the page shows anyway after 2.5 s. */
-html:not(.dn-house) body{visibility:hidden;animation:dn-reveal 0s 2.5s forwards}
+html:not(.dn-house) body,html:not(.dn-fonts) body{visibility:hidden;animation:dn-reveal 0s 2.5s forwards}   /* dn-fonts: finish.js, once the faces are in */
 @keyframes dn-reveal{to{visibility:visible}}
 @media (prefers-color-scheme:dark){html:not([data-theme="light"]),html:not([data-theme="light"]) body{background:#11131A}}
 html[data-theme="dark"],html[data-theme="dark"] body{background:#11131A}

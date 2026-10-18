@@ -34,9 +34,11 @@ async function newPhone(browser, { width = 390, height = 844, scheme = 'light', 
   });
   await ctx.route('**/*', async route => {
     const u = new URL(route.request().url());
-    if (u.host === 'fonts.googleapis.com') return FONTS ? route.fulfill({ status: 200, contentType: 'text/css', body: fs.readFileSync(path.join(FONTS, 'fonts.css')) }) : route.fulfill({ status: 200, contentType: 'text/css', body: '' });
+    // fonts: honour ?display= as Google does, so font swaps show up in tests
+    if (u.host === 'fonts.googleapis.com' && !u.pathname.startsWith('/__fonts/')) return FONTS ? route.fulfill({ status: 200, contentType: 'text/css', body: fs.readFileSync(path.join(FONTS, 'fonts.css'), 'utf8').replace(/font-display:[^;}]*/g, 'font-display:' + (u.searchParams.get('display') || 'auto')) }) : route.fulfill({ status: 200, contentType: 'text/css', body: '' });
     if (u.pathname.startsWith('/__fonts/') && FONTS) {
-      const f = path.join(FONTS, decodeURIComponent(u.pathname.slice(9)));
+      const rel = decodeURIComponent(u.pathname.slice(9));
+      let f = path.join(FONTS, rel); if (!fs.existsSync(f)) f = path.join(FONTS, 'node_modules', rel);   // an npm install of @fontsource puts them here
       return fs.existsSync(f) ? route.fulfill({ status: 200, contentType: 'font/woff2', body: fs.readFileSync(f) }) : route.fulfill({ status: 404 });
     }
     if (u.host.endsWith('supabase.co')) {

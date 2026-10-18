@@ -192,6 +192,28 @@ const TESTS = {
     await ctx.close();
   },
 
+  /* a reopened finish sheet on a slow connection: shown once, already in its own fonts, nothing re-flowing after */
+  async 'flash:fonts'(b) {
+    for (const [type, file, drive] of [['path', F.path, p => play.path(p)], ['tangle', F.tangle, p => play.tangle(p, { n: 2 })]]) {
+      const c1 = await newPhone(b, { scheme: 'dark' }); const { p } = await open(b, file, { ctx: c1 }); await drive(p);
+      const ls = await p.evaluate(() => JSON.stringify(Object.assign({}, localStorage))); await c1.close();
+      const c2 = await newPhone(b, { scheme: 'dark' });
+      await c2.addInitScript(ls => { if (!localStorage.length) { const o = JSON.parse(ls); for (const k in o) localStorage.setItem(k, o[k]); } }, ls);
+      await c2.route(/__fonts\//, async r => { await new Promise(z => setTimeout(z, 700)); await r.fallback(); });   // font files 700 ms late
+      await c2.addInitScript(() => { window.__seen = []; const t0 = performance.now(); (function tick() {
+        const el = document.querySelector('.fin-title'), n = document.querySelector('.fin-next');
+        if (el && getComputedStyle(document.body).visibility !== 'hidden' && getComputedStyle(el).visibility !== 'hidden') {
+          const rg = document.createRange(); rg.selectNodeContents(el); const r = rg.getBoundingClientRect();
+          const k = Math.round(r.width) + ',' + Math.round(r.height) + ',' + (n ? Math.round(n.getBoundingClientRect().top) : -1);
+          if (window.__seen[window.__seen.length - 1] !== k) window.__seen.push(k); }
+        if (performance.now() - t0 < 2500) requestAnimationFrame(tick); })(); });
+      const p2 = await c2.newPage(); await p2.goto('https://dailynoodle.co.uk/reports/' + file); await p2.waitForTimeout(2600);
+      const seen = await p2.evaluate(() => window.__seen);
+      ok(seen.length === 1, `${type}: reopened with slow fonts, the sheet appears once and doesn't move (${seen.join(' -> ')})`);
+      await c2.close();
+    }
+  },
+
   /* ---------- finish sheet, per type ---------- */
   async 'finish:tangle'(b) {
     const ev = []; const { ctx, p } = await open(b, F.tangle, { events: ev });

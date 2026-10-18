@@ -80,7 +80,7 @@
     var have = [].slice.call(document.querySelectorAll('link[href*="fonts.googleapis.com/css2"]')).some(function (l) { return /Instrument\+Serif/.test(l.href) && /Archivo/.test(l.href); });
     if (have) return;
     var l = document.createElement('link'); l.rel = 'stylesheet'; l.setAttribute('data-fin-fonts', '');
-    l.href = 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Serif:ital@0;1&display=swap';
+    l.href = 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Serif:ital@0;1&display=block';
     document.head.appendChild(l);
   }
   function css() {
@@ -246,9 +246,13 @@
   }
   function open(box) {
     box.classList.add('fin-open'); document.documentElement.classList.add('fin-shown');
-    try { box.scrollTop = 0; } catch (e) {}
+    try { if (box.scrollTop) box.scrollTop = 0; } catch (e) {}
     // screen readers and keyboards land on the result, not on the board behind it
-    try { var ft = box.querySelector('.fin-title'); if (ft) { ft.setAttribute('tabindex', '-1'); ft.focus({ preventScroll: true }); } } catch (e) {}
+    // only when the sheet opens at the end of a game, not when a finished puzzle is reopened (on Android
+    // a focus move as the page loads drew a ring and flashed the scrollbar)
+    if (!document.documentElement.hasAttribute('data-dn-done') && performance.now() > 1500) {
+      try { var ft = box.querySelector('.fin-title'); if (ft) { ft.setAttribute('tabindex', '-1'); ft.focus({ preventScroll: true }); } } catch (e) {}
+    }
     if (!box.getAttribute('role')) { box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'Result'); }
   }
   function hide() {
@@ -264,6 +268,19 @@
       tc.content = /BORD/.test((window.DN_PUZZLE || {}).id || '') ? '#0F181D' : '#11131A'; document.head.appendChild(tc);
     }
   } catch (e) {}
+  /* hold the sheet (and, on the five, the page: house.css) until its two faces have loaded, at most a
+     second, so nothing re-flows when they arrive; on a revisit they're cached and this is immediate */
+  (function () {
+    var r = document.documentElement, done = false;
+    function go() { if (!done) { done = true; r.classList.add('dn-fonts'); } }
+    try {
+      if (!document.fonts || !document.fonts.load) return go();
+      Promise.all(['400 40px "Instrument Serif"', 'italic 400 20px "Instrument Serif"', '400 16px Archivo', '600 16px Archivo']
+        .map(function (f) { return document.fonts.load(f); })).then(go, go);
+      setTimeout(go, 1000);
+    } catch (e) { go(); }
+  })();
+
   window.dnFinish = { show: show, hide: hide, q: [], _test: { overallRun: overallRun, toMidnight: toMidnight, hm: hm } };
   queued.forEach(show);
 })();

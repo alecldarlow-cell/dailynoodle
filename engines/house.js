@@ -35,7 +35,7 @@
   /* ---- fonts: Archivo for the interface, Instrument Serif for the big moments ---- */
   if (!document.querySelector('link[data-fin-fonts]')) {
     var lf = document.createElement('link'); lf.rel = 'stylesheet'; lf.setAttribute('data-fin-fonts', '');
-    lf.href = 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Serif:ital@0;1&display=swap';
+    lf.href = 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Serif:ital@0;1&display=block';
     document.head.appendChild(lf);
   }
   var root = document.documentElement;
