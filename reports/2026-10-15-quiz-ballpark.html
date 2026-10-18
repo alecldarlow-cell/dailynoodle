@@ -104,7 +104,8 @@ a{color:inherit}
 .chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .qnav{margin-left:auto;display:flex;align-items:center}
 .qn{min-width:38px;text-align:center;font-weight:700;color:var(--ink2);font-size:15px}
-.navb{display:flex;align-items:center;justify-content:center;width:32px;height:44px;border-radius:10px;font-size:28px;font-weight:700;line-height:1;color:var(--ink)}
+.navb{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:0 -6px;border-radius:10px;font-size:28px;font-weight:700;line-height:1;color:var(--ink)}
+.top .chip,.qn,.sc{pointer-events:none}   /* the arrows' 44px tap areas reach under these */
 .navb[disabled]{opacity:.2;pointer-events:none}
 .sc{min-width:58px;text-align:right;font-weight:800;font-size:22px}
 .meter{position:relative;height:8px;border-radius:4px;background:var(--line);margin-top:14px}
@@ -231,7 +232,7 @@ a{color:inherit}
 /* reduced motion: the in-game switch and the system setting both land here */
 .rm *,.rm *::before,.rm *::after{animation:none!important;transition:none!important}
 @media (prefers-reduced-motion: reduce){.burst{display:none}}
-@media (max-width:400px){.top{gap:6px}.navb{width:26px}.qn{min-width:34px;font-size:14px}.sc{min-width:40px;font-size:20px}.chip{font-size:13px;padding-right:8px}}
+@media (max-width:400px){.top{gap:6px}.navb{margin:0 -9px}.qn{min-width:34px;font-size:14px}.sc{min-width:40px;font-size:20px}.chip{font-size:13px;padding-right:8px}}
 @media (max-height:640px){.rv{font-size:36px}.q{font-size:19px}.logo h1{font-size:40px}.slz{padding-top:34px}}
 /* short screens (browser bars showing, iPhone Safari): keep the verdict and both numbers in view after Lock in */
 @media (max-height:600px){
