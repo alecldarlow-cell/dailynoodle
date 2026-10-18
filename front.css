@@ -107,7 +107,11 @@
      width, stepped by data-len), the unit is demoted, and the label carries the
      noun — so the tile states a fact rather than floating a number. */
   .stat{container-type:inline-size;position:relative;display:grid;place-content:center;
-    text-align:center;padding:4px;background:var(--paper);border-color:var(--ink)}
+    text-align:center;padding:4px;background:var(--accent-soft);border-color:transparent;
+    border-radius:10px}
+  /* Was white with a 1px ink outline, which drew a hard box round the number.
+     A soft accent wash with no outline lets the figure carry the tile.
+     Contrast on each section's wash: accent >= 4.56:1, label/unit >= 5.11:1. */
   .stat .fig{display:flex;align-items:baseline;justify-content:center;
     font-family:var(--display);font-weight:800;color:var(--accent);
     letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
@@ -117,7 +121,7 @@
   .stat[data-len="4"] .fig{font-size:26cqw}
   .stat[data-len="5"] .fig{font-size:21cqw}
   .stat[data-len="6"] .fig{font-size:17cqw}
-  .stat .unit{font-size:.42em;font-weight:700;color:var(--faint);
+  .stat .unit{font-size:.42em;font-weight:700;color:var(--muted);
     letter-spacing:0;margin-left:.05em}
   .stat.haslabel .fig{margin-top:-8cqw}
   /* --muted, not --faint: 6.03:1 on the tile against --faint's 2.64:1, which
