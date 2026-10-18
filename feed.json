@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-18T00:59:21.372Z",
+  "built": "2026-10-18T01:00:28.479Z",
   "today": "2026-10-18",
   "timezone": "Europe/London",
-  "count": 616,
+  "count": 617,
   "items": [
     {
       "path": "reports/2026-10-18-crossword-mini-0099.html",
@@ -107,6 +107,21 @@
       "stat": "142,250",
       "statUnit": "",
       "statLabel": "participants",
+      "mask": ""
+    },
+    {
+      "path": "reports/2026-10-18-student-visa-grants-peak-fall.html",
+      "kind": "report",
+      "topic": "Immigration",
+      "headline": "Student visa grants fall 41% from peak but stay above 2019",
+      "standfirst": "The Home Office granted 383,455 sponsored study visas in the year to June 2026, down from 652,072 at the 2023 peak and still above the nearly 300,000 of 2019. China and India account for almost half of main applicants.",
+      "date": "2026-10-18",
+      "updated": "",
+      "read": "~3 min",
+      "thumb": "",
+      "stat": "41",
+      "statUnit": "%",
+      "statLabel": "visa fall",
       "mask": ""
     },
     {
