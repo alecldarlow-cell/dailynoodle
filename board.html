@@ -85,6 +85,8 @@
   .field{display:block;margin-top:14px}
   .field span{display:block;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
   .field input{width:100%;font:500 16px var(--body);padding:10px 12px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);color:var(--ink)}
+  .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .field small{display:block;margin-top:5px;font-size:12.5px;color:var(--faint)}
   .msg{margin-top:10px;font-size:14px;color:#B3261E;min-height:1em}
   .msg.ok{color:var(--accent)}
   details.set{margin-top:26px;border-top:1px solid var(--hair);padding-top:12px}
@@ -216,7 +218,7 @@
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Start a league</h2>' +
       '<label class="field"><span>League name</span><input name="lname" maxlength="30" placeholder="e.g. Noodle family" required></label>' +
-      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" placeholder="e.g. Alec" required></label>' +
+      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" placeholder="e.g. Alec" required><small>What everyone in the league sees.</small></label>' +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Start league</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.create(f.elements.lname.value.trim(), f.elements.nick.value.trim()).then(function (l) {
