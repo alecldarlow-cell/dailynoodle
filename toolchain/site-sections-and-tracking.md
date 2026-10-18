@@ -1,6 +1,6 @@
 # Digi site: sections, reader tracking and admin (set up 26 Sep 2026)
 
-Reference for any session that builds or publishes to the digi-news repo. Where this conflicts with older notes on the front page or dn:kind, this is current.
+The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dailynoodle (renamed from digi-news, 18 Oct 2026). Start with `SITE.md` at the repo root for names, addresses, publishing and saved-progress rules; this file holds the detail. Where this conflicts with older notes on the front page or dn:kind, this is current.
 
 ## Three sections
 - `index.html` = Digi News (kind `report`, blue #1C46C2), `puzzles.html` = Digi Puzzles (kind `puzzle`, green #0E7A4B), `games.html` = Digi Games (kind `game`, purple #6A2BC9).
