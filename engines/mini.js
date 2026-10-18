@@ -460,6 +460,9 @@ const APPMODE=!!(window.matchMedia&&window.matchMedia("(pointer:coarse) and (hov
 function initAppMode(){
   if(!APPMODE)return;               // phones/tablets only — not touchscreen laptops
   document.documentElement.classList.add("app-mode");
+  /* 18 Oct 2026: the clue bar lives just above the keyboard on phones (see mini.css) */
+  const cbox=document.querySelector(".cluebox"),kbEl=$("#kb");
+  if(cbox&&kbEl&&kbEl.parentNode)kbEl.parentNode.insertBefore(cbox,kbEl);
   customKb=true;                       // own keyboard → native one never reflows the layout
   $("#kb").classList.add("show");
   const t=$("#toggleKb"); if(t)t.textContent="Hide keys";

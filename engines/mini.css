@@ -179,3 +179,21 @@ html.app-mode .key.wide{max-width:64px}
 #revealAll,#reset,#toggleKb{display:none!important}
 /* New grid and the difficulty picker were deleted outright (markup + handler), 15 Oct 2026. */
 footer{display:none!important}
+
+/* 18 Oct 2026 — thumb-first phone layout (Alec). In app mode the clue bar sits
+   directly above the keyboard, where the thumb already is; the occasional
+   buttons move up under the meta row, above the grid. The engine moves
+   .cluebox out of <main> to just before #kb (ids unchanged — dn-track.js still
+   sees #cluebar), so these orders are all on .app's own column:
+   header · meta · controls · board · message · clue bar · keyboard. */
+html.app-mode .controls{order:1;margin:0 0 8px}
+html.app-mode main{order:2}
+html.app-mode .msg{order:3}
+html.app-mode .cluebox{order:4;margin-top:8px}
+html.app-mode .kb{order:5}
+/* the buttons share the row instead of scrolling off the right edge */
+html.app-mode .controls button{flex:1 1 auto;min-width:0;padding:6px 8px}
+html.app-mode .controls #fs{flex:0 0 auto}
+@media (max-height:660px){html.app-mode .cluebox{margin-top:5px}html.app-mode .controls{margin-bottom:5px}}
+/* once solved, checking and revealing have nothing left to do */
+body.win #checkWord,body.win #checkAll,body.win #revealWord{display:none}
