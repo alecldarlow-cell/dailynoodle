@@ -125,6 +125,23 @@ const TESTS = {
   async 'house:sweep'(b) { await houseChecks(b, 'sweep', F.sweep, async p => { const P = await play.puzzle(p); await tap(p, p.locator('#grid .cell').nth((P.start[0] - 1) * 6 + P.start[1] - 1)); }, play.sweep); },
   async 'house:path'(b) { await houseChecks(b, 'path', F.path, async p => { const P = await play.puzzle(p); const i = P.solution.flat().indexOf(1); await tap(p, p.locator('#grid .cell').nth(i)); }, play.path); },
 
+  async 'house:tangle-borders-home'(b) {
+    for (const [type, file, bg] of [['tangle', F.tangle, 'rgb(17, 19, 26)'], ['borders', F.borders, 'rgb(15, 24, 29)']]) {
+      const { ctx, p } = await open(b, file);
+      const s = await p.evaluate(() => ({ date: document.getElementById('dateLine').textContent, back: document.querySelector('#home a.back').textContent,
+        stats: document.querySelectorAll('#home .stats div, #home .hstats div').length, how: !!document.querySelector('#home details.how'),
+        sw: document.documentElement.scrollWidth, vw: innerWidth }));
+      ok(/^No\. \d+, Sunday 18 October$/.test(s.date) && s.back === '← Puzzles', `${type}: home date line "${s.date}", back "${s.back}"`);
+      ok(s.stats === 3 && s.how && s.sw <= s.vw, `${type}: three stats, How to play, no sideways scroll`);
+      ok(!p.errs.length, `${type}: no page errors ` + p.errs.join(' | '));
+      await ctx.close();
+      const d = await open(b, file, { scheme: 'dark' });
+      const k = await d.p.evaluate(() => getComputedStyle(document.body).backgroundColor);
+      ok(k === bg, `${type}: dark mode follows the phone (${k})`);
+      await d.ctx.close();
+    }
+  },
+
   /* ---------- finish sheet, per type ---------- */
   async 'finish:tangle'(b) {
     const ev = []; const { ctx, p } = await open(b, F.tangle, { events: ev });

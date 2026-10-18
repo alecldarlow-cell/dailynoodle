@@ -167,3 +167,79 @@ footer{margin-top:auto;padding-top:8px;font-size:11px;color:var(--ink2);opacity:
    lives in each puzzle page, so the elements stay in the HTML but never show.
    The footer was a build note ("SHELL vN · … code, not eye") meant for us, not players. */
 footer{display:none!important}
+
+/* ---------------------------------------------------------------------------
+   18 Oct 2026 — redesign (as Tangle and the house start cards): a rounded
+   start card that keeps the atlas plate, stats and How to play under it,
+   quieter settings, and an "atlas at night" dark palette that follows the
+   phone. Overrides the rules above; the page markup is unchanged.
+--------------------------------------------------------------------------- */
+:root{--edge:var(--ink); --ledge:var(--ink); --land-edge:var(--ink); --globe:#E4F1F1; --wland:#E9DCAE;
+  --onRight:#173F2A; --onWrong:#5E1E18; --tog-off:#C3CEC9; --veil:rgba(207,230,232,.92); --press:#EEF2EE; --line:rgba(31,58,74,.16)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F181D; --sea:#16303A; --grat:#2A4C57; --ink:#DCE8EC; --ink2:#97ADB6; --paper:#1B2A31;
+  --pin:#FF7A6E; --pinT:#4A2522; --ok:#4CC793; --okT:#173A2A;
+  --edge:#4C6772; --ledge:#060B0E; --land-edge:#0B1418; --globe:#1E3A44; --wland:#BBAE80;
+  --onRight:#C4F0D5; --onWrong:#FFD6D0; --tog-off:#3A4E57; --veil:rgba(22,48,58,.92); --press:#24363E; --line:rgba(220,232,236,.14);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F181D; --sea:#16303A; --grat:#2A4C57; --ink:#DCE8EC; --ink2:#97ADB6; --paper:#1B2A31;
+  --pin:#FF7A6E; --pinT:#4A2522; --ok:#4CC793; --okT:#173A2A;
+  --edge:#4C6772; --ledge:#060B0E; --land-edge:#0B1418; --globe:#1E3A44; --wland:#BBAE80;
+  --onRight:#C4F0D5; --onWrong:#FFD6D0; --tog-off:#3A4E57; --veil:rgba(22,48,58,.92); --press:#24363E; --line:rgba(220,232,236,.14);
+  color-scheme:dark}
+/* literals above, routed through the tokens */
+.btn{border-color:var(--edge);box-shadow:0 3px 0 var(--ledge)}
+.btn:active{box-shadow:0 0 0 var(--ledge)}
+.btn.primary{border-color:var(--ink)}
+.btn.quiet{box-shadow:none;border-color:var(--ink2)}
+.btn.quiet:active{background:var(--press)}
+.iconbtn{border-color:var(--edge)}
+.land{stroke:var(--ink)}
+.sheet{border-color:var(--edge)}
+.sheet::after{border-color:var(--edge)}
+svg path[fill="#E4F1F1"]{fill:var(--globe);stroke:var(--land-edge)}
+svg path[fill="#E9DCAE"]{fill:var(--wland);stroke:var(--land-edge)}
+#nameplate{background:var(--veil)}
+.opt.right{color:var(--onRight)}
+.opt.wrong{color:var(--onWrong)}
+#inset{border-color:var(--edge)}
+.dialog{border-color:var(--edge);box-shadow:0 4px 0 var(--ledge)}
+.tile{border-color:var(--edge)}
+
+/* home: the start card */
+#home .wrap{gap:0}
+#home .top{margin-bottom:6px}
+#numLabel{display:none}
+.dateline{margin:8px 0 0;font-size:20px}
+#playCard{flex:0 0 auto;margin:22px 0 0;min-height:0;border:0;border-radius:18px;box-shadow:none;padding:0 0 20px;display:flex;flex-direction:column;overflow:hidden}
+#playCard::after{content:none}
+#playCard:active{transform:none;box-shadow:none;filter:brightness(.98)}
+#playCard .world{position:static;display:block;width:calc(100% - 28px);height:auto;margin:16px 14px 8px}
+#playCard .cardtxt{position:static;padding:8px 20px 0;background:none}
+.cardtxt b{font-size:32px}
+.cardtxt small{padding-right:0;margin-top:6px;font-size:16px;line-height:1.45}
+.cardtxt .go{position:static;display:inline-flex;align-items:center;min-height:44px;margin-top:16px;padding:0 22px;border-radius:24px;font-weight:600;font-stretch:100%;font-size:16px}
+.hstats{display:grid;grid-template-columns:repeat(3,1fr);margin:18px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.hstats div{display:flex;flex-direction:column;padding:10px 0 10px 14px;border-left:1px solid var(--line);min-width:0}
+.hstats div:first-child{border-left:0;padding-left:0}
+.hstats b{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1}
+.hstats span{font-size:13px;color:var(--ink2);margin-top:4px}
+details.how{margin:6px 0 0;border-bottom:1px solid var(--line)}
+details.how summary{list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:52px;font-weight:600;font-size:16px;cursor:pointer}
+details.how summary::-webkit-details-marker{display:none}
+details.how summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:rotate(45deg) translateY(-3px)}
+details.how[open] summary::after{transform:rotate(-135deg) translateY(-1px)}
+details.how p{margin:0 0 12px;font-size:15px;line-height:1.5;color:var(--ink2)}
+/* quiet settings, as on Tangle */
+#homeToggles{gap:4px 18px;margin:8px 0 0}
+#homeToggles .tog{position:relative;border:0;padding:0;min-height:44px;gap:8px;font-size:14px;font-weight:500;color:var(--ink2);border-radius:0}
+#homeToggles .tog::before{width:30px;height:18px;border-radius:9px;background:var(--tog-off);box-shadow:none!important}
+#homeToggles .tog[aria-checked="true"]::before{background:var(--ink)}
+#homeToggles .tog::after{content:"";position:absolute;left:2px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:7px;background:var(--paper);transition:left .15s}
+#homeToggles .tog[aria-checked="true"]::after{left:14px}
+.tog::before{background:var(--tog-off);box-shadow:inset 0 0 0 2px var(--tog-off)}
+.tog[aria-checked="false"]::before{box-shadow:inset 0 0 0 2px var(--tog-off),inset -11px 0 0 6px var(--paper)}
+/* the home screen scrolls now it is taller */
+#home{overflow-y:auto;-webkit-overflow-scrolling:touch}
+#home .wrap{height:auto;min-height:100%}

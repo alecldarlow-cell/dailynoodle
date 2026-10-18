@@ -159,13 +159,27 @@ function insetMap(c){$('inset').innerHTML='';$('inset').appendChild(worldSVG(doc
 function tileSVG(c){return `<svg viewBox="0 0 600 600" aria-hidden="true"><path class="land" fill="${colourOf(c)}" d="${c.d}"/></svg>`;}
 
 /* ---------- home ---------- */
+/* 18 Oct 2026 redesign (as Tangle and the house start cards): the number joins the date line, then
+   your stats and How to play under the card. The page markup stays as it is; these are added here. */
+function liveStreak(){const s=save.streak||{n:0},t=today();return (s.last===t||s.last===dayBefore(t))?(s.n||0):0;}
+function homeExtras(){
+  const card=$('playCard');if(!card)return;
+  let st=$('hStats');
+  if(!st){st=document.createElement('div');st.className='hstats';st.id='hStats';card.parentNode.insertBefore(st,card.nextSibling);
+    const how=document.createElement('details');how.className='how';
+    how.innerHTML='<summary>How to play</summary><p>Ten country outlines, easiest first. Pick the country from four names: 100 points for each right answer, and 10 more for every one in a row, up to 50.</p><p>Stuck? Show on map puts the outline on a world map, for half points. Every country you name goes into your atlas in Borderline.</p>';
+    st.parentNode.insertBefore(how,st.nextSibling);}
+  const best=Math.max(0,...Object.values(save.done||{}).map(d=>+d.p||0));
+  st.innerHTML='<div><b>'+liveStreak()+'</b><span>day streak</span></div><div><b>'+best+'</b><span>best score</span></div><div><b>'+Object.keys(save.done||{}).length+'</b><span>Borders played</span></div>';
+}
 function renderHome(){
   show('home');
   $('numLabel').textContent='No. '+parseInt(P.id.slice(-4),10);
-  $('dateLine').textContent=longDate(P.date);
+  $('dateLine').textContent='No. '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date).replace(/ \d{4}$/,'');
+  homeExtras();
   worldSVG($('homeWorld'),null);
   const c=save.cur&&save.cur.id===P.id?save.cur:null;
-  $('playStatus').textContent=c?`Question ${Math.min(NQ,c.ans.length+1)} of ${NQ}, ${c.pts} points so far.`:'Ten country outlines, easiest first. Scored out of ten.';
+  $('playStatus').textContent=c?`Question ${Math.min(NQ,c.ans.length+1)} of ${NQ}, ${c.pts} points so far.`:'Ten country outlines, easiest first. Name them from four; scored out of ten.';
   $('playGo').textContent=c?'Resume':'Play';
   toggles($('homeToggles'));
 }
@@ -311,6 +325,8 @@ function loop(now){
   const fails=GATE(typeof PUZZLE==='object'?PUZZLE:null,md);
   if(fails.length){show('err');$('errList').textContent='Failed: '+fails.join('; ');window.__bordersGate=fails;return;}
   P=PUZZLE;window.__bordersGate=[];
+  document.documentElement.classList.add('dn-dark');   // this player has a dark palette, so the finish sheet may use its own
+  for(const a of document.querySelectorAll('a.back'))if(/Digi Puzzles/.test(a.textContent))a.textContent='← Puzzles';
   $('playCard').addEventListener('click',()=>{goFS();audio();start();});
   $('hintBtn').addEventListener('click',useHint);
   $('nextBtn').addEventListener('click',()=>{goFS();next();});
