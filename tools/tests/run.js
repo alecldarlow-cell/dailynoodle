@@ -161,6 +161,20 @@ const TESTS = {
     await ctx.close();
     await shareNative(b, F.mini, p2 => play.grid(p2), 'mini');
   },
+  async 'finish:doku'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.doku, { events: ev });
+    await play.grid(p);
+    await sheetChecks(p, ev, { type: 'doku', ids: ['winTitle', 'winTime', 'winStreak', 'winBest'],
+      shareRe: /^🔢 Doku #97 — \d:\d\d$/,
+      endCheck: x => ok(x && x.outcome === 'solved', `doku: tracker read ${x && x.outcome}`) });
+    ok(await text(p, '.fin-note') === 'All twelve tiles placed.', 'doku: note');
+    ok(await p.locator('.fin-grid i.giv').count() === 5, 'doku: five given letters shaded');
+    await shareClipboard(p, ctx, 'doku');
+    await reopen(p, ev, 'doku');
+    ok(!p.errs.length, 'doku: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+    await shareNative(b, F.doku, p2 => play.grid(p2), 'doku');
+  },
   /* ---------- the five fixes of 18 Oct ---------- */
   async 'fix:link-replay'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
