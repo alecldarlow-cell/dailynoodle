@@ -1972,14 +1972,7 @@ function drawClips() {
 }
 function drawMarkers() {
   const x0 = cam.x, x1 = cam.x + W / cam.s;
-  const stepM = cam.s > 18 ? 2 : cam.s > 9 ? 5 : cam.s > 4 ? 10 : cam.s > 2 ? 25 : 50;
-  cx.font = '600 ' + Math.max(10, Math.min(13, cam.s * 1.1)) + 'px Nunito, sans-serif'; cx.textAlign = 'center';
-  for (let m = Math.ceil(Math.max(0, x0) / stepM) * stepM; m <= x1; m += stepM) {
-    if (pl.towers) break;
-    const X = SX(m), Y = SY(groundAt(pl, m)) + Math.max(5, Math.min(14, 0.7 * cam.s));
-    cx.fillStyle = 'rgba(255,255,255,.45)'; cx.fillRect(X - 1, Y + 2, 2, m % (stepM * 2) === 0 ? 8 : 4);
-    if (m % (stepM * 2) === 0 && Y + 22 < H) { cx.fillStyle = 'rgba(255,255,255,.75)'; cx.fillText(m + ' m', X, Y + 22); }
-  }
+  cx.textAlign = 'center';   // (the ground tape measure was removed: the HUD shows the distance)
   if (WR > x0 && WR < x1) {
     const X = SX(WR), ly = hudBottom + 22;
     cx.strokeStyle = 'rgba(214,85,62,.55)'; cx.lineWidth = 2; cx.setLineDash([6, 6]); cx.beginPath(); cx.moveTo(X, SY(groundAtFull(pl, WR))); cx.lineTo(X, ly + 6); cx.stroke(); cx.setLineDash([]);
