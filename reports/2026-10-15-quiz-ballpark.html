@@ -1594,7 +1594,7 @@ const PACKS=[
 ];
 const TOUR={k:'tour',name:'Grand Tour',sub:'Ten from every pack you’ve opened',c:'#1E2433',ic:'<path d="M12 1.5l2.6 7.9 7.9 2.6-7.9 2.6-2.6 7.9-2.6-7.9L1.5 12l7.9-2.6z"/>'};
 const ALLP=PACKS.concat([TOUR]);
-const NQ=10, CLEAR=400, S2=525, S3=625;
+const NQ=10, CLEAR=400, S2=525, S3=625, MAXKIND=3;
 const BAND=[1.15,1.3,1.6,3],     // 15%, 30%, 60%, 3x (widened 18 Oct 2026 so ~10% of rounds earn 3 stars)
       PTS=[100,75,50,25,0], ZN=['Bullseye','Close','Ballpark','In range','Miss'];
 const ZC=['var(--z0)','var(--z1)','var(--z2)','var(--z3)','var(--zm)'];
@@ -1812,15 +1812,28 @@ const endRev=()=>!!VR&&VR!==R;                  // reviewing a finished round fr
 
 function pickIds(p){
   const src=p<NP?[PACKS[p]]:PACKS.filter((_,i)=>unlocked(i));   // the Grand Tour draws from every pack you've opened
-  let pool=[].concat.apply([],src.map(pk=>pk.q.map((_,i)=>pk.k+':'+i)));
+  const all=[].concat.apply([],src.map(pk=>pk.q.map((_,i)=>pk.k+':'+i)));
+  const kind=id=>fact(id).q.split(' ').slice(0,3).join(' ').toLowerCase();   // "how tall is", "how many people"…
   // rotation: questions never asked come first, then the ones asked longest ago
   const age=save.age[ALLP[p].k]||[],at=new Map(age.map((id,i)=>[id,i]));
-  pool=shuffle(pool.filter(id=>!at.has(id))).concat(pool.filter(id=>at.has(id)).sort((x,y)=>at.get(x)-at.get(y)));
+  // never-asked questions are spread out by kind, so each kind is shared across the rounds rather than bunching up
+  const byK={};shuffle(all.filter(id=>!at.has(id))).forEach(id=>{(byK[kind(id)]=byK[kind(id)]||[]).push(id)});
+  const key=new Map();Object.values(byK).forEach(g=>g.forEach((id,j)=>key.set(id,(j+Math.random())/g.length)));
+  const fresh=[...key.keys()].sort((x,y)=>key.get(x)-key.get(y));
+  const old=all.filter(id=>at.has(id)).sort((x,y)=>at.get(x)-at.get(y));
+  const pool=fresh.concat(old);
   let ei=pool.findIndex((id,i)=>i<NQ&&fact(id).easy);              // an easy opener for an early win
   if(ei<0)ei=pool.findIndex(id=>fact(id).easy);
-  if(ei>0)pool.unshift(pool.splice(ei,1)[0]);
-  let ids=pool.slice(0,NQ);
-  if(p===TI){const first=ids[0];ids=shuffle(ids.slice(1));ids.unshift(first)}
+  const ids=ei>=0?[pool[ei]]:[],seen={};if(ei>=0)seen[kind(pool[ei])]=1;
+  // variety: at most MAXKIND of one kind a round. Never-asked questions still come before old ones,
+  // so a full pack is still asked once before anything repeats.
+  // A kind too big to fit under the cap in the rounds the pack has left gets just enough room (Places' "How many people").
+  const left={};fresh.forEach(id=>{left[kind(id)]=(left[kind(id)]||0)+1});const rl=Math.max(1,Math.ceil(fresh.length/NQ));
+  const capOf=k=>Math.max(MAXKIND,Math.ceil((left[k]||0)/rl));
+  const take=(list,cap)=>{for(const id of list){if(ids.length>=NQ)return;if(ids.indexOf(id)>=0)continue;const k=kind(id);
+    if(cap&&(seen[k]||0)>=capOf(k))continue;seen[k]=(seen[k]||0)+1;ids.push(id)}};
+  take(fresh,true);take(fresh,false);take(old,true);take(old,false);
+  if(p===TI){const first=ids[0];const rest=shuffle(ids.slice(1));rest.unshift(first);return rest}
   return ids}
 
 function startRound(p,how){
