@@ -76,6 +76,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 button:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 html.touch :focus-visible{outline:none}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row2.tg{gap:0 10px}.row2.tg>:last-child:nth-child(odd){grid-column:1/-1}
 .logo{display:flex;justify-content:center;gap:5px;margin:2px 0 4px}
 .logo i{width:24px;height:24px;border-radius:50%;display:block;background:
   radial-gradient(circle at 33% 28%,rgba(255,255,255,.95) 0 13%,rgba(255,255,255,0) 15%),
@@ -685,7 +686,7 @@ function goalLeftOf(B, sp, dropped) {
    and everything up to where the player had reached is open. v1 is left untouched. */
 const SAVE_KEY = 'digi-bubble-burst-v2', SAVE_V1 = 'digi-bubble-burst-v1';
 const coarse = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } })();
-const save = { v: 2, unlocked: 0, stars: {}, best: {}, endlessBest: 0, muted: false, fs: coarse, calm: null };
+const save = { v: 2, unlocked: 0, stars: {}, best: {}, endlessBest: 0, muted: false, fs: coarse, calm: null, hap: true };
 const readJSON = k => { try { const s = JSON.parse(localStorage.getItem(k) || 'null'); return s && typeof s === 'object' && !Array.isArray(s) ? s : null; } catch (e) { return null; } };
 (function loadSave() {
   const s2 = readJSON(SAVE_KEY);
@@ -715,6 +716,7 @@ function migrateV1(s1) {
   save.muted = save.muted === true;
   save.fs = typeof save.fs === 'boolean' ? save.fs : coarse;
   save.calm = typeof save.calm === 'boolean' ? save.calm : null;
+  save.hap = typeof save.hap === 'boolean' ? save.hap : true;
   save.v = 2;
 })();
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
@@ -736,7 +738,11 @@ function goFS() {
   } catch (e) {}
 }
 function exitFS() { try { if (!isFS()) return; const x = document.exitFullscreen || document.webkitExitFullscreen; const p = x && x.call(document); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
-const fsBtn = where => fsOK ? '<button class="btn ghost" data-act="fs" data-arg="' + where + '" role="switch" aria-checked="' + save.fs + '" style="margin-top:10px">Full screen: ' + (save.fs ? 'on' : 'off') + '</button>' : '';
+/* ---------- haptics (Android; iPhone Safari has no vibration, so the switch is hidden there) ---------- */
+const hapOK = (() => { try { return typeof navigator.vibrate === 'function'; } catch (e) { return false; } })();
+function buzz(p) { if (!p || !hapOK || !save.hap) return; try { navigator.vibrate(p); } catch (e) {} }
+const hapBtn = where => hapOK ? '<button class="btn ghost" data-act="hap" data-arg="' + where + '" role="switch" aria-checked="' + save.hap + '">Vibration: ' + (save.hap ? 'on' : 'off') + '</button>' : '';
+const fsBtn = where => fsOK ? '<button class="btn ghost" data-act="fs" data-arg="' + where + '" role="switch" aria-checked="' + save.fs + '">Full screen: ' + (save.fs ? 'on' : 'off') + '</button>' : '';
 /* ---------- DOM helpers ---------- */
 const $ = id => document.getElementById(id);
 const cv = $('cv'), ctx = cv.getContext('2d');
@@ -1005,6 +1011,7 @@ function land(sim, b) {
   if (nPop) snd('pop', S.combo); else snd('stick');
   if (nDrop) setTimeout(() => snd('drop'), 90);
   if (res.popped.some(p => p.cell.t === 'blast')) { S.shake = Math.max(S.shake, .25); snd('boom'); }
+  buzz(b.t === 'bomb' || res.popped.some(p => p.cell.t === 'blast') ? 40 : nDrop >= 8 ? 25 : b.t === 'zap' ? 20 : nPop ? 8 : 0);
   if (nDrop >= 8) toast(nDrop >= 16 ? 'Avalanche! ' + nDrop + ' dropped' : 'Big drop! ' + nDrop + ' bubbles', 1400);
   // power meter
   if (S.spec.specials && S.spec.specials.length) {
@@ -1014,7 +1021,7 @@ function land(sim, b) {
       const sp = S.spec.specials, t = sp[Math.floor(Math.random() * sp.length)];
       S.next = { t };
       toast(SPECIAL_NAMES[t] + ' ready! Swap to use it', 1800);
-      snd('power');
+      snd('power'); setTimeout(() => buzz([10, 50, 10]), 120);
     }
   }
   refreshShooter();
@@ -1085,7 +1092,7 @@ function finish(win, reason) {
       (last ? '<p class="sub">All ' + LEVELS.length + ' levels done. Try Endless for a high score.</p><button class="btn primary" data-act="endless" data-focus>Play Endless</button>'
             : '<button class="btn primary" data-act="next" data-focus>' + (worldEnd ? 'On to ' + worldOf(i + 1).name : 'Next level') + '</button>') +
       '<div class="row2"><button class="btn" data-act="retry">Replay</button><button class="btn ghost" data-act="levels">Levels</button></div>';
-    snd('win'); S.endStars = st;
+    snd('win'); S.endStars = st; buzz([20, 70, 40]);
     rndEnd(true, { score: S.score, stars: st });
   } else {
     const msg = { room: 'The bubbles crossed the dotted line.', shots: 'You ran out of shots.', time: 'Time ran out.' }[reason] || '';
@@ -1096,7 +1103,7 @@ function finish(win, reason) {
       '<p>' + have + '</p>' +
       '<button class="btn primary" data-act="retry" data-focus>Try again</button>' +
       '<div class="row2"><button class="btn" data-act="levels">Levels</button><button class="btn ghost" data-act="home">Menu</button></div>';
-    snd('lose');
+    snd('lose'); buzz(60);
     rndEnd(false, { score: S.score });
   }
   updHud();
@@ -1785,7 +1792,7 @@ function homeHtml() {
     '<button class="btn' + (paused ? '' : ' primary') + '" data-act="lv" data-arg="' + n + '"' + (paused ? '' : ' data-focus') + '>Play · ' + lvName(n) + '</button>' +
     '<div class="row2"><button class="btn" data-act="levels">Levels · ★' + totalStars() + '</button>' +
     '<button class="btn" data-act="endless">Endless</button></div>' +
-    '<div class="row2">' + fsBtn('home') + motionBtn('home') + '</div>' +
+    '<div class="row2 tg">' + fsBtn('home') + motionBtn('home') + hapBtn('home') + '</div>' +
     '<p class="small" style="margin-top:10px">Endless best: ' + fmtNum(save.endlessBest) + '</p>' +
     '<p class="keys">Keyboard: ← → aim · Space shoot · S swap · P pause</p>';
 }
@@ -1823,7 +1830,7 @@ function pauseHtml() {
   }
   return h + '<button class="btn primary" data-act="resume" data-focus>Resume</button>' +
     '<div class="row2"><button class="btn" data-act="retry">Restart</button><button class="btn" data-act="levels">Levels</button></div>' +
-    '<button class="btn ghost" data-act="home">Menu</button><div class="row2">' + fsBtn('pause') + motionBtn('pause') + '</div>';
+    '<button class="btn ghost" data-act="home">Menu</button><div class="row2 tg">' + fsBtn('pause') + motionBtn('pause') + hapBtn('pause') + '</div>';
 }
 function openHome() {
   if (S.mode === 'play') S.mode = 'paused';
@@ -1841,8 +1848,9 @@ card.addEventListener('click', e => {
   const a = b.dataset.act;
   // full screen is asked for from the taps that start or resume play (contract §10)
   if (a === 'lv' || a === 'go' || a === 'endless' || a === 'resume' || a === 'retry' || a === 'next') goFS();
-  if (a === 'fs' || a === 'calm') {
+  if (a === 'fs' || a === 'calm' || a === 'hap') {
     if (a === 'fs') { save.fs = !save.fs; if (save.fs) goFS(); else exitFS(); }
+    else if (a === 'hap') { save.hap = !save.hap; buzz(15); }
     else { save.calm = !rm(); for (const k in spr) delete spr[k]; syncCalm(); }
     persist(); showOverlay(b.dataset.arg === 'pause' ? pauseHtml() : homeHtml()); refocus(a); return;
   }
