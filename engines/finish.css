@@ -178,3 +178,10 @@ details.fin-rare p{font-size:14px;line-height:1.7;color:var(--f-ink2);margin:0 0
    headline never re-flows in front of you */
 html.fin-ready.dn-fonts .fin-box.fin-open{visibility:visible!important}
 html.fin-ready:not(.dn-fonts) .fin-box.fin-open{visibility:hidden!important}
+
+/* phones: the players scroll by touch, so no page scrollbar is drawn (Android faded one in as a reopened
+   puzzle settled), and the page tells the browser its theme up front, so anything the browser paints
+   around it while its own bars move is dark in dark mode, not white */
+@media (pointer:coarse){html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}}
+:root{color-scheme:light dark}
+:root[data-theme="light"]{color-scheme:light}
