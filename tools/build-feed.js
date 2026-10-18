@@ -386,6 +386,29 @@ const feed = { built: new Date().toISOString(), today: TODAY, timezone: TZ, coun
 fs.writeFileSync(path.join(ROOT, 'feed.json'), JSON.stringify(feed, null, 2) + '\n');
 
 console.log(`feed.json written — ${items.length} item(s) live; today = ${TODAY} (${TZ})`);
+
+// puzzles-today.json: today's puzzles, for the finish sheet's "Next" row
+// (engines/finish.js). Small on purpose; the finish sheet must not pull the
+// whole feed. One item per type, in the finish sheet's own order.
+{
+  const TYPE_OF = { 'crossword-mini': 'mini', 'logic-doku': 'doku', 'logic-sweep': 'sweep', 'logic-path': 'path',
+                    'word-link': 'link', 'word-tangle': 'tangle', 'geo-borders': 'borders' };
+  const today = [];
+  for (const it of items) {
+    if (it.kind !== 'puzzle' || it.date !== TODAY) continue;
+    const m = /^reports\/\d{4}-\d{2}-\d{2}-([a-z]+-[a-z]+)(?:-\d{4})?\.html$/.exec(it.path);
+    const type = m && TYPE_OF[m[1]];
+    if (!type) continue;
+    const src = fs.readFileSync(path.join(ROOT, it.path), 'utf8');
+    const id = (src.match(/\bid\s*:\s*"(DP·[A-Z]+·[0-9-]+)"/) || [])[1];
+    if (!id) { warnings.push(`puzzles-today: no puzzle id in ${it.path}`); continue; }
+    today.push({ type, id, name: it.headline, path: it.path });
+  }
+  const ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders'];
+  today.sort((a, b) => ORDER.indexOf(a.type) - ORDER.indexOf(b.type));
+  fs.writeFileSync(path.join(ROOT, 'puzzles-today.json'), JSON.stringify({ today: TODAY, items: today }, null, 1) + '\n');
+  console.log(`puzzles-today.json written — ${today.length} puzzle(s) for ${TODAY}`);
+}
 if (INCLUDE_FUTURE) console.log('  WARNING: FEED_INCLUDE_FUTURE=1 — forward-dated items were published.');
 for (const w of warnings) console.log('  note: ' + w);
 if (held.length) {

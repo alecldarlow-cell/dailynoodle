@@ -230,6 +230,8 @@
     a.className = 'nn-board-link'; a.href = BOARD + '&from=result';
     a.textContent = '🏆 See today’s board';
     var w = document.createElement('div'); w.className = 'nn-board-wrap'; w.appendChild(a);
+    var slot = box.querySelector('.fin-board-slot');   // the shared finish sheet (engines/finish.js) has a place for it
+    if (slot) { slot.appendChild(w); return; }
     var share = box.querySelector('#winShare, #shareBtn, #shareAgain');
     var host = (share && share.parentNode) || box.querySelector('.modalbtns') || box.querySelector('.modalcard') || box;
     if (share && host === share.parentNode && host.classList && host.classList.contains('modalbtns')) {
@@ -243,7 +245,7 @@
   function watch() {
     var box = document.getElementById('winModal') || document.getElementById('modal');
     if (!box || !('MutationObserver' in window)) return;
-    function check() { if (box.classList.contains('on')) { addLink(box); setTimeout(function () { addLink(box); }, 300); } }
+    function check() { if (box.classList.contains('on') || box.classList.contains('fin-open')) { addLink(box); setTimeout(function () { addLink(box); }, 300); } }
     new MutationObserver(check).observe(box, { attributes: true, attributeFilter: ['class'] });
     check();
   }

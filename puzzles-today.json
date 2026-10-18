@@ -1,0 +1,47 @@
+{
+ "today": "2026-10-18",
+ "items": [
+  {
+   "type": "mini",
+   "id": "DP·MINI·0099",
+   "name": "Mini 99",
+   "path": "reports/2026-10-18-crossword-mini-0099.html"
+  },
+  {
+   "type": "doku",
+   "id": "DP·LEXI·0097",
+   "name": "Doku 97",
+   "path": "reports/2026-10-18-logic-doku-0097.html"
+  },
+  {
+   "type": "sweep",
+   "id": "DP·SWEEP·2026-10-18",
+   "name": "Sweep 94",
+   "path": "reports/2026-10-18-logic-sweep.html"
+  },
+  {
+   "type": "path",
+   "id": "DP·PATH·0092",
+   "name": "Path 92",
+   "path": "reports/2026-10-18-logic-path-0092.html"
+  },
+  {
+   "type": "link",
+   "id": "DP·LINK·0071",
+   "name": "Link 71",
+   "path": "reports/2026-10-18-word-link-0071.html"
+  },
+  {
+   "type": "tangle",
+   "id": "DP·TANG·0012",
+   "name": "Tangle 12",
+   "path": "reports/2026-10-18-word-tangle-0012.html"
+  },
+  {
+   "type": "borders",
+   "id": "DP·BORD·0014",
+   "name": "Borders 14",
+   "path": "reports/2026-10-18-geo-borders-0014.html"
+  }
+ ]
+}
