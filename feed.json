@@ -1,8 +1,8 @@
 {
-  "built": "2026-10-18T00:58:02.273Z",
+  "built": "2026-10-18T00:59:21.372Z",
   "today": "2026-10-18",
   "timezone": "Europe/London",
-  "count": 615,
+  "count": 616,
   "items": [
     {
       "path": "reports/2026-10-18-crossword-mini-0099.html",
@@ -32,6 +32,21 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
+      "mask": ""
+    },
+    {
+      "path": "reports/2026-10-18-health-care-visas-new-workers-fall.html",
+      "kind": "report",
+      "topic": "Immigration",
+      "headline": "Health and care visas for new workers are down 95% from peak",
+      "standfirst": "The Home Office granted 7,228 Health and Care Worker visas to main applicants in the year to June 2026, against 145,823 at the December 2023 peak. Renewals for people already here rose 19%, and the fall follows policy changes rather than…",
+      "date": "2026-10-18",
+      "updated": "",
+      "read": "~3 min",
+      "thumb": "",
+      "stat": "95",
+      "statUnit": "%",
+      "statLabel": "visa fall",
       "mask": ""
     },
     {
