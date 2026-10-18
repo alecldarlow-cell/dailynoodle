@@ -149,6 +149,7 @@ html.calm .stars .on{animation:none}
 .dots{display:flex;justify-content:center;gap:6px;margin:6px 0 2px}
 .dots i{width:7px;height:7px;border-radius:50%;background:rgba(30,35,64,.18)}
 .dots i.on{background:var(--ink)}
+.dots i.dk{background:rgba(78,51,153,.32)}.dots i.dk.on{background:#4E3399}
 .wblurb{margin:4px 0 10px !important}
 .lv{position:relative;padding-top:2px !important}
 .lv .num{line-height:1}
@@ -427,8 +428,101 @@ const MARKS = [
 const GUIDES = [[7, 4, 0], [15, 9, 0], [5, 2, 0], [17, 12, 0], [4, 2, 0], [14, 9, 0], [14, 10, 0], [12, 8, 0], [34, 25, 0], [36, 26, 0], [38, 23, 0], [51, 40, 0], [9, 5, 0], [18, 12, 0], [31, 24, 0], [46, 35, 0], [10, 6, 0], [37, 31, 0], [56, 42, 0], [45, 37, 0], [9, 5, 0], [29, 17, 0], [56, 44, 0], [26, 18, 0], [48, 35, 0], [52, 39, 0], [27, 20, 0], [60, 48, 0], [10, 6, 0], [4, 3, 0], [27, 21, 0], [29, 21, 0], [46, 36, 0], [20, 15, 0], [29, 21, 0], [37, 27, 0], [4, 3, 0], [45, 34, 0], [25, 19, 0], [33, 23, 0], [27, 18, 0], [8, 4, 0], [63, 51, 0], [56, 47, 0], [41, 34, 0], [50, 35, 0], [6, 4, 0], [70, 54, 0], [93, 80, 0], [15, 11, 0], [38, 27, 0], [43, 35, 0], [41, 30, 0], [39, 27, 0], [21, 14, 0], [41, 32, 0], [46, 34, 0], [26, 19, 0], [11, 5, 0], [47, 34, 0], [39, 26, 0], [48, 38, 0], [41, 29, 0], [40, 27, 0], [20, 15, 0], [32, 25, 0], [31, 22, 0], [46, 32, 0], [12, 9, 0], [33, 26, 0], [50, 35, 0], [20, 13, 0], [30, 17, 0], [55, 44, 0], [20, 15, 0], [110, 80, 1], [90, 60, 1], [80, 60, 1], [230, 170, 1], [170, 130, 1], [190, 160, 1], [210, 160, 1], [180, 140, 1], [40, 20, 1], [120, 70, 1], [110, 80, 1], [20, 10, 1], [190, 150, 1], [200, 160, 1], [70, 40, 1], [180, 140, 1], [190, 140, 1], [110, 80, 1], [40, 20, 1], [200, 170, 1], [190, 150, 1], [60, 40, 1], [170, 130, 1], [210, 170, 1], [90, 40, 1], [15, 8, 0], [34, 17, 0], [33, 24, 0], [26, 18, 0], [33, 22, 0], [40, 30, 0], [37, 21, 0], [43, 29, 0], [9, 7, 0], [34, 24, 0], [29, 17, 0], [28, 19, 0], [43, 29, 0], [38, 22, 0], [9, 6, 0], [25, 19, 0], [30, 20, 0], [32, 23, 0], [11, 5, 0], [41, 29, 0], [28, 21, 0], [36, 27, 0], [7, 5, 0], [23, 16, 0], [11, 6, 0], [43, 24, 0], [43, 33, 0], [34, 22, 0], [51, 36, 0], [34, 23, 0], [14, 7, 0], [50, 36, 0], [180, 120, 1], [56, 37, 0], [36, 29, 0], [36, 23, 0], [33, 17, 0], [42, 32, 0], [31, 23, 0], [160, 120, 1], [28, 19, 0], [19, 11, 0], [45, 31, 0], [15, 11, 0], [170, 120, 1], [33, 20, 0], [46, 28, 0], [69, 49, 0], [12, 6, 0], [43, 32, 0]];
 const OLD2NEW = [0, 1, 3, 5, 8, 10, 12, 15, 25, 28, 31, 33, 35, 34, 39, 42, 50, 53, 56, 58, 60, 62, 65, 70, 75, 100, 79, 103, 83, 106, 109, 91, 125, 128, 131, 133, 136, 139, 147, 149];
 /*LEVELS-END*/
-const worldIdx = i => Math.max(0, Math.min(WORLDS.length - 1, Math.floor(i / PER_WORLD)));
-const worldOf = i => WORLDS[worldIdx(i)];
+/* ---------- Beyond the Summit: generated levels, 151 onwards ----------
+   A level past the hand-made 150 is built from its number alone, so everyone gets
+   the same board for the same level. Difficulty climbs from about Lagoon at 151 to
+   Summit at 251, then holds: varied, not harder. GEN_TUNE was set by simulated
+   play, as the hand-made levels were: per generated level its shot limit, clock,
+   ceiling, shot target and star marks. Past the tuned block the boards come round
+   again with their colours turned, under new names. */
+const HAND = LEVELS.length;
+/*GEN-BEGIN*/
+// per generated level k (level 151 + k): [shots, time, drop, par, ★★ score, ★★★ score, ★★ guide, ★★★ guide, guide in seconds]
+const GEN_TUNE = [
+  [64,0,0,0,5125,7525,52,27,0], [35,0,0,0,4175,4425,21,16,0], [0,290,0,0,9250,10900,130,90,1], [46,0,0,0,4250,5500,26,21,0], [0,0,0,59,2400,3400,52,40,0], [0,0,8,17,1850,2425,14,11,0], [15,0,0,0,3300,4000,6,4,0], [0,0,8,35,4525,5725,19,17,0],
+  [159,0,0,0,15050,17100,75,50,0], [0,40,0,0,3325,3575,20,10,1], [34,0,0,0,3950,4200,21,17,0], [51,0,0,0,8450,9425,13,9,0], [53,0,0,0,5000,6375,25,24,0], [0,155,0,0,4675,5700,70,40,1], [0,0,0,48,2925,3250,48,35,0], [0,295,0,0,7450,8650,160,130,1],
+  [89,0,0,0,5075,8725,72,41,0], [0,0,0,63,2875,3725,130,52,0], [0,40,0,0,3250,3500,20,10,1], [0,0,8,65,5425,6475,44,40,0], [70,0,0,0,6050,7925,34,29,0], [0,0,8,23,1875,2125,40,22,0], [88,0,0,0,4950,8600,49,45,0], [0,65,0,0,4175,4425,30,10,1],
+  [0,0,8,20,1900,2300,25,19,0], [0,0,8,32,2425,2775,32,24,0], [0,0,8,25,4050,4300,42,24,0], [67,0,0,0,8400,9475,33,20,0], [0,205,0,0,4375,6350,110,100,1], [89,300,0,0,18400,19375,32,22,0], [61,0,0,0,6300,7650,23,19,0], [72,0,0,0,4900,6200,51,39,0],
+  [0,380,0,0,10700,12925,170,110,1], [37,0,0,0,4850,5125,20,15,0], [0,0,0,39,2475,2950,39,26,0], [42,0,0,0,3500,4200,29,20,0], [29,95,0,0,4275,6000,19,13,0], [33,105,0,0,4550,5875,25,22,0], [0,195,0,0,6700,7400,90,70,1], [0,0,8,22,4200,4850,18,13,0],
+  [0,0,8,24,3550,5225,26,20,0], [0,0,0,26,3025,3275,21,15,0], [50,170,0,0,6300,9750,27,21,0], [0,0,8,24,2300,2550,22,16,0], [0,145,0,0,5100,5350,80,60,1], [0,175,0,0,5425,6500,110,70,1], [0,0,0,38,3125,3650,34,22,0], [0,0,8,28,2375,3225,26,16,0],
+  [49,155,0,0,5375,6950,39,29,0], [45,0,0,0,4850,5325,38,21,0], [0,105,0,0,2725,3725,70,60,1], [0,130,0,0,6350,7075,50,30,1], [56,0,0,0,6900,8800,28,22,0], [19,0,0,0,4425,4675,14,8,0], [0,0,8,40,5600,6225,25,21,0], [54,0,0,0,3650,7225,27,18,0],
+  [0,0,0,39,4675,5000,29,21,0], [0,0,8,7,2900,3150,9,4,0], [0,125,0,0,4775,5025,70,60,1], [0,0,8,24,2925,4275,19,15,0], [0,0,8,28,4450,4950,32,25,0], [0,245,0,0,7475,9350,110,90,1], [0,0,8,20,2950,3875,16,12,0], [62,0,0,0,4925,5900,43,27,0],
+  [43,140,0,0,8525,10150,28,20,0], [0,100,0,0,2850,3800,70,60,1], [41,0,0,0,4600,6650,27,19,0], [0,215,0,0,8100,9525,60,20,1], [0,0,8,37,3550,4875,30,20,0], [0,110,0,0,3400,4175,90,40,1], [0,0,8,24,2275,2575,32,19,0], [0,165,0,0,6050,6600,100,90,1],
+  [0,165,0,0,4625,5625,90,70,1], [0,0,8,28,3500,4450,19,9,0], [10,0,0,0,2475,2900,5,4,0], [0,0,8,30,2525,3325,38,26,0], [0,0,8,24,2400,2650,23,14,0], [41,0,0,0,5825,7200,20,14,0], [0,115,0,0,3375,4725,50,40,1], [78,265,0,0,11650,14150,52,36,0],
+  [56,0,0,0,6050,7525,26,18,0], [50,160,0,0,7825,9200,37,22,0], [0,0,0,50,3050,3300,67,54,0], [49,160,0,0,6500,8050,32,18,0], [76,0,0,0,10150,10975,36,32,0], [0,0,8,41,2325,2875,41,33,0], [23,70,0,0,4225,6175,19,13,0], [0,0,8,37,3550,4100,35,28,0],
+  [0,0,8,30,2775,3925,26,22,0], [0,0,0,92,3375,6400,68,62,0], [0,0,8,15,4100,4350,9,8,0], [0,0,0,39,2625,3225,46,40,0], [47,0,0,0,5500,6175,25,21,0], [0,0,8,35,2225,2600,45,28,0], [24,85,0,0,4775,5450,16,13,0], [0,0,0,53,3675,4750,43,30,0],
+  [0,0,0,53,2725,3750,60,42,0], [0,0,0,17,3350,3600,15,9,0], [52,170,0,0,7825,9125,36,22,0], [0,0,0,59,3275,3975,55,39,0], [73,0,0,0,5350,6375,52,41,0], [0,140,0,0,4900,5625,100,80,1], [13,45,0,0,4025,4475,7,6,0], [53,0,0,0,3400,4350,47,21,0],
+  [0,0,0,39,2525,3200,32,27,0], [0,0,0,25,2925,3175,40,17,0], [0,0,8,26,2775,3025,28,13,0], [0,0,0,15,3150,3575,31,19,0], [0,140,0,0,4725,5825,90,70,1], [53,0,0,0,3950,6225,42,25,0], [0,0,8,28,6325,6575,17,8,0], [0,0,8,40,4575,5325,33,27,0],
+  [0,135,0,0,3450,4600,110,80,1], [0,0,0,32,3825,5475,23,15,0], [0,55,0,0,3850,4375,50,30,1], [32,0,0,0,6575,6825,13,10,0], [0,50,0,0,4325,4750,30,20,1], [0,70,0,0,4675,5425,40,30,1], [0,0,8,41,3050,3350,48,23,0], [0,0,8,35,3500,3975,36,30,0],
+  [0,0,0,32,4075,4325,40,27,0], [12,0,0,0,3900,4425,8,7,0], [0,0,8,22,3325,3650,17,5,0], [0,0,0,35,2875,3600,30,24,0], [56,185,0,0,7875,9425,38,34,0], [23,80,0,0,7075,7925,21,10,0], [0,0,0,51,3675,4075,56,43,0], [0,0,8,31,2650,3100,40,19,0],
+  [0,0,8,45,4000,4875,42,31,0], [71,225,0,0,10900,11425,46,40,0], [0,135,0,0,4325,4900,100,70,1], [0,110,0,0,4625,5700,80,70,1], [0,160,0,0,6175,6475,100,50,1], [51,165,0,0,3975,6825,38,28,0], [0,0,8,42,2675,2925,42,36,0], [0,0,8,16,3100,3725,16,10,0],
+  [0,150,0,0,4500,4800,100,90,1], [44,150,0,0,4175,5025,42,36,0], [0,85,0,0,4600,5400,60,50,1], [31,0,0,0,4425,5725,20,14,0], [29,0,0,0,4975,5400,16,14,0], [0,145,0,0,5725,6375,70,60,1], [40,0,0,0,5450,6000,26,19,0], [0,125,0,0,3125,4025,100,60,1],
+  [0,0,8,30,3275,3800,40,33,0], [34,0,0,0,5175,5725,21,14,0], [0,135,0,0,5125,5700,100,70,1], [0,0,8,33,2650,3175,39,19,0], [0,240,0,0,6075,6400,160,140,1], [43,145,0,0,7075,7575,29,24,0], [70,230,0,0,13150,15825,29,27,0], [0,155,0,0,3375,4125,110,70,1],
+  [77,0,0,0,6550,9550,31,26,0], [41,130,0,0,6700,9850,26,16,0], [30,0,0,0,4400,5075,19,6,0], [46,0,0,0,4350,4800,31,23,0], [0,125,0,0,4400,4775,80,70,1], [56,0,0,0,7325,9850,34,16,0], [52,0,0,0,6550,7325,25,19,0], [54,0,0,0,2950,4075,49,39,0],
+  [0,0,8,25,2550,2800,30,20,0], [0,0,8,33,3025,3275,53,40,0], [0,0,8,16,3425,4025,19,7,0], [71,0,0,0,4325,6450,48,27,0], [0,0,10,65,4075,5275,53,34,0], [0,230,0,0,5775,7200,120,80,1], [0,40,0,0,3100,3525,20,10,1], [0,150,0,0,4475,5625,90,70,1],
+  [0,0,8,40,4500,5650,27,24,0], [71,0,0,0,6300,7075,46,42,0], [37,0,0,0,4325,5525,21,19,0], [0,200,0,0,5875,7025,120,110,1], [57,0,0,0,6875,7900,23,19,0], [0,0,8,47,3225,3875,62,31,0], [64,210,0,0,6750,8200,49,38,0], [0,140,0,0,5275,5850,70,60,1],
+  [0,120,0,0,4225,4475,90,50,1], [0,50,0,0,3525,3950,30,20,1], [0,100,0,0,2975,3275,80,70,1], [18,0,0,0,4550,5225,16,10,0], [0,195,0,0,4900,7225,110,80,1], [0,0,0,37,3675,4575,33,18,0], [0,145,0,0,4075,5025,90,70,1], [0,0,8,45,2425,3375,43,27,0],
+  [0,0,8,23,5450,5700,15,9,0], [0,0,8,16,3625,4300,21,15,0], [0,100,0,0,4075,4725,70,40,1], [58,0,0,0,6975,8050,33,31,0], [0,0,0,54,4575,6950,36,27,0], [28,0,0,0,4125,5150,13,9,0], [65,215,0,0,8225,11075,45,39,0], [29,0,0,0,3325,3800,21,11,0],
+  [0,0,8,14,3425,3675,11,9,0], [0,230,0,0,5050,5500,180,130,1], [56,0,0,0,4725,5375,44,33,0], [0,0,0,19,3175,4000,16,7,0], [0,0,8,28,2250,3175,25,21,0], [0,0,8,38,3875,4450,42,28,0], [0,0,0,33,3700,4050,47,25,0], [0,75,0,0,3675,4975,40,20,1],
+  [0,0,8,51,3650,4750,40,33,0], [0,135,0,0,4075,4775,110,100,1], [0,0,8,32,3425,4250,29,27,0], [48,0,0,0,3800,6075,35,22,0], [26,85,0,0,5825,7925,13,11,0], [40,130,0,0,3925,4725,36,21,0], [0,0,8,34,2825,3850,28,26,0], [0,75,0,0,4825,5225,50,30,1],
+  [48,0,0,0,4800,6475,35,31,0], [0,0,8,50,3700,3950,60,45,0], [0,0,8,40,2350,3550,39,26,0], [0,105,0,0,3900,4600,70,60,1], [0,0,10,45,3625,3875,38,25,0], [84,0,0,0,7125,11400,26,19,0], [0,0,0,34,3300,3975,27,19,0], [58,0,0,0,5800,7325,31,24,0],
+  [45,145,0,0,5925,6900,35,28,0], [0,195,0,0,4075,4850,150,140,1], [0,135,0,0,3875,4375,90,70,1], [40,130,0,0,5725,7700,31,14,0], [0,170,0,0,3375,4650,140,100,1], [0,135,0,0,3875,4500,110,90,1], [0,0,10,54,3825,5350,43,30,0], [0,0,8,12,4100,4575,19,18,0],
+  [25,0,0,0,4950,6525,11,7,0], [42,0,0,0,2425,4675,27,26,0], [0,80,0,0,4400,4925,40,30,1], [0,0,8,56,3300,4175,50,41,0], [45,0,0,0,4350,5175,25,23,0], [64,215,0,0,10225,13650,41,14,0], [0,75,0,0,4325,4975,50,30,1], [0,0,8,56,4600,5575,38,30,0],
+  [41,0,0,0,4375,5025,30,28,0], [44,0,0,0,3500,4100,39,26,0], [32,100,0,0,4200,6075,25,18,0], [0,0,8,41,2850,3100,74,40,0], [0,0,0,34,2625,3400,35,30,0], [0,150,0,0,4475,4850,100,90,1], [71,0,0,0,7975,8900,32,30,0], [0,0,8,24,3150,5000,23,18,0],
+  [0,0,8,53,5025,7050,32,23,0], [37,120,0,0,6150,8425,18,10,0], [0,0,0,23,4200,5125,52,29,0], [0,140,0,0,4175,5300,80,70,1], [0,0,8,22,2175,2425,25,18,0], [0,0,0,30,3925,4725,20,17,0], [75,0,0,0,5325,6650,54,43,0], [0,0,10,26,3950,4800,26,20,0],
+  [0,180,0,0,5250,5500,140,100,1], [91,295,0,0,8450,12000,74,45,0]
+];
+/*GEN-END*/
+const GEN_SHAPES = ['full', 'full', 'funnel', 'diamond', 'pillars', 'ring', 'heart', 'towers', 'zigzag', 'waves', 'chandelier', 'xshape'];
+const GEN_WORDS = [   // per scene: first words, second words
+  [['Twilight', 'Firefly', 'Lantern', 'Owl', 'Moth', 'Dew', 'Hayrick', 'Glow-worm', 'Evening', 'Starling'], ['Meadow', 'Hollow', 'Field', 'Path', 'Brook', 'Copse', 'Stile', 'Barn', 'Lane', 'Green']],
+  [['Moonlit', 'Phosphor', 'Night', 'Pearl', 'Silver', 'Lantern', 'Drifting', 'Sleeping', 'Glimmer', 'Velvet'], ['Reef', 'Tide', 'Cove', 'Shoal', 'Kelp', 'Current', 'Lagoon', 'Grotto', 'Shallows', 'Bay']],
+  [['Harvest', 'Bonfire', 'Ember', 'Cider', 'Lantern', 'Hazel', 'Russet', 'Twilight', 'Quince', 'Damson'], ['Moon', 'Orchard', 'Barn', 'Bough', 'Basket', 'Hedge', 'Press', 'Loft', 'Grove', 'Gate']],
+  [['Last Light', 'Coyote', 'Ember', 'Desert', 'Copper', 'Sundown', 'Dusty', 'Red', 'Owl', 'Campfire'], ['Mesa', 'Butte', 'Arroyo', 'Gulch', 'Ridge', 'Trail', 'Canyon', 'Wash', 'Dune', 'Rim']],
+  [['Midnight', 'Polar', 'Shimmer', 'Comet', 'Star', 'Frost', 'Velvet', 'Glacier', 'Moonrise', 'Silent'], ['Sky', 'Veil', 'Arc', 'Drift', 'Crown', 'Ribbon', 'Halo', 'Field', 'Spire', 'Glow']],
+  [['Alpenglow', 'Night', 'Starlit', 'Moonlit', 'Last', 'High', 'Frozen', 'Summit', 'Silver', 'Cloud'], ['Ridge', 'Col', 'Peak', 'Camp', 'Crest', 'Cornice', 'Saddle', 'Arete', 'Tarn', 'Pass']]
+];
+// The board and rules of generated level k (0 = level 151), before tuning.
+function genBase(k) {
+  const rnd = mulberry(k * 9973 + 4049), pick = a => a[Math.floor(rnd() * a.length)];
+  const d = Math.min(1, k / 100);
+  const shape = pick(GEN_SHAPES);
+  const colors = d < .25 ? (rnd() < .3 ? 5 : 4) : d < .7 ? 5 : (rnd() < .25 ? 5 : 6);
+  const sp = { gen: 1, seed: 50000 + k, shape, rows: 9 + Math.round(d * 2 + rnd() * 2), colors, p: Math.round((.5 - d * .1 + (rnd() - .5) * .06) * 100) / 100,
+    anchors: 2 + (rnd() < .3 + d * .4 ? 1 : 0), specials: ['rainbow'] };
+  if (['heart', 'diamond', 'chandelier', 'xshape'].includes(shape)) sp.canopy = 1;
+  const g = rnd();
+  if (g < .22) { sp.goal = 'rescue'; if (d > .3 && rnd() < .2) { sp.vault = true; sp.meter = 18; } else sp.stars = Math.min(6, 3 + Math.floor(rnd() * (2 + d * 2))); }
+  else if (g < .36) { sp.goal = 'drop'; sp.target = pick([35, 40, 45, 55]); }
+  if (rnd() < .55) sp.ice = 3 + Math.floor(rnd() * 5);
+  if (rnd() < .45) sp.mys = 3 + Math.floor(rnd() * 5);
+  if (rnd() < .35 + d * .15) { sp.stones = 3 + Math.floor(rnd() * 4); if (rnd() < .5) sp.blast = 2 + Math.floor(rnd() * 2); }
+  if (d > .1 || rnd() < .5) sp.specials.push('bomb');
+  if (d > .35) sp.specials.push('zap');
+  const q = rnd();
+  sp.pt = q < .12 ? 'line' : q < .42 ? 'ceiling' : q < .65 ? 'shots' : q < .85 ? 'time' : d > .25 ? 'double' : 'shots';
+  return sp;
+}
+const genCache = new Map();
+// Generated level i (i >= HAND): base board + its tuned numbers, named for its own number.
+function genLevel(i) {
+  if (genCache.has(i)) return genCache.get(i);
+  const k = i - HAND, T = GEN_TUNE.length, kb = T ? k % T : k, sp = genBase(kb), t = T ? GEN_TUNE[kb] : null;
+  const nr = mulberry(k * 7717 + 31), words = GEN_WORDS[Math.floor(k / PER_WORLD) % 6];
+  sp.name = words[0][Math.floor(nr() * 10)] + ' ' + words[1][Math.floor(nr() * 10)];
+  sp.rot = T ? Math.floor(k / T) % sp.colors : 0;
+  if (t) {   // [shots, time, drop, par, ★★, ★★★, guide ★★, guide ★★★, guide is time]
+    if (t[0]) sp.shots = t[0]; if (t[1]) sp.time = t[1]; if (t[2]) sp.drop = t[2]; if (t[3]) sp.par = t[3];
+    sp.marks = [t[4], t[5]]; sp.guide = [t[6], t[7], t[8]];
+  }
+  delete sp.pt;
+  genCache.set(i, sp);
+  return sp;
+}
+const levelSpec = i => i < HAND ? LEVELS[i] : genLevel(i);
+const marksOf = i => i < HAND ? MARKS[i] : levelSpec(i).marks || [999999, 999999];
+const guideOf = i => i < HAND ? GUIDES[i] : levelSpec(i).guide;
+const worldIdx = i => Math.max(0, Math.floor(i / PER_WORLD));
 /* ---------- pure helpers ---------- */
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 function mulberry(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -591,7 +685,7 @@ const SHAPES = {
   xshape: (r, x, n) => { if (r === 0) return true; const t = r / (n - 1) * 10.5; return Math.abs(x - t) < 1.3 || Math.abs(x - (10.5 - t)) < 1.3; }
 };
 function buildLevel(idx) {
-  const sp = LEVELS[idx], rnd = mulberry((sp.seed != null ? sp.seed : idx) * 7919 + 101), B = { grid: emptyGrid(), parity: 0, ceil: 0 };
+  const sp = levelSpec(idx), rnd = mulberry((sp.seed != null ? sp.seed : idx) * 7919 + 101), B = { grid: emptyGrid(), parity: 0, ceil: 0 };
   const shape = SHAPES[sp.shape] || SHAPES.full, g = B.grid, nc = sp.colors;
   for (let r = 0; r < sp.rows; r++) for (let c = 0; c < COLS; c++) {
     const x = c + (isOff(B, r) ? .5 : 0);
@@ -631,7 +725,33 @@ function buildLevel(idx) {
   place('ice', sp.ice);
   place('mys', sp.mys);
   for (const [x, y] of floating(B)) g[x][y] = null;
+  if (sp.rot) for (const row of g) for (const h of row) if (h && h.k != null) h.k = (h.k + sp.rot) % nc;   // a repeat lap: same board, colours turned
+  if (sp.gen) unseal(B);
   return B;
+}
+/* Generated boards only: nothing the goal needs may be walled in. A group holding a coloured
+   bubble or a star that no shot can ever reach (closed off by stones, walls and the ceiling)
+   loses the stones round it. */
+function unseal(B) {
+  const g = B.grid;
+  for (let pass = 0; pass < 8; pass++) {
+    const open = new Set(), q = [];   // empty cells a shot can travel through, grown up from the bottom row
+    for (let c = 0; c < COLS; c++) if (!g[ROWS - 1][c]) { open.add((ROWS - 1) * COLS + c); q.push([ROWS - 1, c]); }
+    while (q.length) { const [a, b] = q.pop(); for (const [x, y] of nbrs(B, a, b)) { const key = x * COLS + y; if (!g[x][y] && !open.has(key)) { open.add(key); q.push([x, y]); } } }
+    const seen = new Set(); let fixed = false;
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      const cell = g[r][c]; if (!cell || cell.t === 'stone' || seen.has(r * COLS + c)) continue;
+      const comp = [], st = [[r, c]], walls = []; seen.add(r * COLS + c); let reach = false;
+      while (st.length) {
+        const [a, b] = st.pop(); comp.push([a, b]);
+        for (const [x, y] of nbrs(B, a, b)) { const key = x * COLS + y, h = g[x][y];
+          if (!h) { if (open.has(key)) reach = true; } else if (h.t === 'stone') walls.push([x, y]); else if (!seen.has(key)) { seen.add(key); st.push([x, y]); } }
+      }
+      if (!reach && walls.length && comp.some(([a, b]) => isColour(g[a][b]) || g[a][b].t === 'star')) { for (const [x, y] of walls) g[x][y] = null; fixed = true; }
+    }
+    if (!fixed) break;
+    for (const [x, y] of floating(B)) g[x][y] = null;
+  }
 }
 function endlessRow(B, n, rnd) {
   const nc = n < 10 ? 4 : n < 24 ? 5 : 6, row = new Array(COLS).fill(null);
@@ -680,6 +800,18 @@ function goalLeftOf(B, sp, dropped) {
   return countWhere(B, isColour);
 }
 /*</engine>*/
+/* ---------- worlds 7 on: Beyond the Summit, the six scenes again at dusk ---------- */
+const LAPS = ['', '', ' II', ' III', ' IV', ' V', ' VI', ' VII', ' VIII', ' IX', ' X'];
+const duskW = {};
+function duskWorld(w) {
+  if (duskW[w]) return duskW[w];
+  const base = WORLDS[w % WORLDS.length], lap = Math.floor((w - WORLDS.length) / WORLDS.length) + 1;
+  return (duskW[w] = { id: base.id, dusk: true, name: base.name + ' at Dusk' + (LAPS[lap] != null ? LAPS[lap] : ' ' + lap), hud: 'Beyond',
+    bg: mix(base.bg, '#7E6FB8', .38), bg2: mix(base.bg2, '#F4A98A', .35), tile: mix(base.tile, '#B9AEE0', .32),
+    blurb: w === WORLDS.length ? 'Beyond the Summit: new levels that never run out, built from every goal and pressure you know. The six worlds again, at dusk.' : base.name + ' at dusk. New boards, the same rules.' });
+}
+const worldOf = i => { const w = worldIdx(i); return w < WORLDS.length ? WORLDS[w] : duskWorld(w); };
+const isBeyond = i => i >= HAND;
 /* ---------- save ---------- */
 /* v2 = six worlds of 25. A v1 save (40 levels) is read once and mapped through
    OLD2NEW: every star and best score is kept on the same board in its new place,
@@ -707,7 +839,7 @@ function migrateV1(s1) {
   return out;
 }
 (function sanitiseSave() {
-  const n = LEVELS.length, isObj = o => o && typeof o === 'object' && !Array.isArray(o);
+  const n = 1e6, isObj = o => o && typeof o === 'object' && !Array.isArray(o);   // levels never run out, so any level number is valid
   const u = Number(save.unlocked); save.unlocked = Number.isFinite(u) ? Math.max(0, Math.min(n - 1, Math.floor(u))) : 0;
   const clean = (o, ok) => { const out = {}; if (isObj(o)) for (const k in o) { const i = Number(k), v = Number(o[k]); if (Number.isInteger(i) && i >= 0 && i < n && ok(v)) out[i] = Math.floor(v); } return out; };
   save.stars = clean(save.stars, v => v >= 1 && v <= 3);
@@ -717,6 +849,7 @@ function migrateV1(s1) {
   save.fs = typeof save.fs === 'boolean' ? save.fs : coarse;
   save.calm = typeof save.calm === 'boolean' ? save.calm : null;
   save.hap = typeof save.hap === 'boolean' ? save.hap : true;
+  if (save.stars[HAND - 1] && save.unlocked < HAND) save.unlocked = HAND;   // cleared level 150: Beyond the Summit is open
   save.v = 2;
 })();
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
@@ -805,19 +938,19 @@ const fmtTime = s => { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) 
 const GOAL_NAME = { clear: 'Clear', rescue: 'Rescue', drop: 'Drop' };
 const PRESS_NAME = { line: 'Dotted line', ceiling: 'Falling ceiling', shots: 'Shot limit', time: 'Clock', double: 'Double lock' };
 function goalTotalOf(idx) {
-  const sp = LEVELS[idx];
+  const sp = levelSpec(idx);
   if (sp.goal === 'drop') return sp.target;
   if (sp.goal === 'rescue') return sp.vault ? 3 : sp.stars;
   return 0;
 }
 function goalLine(idx) {
-  const sp = LEVELS[idx], g = goalOf(sp), n = goalTotalOf(idx);
+  const sp = levelSpec(idx), g = goalOf(sp), n = goalTotalOf(idx);
   if (g === 'rescue') return ['Free all ' + n + ' stars', sp.vault ? 'They are sealed in stone: pop beside the blast bubbles to break in.' : 'Pop a match right beside a star, or cut it loose so it falls.'];
   if (g === 'drop') return ['Drop ' + n + ' bubbles', 'Cut bubbles loose so they fall. Popped bubbles don’t count; clearing the board also wins.'];
   return ['Clear every coloured bubble', 'Match 3 or more of a colour to pop them. Anything cut loose falls.'];
 }
 function loseLine(idx) {
-  const sp = LEVELS[idx], p = pressureOf(sp), also = 'Bubbles crossing the dotted line also ends it.';
+  const sp = levelSpec(idx), p = pressureOf(sp), also = 'Bubbles crossing the dotted line also ends it.';
   if (p === 'double') return ['Out of ' + sp.shots + ' shots or ' + fmtTime(sp.time) + ' on the clock', also];
   if (p === 'time') return ['The clock runs out after ' + fmtTime(sp.time), also];
   if (p === 'shots') return ['You run out of ' + sp.shots + ' shots', also];
@@ -873,28 +1006,28 @@ const FEAT = {
   double: { t: 'Double lock', d: 'A shot limit and a clock at once. Run out of either and the level is lost.', ic: 'double' },
   c6: { t: 'Six colours', d: 'Six colours from here on. Think two shots ahead.', cell: { t: 'c', k: 5 } }
 };
-function newFeats(i) { return featsOf(LEVELS[i], i).filter(f => FIRST[f] === i); }
+function newFeats(i) { return i < HAND ? featsOf(LEVELS[i], i).filter(f => FIRST[f] === i) : []; }
 function cellPic(cell) {  // a bubble sprite as a small picture for the cards
   try { const c = document.createElement('canvas'), s = 34, g = c.getContext('2d'); c.width = c.height = s * 2; g.scale(2, 2); g.translate(s / 2, s / 2); paintBubble(g, keyOf(cell)); return '<img class="pic" alt="" src="' + c.toDataURL() + '">'; } catch (e) { return ''; }
 }
 function guideText(idx, short) {   // what the stars usually take, in shots (or time on clock-only levels)
-  const g = GUIDES[idx]; if (!g) return '';
+  const g = guideOf(idx); if (!g) return '';
   const u = n => g[2] ? fmtTime(n) : n + (n === 1 ? ' shot' : ' shots');
   return short ? '★★★ usually ' + (g[2] ? 'within ' : 'in ') + u(g[1]) + (g[2] ? '' : ' or fewer') + ' · ★★ ' + (g[2] ? 'within ' : 'in ') + u(g[0])
     : '★★★ usually means clearing ' + (g[2] ? 'within ' + u(g[1]) : 'in ' + u(g[1]) + ' or fewer') + '; ★★ ' + (g[2] ? 'within ' : 'in about ') + u(g[0]) + '.';
 }
 function marksHtml(idx) {
-  const m = MARKS[idx];
+  const m = marksOf(idx);
   return '<div class="marks" role="list"><span role="listitem"><b class="st">★</b> clear it</span><span role="listitem"><b class="st">★★</b> ' + fmtNum(m[0]) + '</span><span role="listitem"><b class="st">★★★</b> ' + fmtNum(m[1]) + '</span></div>';
 }
 function rulesHtml(idx) {
-  const sp = LEVELS[idx], g = goalOf(sp), p = pressureOf(sp), gl = goalLine(idx), ll = loseLine(idx);
+  const sp = levelSpec(idx), g = goalOf(sp), p = pressureOf(sp), gl = goalLine(idx), ll = loseLine(idx);
   return '<div class="rule"><span class="badge g-' + g + '">' + icon(g) + '</span><div><p class="rk">Goal</p><p class="rt">' + gl[0] + '</p><p class="rd">' + gl[1] + '</p></div></div>' +
     '<div class="rule"><span class="badge p-' + p + '">' + icon(p) + '</span><div><p class="rk">You lose if</p><p class="rt">' + ll[0] + '</p><p class="rd">' + ll[1] + '</p></div></div>' +
     '<div class="rule"><span class="badge st-b">★</span><div><p class="rk">Stars</p>' + marksHtml(idx) + '<p class="rd"><b class="guide">' + guideText(idx) + '</b> ' + scoreTip(sp) + '</p></div></div>';
 }
 function cardHtml(idx) {
-  const sp = LEVELS[idx], wd = worldOf(idx), j = idx % PER_WORLD, nf = newFeats(idx);
+  const sp = levelSpec(idx), wd = worldOf(idx), j = idx % PER_WORLD, nf = newFeats(idx);
   let h = '<p class="kicker">' + wd.name + ' · Level ' + (j + 1) + ' of ' + PER_WORLD + '</p><h2 id="ovTitle">' + sp.name + '</h2>';
   if (j === 0) h += '<p class="sub">' + wd.blurb + '</p>';
   for (const f of nf) { const F = FEAT[f]; h += '<div class="newf">' + (F.cell ? cellPic(F.cell) : '<span class="badge">' + icon(F.ic) + '</span>') + '<div><p class="rt"><span class="tag">New</span> ' + F.t + '</p><p class="rd">' + F.d + '</p></div></div>'; }
@@ -907,11 +1040,11 @@ function cardHtml(idx) {
 }
 
 function startLevel(idx, card = true) {
-  idx = clamp(idx, 0, LEVELS.length - 1);
-  const sp = LEVELS[idx], B = buildLevel(idx);
+  idx = Math.max(0, Math.floor(idx) || 0);
+  const sp = levelSpec(idx), B = buildLevel(idx);
   Object.assign(S, { kind: 'level', idx, wi: worldIdx(idx), spec: sp, grid: B.grid, parity: 0, ceil: 0, score: 0, combo: 0, meter: 0,
     meterMax: sp.meter || 20, fired: 0, shotsLeft: sp.shots || null, timeLeft: sp.time || null, dropIn: sp.drop || 0, dropped: 0, freed: 0, endT: 0,
-    marks: MARKS[idx], br: { pop: 0, combo: 0, drop: 0, bonus: 0 } });
+    marks: marksOf(idx), br: { pop: 0, combo: 0, drop: 0, bonus: 0 } });
   resetFx();
   rndArm();
   S.goalTotal = goalTotalOf(idx);
@@ -1078,9 +1211,9 @@ function finish(win, reason) {
     const st = starsFor(S.score, S.marks), i = S.idx, prevBest = save.best[i] || 0;
     save.stars[i] = Math.max(save.stars[i] || 0, st);
     save.best[i] = Math.max(prevBest, S.score);
-    if (i + 1 < LEVELS.length) save.unlocked = Math.max(save.unlocked, i + 1);
+    save.unlocked = Math.max(save.unlocked, i + 1);
     persist();
-    const last = i === LEVELS.length - 1, worldEnd = i % PER_WORLD === PER_WORLD - 1;
+    const last = i === HAND - 1, worldEnd = i % PER_WORLD === PER_WORLD - 1;
     const title = last ? 'You reached the top!' : worldEnd ? worldOf(i).name + ' complete!' : S.spec.goal === 'rescue' ? 'All stars freed!' : S.spec.goal === 'drop' ? 'Target dropped!' : 'Level cleared!';
     const toNext = st === 1 ? fmtNum(S.marks[0] - S.score) + ' more for ★★' : st === 2 ? fmtNum(S.marks[1] - S.score) + ' more for ★★★' : 'Top marks.';
     html = '<p class="kicker">' + worldOf(i).name + ' · Level ' + (i % PER_WORLD + 1) + ' · ' + S.spec.name + '</p><h2 id="ovTitle">' + title + '</h2>' + starRow(st) +
@@ -1088,8 +1221,8 @@ function finish(win, reason) {
       '<div class="brk"><span>Pops<b>' + fmtNum(S.br.pop) + '</b></span><span>Drops<b>' + fmtNum(S.br.drop) + '</b></span><span>Combos<b>' + fmtNum(S.br.combo) + '</b></span><span>Bonus<b>' + fmtNum(bonus) + '</b></span></div>' +
       '<p class="small">Bonus: ' + why.join(' · ') + '</p>' +
       '<p class="small">★★ at ' + fmtNum(S.marks[0]) + ' · ★★★ at ' + fmtNum(S.marks[1]) + ' · ' + toNext + '</p>' +
-      '<p class="small">You used ' + (GUIDES[i][2] ? fmtTime((S.spec.time || 0) - S.timeLeft) : S.fired + (S.fired === 1 ? ' shot' : ' shots')) + '. ' + guideText(i, true) + '</p>' +
-      (last ? '<p class="sub">All ' + LEVELS.length + ' levels done. Try Endless for a high score.</p><button class="btn primary" data-act="endless" data-focus>Play Endless</button>'
+      '<p class="small">You used ' + ((guideOf(i) || [])[2] ? fmtTime((S.spec.time || 0) - S.timeLeft) : S.fired + (S.fired === 1 ? ' shot' : ' shots')) + '. ' + guideText(i, true) + '</p>' +
+      (last ? '<p class="sub">All ' + HAND + ' levels done. Beyond the Summit has new levels that never run out.</p><button class="btn primary" data-act="next" data-focus>Go Beyond the Summit</button>'
             : '<button class="btn primary" data-act="next" data-focus>' + (worldEnd ? 'On to ' + worldOf(i + 1).name : 'Next level') + '</button>') +
       '<div class="row2"><button class="btn" data-act="retry">Replay</button><button class="btn ghost" data-act="levels">Levels</button></div>';
     snd('win'); S.endStars = st; buzz([20, 70, 40]);
@@ -1356,9 +1489,10 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fo
    Each world is a static backdrop (cached per size) plus a few light moving
    things drawn each frame. Everything sits behind the board in soft pastel so
    the bubbles always read first; with calm motion the scene holds still. */
-const sceneWorld = () => S.kind === 'endless' ? S.wi : worldIdx(Math.max(0, S.idx));
+const sceneWorld = () => S.kind === 'endless' ? S.wi : worldIdx(Math.max(0, S.idx)) % WORLDS.length;
+const isDusk = () => S.kind === 'level' && worldIdx(Math.max(0, S.idx)) >= WORLDS.length;
 function setSky(wi) {
-  const wd = WORLDS[wi < 0 ? (S.kind === 'endless' ? S.wi : 0) : wi];
+  const wd = wi < 0 ? WORLDS[S.kind === 'endless' ? S.wi : 0] : wi < WORLDS.length ? WORLDS[wi] : duskWorld(wi);
   document.body.style.setProperty('--sky-a', wd.bg); document.body.style.setProperty('--sky-b', wd.bg2);
   const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', wd.bg);
 }
@@ -1385,7 +1519,7 @@ function band(g, w, h, base, amp, freq, ph, col, jag) {  // a filled skyline fro
   g.lineTo(w, h); g.closePath(); g.fill();
 }
 function glow(g, x, y, r, col) { const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2); }
-function paintStatic(g, wi, w, h) {
+function paintStatic(g, wi, w, h, dusk) {
   const wd = WORLDS[wi], sky = g.createLinearGradient(0, 0, 0, h);
   sky.addColorStop(0, wd.bg); sky.addColorStop(1, wd.bg2);
   g.fillStyle = sky; g.fillRect(0, 0, w, h);
@@ -1455,13 +1589,27 @@ function paintStatic(g, wi, w, h) {
       break;
     }
   }
+  if (dusk) {   // Beyond the Summit: the same scene in evening light, with the first stars out
+    const ev = g.createLinearGradient(0, 0, 0, h);
+    ev.addColorStop(0, 'rgba(46,34,112,.52)'); ev.addColorStop(.45, 'rgba(112,72,150,.28)'); ev.addColorStop(.8, 'rgba(236,128,104,.22)'); ev.addColorStop(1, 'rgba(255,170,110,.26)');
+    g.fillStyle = ev; g.fillRect(0, 0, w, h);
+    const R1 = mulberry(wi * 31 + 9); g.fillStyle = 'rgba(255,255,255,.9)';
+    for (let i = 0; i < 34; i++) { g.beginPath(); g.arc(R1() * w, R1() * h * .3, .6 + R1() * 1.3, 0, 7); g.fill(); }
+    if (WORLDS[wi].id !== 'aurora') {   // a rising moon (Aurora has its own)
+      const mx = w * .82, my = h * .1, mr = Math.max(12, w * .035);
+      glow(g, mx, my, mr * 4, 'rgba(255,246,220,.35)');
+      g.fillStyle = 'rgba(255,248,226,.95)'; g.beginPath(); g.arc(mx, my, mr, 0, 7); g.fill();
+      g.fillStyle = 'rgba(214,206,190,.45)';
+      for (const [x, y, r] of [[-.3, -.2, .22], [.25, .2, .16], [.05, -.45, .1]]) { g.beginPath(); g.arc(mx + x * mr, my + y * mr, r * mr, 0, 7); g.fill(); }
+    }
+  }
 }
 function drawScene(wi, time) {
-  const key = wi + ':' + VW + 'x' + VH + '@' + DPR;
+  const dusk = isDusk(), key = wi + (dusk ? 'd' : '') + ':' + VW + 'x' + VH + '@' + DPR;
   if (key !== sceneKey) {
     sceneKey = key; sceneCv = sceneCv || document.createElement('canvas');
     sceneCv.width = Math.round(VW * DPR); sceneCv.height = Math.round(VH * DPR);
-    const g = sceneCv.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); paintStatic(g, wi, VW, VH);
+    const g = sceneCv.getContext('2d'); g.setTransform(DPR, 0, 0, DPR, 0, 0); paintStatic(g, wi, VW, VH, dusk);
   }
   ctx.drawImage(sceneCv, 0, 0, VW, VH);
   const t = rm() ? 0 : time / 1000, w = VW, h = VH, id = WORLDS[wi].id;
@@ -1729,7 +1877,7 @@ function toast(msg, ms = 1800) {
 let lastBarKey = '';
 function updHud() {
   const e = S.kind === 'endless', sp = S.spec;
-  $('hLvlL').textContent = e ? 'Best' : worldOf(S.idx).name;
+  $('hLvlL').textContent = e ? 'Best' : worldOf(S.idx).hud || worldOf(S.idx).name;
   $('hLvl').textContent = e ? fmtNum(Math.max(save.endlessBest, S.score)) : (S.idx % PER_WORLD + 1) + '/' + PER_WORLD;
   const gl = $('hGoalL'), gv = $('hGoal'), g = e ? null : goalOf(sp);
   if (e) { gl.textContent = 'Rows'; gv.textContent = Math.max(0, S.rows - 9); }
@@ -1774,8 +1922,8 @@ function showOverlay(html) {
 }
 function hideOverlay() { ov.hidden = true; }
 function nextLevelIdx() {
-  for (let i = 0; i <= Math.min(save.unlocked, LEVELS.length - 1); i++) if (!save.stars[i]) return i;
-  return Math.min(save.unlocked, LEVELS.length - 1);
+  for (let i = 0; i <= save.unlocked; i++) if (!save.stars[i]) return i;
+  return save.unlocked;
 }
 function totalStars() { let n = 0; for (const k in save.stars) n += save.stars[k]; return n; }
 const starsMini = n => '<b class="on">' + '★'.repeat(n) + '</b><b class="off">' + '★'.repeat(3 - n) + '</b>';
@@ -1787,7 +1935,7 @@ function homeHtml() {
   let note = '';
   if (save.migrated) { note = '<p class="note">New: six worlds and 110 more levels. Your stars are all kept, and new levels are waiting in every world.</p>'; delete save.migrated; persist(); }
   return '<div class="logo" aria-hidden="true">' + logo + '</div><h2 id="ovTitle" class="title">Bubble Burst</h2>' +
-    '<p class="sub">Six worlds, ' + LEVELS.length + ' levels. Aim, bounce off the walls and match 3 or more to pop. Cut bubbles loose to drop them for big points.</p>' + note +
+    '<p class="sub">' + (save.unlocked >= HAND ? 'Six worlds, ' + HAND + ' levels, and Beyond the Summit: new levels that never run out.' : 'Six worlds, ' + HAND + ' levels. Aim, bounce off the walls and match 3 or more to pop. Cut bubbles loose to drop them for big points.') + '</p>' + note +
     (paused ? '<button class="btn primary" data-act="resume" data-focus>Resume ' + (S.kind === 'endless' ? 'Endless' : lvName(S.idx)) + '</button>' : '') +
     '<button class="btn' + (paused ? '' : ' primary') + '" data-act="lv" data-arg="' + n + '"' + (n === 0 && !save.stars[0] ? ' data-first="1"' : '') + (paused ? '' : ' data-focus') + '>Play · ' + lvName(n) + '</button>' +
     '<div class="row2"><button class="btn" data-act="levels">Levels · ★' + totalStars() + '</button>' +
@@ -1798,18 +1946,19 @@ function homeHtml() {
 }
 function levelsHtml(wi) {
   if (wi == null || !Number.isFinite(wi)) wi = worldIdx(S.kind === 'level' && (S.mode === 'paused' || S.mode === 'over' || S.mode === 'card') ? S.idx : nextLevelIdx());
-  wi = clamp(wi, 0, WORLDS.length - 1);
-  const w = WORLDS[wi], a = wi * PER_WORLD, cur = nextLevelIdx();
+  const nW = Math.max(WORLDS.length, worldIdx(save.unlocked) + 1);   // the six, plus every Beyond the Summit world reached
+  wi = clamp(wi, 0, nW - 1);
+  const w = worldOf(wi * PER_WORLD), a = wi * PER_WORLD, cur = nextLevelIdx();
   let got = 0; for (let i = a; i < a + PER_WORLD; i++) got += save.stars[i] || 0;
-  let h = '<h2 id="ovTitle">Levels</h2><p class="small">★ ' + totalStars() + ' of ' + LEVELS.length * 3 + ' stars</p>' +
+  let h = '<h2 id="ovTitle">Levels</h2><p class="small">★ ' + totalStars() + ' of ' + nW * PER_WORLD * 3 + ' stars</p>' +
     '<div class="wpager"><button class="pg" data-act="wpage" data-arg="' + (wi - 1) + '" aria-label="Previous world"' + (wi ? '' : ' disabled') + '>‹</button>' +
     '<div class="wt" style="--t:' + w.tile + '"><b>' + (wi + 1) + ' · ' + w.name + '</b><span>★ ' + got + '/' + PER_WORLD * 3 + (a > save.unlocked ? ' · locked' : '') + '</span></div>' +
-    '<button class="pg" data-act="wpage" data-arg="' + (wi + 1) + '" aria-label="Next world"' + (wi < WORLDS.length - 1 ? '' : ' disabled') + '>›</button></div>' +
-    '<div class="dots" aria-hidden="true">' + WORLDS.map((x, k) => '<i' + (k === wi ? ' class="on"' : '') + '></i>').join('') + '</div>' +
+    '<button class="pg" data-act="wpage" data-arg="' + (wi + 1) + '" aria-label="Next world"' + (wi < nW - 1 ? '' : ' disabled') + '>›</button></div>' +
+    (nW <= 9 ? '<div class="dots" aria-hidden="true">' + Array.from({ length: nW }, (x, k) => '<i class="' + (k === wi ? 'on' : '') + (k >= WORLDS.length ? ' dk' : '') + '"></i>').join('') + '</div>' : '') +
     '<p class="small wblurb">' + w.blurb + '</p><div class="lvgrid">';
   const used = new Set();
   for (let i = a; i < a + PER_WORLD; i++) {
-    const sp = LEVELS[i], locked = i > save.unlocked, st = save.stars[i] || 0, g = goalOf(sp), p = pressureOf(sp);
+    const sp = levelSpec(i), locked = i > save.unlocked, st = save.stars[i] || 0, g = goalOf(sp), p = pressureOf(sp);
     let ics = ''; if (g !== 'clear') { ics += icon(g); used.add(g); } if (p !== 'line') { ics += icon(p); used.add(p); }
     const label = 'Level ' + (i % PER_WORLD + 1) + ', ' + sp.name + '. ' + GOAL_NAME[g] + (p !== 'line' ? ', ' + PRESS_NAME[p] : '') + (locked ? '. Locked' : st ? '. ' + st + ' of 3 stars' : '. Not yet cleared');
     h += '<button class="lv' + (i === cur ? ' cur' : '') + '" style="--t:' + w.tile + '" data-act="lv" data-arg="' + i + '"' + (locked ? ' disabled' : '') + ' aria-label="' + label + '" title="' + sp.name + '">' +
@@ -1946,7 +2095,7 @@ if (window.__DGTEST === true) window.__dg = { end: win => { if (S.mode === 'over
 
 /* ---------- test hook (only with #test in the URL) ---------- */
 if (location.hash === '#test') {
-  window.BB = { S, LEVELS, MARKS, GUIDES, OLD2NEW, FIRST, updHud, save, persist, startLevel, beginPlay, startEndless, pushRow, finish, nextLevelIdx, levelsHtml, cardHtml, simulate, resolveShot, presentColours, countWhere, isColour, goalLeft, lowestEff, nbrs,
+  window.BB = { S, LEVELS, MARKS, GUIDES, OLD2NEW, HAND, levelSpec, marksOf, guideOf, worldOf, buildLevel, FIRST, updHud, save, persist, startLevel, beginPlay, startEndless, pushRow, finish, nextLevelIdx, levelsHtml, cardHtml, simulate, resolveShot, presentColours, countWhere, isColour, goalLeft, lowestEff, nbrs,
     clone: () => ({ grid: S.grid.map(r => r.slice()), parity: S.parity, ceil: S.ceil }),
     shootNow(angle, doSwap) { if (doSwap) swap(); S.angle = angle; const sim = simulate(S, angle); if (!sim) return false; const b = S.cur; S.cur = S.next; S.next = newBubble(); land(sim, b); return true; },
     step, draw, MIN_A, MAX_A, DEAD, geo: () => ({ X0, scale, LX, LY, NX, NY, BT, DEADY }) };
@@ -1956,7 +2105,7 @@ if (location.hash === '#test') {
 resize();
 (() => {
   const i = nextLevelIdx(), B = buildLevel(i);
-  Object.assign(S, { grid: B.grid, idx: i, wi: worldIdx(i), spec: LEVELS[i], marks: MARKS[i], goalTotal: goalTotalOf(i), cur: { t: 'c', k: 0 }, next: { t: 'c', k: 1 } });
+  Object.assign(S, { grid: B.grid, idx: i, wi: worldIdx(i), spec: levelSpec(i), marks: marksOf(i), goalTotal: goalTotalOf(i), cur: { t: 'c', k: 0 }, next: { t: 'c', k: 1 } });
   setSky(S.wi); updHud();
   if (!readJSON(SAVE_KEY)) persist();   // first run, or just migrated from v1: write the v2 save once
 })();
@@ -1965,6 +2114,5 @@ showOverlay(homeHtml());
 requestAnimationFrame(t => { last = t; requestAnimationFrame(tick); });
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
