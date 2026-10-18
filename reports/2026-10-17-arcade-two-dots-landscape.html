@@ -2582,7 +2582,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   /* soft glow behind the title words, when the title sits inside the game view */
   function TitleBloom({ nowMs }) {
     if (!TITLE_GLOW) return null;
-    let glowPulse = 0.5 + 0.5 * Math.sin(nowMs / 2500), bloomR = (TITLE_GLOW.r + glowPulse * TITLE_GLOW.r * 0.25), bloomA = 0.06 + glowPulse * 0.07, el = (cx, col) => /* @__PURE__ */ react_default.createElement(Circle, { cx, cy: TITLE_GLOW.y, r: bloomR }, /* @__PURE__ */ react_default.createElement(RadialGradient, { c: vec(cx, TITLE_GLOW.y), r: bloomR, colors: [col + alphaHex(Math.round(bloomA * 255)), col + "00"] }));
+    let glowPulse = reducedMotion() ? 0.5 : 0.5 + 0.5 * Math.sin(nowMs / 2500), bloomR = (TITLE_GLOW.r + glowPulse * TITLE_GLOW.r * 0.25), bloomA = 0.06 + glowPulse * 0.07, el = (cx, col) => /* @__PURE__ */ react_default.createElement(Circle, { cx, cy: TITLE_GLOW.y, r: bloomR }, /* @__PURE__ */ react_default.createElement(RadialGradient, { c: vec(cx, TITLE_GLOW.y), r: bloomR, colors: [col + alphaHex(Math.round(bloomA * 255)), col + "00"] }));
     return /* @__PURE__ */ react_default.createElement(react_default.Fragment, null, el(TITLE_GLOW.xl, COL_L), el(TITLE_GLOW.xr, COL_R));
   }
   function PipeSegment({ pipeLeft, seg, flashAlpha, paused, shimmer }) {
@@ -2992,10 +2992,10 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     /* world change: the old scenery fades out over the new one while the world card shows */
     let ease = (u) => (u = Math.max(0, Math.min(1, u)), u * u * (3 - 2 * u)), fadeOld = tr === null ? 0 : 1 - ease((tr - TRANS_FADE[0]) / (TRANS_FADE[1] - TRANS_FADE[0]));
     let cardA = tr === null ? 0 : Math.min(ease(tr / 18), ease((TRANS_FRAMES - tr) / 34)), oldTheme = getTheme(WORLD_IDS[display.prevWorld]);
-    let displayedWorldTheme = worldTheme, worldTod = worldTodFor(display, nowMs), pauseSubOpacity = 0.45 + 0.55 * Math.sin(nowMs / 500);
+    let displayedWorldTheme = worldTheme, worldTod = worldTodFor(display, nowMs), rm = reducedMotion(), pauseSubOpacity = rm ? 0.75 : 0.45 + 0.55 * Math.sin(nowMs / 500);
     let dotLDisplayY = display.phase === "idle" ? idleY(nowMs, 0) : display.dotLY, dotRDisplayY = display.phase === "idle" ? idleY(nowMs, 1) : display.dotRY;
     let bgColor = display.flash > 6 ? worldTheme.palette.bgFlash ?? COL_BG_FLASH : COL_BG, scoreScale = 1 + display.scorePop / 18 * 0.4, scoreColor = display.scorePop > 12 ? "#ffffff" : GOLD, isTierBoundary = TIER_BOUNDARY_SCORES.includes(display.score), milestoneFrames = isTierBoundary ? 90 : 40, mT = display.milestonePop / milestoneFrames, mAlpha = display.milestonePop > 0 ? isTierBoundary ? display.milestonePop > 30 ? 1 : display.milestonePop / 30 : mT > 0.15 ? 1 : mT / 0.15 : 0, mDriftY = (1 - mT) * 24 * Math.min(1, SCALE), showDeathOverlay = display.phase === "dead" && display.deathCountFrames <= display.scoreCountFrames, countDone = display.deathCountFrames === 0;
-    let thumbR = Math.max(24, (30 + 4 * Math.sin(nowMs / 700)) * SCALE), thumbY = gameTop + VIS_H * 0.84 * SCALE, thumbFillAlpha = (0.2 + 0.05 * Math.sin(nowMs / 700)).toFixed(3), pauseShimmerOpacity = 0.08 + 0.08 * Math.sin(nowMs / 120), freezeWindowFrames = display.deathCountFrames - display.scoreCountFrames, freezeAlpha = display.phase === "dead" && freezeWindowFrames > 0 ? (1 - freezeWindowFrames / 20) * 0.45 : 0, still = reducedMotion();
+    let thumbR = Math.max(24, (30 + (rm ? 0 : 4 * Math.sin(nowMs / 700))) * SCALE), thumbY = gameTop + VIS_H * 0.84 * SCALE, thumbFillAlpha = (0.2 + (rm ? 0 : 0.05 * Math.sin(nowMs / 700))).toFixed(3), pauseShimmerOpacity = rm ? 0.08 : 0.08 + 0.08 * Math.sin(nowMs / 120), freezeWindowFrames = display.deathCountFrames - display.scoreCountFrames, freezeAlpha = display.phase === "dead" && freezeWindowFrames > 0 ? (1 - freezeWindowFrames / 20) * 0.45 : 0, still = reducedMotion();
     still || (stillNow = nowMs);
     let bgNow = still ? stillNow : nowMs;
     still && (displayedWorldTheme = stillTheme(displayedWorldTheme)), set(root, "background", bgColor);
@@ -3156,6 +3156,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
