@@ -153,6 +153,20 @@ const TESTS = {
     }
   },
 
+  async 'news:dark'(b) {
+    for (const f of ['2026-10-18-student-visa-grants-peak-fall.html', '2026-07-28-uk-two-party-vote-share.html']) for (const sc of ['light', 'dark']) {
+      const { ctx, p } = await open(b, f, { scheme: sc }); await wait(p, 2500);
+      const k = await p.evaluate(() => { const fills = [...document.querySelectorAll('.dn-fig svg [fill],.dn-fig svg [stroke]')].map(e => (e.getAttribute('fill') || '') + ' ' + (e.getAttribute('stroke') || '')).join(' ').toUpperCase();
+        return { bg: getComputedStyle(document.body).backgroundColor, subj: DN.colors.subject, figs: document.querySelectorAll('.dn-fig svg').length,
+          oldBlue: fills.includes('#1C46C2'), newBlue: fills.includes('#9DB2FF'), sw: document.documentElement.scrollWidth, vw: innerWidth }; });
+      const dark = sc === 'dark';
+      ok(k.bg === (dark ? 'rgb(17, 19, 26)' : 'rgb(252, 252, 251)') && k.subj === (dark ? '#9DB2FF' : '#1C46C2') && k.figs > 0 && k.sw <= k.vw && !p.errs.length,
+        `${f.slice(11, 40)} ${sc}: canvas ${k.bg}, chart subject ${k.subj}, ${k.figs} charts` + (p.errs.length ? ' ' + p.errs.join(' | ') : ''));
+      ok(dark ? (!k.oldBlue && k.newBlue) : !k.newBlue, `${f.slice(11, 40)} ${sc}: chart colours ${dark ? 'swapped for dark' : 'untouched'}`);
+      await ctx.close();
+    }
+  },
+
   /* ---------- finish sheet, per type ---------- */
   async 'finish:tangle'(b) {
     const ev = []; const { ctx, p } = await open(b, F.tangle, { events: ev });

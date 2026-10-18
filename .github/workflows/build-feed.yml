@@ -69,6 +69,11 @@ jobs:
       - name: Share button on news pieces
         run: node tools/news-share.js
 
+      # Dark mode on every news piece (follows the phone, like the front
+      # pages and puzzles): one marked block in <head>, idempotent.
+      - name: News dark mode
+        run: node tools/news-dark.js
+
       - name: Build feed.json
         run: node tools/build-feed.js
 

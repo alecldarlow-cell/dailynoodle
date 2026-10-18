@@ -183,6 +183,31 @@
 <meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
 <meta name="twitter:card" content="summary_large_image">
 <!-- og:end -->
+<!-- nn-dark:start (tools/news-dark.js — do not edit by hand) -->
+<meta name="theme-color" content="#FCFCFB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11131A" media="(prefers-color-scheme: dark)">
+<style>@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--canvas:#11131A;--paper:#1B1E29;--ink:#ECEEF4;--muted:#A6ABBD;--faint:#80869A;--hair:#2E3344;--accent:#8EA6FF;--accent-soft:#1C2440;--contrast:#FF7A6E;color-scheme:dark}:root:not([data-theme="light"]) body{background:var(--canvas);color:var(--ink)}:root:not([data-theme="light"]) .mono{color:#11131A}:root:not([data-theme="light"]) .tier.t1{background:#1C2440;color:#A9BBFF}:root:not([data-theme="light"]) .tier.t2{background:#142C24;color:#7FD9A8}:root:not([data-theme="light"]) .tier.t3{background:#2C2818;color:#D9C58A}:root:not([data-theme="light"]) .unknowns,:root:not([data-theme="light"]) .caveat,:root:not([data-theme="light"]) .measure{background:var(--paper)}:root:not([data-theme="light"]) table.tbl th{background:var(--paper)}:root:not([data-theme="light"]) [style*="solid #ddd"]{border-bottom-color:var(--hair)!important}:root:not([data-theme="light"]) [style*="dashed #666"]{border-top-color:var(--faint)!important}:root:not([data-theme="light"]) .dn-nodelabel{stroke:var(--canvas)}}:root[data-theme="dark"]{--canvas:#11131A;--paper:#1B1E29;--ink:#ECEEF4;--muted:#A6ABBD;--faint:#80869A;--hair:#2E3344;--accent:#8EA6FF;--accent-soft:#1C2440;--contrast:#FF7A6E;color-scheme:dark}:root[data-theme="dark"] body{background:var(--canvas);color:var(--ink)}:root[data-theme="dark"] .mono{color:#11131A}:root[data-theme="dark"] .tier.t1{background:#1C2440;color:#A9BBFF}:root[data-theme="dark"] .tier.t2{background:#142C24;color:#7FD9A8}:root[data-theme="dark"] .tier.t3{background:#2C2818;color:#D9C58A}:root[data-theme="dark"] .unknowns,:root[data-theme="dark"] .caveat,:root[data-theme="dark"] .measure{background:var(--paper)}:root[data-theme="dark"] table.tbl th{background:var(--paper)}:root[data-theme="dark"] [style*="solid #ddd"]{border-bottom-color:var(--hair)!important}:root[data-theme="dark"] [style*="dashed #666"]{border-top-color:var(--faint)!important}:root[data-theme="dark"] .dn-nodelabel{stroke:var(--canvas)}</style>
+<script>
+(function(){
+  var r=document.documentElement,t=r.getAttribute('data-theme'),dark=false;
+  try{dark=t==='dark'||(t!=='light'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);}catch(e){}
+  if(!dark)return;
+  var C={ink:'#ECEEF4',axis:'#A6ABBD',hair:'#2E3344',faint:'#80869A',paper:'#11131A',subject:'#9DB2FF',muted:'#4A5068',pos:'#9DB2FF',neg:'#FF7A6E',proj:'#80869A',band:'#1C2440'};
+  var DK={'#1C46C2':'#9DB2FF','#1740A6':'#9DB2FF','#E0312A':'#FF7A6E','#15171C':'#ECEEF4','#ECF0FC':'#1C2440','#C9CCD1':'#4A5068','#E6E6E2':'#2E3344','#FFFFFF':'#11131A','#FFF':'#11131A'};
+  function fix(o,n){if(!o||typeof o!=='object'||o.nodeType||n>8)return;
+    if(Object.prototype.toString.call(o)==='[object Array]'){for(var i=0;i<o.length;i++)fix(o[i],n+1);return;}
+    for(var k in o){if(!Object.prototype.hasOwnProperty.call(o,k))continue;var v=o[k];
+      if(typeof v==='string'&&/colou?r$/i.test(k)){var u=DK[v.toUpperCase()];if(u)o[k]=u;}
+      else if(v&&typeof v==='object')fix(v,n+1);}}
+  var lib;
+  try{Object.defineProperty(window,'DN',{configurable:true,enumerable:true,get:function(){return lib;},set:function(v){lib=v;
+    if(!v||typeof v!=='object')return;
+    try{if(v.colors)for(var k in C)v.colors[k]=C[k];}catch(e){}
+    ['line','bars','columns','slope','scatter','rangeStrip','sankey'].forEach(function(n){var f=v[n];
+      if(typeof f==='function')v[n]=function(t,spec){fix(spec,0);return f.apply(this,arguments);};});}});}catch(e){}
+})();
+</script>
+<!-- nn-dark:end -->
 </head>
 <body>
 <div class="wrap">
