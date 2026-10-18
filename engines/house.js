@@ -125,6 +125,8 @@
   root.classList.add('dn-starting');
   $('dnPlay').addEventListener('click', function () {
     root.classList.remove('dn-starting'); card.hidden = true;
+    // Doku: keep the bank at its starting height, so the grid doesn't jump as it empties
+    var bank = TYPE === 'doku' && $('bank'); if (bank) requestAnimationFrame(function () { bank.style.minHeight = bank.offsetHeight + 'px'; });
     try { window.scrollTo(0, 0); } catch (e) {}
     window.dispatchEvent(new Event('resize'));   // let app-mode layouts refit now the board shows
   });

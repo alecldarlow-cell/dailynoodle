@@ -101,6 +101,9 @@ async function houseChecks(b, type, file, firstTap, driver) {
   const starts = () => ev.filter(e => e.ev === 'puzzle_start').length;
   const flush = async () => { await p.evaluate(() => { document.dispatchEvent(new Event('visibilitychange')); window.dispatchEvent(new Event('pagehide')); }); await wait(p, 600); };
   ok(!(await p.locator('.dn-start').isVisible()), `${type}: Play takes you to the board`);
+  const small = await p.evaluate(() => [...document.querySelectorAll('.app button')].filter(e => { if (e.closest('.fin-box') || e.matches('.cell,.key')) return false;
+    const r = e.getBoundingClientRect(); return r.width && r.height && getComputedStyle(e).visibility !== 'hidden' && r.height < 44; }).map(e => (e.id || e.className) + ' ' + Math.round(e.getBoundingClientRect().height)));
+  ok(!small.length, `${type}: every control on the board is at least 44px tall ${small.join(', ')}`);
   await flush(); const afterPlay = starts();
   await firstTap(p); await wait(p, 600); await flush();
   ok(afterPlay === 0 && starts() === 1, `${type}: the first tap on the board starts the puzzle, Play does not (${afterPlay}, then ${starts()})`);
@@ -183,6 +186,7 @@ const TESTS = {
     ok(await p.locator('.fin-wl.open').count() === 1, 'tangle: Show more opens its group');
     await shareClipboard(p, ctx, 'tangle');
     await reopen(p, ev, 'tangle');
+    ok(await text(p, '#winTitle') === 'Your score', 'tangle: reopened later, the title says Your score, not Time’s up');
     ok(!p.errs.length, 'tangle: no page errors ' + p.errs.join(' | '));
     await ctx.close();
     await shareNative(b, F.tangle, p2 => play.tangle(p2, { n: 3 }), 'tangle');

@@ -121,3 +121,18 @@ details.dn-how p{font-size:15px;line-height:1.5;color:var(--ink-soft);margin:0 0
 /* Link's wrong-guess shake: a tint, not a pale slab, in the dark */
 @media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .tile.miss{background:rgba(255,122,110,.16)}}
 html.dn-house[data-theme="dark"] .tile.miss{background:rgba(255,122,110,.16)}
+
+/* ---- mop-up from the audit (18 Oct 2026) ---- */
+/* every control on the board at least 44px to tap (cells, tiles and keys have their own sizes) */
+html.dn-house .app button:not(.fin-box button):not(.cell):not(.tile):not(.key):not(.dn-back){min-height:44px}
+html.dn-house .app #fs{min-width:44px}
+/* Mini: Reveal word set apart from the two Checks, so it isn't one slip away */
+html.dn-house.dn-mini #revealWord{margin-left:12px}
+/* Sweep: the mines-left count is information, not an error; red only once you've over-flagged */
+html.dn-house.dn-sweep .counter b:not(.neg){color:var(--ink)}
+/* Link: mistakes left as 12px dots, not 9px */
+html.dn-house.dn-link .pip{width:12px;height:12px}
+/* Path: numbers sit on top of the thread, so it no longer strikes them through */
+html.dn-house.dn-path .cell .num{position:relative;z-index:6;background:inherit;border-radius:4px;padding:0 3px;line-height:1.1}
+/* Doku: bank tiles 44px wide (were 30px), seven to a row on a phone */
+html.dn-house.dn-doku .bank .tile{width:44px;min-width:44px}
