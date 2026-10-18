@@ -1677,7 +1677,7 @@ function renderSetup(){
       </div>
       <ul class="howto">
         <li>Creatures lurk on three rings — <b>Clearing</b>, <b>Treeline</b>, <b>Deep Woods</b> — and creep one ring closer each night.</li>
-        <li>Each <b>attack card</b> only strikes <b>its own ring</b>. Trade and plan: "you take the Treeline, I'll get the Clearing."</li>
+        <li>Each <b>attack card</b> only strikes <b>its own ring</b>. Split the work: "you take the Treeline, I'll get the Clearing."</li>
         <li>You can only hit creatures in <b>lit</b> rings. The brighter the fire, the farther you see — but the fire <b>burns down 1 each night</b>.</li>
         <li>Feed it with <b>firewood</b>. If the fire dies, or a creature breaks into camp once too often, you both lose.</li>
         <li>Any creature reaching camp deals damage equal to its remaining health — <b>kill the big ones early</b>.</li>
@@ -2029,7 +2029,7 @@ function refreshMenu(){
       ${setLabels()}
       <details ${wasOpen?'open':''}><summary>How to Survive</summary>
       <ul class="howto">
-        <li>Each <b>attack card</b> hits only <b>its labelled ring</b> (R1 Clearing, R2 Treeline, R3 Deep Woods). ◎ = any lit ring.</li>
+        <li>Each <b>attack card</b> hits only <b>its labelled ring</b> (1 Clearing, 2 Treeline, 3 Deep Woods). ✦ = any lit ring.</li>
         <li>You can only strike creatures in <b>lit</b> rings. Fire ≥${LIGHT[1]} lights the Clearing, ≥${LIGHT[2]} the Treeline, ≥${LIGHT[3]} the Deep Woods.</li>
         <li>The fire <b>drops 1 fuel each night</b>. Feed it with 🪵 firewood or it dies — and so do you.</li>
         <li>Every night, creatures step <b>one ring inward</b>, then a new wave appears in the woods.</li>
@@ -2068,6 +2068,5 @@ if(window.__DGTEST===true){
 initFx();
 render();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
