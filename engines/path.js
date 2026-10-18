@@ -154,6 +154,24 @@ const state = {
   timerHandle: null,
   streak: 0
 };
+/* ---- dn-path-streak-v1: the streak is kept in digi-path-streak (London days).
+   It used to live only in memory, so it showed 1 on every finish and 0 on reload. ---- */
+const STREAK_KEY="digi-path-streak";
+function today(){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}catch(e){return new Date().toISOString().slice(0,10);}}
+function dayBefore(s){const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10);}
+function streakGet(){try{const s=JSON.parse(localStorage.getItem(STREAK_KEY)||"null");return s&&typeof s==="object"?s:null;}catch(e){return null;}}
+function streakLive(){const s=streakGet(),t=today();return s&&(s.last===t||s.last===dayBefore(t))?(s.streak||0):0;}
+function streakBump(){
+  const s=streakGet()||{last:null,streak:0,best:0,dates:[]},t=today();
+  if(!(s.dates||[]).includes(t)){
+    s.streak=s.last===dayBefore(t)?(s.streak||0)+1:1; s.best=Math.max(s.best||0,s.streak);
+    s.last=t; s.tz="L"; s.dates=[...new Set([...(s.dates||[]),t])].slice(-90);
+    try{localStorage.setItem(STREAK_KEY,JSON.stringify(s));}catch(e){}
+  }
+  return s.streak||0;
+}
+state.streak=streakLive();
+document.getElementById("streakn").textContent=state.streak;
 const lockedByValue = new Map(PUZZLE.locked.map(([r,c,v])=>[v,[r-1,c-1]]));
 for(const [r,c,v] of PUZZLE.locked) state.cellValue[r-1][c-1] = v;
 state.lowCell  = lockedByValue.get(1).slice();
@@ -402,7 +420,7 @@ function checkWin(){
   paint();                                 // clears the active-end highlight before the celebration
   gridEl.classList.add("celebrate");
   fireConfetti();
-  state.streak += 1;
+  state.streak = streakBump();
   document.getElementById("streakn").textContent = state.streak;
   document.getElementById("statStreak").textContent = state.streak;
   document.getElementById("statTime").textContent = timerEl.textContent;

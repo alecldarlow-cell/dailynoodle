@@ -34,7 +34,7 @@ in `toolchain/site-sections-and-tracking.md`.
 - Scheduled tasks (claude.ai): **Daily news** (00:52 UTC; two news pieces, built to rubric v5: at least one pegged to an event or decision) and **Pinwheel clean-up** (02:37 London; replaces banned Mini/Doku layouts). Both clone `alecldarlow-cell/dailynoodle` and push to `main`.
 
 ## Saved progress (do not break)
-- Streaks, finished puzzles and game saves live in each player's browser `localStorage` for the site's address. Keys include `noodle-board-v1` (leaderboard leagues), `digi-mini-v1`, `digi-mini-streak`, `digi-doku-v1`, `digi-sweep-v1`, `digi-sweep-streak`, `digi-path-v1`, `digi-link-v1`, `digi-link-streak`, `digi-tangle-v1`, `digi-borders-v1`, `digi-borderline-v1`. Never rename a key, a puzzle id or a puzzle's file path.
+- Streaks, finished puzzles and game saves live in each player's browser `localStorage` for the site's address. Keys include `noodle-board-v1` (leaderboard leagues), `digi-mini-v1`, `digi-mini-streak`, `digi-doku-v1`, `digi-sweep-v1`, `digi-sweep-streak`, `digi-path-v1`, `digi-path-streak` (from 18 Oct 2026; Path kept no streak before), `digi-link-v1`, `digi-link-streak`, `digi-tangle-v1`, `digi-borders-v1`, `digi-borderline-v1`. Never rename a key, a puzzle id or a puzzle's file path.
 - Browser storage belongs to one address. Any future address change needs a handoff like the 18 Oct one: the forwarding repo packs the old address's storage into the link's `#dnmove=` fragment and `dn-track.js` merges it in on arrival without overwriting newer progress.
 
 ## Tracking and admin
