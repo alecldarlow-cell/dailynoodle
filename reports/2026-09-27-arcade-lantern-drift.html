@@ -166,7 +166,7 @@ const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){r
 // gm = last mode picked, un = 4 (Short) or 7 (Full), ulong = longer rests, ugentle = off|slight|release,
 // uskip = areas always skipped, uspeak = spoken cues, usafe = safety card seen, usess = Unwind sessions done
 const fresh=()=>({v:1,sessions:0,best:0,mins:0,len:3,col:'amber',scene:'night',snd:'both',rm:prefersRM,tutDone:false,fs:coarse,
- gm:'breathe',un:4,ulong:false,ugentle:'off',uskip:[],uspeak:false,usafe:false,usess:0});
+ gm:'breathe',un:4,ulong:false,ugentle:'off',uskip:[],uspeak:false,usafe:false,usess:0,vib:true});
 let meta=fresh();
 try{const s=localStorage.getItem(KEY);if(s){const o=JSON.parse(s);if(o&&typeof o==='object'){meta=Object.assign(fresh(),o);if(o.snd===undefined&&o.muted)meta.snd='off';delete meta.muted;}}}catch(e){}
 if(!SNDS[meta.snd])meta.snd='both';
@@ -176,6 +176,7 @@ if(meta.un!==7)meta.un=4;
 if(!['off','slight','release'].includes(meta.ugentle))meta.ugentle='off';
 meta.uskip=Array.isArray(meta.uskip)?meta.uskip.filter((a,i,x)=>typeof a==='string'&&x.indexOf(a)===i):[];
 ['ulong','uspeak','usafe'].forEach(k=>{meta[k]=meta[k]===true;});
+meta.vib=meta.vib!==false;   // Vibration switch (added later; older saves default to on)
 if(!(meta.usess>=0))meta.usess=0;
 const own=it=>meta.sessions>=it.need;
 if(!COLS.some(c=>c.id===meta.col&&own(c)))meta.col='amber';
@@ -253,7 +254,8 @@ function tone(kind){if(!AU.ac||!AU.bus||meta.snd==='off'||simHold!==null)return;
  else if(kind==='nag'){note(659.25,0,0,1.6,0.035);note(659.25,0,0.45,1.8,0.03);}
  else if(kind==='next'){note(220,0,0,1.4,0.05,'triangle');note(293.66,0,0.5,1.8,0.045,'triangle');}}catch(e){}}
 let buzzed=false;   // only ever cancel a buzz we started (Chrome logs an error for vibrate before the first tap)
-function buzz(p){if(simHold!==null)return;try{if(navigator.vibrate){buzzed=true;navigator.vibrate(p);}}catch(e){}}
+const canBuzz=(()=>{try{return typeof navigator.vibrate==='function'}catch(e){return false}})();
+function buzz(p){if(simHold!==null||!meta.vib)return;try{if(navigator.vibrate){buzzed=true;navigator.vibrate(p);}}catch(e){}}
 let voice=null;
 function findVoice(){try{if(!window.speechSynthesis||!window.SpeechSynthesisUtterance)return null;const vs=speechSynthesis.getVoices().filter(v=>v.localService===true);
  voice=vs.find(v=>/^en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||vs[0]||null;}catch(e){voice=null;}return voice;}
@@ -466,6 +468,7 @@ function showPause(){ov.className='';ov.hidden=false;
   ${uw?`${tog('tL',meta.ulong,'Longer rests','25 seconds of rest after each area instead of 15')}
   ${tog('tG',meta.ugentle!=='off','Gentle mode','Softer wording, same timings')}
   ${meta.ugentle!=='off'?`<div class="seg" role="radiogroup" aria-label="Gentle mode">${[['slight','Tighten slightly'],['release','Release only']].map(([k,l])=>`<button type="button" class="pill${meta.ugentle===k?' on':''}" data-ug="${k}" role="radio" aria-checked="${meta.ugentle===k}">${l}</button>`).join('')}</div>`:''}
+  ${canBuzz?tog('tB',meta.vib,'Vibration','A buzz as you start to tense and when it’s time to let go'):''}
   ${voice?tog('tV',meta.uspeak,'Spoken cues','A quiet voice reads each step, using a voice on this phone'):''}
   <div class="slbl">Always skip</div><div class="chips l">${AREAS.map(a=>`<button type="button" class="chip${meta.uskip.includes(a.id)?' on':''}" data-sk="${a.id}" aria-pressed="${meta.uskip.includes(a.id)}">${a.name}</button>`).join('')}</div>
   <p class="note" style="text-align:left">Skipped areas are left out of every session until you turn them back on.</p>
@@ -479,6 +482,7 @@ function showPause(){ov.className='';ov.hidden=false;
   if(uw){$('tL').addEventListener('click',()=>{meta.ulong=!meta.ulong;save();r();});
    $('tG').addEventListener('click',()=>{meta.ugentle=meta.ugentle==='off'?'slight':'off';save();r();});
    ov.querySelectorAll('[data-ug]').forEach(b=>b.addEventListener('click',()=>{meta.ugentle=b.dataset.ug;save();r();}));
+   if($('tB'))$('tB').addEventListener('click',()=>{meta.vib=!meta.vib;save();if(!meta.vib)hush();else buzz(30);r();});
    if($('tV'))$('tV').addEventListener('click',()=>{meta.uspeak=!meta.uspeak;save();r();});
    ov.querySelectorAll('[data-sk]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.sk,i=meta.uskip.indexOf(k);if(i<0)meta.uskip.push(k);else meta.uskip.splice(i,1);save();r();}));
    $('sf').addEventListener('click',()=>showSafety('pause'));}
@@ -787,6 +791,5 @@ addEventListener('resize',resize);
 resize();showTitle();requestAnimationFrame(frame);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
