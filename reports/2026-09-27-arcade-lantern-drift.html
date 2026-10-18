@@ -52,7 +52,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .chip.on{border-color:var(--warm);color:var(--warm)}
 .chip:disabled{opacity:.35;cursor:default}
 .note{font-size:12px;color:var(--dim);margin:8px 0 2px;line-height:1.35}
-.row{display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap}
+.row{display:flex;justify-content:center;align-items:center;gap:0 10px;flex-wrap:wrap}.row .link{padding:0 4px}
 .link{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;background:none;border:0;color:var(--dim);font:700 14px Nunito,system-ui,sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .card{background:#0c1433;border:1px solid var(--line);border-radius:18px;padding:22px 18px 14px;max-width:360px;width:100%;text-align:center;box-sizing:border-box}
 .card h2{font-family:Lora,Georgia,serif;font-weight:500;font-size:28px;margin:0 0 6px}
@@ -427,13 +427,14 @@ function showTitle(){S.mode='title';S.paused=false;rnd.armed=false;rnd.open=fals
   <div class="tMore"><div class="lbl">Lantern</div><div class="sws">${COLS.map(c=>`<button type="button" class="sw${meta.col===c.id?' on':''}" data-col="${c.id}" ${own(c)?'':'disabled'} aria-label="${c.name} lantern${own(c)?'':', locked'}" style="--g:${c.c}"><i style="background:${c.c}"></i></button>`).join('')}</div>
   <div class="lbl">River</div><div class="chips">${SCENES.map(s=>`<button type="button" class="chip${meta.scene===s.id?' on':''}" data-sc="${s.id}" ${own(s)?'':'disabled'}>${s.name}</button>`).join('')}</div>
   <p class="note">Sessions completed: ${meta.sessions}. ${nextUnlock()}</p>
-  <div class="row"><button type="button" class="link" id="snd">Sound: ${SNDS[meta.snd]}</button><a class="link" href="../games.html">&larr; Digi Games</a></div></div>`;
+  <div class="row"><button type="button" class="link" id="snd">Sound: ${meta.snd==='both'?'Both':SNDS[meta.snd]}</button>${fsOK?`<button type="button" class="link" id="fsT" role="switch" aria-checked="${meta.fs}">Full screen: ${meta.fs?'On':'Off'}</button>`:''}<a class="link" href="../games.html">&larr; Digi Games</a></div></div>`;
   ov.querySelectorAll('[data-len]').forEach(b=>b.addEventListener('click',()=>{meta.len=+b.dataset.len;save();r();}));
   ov.querySelectorAll('[data-un]').forEach(b=>b.addEventListener('click',()=>{meta.un=+b.dataset.un;save();r();}));
   ov.querySelectorAll('[data-gm]').forEach(b=>b.addEventListener('click',()=>{meta.gm=b.dataset.gm;save();r();}));
   ov.querySelectorAll('[data-col]').forEach(b=>b.addEventListener('click',()=>{meta.col=b.dataset.col;save();r();}));
   ov.querySelectorAll('[data-sc]').forEach(b=>b.addEventListener('click',()=>{meta.scene=b.dataset.sc;save();r();}));
   $('snd').addEventListener('click',()=>{const k=Object.keys(SNDS);setSound(k[(k.indexOf(meta.snd)+1)%k.length]);audioInit();r();});
+  if($('fsT'))$('fsT').addEventListener('click',()=>{meta.fs=!meta.fs;save();if(meta.fs)goFS();else exitFS();r();});
   $('go').addEventListener('click',()=>{if(meta.gm==='unwind'){if(!meta.usafe){audioInit();showSafety('first');return;}goFS();audioInit();enterUnwind();return;}goFS();audioInit();enterReady();});};
  r();}
 // Safety card: before the first Unwind session, and afterwards from the pause menu
@@ -779,6 +780,5 @@ addEventListener('resize',resize);
 resize();showTitle();requestAnimationFrame(frame);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
