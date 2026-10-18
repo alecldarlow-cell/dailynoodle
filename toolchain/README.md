@@ -19,9 +19,9 @@ Node 18+ and Python 3. **jsdom is the only dependency.**
 | `dn-redate.js` | Moves an already-shipped piece to a new date; refuses on date-dependent content | Redates only |
 | `DN-API.md` | Chart toolkit reference: primitives, spec fields, label budgets, silent failures, markup contracts. Replaces reading the template | Read once per build |
 | `SESSION-PROTOCOL.md` | Build order, context discipline, bootstrap, the two dates, redating | Read first |
-| `digi-news-standards-rubric-v4.md` | Binding editorial standards: news value, source tiers, going to the data, assumption firewall, caveat test, accessibility floor, length tiers, footer, disclosure, continuity, fairness | Only on a contested call |
-| `digi-news-prepublish-checklist-4.md` | Pre-publish checklist in two passes, mapped to rubric sections | Pass 1 at the spine checkpoint; pass 2 at the gate step |
-| `digi-news-style-guide-v1.md` | Headlines, standfirsts, the first two paragraphs, number ration, register | Build step 5, before the headline |
+| `digi-news-standards-rubric-v5.md` | Binding editorial standards: news value, source tiers, going to the data, assumption firewall, caveat test, news spine, context floor, accessibility floor, length tiers, footer, disclosure, continuity, fairness | §0–§0a, §1d, §4b and §6–§6b at the editorial gate (step 0); the rest only on a contested call |
+| `digi-news-prepublish-checklist-5.md` | Pre-publish checklist in two passes, mapped to rubric sections | Pass 1 at the spine checkpoint; pass 2 at the gate step |
+| `digi-news-style-guide-v2.md` | Headlines, standfirsts, the first two paragraphs, number ration, register | Build step 5, before the headline |
 | `addendum-digi-reporter.md` | The `dn:statlabel` tile-kicker rule (also gated by the linter) | Only if a kicker call is unclear |
 | `site-sections-and-tracking.md` | Site sections (`report`/`puzzle`/`game`), the tracker-line exception, admin | When publishing or rebuilding a shipped piece |
 
@@ -52,7 +52,7 @@ All commands run from `~/b`. Pipe gate output through `tail`.
 
 1. **`verify.js`** — compute every derived figure in Node from the sourced inputs and
    print the locked outputs. Printed figures in the piece must equal these.
-2. **Spine checkpoint** — one line to the desk: confirmed, or changed and why.
+2. **Spine checkpoint** — one block to the desk: the so-what sentence, the four-part news spine (what happened → why → why it matters → what happens next) with a source for each, and whether the data spine was confirmed or changed and why.
 3. **`piece/init.js`** — chart init body, no `<script>` wrapper. Build from `DN-API.md`.
 4. **Preflight** — `node dn-preflight.js piece/init.js` → must print `PREFLIGHT: PASS`.
 5. **Prose** — `piece/body.html` (from `<div class="head">` to the last `</section>`),

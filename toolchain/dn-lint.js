@@ -20,6 +20,8 @@
      - Charts render with no thrown errors, and still render at 360px.   §8/§10
      - DN feed meta block present, self-consistent, and agreeing with the
        <h1>, the footer date, and the filename convention.                §13
+     - Rubric v5 news spine (why / why it matters / what next), the
+       "cannot say why" phrase, caveat proportion and the context floor. v5
      - No leftover house-template placeholder text.                      (hygiene)
      - Page <title> is not still the template's "House Template".        (hygiene)
      - Zero console / uncaught errors during render.                     §10
@@ -402,6 +404,56 @@ const MONTHS = { jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov
     else add('OK', 'honesty', '"What we don\'t know" section present.');
     if (!hasCaveat) add('WARN', 'honesty', 'No .caveat card found — the rubric requires the strongest objection to the piece\'s own conclusion to be carried on the page.');
     else add('OK', 'honesty', 'Caveat card present.');
+  }
+
+  /* ---- 11b. News spine, context floor and proportion (rubric v5 §0a, §1d, §4b, §6, §6b) ----
+     Added after the 18 Oct 2026 audit: recent pieces averaged ~600 words, 2.9
+     sources and no "why", "so what" or "what next". These are WARNs so a
+     deliberate brief or evergreen explainer can justify them, but a nightly
+     news piece may not waive them (see the Daily news brief). */
+  if (!notReport) {
+    const wc = function (sel) {
+      return Array.prototype.slice.call(document.querySelectorAll(sel))
+        .map(function (n) { return (n.textContent || '').replace(/\[\d+\]/g, ' '); })
+        .join(' ').trim().split(/\s+/).filter(Boolean).length;
+    };
+    const narrWords = wc('h1, .standfirst, .section p, .section li, .callout, .unknowns p, .caveat, .positions p, .more li');
+    const readMetaV5 = dnMeta('dn:read') || '';
+    const minsV5 = +((readMetaV5.match(/(\d+)\s*min/) || [])[1] || 0);
+    if (minsV5 && minsV5 <= 4) {
+      add('WARN', 'v5 §9', 'Short tier (dn:read "' + readMetaV5 + '"). Under rubric v5 Medium (900-1,300 words) is the default; ' +
+        'Short is for a deliberate brief only. Justify, or write the full news spine.');
+    }
+    const heads = Array.prototype.slice.call(document.querySelectorAll('.section .eyebrow, .section h2, .unknowns .h'))
+      .map(function (n) { return (n.textContent || '').trim(); }).join(' | ');
+    const SPINE = [
+      ['why', /\bwhy\b(?! it matters)|behind|caus|driv|explain|reason/i, 'a "why it happened" section (explanations on the record, attributed) — §0a, §4b'],
+      ['matters', /matters|affect|who (pays|loses|gains)|means|consequen|stake|impact|for patients|for (households|families|workers|students)/i, 'a "why it matters / who it affects" section — §0a'],
+      ['next', /next|ahead|what happens|coming|decision|deadline|to watch/i, 'a "what happens next" section — §6b']
+    ];
+    SPINE.forEach(function (sp) {
+      if (sp[1].test(heads)) add('OK', 'v5 §0a', 'Spine: ' + sp[0] + ' section present.');
+      else add('WARN', 'v5 §0a', 'No eyebrow or h2 reads as ' + sp[2] + '.');
+    });
+    const DUCK = /(cannot|can'?t|do(es)? not|don'?t) (say|tell|show|explain|confirm|separate)[^.]{0,40}\bwhy\b|say(s)? nothing about why|not something (these|the) [^.]{0,30}can separate/i;
+    const duckHit = (bodyText.match(DUCK) || [])[0];
+    if (duckHit) add('WARN', 'v5 §4b', 'Text says the data cannot explain the change ("' + duckHit.slice(0, 70) +
+      '…"). Confirm the explanation search was done and report any on-record explanation, attributed.');
+    const cavWords = wc('.unknowns p, .caveat');
+    if (narrWords && cavWords / narrWords > 0.2) {
+      add('WARN', 'v5 §6', '"What we don\'t know" + caveat are ' + Math.round(100 * cavWords / narrWords) +
+        '% of the narrative (' + cavWords + ' of ' + narrWords + ' words); v5 target is about 15%. Move mechanics to the Method.');
+    } else if (narrWords) {
+      add('OK', 'v5 §6', 'Caveat block is ' + Math.round(100 * cavWords / narrWords) + '% of the narrative.');
+    }
+    const tiers = sourceLis.map(function (li) { const b = li.querySelector('.tier, .t1, .t2, .t3'); return b ? (b.textContent.match(/[123]/) || [''])[0] : ''; });
+    const nonT1 = tiers.filter(function (t) { return t === '2' || t === '3'; }).length;
+    if (sourceLis.length < 4 || !tiers.some(function (t) { return t === '2'; })) {
+      add('WARN', 'v5 §1d', sourceLis.length + ' source(s), ' + tiers.filter(function (t) { return t === '2'; }).length +
+        ' at Tier 2. The v5 context floor is four or more sources with at least one Tier 2 analysis, unless the piece is a declared brief.');
+    } else {
+      add('OK', 'v5 §1d', sourceLis.length + ' sources, ' + nonT1 + ' of them Tier 2/3 context.');
+    }
   }
 
   /* ---- 12. Presentation contracts (§8, §13) ----

@@ -18,7 +18,7 @@ house template — both happen in the first ten turns of every build.
 | Project instructions | already in context — free |
 | `DN-API.md` | once, at the top of a build |
 | House template | **never** — `dn-build.py` splices it; `DN-API.md` documents it |
-| Standards rubric (latest version) | **only on a contested call** — when a judgement is genuinely in dispute |
+| Standards rubric (latest version) | **§0–§0a, §1d, §4b and §6–§6b at step 0** (the so-what, news spine, context floor, explanation search, caveat proportion, what happens next — about 120 lines); the rest **only on a contested call** |
 | Prepublish checklist (latest version) | **pass 1 (editorial) at the spine checkpoint; pass 2 (production) at the gate step** — never at startup |
 | Headline & style guide | **at step 5, before writing the headline and first two paragraphs** — §1–§4 only |
 | Reporter addendum | never as a read — its one rule (`dn:statlabel`) is in the instructions and gated by the linter |
@@ -97,6 +97,16 @@ saving tokens can cost you sourcing.
   edition's 11.9% became 11.1% in the next. Prefer editions on the same basis, and
   put any break in the caveat card.
 
+- **Context research is not optional *(v5)*.** After the primary release, spend a
+  second round of searches on the story around it: what the responsible department,
+  regulator or producer said; any target, deadline, policy change or event that
+  coincides with the change; Tier 2 analysis (think tanks, the OBR, learned
+  societies); and Tier 3 coverage of the same release, for explanations and
+  on-record reactions. Budget roughly as many searches for context as for the data.
+  The explanation found here is what turns a bulletin rewrite into a news piece
+  (rubric §4b). A piece that says "the data cannot say why" when the Health
+  Foundation, the minister or the release itself has said why is wrong, not cautious.
+
 ---
 
 ## Build order
@@ -105,11 +115,15 @@ The gate moves to the front. Geometry failures are decidable from the chart spec
 alone, so there is no reason to discover them after the prose is written.
 
 ```
-0  EDITORIAL GATE   peg + date, added-value sentence, 30-day feed check, interests
+0  EDITORIAL GATE   peg + date, added-value sentence, so-what sentence,
+                    30-day feed check, interests; then CONTEXT RESEARCH
+                    (explanations on the record, positions, next step)
 1  verify.js        compute every derived figure, lock the outputs
 2  SPINE CHECKPOINT one block to the desk + checklist pass 1 (editorial):
                     spine (confirmed / changed because Y), peg and date,
-                    added-value sentence, independent source, data to attach,
+                    added-value sentence, so-what sentence, the news spine
+                    (what happened → why → why it matters → what next) with
+                    a source for each, independent source, data to attach,
                     interest to declare, prior DN piece to link
 3  piece/init.js    author the exhibits
 4  dn-preflight.js  geometry + silent-failure check, before any prose

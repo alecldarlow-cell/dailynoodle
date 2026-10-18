@@ -28,7 +28,7 @@ in `toolchain/site-sections-and-tracking.md`.
 ## Publishing
 - Push a file to `reports/` on `main`. `.github/workflows/build-feed.yml` then injects the tracker, patches share text, moves puzzles onto the shared engines and rebuilds `feed.json`.
 - The same workflow runs nightly around London midnight so forward-dated files appear on their own day without a push.
-- Scheduled tasks (claude.ai): **Daily news** (00:52 UTC; three news pieces) and **Pinwheel clean-up** (02:37 London; replaces banned Mini/Doku layouts). Both clone `alecldarlow-cell/dailynoodle` and push to `main`.
+- Scheduled tasks (claude.ai): **Daily news** (00:52 UTC; two news pieces, built to rubric v5: at least one pegged to an event or decision) and **Pinwheel clean-up** (02:37 London; replaces banned Mini/Doku layouts). Both clone `alecldarlow-cell/dailynoodle` and push to `main`.
 
 ## Saved progress (do not break)
 - Streaks, finished puzzles and game saves live in each player's browser `localStorage` for the site's address. Keys include `digi-mini-v1`, `digi-mini-streak`, `digi-doku-v1`, `digi-sweep-v1`, `digi-sweep-streak`, `digi-path-v1`, `digi-link-v1`, `digi-link-streak`, `digi-tangle-v1`, `digi-borders-v1`, `digi-borderline-v1`. Never rename a key, a puzzle id or a puzzle's file path.

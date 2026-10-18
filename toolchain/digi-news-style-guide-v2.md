@@ -1,8 +1,10 @@
-# DIGI NEWS — Headline & Style Guide (v1)
+# DIGI NEWS — Headline & Style Guide (v2)
 
 The rubric decides what is true enough to print; this guide decides how it reads. It is binding on headlines, standfirsts and the first two paragraphs, and advisory everywhere else.
 
 All the examples below are real Digi News headlines and paragraphs, with rewrites. Each rewrite was checked against the piece's own figures and caveat.
+
+v2 adds the news lede (§3), the explanation paragraph (§3a) and the spine headings (§7). The aim is the clarity of the Economist, the FT and the Guardian: the reader knows what happened, why, and why it matters before any detail.
 
 ---
 
@@ -12,6 +14,7 @@ All the examples below are real Digi News headlines and paragraphs, with rewrite
 
 - **One idea.** If the headline needs "but", "after", "while" or a full stop to hold two facts, pick one. The second fact goes in the standfirst.
 - **About 12 words or fewer.** The median Digi News headline is 14 words, and four in ten run longer. Front-page cards and phone screens truncate them.
+- **Say what it means, not what the data show.** "The NHS hit its waiting-time target in March. It has not improved since" beats "England's 18-week waiting performance has held near 65% since March". A headline built on a statistic should still tell the reader what the statistic means.
 - **Lead with the subject and an active verb.** "UK smoking rate halves", not "Fewer than one in ten UK adults now smoke".
 - **Rest on the claim that survives the caveat (rubric §5b).** The headline is written last, after the caveat card.
 - **No attribution tail unless it is needed for accuracy.** "…, NOAA data show" adds four words. The standfirst names the source.
@@ -53,13 +56,22 @@ Do not end on a hedge the headline did not need.
 
 ## 3. The first two paragraphs
 
-The reader decides in the first two paragraphs whether to continue. Those paragraphs answer three questions, in this order:
+The reader decides in the first two paragraphs whether to continue. The first three paragraphs answer four questions, in this order:
 
-1. What happened?
-2. Why does it matter, or why now?
-3. How sure are we?
+1. What happened? (the news, in plain words, not the statistic)
+2. Why does it matter, and to whom?
+3. Why did it happen, according to whom?
+4. How sure are we? (one clause, not a paragraph)
 
 The detail comes after.
+
+**The news lede *(v2)*.** The first sentence says what happened and what it means. The precise figure comes in sentence two, or later in the same sentence. Do not open with "[Body] published its [month] figures on [date]": the release is the peg, not the news.
+
+**Before** (NHS waits, 13 October):
+> NHS England published its August referral-to-treatment figures on 8 October. Of about 7.4 million waiting pathways, 65.2% had been waiting up to 18 weeks.
+
+**After:**
+> Hospitals in England met the government's interim goal of treating 65% of patients within 18 weeks, reaching 65.3% in March. Six months on, the share has not moved: it was 65.2% in August, and the bigger promise, 92% by March 2029, is as far away as it was in the spring.
 
 **Number ration.** No sentence in the first two paragraphs carries more than two figures. The smoking, GDP and asylum pieces of 11–12 October carry one figure every six to eight words of prose, which is denser than a statistical bulletin. Put exact figures the argument does not need into an exhibit or its data table. In prose, round where precision adds nothing: write "about half" rather than "48.5% of its 2011 level".
 
@@ -70,6 +82,14 @@ The detail comes after.
 > About 4.9 million adults in the UK smoked last year, according to the Office for National Statistics — 9.8% of over-18s, half the rate of 2011.[1] Men still smoke more than women, and Scotland and Wales more than England.[1] Those gaps are small next to the one between people with and without qualifications.
 
 The nation and sex figures move to a small table or the exhibit.
+
+### 3a. The explanation paragraph *(v2)*
+
+The third paragraph (or the first of the "why" section) gives the explanations on the record, attributed, and says which the evidence supports:
+
+> The March jump was no accident of the calendar. Trusts ran short "sprints" of evening and weekend clinics to hit the deadline, according to the Health Foundation, which doubted the pace could last.
+
+If the explanation search (rubric §4b) found nothing, say so in a clause and move on; do not spend a paragraph on what the data cannot show.
 
 ---
 
@@ -102,3 +122,12 @@ A piece that cannot answer "why now?" in a clause has failed rubric §0.
 
 - When an earlier Digi News piece covered the topic, link to it in the sentence that mentions the earlier finding: "Digi News [reported in August](…) that NOAA's switch to a relative index moved 2026 down the rankings."
 - A follow-up's headline says what is new. It does not restate the earlier headline with an updated number.
+
+---
+
+## 7. Spine headings and endings *(v2)*
+
+- Use the eyebrows to show the spine: **What happened**, **Why it happened** (or *Behind the change*, *What's driving it*), **Why it matters** (or *Who it affects*, *What it means*), **What happens next**. Other eyebrows (*In context*, *Where it's contested*) sit between them where needed.
+- Each h2 carries the point of its section, as before.
+- End the narrative on what happens next: a decision, a date, a test. Do not end on a hedge.
+- Quotes: a short attributed quote from a named person can carry a position better than a paraphrase. Keep each under 15 words, one per source, with the venue and date (rubric §1c, §11).

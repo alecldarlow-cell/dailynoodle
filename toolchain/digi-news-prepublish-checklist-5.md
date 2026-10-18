@@ -1,4 +1,4 @@
-# DIGI NEWS — Pre-Publish Checklist (v4)
+# DIGI NEWS — Pre-Publish Checklist (v5)
 
 A piece does not ship until every box is ticked. Each item maps to a rubric section (§). If a box can't be ticked, fix the piece or cut the claim — don't wave it through.
 
@@ -7,7 +7,7 @@ The checklist runs in two passes:
 - The **editorial pass** is done at the spine checkpoint, before the build.
 - The **production pass** is done at the gate step.
 
-The editorial pass is new in v4. It exists because every failure it catches costs a rebuild if it is found later.
+The editorial pass is new in v4. It exists because every failure it catches costs a rebuild if it is found later. v5 adds the so-what, the news spine, the context floor and the explanation search to it: these are the checks recent pieces most often failed.
 
 ---
 
@@ -16,10 +16,15 @@ The editorial pass is new in v4. It exists because every failure it catches cost
 ## News value (§0)
 - [ ] **Peg named, with its date.** If the source is more than 14 days old, the first paragraph says why the piece is running now.
 - [ ] **Added-value sentence written.** It is one line saying what this piece tells the reader that the source's own headline does not.
+- [ ] **So-what sentence written** (§0, new in v5). One line naming the real-world consequence: for people, a service, money, a market or a pending decision. Not "the figure rose".
+- [ ] **Spine planned** (§0a): what happened → why → why it matters → what happens next, with the source for each.
 - [ ] **Feed checked for the last 30 days.** If Digi News has covered the topic, this is a follow-up: it links back and leads on what changed. If nothing material changed, the piece is dropped.
 
 ## Sourcing plan (§1, §1b, §1c)
 - [ ] At least one source **independent of the primary release** has been identified.
+- [ ] **Context floor met** (§1d, new in v5): at least one Tier 2 analysis, and, where a policy, target, promise or decision is involved, the responsible body's position and its strongest on-record critic.
+- [ ] **Explanation search done** (§4b, new in v5): the producer, the responsible department or regulator, coinciding targets or policy changes, and Tier 2/3 coverage of the same release have been searched for an explanation of the change. Findings are noted at the checkpoint.
+- [ ] **Next step found** (§6b, new in v5): the next decision, deadline or release, with its date where public.
 - [ ] Every figure the spine needs is in hand **from the data**, not inferred from bulletin prose. Anything not reachable is named at the checkpoint, and the requester is asked to attach it.
 - [ ] If the piece will reach an adverse finding about a named organisation, its **published position** has been looked for.
 - [ ] **Interest check (§14).** Does the piece cover the editor's employer, a charity of which he is a trustee, or a company in which he holds shares? If yes, a declaration is planned, and the framing has been reconsidered.
@@ -50,6 +55,8 @@ The editorial pass is new in v4. It exists because every failure it catches cost
 - [ ] Each source carries a **T1/T2/T3 badge**, and nothing load-bearing rests on opinion, advocacy or low-reliability sources. §1, §1a
 - [ ] At least one cited source is independent of the primary release; otherwise the Method says why not. §1
 - [ ] Causal and evaluative claims are attributed or explicitly marked as analysis, with no unsourced "causes" or "most observers". §4, §4a
+- [ ] No sentence says the data "cannot say why" (or similar) when a named body has publicly offered an explanation; on-record explanations are reported and weighed. §4b
+- [ ] The piece cites four or more sources, including at least one Tier 2 analysis, or it is declared a brief. §1d
 - [ ] Fact and interpretation are visibly separated throughout. §4
 - [ ] For any adverse finding about a named organisation, its published position is included, or its absence is stated. §1c
 
@@ -61,6 +68,8 @@ The editorial pass is new in v4. It exists because every failure it catches cost
 ## Uncertainty
 - [ ] A **"What we don't know"** note is present, and it lists genuine unknowns, not unretrieved published data. §6, §1b
 - [ ] A caveat card states the single strongest objection to the main reading. §6, §5b
+- [ ] "What we don't know" and the caveat card together are no more than about 15% of the narrative; measurement mechanics are in the Method. §6
+- [ ] A **"What happens next"** section closes the narrative, with dates where public. §6b
 - [ ] Any survey or poll reports the **sample size, margin of error, fielding dates and pollster**, and within-MoE gaps are not framed as real movement. §6a
 
 ## Disclosure, fairness and continuity — *new in v4*
@@ -72,6 +81,8 @@ The editorial pass is new in v4. It exists because every failure it catches cost
 
 ## Writing (style guide)
 - [ ] The first paragraph says what happened and why it matters to a reader, in plain words, before the detail.
+- [ ] By the end of the third paragraph the reader knows the so-what and the main explanation on the record. Style guide §3
+- [ ] The section eyebrows follow the news spine: what happened, why, why it matters, what happens next. §0a
 - [ ] Number ration: no more than two figures in any sentence of the first two paragraphs. Exact figures that the prose does not need go to an exhibit or table.
 - [ ] Neutral, active register; no loaded language; contested claims attributed. §4, §4a
 
@@ -91,7 +102,7 @@ The editorial pass is new in v4. It exists because every failure it catches cost
 - [ ] **Sources** are numbered, highest tier first, badged, and linked with retrieval dates where possible. §12
 - [ ] The **Corrections** line is present ("None" until needed). §12, §15
 - [ ] The **version line and "Figures to [date]"** are present and correct. The version uses the canonical form `v<major>.<minor>`. §12
-- [ ] Length matches the tier. `dn:read` is `~N min`, with N equal to the narrative words divided by 230. The "Go deeper" tail is included only if material was deliberately omitted. §9
+- [ ] Length matches the tier. Medium (900–1,300 words) is the default; a Short piece is a deliberate brief. `dn:read` is `~N min`, with N equal to the narrative words divided by 230. The "Go deeper" tail is included only if material was deliberately omitted. §9
 
 ## Publication and feed (§13)
 The piece is published by uploading the file to the site repo, and the front page builds its card from the file itself. The metadata is therefore part of the deliverable.
