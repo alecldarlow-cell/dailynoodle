@@ -298,6 +298,13 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
 #splash .homeGear{text-decoration:none!important;display:flex;align-items:center;justify-content:center;min-height:44px}
 @media(min-aspect-ratio:1/1) and (max-height:430px){#splash .homeMain{padding-bottom:calc(64px + var(--sb))}}
 #splash .homeChips{background:rgba(255,253,246,.8);border-radius:999px;padding:3px 12px}
+/* pause: back link in the grid; the long flying notes fold away so the card fits a landscape phone */
+.pgrid a.btn.back{text-decoration:none;justify-content:flex-start;padding:8px 16px}
+.howto{margin-top:6px}
+.howto summary{min-height:44px;display:flex;align-items:center;gap:6px;font-weight:800;cursor:pointer;color:#2e4458;list-style:none}
+.howto summary::-webkit-details-marker{display:none}
+.howto summary:before{content:"▸";transition:transform .15s}.howto[open] summary:before{transform:rotate(90deg)}
+.howto .controlHelp{margin-top:0}
 </style>
 </head>
 <body>
@@ -380,9 +387,10 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
       <button class="btn sw" id="pMotion">Reduced motion <span class="k">Off</span></button>
       <button class="btn sw" id="pFS">Full screen <span class="k">On</span></button>
       <button class="btn sw" id="pUpright">Upright play <span class="k">Off</span></button>
+      <a class="btn back" href="../games.html">← Digi Games</a>
     </div>
-    <p id="controlHelp" class="controlHelp">Drag back and release to throw. In flight, hold the right side to raise the flaps (nose up) and the left side to lower them (nose down); let go and they go flat. Left alone the plane swoops up and down and glides steeply, so smooth it out: flaps down as it climbs, flaps up as it dives. Pulling up when slow stalls the wing; dive a little to get speed back. A steep throw plus a hold on the right makes a loop. ☰ pauses. Keyboard: ←/→ aim, Space throws; hold ↑ or Space for flaps up, ↓ for flaps down; P or Esc pauses. Clears keep your throw; 2× target restores one (maximum five).</p>
-    <div class="row" style="margin-top:6px"><a class="back" href="../games.html">← Digi Games</a></div>
+    <details class="howto" id="howto" open><summary>How to fly</summary>
+    <p id="controlHelp" class="controlHelp">Drag back and release to throw. In flight, hold the right side to raise the flaps (nose up) and the left side to lower them (nose down); let go and they go flat. Left alone the plane swoops up and down and glides steeply, so smooth it out: flaps down as it climbs, flaps up as it dives. Pulling up when slow stalls the wing; dive a little to get speed back. A steep throw plus a hold on the right makes a loop. ☰ pauses. Keyboard: ←/→ aim, Space throws; hold ↑ or Space for flaps up, ↓ for flaps down; P or Esc pauses. Clears keep your throw; 2× target restores one (maximum five).</p></details>
   </div>
 </div>
 
@@ -1112,6 +1120,7 @@ function pausePlay(settingsOnly) {
   $('pHangar').textContent = resumeMenu ? 'New run' : 'Hangar';
   pauseMode = settingsOnly ? 'settings' : 'pause';
   refreshSwitches();
+  try { $('howto').open = !(innerWidth > innerHeight && innerHeight <= 430); } catch (e) {}
   $('pause').classList.add('on'); focusPanel('pause','pResume');
 }
 let pauseMode = 'pause', resumeMenu = false;
