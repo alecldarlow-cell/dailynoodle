@@ -596,8 +596,8 @@ function loadRun(){try{const o=JSON.parse(localStorage.getItem(RUNKEY));if(o&&o.
 function clearRun(){try{localStorage.removeItem(RUNKEY)}catch(e){}}
 
 /* ---------- Digi site tracking (site contract §5) ----------
-   A round is one attempt at one chart. game_start fires on the first troop placed (or the first Auto);
-   game_end fires once, when the player holds every island (win) or has none left (loss).
+   A round is one attempt at one chart (or one open-sea leg). game_start fires on the first troop placed (or the first
+   Advance party claim); game_end fires once, when the last rival fleet is out (win) or the player has no island left (loss).
    Restarting a chart or leaving mid-round sends nothing, which the dashboard counts as abandoned. */
 const GAME='archipelago';let rnd={armed:false,open:false,secs:0,how:'new'};let uiN={pauses:0};
 function trk(ev,x){try{if(window.digi&&window.digi.track)window.digi.track(ev,Object.assign({game:GAME},x));}catch(e){}}
@@ -1686,10 +1686,10 @@ function intro(ci,deal){const c=CHARTS[ci],assist=Math.round(assistFor(ci)*100);
  const pick=won?`<div class="seg" style="margin:10px 0 4px"><button class="cbtn${shuf?'':' on'}" id="sCh">Charted</button><button class="cbtn${shuf?' on':''}" id="sSh">Shuffled</button></div>`:'';
  const body=shuf?`<p>A fresh deal on the same chart. You start at <b>${c.isl[D_.seats[0].h].n}</b>; the rivals, their harbours and the gull garrisons are dealt anew.</p>
   <div class="kick">Rivals</div>${rivals}
-  <p style="font-size:13px;color:var(--ink-2)">Win by holding every island. ${rec?`Shuffled: ${rec.w} win${rec.w>1?'s':''}, best ${rec.b} turns.`:'No shuffled wins here yet.'} Stars come from the charted start.${assist?` <b>Calmer seas:</b> rivals muster ${assist}% less after your last tries.`:''}${clash?` Setting sail here ends your unfinished ${CHARTS[run.st.c].name} round.`:''}</p>`
+  <p style="font-size:13px;color:var(--ink-2)">Win by knocking every rival fleet out. ${rec?`Shuffled: ${rec.w} win${rec.w>1?'s':''}, best ${rec.b} turns.`:'No shuffled wins here yet.'} Stars come from the charted start.${assist?` <b>Calmer seas:</b> rivals muster ${assist}% less after your last tries.`:''}${clash?` Setting sail here ends your unfinished ${CHARTS[run.st.c].name} round.`:''}</p>`
   :`<p>${c.flav}</p>
   <div class="kick">Rivals</div>${rivals}<p class="tip"><b>Tip:</b> ${c.tip}</p>
-  <p style="font-size:13px;color:var(--ink-2)">Win by holding every island. Three stars for a win in ${c.par} turns or fewer.${won?'':' Win it once to open shuffled deals: the same chart with fresh harbours, rivals and garrisons.'}${assist?` <b>Calmer seas:</b> rivals muster ${assist}% less after your last tries.`:''}${clash?` Setting sail here ends your unfinished ${CHARTS[run.st.c].name} round.`:''}</p>`;
+  <p style="font-size:13px;color:var(--ink-2)">Win by knocking every rival fleet out. Three stars for a win in ${c.par} turns or fewer.${won?'':' Win it once to open shuffled deals: the same chart with fresh harbours, rivals and garrisons.'}${assist?` <b>Calmer seas:</b> rivals muster ${assist}% less after your last tries.`:''}${clash?` Setting sail here ends your unfinished ${CHARTS[run.st.c].name} round.`:''}</p>`;
  showModal(`<div class="kick">Chart ${ci+1} of ${CAMP} · ${c.real?'Real chart':'Invented chart'}</div><h2>${c.name}</h2>${pick}<canvas class="mini" id="imini"></canvas>${body}
   ${same?`<button class="cbtn pri" id="cont">Continue · turn ${run.st.turn}</button>`:'<button class="cbtn pri" id="go">Set sail</button>'}${shuf?'<button class="cbtn" id="rd">Deal again</button>':''}<button class="cbtn" id="bk">Back</button>${same?`<button class="cbtn danger gap" id="go">Start over${shuf?' with this deal':''}</button>`:''}`,'',()=>{
   drawMini($('imini'),ci,D_?D_.own:null,fl);
@@ -1759,7 +1759,7 @@ function settings(back){const s=meta.set;const sw=(id,on,l,sub)=>`<button class=
   if($('tips'))$('tips').addEventListener('click',()=>{meta.coached=false;saveMeta();settings(back);});
   $('card').querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{s[b.dataset.k]=b.dataset.v;saveMeta();settings(back);}));});}
 function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">‹ Back</button><h2>How to play</h2></div>
- <ol class="rules"><li><b>Win</b> by holding every island on the chart. You are out if you lose them all.</li>
+ <ol class="rules"><li><b>Win</b> by knocking every rival fleet out of the fight; any gull islands left then strike their colours. You are out if you lose all your islands.</li>
  <li><b>Reinforce:</b> each turn you get your islands ÷ 3 (at least 3), plus a bonus for every whole chain you hold. Tap your islands to send them.</li>
  <li><b>Chains</b> are the groups of islands sharing a coloured stretch of water. The small tag (+4) is what holding the whole chain adds every turn; it takes a fleet’s colour once that fleet holds it all. Tap Chains for names and who is closest.</li>
  <li><b>Attack</b> along a dotted lane from an island with 2 or more troops: tap the rival island (or tap yours first to choose where from). You roll up to 3 dice, the defender up to 2. Highest against highest; ties go to the defender. Blitz keeps rolling, one throw at a time, until the island falls or you tap Stop.</li>
