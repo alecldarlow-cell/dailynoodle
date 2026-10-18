@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Borders — Digi Puzzles</title>
+<meta name="dn:headline"   content="Borders 0503">
+<meta name="dn:standfirst" content="Ten country outlines, one at a time. Name each from four choices, easiest first. Your score is out of ten.">
+<meta name="dn:date"       content="2028-02-19">
+<meta name="dn:kind"       content="puzzle">
+<meta name="dn:topic"      content="Geography">
+<meta name="dn:read"       content="~3 min">
+<meta name="dn:thumb"      content="assets/borders-thumb.svg">
+<meta name="theme-color" content="#E3ECE8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="../engines/borders.css">
+</head>
+<body>
+
+<!-- HOME -->
+<section id="home" class="screen" aria-label="Borders">
+ <div class="wrap">
+  <div class="top"><a class="back" href="../puzzles.html">← Digi Puzzles</a></div>
+  <div>
+   <h1 class="title">Borders</h1>
+   <div class="bar" aria-hidden="true"><i></i><i></i><i></i><i></i><span id="numLabel"></span></div>
+   <p class="dateline" id="dateLine"></p>
+  </div>
+  <button id="playCard" class="sheet" aria-label="Play today's ten">
+   <svg class="world" id="homeWorld" aria-hidden="true"></svg>
+   <span class="cardtxt"><b>Today's ten</b><small id="playStatus">Ten country outlines, easiest first. Scored out of ten.</small><span class="go" id="playGo">Play</span></span>
+  </button>
+  <div class="toggles" id="homeToggles"></div>
+  <footer>BORDERS · SHELL v2 · gated at build, and again on load</footer>
+ </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="screen" aria-label="Quiz">
+ <div class="wrap">
+  <div class="qtop">
+   <button class="iconbtn" id="pauseBtn" aria-label="Pause"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" fill="currentColor"/></svg></button>
+   <div id="ticks" aria-hidden="true"></div>
+   <div id="pts" aria-live="polite">0<small>pts</small></div>
+  </div>
+  <div id="sheet" class="sheet">
+   <svg class="mapsvg" id="qmap" role="img" aria-label="Country outline"></svg>
+   <div id="nameplate" aria-live="polite"></div>
+   <div id="scale" aria-hidden="true"></div>
+   <div id="inset" aria-hidden="true"></div>
+   <div id="coach" class="off">Which country is this? “Show on map” helps, for half points.</div>
+  </div>
+  <div id="opts"></div>
+  <div class="qfoot">
+   <button id="hintBtn" class="btn quiet">Show on map (half points)</button>
+   <button id="nextBtn" class="btn primary" hidden>Next</button>
+  </div>
+ </div>
+</section>
+
+<!-- RESULT (the result box the site tracker watches: it gains "on" once, when a ten is finished) -->
+<section id="winModal" class="screen scroll modal" aria-label="Result">
+ <div class="wrap">
+  <div class="top"><a class="back" href="../puzzles.html">← Digi Puzzles</a></div>
+  <p class="kick" id="rKick"></p>
+  <h2 class="big" id="rBig"></h2>
+  <p class="verdict"><span id="winTitle"></span><span id="rStars"></span></p>
+  <div class="stats">
+   <div><b id="winTime">0:00</b><span>time</span></div>
+   <div><b id="rPts">0</b><span>points</span></div>
+   <div><b id="rStreak">0</b><span>day streak</span></div>
+  </div>
+  <p class="sub" id="rSub"></p>
+  <div class="strip" id="rStrip"></div>
+  <button id="winShare" class="btn primary">Share result</button>
+  <div class="endbtns">
+   <a class="btn" href="../puzzles.html">More puzzles</a>
+   <a class="btn" href="2026-10-05-quiz-borderline.html">Explore more outlines</a>
+  </div>
+  <p class="small">Every country you name here is added to your atlas in Borderline, on Digi Games.</p>
+ </div>
+</section>
+
+<!-- GATE FAILURE -->
+<section id="err" class="screen" aria-label="Puzzle unavailable">
+ <div class="wrap">
+  <div class="top"><a class="back" href="../puzzles.html">← Digi Puzzles</a></div>
+  <h2 class="big" style="font-size:48px">This puzzle can't be shown</h2>
+  <p class="sub">It failed its own checks when it loaded, so it has been held back. Today's other puzzles are on the Digi Puzzles page.</p>
+  <p class="small" id="errList"></p>
+ </div>
+</section>
+
+<!-- PAUSE -->
+<div id="pause" role="dialog" aria-modal="true" aria-label="Paused">
+ <div class="dialog">
+  <h2>Paused</h2>
+  <button id="resumePause" class="btn primary">Resume</button>
+  <div class="toggles" id="pauseToggles"></div>
+  <button id="quitBtn" class="btn quiet">Back to start</button>
+ </div>
+</div>
+
+<script>
+/* This puzzle's data. The player is ../engines/borders.js, shared by every borders. */
+window.DN_PUZZLE={id:"DP·BORD·0503",date:"2028-02-19",band:"standard",qs:[{"n":"United States","i":159,"t":1,"lo":-98.81,"la":39.89,"km":9.0535,"x":74,"y":39.4,"d":"M499 212l30 0 2-4 4 0 6-8 3-11 7-11 3 4 6-2 4 3 0 19 4 2-1 4 4 1 1 5-2 2-6 1-2 3-4-2-1 4-2-2 0-3-3 7-5 2 0-1-2 3-2-1-2 2-5 11 2 3-4 3 3 2 3 6 4-1-3-3 2 0 1 5-7 2 0-3-4 3 0-3-2-1-2 6-13 1-10 6 0-6 1 4-4 5 3 2-1 7 0-2-7 12-1 1 0-3-5-4 1-4 3-2-5 4 5 15-8 15-1-3 3-7-2 0 0-4-1 1-2-2 0-2 2-1-3-1 1-1-1-1 2-2-1-1 3-4-2-1-3 4-1 0 1 11-2-3 3 6-6-4-3 0 2-6-2 4 0 3 2 0 8 5-1 3-2 0-5-6 8 9-2 2-3-3 4 4-1 2-2-3-6-1 6 2 1 3 5 0 4 13-3-10 1 6-3-2 0 2-4 1-2-2 0 3 6 0 0 3 2-3 1 1 0 3-4 3-8-2 5 3-2 3-3-2 1 2 5 0 0 2-8 3-1-2 0 3-5 6 0-2-1 3-8 2-3 5 0-2-1 3-6 4 0 2-7 1 2 1-1 2-2-2 1 3-4 3-3 6-1 6 3 11 6 14 1 7-1-7-1 2-2-5 1 5 7 16-1 10-2 6-7 2 0-2 1 0-4-5-3-2-2-5 1-2-2 1 0-4-2 1-4-7 3-4-3-1 0 3-1-2 1-11-9-11-6-2-1 2-9 2-3-4 1-2-2 1-6-2 3 0-2-1-9 1 2-2-2 2-7 2 2-1-2-5-1 4-8-1-6 3-5-2-2 1-1 1 2 2 5-2-1 2 2 1 2-1 0 2-3 2 6 5-3 2-1-3-6-3 1 2-2 3-1-2-4 1-5-1 1-1-1-2-2 0-4-3-3 3-9-3-6 1 0-3-1 3-8 4 2-2-2 0 0-2-2 0 1 4-4 4-9 5 2-1-5-1 2 3-4 0 0 2-3 1 0 2-3 1 1 2-1 4-3-2 3 3 0 8 3 4-2 2-17-6-3-6 0-6-18-23-9-2-9 10-11-6-4-11-15-13-17-1 0 5-26 1-36-14 1-2-23 2-3-8-6-5-3-1-1-3-6-1-4-3-10-2 0-6-11-14 0-6-5-5-1-4 0-3 4 4-2-6 7-1-8-1-1 4-5-2 1-2-8-9-1-11-4-5 2-15-4-18 3-11 2-34 7 1-8-2 0-4 1 2 1-3-2-3 2-1-2-1-1 1-5-20 7 3 11 1 1 3-4 8 2-1-1-1 5-6-2 4 1 5-2 1 0-2-2 3 3 0 3-4 0-5 1-4-2-2 1-2-3-2 2-1 0-2-3-4 260 0 1-6 2 0 3 9 8 3 7-1 5 2 0 3 4-1 5 4 5-2 14 3 10-5 33 20 3 6 4-1 2 6 3 0 2 1-1 3 9 6 4 24-4 12-5 6 1 4 3 2 13-7 10-2 11-6 2-1-3-7 4-2 18 0 7-9 9-8 4-1zM520 263l6 0-8 3-12 2 4-4 9-1 3-2-1 2zM48 168l2 4-4-5 2-2 0 1 0 2z","K":539.97,"tx":272.1,"ty":687.6,"o":["Mexico","Guatemala","El Salvador","United States"]},{"n":"Poland","i":119,"t":1,"lo":19.42,"la":52.11,"km":1.252,"x":164,"y":27.8,"d":"M545 345l4 10-1 8 11 16 7 16 6 6 0 2-7 5 4 6 2 9 0 7-6 10-14 3-17 18-20 23-21 30 4 21-1 10 7 8-2 5-12-5-6 0-25-11-2-8-5-3-13-6-23-2-8 2-4 6-7 2-14-6-14 0-11 6-6 11-7-3-7 2-2-1 2-5-1-9-8-3-10-16-11 8-5 9-10 0-2-8-5-1-2-9-11-12-2-10-12-5-2 2-15-11-3 3-6 3-13-12-2-4 6-3 2-3-2-7-8 4-8 1-14-11-15-4 6 16-8 5-9 7-2 0-17-23-5-2-2-3 4-5 5-1 3-7-8-7-15 4-3-5-12-6-20-6-4-6-1-7-15-5 0 12-10 2 9-21 2-13-6-19-9-5 0-9-7-18 4-7 4-15-3-3-1-12-3-3-4-7 4-15-6-10-14-13-7-8 1-5 8-9 4-7 3-10 0-6-7-25-2-16 18 8-2-17-18-4 0-8 2 2 7 1 18-9 31-11 49-14 21-25 17-4 21-13 45-10 13 0 23 15 3 5-16-11-4 0 8 22 5 8 9 5 7 2 24-3 11-7 33 4 106 5 31 1 5-4 4 0 7 4 1 4 13 6 9 9 2 18 7 33 10 30 5 22 1 29-3 4-24 13-13 21 2 2 21 14 3 5-2 15 1 6-4 9-1 8z","K":3124.48,"tx":316.6,"ty":3633.3,"o":["Lithuania","Hungary","Germany","Poland"]},{"n":"Argentina","i":4,"t":1,"lo":-64.76,"la":-34.68,"km":7.369,"x":99.1,"y":111.6,"d":"M375 144l-4 6 1 4-3 8 1 3-3 4 1 15-3 3-2 8 2 8-2 1 3 6 9 5 5 5-2 9 3 6 5 1 0 9-11 17-7 6-21 6-16 3-9-1-6-2 0 7 3 2-1 0 1 1-1 6-1 1-2 5 2 8-2 4-7 3-8 1-16-7-2 1-1 5 2 17 6 2-1 3 2 0 4 0 1-3-3 0 6-2 2 3 0 7-1 2-4 1-6-6-6 2 0 2 8 3-6 4-5 7-1 13-4 5 0 6-7 0-9 5-8 14 1 7 9 10 11 3 1 7-5 5 3 0 2 2-21 19-2 6-2 12-1 2-5 2-5-7 0 4-3 1 4 0 2 3-6 5-3 9-2 3 2 0 2 11-6 0 7 2 7 13-1 1 0-1-19-6-24-1-6-9 1-16-2-2-8 3-5-12-1-11 2-5 4 0 1-6 5-4 1-5 3-5-2-7 2-7 5-5 0-7 3-3-2-9 3-4-2-6 3-2 2-5-3-4-5-1-1-3 10 0 1-3 0-2-8-1 2-8-3-10 2-2-5-4 1-13 4-3-2-7 0-16 3-5-2-3 2-3-1-6 3 0 1-11 7-5-4-14 0-14 2-5 8-7-2-12 2-2 4-13 3-1 0-14-3-1 1-5-5-12 2-1-4-6 0-4 3-4 2-9 2-1 2-2-2-2 0-10 2-4 2-9 6-7 4-11 7-3-4-7 3-4-3-9 3-5-2-4 0-3 4-3 11-5 4-14-2-2 6-8 4-2 2-4 5 4 15 2 3 8 5-11 14 0 11 14 11 9 14 5 9 6 15 7 4 4 1 3-7 8-1 7-5 7 0 2 6 0 21 4 4-4 5 2 4-6 3-1 5-6 2-13 7 0 4 9-2 13-6 4-6 2-3 4-8 5 0 2-2 0-21 25zM238 568l0-46 5 9-3-1 0 4 4 1 2 6 8 10 14 10 6 3 7 0-4 5-13 3-8-3-18-1zM288 565l10 0-11 4-1-1 2-2z","K":710.95,"tx":285.8,"ty":-249.3,"o":["Bolivia","Peru","Uruguay","Argentina"]},{"n":"Hungary","i":66,"t":2,"lo":19.38,"la":47.17,"km":0.9425,"x":164.4,"y":32.5,"d":"M512 153l10-1 1 6 7 13 13 6 5 8 8 4 7-1 8 10-1 8 2 2-16 17-5 4-10 0-16 5-14 19-9 8-1 13-10 10-6 20-10 11-1 10-14 24 1 6-14 11-5 14 1 9-6 2-3 10-9 8-16-2-7 1-2 6-6 6-4 1-8-3-18 3-3 3-7-4-18-2-7 2-19-3-6 2-9 10-17 10-5-1-5-3-6 6-7 4-16 3-5-1-8 11-10 6-6 1-32-2-13-2-13-9-3-5-6-3-10-2-7-5-6-9-24-21-6-10-9-9-19-9-11-16 0-5-4-5-2-13-2-3-15-1 13-12 6-4 10-1 3-13-1-2-3-1-2-9 3-6-1-15 6 0 8-6 5-10-3-9-17-5-1-3 11-8 3-1 15 9 4-2 19-2-3-15 4-8 1-7 5-5 10 0 3 2 26 21 10 5 31 1 46-3 4-8-2-5 0-5 3-8 10-6 28-2 17-5 2-6 5-6 5-1 22 11 4-2 31-18 13-28 12-3 18 1 16 4 10 0 15-5 6 0 9 7 12 18 4 1 27-7z","K":4595.51,"tx":291.5,"ty":4601.5,"o":["Hungary","Serbia","Czechia","Croatia"]},{"n":"Qatar","i":121,"t":2,"lo":51.18,"la":25.3,"km":0.325,"x":191.4,"y":53.5,"d":"M326 558l-53 14-23 0-16-3-13-7-22-29-15-37 8-21 4-13-21-99-7-76 2-16 12-17 22-40 10-38 31-89 32-34 48-25 39 49 48 38 9 41-15 34-12 54 8 25 2 21 14 37 12 46 2 33-7 30-16 25-33 76-10 8z","K":17730.67,"tx":300.8,"ty":8418.1,"o":["Saudi Arabia","Qatar","Yemen","Jordan"]},{"n":"Romania","i":123,"t":2,"lo":24.98,"la":45.85,"km":1.3475,"x":168.7,"y":33.7,"d":"M486 346l6 9 8 4 18 5 1-1 0-5 6 2 19-10 11-1 9 4 8 9-4 23-4 11-30 7 2-3-2-11 3-4-7-1-5 6 2 9-4 7-3 12 5 0-2 5-9 11-3 6 1 25-4 19-13 0-8-2-10-4-10-13-8 2-4-3-14-2-19-12-35 7-16 6-16 11-6 8-8 5-11 3-19-1-42-9-12 3-57-9-18 3-3-2 0-7 9-8 0-2-18-13-2-4-8-7-2-5 0-4 3-4 4-2 4 0 2-1 0-3-13-8-9 2-8 10-7 1-3-6-7-4-16-3-2-4-4-3-10-3 0-3 9-1 1-2 0-1-9-5-1-2 4-2 4-10-4-3-11-4-5-4-7-3-14-13 0-22-4 1-8-11-12-9-7-11 2-2 13-3 6 3 6-3 3-6 4-1 12 1 5-3 4-9 4-2-1-6 4-10 10-8-1-4 10-18 1-7 7-8 5-14 7-8 0-9 7-6 10-13 11-4 7 1 15-16 11-5 5-7 3 0 12 8 15 0 19 5 4-1 6 4 18-4 5 2 18 18 11-3 5-6 17-8 40-7 7-10 2-8 23-5 11 4 4 5 10 17 11 27 7 9 9 17 9 10 5 9 12 12 10 28-1 11 1 5-7 26-1 13 3 27-5 4 5 7z","K":3293.25,"tx":300.5,"ty":3285.8,"o":["Moldova","Slovakia","Romania","Serbia"]},{"n":"Rwanda","i":125,"t":2,"lo":29.92,"la":-1.99,"km":0.4125,"x":174.9,"y":79.9,"d":"M222 152l9 0 58-14 6 5 9 27 5 3 8 1 16-6 31-21 47-51 12-18 10-10 14-3 26 1-9 4-2 13 11 21 33 43 21 8 14 17 14 28 4 35-5 42 2 32 13 20 3 27-6 33-7 19-8 7-9 3-14-3-15 3-17 6-10 1-20-6-20-17-37 9-10 0-13 8-12 10-7 0-6-1-32-20-12 1-5 56-5 31-7 14-22 14-23 7-83 4-11-5-15-31-26-14-26-7-10 2-9 16-4 15-26-10-6-13-1-21-10-29 6-13 30-23 32-22 7-10 4-17-5-73 4-13 14-25 19-27 23-28 13-2 18-11 18-16z","K":15433.05,"tx":314.5,"ty":-221.6,"o":["Uganda","Malawi","Rwanda","Tanzania"]},{"n":"Tanzania","i":147,"t":2,"lo":34.8,"la":-6.27,"km":2.263,"x":178.9,"y":84,"d":"M204 449l-21-10-3-2-24-5-1-6-5-2-7 0-6-5-1-4-9-5-13 0-6-3-7-8-25-59-5-8-5-6-19-14-8-15-3-15 6-14-14-41 4-22 15 0 11-7 10-11 6-11 6-6 2-7 10-8 0-4 8-3 1-4-2-11-16-4-1-3 2-7-2-2 5-11 14-4 3-10-3-8 0-20-5-8-4-2-6-7-2-4 0-3 2-1 4 1 11-4 154 1 179 99 2 13-3 10 5 2 4 6 69 50-11 41-8 17-1 10 3 12 13 12 8 12 9 3 3 7-1 5-8 11-3 9 0 13 2-2 5 3 0 10-5 12-2 9 4 14 5 7-1 4 9 13-1 10 7 21 1 4-3 5 7 1 6 6 5 0 6 4 8 6 4 6-23 17-8 5-13 3-12 7-7 2-9 0-9 4-15 9-9-5-7-2-12 1-2 1-3 8-5 5-9 5-8 2-7-2-12-6-10 3-5 3-18 1-6-1 0-3-5-4-8-4-6 0-11 7-30-1-3-9-2-2-4-1-8-13 3-18-4-9-1-14-2-11-10-15-16-12-2 4 0 5-3 0-9-3-14 0-4-4-10-2-9-4zM525 290l4 10-1 2-4 1-3-5-2 1-3-4-4 0-3-5 1-12 4-4 2-6 6 19 2 2zM543 227l-1 18-5 9-5-4 3-12-2-9 6 0zM535 379l-2 0-3-3 15-14-4 13-3 0z","K":2798.3,"tx":295.5,"ty":-12.4,"o":["Tanzania","Uganda","Zambia","Rwanda"]},{"n":"Sierra Leone","i":130,"t":3,"lo":-11.79,"la":8.56,"km":0.6315,"x":140.2,"y":69.7,"d":"M562 295l-6 30-7 22-5 5-23 6-9 9-13 55-8 4-32 35-22 13-15 12-14 14-17 15-20 24-13 25-9 8-7-7-33-25-33-17-73-27-25-8 2-10 8-18-14-21 6-16-6 0-10 10-23-3-14-13-12-5-6-7-7-35-6-16-10-9-23-3-9-21-12-16 2-11 10 1 8 7 12 3 16-18 14-9 4-9-2-5-9 8-23-2-6 6-11 3-8-22 1-12 3-14 24-2 2-4-17-3-20-16-4-11 10-3 18 4 18-10 5-8 7-21 22-6 13-13 13-20 6-13 8-13 2-7 6-5 10-28 12-7 27-5 24 9 38-8 2-12 111-1 12 3 4 10 11 14 12 10 32 48 30 35 1 10-11 24 0 5 4 3 19 4 2 33 9 19 9 13 0 5-22 23-8 22-7 12 5 2 5-1 17 2 11-8 18-21 6-2zM172 479l-3 5-11-12-60-17 16-9 42-2 12 5 6 4 2 9z","K":9975.94,"tx":299.2,"ty":1777.4,"o":["Senegal","Guinea-Bissau","Côte d'Ivoire","Sierra Leone"]},{"n":"Kyrgyzstan","i":81,"t":3,"lo":74.51,"la":41.47,"km":1.687,"x":206.9,"y":37.9,"d":"M113 366l17-3 11 5 5 0 4 4 7-5 6-2 8-12 5-1 1 2 5 2 3-4-2-4 2-4 10 4 3-2 5-6 18-11-7-3-6 1-11-2-7-7-7-4-9 1-1-10-3-1-3 2-8-2-1-8-3-6-5-3-2-6-3 3 1 4-2 7-4 2-4-3-1 15-5-2-9 0-16-7-5-13-2 0-9 3-14-9 0-2 13-10 9-10 9-3 2-7 19-9-1-3-9-5-4 2-3-3 0-3 5-8 2-5 7-9 4-4 8-4 5 2 15-4 22 4 24 8 5 5 21 4 6 6 4 1-3-13 7-27 2-3 14-6 3-4 10 0 3-3 30 17 27 10 13 1 8-8 35 1 24-3 12 4 28 1 11 2 25 0 18 6 12 0 2 1 1 6 12 13 3 1 21 3 14 15 2 9-1 2-19 2-4 7-23 7-42 24-4 3-1 6-11 14-15 1-12 4-29-3-4 1-4 3-8 13-4 13-5 9-8 6-3-5-5 3-7 1-7 4-10 0-4-20-3-1-14 10-12 2-8-3-2 4 2 7-8 1-13 11-21 6-8 16 4 14-4 5-5 2-13 0-11 6-7 1-26-1-11 2-6 8-9-9-13 5-3-2 1-7-12-4 1-5-2-3-20 7-3 5-10 2-4-2-6-9-5-2-13 3-4-3-1 2-9 0-18-1-6 3-9 0-1-9-2-6 2-10 2-3 6 4 2-1 0-7 3-5 21-6 24 10 3 6 6-3 1-6 15-6 1-3zM126 389l-2-6 3-4-8-2-3-5-2 4 0 3 4 3-2 6 7 1zM154 385l0-3-6 3 5 3zM101 393l-2-2-9-2 4 6 2 0z","K":2829.39,"tx":288.7,"ty":2540.3,"o":["Kazakhstan","Kyrgyzstan","Turkmenistan","Tajikistan"]}]};
+</script>
+<script src="../engines/borders.js"></script>
+<script src="../dn-track.js" defer></script>
+</body>
+</html>
