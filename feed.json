@@ -1,9 +1,24 @@
 {
-  "built": "2026-10-18T19:21:08.314Z",
+  "built": "2026-10-18T19:26:13.883Z",
   "today": "2026-10-18",
   "timezone": "Europe/London",
   "count": 617,
   "items": [
+    {
+      "path": "reports/2026-10-15-quiz-ballpark.html",
+      "kind": "game",
+      "topic": "Quiz",
+      "headline": "Ballpark",
+      "standfirst": "How good are you at guessing? Ballpark tests your guesstimates with a range of categories.",
+      "date": "2026-10-15",
+      "updated": "2026-10-18",
+      "read": "~3 min",
+      "thumb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI0Y1RUZFNCIvPjxwYXRoIGQ9Ik0wIDIwSDEyME0wIDQwSDEyME0wIDEwMEgxMjBNMjAgMFYxMjBNNDAgMFYxMjBNODAgMFYxMjBNMTAwIDBWMTIwIiBzdHJva2U9IiMxRTI0MzMiIHN0cm9rZS1vcGFjaXR5PSIuMDciIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iMjgiIHk9IjU4IiB3aWR0aD0iNzYiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjRjA4QzUwIi8+PHJlY3QgeD0iNDAiIHk9IjU4IiB3aWR0aD0iNTIiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjRjBCNDNDIi8+PHJlY3QgeD0iNTAiIHk9IjU4IiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjODZCRDRCIi8+PHJlY3QgeD0iNTgiIHk9IjU4IiB3aWR0aD0iMTYiIGhlaWdodD0iMzIiIHJ4PSI0IiBmaWxsPSIjMUU5RTZBIi8+PHJlY3QgeT0iNzAiIHdpZHRoPSIxMjAiIGhlaWdodD0iOCIgZmlsbD0iIzFFMjQzMyIvPjxwYXRoIGQ9Ik0xMCA4MnYxMk01MCA4MnYxMk05MCA4MnYxMiIgc3Ryb2tlPSIjMUUyNDMzIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNMjIgODJ2Nk0yOSA4MnY2TTM0IDgydjZNNjIgODJ2Nk02OSA4MnY2TTc0IDgydjZNMTAyIDgydjZNMTA5IDgydjZNMTE0IDgydjYiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSIxLjYiLz48cGF0aCBkPSJNNjYgMzRWNzAiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PGNpcmNsZSBjeD0iNjYiIGN5PSIyOCIgcj0iMTAiIGZpbGw9IiMxRTI0MzMiLz48Y2lyY2xlIGN4PSI2NiIgY3k9IjI4IiByPSI0IiBmaWxsPSIjRjVFRkU0Ii8+PGNpcmNsZSBjeD0iNjEiIGN5PSI3NCIgcj0iMTIiIGZpbGw9IiNFMDUzM0IiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSIzLjUiLz48L3N2Zz4=",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": ""
+    },
     {
       "path": "reports/2026-10-17-arcade-paper-planes.html",
       "kind": "game",
@@ -620,21 +635,6 @@
       "stat": "4.3",
       "statUnit": "%",
       "statLabel": "wait offset",
-      "mask": ""
-    },
-    {
-      "path": "reports/2026-10-15-quiz-ballpark.html",
-      "kind": "game",
-      "topic": "Quiz",
-      "headline": "Ballpark",
-      "standfirst": "How good are you at guessing? Ballpark tests your guesstimates with a range of categories.",
-      "date": "2026-10-15",
-      "updated": "",
-      "read": "~3 min",
-      "thumb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI0Y1RUZFNCIvPjxwYXRoIGQ9Ik0wIDIwSDEyME0wIDQwSDEyME0wIDEwMEgxMjBNMjAgMFYxMjBNNDAgMFYxMjBNODAgMFYxMjBNMTAwIDBWMTIwIiBzdHJva2U9IiMxRTI0MzMiIHN0cm9rZS1vcGFjaXR5PSIuMDciIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iMjgiIHk9IjU4IiB3aWR0aD0iNzYiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjRjA4QzUwIi8+PHJlY3QgeD0iNDAiIHk9IjU4IiB3aWR0aD0iNTIiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjRjBCNDNDIi8+PHJlY3QgeD0iNTAiIHk9IjU4IiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjODZCRDRCIi8+PHJlY3QgeD0iNTgiIHk9IjU4IiB3aWR0aD0iMTYiIGhlaWdodD0iMzIiIHJ4PSI0IiBmaWxsPSIjMUU5RTZBIi8+PHJlY3QgeT0iNzAiIHdpZHRoPSIxMjAiIGhlaWdodD0iOCIgZmlsbD0iIzFFMjQzMyIvPjxwYXRoIGQ9Ik0xMCA4MnYxMk01MCA4MnYxMk05MCA4MnYxMiIgc3Ryb2tlPSIjMUUyNDMzIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNMjIgODJ2Nk0yOSA4MnY2TTM0IDgydjZNNjIgODJ2Nk02OSA4MnY2TTc0IDgydjZNMTAyIDgydjZNMTA5IDgydjZNMTE0IDgydjYiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSIxLjYiLz48cGF0aCBkPSJNNjYgMzRWNzAiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PGNpcmNsZSBjeD0iNjYiIGN5PSIyOCIgcj0iMTAiIGZpbGw9IiMxRTI0MzMiLz48Y2lyY2xlIGN4PSI2NiIgY3k9IjI4IiByPSI0IiBmaWxsPSIjRjVFRkU0Ii8+PGNpcmNsZSBjeD0iNjEiIGN5PSI3NCIgcj0iMTIiIGZpbGw9IiNFMDUzM0IiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSIzLjUiLz48L3N2Zz4=",
-      "stat": "",
-      "statUnit": "",
-      "statLabel": "",
       "mask": ""
     },
     {
