@@ -46,27 +46,22 @@
    browser's localStorage, which belongs to one address. A plain redirect
    would leave it behind, so:
 
-   OLD address  Every page packs this browser's saved data into the link's
+   OLD address  The forwarding repo alecldarlow-cell/digi-news (its index.html
+                and 404.html) packs this browser's saved data into the link's
                 #fragment (never sent to any server) and jumps to the same
                 page on the new address.
-   NEW address  A page opened with that fragment merges the data in, never
+   NEW address  This file: a page opened with that fragment merges the data in, never
                 overwriting newer progress made on the new address, removes
                 the fragment from the address bar and reloads once so the
                 puzzle or game starts with the merged save.
 
-   The old copy of the site never changes after the move, so carrying the
-   data on every visit is harmless and covers anyone whose first hop failed.
    Lives here because every page already loads this file. Independent of the
    tracker below: opting out of tracking does not block the move.
    ========================================================================== */
 (function () {
   'use strict';
-  var OLD_HOST   = 'alecldarlow-cell.github.io';
-  var OLD_BASE   = '/digi-news';
-  var NEW_ORIGIN = 'https://dailynoodle.co.uk';
-  var TAG        = '#dnmove=';
+  var TAG = '#dnmove=';
 
-  function b64e(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
   function b64d(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
   function isObj(x){ return x && typeof x === 'object' && !Array.isArray(x); }
   function parse(s){ try { return JSON.parse(s); } catch (e) { return undefined; } }
@@ -115,23 +110,6 @@
   function isStreak(o){ return isObj(o) && 'last' in o && ('streak' in o || 'n' in o); }
 
   try {
-    if (location.hostname.toLowerCase() === OLD_HOST) {
-      var path = location.pathname;
-      if (path.indexOf(OLD_BASE + '/') === 0 || path === OLD_BASE) path = path.slice(OLD_BASE.length) || '/';
-      var data = {};
-      try {
-        for (var i = 0; i < localStorage.length; i++) {
-          var key = localStorage.key(i);
-          if (key != null) data[key] = localStorage.getItem(key);
-        }
-      } catch (e) {}
-      var frag = '';
-      try { frag = TAG + b64e(JSON.stringify({ v:1, h:location.hash, d:data })); } catch (e) { frag = location.hash; }
-      window.DN_MOVING = true;
-      location.replace(NEW_ORIGIN + path + location.search + frag);
-      return;
-    }
-
     if (location.hash.indexOf(TAG) !== 0) return;
     var p = parse(b64d(location.hash.slice(TAG.length)));
     if (isObj(p) && p.v === 1 && isObj(p.d)) {
