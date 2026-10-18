@@ -244,6 +244,14 @@
     document.documentElement.classList.remove('fin-shown');
   }
 
+  /* the browser bar follows dark mode too (18 Oct 2026), as on the front pages; Tangle sets its own */
+  try {
+    if (!document.getElementById('themeColor')) {
+      [].forEach.call(document.querySelectorAll('meta[name="theme-color"]:not([media])'), function (m) { m.setAttribute('media', '(prefers-color-scheme: light)'); });
+      var tc = document.createElement('meta'); tc.name = 'theme-color'; tc.media = '(prefers-color-scheme: dark)';
+      tc.content = /BORD/.test((window.DN_PUZZLE || {}).id || '') ? '#0F181D' : '#11131A'; document.head.appendChild(tc);
+    }
+  } catch (e) {}
   window.dnFinish = { show: show, hide: hide, q: [], _test: { overallRun: overallRun, toMidnight: toMidnight, hm: hm } };
   queued.forEach(show);
 })();

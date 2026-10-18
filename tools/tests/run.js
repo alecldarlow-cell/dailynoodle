@@ -142,6 +142,17 @@ const TESTS = {
     }
   },
 
+  async 'front:dark'(b) {
+    for (const pg of ['index', 'puzzles', 'games', 'lab', 'board', 'privacy']) for (const sc of ['light', 'dark']) {
+      const { ctx, p } = await open(b, `../${pg}.html`, { scheme: sc }); await wait(p, 1200);
+      const k = await p.evaluate(() => ({ bg: getComputedStyle(document.body).backgroundColor, sw: document.documentElement.scrollWidth, vw: innerWidth,
+        tc: [...document.querySelectorAll('meta[name="theme-color"]')].filter(m => matchMedia(m.media || 'all').matches).map(m => m.content)[0] }));
+      const want = sc === 'dark' ? ['rgb(17, 19, 26)', '#11131A'] : ['rgb(252, 252, 251)', '#FCFCFB'];
+      ok(k.bg === want[0] && k.tc === want[1] && k.sw <= k.vw && !p.errs.length, `${pg} ${sc}: canvas ${k.bg}, bar ${k.tc}` + (p.errs.length ? ' ' + p.errs.join(' | ') : ''));
+      await ctx.close();
+    }
+  },
+
   /* ---------- finish sheet, per type ---------- */
   async 'finish:tangle'(b) {
     const ev = []; const { ctx, p } = await open(b, F.tangle, { events: ev });

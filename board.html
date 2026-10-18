@@ -7,7 +7,8 @@
 <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<meta name="theme-color" content="#FCFCFB">
+<meta name="theme-color" content="#FCFCFB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11131A" media="(prefers-color-scheme: dark)">
 <title>Leaderboard — The Daily Noodle</title>
 <meta name="description" content="Daily leaderboards for your group: one board per puzzle, every day.">
 <meta name="robots" content="noindex">
@@ -73,11 +74,11 @@
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:9px 16px;
     border-radius:999px;border:1px solid var(--hair);background:var(--paper);color:var(--ink);
     font:600 14px var(--body);cursor:pointer}
-  .btn.go{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.go{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
   .btn.alt{background:var(--accent-soft);border:1.5px solid var(--accent);color:var(--accent)}
   .btn svg{width:17px;height:17px;flex:none}
   .acts.main .btn{flex:1 1 150px}
-  .btn.warn{color:#B3261E}
+  .btn.warn{color:var(--bad)}
   .btn:disabled{opacity:.5;cursor:default}
   .bcard{margin-top:18px;padding:18px 16px;background:var(--paper);border:1px solid var(--hair);border-radius:12px}
   .bcard h2{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.01em;line-height:1.25}
@@ -93,7 +94,7 @@
   .field input{width:100%;font:500 16px var(--body);padding:10px 12px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);color:var(--ink)}
   .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
   .field small{display:block;margin-top:5px;font-size:12.5px;color:var(--faint)}
-  .msg{margin-top:10px;font-size:14px;color:#B3261E;min-height:1em}
+  .msg{margin-top:10px;font-size:14px;color:var(--bad);min-height:1em}
   .msg.ok{color:var(--accent)}
   details.set{margin-top:26px;border-top:1px solid var(--hair);padding-top:12px}
   details.set summary{cursor:pointer;font-weight:600;font-size:14.5px;color:var(--muted);list-style:none}
@@ -105,7 +106,7 @@
   .code{font-family:var(--display);font-weight:800;letter-spacing:.12em}
   .plist{list-style:none;margin-top:6px}
   .plist li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--hair);font-size:15px}
-  .plist button{font:600 13px var(--body);color:#B3261E;background:none;border:0;cursor:pointer;padding:6px}
+  .plist button{font:600 13px var(--body);color:var(--bad);background:none;border:0;cursor:pointer;padding:6px}
   .inline{display:flex;gap:8px;margin-top:6px}
   .inline input{flex:1;min-width:0;font:500 15px var(--body);padding:8px 10px;border:1px solid var(--hair);border-radius:8px}
   .loading{padding:40px 0;text-align:center;color:var(--faint);font-size:14px}

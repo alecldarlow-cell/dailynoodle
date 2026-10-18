@@ -18,7 +18,33 @@
     --lab:#C2185B;     --lab-soft:#FCE7EF;
     --accent:var(--news); --accent-soft:var(--news-soft);
     --mono-bg:var(--accent); --mono-ink:#fff;
+    /* text on the ink and accent fills, the puzzle-tile previews, the loading
+       shimmer and warnings: tokens so dark mode can swap them */
+    --on-ink:#fff; --on-accent:#fff; --skel:#F2F2EF; --bad:#B3261E;
+    --tile-frame:var(--ink); --tile-cell:var(--paper); --tile-lock:var(--news-soft);
   }
+  /* Dark mode (18 Oct 2026): follows the phone, like the puzzle players, so
+     moving between the front pages and a puzzle doesn't flash light and dark.
+     The canvas is the players' own dark (#11131A). Accents are lifted to stay
+     readable on it (each >= 4.5:1 on the canvas and on its soft wash). */
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --canvas:#11131A; --paper:#1B1E29; --ink:#ECEEF4; --muted:#A6ABBD; --faint:#80869A; --hair:#2E3344;
+    --news:#8EA6FF;    --news-soft:#1C2440;
+    --puzzles:#4CC793; --puzzles-soft:#142C24;
+    --games:#B794FF;   --games-soft:#2A2043;
+    --lab:#FF7FAE;     --lab-soft:#3A1A29;
+    --mono-ink:#11131A; --on-ink:#11131A; --on-accent:#0B0D12; --skel:#1F2330; --bad:#FF7A6E;
+    --tile-frame:#050608; --tile-cell:#2E3344; --tile-lock:#3A4466;
+    color-scheme:dark}}
+  :root[data-theme="dark"]{
+    --canvas:#11131A; --paper:#1B1E29; --ink:#ECEEF4; --muted:#A6ABBD; --faint:#80869A; --hair:#2E3344;
+    --news:#8EA6FF;    --news-soft:#1C2440;
+    --puzzles:#4CC793; --puzzles-soft:#142C24;
+    --games:#B794FF;   --games-soft:#2A2043;
+    --lab:#FF7FAE;     --lab-soft:#3A1A29;
+    --mono-ink:#11131A; --on-ink:#11131A; --on-accent:#0B0D12; --skel:#1F2330; --bad:#FF7A6E;
+    --tile-frame:#050608; --tile-cell:#2E3344; --tile-lock:#3A4466;
+    color-scheme:dark}
   html[data-section="puzzles"]{--accent:var(--puzzles);--accent-soft:var(--puzzles-soft)}
   html[data-section="games"]{--accent:var(--games);--accent-soft:var(--games-soft)}
   html[data-section="lab"]{--accent:var(--lab);--accent-soft:var(--lab-soft)}
@@ -65,7 +91,7 @@
   /* four pills (News, Puzzles, Games, Lab) on one row down to 320px */
   @media(max-width:399px){.sections{gap:4px}.sec{padding:6px 9px;gap:5px;letter-spacing:.05em}}
   @media(max-width:345px){.sec{font-size:10.5px;padding:6px 7px;gap:4px}}
-  .sec[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .sec[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
   .sec:not([aria-current]):hover{border-color:var(--ink);color:var(--ink)}
   /* search: an icon at the end of the section row; tapping it opens the field
      underneath. The field stays open while it holds a query. */
@@ -73,7 +99,7 @@
     border:1px solid var(--hair);background:var(--paper);color:var(--muted);border-radius:999px;cursor:pointer}
   .sbtn[hidden]{display:none}   /* search parked for now: remove `hidden` on the button to bring it back */
   .sbtn svg{width:16px;height:16px;display:block}
-  .sbtn[aria-expanded="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .sbtn[aria-expanded="true"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
   .searchrow{display:flex;gap:8px;align-items:center;margin-top:8px}
   .searchrow[hidden]{display:none}
   .search{flex:1;font-family:var(--body);font-size:15px;padding:9px 12px;border:1px solid var(--hair);
@@ -87,7 +113,7 @@
     background:var(--paper);color:var(--muted);border-radius:999px;cursor:pointer}
   .chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
   /* Puzzles: the leaderboard link leading the topic row, filled so it doesn't read as a filter */
-  .chip.boardpill{background:var(--accent);border-color:var(--accent);color:#fff;margin-right:6px;position:relative}
+  .chip.boardpill{background:var(--accent);border-color:var(--accent);color:var(--on-accent);margin-right:6px;position:relative}
   .chip.boardpill::after{content:"";position:absolute;right:-7px;top:6px;bottom:6px;width:1px;background:var(--hair)}
   .count{font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
     color:var(--faint);padding:8px 0 0}
@@ -153,16 +179,16 @@
      mask. Blocks read as a Mini, pre-locked cells as a Doku, a bare 4x4 of
      chips as a Link — so the types
      are told apart from the feed without reading a word. */
-  .puzzle{background:var(--ink);border-color:var(--ink);padding:9px}
-  .pgrid{width:100%;height:100%;display:grid;gap:1.5px;background:var(--ink);
+  .puzzle{background:var(--tile-frame);border-color:var(--tile-frame);padding:9px}
+  .pgrid{width:100%;height:100%;display:grid;gap:1.5px;background:var(--tile-frame);
     grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);
-    outline:1.5px solid var(--ink)}
+    outline:1.5px solid var(--tile-frame)}
   .pgrid.six{grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(6,1fr)}
   /* Link: sixteen loose chips, no blocks, no locks, no start square */
   .pgrid.four{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:2.5px}
-  .pgrid i{background:var(--paper);display:block}
-  .pgrid i.b{background:var(--ink)}
-  .pgrid i.l{background:var(--news-soft)}
+  .pgrid i{background:var(--tile-cell);display:block}
+  .pgrid i.b{background:var(--tile-frame)}
+  .pgrid i.l{background:var(--tile-lock)}
   .pgrid i.a{background:var(--play)}
   .hl{font-family:var(--display);font-weight:700;font-size:19px;line-height:1.22;letter-spacing:-.01em}
   .sf{font-size:14px;color:var(--muted);margin-top:7px;line-height:1.45;
@@ -190,7 +216,7 @@
     border-radius:4px;padding:12px 14px;font-size:13px;color:var(--muted);margin:16px 0}
   .note b{color:var(--ink)}
   .skel{height:96px;border-bottom:1px solid var(--hair);margin:0;
-    background:linear-gradient(90deg,var(--canvas),#F2F2EF,var(--canvas));
+    background:linear-gradient(90deg,var(--canvas),var(--skel),var(--canvas));
     background-size:200% 100%;animation:sh 1.2s linear infinite}
   @keyframes sh{to{background-position:-200% 0}}
   .empty{padding:40px 0;color:var(--muted);font-size:15px;text-align:center}

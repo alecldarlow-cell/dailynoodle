@@ -7,7 +7,8 @@
 <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<meta name="theme-color" content="#FCFCFB">
+<meta name="theme-color" content="#FCFCFB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11131A" media="(prefers-color-scheme: dark)">
 <title>Privacy — The Daily Noodle</title>
 <meta name="description" content="What The Daily Noodle records about visits, and how to switch it off.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +25,7 @@
   .doc a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
   .switch{margin-top:14px;font:inherit;font-weight:600;font-size:15px;padding:10px 16px;border-radius:999px;
     border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
-  .switch[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .switch[aria-pressed="true"]{background:var(--ink);color:var(--on-ink)}
   .switch:disabled{opacity:.7;cursor:default}
 </style>
 </head>
