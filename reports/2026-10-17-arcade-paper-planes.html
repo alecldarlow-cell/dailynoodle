@@ -245,6 +245,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
 #tut .msg{top:auto!important;bottom:calc(10px + var(--sb));max-width:min(560px,calc(100vw - 340px));font-size:14px;padding:4px 4px 4px 12px;border-width:1.5px;box-shadow:0 2px 0 var(--ink);background:rgba(255,253,246,.94)}
 #tut .msg #tutSkip{min-height:36px;padding:4px 10px;font-size:13px;box-shadow:none}
 @media(max-width:700px){#tut .msg{bottom:calc(64px + var(--sb));max-width:calc(100vw - 24px)}}
+#tut .msg{margin-bottom:var(--banH,0px)}
 @media(max-aspect-ratio:3/4){.homeHills{height:24vh}#splash{padding-bottom:calc(16vh + var(--sb))}#splashPlane{width:min(340px,84vw)}#splash h1{font-size:min(17vw,84px)}#splash .tagline{font-size:16px;margin:8px 0 22px}.route{width:min(380px,92vw)}.route .stop{width:30px;height:30px;font-size:12px}.route .stop.next{width:36px;height:36px}.routeTxt{font-size:14px;margin:8px 0 22px}#splash .homeActions{flex-direction:column;width:min(320px,86vw)}#splash .homeActions .btn{width:100%;font-size:22px;padding:14px}.homeChips{margin-top:18px}}
 
 /* calmer home */
@@ -914,6 +915,7 @@ function launch(v) {
   fl = newFlight(pl, P, v.ang, 1);
   fl.ang0 = v.ang; fl.pow0 = 1;
   state = 'fly'; $('pitchLabel').textContent='WING ANGLE'; introT = 0; $('intro').classList.remove('on'); aim = null; path = []; $('hud').classList.add('flying');
+  updateBanner();   // the "turn sideways" card is for aiming and the hangar only: never over the flap thumbs in flight
   run.n++;
   sWhoosh(1);
   if (!save.tut1) { save.tut1 = true; persist(); }
@@ -1072,6 +1074,8 @@ function updateConditions(){
 function updateBanner() {
   const show = H > W && !save.upright && (state === 'hangar' || state === 'aim');
   $('banner').classList.toggle('on', show);
+  // keep the tutorial hint stacked above the banner rather than hidden under it
+  try { document.body.style.setProperty('--banH', show ? ($('banner').firstElementChild.offsetHeight + 8) + 'px' : '0px'); } catch (e) {}
 }
 let tutStage = 0;
 /* The first five flights each teach one thing about the flaps. */
@@ -2164,6 +2168,5 @@ requestAnimationFrame(frame);
 })();
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
