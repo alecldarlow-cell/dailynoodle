@@ -38,10 +38,124 @@
    Global Privacy Control / Do Not Track signal.
    The page never depends on this script: every failure is silent.
    ========================================================================== */
+
+/* ==========================================================================
+   Domain move (Oct 2026): alecldarlow-cell.github.io/digi-news -> dailynoodle.co.uk
+   --------------------------------------------------------------------------
+   Saved progress (streaks, finished puzzles, game saves) lives in each
+   browser's localStorage, which belongs to one address. A plain redirect
+   would leave it behind, so:
+
+   OLD address  Every page packs this browser's saved data into the link's
+                #fragment (never sent to any server) and jumps to the same
+                page on the new address.
+   NEW address  A page opened with that fragment merges the data in, never
+                overwriting newer progress made on the new address, removes
+                the fragment from the address bar and reloads once so the
+                puzzle or game starts with the merged save.
+
+   The old copy of the site never changes after the move, so carrying the
+   data on every visit is harmless and covers anyone whose first hop failed.
+   Lives here because every page already loads this file. Independent of the
+   tracker below: opting out of tracking does not block the move.
+   ========================================================================== */
+(function () {
+  'use strict';
+  var OLD_HOST   = 'alecldarlow-cell.github.io';
+  var OLD_BASE   = '/digi-news';
+  var NEW_ORIGIN = 'https://dailynoodle.co.uk';
+  var TAG        = '#dnmove=';
+
+  function b64e(s){ return btoa(unescape(encodeURIComponent(s))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+  function b64d(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); while (s.length % 4) s += '='; return decodeURIComponent(escape(atob(s))); }
+  function isObj(x){ return x && typeof x === 'object' && !Array.isArray(x); }
+  function parse(s){ try { return JSON.parse(s); } catch (e) { return undefined; } }
+
+  // Union of finished puzzles / days / atlas entries; for a streak keep the
+  // more recent run and the higher best. Anything else: keep what's here.
+  var UNION = { done:1, days:1, found:1 };
+  function mergeObj(here, old){
+    var out = {}, k;
+    for (k in here) out[k] = here[k];
+    if (isStreak(here) && isStreak(old)) {
+      var src = (old.last || '') > (here.last || '') ? old : here;
+      for (k in src) out[k] = src[k];
+      if ('best' in old || 'best' in here) out.best = Math.max(+old.best || 0, +here.best || 0);
+      if (Array.isArray(old.dates) && Array.isArray(here.dates)) {
+        var seen = {}, all = here.dates.concat(old.dates).filter(function(d){ return seen[d] ? 0 : (seen[d] = 1); });
+        out.dates = all.sort();
+        // With the full list of days played, the current run can be recounted
+        // across both addresses (played yesterday on the old one, today on the new).
+        if ('streak' in out && out.dates.length) {
+          var run = 1, day = out.dates[out.dates.length - 1];
+          while (true) {
+            var prev = new Date(Date.parse(day + 'T12:00:00Z') - 864e5).toISOString().slice(0, 10);
+            if (out.dates.indexOf(prev) < 0) break;
+            run++; day = prev;
+          }
+          out.last = out.dates[out.dates.length - 1];
+          out.streak = run;
+          out.best = Math.max(out.best || 0, run);
+        }
+      }
+    }
+    for (k in old) {
+      if (!(k in out)) out[k] = old[k];
+      else if (UNION[k] && isObj(out[k]) && isObj(old[k])) {
+        var u = {}, j;
+        for (j in old[k]) u[j] = old[k][j];
+        for (j in out[k]) u[j] = out[k][j];
+        out[k] = u;
+      } else if (k === 'streak' && isObj(out[k]) && isObj(old[k])) {
+        out[k] = mergeObj(out[k], old[k]);
+      }
+    }
+    return out;
+  }
+  function isStreak(o){ return isObj(o) && 'last' in o && ('streak' in o || 'n' in o); }
+
+  try {
+    if (location.hostname.toLowerCase() === OLD_HOST) {
+      var path = location.pathname;
+      if (path.indexOf(OLD_BASE + '/') === 0 || path === OLD_BASE) path = path.slice(OLD_BASE.length) || '/';
+      var data = {};
+      try {
+        for (var i = 0; i < localStorage.length; i++) {
+          var key = localStorage.key(i);
+          if (key != null) data[key] = localStorage.getItem(key);
+        }
+      } catch (e) {}
+      var frag = '';
+      try { frag = TAG + b64e(JSON.stringify({ v:1, h:location.hash, d:data })); } catch (e) { frag = location.hash; }
+      window.DN_MOVING = true;
+      location.replace(NEW_ORIGIN + path + location.search + frag);
+      return;
+    }
+
+    if (location.hash.indexOf(TAG) !== 0) return;
+    var p = parse(b64d(location.hash.slice(TAG.length)));
+    if (isObj(p) && p.v === 1 && isObj(p.d)) {
+      for (var k in p.d) {
+        var oldV = p.d[k], here = null;
+        try { here = localStorage.getItem(k); } catch (e) {}
+        var val = oldV;
+        if (here != null) {
+          var a = parse(here), b = parse(oldV);
+          val = (isObj(a) && isObj(b)) ? JSON.stringify(mergeObj(a, b)) : here;
+        }
+        try { localStorage.setItem(k, val); } catch (e) {}
+      }
+    }
+    window.DN_MOVING = true;
+    history.replaceState(null, '', location.pathname + location.search + ((p && typeof p.h === 'string') ? p.h : ''));
+    location.reload();
+  } catch (e) {}
+})();
+
 (function () {
   'use strict';
 
-  var URL_ = 'https://gnehttjheoyutrfsvslq.supabase.co/rest/v1/rpc/log_events';
+  var URL_ ='https://gnehttjheoyutrfsvslq.supabase.co/rest/v1/rpc/log_events';
   var KEY  = 'sb_publishable_dEMntRNiElpGHn3Hd5Ef1Q_HvLa2wTB';   // public by design
   var IDLE = 30 * 60 * 1000;
   var MAX_BATCH = 25;

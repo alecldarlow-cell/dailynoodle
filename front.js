@@ -20,7 +20,7 @@
   /* ---------- config ------------------------------------------------------
      Only used by the fallback listing (when feed.json isn't there yet).
      Leave blank to auto-detect from the GitHub Pages URL.                   */
-  var CONFIG = { owner:'', repo:'', branch:'main' };
+  var CONFIG = { owner:'alecldarlow-cell', repo:'digi-news', branch:'main' };   // set by hand: on a custom domain it can't be read from the address
 
   /* ---------- section ------------------------------------------------------
      Each page declares its desk on <html data-section="…">. The section picks
