@@ -1373,7 +1373,7 @@ window.addEventListener('pagehide', () => { if (run && !run.finished && (state =
 /* ---------- simulation tick ---------- */
 function tick(dt) {
   if (introT > 0) { introT -= dt; if (introT <= 0) $('intro').classList.remove('on'); }
-  if (state === 'aim' || state === 'fly' || state === 'result') { if (rnd.open) rnd.secs += dt; }
+  if (state === 'aim' || state === 'fly') { if (rnd.open) rnd.secs += dt; }   // active play only (§5.3): not the landing card
   if (state === 'fly') {
     let up = keyHold || autoHold(), dn = keyDown;
     for (const sd of holdPtrs.values()) { if (sd > 0) up = true; else dn = true; }
