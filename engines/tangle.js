@@ -120,6 +120,15 @@ function shareLine(){const star=D.found.includes(P.star)?' ★':'';return '🧶 
 function shareText(){return shareLine();}   // score line only: no link
 
 /* ---------- home ---------- */
+/* 18 Oct 2026 redesign: a third stat (Tangles played), Yesterday's answers as a link under the settings,
+   the back link and dark mode for the shared finish sheet. The page markup stays as it is. */
+function homeExtras(){
+  const st=document.querySelector('#home .stats');
+  if(st&&!$('hPlayed')){const d=document.createElement('div');d.innerHTML='<b id="hPlayed">0</b><span>Tangles played</span>';st.appendChild(d);}
+  if($('hPlayed'))$('hPlayed').textContent=Object.keys(save.done||{}).length;
+  const y=$('yBtn'),tg=$('homeToggles');
+  if(y&&tg&&!y.classList.contains('ylink')){y.classList.add('ylink');y.classList.remove('btn');tg.parentNode.insertBefore(y,tg.nextSibling);}
+}
 function artSVG(){
   let s='<rect width="120" height="120" fill="none"/>';
   for(let i=0;i<16;i++){const x=12+(i%4)*26,y=12+Math.floor(i/4)*26;
@@ -132,13 +141,14 @@ function liveStreak(){const s=save.streak||{n:0},t=today();return (s.last===t||s
 function renderHome(){
   show('home');
   $('numLabel').textContent='No. '+parseInt(P.id.slice(-4),10);
-  $('dateLine').textContent=longDate(P.date);
+  $('dateLine').textContent='No. '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date).replace(/ \d{4}$/,'');
   $('homeArt').innerHTML=artSVG();
   if(D.state==='done'){$('playHead').textContent=plural(D.score,'point','points');$('playStatus').textContent=`${plural(D.found.length,'word','words')} today. See the answers; a new board arrives at midnight.`;$('playGo').textContent='View';}
   else if(D.state==='playing'){$('playHead').textContent='Round paused';$('playStatus').textContent=`${mmss(D.left)} left, ${plural(D.score,'point','points')} so far.`;$('playGo').textContent='Resume';}
-  else{$('playHead').textContent='Today\'s tangle';$('playStatus').textContent=`90 seconds. Longer words score more; the ${num(P.star.length)}-letter word scores double.`;$('playGo').textContent='Play';}
+  else{$('playHead').textContent='Today’s Tangle';$('playStatus').textContent=`90 seconds. Longer words score more; the ${num(P.star.length)}-letter word scores double.`;$('playGo').textContent='Play';}
   $('yBtn').hidden=P.n<=1;
   $('hStreak').textContent=liveStreak();$('hBest').textContent=save.best||0;
+  homeExtras();
   toggles($('homeToggles'));
 }
 
@@ -449,6 +459,8 @@ let rsT=0;function remeasureSoon(){clearTimeout(rsT);rsT=setTimeout(measure,80);
   const fails=GATE(typeof PUZZLE==='object'?PUZZLE:null,md);
   if(fails.length){show('err');$('errList').textContent='Failed: '+fails.join('; ');window.__tangleGate=fails;return;}
   P=PUZZLE;window.__tangleGate=[];
+  document.documentElement.classList.add('dn-dark');   // this player has a dark palette, so the finish sheet may use its own
+  for(const a of document.querySelectorAll('a.back'))if(/Digi Puzzles/.test(a.textContent))a.textContent='← Puzzles';
   low=P.tiles.map(t=>t.toLowerCase());MAIN=new Set(P.main);BONUS=new Set(P.bonus);ALLW=new Set(P.main.concat(P.bonus));D=day();
   buildBoard();
   const b=$('board');

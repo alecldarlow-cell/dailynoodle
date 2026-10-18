@@ -156,3 +156,51 @@ details.bon summary{cursor:pointer;min-height:40px;display:flex;align-items:cent
    lives in each puzzle page, so the elements stay in the HTML but never show.
    The footer was a build note ("SHELL vN · … code, not eye") meant for us, not players. */
 footer{display:none!important}
+
+/* ---------------------------------------------------------------------------
+   18 Oct 2026 — redesign (approved from the mocks): the start card, quieter
+   settings, and dark mode. Overrides the rules above; the markup in the pages
+   is unchanged, the engine adds the few bits it needs at boot.
+--------------------------------------------------------------------------- */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11131A; --ink:#ECEEF4; --ink2:#A6ABBD; --paper:#1B1E29; --line:#343849; --edge:#4A5066; --soft:#2A2E3C;
+  --primary:#3D63FF; --onPrimary:#FFFFFF; --thread:#6E8BFF; --threadT:#25305C; --onThread:#FFFFFF;
+  --ok:#4CC793; --okT:#173A2C; --gold:#F2BE2E; --goldT:#3B3010; --goldInk:#FFE08A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11131A; --ink:#ECEEF4; --ink2:#A6ABBD; --paper:#1B1E29; --line:#343849; --edge:#4A5066; --soft:#2A2E3C;
+  --primary:#3D63FF; --onPrimary:#FFFFFF; --thread:#6E8BFF; --threadT:#25305C; --onThread:#FFFFFF;
+  --ok:#4CC793; --okT:#173A2C; --gold:#F2BE2E; --goldT:#3B3010; --goldInk:#FFE08A; color-scheme:dark}
+#home .wrap{gap:0}
+#home .top{margin-bottom:6px}
+.knot svg{display:none}
+.knot{display:none}
+.dateline{margin:8px 0 0;font-size:20px}
+#playCard{flex:0 0 auto;margin:22px 0 0;min-height:0;border:0;border-radius:18px;box-shadow:none;padding:22px 20px 20px;gap:16px}
+#playCard:active{transform:none;box-shadow:none;filter:brightness(.98)}
+#playCard .art{flex:none;width:132px;height:132px;max-height:none;margin:0 auto}
+.cardtxt{padding:0}
+.cardtxt b{font-size:32px}
+.cardtxt small{padding-right:0;margin-top:6px;font-size:16px;line-height:1.45}
+.cardtxt .go{position:static;display:inline-flex;align-items:center;min-height:44px;margin-top:16px;padding:0 22px;border-radius:24px;font-weight:600;font-stretch:100%;font-size:16px}
+.row2{display:block;margin:18px 0 0}
+.row2 .stats{display:grid!important;grid-template-columns:repeat(3,1fr);gap:0;margin:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.row2 .stats div{padding:10px 0 10px 14px;border-left:1px solid var(--line)}
+.row2 .stats div:first-child{border-left:0;padding-left:0}
+.row2 .stats b{font-size:28px}
+details.how{border-top:0;border-bottom:1px solid var(--line);padding-top:0;margin-top:6px}
+details.how summary{min-height:52px;justify-content:space-between;font-size:16px}
+details.how summary::before{content:none}
+details.how summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:rotate(45deg) translateY(-3px)}
+details.how[open] summary::after{transform:rotate(-135deg) translateY(-1px)}
+details.how p{margin:0 0 12px;line-height:1.5}
+#homeToggles{gap:4px 18px;margin:8px 0 0}
+.tog{border:0;padding:0;min-height:44px;gap:8px;font-size:14px;font-weight:500;color:var(--ink2);border-radius:0}
+.tog::before{width:30px;height:18px;border-radius:9px;background:var(--line);box-shadow:none!important;position:relative}
+.tog[aria-checked="true"]{color:var(--ink2)}
+.tog[aria-checked="true"]::before{background:var(--primary);box-shadow:inset 14px 0 0 0 var(--primary),inset -2px 0 0 0 var(--primary)!important}
+.tog{position:relative}
+.tog::after{content:"";position:absolute;left:2px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:7px;background:#fff;transition:left .15s}
+.tog[aria-checked="true"]::after{left:14px}
+#yBtn.ylink{display:inline-flex;align-items:center;min-height:44px;margin-top:10px;padding:0;border:0;box-shadow:none;background:none;color:var(--primary);font-weight:600;font-size:15px;font-stretch:100%;justify-content:flex-start}
+:root[data-theme="dark"] #yBtn.ylink{color:#A9BBFF}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #yBtn.ylink{color:#A9BBFF}}
