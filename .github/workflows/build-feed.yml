@@ -64,6 +64,11 @@ jobs:
       - name: Link-preview tags
         run: node tools/og-tags.js
 
+      # Share button (share sheet / copy, WhatsApp-ready text) on every news
+      # piece. Rewrites a file only when its block changes.
+      - name: Share button on news pieces
+        run: node tools/news-share.js
+
       - name: Build feed.json
         run: node tools/build-feed.js
 

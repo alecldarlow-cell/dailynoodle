@@ -27,7 +27,7 @@ in `toolchain/site-sections-and-tracking.md`.
 - Puzzle templates and engines still say Digi ("The Digi Mini", "← Digi Puzzles"). That rebrand is a separate, parked job; when done it must keep puzzle ids, filenames and localStorage keys unchanged.
 
 ## Publishing
-- Push a file to `reports/` on `main`. `.github/workflows/build-feed.yml` then injects the tracker, patches share text, moves puzzles onto the shared engines, writes link-preview (Open Graph) tags from each file's `dn:*` metas (`tools/og-tags.js`) and rebuilds `feed.json`. If a scheduled task pushes at the same time, the workflow rebases and retries its push.
+- Push a file to `reports/` on `main`. `.github/workflows/build-feed.yml` then injects the tracker, patches share text, moves puzzles onto the shared engines, writes link-preview (Open Graph) tags from each file's `dn:*` metas (`tools/og-tags.js`), adds the Share button to every news piece (`tools/news-share.js`) and rebuilds `feed.json`. If a scheduled task pushes at the same time, the workflow rebases and retries its push.
 - **The site is deployed by that workflow, not served straight from the repo** (Settings → Pages → Source: GitHub Actions). Its last steps build `_site/` with `tools/build-site.js`: site files plus `reports/` minus every forward-dated file the feed holds back. `tools/`, `toolchain/`, `.github/` and notes are never published. So a change reaches the live site only when the workflow succeeds; check Actions if something doesn't appear.
 - The same workflow runs nightly around London midnight, so forward-dated files appear on their own day without a push.
 - Forward-dated puzzles (answers included) are still readable in the repo itself while it is public.
@@ -39,6 +39,8 @@ in `toolchain/site-sections-and-tracking.md`.
 
 ## Tracking and admin
 - `dn-track.js` (loaded by every page) records anonymous events into the `digi` Supabase project (London). The database accepts the sections news, puzzles, games and site only; any other page (Lab, or a new one) is recorded as `site`. It also holds the domain-move import, which runs before the tracker and is independent of tracking opt-out.
+- News pieces have two Share buttons (under the dateline, above the footer), added by `tools/news-share.js` in the build workflow, not by the toolchain. They open the phone's share sheet (or copy, on desktop) with the headline, first hero stat and the link tagged `?via=share`, and record `share_click` / `share_done` (props `method` native|copy, `pos` top|end).
+- `page_view` carries `inst` (1 when opened from a home-screen icon, else 0) from 18 Oct 2026; earlier views have no `inst`.
 - `admin.html`: magic-link sign-in. Supabase Auth allows `https://dailynoodle.co.uk/admin.html` as a redirect URL.
 
 ## Changing something site-wide

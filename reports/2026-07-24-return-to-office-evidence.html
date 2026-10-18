@@ -1338,5 +1338,53 @@ DN.columns("#ex6", {
 })();
 </script>
 <script src="../dn-track.js" defer></script>
+<!-- nn-share:start (tools/news-share.js — do not edit by hand) -->
+<style>.nn-share-row{margin-top:14px}.nn-share-end{margin:30px 0 6px}.nn-share{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:8px 16px 8px 13px;border:1px solid var(--hair,#E6E6E2);border-radius:999px;background:var(--paper,#fff);color:var(--accent,#1C46C2);font:600 13.5px/1 var(--body,system-ui,sans-serif);cursor:pointer;-webkit-tap-highlight-color:transparent}.nn-share:hover{background:var(--accent-soft,#ECF0FC)}.nn-share:focus-visible{outline:2px solid var(--accent,#1C46C2);outline-offset:2px}.nn-share svg{width:16px;height:16px;flex:none}@media print{.nn-share-row{display:none}}</style>
+<script>
+(function(){
+  var d=document;
+  var h1=d.querySelector('h1'); if(!h1) return;
+  function txt(el){ if(!el) return ''; var c=el.cloneNode(true), s=c.querySelectorAll('sup');
+    for(var i=0;i<s.length;i++) s[i].parentNode.removeChild(s[i]);
+    return c.textContent.replace(/\s+/g,' ').trim(); }
+  function og(p){ var m=d.querySelector('meta[property="'+p+'"]'); return m?m.content:''; }
+  var head=txt(h1), stat='', hs=d.querySelector('.hs');
+  if(hs){ var n=txt(hs.querySelector('.n')), l=txt(hs.querySelector('.l'));
+    if(l.length>140) l=l.slice(0,137).replace(/\s+\S*$/,'')+'…';
+    if(n) stat=n+(l?' — '+l:''); }
+  var base=og('og:url')||location.href.split(/[?#]/)[0];
+  var url=base+'?via=share', text=head+(stat?'\n'+stat:'');
+  function track(e,p){ try{ if(window.digi){ window.digi.track(e,p); window.digi.flush(); } }catch(x){} }
+  function copy(s){
+    if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(s);
+    return new Promise(function(ok,no){ var t=d.createElement('textarea'); t.value=s; t.setAttribute('readonly','');
+      t.style.position='fixed'; t.style.opacity='0'; d.body.appendChild(t); t.select();
+      var done=false; try{ done=d.execCommand('copy'); }catch(e){} d.body.removeChild(t); done?ok():no(); });
+  }
+  var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
+  function make(pos){
+    var b=d.createElement('button'); b.type='button'; b.className='nn-share';
+    b.innerHTML=ICON+'<span aria-live="polite">Share</span>';
+    var lab=b.querySelector('span'), t=0;
+    function say(s){ lab.textContent=s; clearTimeout(t); t=setTimeout(function(){ lab.textContent='Share'; },2500); }
+    b.addEventListener('click',function(){
+      if(navigator.share){
+        track('share_click',{method:'native',pos:pos});
+        navigator.share({title:head,text:text,url:url})
+          .then(function(){ track('share_done',{method:'native',pos:pos}); }, function(){});
+      } else {
+        track('share_click',{method:'copy',pos:pos});
+        copy(text+'\n'+url).then(function(){ say('Copied — paste into WhatsApp');
+          track('share_done',{method:'copy',pos:pos}); }, function(){ say('Couldn’t copy'); });
+      }
+    });
+    var w=d.createElement('div'); w.className='nn-share-row'+(pos==='end'?' nn-share-end':''); w.appendChild(b);
+    return w;
+  }
+  var dl=d.querySelector('.dateline'); if(dl) dl.parentNode.insertBefore(make('top'), dl.nextSibling);
+  var ft=d.querySelector('.foot'); if(ft) ft.parentNode.insertBefore(make('end'), ft);
+})();
+</script>
+<!-- nn-share:end -->
 </body>
 </html>

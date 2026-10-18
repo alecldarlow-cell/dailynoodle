@@ -234,9 +234,18 @@
     return /FBAN|FBAV|FB_IAB/.test(u) ? 'facebook' : /Instagram/.test(u) ? 'instagram'
          : /WhatsApp/i.test(u) ? 'whatsapp' : /Snapchat/.test(u) ? 'snapchat' : /\bLine\//.test(u) ? 'line' : '';
   }
+  // Opened from a home-screen icon (the app manifest asks for fullscreen; iOS
+  // reports standalone). Added 18 Oct 2026: page views before then have no inst.
+  function installed(){
+    try {
+      var mm = window.matchMedia;
+      return !!((mm && (mm('(display-mode: fullscreen)').matches || mm('(display-mode: standalone)').matches
+                     || mm('(display-mode: minimal-ui)').matches)) || navigator.standalone === true);
+    } catch (e) { return false; }
+  }
   if (!optedOut()) ids();   // sets isNew before the first event
   var pvProps = { topic: meta('dn:topic'), kind: KIND, new: isNew,
-                  ref: refDomain(), screen: band(window.innerWidth), tv: 3 };
+                  ref: refDomain(), screen: band(window.innerWidth), inst: installed() ? 1 : 0, tv: 3 };
   var VIA = viaTag(), APP = inApp();
   if (VIA) pvProps.via = VIA;
   if (APP) pvProps.app = APP;
