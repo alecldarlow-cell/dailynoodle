@@ -37,7 +37,7 @@ sparse: only `toolchain/` is checked out, not the 200+ MB `reports/` back catalo
 ```bash
 mkdir -p ~/b && cd ~/b \
   && git clone -q --depth 1 --filter=blob:none --sparse \
-       https://github.com/alecldarlow-cell/digi-news.git repo \
+       https://github.com/alecldarlow-cell/dailynoodle.git repo \
   && git -C repo sparse-checkout set toolchain \
   && cp repo/toolchain/dn-*.js repo/toolchain/dn-build.py repo/toolchain/DN-API.md \
        repo/toolchain/digi-news-house-template-v3-3-3.html . \

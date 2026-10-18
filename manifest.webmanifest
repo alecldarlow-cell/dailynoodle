@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Digi News",
-  "short_name": "Digi News",
-  "description": "Data journalism. Facts first, fully sourced, honest about uncertainty.",
+  "name": "The Daily Noodle",
+  "short_name": "Daily Noodle",
+  "description": "News, daily puzzles and games. Fresh every morning.",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",
