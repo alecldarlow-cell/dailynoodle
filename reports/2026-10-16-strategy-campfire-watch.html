@@ -567,6 +567,19 @@
     .gscreen .hand{flex-wrap:wrap;overflow:visible;margin-top:0;padding-top:4px;}
     .gscreen .card{flex:1 1 28%;max-width:none;height:128px;}
   }
+  /* Phones held sideways (short landscape, e.g. an iPhone, which can't lock to portrait):
+     board left, tray right, every control kept on screen. */
+  @media (orientation: landscape) and (max-height: 540px){
+    body.ingame #app{max-width:100%;display:flex;flex-direction:row;
+      padding:max(6px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));}
+    .gscreen{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,46%);grid-template-rows:auto minmax(0,1fr);gap:6px 10px;
+      grid-template-areas:"board top" "board tray";height:100%;min-height:0;}
+    .topbar{grid-area:top;} .boardzone{grid-area:board;min-height:0;} .tray{grid-area:tray;min-height:0;justify-content:flex-end;}
+    .gscreen .hand{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;margin-top:-6px;padding-top:9px;}
+    .gscreen .card{flex:1 1 0;min-width:54px;max-width:96px;height:min(106px,30vh);}
+    .gscreen .card .cic{font-size:21px;margin-top:19px;}
+    .gscreen .prompt{min-height:22px;font-size:12.5px;}
+  }
   /* banners float over the board as a pill */
   .nightbanner{left:50%;right:auto;top:30%;transform:translateX(-50%);padding:10px 20px;border-radius:999px;white-space:nowrap;max-width:92vw;
     overflow:hidden;text-overflow:ellipsis;background:rgba(8,12,20,.86);box-shadow:0 6px 24px rgba(0,0,0,.45);font-size:19px;animation:banner2 1.8s ease forwards;}
@@ -2052,6 +2065,5 @@ if(window.__DGTEST===true){
 initFx();
 render();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
