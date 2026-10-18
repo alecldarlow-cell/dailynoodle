@@ -1,0 +1,6 @@
+# Local build and tool output — never part of the site
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+*.log

@@ -26,7 +26,7 @@ in `toolchain/site-sections-and-tracking.md`.
 - Brand status: front pages, privacy, admin and the app manifest say The Daily Noodle. Existing pieces, puzzle templates and engines still say Digi ("The Digi Mini", "← Digi Puzzles"). That rebrand is a separate, parked job; when done it must keep puzzle ids, filenames and localStorage keys unchanged.
 
 ## Publishing
-- Push a file to `reports/` on `main`. `.github/workflows/build-feed.yml` then injects the tracker, patches share text, moves puzzles onto the shared engines and rebuilds `feed.json`.
+- Push a file to `reports/` on `main`. `.github/workflows/build-feed.yml` then injects the tracker, patches share text, moves puzzles onto the shared engines, writes link-preview (Open Graph) tags from each file's `dn:*` metas (`tools/og-tags.js`) and rebuilds `feed.json`. If a scheduled task pushes at the same time, the workflow rebases and retries its push.
 - The same workflow runs nightly around London midnight so forward-dated files appear on their own day without a push.
 - Scheduled tasks (claude.ai): **Daily news** (00:52 UTC; two news pieces, built to rubric v5: at least one pegged to an event or decision) and **Pinwheel clean-up** (02:37 London; replaces banned Mini/Doku layouts). Both clone `alecldarlow-cell/dailynoodle` and push to `main`.
 
@@ -35,7 +35,7 @@ in `toolchain/site-sections-and-tracking.md`.
 - Browser storage belongs to one address. Any future address change needs a handoff like the 18 Oct one: the forwarding repo packs the old address's storage into the link's `#dnmove=` fragment and `dn-track.js` merges it in on arrival without overwriting newer progress.
 
 ## Tracking and admin
-- `dn-track.js` (loaded by every page) records anonymous events into the `digi` Supabase project (London). It also holds the domain-move import, which runs before the tracker and is independent of tracking opt-out.
+- `dn-track.js` (loaded by every page) records anonymous events into the `digi` Supabase project (London). The database accepts the sections news, puzzles, games and site only; any other page (Lab, or a new one) is recorded as `site`. It also holds the domain-move import, which runs before the tracker and is independent of tracking opt-out.
 - `admin.html`: magic-link sign-in. Supabase Auth allows `https://dailynoodle.co.uk/admin.html` as a redirect URL.
 
 ## Changing something site-wide

@@ -18,6 +18,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - page_view carries `via` (from `?via=` on a link) and `app` (in-app browser name) because apps send no referrer.
 - Reporting logic for these is in `toolchain/sql/2026-10-15-mi-audit-fixes.sql` (applied to Supabase as migration `mi_audit_fixes`).
 - Games must call the tracker themselves: `window.digi&&digi.track('game_start',{game:'<slug>',...})` when a round starts and `digi.track('game_end',{game:'<slug>',win:true|false,...})` when it ends. Lighthouse Keeper already does.
+- Link previews: `tools/og-tags.js` keeps a marked `<!-- og:start … og:end -->` block of Open Graph tags in every file's `<head>`, built from its dn:* metas. Like the tracker line, it is added by the workflow: don't add it by hand, and if dn-lint flags it on a rebuilt shipped piece, strip it before the gates.
 - Opt-out: footer "Don't record my visits" switch and `privacy.html`; GPC / Do Not Track respected.
 
 ## Admin

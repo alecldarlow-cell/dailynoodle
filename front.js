@@ -93,7 +93,7 @@
 
   /* ---------- load ---------- */
   function loadFeed(){
-    return fetch('feed.json?t='+Date.now(), {cache:'no-store'})
+    return fetch('feed.json', {cache:'no-cache'})   // revalidates: a fresh copy only when it has changed
       .then(function(r){ if(!r.ok) throw new Error('no feed'); return r.json(); })
       .then(function(j){
         state.items = j.items || [];

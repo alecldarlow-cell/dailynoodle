@@ -174,7 +174,11 @@
   function meta(n){ var m = document.querySelector('meta[name="'+n+'"]'); return m ? m.content : ''; }
   var KIND = meta('dn:kind');
   var KIND_TO_SECTION = { report: 'news', puzzle: 'puzzles', game: 'games' };
-  var SECTION = document.documentElement.dataset.section || KIND_TO_SECTION[KIND] || 'site';
+  var PAGE_SECTION = document.documentElement.dataset.section || KIND_TO_SECTION[KIND] || 'site';
+  // public.log_events only accepts these sections and silently drops anything
+  // else, so any other page (Lab, or one added later) is recorded as 'site'.
+  var ACCEPTED = { news: 1, puzzles: 1, games: 1, site: 1 };
+  var SECTION = ACCEPTED[PAGE_SECTION] ? PAGE_SECTION : 'site';
   function pathOf(href){
     try {
       var p = new URL(href, location.href).pathname.split('/').filter(Boolean);

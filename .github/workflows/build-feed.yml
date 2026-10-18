@@ -4,8 +4,6 @@ on:
   push:
     paths:
       - 'reports/**'
-      - 'puzzles/**'
-      - 'games/**'
       - 'tools/**'
       - '.github/workflows/build-feed.yml'
   schedule:
@@ -36,10 +34,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history so a push retry can rebase cleanly
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Add reader-activity script to new pieces
         run: node tools/inject-tracker.js
@@ -54,20 +54,33 @@ jobs:
       - name: Move new puzzles onto the shared engines
         run: for t in mini doku sweep link path tangle borders; do node tools/engine-shells.js $t || echo "::warning::engine-shells $t failed (see log)"; done
 
+      # Link-preview (Open Graph) tags from each file's dn:* metas, so a
+      # pasted link shows a card. Rewrites a file only when its tags change.
+      - name: Link-preview tags
+        run: node tools/og-tags.js
+
       - name: Build feed.json
         run: node tools/build-feed.js
 
       - name: Commit if changed
         run: |
-          git config user.name  "digi-news-bot"
+          git config user.name  "dailynoodle-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add feed.json reports puzzles games 2>/dev/null || git add feed.json reports
+          git add feed.json reports
           if git diff --staged --quiet; then
             echo "nothing changed — nothing to commit"
-          else
-            git commit -m "chore: rebuild feed.json, add tracker to new pieces [skip ci]"
-            git push
+            exit 0
           fi
+          git commit -m "chore: rebuild feed.json, add tracker to new pieces [skip ci]"
+          # A scheduled task may have pushed while this ran: rebase onto it
+          # and retry rather than failing and losing tonight's feed.
+          for i in 1 2 3; do
+            if git push; then exit 0; fi
+            echo "push rejected (attempt $i) — rebasing onto origin/main"
+            sleep $((i * 5))
+            git pull --rebase origin main
+          done
+          echo "::error::could not push after 3 attempts"; exit 1
 
       # Runs after the feed is committed, so a batch missing the player-save
       # patch fails this run (and alerts) without holding back publishing.
