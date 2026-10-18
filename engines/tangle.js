@@ -407,7 +407,7 @@ function showResult(fresh){
   // fill every field first: the tracker reads #winTitle and #winTime the moment "on" lands
   $('rKick').textContent='Tangle '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date);
   $('rBig').innerHTML=r.score+'<small>'+(r.score===1?'point':'points')+'</small>';
-  $('winTitle').textContent='Time’s up';
+  $('winTitle').textContent=fresh?'Time’s up':'Your score';   // reopened later, "Time's up" reads oddly; the tracker only reads it on a fresh finish
   $('winTime').textContent=mmss(ROUND-Math.max(0,r.left));
   $('rWords').textContent=r.found.length;
   $('rBest').textContent=save.best||0;
