@@ -8,7 +8,7 @@ in `toolchain/site-sections-and-tracking.md`.
 
 ## Identity
 - Name: **The Daily Noodle** (formerly Digi News / Digi Puzzles / Digi Games, renamed 18 Oct 2026).
-- Address: **https://dailynoodle.co.uk** (GitHub Pages, HTTPS enforced; `www.` redirects to it). Domain registered and DNS-hosted at Cloudflare, records "DNS only".
+- Address: **https://dailynoodle.co.uk** (GitHub Pages, deployed by the build workflow, HTTPS enforced; `www.` redirects to it). Domain registered and DNS-hosted at Cloudflare, records "DNS only".
 - Repo: **alecldarlow-cell/dailynoodle** (this repo; renamed from `digi-news`). Publish to `main`.
 - `alecldarlow-cell/digi-news` is now a separate, tiny **forwarding repo** for old links. Never build in it or publish to it. It must stay public with Pages on.
 - Audience: about ten friends and family who compare puzzle results in a WhatsApp group. A hobby site, not a public publication.
@@ -27,7 +27,9 @@ in `toolchain/site-sections-and-tracking.md`.
 
 ## Publishing
 - Push a file to `reports/` on `main`. `.github/workflows/build-feed.yml` then injects the tracker, patches share text, moves puzzles onto the shared engines, writes link-preview (Open Graph) tags from each file's `dn:*` metas (`tools/og-tags.js`) and rebuilds `feed.json`. If a scheduled task pushes at the same time, the workflow rebases and retries its push.
-- The same workflow runs nightly around London midnight so forward-dated files appear on their own day without a push.
+- **The site is deployed by that workflow, not served straight from the repo** (Settings → Pages → Source: GitHub Actions). Its last steps build `_site/` with `tools/build-site.js`: site files plus `reports/` minus every forward-dated file the feed holds back. `tools/`, `toolchain/`, `.github/` and notes are never published. So a change reaches the live site only when the workflow succeeds; check Actions if something doesn't appear.
+- The same workflow runs nightly around London midnight, so forward-dated files appear on their own day without a push.
+- Forward-dated puzzles (answers included) are still readable in the repo itself while it is public.
 - Scheduled tasks (claude.ai): **Daily news** (00:52 UTC; two news pieces, built to rubric v5: at least one pegged to an event or decision) and **Pinwheel clean-up** (02:37 London; replaces banned Mini/Doku layouts). Both clone `alecldarlow-cell/dailynoodle` and push to `main`.
 
 ## Saved progress (do not break)

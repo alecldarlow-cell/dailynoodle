@@ -1,7 +1,7 @@
 # The Daily Noodle
 
 News, daily puzzles and games for a small group of friends and family, at
-**https://dailynoodle.co.uk**. A static site served by GitHub Pages from `main`.
+**https://dailynoodle.co.uk**. A static site on GitHub Pages, deployed from `main` by the Build feed workflow.
 
 Start with **[SITE.md](SITE.md)**: names, addresses, sections, publishing,
 and the rules that keep players' streaks and saved progress safe.
@@ -24,8 +24,9 @@ and the rules that keep players' streaks and saved progress safe.
 
 Push a file to `reports/` on `main`. The **Build feed** workflow then adds the
 tracker, patches share text, moves puzzles onto the shared engines, writes
-link-preview tags and rebuilds `feed.json`. It also runs nightly so
-forward-dated items appear on their day. Details in `SITE.md` and
+link-preview tags, rebuilds `feed.json`, and deploys the site: everything
+except forward-dated files and the `tools/` and `toolchain/` folders. It also
+runs nightly so forward-dated items appear on their day. Details in `SITE.md` and
 `toolchain/site-sections-and-tracking.md`.
 
 ## Checks

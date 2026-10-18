@@ -1,11 +1,11 @@
 name: Build feed
 
 on:
+  # Every push to main: since Pages publishes what this workflow deploys
+  # (Settings → Pages → Source: GitHub Actions), any change to the site has
+  # to come through here.
   push:
-    paths:
-      - 'reports/**'
-      - 'tools/**'
-      - '.github/workflows/build-feed.yml'
+    branches: [main]
   schedule:
     # Nightly, so forward-dated pieces publish on their own day without a push.
     # History: a single '0 2 * * *' slot was routinely queued by GitHub until
@@ -23,7 +23,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write   # commit feed.json and patched pieces
+  pages: write      # deploy the site
+  id-token: write   # required by deploy-pages
 
 concurrency:
   group: build-feed
@@ -32,6 +34,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -81,6 +86,22 @@ jobs:
             git pull --rebase origin main
           done
           echo "::error::could not push after 3 attempts"; exit 1
+
+      # Publish only what's released: forward-dated files (the same ones the
+      # feed holds back) and the non-site folders stay out of the deployed
+      # site. build-site.js fails rather than publish a held file.
+      - name: Assemble the site
+        run: |
+          DN_HELD_OUT="$RUNNER_TEMP/held.txt" node tools/build-feed.js
+          node tools/build-site.js "$RUNNER_TEMP/held.txt" _site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
 
       # Runs after the feed is committed, so a batch missing the player-save
       # patch fails this run (and alerts) without holding back publishing.

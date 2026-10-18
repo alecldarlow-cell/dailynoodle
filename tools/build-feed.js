@@ -394,3 +394,11 @@ if (held.length) {
   for (const h of held) console.log(`    ${h.date}  ${h.rel}`);
   console.log(`  next release: ${held[0].date}`);
 }
+
+// For tools/build-site.js: the files held back above, one repo-relative path
+// per line, so the deployed site leaves out exactly what the feed leaves out.
+// Written outside the published folder; never commit it.
+if (process.env.DN_HELD_OUT) {
+  fs.writeFileSync(process.env.DN_HELD_OUT, held.map(h => h.rel).join('\n') + (held.length ? '\n' : ''));
+  console.log(`  held list written to ${process.env.DN_HELD_OUT} (${held.length})`);
+}
