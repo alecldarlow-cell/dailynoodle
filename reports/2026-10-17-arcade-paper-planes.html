@@ -9,6 +9,7 @@
 <meta name="dn:standfirst" content="Five throws to fly from the back garden to the mountains. Fold better planes as you go.">
 <meta name="dn:topic"      content="Arcade">
 <meta name="dn:date"       content="2026-10-17">
+<meta name="dn:updated"    content="2026-10-18">
 <meta name="dn:read"       content="~4 min">
 <meta name="dn:badge"      content="In development">
 <meta name="dn:thumb"      content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3Y2M0ZWYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlM2Y0ZmQiLz48L2xpbmVhckdyYWRpZW50PjxnIGlkPSJjIj48Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNyIvPjxjaXJjbGUgY3g9IjgiIGN5PSItMyIgcj0iOC41Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIwIiByPSI2LjUiLz48cmVjdCB4PSIwIiB5PSItMiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjgiLz48L2c+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI3MpIi8+PGNpcmNsZSBjeD0iOTgiIGN5PSIyMiIgcj0iMTEiIGZpbGw9IiNmZmY2Y2YiLz48dXNlIGhyZWY9IiNjIiB4PSIxNCIgeT0iMjYiIGZpbGw9IiNmZmYiLz48dXNlIGhyZWY9IiNjIiB4PSI3MCIgeT0iNDgiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44NSIvPjxwYXRoIGQ9Ik0wIDk4IFEzMCA4NiA2MiA5NCBUMTIwIDkwIFYxMjAgSDAgWiIgZmlsbD0iIzdjYzE3MyIvPjxwYXRoIGQ9Ik0wIDEwNiBRNDAgOTggODAgMTA2IFQxMjAgMTA0IFYxMjAgSDAgWiIgZmlsbD0iIzVhYTk1YSIvPjxwYXRoIGQ9Ik05MiA5MiBWNzAiIHN0cm9rZT0iIzI5MzAzZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTkyIDcwIEwxMDYgNzQgTDkyIDc4IFoiIGZpbGw9IiNmMzljMzIiIHN0cm9rZT0iIzI5MzAzZCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNNiAxMDQgUTI0IDY0IDUyIDU4IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZjZmZDYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWRhc2hhcnJheT0iNSA2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyBzdHJva2U9IiMyOTMwM2QiIHN0cm9rZS13aWR0aD0iMi40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNTAgNjIgTDkyIDM4IEw2NiA2MCBaIiBmaWxsPSIjY2ZkOGUzIi8+PHBhdGggZD0iTTQyIDU0IEw5MiAzOCBMNjYgNjAgWiIgZmlsbD0iI2ZmZiIvPjwvZz48cGF0aCBkPSJNNDQgNTUgTDkxIDM5IiBzdHJva2U9IiNiOWM0ZDIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PC9zdmc+">
@@ -144,7 +145,11 @@ a.back:active{opacity:.6}
 .hidden{display:none!important}
 
 /* Paper Planes v2: readable instruments and inviting paper-and-clip rewards. */
-#hud{z-index:4;justify-content:flex-end;flex-wrap:nowrap;align-items:flex-start;padding:calc(9px + var(--st)) calc(12px + var(--sr)) 0 calc(12px + var(--sl));pointer-events:none}
+#hud{z-index:4;justify-content:flex-end;flex-direction:column;flex-wrap:nowrap;align-items:flex-end;padding:calc(9px + var(--st)) calc(12px + var(--sr)) 0 calc(12px + var(--sl));pointer-events:none}
+#conditions{display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-size:11px;line-height:1.25;max-width:100%}
+#windReadout,#flightCue{padding:4px 8px;border-radius:8px;background:rgba(255,253,246,.92);color:#364e61;max-width:100%;text-align:right}
+#flightCue.warn{background:#fff0c5;color:#714409}#flightCue.danger{background:#ffe4db;color:#852f1b}
+#windReadout small{font-size:10px;color:#516979}
 #hud .cockpit{display:flex;gap:2px;padding:4px;border:1.5px solid rgba(43,66,82,.22);border-radius:15px;background:rgba(255,253,246,.9);box-shadow:0 4px 17px rgba(30,53,82,.11);backdrop-filter:blur(8px)}
 .flightMeasure{min-width:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px 8px 4px;gap:0;border-right:1px solid #dce5ed}
 .flightMeasure:last-child{border-right:0}.flightMeasure.distance{min-width:112px}
@@ -154,6 +159,9 @@ a.back:active{opacity:.6}
 .meter{display:block;width:100%;height:3px;background:#dbe6ed;border-radius:8px;margin-top:3px;overflow:hidden}
 .meter b{display:block;height:100%;width:0;background:#3199cb;border-radius:8px;transition:width .12s linear}.pitchMeter b{background:#ec9b54}
 #pauseBtn{position:fixed;bottom:calc(10px + var(--sb));left:calc(10px + var(--sl));pointer-events:auto;z-index:5;width:44px;height:44px;background:rgba(255,253,246,.84);font-size:19px;box-shadow:0 2px 8px rgba(34,53,70,.09);border:1.5px solid rgba(41,48,61,.3)}
+#pauseBtn{top:calc(9px + var(--st));right:calc(12px + var(--sr));bottom:auto;left:auto}
+#hud:not(.flying) .cockpit{margin-right:52px}
+@media(max-width:420px){#hud .flightMeasure{min-width:62px;padding-left:4px;padding-right:4px}#hud .flightMeasure.distance{min-width:78px}#hud .flightMeasure strong{font-size:22px}#hud #hudDist{min-width:0}}
 #hud.flying #pauseBtn{display:none}#hud.flying .cockpit{opacity:.91}
 #toasts{top:calc(74px + var(--st))}#tut .msg{font-size:15px}
 #splash{gap:2px;background:radial-gradient(circle at 80% 16%,#fffad2 0 7%,transparent 8%),linear-gradient(165deg,#bfe6ff 0%,#dff1fa 56%,#e1e8d9 100%)}
@@ -166,13 +174,14 @@ a.back:active{opacity:.6}
 .up.can .btn{background:#d9f1de;border-color:#31824c}.up.can .tx b:after{content:"  ●";color:#329b5c;font-size:9px}#homeBtn{font-size:12px;padding:5px 9px}
 .landing .card{width:min(470px,100%);text-align:center;position:relative;overflow:auto;padding:12px 16px 14px 42px}
 .landingTop{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;margin-bottom:2px}.eyebrow{font-size:10px;letter-spacing:1px;font-weight:800;color:#57718b}
-.landing h2{margin:0 0 2px;font-size:clamp(24px,4.5vmin,32px)}.landingResult{display:flex;align-items:baseline;gap:10px;justify-content:center;font-size:12px;color:#587088}.landingResult strong{font-size:28px;color:#29303d;line-height:1}
+.landing h2{margin:0 0 2px;font-size:clamp(24px,4.5vmin,32px)}.landingResult{display:flex;align-items:baseline;gap:10px;justify-content:center;font-size:12px;color:#587088}.landingResult strong{white-space:nowrap;font-size:28px;color:#29303d;line-height:1}
 .rewardHero{position:relative;display:flex;justify-content:center;align-items:center;gap:12px;border:2px solid #b68735;border-radius:15px;background:linear-gradient(120deg,#fff2b8,#fff9e8 60%,#ffe5a4);box-shadow:0 4px 0 rgba(167,120,43,.2);padding:6px 12px;margin:8px 0;overflow:hidden}
 .rewardIcon{font-size:40px;line-height:1;color:#7b5930;transform:rotate(24deg)}.rewardHero .rewardAmount{display:flex;flex-direction:column;text-align:left}.rewardHero small{font-size:10px;letter-spacing:1.1px;font-weight:800;color:#926820}.rewardHero strong{font-size:clamp(32px,5.5vmin,48px);font-weight:400;line-height:1;color:#704a1b}.rewardGlint{position:absolute;right:15px;top:2px;color:#e2b14a;font-size:22px}
 .landing.on .rewardGlint{animation:rewardTwinkle .9s ease-in-out 2}@keyframes rewardTwinkle{50%{transform:rotate(28deg) scale(1.35);opacity:.55}}
 .rewardBreak{font-size:12px;color:#536579;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.rewardBreak b{color:#263b50}.landingBalance{margin-top:5px;font-size:12px;font-weight:800;color:#48596c}
 .upgradeHint{font-size:12px;text-align:center;background:#e6f0f4;border:1px solid #c8d8df;color:#2b566d;border-radius:9px;padding:5px 9px;margin:8px 0 5px}.upgradeHint.ready{background:#e5f3d7;border-color:#c0deb1;color:#26653b;font-weight:800}
-.landingActions{display:flex;justify-content:center;margin-top:6px}.landingActions .btn{min-width:190px}
+.landingActions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:6px}.landingActions .btn{min-width:190px}
+@media(min-aspect-ratio:1/1){.landing .card{width:min(600px,100%)}}
 .endReward{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px 12px;border-radius:11px;background:linear-gradient(120deg,#fff0ad,#fff9df);padding:6px;margin:5px auto;border:1.5px solid #d9bc73}.endReward span{font-size:11px;font-weight:800;letter-spacing:.9px;color:#7e5a25}.endReward strong{font-size:35px;line-height:1;color:#73501f}.endReward small{font-size:11px;color:#775e39}
 #eUpgrade{margin:5px 0}.end .stats{margin:5px 0}.btn:focus-visible,a:focus-visible{outline:3px solid #286fbc;outline-offset:3px}
 @media(max-width:450px){.flightMeasure{min-width:62px;padding:2px 5px 3px}.flightMeasure.distance{min-width:100px}.flightMeasure strong{font-size:22px}.flightMeasure small{font-size:8px}.landing .card{padding:9px 9px 10px 37px}.rewardHero{margin:6px 0}.rewardHero strong{font-size:38px}.homeActions .btn{min-width:135px;padding:9px 12px}}
@@ -212,6 +221,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
     <div class="flightMeasure"><small>SPEED</small><strong class="hand" id="hudSpeed">— m/s</strong><i class="meter"><b id="speedFill"></b></i></div>
     <div class="flightMeasure pitch"><small>NOSE</small><strong class="hand" id="hudPitch">—°</strong><i class="meter pitchMeter"><b id="pitchFill"></b></i></div>
   </div>
+  <div id="conditions"><div id="windReadout" aria-label="Wind conditions">Calm air</div><div id="flightCue" role="status" aria-live="polite">Hold briefly to climb</div></div>
 </div>
 <div id="toasts" role="status" aria-live="polite"></div>
 <div id="intro"><div class="in hand"><div class="p" id="introP">Place 1 of 8</div><div class="pn" id="introN">Back garden</div><div class="t" id="introT">Beat 12 m</div></div></div>
@@ -268,7 +278,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
       <button class="btn sw" id="pFS">Full screen <span class="k">On</span></button>
       <button class="btn sw" id="pUpright">Upright play <span class="k">Off</span></button>
     </div>
-    <p id="controlHelp" class="controlHelp">Drag back and release to throw. Hold to lift; release to glide. Two-finger tap pauses. Keyboard: ←/→ aim, Space throws; hold Space/↑ to lift. P or Esc pauses. Clears keep your throw; 2× target restores one (maximum five).</p>
+    <p id="controlHelp" class="controlHelp">Drag back and release to throw. Hold briefly to climb; release to regain speed. Watch for nose-high and stall cues. Wind is shown before launch; arrows show its direction. Assistance stays consistent across places. Two-finger tap pauses. Keyboard: ←/→ aim, Space throws; hold Space/↑ to lift. P or Esc pauses. Clears keep your throw; 2× target restores one (maximum five).</p>
     <div class="row" style="margin-top:6px"><a class="back" href="../games.html">← Digi Games</a></div>
   </div>
 </div>
@@ -290,7 +300,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
     <div class="rewardBreak" id="lBreak"></div>
     <div class="landingBalance" id="lBalance"></div>
     <div class="upgradeHint" id="lUpgrade"></div>
-    <div class="landingActions"><button class="btn pri" id="lNext">Next throw ➤</button></div>
+    <div class="landingActions"><button class="btn pri" id="lNext">Next throw ➤</button><button class="btn" id="lHangar">✦ Hangar · upgrades</button></div>
   </div>
 </div>
 <div class="ov dim end" id="end">
@@ -316,17 +326,17 @@ const G = 9.81;
 
 /* Five folds, bought in order. cla: lift slope /rad; cd0: base drag; k: induced drag; as: stall angle (rad);
    kq: area/mass factor (higher = lighter, slower, pushed about more); lift/fall: hold/release pitch rates (rad/s);
-   dive: nose angle it eases down to when released (rad); v: top launch speed (m/s) before the Throwing arm. */
+   v: top launch speed (m/s) before the Throwing arm. */
 const FOLDS = [
-  { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 16,  cla: 2.9, cd0: 0.050, k: 0.20,  as: 0.27, kq: 0.30, lift: 0.75, fall: 0.62, dive: -0.2, v: 13.5,
+  { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 16,  cla: 2.9, cd0: 0.050, k: 0.20,  as: 0.27, kq: 0.30, lift: 0.75, fall: 0.62, v: 13.5,
     blurb: 'Fast off the hand, little lift, noses down early.' },
-  { id: 'nakamura', name: 'Nakamura Lock',  cost: 120,  base: 40,  cla: 3.1, cd0: 0.046, k: 0.17,  as: 0.33, kq: 0.31, lift: 0.7, fall: 0.55, dive: -0.18, v: 13.5,
+  { id: 'nakamura', name: 'Nakamura Lock',  cost: 120,  base: 40,  cla: 3.1, cd0: 0.046, k: 0.17,  as: 0.33, kq: 0.31, lift: 0.7, fall: 0.55, v: 13.5,
     blurb: 'Locked nose: steadier, forgiving when you pull too hard.' },
-  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.044, k: 0.12,  as: 0.30, kq: 0.40, lift: 0.65, fall: 0.50, dive: -0.15, v: 14.0,
+  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.044, k: 0.12,  as: 0.30, kq: 0.40, lift: 0.65, fall: 0.50, v: 14.0,
     blurb: 'Big wings: floats and rides thermals, but slow.' },
-  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.036, k: 0.095, as: 0.30, kq: 0.34, lift: 0.7, fall: 0.52, dive: -0.16, v: 15.5,
-    blurb: 'Long, clean glides. Needs a hard throw to wake it up.' },
-  { id: 'rdart',    name: 'Record Dart',    cost: 3500, base: 420, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, lift: 0.8, fall: 0.62, dive: -0.19, v: 18.0,
+  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.036, k: 0.095, as: 0.30, kq: 0.34, lift: 0.7, fall: 0.52, v: 15.5,
+    blurb: 'Efficient wings hold speed through long, clean glides.' },
+  { id: 'rdart',    name: 'Record Dart',    cost: 3500, base: 420, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, lift: 0.8, fall: 0.62, v: 18.0,
     blurb: 'Fastest and furthest. Twitchy: rewards a good pilot.' }
 ];
 const FOLD_STATS = [
@@ -353,7 +363,6 @@ function planeParams(fi, up, arm) {
     kq: f.kq / (1 + 0.12 * p),            // heavier paper: less aero push per unit mass
     lift: f.lift,
     fall: f.fall * (1 - 0.05 * t),
-    dive: f.dive + 0.02 * t,
     trimLv: t,
     v: f.v * (1 + 0.035 * p) * (1 + 0.07 * (arm || 0)),
     fi
@@ -361,7 +370,7 @@ function planeParams(fi, up, arm) {
 }
 
 /* ---------- places ---------- */
-/* ground: [[x,y],...] piecewise linear, flat beyond the ends. zones: air movement. obs: things that end a flight. */
+/* ground: [[x,y],...] piecewise linear, flat beyond the ends. zones: air movement. obs: obstacles that knock speed off. */
 function mkPlaces() {
   return [
     { n: 1, id: 'garden', name: 'Back garden', target: 10, y0: 1.6,
@@ -434,7 +443,17 @@ function groundAtFull(pl, x) {
   return y;
 }
 
-/* Per-throw variation: thermals and clips shift a little each throw. */
+/* Per-throw variation: reproducible wind, thermals and clips. Wind starts at place 3. */
+function windProfile(pl, seed) {
+  if(pl.n < 3)return {base:0,amplitude:0,phase:0,period:10};
+  const r=mulberry((seed ^ 0x51f15e) >>> 0), exposure=Math.min(1,(pl.n-2)/6);
+  const base=(r()<0.5?-1:1)*(0.35+exposure*0.8)*(0.7+r()*0.3);
+  return {base,amplitude:0.12+exposure*0.28,phase:r()*Math.PI*2,period:8+r()*4};
+}
+function windAt(pl, roll, t=0) {
+  const w=roll.wind;
+  return w ? w.base+w.amplitude*Math.sin(w.phase+t*Math.PI*2/w.period) : (pl.wind||0);
+}
 function rollThrow(pl, seed) {
   const r = mulberry(seed), zones = pl.zones.map(z => {
     const s = (r() - 0.5) * 6;
@@ -449,12 +468,12 @@ function rollThrow(pl, seed) {
     const cy = gy + 2 + r() * Math.max(2, (top - gy) * 0.9 + 4);
     for (let j = 0; j < 3; j++) clips.push({ x: cx + j * 1.6, y: cy + Math.sin(j) * 0.4, got: false });
   }
-  return { zones, clips, seed };
+  return { zones, clips, seed, wind:windProfile(pl,seed) };
 }
 
 /* Air movement at a point: returns [wx, wy] (m/s). */
-function airAt(pl, roll, x, y) {
-  let wx = pl.wind || 0, wy = 0;
+function airAt(pl, roll, x, y, t=0) {
+  let wx = windAt(pl,roll,t), wy = 0;
   for (const z of roll.zones) {
     if (x < z.x0 || x > z.x1) continue;
     const u = (x - z.x0) / (z.x1 - z.x0), bell = Math.sin(Math.PI * u);
@@ -474,20 +493,36 @@ function newFlight(pl, P, angDeg, power) {
   return { x: 0, y: pl.y0, vx: v * Math.cos(a), vy: v * Math.sin(a), th: a, a: 0, c: 0, stall: 0, bumpT: 0, t: 0, done: false, why: '', maxY: pl.y0, clips: 0, hold: false, flutter: 0 };
 }
 const DT = 1 / 120;
+// One assistance strength for every place and every moment of a flight.
+// Plane upgrades can change its aerodynamic response; level and time cannot.
+const GLIDE_ASSIST = 0.93;
+function glideTarget(P,v,gam) {
+  const eq=Math.min(P.as*0.85,G*Math.cos(gam)/(P.kq*v*v*P.cla));
+  const best=Math.sqrt(P.cd0/P.k)/P.cla;
+  return Math.max(0,Math.min(best,eq*1.05)*(GLIDE_ASSIST+0.02*(P.trimLv||0)));
+}
+function flightFeedback(f,P,pl,roll) {
+  const [wx,wy]=airAt(pl,roll,f.x,f.y,f.t), speed=Math.hypot(f.vx-wx,f.vy-wy);
+  const liftSpeed=Math.sqrt(G/(P.kq*P.cla*P.as));
+  if(f.bumpT>0)return {kind:'warn',text:'Knocked off course · recover'};
+  if(f.stall>0)return {kind:'danger',text:'Stall · release to recover'};
+  if(f.a>P.as*0.78)return {kind:'warn',text:'Nose high · release now'};
+  if(speed<liftSpeed*0.95)return {kind:'warn',text:'Low speed · release to glide'};
+  if(wy>0.8)return {kind:'',text:'Rising air · ride the lift'};
+  if(wy< -0.8)return {kind:'warn',text:'Sinking air · losing height'};
+  return {kind:'',text:f.hold?'Lifting the nose uses speed':'Gliding · conserving speed'};
+}
 function step(f, P, pl, roll, hold, magnet) {
   if (f.done) return;
   f.hold = hold;
-  // pitch control. Hold: the nose lifts against the airflow. Release: it eases back (soft gravity)
-  // towards the fold's gentle dive line. The nose then follows the commanded angle quickly (the plane weathervanes).
-  const [wx, wy] = airAt(pl, roll, f.x, f.y);
+  // Hold lifts the nose; release eases toward efficient glide with consistent assistance.
+  const [wx, wy] = airAt(pl, roll, f.x, f.y, f.t);
   const rx = f.vx - wx, ry = f.vy - wy, v = Math.hypot(rx, ry) || 0.001, gam = Math.atan2(ry, rx);
-  const eq = Math.min(P.as * 0.85, G * Math.cos(gam) / (P.kq * v * v * P.cla));
   if (f.stall > 0) { f.stall -= DT; f.c -= P.fall * 1.8 * DT; }
   else if (hold) f.c += P.lift * DT;
   else {
     // let go: the plane settles into its best glide (level-ish when fast), easing a touch below it like soft gravity
-    const best = Math.sqrt(P.cd0 / P.k) / P.cla;
-    const auto = Math.max(0.0, Math.min(best, eq * 1.05) * (0.93 + 0.02 * (P.trimLv || 0)));
+    const auto = glideTarget(P,v,gam);
     const d = auto - f.c, s = P.fall * DT;
     f.c += Math.abs(d) <= s ? d : Math.sign(d) * s;
   }
@@ -694,7 +729,7 @@ function resize() {
 window.addEventListener('resize', resize);
 
 /* ---------- game state ---------- */
-let state = 'boot', paused = false;
+let state = 'boot', paused = false, hangarRun = false;
 let run = null, pl = null, roll = null, P = null, fl = null, aim = null, lastPath = null, path = [];
 const holdPtrs = new Set(); let keyHold = false;
 let cam = { x: -6, y: -2, s: 12 }, camT = null;
@@ -714,6 +749,7 @@ function startRun(how, mode) {
 }
 function runSnap() { return run ? { mode: run.mode, place: run.place, throws: run.throws, best: run.best, total: run.total, clips: run.clips, cleared: run.cleared, n: run.n, fold: save.fold } : null; }
 function beginAim(intro) {
+  hangarRun = false;
   pl = placeOf(run);
   roll = rollThrow(pl, (Date.now() & 0xffff) + run.n * 31 + 1);
   P = planeParams(save.fold, save.up[save.fold], save.arm);
@@ -731,23 +767,23 @@ function showIntro() {
   $('intro').classList.add('on'); introT = 2.2;
   const hb = $('hud').getBoundingClientRect(); $('intro').style.top = Math.round(Math.max(hb.bottom + 70, H * 0.3)) + 'px';
 }
-// Full power at about 12 mm of thumb travel (~70 CSS px on a phone), so a short, natural pull is enough.
+// Tutorial gesture length only; all deliberate drags launch at the plane's full speed.
 function pullMax() { return Math.max(56, Math.min(88, Math.min(W, H) * 0.19)); }
 function aimVec() {
   if (!aim) return null;
   const dx = aim.sx - aim.cx, dy = aim.cy - aim.sy, len = Math.hypot(dx, dy);
-  const Lmax = pullMax();
   let ang = Math.atan2(dy, Math.max(0.001, dx)) * 180 / Math.PI;
   if (dx <= 0) ang = dy > 0 ? 60 : 0;
   ang = Math.max(0, Math.min(60, ang));
-  return { ang, pow: Math.min(1, len / Lmax), len };
+  return { ang, pow: 1, len };
 }
 function launch(v) {
-  fl = newFlight(pl, P, v.ang, Math.max(0.15, v.pow));
-  fl.ang0 = v.ang; fl.pow0 = v.pow;
+  instrumentT = timeT - 0.12;
+  fl = newFlight(pl, P, v.ang, 1);
+  fl.ang0 = v.ang; fl.pow0 = 1;
   state = 'fly'; introT = 0; $('intro').classList.remove('on'); aim = null; path = []; $('hud').classList.add('flying');
   run.n++;
-  sWhoosh(v.pow);
+  sWhoosh(1);
   if (!save.tut1) { save.tut1 = true; persist(); }
   showTut();
 }
@@ -792,7 +828,7 @@ function land() {
     } else {
       run.throws--;
       outcome = fmt(d) + ' m — short by ' + fmt(tgt - d) + ' m';
-      if (run.place === 0 && save.runs === 0 && run.n <= 2) msgs.push(['', fl.pow0 < 0.75 ? 'Pull back further for a harder throw' : 'Hold to lift the nose and stretch the glide']);
+      if (run.place === 0 && save.runs === 0 && run.n <= 2) msgs.push(['', 'Hold briefly to lift the nose; release before you stall']);
       if (run.throws <= 0) next = 'end';
     }
   }
@@ -862,7 +898,7 @@ function showLanding(v){
   const breakdown=[['Distance',Math.floor(v.d/4)],['Air clips',v.pickups*3]];if(v.bonus)breakdown.push(['Place bonus',v.bonus]);
   $('lBreak').innerHTML=breakdown.map(x=>'<span>'+x[0]+' <b>+'+x[1]+'</b></span>').join('');
   $('lBalance').textContent='✈ '+run.throws+' throws left  ·  '+save.clips.toLocaleString()+' paperclips banked';setUpgradeHint($('lUpgrade'));
-  if (v.next === 'aim' && nextUpgrade().affordable) $('lUpgrade').textContent='✦ Upgrade unlocked! Finish the run, then visit the Hangar.';
+  if (v.next === 'aim' && nextUpgrade().affordable) $('lUpgrade').textContent='✦ Upgrade ready! Visit the Hangar, then continue this run.';
   $('lNext').textContent=v.next==='end'||v.next==='win'?'See run results ➤':v.clear?'Next place ➤':'Next throw ➤';
   $('landing').classList.add('on'); focusPanel('landing','lNext');
   if(!RM()&&v.earned>0){const start=performance.now(),dur=Math.min(950,480+v.earned*3);const count=now=>{
@@ -872,6 +908,7 @@ function showLanding(v){
   };requestAnimationFrame(count);}
 }
 $('lNext').addEventListener('click',()=>{initAudio();if(state==='result'&&!paused){goFS();afterResult();}});
+$('lHangar').addEventListener('click',()=>{initAudio();if(state==='result'&&!paused)openHangar(result.next==='aim');});
 
 function toast(t, cls) {
   const el = document.createElement('div'); el.className = 'toast hand' + (cls ? ' ' + cls : ''); el.textContent = t;
@@ -884,6 +921,17 @@ document.querySelectorAll('.clipI').forEach(e => e.style.backgroundImage = 'url(
 function updateHud(){
   if(!run)return;
   if(state!=='fly'){$('hudSpeed').textContent='— m/s';$('hudPitch').textContent='—°';$('speedFill').style.width='0%';$('pitchFill').style.width='50%';}
+  updateConditions();
+}
+function updateConditions(){
+  if(!pl||!roll||!P)return;
+  const wx=windAt(pl,roll,fl?fl.t:0), gust=roll.wind?roll.wind.amplitude:0;
+  const wind=Math.abs(wx)<0.05?'Calm air':(wx<0?'← Headwind ':'→ Tailwind ')+Math.abs(wx).toFixed(1)+' m/s';
+  const label=wind+(gust?' · gusts ±'+gust.toFixed(1):'');
+  if($('windReadout').textContent!==label)$('windReadout').textContent=label;
+  const cue=state==='fly'&&fl?flightFeedback(fl,P,pl,roll):{kind:'',text:'Hold briefly to climb'};
+  if($('flightCue').textContent!==cue.text)$('flightCue').textContent=cue.text;
+  $('flightCue').className=cue.kind;
 }
 function updateBanner() {
   const show = H > W && !save.upright && (state === 'hangar' || state === 'aim');
@@ -897,7 +945,7 @@ function placeBelowHud(el) {
 function showTut() {
   const t = $('tut'); placeBelowHud(t.querySelector('.msg'));
   if (state === 'aim' && !save.tut1 && run) { tutStage = 1; $('tutTxt').textContent = coarse ? 'Pull back and release to throw · two fingers pause' : 'Drag back to throw · or ←/→ aim, Space launches'; t.classList.add('on'); $('hand').style.display = 'block'; }
-  else if (state === 'fly' && !save.tut2) { tutStage = 2; $('tutTxt').textContent = 'Hold anywhere to lift the nose · let go to glide down'; t.classList.add('on'); $('hand').style.display = 'none'; }
+  else if (state === 'fly' && !save.tut2) { tutStage = 2; $('tutTxt').textContent = 'Hold briefly to climb · release to regain speed'; t.classList.add('on'); $('hand').style.display = 'none'; }
   else hideTut();
 }
 function hideTut() { tutStage = 0; $('tut').classList.remove('on'); }
@@ -946,7 +994,7 @@ $('splashHangar').addEventListener('click',()=>{initAudio();openHangar();});
 $('homeSettings').addEventListener('click',()=>{initAudio();pausePlay(true);});
 function refreshHomeFS(){const b=$('homeFS');b.hidden=!fsOK;b.textContent='Full screen: '+(save.fs?'On':'Off');}
 $('homeFS').addEventListener('click',()=>{save.fs=!save.fs;persist();if(save.fs)goFS();else exitFS();refreshHomeFS();});
-$('homeBtn').addEventListener('click',()=>showHome());
+$('homeBtn').addEventListener('click',()=>{if(hangarRun)continueFromHangar();else showHome();});
 function showHome(){
   run=null;state='home';paused=false;hideTut();hideAllOverlays();$('hud').classList.remove('on','flying');
   refreshHomeFS(); $('homeProgress').textContent=save.runs?'Best '+fmt(save.bestThrow)+' m · '+save.clips+' clips ready to spend':'Eight places. Earn clips. Fold better planes.';
@@ -983,9 +1031,10 @@ let lastMode = 'run';
 
 /* ---------- hangar ---------- */
 let viewFold = 0;
-function openHangar() {
+function openHangar(keepRun = false) {
   hideAllOverlays(); hideTut(); $('hud').classList.remove('on','flying');
-  state = 'hangar'; paused = false; run = null; fl = null;
+  hangarRun = !!(keepRun && run && !run.finished);
+  state = 'hangar'; paused = false; if(!hangarRun)run = null; fl = null;
   viewFold = save.fold;
   $('hangar').classList.add('on');
   renderHangar(); updateBanner(); focusPanel('hangar','flyBtn');
@@ -996,6 +1045,8 @@ function foldStats(fi) {
   return [['Speed', (Q.v - 12) / 18], ['Glide', (ld - 4) / 8], ['Lift', (Q.cla * Q.as - 0.7) / 0.9], ['Steadiness', (Q.as - 0.24) / 0.2 * 0.6 + (0.75 - Q.fall) / 0.5 * 0.4]];
 }
 function renderHangar() {
+  if(hangarRun){save.run=runSnap();persist();}
+  $('homeBtn').textContent=hangarRun?'Continue run ➤':'⌂ Home';
   $('hClips').textContent=save.clips; const suggestion=nextUpgrade();$('hangarGuide').textContent=suggestion.text;$('hangarGuide').classList.toggle('ready',suggestion.affordable);
   const fi = viewFold, f = FOLDS[fi], own = save.owned[fi];
   $('fName').textContent = f.name; $('fCount').textContent = 'Fold ' + (fi + 1) + ' of 5' + (own ? (fi === save.fold ? ' · flying' : ' · owned') : '');
@@ -1003,10 +1054,10 @@ function renderHangar() {
   $('fBars').innerHTML = foldStats(fi).map(s => '<span>' + s[0] + '</span><div class="bar"><i style="width:' + Math.round(100 * Math.max(0.05, Math.min(1, s[1]))) + '%"></i></div>').join('');
   $('fPrev').disabled = fi === 0; $('fNext').disabled = fi === 4;
   const fly = $('flyBtn');
-  if (own) { fly.textContent = 'Fly ➤'; fly.className = 'btn pri'; fly.disabled = false; fly.dataset.act = 'fly'; }
+  if (own) { fly.textContent = hangarRun ? 'Continue run ➤' : 'Fly ➤'; fly.className = 'btn pri'; fly.disabled = false; fly.dataset.act = 'fly'; }
   else if (save.owned[fi - 1]) { fly.innerHTML = 'Buy · ' + f.cost + ' <i class="clipI" style="background-image:url(&quot;' + CLIP_ICON + '&quot;)"></i>'; fly.className = 'btn org'; fly.disabled = save.clips < f.cost; fly.dataset.act = 'buy'; }
   else { fly.textContent = 'Buy ' + FOLDS[fi - 1].name + ' first'; fly.className = 'btn'; fly.disabled = true; fly.dataset.act = ''; }
-  $('towerBtn').classList.toggle('hidden', !(towerUnlocked() && own));
+  $('towerBtn').classList.toggle('hidden', hangarRun || !(towerUnlocked() && own));
   const bp = save.bestPlace ? PLACES[Math.min(8, save.bestPlace) - 1].name + ' (' + save.bestPlace + ')' : '—';
   $('bests').textContent = 'Furthest place: ' + bp + ' · Best throw: ' + (save.bestThrow ? fmt(save.bestThrow) + ' m' : '—') + (towerUnlocked() ? ' · Skyscraper: ' + (save.towerBest ? fmt(save.towerBest) + ' m' : '—') : '');
   // upgrades
@@ -1055,8 +1106,11 @@ $('flyBtn').addEventListener('click', () => {
     save.clips -= f.cost; save.owned[viewFold] = true; save.fold = viewFold; persist(); sBuy(); sChime(); buzz(30); renderHangar(); return;
   }
   if (act !== 'fly') return;
-  save.fold = viewFold; persist(); goFS(); lastMode = 'run'; startRun('new', 'run');
+  save.fold = viewFold; persist(); if(hangarRun){continueFromHangar();return;} goFS(); lastMode = 'run'; startRun('new', 'run');
 });
+function continueFromHangar(){
+  initAudio();save.run=runSnap();persist();goFS();hideAllOverlays();beginAim(true);
+}
 $('towerBtn').addEventListener('click', () => { initAudio(); save.fold = viewFold; persist(); goFS(); lastMode = 'tower'; startRun('new', 'tower'); });
 $('setBtn').addEventListener('click', () => { initAudio(); pausePlay(true); });
 
@@ -1172,6 +1226,10 @@ function confetti() {
 }
 
 /* ---------- camera ---------- */
+function flightZoom(speed, launchSpeed, reduced) {
+  // Apply after fitting the terrain: speed must still matter on a wide, short screen.
+  return reduced ? 0.85 : 1.12 - 0.34 * Math.min(1.5, Math.max(0, speed / launchSpeed));
+}
 function updateCam(dt) {
   if (!pl) return;
   const land = W >= H;
@@ -1181,11 +1239,11 @@ function updateCam(dt) {
   const gy = groundAtFull(pl, fx);
   const alt = Math.max(0, fy - gy);
   // Tight on short, slow throws; eases out as the plane gets faster or higher, so the plane stays big on screen
-  let visW = land ? 20 + spd * 1.5 + alt * 0.9 : 18 + spd * 1.1 + alt * 0.6;
+  let visW = land ? 28 + alt * 0.9 : 24 + alt * 0.6;
   if (state === 'aim' && run) visW = land ? Math.min(52, Math.max(22, (pl.target || 40) * 1.7 + 6)) : Math.min(46, Math.max(20, (pl.target || 40) * 1.3 + 6));
   let visH = Math.max(land ? 12 : 18, alt * 1.45 + 8);
   visH = Math.min(visH, 150); visW = Math.min(visW, 240);
-  const s = Math.min(W / visW, H / visH);
+  const s = Math.min(W / visW, H / visH) * (fl ? flightZoom(spd, P.v, RM()) : 1);
   const viewH = H / s, viewW = W / s;
   const left = fx - viewW * (state === 'aim' ? (land ? 0.18 : 0.1) : 0.3);
   let bottom = gy - viewH * (land ? 0.12 : 0.3);
@@ -1772,16 +1830,13 @@ function drawAim() {
   const L = planeSize();
   const X0 = SX(0), Y0 = SY(pl.y0);
   const v = aimVec();
-  let ang = v ? v.ang : 25;
+  let ang = v ? v.ang : keyAngle;
   ART.planeShadow(cx, X0, SY(groundAtFull(pl, 0)), pl.y0 - groundAtFull(pl, 0), L);
   if (v && v.len >= 10) {
-    const sp = P.v * Math.max(0.15, v.pow), a = ang * Math.PI / 180;
+    const sp = P.v, a = ang * Math.PI / 180;
     for (let i = 1; i <= 16; i++) { const t = i * 0.08; const x = sp * Math.cos(a) * t, y = pl.y0 + sp * Math.sin(a) * t - 4.9 * t * t; cx.fillStyle = 'rgba(47,111,214,' + (0.9 - i * 0.04).toFixed(2) + ')'; cx.beginPath(); cx.arc(SX(x), SY(y), Math.max(2, 3.6 - i * 0.12), 0, 7); cx.fill(); }
     cx.strokeStyle = 'rgba(41,48,61,.35)'; cx.lineWidth = 2; cx.setLineDash([4, 5]); cx.beginPath(); cx.moveTo(aim.sx, aim.sy); cx.lineTo(aim.cx, aim.cy); cx.stroke(); cx.setLineDash([]);
-    // power ring at the thumb
-    cx.strokeStyle = 'rgba(41,48,61,.2)'; cx.lineWidth = 5; cx.beginPath(); cx.arc(aim.sx, aim.sy, 26, 0, 7); cx.stroke();
-    cx.strokeStyle = v.pow >= 1 ? '#2e9a5a' : '#2f6fd6'; cx.beginPath(); cx.arc(aim.sx, aim.sy, 26, -Math.PI / 2, -Math.PI / 2 + v.pow * Math.PI * 2); cx.stroke();
-    const txt = Math.round(ang) + '°  ·  ' + Math.round(v.pow * 100) + '%';
+    const txt = Math.round(ang) + '°';
     cx.font = '400 18px "Patrick Hand", cursive'; const tw = cx.measureText(txt).width; cx.textAlign = 'left';
     cx.fillStyle = 'rgba(255,253,246,.88)'; rr(X0 + L * 1.3 - 6, Y0 - L * 1.6 - 17, tw + 12, 23, 6); cx.fill();
     cx.fillStyle = '#29303d'; cx.fillText(txt, X0 + L * 1.3, Y0 - L * 1.6); cx.textAlign = 'center';
@@ -1789,15 +1844,22 @@ function drawAim() {
   ART.plane(cx, X0, Y0, ang * Math.PI / 180, save.fold, L, { roll: 0.1 });
 }
 let hudShown = '', hudBottom = 60, hudMeasured = 0, instrumentT = 0;
+function speedScale(){return Math.ceil(P.v / 5) * 5;}
 function render() {
   cx.setTransform(DPR, 0, 0, DPR, 0, 0);
   const hd = fl ? fmt(Math.max(0,fl.x)) + ' m' : '0.0 m';
   if(hd!==hudShown){hudShown=hd;$('hudDist').textContent=hd;}
   if(state==='fly'&&fl&&timeT-instrumentT>.11){
     instrumentT=timeT;
+    updateConditions();
     const v=Math.hypot(fl.vx,fl.vy),nose=Math.round(fl.th*180/Math.PI);
-    $('hudSpeed').textContent=Math.round(v)+' m/s';$('hudPitch').textContent=(nose>0?'+':'')+nose+'°';
-    $('speedFill').style.width=Math.min(100,v/35*100).toFixed(0)+'%';
+    $('hudSpeed').textContent=v.toFixed(1)+' m/s';$('hudPitch').textContent=(nose>0?'+':'')+nose+'°';
+    const max=speedScale(), meter=$('speedFill').parentElement;
+    meter.setAttribute('role','meter');meter.setAttribute('aria-label','Speed in metres per second');
+    meter.setAttribute('aria-valuemin','0');meter.setAttribute('aria-valuemax',String(max));
+    meter.setAttribute('aria-valuenow',String(Math.min(max,v).toFixed(1)));
+    meter.title='Speed · 0–'+max+' m/s';
+    $('speedFill').style.width=Math.min(100,v/max*100).toFixed(1)+'%';
     $('pitchFill').style.width=Math.max(0,Math.min(100,50+nose*.8)).toFixed(0)+'%';
   }
   if (timeT - hudMeasured > 0.5) { hudMeasured = timeT; const r = $('hud').getBoundingClientRect(); if (r.height > 0) hudBottom = r.bottom; }
@@ -1815,13 +1877,12 @@ function render() {
     speedLines(X, Y, fl.vx, fl.vy, L);
     const roll = fl.stall > 0 && !RM() ? Math.sin(fl.flutter) * 0.35 : (RM() ? 0 : Math.sin(timeT * 2.1) * 0.05) + (fl.hold ? -0.1 : 0.05);
     ART.plane(cx, X, Y, fl.th, save.fold, L, { roll });
-    if (fl.stall > 0) { cx.font = '400 17px "Patrick Hand", cursive'; const tw = cx.measureText('stall!').width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 17, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#d4553e'; cx.fillText('stall!', X, Y - L * 1.5); }
+    if (fl.stall > 0) { const label=fl.bumpT>0?'bump!':'stall!'; cx.font = '400 17px "Patrick Hand", cursive'; const tw = cx.measureText(label).width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 17, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#d4553e'; cx.fillText(label, X, Y - L * 1.5); }
     const alt = fl.y - gy;
     if (alt > 25 && SY(gy) > H) { cx.font = '400 15px "Patrick Hand", cursive'; const tx = '↓ ' + Math.round(alt) + ' m up', tw = cx.measureText(tx).width; cx.fillStyle = 'rgba(255,253,246,.85)'; rr(X - tw / 2 - 6, H - 30, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#29303d'; cx.fillText(tx, X, H - 14); }
   }
   for (const p of parts) { cx.globalAlpha = Math.max(0, 1 - p.t / p.life); cx.fillStyle = p.c; if (p.sq) { cx.save(); cx.translate(SX(p.x), SY(p.y)); cx.rotate(p.t * 8 + p.r); cx.fillRect(-p.r, -p.r * 0.6, p.r * 2, p.r * 1.2); cx.restore(); } else { cx.beginPath(); cx.arc(SX(p.x), SY(p.y), p.r, 0, 7); cx.fill(); } }
   cx.globalAlpha = 1;
-  if (pl.wind) { cx.font = '400 15px "Patrick Hand", cursive'; cx.textAlign = 'right'; const tw = cx.measureText('← headwind').width; cx.fillStyle = 'rgba(255,253,246,.8)'; rr(W - tw - 20, H - 32, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#29303d'; cx.fillText('← headwind', W - 14, H - 16); cx.textAlign = 'center'; }
 }
 
 /* ---------- tutorial hand animation ---------- */
@@ -1861,7 +1922,7 @@ const TEST = { speed: 1, auto: null };
 function autoHold() {
   if (!TEST.auto || !fl) return false;
   const v2 = fl.vx * fl.vx + fl.vy * fl.vy, ab = bestAlpha(P), as = sinkAlpha(P);
-  const [, wy] = airAt(pl, roll, fl.x, fl.y);
+  const [, wy] = airAt(pl, roll, fl.x, fl.y, fl.t);
   let tgt = wy > 0.4 && v2 < 100 ? as : Math.min(ab, G / (P.kq * v2 * P.cla));
   const vg = Math.sqrt(G / (P.kq * P.cla * ab)), gam = Math.atan2(fl.vy, fl.vx);
   if (Math.sqrt(v2) < vg * 1.15 && gam > 0.05 && !(wy > 0.4)) tgt = Math.min(tgt, 0);
@@ -1876,7 +1937,7 @@ if (window.__DGTEST === true) {
       if (run && (state === 'aim' || state === 'fly' || state === 'result')) endRun(!!win);
       else if (state === 'home' || state === 'splash' || state === 'hangar') { startRun('new', 'run'); endRun(!!win); }
     },
-    state: () => ({ state, paused, qual, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done } }),
+    state: () => ({ state, paused, qual, hangarRun, wind: roll && { ...roll.wind, value: windAt(pl,roll,fl?fl.t:0), seed: roll.seed }, camera: {...cam}, speedMax: P && speedScale(), launchSpeed: P && P.v, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done, vx: fl.vx, vy: fl.vy, power: fl.pow0 } }),
     give: o => { Object.assign(save, o); persist(); if (state === 'hangar') renderHangar(); },
     speed: s => { TEST.speed = s; },
     auto: on => { TEST.auto = on; },
@@ -1885,7 +1946,7 @@ if (window.__DGTEST === true) {
     hangar: () => openHangar(),
     startRun: (how, mode) => startRun(how || 'new', mode || 'run'),
     place: n => { if (!run || run.mode !== 'run') return; run.place = Math.max(0, Math.min(7, n)); beginAim(true); },
-    model: { FOLDS, PLACES, TOWER }
+    model: { FOLDS, PLACES, TOWER, flightZoom, windProfile, windAt, glideTarget, flightFeedback }
   };
 }
 
