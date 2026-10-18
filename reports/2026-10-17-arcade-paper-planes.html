@@ -278,7 +278,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
       <button class="btn sw" id="pFS">Full screen <span class="k">On</span></button>
       <button class="btn sw" id="pUpright">Upright play <span class="k">Off</span></button>
     </div>
-    <p id="controlHelp" class="controlHelp">Drag back and release to throw. Short holds trade speed for height; release to stop pulling. Pulling up trades speed for height. Amber warns of a high wing angle; low speed is warned separately. Release removes your pitch input; the airflow acts on the wings. Recovery is not guaranteed. Airspeed measures motion through the air; wing angle is relative to that airflow. Wind is shown before launch; arrows show its direction. No flight assist: warnings never change your controls. Holding can loop or stall the plane; recovery needs height. Two-finger tap pauses. Keyboard: ←/→ aim, Space throws; hold Space/↑ to lift. P or Esc pauses. Clears keep your throw; 2× target restores one (maximum five).</p>
+    <p id="controlHelp" class="controlHelp">Drag back and release to throw. In flight, hold to raise the flaps at the back of the wings: the nose lifts. A tap is a nudge; a long hold is a full pull, and full flaps stall the wing. Let go and the flaps go flat and the plane settles back into a glide. Steep throw plus a hold makes a loop. Fast planes turn tighter; slow ones need height to recover. The wing-angle meter turns amber near the stall. Two-finger tap pauses. Keyboard: ←/→ aim, Space throws; hold Space/↑ for flaps. P or Esc pauses. Clears keep your throw; 2× target restores one (maximum five).</p>
     <div class="row" style="margin-top:6px"><a class="back" href="../games.html">← Digi Games</a></div>
   </div>
 </div>
@@ -325,18 +325,18 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 const G = 9.81;
 
 /* Five folds, bought in order. cla: lift slope /rad; cd0: base drag; k: induced drag; as: stall angle (rad);
-   kq: area/mass factor (higher = lighter, slower, pushed about more); lift: pilot pitch torque factor;
+   kq: area/mass factor (higher = lighter, slower, pushed about more); pull: full-flap wing angle as a multiple of the stall angle;
    v: top launch speed (m/s) before the Throwing arm. */
 const FOLDS = [
-  { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 16,  cla: 2.9, cd0: 0.050, k: 0.20,  as: 0.27, kq: 0.30, lift: 0.75, v: 13.5,
+  { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 16,  cla: 3.2, cd0: 0.050, k: 0.20,  as: 0.29, kq: 0.30, pull: 1.15, v: 13.5,
     blurb: 'Fast off the hand, little lift, noses down early.' },
-  { id: 'nakamura', name: 'Nakamura Lock',  cost: 120,  base: 40,  cla: 3.1, cd0: 0.046, k: 0.17,  as: 0.33, kq: 0.31, lift: 0.7, v: 13.5,
+  { id: 'nakamura', name: 'Nakamura Lock',  cost: 120,  base: 40,  cla: 3.1, cd0: 0.046, k: 0.17,  as: 0.33, kq: 0.31, pull: 1.05, v: 13.5,
     blurb: 'Locked nose: steadier, forgiving when you pull too hard.' },
-  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.044, k: 0.12,  as: 0.30, kq: 0.40, lift: 0.65, v: 14.0,
+  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.044, k: 0.12,  as: 0.30, kq: 0.40, pull: 1.12, v: 14.0,
     blurb: 'Big wings: floats and rides thermals, but slow.' },
-  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.036, k: 0.095, as: 0.30, kq: 0.34, lift: 0.7, v: 15.5,
+  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.036, k: 0.095, as: 0.30, kq: 0.34, pull: 1.12, v: 15.5,
     blurb: 'Efficient wings hold speed through long, clean glides.' },
-  { id: 'rdart',    name: 'Record Dart',    cost: 3500, base: 420, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, lift: 0.8, v: 18.0,
+  { id: 'rdart',    name: 'Record Dart',    cost: 3500, base: 420, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, pull: 1.18, v: 18.0,
     blurb: 'Fastest launch. Trade speed for height; ease off before the stall.' }
 ];
 const FOLD_STATS = [
@@ -352,7 +352,9 @@ const SHARED = [
 function foldCost(fi, lvl) { return FOLDS[fi].base * FOLD_MULT[lvl]; }          // cost of going from lvl to lvl+1
 function sharedCost(si, lvl) { return SHARED[si].base * Math.pow(2, lvl); }
 
-/* Effective plane parameters for a fold and its upgrade levels. */
+/* Effective plane parameters for a fold and its upgrade levels.
+   trim: the wing angle the plane settles at with flat flaps, set so it glides at TRIM_V of its fold's launch speed. */
+const TRIM_V = 0.68;
 function planeParams(fi, up, arm) {
   const f = FOLDS[fi], p = up.paper || 0, c = up.crease || 0, t = up.trim || 0;
   return {
@@ -361,7 +363,9 @@ function planeParams(fi, up, arm) {
     k: f.k * (1 - 0.03 * c),
     as: f.as + 0.015 * t,
     kq: f.kq / (1 + 0.12 * p),            // heavier paper: less aero push per unit mass
-    lift: f.lift,
+    pull: f.pull,
+    vt: TRIM_V * f.v * (1 + 0.035 * p),
+    trim: Math.max(-0.06, (G / (f.kq / (1 + 0.12 * p) * Math.pow(TRIM_V * f.v * (1 + 0.035 * p), 2)) - 0.28) / (f.cla * (1 + 0.04 * t))),
     trimLv: t,
     v: f.v * (1 + 0.035 * p) * (1 + 0.07 * (arm || 0)),
     fi
@@ -375,34 +379,34 @@ function mkPlaces() {
     { n: 1, id: 'garden', name: 'Back garden', target: 10, y0: 1.6,
       ground: [[-20, 0], [400, 0]], zones: [], obs: [], clips: 0,
       pal: { sky0: '#bfe6ff', sky1: '#eaf7ff', far: '#9fd39a', mid: '#7cc173', near: '#5aa95a', ground: '#6fbf62', soil: '#8a6a45', accent: '#a0784c' } },
-    { n: 2, id: 'playground', name: 'Playground', target: 20, y0: 1.6,
+    { n: 2, id: 'playground', name: 'Playground', target: 18, y0: 1.6,
       ground: [[-20, 0], [400, 0]], zones: [], obs: [], clips: 3,
       pal: { sky0: '#a9dcff', sky1: '#e6f5ff', far: '#ffcf5c', mid: '#ff7b6b', near: '#4fa3ff', ground: '#e3c88f', soil: '#b99a63', accent: '#ff5d73' } },
-    { n: 3, id: 'green', name: 'Village green', target: 32, y0: 1.6,
+    { n: 3, id: 'green', name: 'Village green', target: 26, y0: 1.6,
       ground: [[-20, 0], [400, 0]], zones: [],
       obs: [{ t: 'tree', x: 58, h: 5, r: 2.2 }, { t: 'tree', x: 118, h: 9, r: 3 }], clips: 4,
       pal: { sky0: '#b6dcf0', sky1: '#eef6f4', far: '#a7c4a0', mid: '#8fb586', near: '#6e9e66', ground: '#7fb36b', soil: '#7a6248', accent: '#9aa3ab' } },
-    { n: 4, id: 'park', name: 'Park', target: 55, y0: 1.6,
+    { n: 4, id: 'park', name: 'Park', target: 45, y0: 1.6,
       ground: [[-20, 0], [400, 0]], zones: [{ t: 'thermal', x0: 30, x1: 54, top: 34, w: 2.4 }],
       obs: [{ t: 'tree', x: 82, h: 9, r: 3 }], clips: 5, pond: [30, 54],
       pal: { sky0: '#f3d9a4', sky1: '#fbf1d8', far: '#d7b46a', mid: '#c49a4e', near: '#9d7a3a', ground: '#c8b25c', soil: '#8a6a3c', accent: '#6fa8c9' } },
-    { n: 5, id: 'beach', name: 'Beach', target: 80, y0: 3.2,
+    { n: 5, id: 'beach', name: 'Beach', target: 65, y0: 3.2,
       ground: [[-20, 1.6], [6, 1.6], [16, 0], [400, 0]],
       zones: [{ t: 'thermal', x0: 44, x1: 64, top: 30, w: 2.2 }],
       obs: [{ t: 'gull', x: 58, y: 13, a: 3, p: 3.2 }, { t: 'gull', x: 92, y: 8, a: 2.5, p: 2.7 }], clips: 5,
       pal: { sky0: '#8fd0f0', sky1: '#e4f6fb', far: '#5fb2d6', mid: '#3d93c0', near: '#f2dfae', ground: '#f0dca4', soil: '#d9bf82', accent: '#ffffff' } },
-    { n: 6, id: 'cliff', name: 'Clifftop', target: 130, y0: 16.6,
+    { n: 6, id: 'cliff', name: 'Clifftop', target: 115, y0: 16.6,
       ground: [[-20, 15], [8, 15], [11, 3], [15, 0], [600, 0]],
       zones: [{ t: 'updraft', x0: 6, x1: 30, top: 32, w: 1.8 }, { t: 'thermal', x0: 92, x1: 112, top: 34, w: 1.8 }],
       obs: [{ t: 'gull', x: 66, y: 18, a: 4, p: 3.6 }, { t: 'gull', x: 128, y: 10, a: 3, p: 3.0 }], clips: 6, sea: 15,
       pal: { sky0: '#6fb3e8', sky1: '#dff0fb', far: '#2f6fa8', mid: '#1f5a92', near: '#f7f4ec', ground: '#7fae5e', soil: '#efeadd', accent: '#1d4f86' } },
-    { n: 7, id: 'valley', name: 'Valley', target: 175, y0: 21.6,
+    { n: 7, id: 'valley', name: 'Valley', target: 150, y0: 21.6,
       ground: [[-20, 20], [6, 20], [44, 0], [240, 0], [300, 34], [600, 34]],
       zones: [{ t: 'down', x0: 66, x1: 96, top: 60, w: 1.3 }, { t: 'thermal', x0: 106, x1: 126, top: 48, w: 3.0 },
               { t: 'down', x0: 140, x1: 166, top: 60, w: 0.9 }, { t: 'thermal', x0: 178, x1: 198, top: 52, w: 2.8 }],
       obs: [{ t: 'tree', x: 62, h: 7, r: 2.6 }], clips: 7,
       pal: { sky0: '#9fb2c4', sky1: '#dfe6ec', far: '#94aaa4', mid: '#71917c', near: '#4f7356', ground: '#6a8f5a', soil: '#5a5146', accent: '#c5ced6' } },
-    { n: 8, id: 'mountains', name: 'Mountains', target: 300, y0: 29.6,
+    { n: 8, id: 'mountains', name: 'Mountains', target: 260, y0: 29.6,
       ground: [[-20, 28], [6, 28], [40, 6], [96, 0], [140, 18], [158, 24], [200, 4], [262, 0], [330, 22], [360, 30], [700, 30]],
       zones: [{ t: 'ridge', x0: 96, x1: 158, top: 52, w: 2.2 }, { t: 'thermal', x0: 200, x1: 224, top: 50, w: 2.3 },
               { t: 'ridge', x0: 262, x1: 330, top: 54, w: 2.0 }],
@@ -420,7 +424,7 @@ function mkTower(seed) {
     if (rnd() < 0.3) zones.push({ t: 'thermal', x0: x - 3, x1: x + w + 3, top: h + 60, w: 1.4 + rnd() * 1.2, vent: 1 });
     x += w + 14 + rnd() * 40;
   }
-  return { n: 9, id: 'tower', name: 'Skyscraper', target: 500, medals: [500, 800, 1000], y0: 121.6,
+  return { n: 9, id: 'tower', name: 'Skyscraper', target: 450, medals: [450, 650, 850], y0: 121.6,
     roof: [-20, 6, 120], ground, zones, towers, obs: [], clips: 14,
     pal: { sky0: '#2b3a67', sky1: '#ffb38a', far: '#3b4a78', mid: '#2a355c', near: '#1c2442', ground: '#2a2f45', soil: '#1c2033', accent: '#ffd36b' } };
 }
@@ -489,58 +493,78 @@ function airAt(pl, roll, x, y, t=0) {
 /* ---------- one flight ---------- */
 function newFlight(pl, P, angDeg, power) {
   const a = angDeg * Math.PI / 180, v = P.v * Math.max(0.15, Math.min(1, power));
-  return { x: 0, y: pl.y0, vx: v * Math.cos(a), vy: v * Math.sin(a), th: a, a: 0, pitchRate: 0, stall: 0, bumpT: 0, t: 0, done: false, why: '', maxY: pl.y0, clips: 0, hold: false, flutter: 0 };
+  return { x: 0, y: pl.y0, vx: v * Math.cos(a), vy: v * Math.sin(a), th: a, a: 0, pitchRate: 0, gam: a, elev: 0, stall: 0, bumpT: 0, t: 0, done: false, why: '', maxY: pl.y0, clips: 0, hold: false, flutter: 0, turn: 0, loops: 0 };
 }
 const DT = 1 / 120;
-// Unassisted flight: fixed passive wing stability and pilot pitch torque only.
-// No target glide angle, speed protection, nose push or automatic stall recovery.
-const STALL_WARNING = 0.65, STALL_RECOVER = 0.60;
+/* Flight model: adapted realism.
+   - The plane is nose-heavy, so the airflow steers the nose back to a glide trim
+     (passive stability). This is what real paper planes do; nothing reads the
+     player's intent or protects them.
+   - Holding raises the flaps at the back of the wings (elevators). They set a
+     nose-up wing angle, the same at any speed. They rise over ELEV_RISE seconds,
+     so a tap is a nudge and a long hold is a full pull; release flattens them.
+   - Full flaps go past the stall angle (P.pull x stall), so a long hold stalls.
+   - Stall: lift sags and the nose drops; the wing recovers once its angle falls.
+   - The steering strength scales with airspeed, with a floor, so the nose still
+     follows the path slowly when the plane is slow (and can lag into a stall). */
+const ELEV_RISE = 0.3, ELEV_FALL = 0.12, WASH = 2.1, K_IND = 1.4, CD_SCALE = 1.4, LOOP_TURN = 5.24; // a loop: the path turns through 300°
+const PITCH_W = 1, PITCH_WMIN = 6, STALL_DROP = 0.15, FLEX = 0.13;
+const STALL_WARNING = 0.65, STALL_RECOVER = 0.6;
 function wrapAngle(a) { return Math.atan2(Math.sin(a),Math.cos(a)); }
+function liftSpeedOf(P) { return Math.sqrt(G/(P.kq*(0.28+P.cla*P.as))); }
 function flightFeedback(f,P,pl,roll) {
   const [wx,wy]=airAt(pl,roll,f.x,f.y,f.t), speed=Math.hypot(f.vx-wx,f.vy-wy);
-  const liftSpeed=Math.sqrt(G/(P.kq*(0.28+P.cla*P.as)));
   if(f.bumpT>0)return {kind:'warn',text:'Knocked off course · recover'};
-  if(f.stall>0)return {kind:'danger',text:f.hold?'Stall · release the pull':'Stalled · recovery needs height'};
-  if(Math.abs(f.a)>P.as*STALL_WARNING)return {kind:'warn',text:'Near stall · release now'};
-  if(speed<liftSpeed*1.35)return {kind:'warn',text:'Low speed · need height to recover'};
+  if(f.stall>0)return {kind:'danger',text:f.hold?'Stall · let go to drop the flaps':'Stalled · nose dropping to recover'};
+  if(Math.abs(f.a)>P.as*STALL_WARNING)return {kind:'warn',text:'Near stall · ease off'};
+  if(speed<liftSpeedOf(P)*1.25)return {kind:'warn',text:'Low speed · nose down to gain speed'};
   if(wy>0.8)return {kind:'',text:'Rising air · ride the lift'};
   if(wy< -0.8)return {kind:'warn',text:'Sinking air · losing height'};
-  return {kind:'',text:f.hold?'Lifting the nose uses speed':'Coasting · no pitch input'};
+  return {kind:'',text:f.hold?(f.elev<0.99?'Flaps rising · nose up':'Full flaps'):'Flaps flat · gliding'};
 }
 function step(f, P, pl, roll, hold, magnet) {
   if (f.done) return;
   f.hold = hold;
+  // Flaps: rise while held, flatten quickly on release.
+  f.elev = hold ? Math.min(1, f.elev + DT / ELEV_RISE) : Math.max(0, f.elev - DT / ELEV_FALL);
   const [wx, wy] = airAt(pl, roll, f.x, f.y, f.t);
   const rx = f.vx - wx, ry = f.vy - wy, v = Math.hypot(rx, ry) || 0.001, gam = Math.atan2(ry, rx);
-  const q = P.kq * v * v;
-  // The nose has angular inertia. Airflow provides a restoring moment and damping;
-  // holding adds pilot torque. Releasing removes that torque, without setting a
-  // desired attitude or flight path. The nose can rotate through a complete loop.
-  const relative=wrapAngle(f.th-gam);
-  const moment=-0.3*q*Math.sin(relative) + (hold ? P.lift*2.4 : 0);
-  f.pitchRate += (moment - (1.8+0.06*q)*f.pitchRate)*DT;
-  f.th += f.pitchRate*DT;
-  f.a = wrapAngle(f.th-gam);
-  const a = f.a;
-  let cl;
-  const aa = Math.abs(a);
-  if (aa <= P.as) cl = 0.28 + P.cla * a;
-  else cl = Math.sign(a) * (0.28 + P.cla * P.as) * Math.max(0,Math.cos(a)) * Math.max(0.2, 1 - (aa - P.as) * 3);
-  // Hysteresis: crossing the critical angle stalls the wing; lowering it reattaches
-  // the flow. No fixed recovery timer, automatic nose push, or low-speed-only stall.
+  const gamRate = wrapAngle(gam - f.gam) / DT; f.gam = gam;
+  // Loops: count full turns of the flight path.
+  f.turn = Math.max(-Math.PI, f.turn + gamRate * DT);
+  if (f.turn > LOOP_TURN) { f.turn = 0; f.loops++; f.loopT = f.t; }
+  // Paper flexes: the faster it flies, the flatter the wings sit (wash-out), so a
+  // hard throw doesn't balloon upwards and a slow plane carries a little more angle.
+  const clT = Math.min(0.28 + P.cla * P.as * 0.7, (0.28 + P.cla * P.trim) * Math.pow(P.vt / v, WASH));
+  const base = (clT - 0.28) / P.cla;
+  // Flaps add nose-up angle; full flaps reach P.pull x the stall angle when slow.
+  // Paper flaps bend back in a fast airflow, so at speed they bite less.
+  const full = P.pull * P.as / (1 + FLEX * (v / P.vt) ** 2);
+  const trim = base + f.elev * Math.max(0, full - base);
+  // Pitch: a light paper plane weathervanes into the airflow almost at once, so the
+  // nose follows the flight path; what lags is the wing angle settling to its trim
+  // (plus flaps). It settles faster the faster the plane flies, with a floor.
+  // A stalled wing pitches the nose down.
+  const w = Math.max(PITCH_WMIN, PITCH_W * v);
+  const target = trim - (f.stall ? STALL_DROP : 0), a0 = f.a;
+  f.a = a0 + (target - a0) * Math.min(1, w * DT);
+  f.th = wrapAngle(gam + f.a);
+  f.pitchRate = gamRate + (f.a - a0) / DT;
+  const a = f.a, aa = Math.abs(a);
+  // Stall with hysteresis: crossing the critical angle breaks the flow; it reattaches once the angle is well below it.
   if (aa > P.as && !f.stall) { f.stall = 1; f.stalls = (f.stalls || 0) + 1; }
   if (f.stall && aa < P.as * STALL_RECOVER) f.stall = 0;
-  const strain=Math.max(0,Math.min(1,(aa/P.as-STALL_WARNING)/(1-STALL_WARNING)));
-  let cd = P.cd0 + P.k * cl * cl + 0.025*strain*strain + 0.7*Math.sin(a)*Math.sin(a);
-  if (f.stall) { cl *= 0.65; cd += 0.1; f.flutter += DT * 30; }
-  // Rotate the air-relative velocity for lift and dissipate speed for drag.
-  // Explicit Euler lift spuriously adds energy in tight loops; this split step
-  // preserves speed under lift and integrates gravity without that free energy.
-  const turn=P.kq*v*cl*DT, drag=1/(1+P.kq*v*cd*DT);
-  const avx=(rx*Math.cos(turn)-ry*Math.sin(turn))*drag+wx;
-  const avy=(rx*Math.sin(turn)+ry*Math.cos(turn))*drag+wy;
-  f.vx=avx; f.vy=avy-G*DT;
-  f.x+=avx*DT; f.y+=(avy-G*DT/2)*DT; f.t+=DT;
+  // Lift: linear to the stall angle, then sagging; a stalled wing loses a further share.
+  const clMax = 0.28 + P.cla * P.as;
+  let cl = aa <= P.as ? 0.28 + P.cla * a : Math.sign(a) * clMax * Math.max(0.35, 1 - (aa - P.as) * 1.6);
+  if (f.stall) { cl *= 0.7; f.flutter += DT * 30; }
+  let cd = P.cd0 * CD_SCALE + P.k * K_IND * cl * cl + (aa > P.as ? 0.5 * Math.sin(aa - P.as) ** 2 + 0.05 : 0);
+  // Rotate the air-relative velocity for lift and dissipate speed for drag (energy-safe split step).
+  const turn = P.kq * v * cl * DT, drag = 1 / (1 + P.kq * v * cd * DT);
+  const avx = (rx * Math.cos(turn) - ry * Math.sin(turn)) * drag + wx;
+  const avy = (rx * Math.sin(turn) + ry * Math.cos(turn)) * drag + wy;
+  f.vx = avx; f.vy = avy - G * DT;
+  f.x += avx * DT; f.y += (avy - G * DT / 2) * DT; f.t += DT;
   if (f.y > f.maxY) f.maxY = f.y;
   // clips
   const mr = 1.3 + 1.1 * (magnet || 0);
@@ -568,8 +592,6 @@ function obsPos(o, t) {
   if (o.t === 'gull') return [o.x + Math.sin(t * 2 * Math.PI / o.p) * o.a * 1.5, o.y + Math.sin(t * 2 * Math.PI / (o.p * 0.7)) * o.a * 0.6];
   return [o.x + Math.sin(t * 2 * Math.PI / o.p) * o.a * 0.6, o.y + Math.cos(t * 2 * Math.PI / o.p) * o.a];
 }
-function bestAlpha(P) { return Math.max(0,(Math.sqrt(P.cd0 / P.k)-0.28) / P.cla); }
-function sinkAlpha(P) { return Math.min(P.as * 0.92, (Math.sqrt(3 * P.cd0 / P.k)-0.28) / P.cla); }
 
 /* Clips earned for a throw */
 function throwClips(dist, pickups) { return Math.floor(Math.max(0, dist) / 4) + pickups * 3; }
@@ -826,7 +848,7 @@ function land() {
     } else {
       run.throws--;
       outcome = fmt(d) + ' m — short by ' + fmt(tgt - d) + ' m';
-      if (run.place === 0 && save.runs === 0 && run.n <= 2) msgs.push(['', 'Try a shallow throw. Short holds trade speed for height']);
+      if (run.place === 0 && save.runs === 0 && run.n <= 2) msgs.push(['', 'Try a 10–30° throw, then let it glide. Hold for flaps']);
       if (run.throws <= 0) next = 'end';
     }
   }
@@ -929,7 +951,7 @@ function updateConditions(){
   const wind=Math.abs(wx)<0.05?'Calm air':(wx<0?'← Headwind ':'→ Tailwind ')+Math.abs(wx).toFixed(1)+' m/s';
   const label=wind+(gust?' · gusts ±'+gust.toFixed(1):'');
   if($('windReadout').textContent!==label)$('windReadout').textContent=label;
-  const cue=state==='fly'&&fl?flightFeedback(fl,P,pl,roll):{kind:'',text:'Short holds trade speed for height'};
+  const cue=state==='fly'&&fl?flightFeedback(fl,P,pl,roll):{kind:'',text:'In flight, hold to raise the flaps · nose up'};
   if($('flightCue').textContent!==cue.text)$('flightCue').textContent=cue.text;
   $('flightCue').className=cue.kind;
 }
@@ -945,7 +967,7 @@ function placeBelowHud(el) {
 function showTut() {
   const t = $('tut'); placeBelowHud(t.querySelector('.msg'));
   if (state === 'aim' && !save.tut1 && run) { tutStage = 1; $('tutTxt').textContent = coarse ? 'Pull back and release to throw · two fingers pause' : 'Drag back to throw · or ←/→ aim, Space launches'; t.classList.add('on'); $('hand').style.display = 'block'; }
-  else if (state === 'fly' && !save.tut2) { tutStage = 2; $('tutTxt').textContent = 'Short holds trade speed for height · release stops your pull'; t.classList.add('on'); $('hand').style.display = 'none'; }
+  else if (state === 'fly' && !save.tut2) { tutStage = 2; $('tutTxt').textContent = 'Hold to raise the flaps · let go to glide'; t.classList.add('on'); $('hand').style.display = 'none'; }
   else hideTut();
 }
 function hideTut() { tutStage = 0; $('tut').classList.remove('on'); }
@@ -1041,8 +1063,8 @@ function openHangar(keepRun = false) {
 }
 function foldStats(fi) {
   const Q = planeParams(fi, save.owned[fi] ? save.up[fi] : { paper: 0, crease: 0, trim: 0 }, save.arm);
-  const ab = bestAlpha(Q), ld = (0.28+Q.cla*ab) / (Q.cd0+Q.k*Math.pow(0.28+Q.cla*ab,2)+0.7*Math.sin(ab)*Math.sin(ab));
-  return [['Speed', (Q.v - 12) / 18], ['Glide', (ld - 4) / 8], ['Lift', (Q.cla * Q.as - 0.7) / 0.9], ['Steadiness', (Q.as - 0.24) / 0.2 * 0.6 + (0.85 - Q.lift) / 0.3 * 0.4]];
+  const ld = 1 / (2 * Math.sqrt(Q.cd0 * CD_SCALE * Q.k * K_IND));   // best glide ratio
+  return [['Speed', (Q.v - 12) / 18], ['Glide', (ld - 3) / 3.5], ['Lift', (Q.cla * Q.as - 0.7) / 0.9], ['Steadiness', (Q.as - 0.24) / 0.2 * 0.6 + (1.25 - Q.pull) / 0.2 * 0.4]];
 }
 function renderHangar() {
   if(hangarRun){save.run=runSnap();persist();}
@@ -1203,8 +1225,9 @@ function tick(dt) {
     const hold = holdPtrs.size > 0 || keyHold || autoHold();
     let n = Math.round(dt / DT);
     for (let i = 0; i < n && !fl.done; i++) {
-      const pr = fl.clips;
+      const pr = fl.clips, lp = fl.loops;
       step(fl, P, pl, roll, hold, save.magnet);
+      if (fl.loops > lp) { tone(784, .18, .06, 'triangle'); tone(1175, .26, .05, 'triangle', .09); }
       if (fl.clips > pr) { sTick(); if (!RM()) for (let k = 0; k < 6; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4, t: 0, life: 0.5, c: '#ffd34d', r: 2.2 }); }
       if ((fl.stall > 0 || fl.bumpT > 0) && stallSnd <= 0) { sFlutter(); stallSnd = 0.5; }
       if (fl.bumpT === 0.6) { noiseHit(0.18, 900, 300, 0.3, 1); if (!RM()) for (let k = 0; k < 10; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.3) * 4, t: 0, life: 0.6, c: fl.bumpCol || '#7fbb68', r: 2.4, sq: 1 }); }
@@ -1548,13 +1571,25 @@ const ART = (() => {
     y1 = y * ct - z * st; z1 = y * st + z * ct; y = y1; z = z1;
     return [x, y, z];
   }
+  // Raised flaps at the back edge of each wing, from the mesh's own trailing edge.
+  function flapFaces(m, e) {
+    if (!m.te) {
+      const pts = m.f.filter(f => f.c === 0).flatMap(f => f.p);
+      const xr = Math.min(...pts.map(p => p[0])), back = pts.filter(p => p[0] < xr + 0.08);
+      const zo = Math.max(...back.map(p => Math.abs(p[2]))), y = Math.max(...back.map(p => p[1]));
+      m.te = { xr, zo, zi: zo * 0.45, y };
+    }
+    const { xr, zo, zi, y } = m.te, d = 0.16, a = e * 1.0, dx = -d * Math.cos(a), dy = d * Math.sin(a);
+    return [-1, 1].map(sd => ({ p: [V(xr + 0.02, y, sd * zi), V(xr + 0.02, y, sd * zo), V(xr + 0.02 + dx, y + dy, sd * zo), V(xr + 0.02 + dx, y + dy, sd * zi)], c: 2 }));
+  }
   function plane(g, X, Y, pitch, fi, L, o) {
     o = o || {};
     const m = MESH[fi] || MESH[0];
     const roll = o.roll || 0, yaw = o.yaw != null ? o.yaw : -0.3, tilt = o.tilt != null ? o.tilt : 0.7;
     const cp = Math.cos(pitch), sp = Math.sin(pitch), cr = Math.cos(roll), sr = Math.sin(roll), cy = Math.cos(yaw), sy = Math.sin(yaw), ct = Math.cos(tilt), st = Math.sin(tilt);
     const T = p => xf(p, cp, sp, cr, sr, cy, sy, ct, st);
-    const fs = m.f.map(f => { const q = f.p.map(T); const z = q.reduce((a, v) => a + v[2], 0) / q.length;
+    const faces = o.flap > 0.02 ? m.f.concat(flapFaces(m, o.flap)) : m.f;
+    const fs = faces.map(f => { const q = f.p.map(T); const z = q.reduce((a, v) => a + v[2], 0) / q.length;
       const a = [q[1][0] - q[0][0], q[1][1] - q[0][1], q[1][2] - q[0][2]], b = [q[2][0] - q[0][0], q[2][1] - q[0][1], q[2][2] - q[0][2]];
       let n = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; const nm = Math.hypot(...n) || 1; n = n.map(v => v / nm);
       const back = n[2] < 0; if (back) n = n.map(v => -v);
@@ -1883,7 +1918,8 @@ function render() {
     ART.planeShadow(cx, X, SY(gy), fl.y - gy, L);
     speedLines(X, Y, fl.vx, fl.vy, L);
     const roll = (fl.stall > 0 || fl.bumpT > 0) && !RM() ? Math.sin(fl.flutter) * 0.35 : (RM() ? 0 : Math.sin(timeT * 2.1) * 0.05) + (fl.hold ? -0.1 : 0.05);
-    ART.plane(cx, X, Y, fl.th, save.fold, L, { roll });
+    ART.plane(cx, X, Y, fl.th, save.fold, L, { roll, flap: fl.elev });
+    if (fl.loopT && fl.t - fl.loopT < 1.4 && !(fl.stall > 0 || fl.bumpT > 0)) { cx.font = '400 19px "Patrick Hand", cursive'; const tw = cx.measureText('loop!').width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 18, tw + 12, 24, 6); cx.fill(); cx.fillStyle = '#2e9a5a'; cx.fillText('loop!', X, Y - L * 1.5); }
     if (fl.stall > 0 || fl.bumpT > 0) { const label=fl.bumpT>0?'bump!':'stall!'; cx.font = '400 17px "Patrick Hand", cursive'; const tw = cx.measureText(label).width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 17, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#d4553e'; cx.fillText(label, X, Y - L * 1.5); }
     const alt = fl.y - gy;
     if (alt > 25 && SY(gy) > H) { cx.font = '400 15px "Patrick Hand", cursive'; const tx = '↓ ' + Math.round(alt) + ' m up', tw = cx.measureText(tx).width; cx.fillStyle = 'rgba(255,253,246,.85)'; rr(X - tw / 2 - 6, H - 30, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#29303d'; cx.fillText(tx, X, H - 14); }
@@ -1974,6 +2010,5 @@ requestAnimationFrame(frame);
 })();
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
