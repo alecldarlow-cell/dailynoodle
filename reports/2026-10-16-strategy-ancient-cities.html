@@ -876,6 +876,7 @@ function startMatch(lv,how,cur,tut){$('tray').hidden=false;$('bRes').hidden=true
  if(typeof how==='object')how=how.how;
  if(tut){opt.lead=TUT_LEAD;opt.size=10;}
  let st;try{st=cur?AC.replay(lv,seed,opt,cur.moves):AC.newMatch(lv,seed,opt);}catch(e){st=AC.newMatch(lv,seed,opt);}
+ if(cur&&st.over){S.cur=null;save();return home();}   // a saved round that had already finished: nothing to continue, and nothing to report twice
  M={id:++mid,lv,diff,seed,opt,st,sel:-1,ghost:null,legal:null,busy:false,info:null,lastRv:null,rvSlot:null,ai:AC.mulberry(seed^0x5bd1e995),fast:false,ended:false,
   names:names(lv),shown:st.scores.slice(),hint:!tut&&S.tut<1?0:-1,tut:tut?{i:0}:null,tutorial:!!tut};
  TIMERS.length=0;FX.pops=[];FX.glows=[];FX.drops.clear();
@@ -886,7 +887,8 @@ function startMatch(lv,how,cur,tut){$('tray').hidden=false;$('bRes').hidden=true
  refresh();
  if(st.over)finish();else if(st.turn!==0)rivalTurn();
 }
-function saveCur(){if(!M||M.tutorial)return;S.cur={city:CITY.id,lv:M.lv,diff:M.diff,seed:M.seed,island:M.st.lim?M.st.island:undefined,moves:M.st.moves};save();}
+/* a finished round is never saved as one to continue */
+function saveCur(){if(!M||M.tutorial||M.ended||M.st.over)return;S.cur={city:CITY.id,lv:M.lv,diff:M.diff,seed:M.seed,island:M.st.lim?M.st.island:undefined,moves:M.st.moves};save();}
 function myTurn(){return M&&!M.busy&&!M.st.over&&M.st.turn===0&&!M.ended;}
 function selSlot(i){if(!myTurn()||!M.st.offer[i])return;if(M.tut){const T=TUT[M.tut.i];if(!T.slot||i!==M.tut.slot){nudge('.slot[data-i="'+i+'"]');return;}}rndStart();hideBanner();hideInfo();
  if(M.sel===i){return;}
@@ -1104,7 +1106,10 @@ addEventListener('keydown',e=>{if(!M)return;if(e.key==='Escape'){if($('modal').h
 /* ---------- screens ---------- */
 function stars(n){let s='';for(let i=0;i<3;i++)s+=i<n?'<i>★</i>':'★';return s;}
 function home(){if(M&&M.viewCity)viewCity(false);M=null;paused=false;hideCoach();TIMERS.length=0;hideInfo();closeModal();$('game').hidden=true;$('home').hidden=false;buildDemo();renderHome();viewRect();fitCam(true);}
-function renderHome(){const P=prog(),L=CITY.levels;if(S.cur&&!L[S.cur.lv])S.cur=null;const cur=S.cur&&S.cur.city===CITY.id?S.cur:null;
+let curChk={k:null,done:false};
+function curDone(c){const k=c.seed+':'+c.lv+':'+(c.moves||[]).length;if(curChk.k===k)return curChk.done;let done=false;   // older saves could hold a round that had already ended
+ try{const opt={island:c.island||S.island||'M'};if(!c.island)opt.lim=null;done=AC.replay(c.lv,c.seed,opt,c.moves).over;}catch(e){}curChk={k,done};return done;}
+function renderHome(){const P=prog(),L=CITY.levels;if(S.cur&&(!L[S.cur.lv]||curDone(S.cur))){S.cur=null;save();}const cur=S.cur&&S.cur.city===CITY.id?S.cur:null;
  let next=0;for(let i=0;i<NL();i++)if(unlocked(i)&&P.st[i]===0){next=i;break;}else next=Math.min(GRAND(),i);
  if(!unlocked(next))next=0;
  const playLbl=cur?`Continue<small>${lvLabel(cur.lv)}${esc(L[cur.lv].name)} · turn ${cur.moves.length+1} · ${DIFFS[cur.diff].n}</small>`:S.tut<2?'Play<small>Start with a one-minute guided game</small>':`Play<small>${lvLabel(next)}${esc(L[next].name)}</small>`;
