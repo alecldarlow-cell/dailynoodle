@@ -246,9 +246,30 @@
     $count.textContent = v.length
       ? v.length + ' ' + SEC.noun[v.length===1?0:1] + (state.q?' matching':'')
       : '';
+    if (SEC.kind === 'puzzle') showRun();
     $built.textContent = state.built
       ? 'Index rebuilt ' + new Date(state.built).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})
       : '';
+  }
+
+  /* ---------- your overall run (Puzzles only) ----------
+     Consecutive London days with at least one puzzle finished, from the
+     players' own saves; the same count the finish sheet shows. */
+  function showRun(){
+    var KEYS = ['digi-mini-v1','digi-doku-v1','digi-sweep-v1','digi-path-v1','digi-link-v1','digi-tangle-v1','digi-borders-v1'],
+        STREAKS = ['digi-mini-streak','digi-doku-streak','digi-link-streak','digi-sweep-streak','digi-path-streak'], days = {};
+    function read(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+    KEYS.forEach(function(k){ var s = read(k); if (s && s.done) for (var id in s.done) { var d = s.done[id] && (s.done[id].d || s.done[id].on); if (d) days[d] = 1; } });
+    STREAKS.forEach(function(k){ var s = read(k); if (s && Array.isArray(s.dates)) s.dates.forEach(function(d){ days[d] = 1; }); });
+    function back(d){ var x = new Date(d + 'T12:00:00Z'); x.setUTCDate(x.getUTCDate() - 1); return x.toISOString().slice(0, 10); }
+    var t; try { t = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); }
+    catch (e) { t = new Date().toISOString().slice(0, 10); }
+    var d = days[t] ? t : back(t), n = 0;
+    while (days[d] && n < 4000) { n++; d = back(d); }
+    var el = document.getElementById('run');
+    if (!el) { el = document.createElement('p'); el.id = 'run'; el.className = 'run'; $count.parentNode.insertBefore(el, $count.nextSibling); }
+    el.innerHTML = n >= 2 ? 'You’ve played every day for <b>' + n + ' days</b>.' : '';
+    el.hidden = n < 2;
   }
 
   /* ---------- events ---------- */

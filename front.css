@@ -91,6 +91,8 @@
   .chip.boardpill::after{content:"";position:absolute;right:-7px;top:6px;bottom:6px;width:1px;background:var(--hair)}
   .count{font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
     color:var(--faint);padding:8px 0 0}
+  .run{font-size:14px;color:var(--muted);padding:4px 0 0;margin:0}
+  .run b{color:var(--ink);font-weight:600}
 
   /* ---------- cards ---------- */
   .feed{list-style:none}

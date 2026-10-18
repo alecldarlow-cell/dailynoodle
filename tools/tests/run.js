@@ -213,6 +213,32 @@ const TESTS = {
     await ctx.close();
     await shareNative(b, F.path, p2 => play.path(p2), 'path');
   },
+  /* ---------- streaks ---------- */
+  async 'streak:doku-own'(b) {
+    const ctx = await newPhone(b);
+    await ctx.addInitScript(() => { if (sessionStorage.getItem('seeded')) return; sessionStorage.setItem('seeded', '1');
+      localStorage.setItem('digi-mini-streak', JSON.stringify({ last: '2026-10-17', streak: 5, best: 5, dates: ['2026-10-17'], tz: 'L' }));
+      localStorage.setItem('digi-doku-v1', JSON.stringify({ v: 1, done: { 'DP·LEXI·0095': { s: 40, d: '2026-10-16' }, 'DP·LEXI·0096': { s: 50, d: '2026-10-17' } } })); });
+    const { p } = await open(b, F.doku, { ctx });
+    ok(await text(p, '#streak') === '2', `doku: streak rebuilt from its own results (${await text(p, '#streak')})`);
+    await play.grid(p);
+    const d = await ls(p, 'digi-doku-streak'), m = await ls(p, 'digi-mini-streak');
+    ok(d && d.streak === 3 && d.best === 3 && d.last === '2026-10-18', 'doku: solving today takes its own streak to 3');
+    ok(m && m.streak === 5 && m.last === '2026-10-17', 'doku: the Mini streak is left alone');
+    await ctx.close();
+  },
+  async 'streak:overall-run'(b) {
+    const ctx = await newPhone(b);
+    await ctx.addInitScript(() => { if (sessionStorage.getItem('seeded')) return; sessionStorage.setItem('seeded', '1');
+      localStorage.setItem('digi-mini-v1', JSON.stringify({ v: 1, done: { 'DP·MINI·0097': { s: 30, d: '2026-10-16' } } }));
+      localStorage.setItem('digi-borders-v1', JSON.stringify({ v: 1, done: { 'DP·BORD·0013': { c: 6, p: 500, on: '2026-10-17' } } })); });
+    const { p } = await open(b, F.link, { ctx });
+    await play.link(p, { wrong: 0 });
+    ok(/every day for 3 days\./.test(await text(p, '.fin-clock')), `run: finish sheet "${await text(p, '.fin-clock')}"`);
+    await p.goto('https://dailynoodle.co.uk/puzzles.html'); await wait(p, 1500);
+    ok(/every day for 3 days\./.test(await text(p, '#run')), `run: Puzzles page "${await text(p, '#run')}"`);
+    await ctx.close();
+  },
   /* ---------- the five fixes of 18 Oct ---------- */
   async 'fix:link-replay'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
