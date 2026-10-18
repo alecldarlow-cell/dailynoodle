@@ -145,6 +145,22 @@ const TESTS = {
     await ctx.close();
     await shareNative(b, F.borders, p2 => play.borders(p2), 'borders');
   },
+  async 'finish:mini'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.mini, { events: ev });
+    await play.grid(p);
+    await sheetChecks(p, ev, { type: 'mini', ids: ['winTitle', 'winTime', 'winStreak', 'winBest'],
+      shareRe: /^✏️ Mini #99 — \d:\d\d$/,
+      endCheck: x => ok(x && x.outcome === 'solved' && x.secs > 0, `mini: tracker read solved in ${x && x.secs}s`) });
+    ok(await text(p, '#winTitle') === 'Solved' && /^\d:\d\d$/.test(await text(p, '#winTime')), 'mini: Solved, time as 0:00');
+    ok(await text(p, '.fin-note') === 'No checks, no reveals.', 'mini: note');
+    ok(await p.locator('.fin-grid.g5 i').count() === 25, 'mini: solved grid in the recap');
+    await shareClipboard(p, ctx, 'mini');
+    await reopen(p, ev, 'mini');
+    ok(await text(p, '.fin-stats > div:first-child b') === '1', 'mini: reopened sheet shows the streak');
+    ok(!p.errs.length, 'mini: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+    await shareNative(b, F.mini, p2 => play.grid(p2), 'mini');
+  },
   /* ---------- the five fixes of 18 Oct ---------- */
   async 'fix:link-replay'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
