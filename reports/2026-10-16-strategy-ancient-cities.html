@@ -1197,7 +1197,7 @@ if(TEST)window.__dg={
  fast:v=>{FAST=v!==false;},
  state:()=>M&&{lv:M.lv,diff:M.diff,turn:M.st.turn,over:M.st.over,ended:M.ended,busy:M.busy,scores:M.st.scores.slice(),shown:M.shown.slice(),offer:M.st.offer.length,bag:M.st.deck.length-M.st.di,sel:M.sel,ghost:M.ghost,prices:M.st.prices.slice(),tiles:M.st.tiles.length,moves:M.st.moves.length,secs:rnd.secs},
  save:()=>JSON.parse(JSON.stringify(S)),
- start:(lv,diff,seed)=>{if(diff)S.diff=diff;startMatch(lv||0,'new',seed?{seed,diff:S.diff,moves:[]}:null);},
+ start:(lv,diff,seed,isl)=>{if(diff)S.diff=diff;lv=lv||0;startMatch(lv,'new',seed?{seed,diff:S.diff,moves:[],island:isl||AC.LEVELS[lv].size}:null);},
  legal:i=>M&&AC.legal(M.st,M.st.offer[i]),
  cellXY:(x,y)=>w2s(x+.5,y+.5),
  auto:async n=>{for(let k=0;k<(n||1e9)&&M&&!M.ended;k++){while(M&&M.busy)await new Promise(r=>setTimeout(r,20));if(!M||M.ended||M.st.over)break;
