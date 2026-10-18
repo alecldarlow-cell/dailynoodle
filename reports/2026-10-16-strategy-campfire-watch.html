@@ -225,10 +225,12 @@
   .card.dim{opacity:.42;} .card.faded{opacity:.4;transform:scale(.94);}
   .card .chip{position:absolute;top:8px;left:18px;width:24px;height:24px;border-radius:50%;background:var(--bar);color:#fff;
     font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.4);}
-  .card .dmg{position:absolute;top:8px;right:8px;font-size:14px;font-weight:800;color:var(--bar);}
+  .card .dmg{position:absolute;top:8px;right:8px;font-size:14px;font-weight:800;color:var(--lab,var(--bar));}
   .card .cic{font-size:30px;text-align:center;margin:26px 0 3px;}
   .card .cn{font-family:var(--serif);font-size:15px;font-weight:700;text-align:center;line-height:1.05;}
-  .card .czone{font-size:11px;font-weight:800;text-align:center;margin-top:3px;color:var(--bar);text-transform:uppercase;letter-spacing:.4px;}
+  .card .czone{font-size:11px;font-weight:800;text-align:center;margin-top:3px;color:var(--lab,var(--bar));text-transform:uppercase;letter-spacing:.4px;}
+  .card .chip{text-shadow:0 1px 1px rgba(0,0,0,.45);}
+  body.day .prompt{color:#a84b08;}   /* 4.7:1 on the daylight page (fire-ink is 3.4:1) */
   .card .cd{font-size:10.5px;text-align:center;color:var(--ink-soft);margin-top:auto;line-height:1.25;}
 
   .controls{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;}
@@ -519,13 +521,13 @@
   .tray .whorole{font-size:11.5px;color:var(--moss);font-weight:700;white-space:nowrap;}
   .gscreen .prompt{margin:0;min-height:34px;display:flex;align-items:center;justify-content:center;font-size:13.5px;line-height:1.22;padding:0 6px;}
   .gscreen .hand{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:12px 1px 3px;margin-top:-10px;scroll-snap-type:none;}
-  .gscreen .card{flex:1 1 0;min-width:56px;max-width:100px;width:auto;height:clamp(100px,12.6vh,124px);padding:6px 4px 6px 9px;border-radius:11px;}
+  .gscreen .card{flex:1 1 0;min-width:56px;max-width:100px;width:auto;height:clamp(104px,13.2vh,124px);padding:6px 4px 6px 9px;border-radius:11px;}
   .gscreen .card .zonebar{width:5px;}
   .gscreen .card .chip{top:5px;left:9px;width:18px;height:18px;font-size:10px;}
   .gscreen .card .dmg{top:5px;right:5px;font-size:11px;}
-  .gscreen .card .cic{font-size:25px;margin:22px 0 3px;}
+  .gscreen .card .cic{font-size:24px;margin:19px 0 3px;}
   .gscreen .card .cn{font-size:11.5px;}
-  .gscreen .card .czone{font-size:8.5px;letter-spacing:.2px;line-height:1.1;}
+  .gscreen .card .czone{font-size:8.5px;letter-spacing:.2px;line-height:1.05;}
   .gscreen .card.armed{transform:translateY(-9px);}
   .gscreen .nohand{flex:1;text-align:center;color:var(--parch-2);font-style:italic;font-family:var(--serif);padding:30px 0;}
   .card.deal{animation:deal .44s cubic-bezier(.2,.8,.3,1.18) both;animation-delay:calc(var(--i)*65ms);}
@@ -725,9 +727,9 @@ const RING_RADIUS = { 1:16, 2:29, 3:42 }; // % from centre
 
 /* ---------------- ZONES, THEME & VISUAL HELPERS ---------------- */
 const ZONES = {
-  1:{ name:"Clearing",   num:"1", color:"#e23b2e", soft:"rgba(226,59,46,.18)" },
-  2:{ name:"Treeline",   num:"2", color:"#e09114", soft:"rgba(224,145,20,.18)" },
-  3:{ name:"Deep Woods", num:"3", color:"#15a06f", soft:"rgba(21,160,111,.18)" },
+  1:{ name:"Clearing",   num:"1", color:"#e23b2e", soft:"rgba(226,59,46,.18)", ink:"#b3241a" },   // ink: text on the cream cards, ≥4.5:1
+  2:{ name:"Treeline",   num:"2", color:"#e09114", soft:"rgba(224,145,20,.18)", ink:"#8a5600" },
+  3:{ name:"Deep Woods", num:"3", color:"#15a06f", soft:"rgba(21,160,111,.18)", ink:"#0b6b49" },
 };
 let theme = "day";  // "day" = high-contrast Daylight, "night" = campfire dark
 function toggleTheme(){ if(nightAnimating) return; theme = (theme==="day"?"night":"day"); render(); refreshMenu(); }
@@ -736,13 +738,13 @@ function setTheme(t){ saveNames(); theme=t; render(); }
 // Returns the colour bar, badge chip, damage/effect text and zone label for a card.
 function cardVisual(def){
   if(def.kind==="attack"){
-    if(def.target==="anyLit") return { bar:"var(--wild)", chip:"✦", dmg:def.dmg+"⚔", zlabel:"Any lit ring" };   // labels kept short for the compact hand
+    if(def.target==="anyLit") return { bar:"var(--wild)", lab:"#7a6000", chip:"✦", dmg:def.dmg+"⚔", zlabel:"Any lit ring" };   // labels kept short for the compact hand
     const z=ZONES[def.ring];
-    return { bar:z.color, chip:z.num, dmg:def.dmg+"⚔", zlabel:z.name };
+    return { bar:z.color, lab:z.ink, chip:z.num, dmg:def.dmg+"⚔", zlabel:z.name };
   }
-  if(def.kind==="fuel")    return { bar:"var(--wood)",  chip:"🪵", dmg:"+"+def.amt, zlabel:"Feed fire" };
-  if(def.kind==="lantern") return { bar:"var(--frost)", chip:"🏮", dmg:"☀",        zlabel:"Light all" };
-  return                          { bar:"var(--frost)", chip:"↺",  dmg:"↺"+def.amt, zlabel:"Draw "+def.amt };
+  if(def.kind==="fuel")    return { bar:"var(--wood)",  lab:"#7a5220", chip:"🪵", dmg:"+"+def.amt, zlabel:"Feed fire" };
+  if(def.kind==="lantern") return { bar:"var(--frost)", lab:"#1f6283", chip:"🏮", dmg:"☀",        zlabel:"Light all" };
+  return                          { bar:"var(--frost)", lab:"#1f6283", chip:"↺",  dmg:"↺"+def.amt, zlabel:"Draw "+def.amt };
 }
 
 // Coloured light-reach pips for the campfire HUD (which zones the firelight reaches).
@@ -1852,7 +1854,7 @@ function renderGame(){
     if(dealMode==="all") di=i;
     else if(dealMode && dealMode.n && i>=hand.length-dealMode.n) di=i-(hand.length-dealMode.n);
     if(di>=0) cls.push("deal");
-    return `<div class="${cls.join(' ')}" style="--bar:${v.bar};--i:${Math.max(0,di)}" onclick="tapCard(${i})">
+    return `<div class="${cls.join(' ')}" style="--bar:${v.bar};--lab:${v.lab};--i:${Math.max(0,di)}" onclick="tapCard(${i})">
         <div class="zonebar"></div>
         <div class="chip">${v.chip}</div>
         <div class="dmg">${v.dmg}</div>
@@ -2065,6 +2067,5 @@ if(window.__DGTEST===true){
 initFx();
 render();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
