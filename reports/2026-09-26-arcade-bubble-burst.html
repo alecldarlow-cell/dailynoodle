@@ -1789,7 +1789,7 @@ function homeHtml() {
   return '<div class="logo" aria-hidden="true">' + logo + '</div><h2 id="ovTitle" class="title">Bubble Burst</h2>' +
     '<p class="sub">Six worlds, ' + LEVELS.length + ' levels. Aim, bounce off the walls and match 3 or more to pop. Cut bubbles loose to drop them for big points.</p>' + note +
     (paused ? '<button class="btn primary" data-act="resume" data-focus>Resume ' + (S.kind === 'endless' ? 'Endless' : lvName(S.idx)) + '</button>' : '') +
-    '<button class="btn' + (paused ? '' : ' primary') + '" data-act="lv" data-arg="' + n + '"' + (paused ? '' : ' data-focus') + '>Play · ' + lvName(n) + '</button>' +
+    '<button class="btn' + (paused ? '' : ' primary') + '" data-act="lv" data-arg="' + n + '"' + (n === 0 && !save.stars[0] ? ' data-first="1"' : '') + (paused ? '' : ' data-focus') + '>Play · ' + lvName(n) + '</button>' +
     '<div class="row2"><button class="btn" data-act="levels">Levels · ★' + totalStars() + '</button>' +
     '<button class="btn" data-act="endless">Endless</button></div>' +
     '<div class="row2 tg">' + fsBtn('home') + motionBtn('home') + hapBtn('home') + '</div>' +
@@ -1854,7 +1854,8 @@ card.addEventListener('click', e => {
     else { save.calm = !rm(); for (const k in spr) delete spr[k]; syncCalm(); }
     persist(); showOverlay(b.dataset.arg === 'pause' ? pauseHtml() : homeHtml()); refocus(a); return;
   }
-  if (a === 'lv') startLevel(+b.dataset.arg);
+  // a brand-new player's first Play goes straight into Level 1; its in-game tip teaches the shot
+  if (a === 'lv') startLevel(+b.dataset.arg, !b.dataset.first);
   else if (a === 'go') beginPlay();
   else if (a === 'levels' || a === 'wpage') {
     if (S.mode === 'play') S.mode = 'paused'; if (S.mode !== 'paused' && S.mode !== 'over') S.mode = 'menu';
