@@ -185,10 +185,13 @@ function stepDuration(st,T){if(st.type==='shuffle')return T.shuffle;let d=0;for(
 function jarPlan(filled,rng){const total=Math.min(BAL.jarCap,BAL.jar0+BAL.jarStep*filled),k=total>=BAL.k4At?4:3;const cols=[0,1,2,3,4,5];
  for(let i=5;i>0;i--){const j=Math.floor(rng()*(i+1));[cols[i],cols[j]]=[cols[j],cols[i]];}
  const pick=cols.slice(0,k),base=Math.floor(total/k),targets={};let rem=total-base*k;for(const c of pick){targets[c]=base+(rem>0?1:0);rem--;}return targets;}
-function placeFinds(rng,items,avoid){const out=[];let guard=0;
- while(out.length<items.length&&guard++<500){const r=BAL.findRow+Math.floor(rng()*(ROWS-BAL.findRow)),c=Math.floor(rng()*COLS);
-  if(out.some(f=>Math.abs(f.r-r)+Math.abs(f.c-c)<3))continue;if(avoid&&avoid.some(a=>Math.abs(a[0]-r)+Math.abs(a[1]-c)<=1))continue;
-  out.push({id:items[out.length],r,c,freed:false});}return out;}
+/* a random layout can box itself in (the first two leave no room for the third), so start again until every find fits */
+function placeFinds(rng,items,avoid){let out=[];
+ for(let tries=0;tries<40&&out.length<items.length;tries++){out=[];let guard=0;
+  while(out.length<items.length&&guard++<500){const r=BAL.findRow+Math.floor(rng()*(ROWS-BAL.findRow)),c=Math.floor(rng()*COLS);
+   if(out.some(f=>Math.abs(f.r-r)+Math.abs(f.c-c)<3))continue;if(avoid&&avoid.some(a=>Math.abs(a[0]-r)+Math.abs(a[1]-c)<=1))continue;
+   out.push({id:items[out.length],r,c,freed:false});}}
+ return out;}
 /* ---------- end engine ---------- */
 
 /* ---------- Sea Glass ---------- */
@@ -737,7 +740,7 @@ function showEnd(win,done,stars,unlocked){
  const card=()=>showCard('end',`<h2 id="cardTitle">${win?'The jar is full':'The tide has turned'}</h2>
  <p>${win?'Tide '+done.tide+' is done, with time to spare.':'The sea takes the shore back for a while. Every piece you gathered on tide '+done.tide+' is on your shelf.'}</p>
  <div class="chips">${chips}</div><p class="small">${done.gathered} piece${done.gathered===1?'':'s'} gathered this tide</p>
- <h3>Rare finds: ${stars} of 3</h3><div class="fgrid">${fcells}</div>
+ <h3>Rare finds: ${stars} of ${done.finds.length}</h3><div class="fgrid">${fcells}</div>
  ${unlocked.length?'<h3>Unlocked</h3><div class="list">'+unlocked.map(u=>`<div class="row"><span class="grow">${esc(u.n)}</span><span class="new">${u.kind==='beach'?'New beach':'New jar'}</span></div>`).join('')+'</div>':''}
  <button class="btn primary" id="next" data-focus>Next tide</button>
  <div class="list">${nav('eShelf','Collection shelf',foundN()+' of '+FINDS.length+' rare finds')}
@@ -779,6 +782,5 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{}).catch(
 
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
