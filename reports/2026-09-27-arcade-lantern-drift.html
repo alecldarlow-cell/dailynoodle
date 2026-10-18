@@ -423,6 +423,9 @@ let tGap=[0,0];   // [bottom of the title text, top of the mode buttons], in sta
 function measureTitle(){try{const s=stage.getBoundingClientRect(),a=ov.querySelector('.tTop'),b=ov.querySelector('.modes');if(!a||!b||ov.hidden)return;
  const p=a.querySelector('p'),last=p&&getComputedStyle(p).display!=='none'?p:a.querySelector('h1');tGap=[last.getBoundingClientRect().bottom-s.top,b.getBoundingClientRect().top-s.top];}catch(e){}}
 try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(measureTitle);}catch(e){}
+// sessions, minutes breathed (saved since launch, never shown before) and the best Breathe score
+function calmLine(){const m=Math.max(0,Math.round(meta.mins)||0),b=Math.max(0,Math.min(100,Math.round(meta.best)||0)),p=[`Sessions: ${meta.sessions}`];
+ if(m)p.push(`${m} minute${m===1?'':'s'} breathed`);if(b)p.push(`Best ${b}%`);return p.join(' · ')+'.';}
 function showTitle(){S.mode='title';S.paused=false;rnd.armed=false;rnd.open=false;$('tut').hidden=true;ptrs.clear();hush();$('uskip').hidden=true;
  ov.className='title';ov.hidden=false;
  const r=()=>{const uw=meta.gm==='unwind';ov.innerHTML=`<div class="tTop"><h1>Lantern Drift</h1><p>${uw?'Unwind your body one lantern at a time. Hold to breathe in and tense; let go to breathe out and watch it float free.':'Breathe with the river. Hold to breathe in and the lantern rises; let go to breathe out and it drifts down.'}</p></div>
@@ -432,7 +435,7 @@ function showTitle(){S.mode='title';S.paused=false;rnd.armed=false;rnd.open=fals
   <button type="button" class="go" id="go">Begin</button>
   <div class="tMore"><div class="lbl">Lantern</div><div class="sws">${COLS.map(c=>`<button type="button" class="sw${meta.col===c.id?' on':''}" data-col="${c.id}" ${own(c)?'':'disabled'} aria-label="${c.name} lantern${own(c)?'':', locked'}" style="--g:${c.c}"><i style="background:${c.c}"></i></button>`).join('')}</div>
   <div class="lbl">River</div><div class="chips">${SCENES.map(s=>`<button type="button" class="chip${meta.scene===s.id?' on':''}" data-sc="${s.id}" ${own(s)?'':'disabled'}>${s.name}</button>`).join('')}</div>
-  <p class="note">Sessions completed: ${meta.sessions}. ${nextUnlock()}</p>
+  <p class="note">${calmLine()} ${nextUnlock()}</p>
   <div class="row"><button type="button" class="link" id="snd">Sound: ${meta.snd==='both'?'Both':SNDS[meta.snd]}</button>${fsOK?`<button type="button" class="link" id="fsT" role="switch" aria-checked="${meta.fs}">Full screen: ${meta.fs?'On':'Off'}</button>`:''}<a class="link" href="../games.html">&larr; Digi Games</a></div></div>`;
   ov.querySelectorAll('[data-len]').forEach(b=>b.addEventListener('click',()=>{meta.len=+b.dataset.len;save();r();}));
   ov.querySelectorAll('[data-un]').forEach(b=>b.addEventListener('click',()=>{meta.un=+b.dataset.un;save();r();}));
@@ -791,6 +794,5 @@ addEventListener('resize',resize);
 resize();showTitle();requestAnimationFrame(frame);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
