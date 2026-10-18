@@ -1365,7 +1365,8 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       bands: theme.bands.map((band) => ({
         band,
         color: preprocessHexCurve(band.colorCurve),
-        haze: band.kind === "plain" && band.hazeCurve ? preprocessHexCurve(band.hazeCurve) : void 0,
+        haze: (band.kind === "plain" || band.kind === "europaGround") && band.hazeCurve ? preprocessHexCurve(band.hazeCurve) : void 0,
+        rust: band.rustCurve ? preprocessHexCurve(band.rustCurve) : void 0,
         gradient: band.kind === "silhouette" && band.gradientCurve ? preprocessHexCurve(band.gradientCurve) : void 0,
         streak: band.kind === "cloudBand" ? preprocessHexCurve(band.streakCurve) : void 0
       })),
@@ -1763,8 +1764,10 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     silhouettePath,
     grassPaths,
     craters,
+    preRust,
     t,
-    scrollX
+    scrollX,
+    nowMs
   }) {
     let yPx = band.yPct * SC_H, heightPx = band.heightPct * SC_H, col = oklchToHex(sampleOklchCurve(preColor, t));
     if (band.kind === "silhouette" && silhouettePath) {
@@ -1812,6 +1815,8 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       )));
     }
     if (band.kind === "lineae") return /* @__PURE__ */ react_default.createElement(LineaeBand, { band, preColor, t });
+    if (band.kind === "iceRidge") return react_default.createElement(IceRidge, { band, preColor, t, scrollX });
+    if (band.kind === "europaGround") return react_default.createElement(EuropaGround, { band, preColor, preHaze, preRust, t, scrollX, nowMs });
     if (band.kind === "craters" && craters) {
       let baseOklch = sampleOklchCurve(preColor, t), bowlCol = oklchToHex(baseOklch), rimCol = oklchToHex([baseOklch[0] * 0.75 + 0.25, baseOklch[1] * 0.75, baseOklch[2]]);
       return /* @__PURE__ */ react_default.createElement(Group, null, craters.map((c, i) => {
@@ -2387,8 +2392,10 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
           silhouettePath: silhouettePaths.get(b.band.id),
           grassPaths: grassPaths.get(b.band.id),
           craters: craters.get(b.band.id),
+          preRust: b.rust,
           t,
-          scrollX
+          scrollX,
+          nowMs
         }
       );
     }), gasGiantSpots.map((c) => c.celestial.kind !== "gasGiantSpot" || !c.rim ? null : /* @__PURE__ */ react_default.createElement(
@@ -2503,6 +2510,148 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     }, [band.id, yPx, h]);
     return E(Group, null, lines.map((l, i) => E(Group, { key: i, opacity: l.a }, E(Path, { path: l.p1, color: col, style: "stroke", strokeWidth: l.w, strokeCap: "round" }), E(Path, { path: l.p2, color: col, style: "stroke", strokeWidth: l.w * 0.8, strokeCap: "round", opacity: 0.8 }))));
   }
+  /* ---------- Europa's ground (the Jupiter world) ----------
+     Ice ridges drawn as angular crags whose faces turning towards Jupiter (on the left) catch its cream light, with a
+     bright rim along those slopes. In front, a scrolling ice plain drawn in true perspective: Europa's banded red
+     ridges (lineae, a pale crest between rusty margins), rafted ice blocks with lit tops, Jupiter-shine pooled on the
+     ice, a bright line where the plain meets the sky, and the odd frost glint. Same virtual portrait pixels as the
+     other worlds; all the light follows the planet's own time-of-day curve. */
+  var EUROPA_LIGHT = [0.9, 0.035, 78];
+  function europaLit(t) { return sampleScalarCurve(europaTheme.celestials[0].litCurve, t); }
+  function okShade(o, dl, k) {
+    let L = Math.max(0, Math.min(1, o[0] + dl)), r = o[2] * Math.PI / 180, a = o[1] * Math.cos(r), b = o[1] * Math.sin(r);
+    if (k) { let lr = EUROPA_LIGHT[2] * Math.PI / 180; L += (EUROPA_LIGHT[0] - L) * k, a += (EUROPA_LIGHT[1] * Math.cos(lr) - a) * k, b += (EUROPA_LIGHT[1] * Math.sin(lr) - b) * k; }
+    return oklchToHex([Math.max(0, Math.min(1, L)), Math.hypot(a, b), Math.atan2(b, a) * 180 / Math.PI]);
+  }
+  function alphaOf(hex, a) { return hex + alphaHex(Math.round(Math.max(0, Math.min(1, a)) * 255)); }
+  /* one tile of ridge: a few massifs (coarse points) broken into angular crags by midpoint displacement on a closed
+     loop, so the tile wraps without a seam. Faces on the coarse slopes that rise to the right look towards Jupiter. */
+  function buildIceRidge(band, seed) {
+    let rng = mulberry32(seed), span = FEAT * 2.4, yTop = band.yPct * SC_H, h = band.heightPct * SC_H, base = band.baseYPct * SC_H + 6, n = band.peaks, coarse = [];
+    for (let i = 0; i < n; i++) {
+      let peak = i % 2 === 0, x = (i + (i ? (rng() - 0.5) * 0.35 : 0)) / n * span, y = peak ? yTop + h * (rng() < 0.35 ? rng() * 0.12 : 0.15 + rng() * 0.35) : yTop + h * (0.62 + rng() * 0.3);
+      coarse.push([x, y]);
+    }
+    let LV = 4, pts = coarse.map((q) => [q[0], q[1], 1]);
+    for (let lv = 0; lv < LV; lv++) {
+      let next = [], amp = h * 0.16 / Math.pow(1.85, lv);
+      for (let i = 0; i < pts.length; i++) {
+        let a = pts[i], b = i + 1 < pts.length ? pts[i + 1] : [pts[0][0] + span, pts[0][1]], mx = (a[0] + b[0]) / 2 + (rng() - 0.5) * (b[0] - a[0]) * 0.25, my = (a[1] + b[1]) / 2 + (rng() - 0.45) * amp * 2;
+        next.push(a, [mx, Math.min(base - 4, my), 0]);
+      }
+      pts = next;
+    }
+    pts.push([pts[0][0] + span, pts[0][1], 1]);
+    let ci = [];
+    pts.forEach((q, i) => q[2] && ci.push(i));
+    let sil = Skia.Path.Make(), lit = Skia.Path.Make(), rim = Skia.Path.Make();
+    sil.moveTo(pts[0][0], base);
+    for (let q of pts) sil.lineTo(q[0], q[1]);
+    sil.lineTo(span, base), sil.close();
+    for (let k = 0; k + 1 < ci.length; k++) {
+      let a = pts[ci[k]], b = pts[ci[k + 1]];
+      if (b[1] >= a[1]) continue;
+      let nb = pts[ci[Math.min(ci.length - 1, k + 2)]], pa = pts[ci[Math.max(0, k - 1)]], foot = b[0] + (nb[0] - b[0]) * (0.12 + rng() * 0.14), heel = a[0] - (a[0] - pa[0]) * (0.1 + rng() * 0.1);
+      lit.moveTo(heel, base);
+      for (let i = ci[k]; i <= ci[k + 1]; i++) lit.lineTo(pts[i][0], pts[i][1]);
+      lit.lineTo(foot, base), lit.close();
+      if (foot > span) { lit.moveTo(heel - span, base); for (let i = ci[k]; i <= ci[k + 1]; i++) lit.lineTo(pts[i][0] - span, pts[i][1]); lit.lineTo(foot - span, base), lit.close(); }
+      rim.moveTo(pts[ci[k]][0], pts[ci[k]][1]);
+      for (let i = ci[k] + 1; i <= ci[k + 1]; i++) rim.lineTo(pts[i][0], pts[i][1]);
+    }
+    return { sil, lit, rim, span, yTop, base, h };
+  }
+  function IceRidge({ band, preColor, t, scrollX }) {
+    let E = react_default.createElement, r = useMemo(() => buildIceRidge(band, 0x51ce ^ themeSeed(band.id)), [band.id]), o = sampleOklchCurve(preColor, t), lit = europaLit(t);
+    let col = oklchToHex(o), face = okShade(o, 0.05 + 0.07 * lit, 0.18 + 0.3 * lit), rimCol = okShade(o, 0.2 + 0.12 * lit, 0.35 + 0.35 * lit), foot = okShade(o, 0.1, 0.25);
+    let dx0 = -(scrollX * band.parallax % r.span), tiles = scTiles(dx0, r.span);
+    return E(react_default.Fragment, null, tiles.map((dx, i) => E(Group, { key: i, transform: [{ translateX: dx }] },
+      E(Path, { path: r.sil, color: col, style: "fill" }),
+      E(Group, { clip: { x: 0, y: 0, width: r.span, height: SC_H } }, E(Path, { path: r.lit, color: face, style: "fill", opacity: 0.85 })),
+      E(Path, { path: r.rim, color: rimCol, style: "stroke", strokeWidth: 1.6 * SC_DS, strokeJoin: "round", strokeCap: "round", opacity: 0.55 + 0.4 * lit }),
+      E(Group, { clip: r.sil }, E(Rect, { x: 0, y: r.base - r.h * 0.55, width: r.span + 2, height: r.h * 0.55 + 6 }, E(LinearGradient, { start: vec(0, r.base - r.h * 0.55), end: vec(0, r.base), colors: [alphaOf(foot, 0), alphaOf(foot, 0.55)] })))
+    )));
+  }
+  /* the plain: ground point (gx, gz) with gz >= 1 lands at y = horizon + depth / gz, x = centre + (gx - camera) / gz */
+  var EUROPA_P = FEAT * 4;
+  function europaGroundSeeds(seed) {
+    let rng = mulberry32(seed), lines = [], rafts = [], glints = [];
+    /* lineae run the full repeat of the ground and join end to end, so a band never stops mid-screen */
+    for (let i = 0; i < 4; i++) {
+      let z0 = [1.3, 1.95, 3.0, 4.8][i] * (0.92 + rng() * 0.16), a1 = (0.16 + rng() * 0.1) / (1 + i * 0.6), a2 = (0.03 + rng() * 0.03) / (1 + i * 0.6), ph = rng() * 6, ph2 = rng() * 6, g0 = rng() * EUROPA_P, w = 80 + rng() * 40, pts = [];
+      for (let k = 0; k <= 48; k++) {
+        let u = k / 48, gz = z0 * Math.exp(a1 * Math.sin(2 * Math.PI * u + ph) + a2 * Math.sin(4 * Math.PI * u + ph2));
+        pts.push([g0 + EUROPA_P * u, gz]);
+      }
+      let gs = pts.map((q) => q[0]), zs = pts.map((q) => q[1]);
+      lines.push({ pts, w, gmin: Math.min(...gs), gmax: Math.max(...gs), zmin: Math.min(...zs), zmax: Math.max(...zs) });
+    }
+    for (let i = 0; i < 8; i++) { let shape = []; for (let k = 0; k < 6; k++) { let an = k / 6 * Math.PI * 2 + (rng() - 0.5) * 0.6; shape.push([Math.cos(an) * (0.7 + rng() * 0.3), Math.sin(an) * (0.6 + rng() * 0.4)]); } rafts.push({ gx: rng() * EUROPA_P, gz: 2.4 * Math.pow(2.2, rng()), s: 40 + rng() * 60, hh: 6 + rng() * 8, shape }); }
+    rafts.sort((a, b) => b.gz - a.gz);
+    for (let i = 0; i < 12; i++) glints.push({ gx: rng() * EUROPA_P, gz: 1.05 + rng() * 2.5, ph: rng() * 6, sp: 700 + rng() * 900, s: 2.5 + rng() * 2 });
+    /* the near edge: soft snowdrifts along the bottom of the view, with a lit crest */
+    let span = FEAT * 2, base = SC_H + 2, j1 = rng() * 6, j2 = rng() * 6, sil = Skia.Path.Make(), lt = Skia.Path.Make(), drift = (x) => SC_H - (16 + 9 * Math.sin(2 * Math.PI * 2 * x / span + j1) + 6 * Math.sin(2 * Math.PI * 5 * x / span + j2) + 3 * Math.sin(2 * Math.PI * 11 * x / span));
+    sil.moveTo(0, base);
+    for (let k = 0; k <= 80; k++) { let x = k / 80 * span; sil.lineTo(x, drift(x)); k ? lt.lineTo(x, drift(x)) : lt.moveTo(x, drift(x)); }
+    sil.lineTo(span, base), sil.close();
+    return { lines, rafts, glints, lip: { sil, lit: lt, span } };
+  }
+  function EuropaGround({ band, preColor, preHaze, preRust, t, scrollX, nowMs }) {
+    let E = react_default.createElement, yH = band.yPct * SC_H, D = SC_H - yH, cx = SC_W / 2, cam = scrollX * band.parallax, seeds = useMemo(() => europaGroundSeeds(0xe0e0 ^ themeSeed(band.id)), [band.id]);
+    let o = sampleOklchCurve(preColor, t), lit = europaLit(t), col = oklchToHex(o), haze = preHaze ? oklchToHex(sampleOklchCurve(preHaze, t)) : col, deep = okShade(o, -0.08), ro = preRust ? sampleOklchCurve(preRust, t) : o, rust = oklchToHex(ro), crest = okShade(o, 0.1 + 0.08 * lit, 0.25 + 0.25 * lit);
+    let top = okShade(o, 0.05 + 0.06 * lit, 0.12 + 0.2 * lit), side = okShade(o, -0.1), light = oklchToHex(EUROPA_LIGHT), lip = okShade(o, -0.13), lipLit = okShade(o, 0.08 + 0.06 * lit, 0.2 + 0.3 * lit);
+    let sy = (gz) => yH + D / gz, sxAt = (gx, gz) => cx + (gx - cam) / gz;
+    /* which repeats of a feature can reach the screen at depth up to zmax */
+    let copies = (gmin, gmax, zmax, zmin) => {
+      let out = [], z0 = zmin || zmax, k0 = Math.floor((cam - cx * zmax - gmax) / EUROPA_P), k1 = Math.ceil((cam + cx * zmax - gmin) / EUROPA_P);
+      for (let k = k0; k <= k1 && out.length < 14; k++) {
+        let off = k * EUROPA_P, a = gmin + off - cam, b = gmax + off - cam, lo = cx + Math.min(a / z0, a / zmax), hi = cx + Math.max(b / z0, b / zmax);
+        hi >= -60 && lo <= SC_W + 60 && out.push(off);
+      }
+      return out;
+    };
+    let ribbons = Skia.Path.Make(), crests = Skia.Path.Make();
+    for (let l of seeds.lines) {
+      for (let off of copies(l.gmin, l.gmax, l.zmax, l.zmin)) {
+        let sp = [], lo = 1 / 0, hi = -1 / 0;
+        for (let q of l.pts) { let x = sxAt(q[0] + off, q[1]); sp.push([x, sy(q[1]), q[1]]), x < lo && (lo = x), x > hi && (hi = x); }
+        if (hi < -40 || lo > SC_W + 40) continue;
+        let up = [], dn = [];
+        for (let k = 0; k < sp.length; k++) {
+          let a = sp[Math.max(0, k - 1)], b = sp[Math.min(sp.length - 1, k + 1)], tx = b[0] - a[0], ty = b[1] - a[1], m = Math.hypot(tx, ty) || 1, nx = -ty / m, ny = tx / m, an = Math.abs(nx), hw = l.w / sp[k][2] * 0.5 * (an + (1 - an) * 0.34 / Math.sqrt(sp[k][2])) * (0.8 + 0.2 * Math.sin(k * 0.5 + l.w));
+          up.push([sp[k][0] + nx * hw, sp[k][1] + ny * hw]), dn.push([sp[k][0] - nx * hw, sp[k][1] - ny * hw]);
+        }
+        ribbons.moveTo(up[0][0], up[0][1]);
+        for (let q of up) ribbons.lineTo(q[0], q[1]);
+        for (let k = dn.length - 1; k >= 0; k--) ribbons.lineTo(dn[k][0], dn[k][1]);
+        ribbons.close();
+        crests.moveTo(sp[0][0], sp[0][1]);
+        for (let q of sp) crests.lineTo(q[0], q[1]);
+      }
+    }
+    let raftEls = [], glintPath = Skia.Path.Make(), glintA = 0;
+    seeds.rafts.forEach((b, i) => { for (let off of copies(b.gx - b.s, b.gx + b.s, b.gz)) {
+      let x = sxAt(b.gx + off, b.gz), y = sy(b.gz), rx = b.s / b.gz, ry = rx * 0.2 / Math.sqrt(b.gz), hp = Math.max(1.5, b.hh / b.gz);
+      if (x + rx * 1.4 < 0 || x - rx * 1.4 > SC_W) continue;
+      let topf = Skia.Path.Make(), sidef = Skia.Path.Make(), shadow = Skia.Path.Make();
+      b.shape.forEach((q, k) => { let px = x + q[0] * rx, py = y - hp + q[1] * ry; k ? topf.lineTo(px, py) : topf.moveTo(px, py); k ? sidef.lineTo(px, py + hp) : sidef.moveTo(px, py + hp); });
+      topf.close(), sidef.close(), sidef.addRect({ x: x - rx * 0.85, y: y - hp, width: rx * 1.7, height: hp });
+      shadow.addOval({ x: x - rx * 0.6, y: y - ry * 0.2, width: rx * 2.6, height: ry * 1.9 });
+      raftEls.push(E(Group, { key: i + "_" + off }, E(Path, { path: shadow, color: deep, style: "fill", opacity: 0.3 }), E(Path, { path: sidef, color: side, style: "fill", opacity: 0.9 }), E(Path, { path: topf, color: top, style: "fill" }), E(Path, { path: topf, color: crest, style: "stroke", strokeWidth: Math.max(0.6, 1.2 / Math.sqrt(b.gz)) * SC_DS, opacity: 0.55, strokeJoin: "round" })));
+    } });
+    seeds.glints.forEach((g) => { let s = Math.sin(nowMs / g.sp + g.ph), a = s > 0.86 ? (s - 0.86) / 0.14 : 0; if (a <= 0) return; for (let off of copies(g.gx, g.gx, g.gz)) { let x = sxAt(g.gx + off, g.gz), y = sy(g.gz), r = g.s * a / Math.sqrt(g.gz) * SC_DS; if (x < 0 || x > SC_W) continue; glintPath.moveTo(x - r, y), glintPath.lineTo(x + r, y), glintPath.moveTo(x, y - r * 0.7), glintPath.lineTo(x, y + r * 0.7); glintA = Math.max(glintA, a); } });
+    let jx = Math.max(0.3 * 0.3 * SC_H, Math.min(SC_W - 0.4 * 0.3 * SC_H, 0.06 * SC_W)), shineRx = SC_W * 0.6, shineRy = D * 0.42;
+    return E(Group, { clip: { x: 0, y: yH, width: SC_W, height: D + 2 } },
+      E(Rect, { x: 0, y: yH, width: SC_W, height: D }, E(LinearGradient, { start: vec(0, yH), end: vec(0, SC_H), colors: [haze, col, deep], positions: [0, 0.22, 1] })),
+      E(Group, { transform: [{ translate: [jx + SC_W * 0.18, yH + D * 0.12] }, { scaleY: shineRy / shineRx }] }, E(Circle, { cx: 0, cy: 0, r: shineRx }, E(RadialGradient, { c: vec(0, 0), r: shineRx, colors: [alphaOf(light, 0.1 + 0.2 * lit), alphaOf(light, 0.04 + 0.06 * lit), alphaOf(light, 0)], positions: [0, 0.45, 1] }))),
+      E(Path, { path: ribbons, color: rust, style: "fill", opacity: 0.5 }),
+      E(Path, { path: crests, color: crest, style: "stroke", strokeWidth: 1.6 * SC_DS, strokeJoin: "round", strokeCap: "round", opacity: 0.45 + 0.3 * lit }),
+      raftEls,
+      E(Rect, { x: 0, y: yH, width: SC_W, height: 2.5 * SC_DS, color: okShade(o, 0.16 + 0.1 * lit, 0.4), opacity: 0.8 }),
+      glintA > 0 && E(Path, { path: glintPath, color: "#ffffff", style: "stroke", strokeWidth: 1.1 * SC_DS, strokeCap: "round", opacity: 0.9 }),
+      scTiles(-(cam * 1.25 % seeds.lip.span), seeds.lip.span).map((dx, i) => E(Group, { key: "lip" + i, transform: [{ translateX: dx }] }, E(Path, { path: seeds.lip.sil, color: lip, style: "fill" }), E(Path, { path: seeds.lip.lit, color: lipLit, style: "stroke", strokeWidth: 2 * SC_DS, strokeJoin: "round", opacity: 0.8 })))
+    );
+  }
   var europaTheme = {
     id: "jupiter",
     label: "Jupiter",
@@ -2517,15 +2666,14 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       bottomCurve: [{ t: 0, color: "#262a40" }, { t: 0.25, color: "#2e3a58" }, { t: 0.5, color: "#3a2a3e" }, { t: 0.75, color: "#10131f" }]
     },
     bands: [
-      { id: "iceRidge", kind: "silhouette", yPct: 0.6, heightPct: 0.1, parallax: 0.18, profile: "cratered-horizon",
-        colorCurve: [{ t: 0, color: "#4c5468" }, { t: 0.25, color: "#66728c" }, { t: 0.5, color: "#5a4f62" }, { t: 0.75, color: "#22273a" }] },
-      { id: "iceNear", kind: "silhouette", yPct: 0.655, heightPct: 0.09, parallax: 0.34, profile: "hills",
-        colorCurve: [{ t: 0, color: "#5e6578" }, { t: 0.25, color: "#7f8aa2" }, { t: 0.5, color: "#6c6070" }, { t: 0.75, color: "#2c3244" }] },
-      { id: "icePlain", kind: "plain", yPct: 0.71, heightPct: 0.29, parallax: 0.5,
+      { id: "iceRidge", kind: "iceRidge", yPct: 0.565, heightPct: 0.14, baseYPct: 0.71, peaks: 8, parallax: 0.16,
+        colorCurve: [{ t: 0, color: "#465068" }, { t: 0.25, color: "#5f6d8a" }, { t: 0.5, color: "#544a62" }, { t: 0.75, color: "#1f2438" }] },
+      { id: "iceNear", kind: "iceRidge", yPct: 0.64, heightPct: 0.08, baseYPct: 0.71, peaks: 6, parallax: 0.3,
+        colorCurve: [{ t: 0, color: "#555c72" }, { t: 0.25, color: "#717d98" }, { t: 0.5, color: "#62586c" }, { t: 0.75, color: "#262b3e" }] },
+      { id: "icePlain", kind: "europaGround", yPct: 0.71, heightPct: 0.29, parallax: 0.62,
         colorCurve: [{ t: 0, color: "#6a6f80" }, { t: 0.25, color: "#8a93a8" }, { t: 0.5, color: "#776a78" }, { t: 0.75, color: "#30364a" }],
-        hazeCurve: [{ t: 0, color: "#8a8c9a" }, { t: 0.25, color: "#b4bccc" }, { t: 0.5, color: "#9a8892" }, { t: 0.75, color: "#454b60" }] },
-      { id: "lineae", kind: "lineae", yPct: 0.71, heightPct: 0.29, count: 7,
-        colorCurve: [{ t: 0, color: "#7a4634" }, { t: 0.25, color: "#9a5038" }, { t: 0.5, color: "#7e3e32" }, { t: 0.75, color: "#3e2422" }] }
+        hazeCurve: [{ t: 0, color: "#9a9caa" }, { t: 0.25, color: "#c2cad8" }, { t: 0.5, color: "#a8949c" }, { t: 0.75, color: "#4c5268" }],
+        rustCurve: [{ t: 0, color: "#7a4634" }, { t: 0.25, color: "#9a5038" }, { t: 0.5, color: "#7e3e32" }, { t: 0.75, color: "#3e2422" }] }
     ],
     particles: [
       { id: "stars", kind: "starfield", count: 90, sizeMul: 0.9, twinkle: !0,
