@@ -15,7 +15,8 @@
      the next run, and an unchanged file is never touched.
    - Values are copied from the dn:* content attributes exactly as written
      (already HTML-escaped there), so nothing is escaped twice.
-   - Image: the site icon. Thumbnails are SVG, which preview cards don't show.
+   - Image: the site-wide share banner (assets/share-card.png, 1200x630),
+     shown large in WhatsApp. Thumbnails are SVG, which preview cards don't show.
    - Not part of the in-page Share button, which stays text-only.
 
    Set DN_OG_DRY=1 to report what would change without writing.
@@ -24,7 +25,8 @@ const fs = require('fs');
 const path = require('path');
 
 const ORIGIN = 'https://dailynoodle.co.uk';
-const IMAGE = ORIGIN + '/icons/icon-512.png';
+const IMAGE = ORIGIN + '/assets/share-card.png';
+const IMAGE_ALT = 'The Daily Noodle: news, puzzles and games';
 const SITE = 'The Daily Noodle';
 const DIRS = ['reports'];
 const DRY = process.env.DN_OG_DRY === '1';
@@ -51,7 +53,10 @@ function block(file, html) {
     standfirst ? '<meta property="og:description" content="' + standfirst + '">' : '',
     '<meta property="og:url" content="' + ORIGIN + '/' + file + '">',
     '<meta property="og:image" content="' + IMAGE + '">',
-    '<meta name="twitter:card" content="summary">',
+    '<meta property="og:image:width" content="1200">',
+    '<meta property="og:image:height" content="630">',
+    '<meta property="og:image:alt" content="' + IMAGE_ALT + '">',
+    '<meta name="twitter:card" content="summary_large_image">',
     END,
   ].filter(Boolean);
   return lines.join('\n') + '\n';
