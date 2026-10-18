@@ -169,7 +169,10 @@
     return { big: mmss(r.secs), small: small };
   }
   var MEDAL = { 1: '🥇', 2: '🥈', 3: '🥉' };
-  function link(code) { return 'https://dailynoodle.co.uk/board.html?join=' + encodeURIComponent(code); }
+  // v= is the link-preview version. WhatsApp keeps the preview it first made for a link,
+  // so bump it when the share image changes (assets/share-card.png; see SITE.md).
+  var PREVIEW_V = '2';
+  function link(code) { return 'https://dailynoodle.co.uk/board.html?join=' + encodeURIComponent(code) + '&v=' + PREVIEW_V; }
   function share(text, url, btn) {
     if (navigator.share) return navigator.share({ text: text, url: url }).catch(function () {});
     var all = text + '\n' + url;
@@ -180,7 +183,7 @@
   function syncUrl() {
     var u = new URL(location.href);
     u.searchParams.set('p', S.type); u.searchParams.set('d', S.date);
-    u.searchParams.delete('join'); u.searchParams.delete('from');
+    u.searchParams.delete('join'); u.searchParams.delete('from'); u.searchParams.delete('v');
     try { history.replaceState(null, '', u.pathname + u.search); } catch (e) {}
   }
 

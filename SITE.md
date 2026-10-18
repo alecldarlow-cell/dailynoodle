@@ -29,6 +29,7 @@ in `toolchain/site-sections-and-tracking.md`.
 ## Link previews (share image)
 - Every page with a link preview uses **`assets/share-card.png`** (1200 × 630, about 160 KB) as `og:image`, with `og:image:width`/`height`/`alt` and `twitter:card` `summary_large_image`, so WhatsApp shows a large banner rather than the square icon. Added 18 Oct 2026. Keep it 1200 × 630 and well under 300 KB, or WhatsApp may fall back to a small thumbnail.
 - The design (the "phone ad": headline, a news front page on a phone, floating Mini and Paper Planes cards) is board D2 on Alec's "Daily Noodle share image" design canvas in claude.ai. To change it, edit there and re-export at 1200 × 630. If the file content changes, give it a new name (or add `?v=2` to the URL in the tags), because WhatsApp and Facebook cache images by URL.
+- League invite links carry `&v=2` (`PREVIEW_V` in `board.html`). WhatsApp keeps the first preview it made for a URL, and an invite link never otherwise changes, so bump `PREVIEW_V` whenever the share image changes. board.html drops `v` from the address on arrival.
 - Every piece, puzzle and game in `reports/` uses the same banner, set by `tools/og-tags.js` (`IMAGE`) in the workflow (18 Oct 2026). Leaderboard shares and league invites link to `board.html`, so they show it too. Per-section variants may come later: change `IMAGE` in `og-tags.js` (by `dn:kind`) and the front pages' tags.
 
 ## Publishing
