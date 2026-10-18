@@ -123,6 +123,56 @@
     for (var k in extra || {}) args[k] = extra[k];
     return rpc('board_' + action, args);
   }
+  /* ---------- history: copied in once, when this browser is first in a league ----------
+     Two sources, both from this browser only: the finished puzzles it
+     remembers (each puzzle type's own save), and its earlier finishes in the
+     visit records (the tracker's id, used by the server for this copy only).
+     The server prefers the saved result where both exist, applies the same
+     checks as a live result and keeps the first result per puzzle.        */
+  var SAVES = [   // key, id code in the save, board type, how to read a record
+    { key: 'digi-mini-v1',    code: 'MINI',  t: 'mini',    read: function (r) { return { outcome: 'solved', secs: r.s }; } },
+    { key: 'digi-doku-v1',    code: '',      t: 'doku',    read: function (r) { return { outcome: 'solved', secs: r.s }; } },
+    { key: 'digi-path-v1',    code: 'PATH',  t: 'path',    read: function (r) { return { outcome: 'solved', secs: clock(r.t) }; } },
+    { key: 'digi-link-v1',    code: 'LINK',  t: 'link',    read: function (r) { return { outcome: r.o === 'win' ? 'solved' : 'failed', secs: clock(r.t), mistakes: r.m }; } },
+    { key: 'digi-sweep-v1',   code: 'SWEEP', t: 'sweep',   read: function (r) { return { outcome: r.o === 'win' ? 'solved' : r.o === 'loss' ? 'failed' : 'revealed', secs: r.s }; } },
+    { key: 'digi-tangle-v1',  code: 'TANG',  t: 'tangle',  read: function (r) { return { outcome: 'scored', score: r.s }; } },
+    { key: 'digi-borders-v1', code: 'BORD',  t: 'borders', read: function (r) { return { outcome: 'scored', score: r.p, secs: r.secs }; } }
+  ];
+  function clock(v) {
+    var m = String(v || '').match(/^(\d{1,4}):(\d{2})$/);
+    return m ? (+m[1]) * 60 + (+m[2]) : null;
+  }
+  function savedResults(feed) {
+    // puzzle id (e.g. "DP·MINI·0099", "DP·SWEEP·2026-10-18") -> file, via the feed
+    var byKey = {};
+    (feed || []).forEach(function (it) {
+      var T = typeOfPath(it.path); if (!T || it.kind !== 'puzzle') return;
+      var num = (it.path.match(/-(\d{3,5})\.html$/) || [])[1];
+      byKey[T.id + '|' + (num ? String(+num) : dateOfPath(it.path))] = it.path;
+    });
+    var rows = [];
+    SAVES.forEach(function (S) {
+      var s = null; try { s = JSON.parse(localStorage.getItem(S.key) || 'null'); } catch (e) {}
+      var done = s && s.done; if (!done || typeof done !== 'object') return;
+      Object.keys(done).forEach(function (id) {
+        var last = String(id).split('·').pop();
+        var k = /^\d{4}-\d{2}-\d{2}$/.test(last) ? last : String(+last);
+        var path = byKey[S.t + '|' + k]; if (!path) return;
+        var r = done[id]; if (!r || typeof r !== 'object') return;
+        var x = S.read(r); x.path = path; rows.push(x);
+      });
+    });
+    return rows;
+  }
+  function backfill(feed) {
+    var s = load(); if (s.filled || !inAny()) return Promise.resolve(0);
+    var aid = null; try { aid = localStorage.getItem('digi.aid'); } catch (e) {}
+    if (aid && !/^[0-9a-f-]{36}$/i.test(aid)) aid = null;
+    return rpc('board_backfill', { p_player: pid(), p_aid: aid, p_rows: savedResults(feed) }).then(function (n) {
+      var s2 = load(); s2.filled = true; save(s2); return n;
+    });
+  }
+
   function current() { return load().cur || ''; }
   function setCurrent(code) { var s = load(); s.cur = code; save(s); }
   function lastType() { return load().ptype || ''; }
@@ -138,7 +188,7 @@
   window.noodleBoard = {
     TYPES: TYPES, BY_ID: BY_ID, typeOfPath: typeOfPath, dateOfPath: dateOfPath,
     pid: pid, leagues: leagues, inAny: inAny, refresh: refresh, create: create, join: join,
-    peek: peek, day: day, owner: owner, current: current, setCurrent: setCurrent,
+    peek: peek, backfill: backfill, day: day, owner: owner, current: current, setCurrent: setCurrent,
     lastType: lastType, setLastType: setLastType, today: today, rpc: rpc
   };
 

@@ -50,3 +50,4 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - Puzzle types on the board: mini, doku, path, sweep, link, tangle, borders. Ranking: solved by time (Link: fewest mistakes, then time); Tangle and Borders by score, then time. Failed or revealed are listed unranked.
 - Streaks on the board are per puzzle, in consecutive puzzle dates completed since joining. They can differ from a puzzle's own streak (Mini and Doku share one in the engines).
 - A player's first result per puzzle stands; replays don't resubmit.
+- History back-fill (once per browser, on first joining): the saves in digi-mini/doku/path/link/sweep-v1 (from 8 Oct 2026), digi-tangle-v1 and digi-borders-v1, mapped to files via feed.json; then the browser's own puzzle_end events (timed puzzles from late Sep; Tangle and Borders scores only from tv:3, 15 Oct). Board events add `board_backfill` {n}.

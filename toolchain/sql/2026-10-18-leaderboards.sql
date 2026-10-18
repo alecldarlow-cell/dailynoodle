@@ -11,7 +11,7 @@
 -- No deletes, by choice (18 Oct 2026): there is no leave, remove-player or
 -- close-league function, no tidy-up job, and old limit records are kept.
 -- Applied as migrations leaderboards_schema, _tables, _helpers,
--- _player_functions and _limits_and_admin.
+-- _player_functions, _limits_and_admin and _backfill.
 -- =========================================================================
 
 create schema if not exists board;
@@ -368,8 +368,43 @@ begin
         order by l.created_at desc) from board.leagues l), '[]'));
 end $$;
 
+-- ---------- history back-fill (once per browser, on first joining) ----------
+create or replace function public.board_backfill(p_player uuid, p_aid uuid, p_rows jsonb) returns int
+language plpgsql security definer set search_path = '' as $$
+declare r jsonb; n int := 0; ok boolean;
+begin
+  if p_player is null or not exists (select 1 from board.members where player = p_player) then return 0; end if;
+  -- 1. results this phone remembers (preferred: they are the player's first finish, with mistakes and scores)
+  if p_rows is not null and jsonb_typeof(p_rows) = 'array' and jsonb_array_length(p_rows) <= 1500 then
+    for r in select value from jsonb_array_elements(p_rows) loop
+      begin
+        ok := public.board_submit(p_player, r ->> 'path', r ->> 'outcome', round((r ->> 'secs')::numeric)::int,
+                                  round((r ->> 'score')::numeric)::int, round((r ->> 'mistakes')::numeric)::int);
+        if ok then n := n + 1; end if;
+      exception when others then null;
+      end;
+    end loop;
+  end if;
+  -- 2. this browser's earlier finishes in the visit records (first finish per puzzle). The tracker id is
+  --    used only for this copy and is not stored.
+  if p_aid is not null then
+    for r in select e.props || jsonb_build_object('path', e.item_path)
+             from (select distinct on (item_path) item_path, props from public.events
+                   where anon_id = p_aid and event = 'puzzle_end' and item_path like 'reports/%'
+                   order by item_path, occurred_at) e loop
+      begin
+        ok := public.board_submit(p_player, r ->> 'path', r ->> 'outcome', round((r ->> 'secs')::numeric)::int,
+                                  round((r ->> 'score')::numeric)::int, round((r ->> 'mistakes')::numeric)::int);
+        if ok then n := n + 1; end if;
+      exception when others then null;
+      end;
+    end loop;
+  end if;
+  return n;
+end $$;
+
 -- ---------- grants: the browser calls the board_* functions ----------
 grant execute on function public.board_mine(uuid), public.board_peek(text), public.board_create(uuid,text,text),
   public.board_join(uuid,text,text), public.board_submit(uuid,text,text,int,int,int),
   public.board_day(uuid,text,text,date), public.board_rename(uuid,text,text),
-  public.board_new_code(uuid,text), public.admin_board(text,text,text) to anon, authenticated;
+  public.board_new_code(uuid,text), public.board_backfill(uuid,uuid,jsonb), public.admin_board(text,text,text) to anon, authenticated;

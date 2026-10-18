@@ -275,6 +275,15 @@
   }
   function loadBoard() {
     var L = cur(); if (!L) { renderLeague(null); return intro(); }
+    // First time in a league on this browser: copy its earlier results in, then show the board.
+    if (!S.filling && !S.filled) {
+      S.filling = true;
+      $app.innerHTML = '<p class="loading">Adding your earlier results…</p>';
+      NB.backfill(S.feed).then(function (n) { if (n) track('board_backfill', { n: n }); }, function () {})
+        .then(function () { S.filled = true; S.filling = false; loadBoard(); });
+      return;
+    }
+    if (S.filling) return;
     NB.setCurrent(L.code); renderPills(); renderLeague(L); syncUrl();
     if (!S.data || S.data.code !== L.code || S.data.type !== S.type || S.data.date !== S.date) $app.innerHTML = '<p class="loading">Loading…</p>';
     var want = [L.code, S.type, S.date].join('|');
