@@ -1359,7 +1359,7 @@ window.addEventListener('keydown', e => {
   if(e.code==='Space'||e.code==='ArrowUp'){
     e.preventDefault();initAudio();
     if(state==='aim'&&e.code==='Space'&&!e.repeat){rndStart();launch({ang:keyAngle,pow:1,len:100});}
-    else if(state==='fly') keyHold=true;
+    else if(state==='fly'&&!e.repeat) keyHold=true;   // a held throw key doesn't carry on into flaps up
   }
   if(e.code==='ArrowDown'&&state==='fly'){e.preventDefault();keyDown=true;}
 });
