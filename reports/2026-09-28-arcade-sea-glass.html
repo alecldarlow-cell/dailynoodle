@@ -99,6 +99,7 @@ body{overflow:hidden;overscroll-behavior:none;background:transparent}
 .tut{display:flex;align-items:center;gap:12px;text-align:left}
 .tut p{margin:0;flex:1;font-weight:600;color:var(--ink);font-size:16px;line-height:1.35;max-width:none}
 .tut .btn{width:auto;flex:none;min-width:96px;margin:0}
+#card.settling{pointer-events:none}
 @media (prefers-reduced-motion:reduce){.sw,.sw::after,#toast{transition:none}}
 </style>
 <!-- og:start (tools/og-tags.js — do not edit by hand) -->
@@ -749,7 +750,8 @@ function showEnd(win,done,stars,unlocked){
   el.querySelectorAll('[data-g]').forEach(r=>r.prepend(glassIcon(+r.dataset.g,26)));
   el.querySelectorAll('[data-fd]').forEach(r=>{const f=FIND[r.dataset.fd],fr=done.finds.find(x=>x.id===f.id).freed;const ic=findIcon(fr?f:TYPE_GHOST[f.type],52,!fr);ic.setAttribute('aria-hidden','true');r.prepend(ic);});
   on('next',()=>{newRun('new');mode='play';hideCard();});on('eShelf',()=>showShelf(card));on('eLooks',()=>showLooks(card));});
- card();}
+ /* the card opens the moment the last piece lands, often under a finger still playing: ignore taps on it for a moment */
+ card();const c=$('card');c.classList.add('settling');setTimeout(()=>c.classList.remove('settling'),450);}
 
 /* ---------- lifecycle ---------- */
 document.addEventListener('visibilitychange',()=>{if(document.hidden){saveRun();saveMeta();try{if(SND.ac)SND.ac.suspend();}catch(_){}if(mode==='play'&&!modalOpen)openPause();}
@@ -782,6 +784,5 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{}).catch(
 
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
