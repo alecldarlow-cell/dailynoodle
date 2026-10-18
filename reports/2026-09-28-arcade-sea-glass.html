@@ -260,11 +260,11 @@ function sdel(k){try{window.localStorage.removeItem(k);}catch(e){}}
 const isInt=(v,lo,hi)=>Number.isInteger(v)&&v>=lo&&v<=hi;
 const prefersRM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}})();
 const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches;}catch(e){return false;}})();   // full screen is on by default for touch screens (site contract §10)
-function freshMeta(){return{v:1,tide:1,filled:0,total:0,found:{},beach:'sand',jar:'kilner',muted:false,rm:prefersRM,hints:true,tutDone:false,fs:coarse};}
+function freshMeta(){return{v:1,tide:1,filled:0,total:0,found:{},beach:'sand',jar:'kilner',muted:false,rm:prefersRM,hints:true,tutDone:false,fs:coarse,vib:true};}
 function cleanMeta(m){const f=freshMeta();if(!m||typeof m!=='object')return f;
  if(isInt(m.tide,1,1e6))f.tide=m.tide;if(isInt(m.filled,0,1e6))f.filled=m.filled;if(isInt(m.total,0,1e9))f.total=m.total;
  if(m.found&&typeof m.found==='object')for(const k in m.found)if(FIND[k]&&isInt(m.found[k],1,1e6))f.found[k]=m.found[k];
- for(const k of ['muted','rm','hints','tutDone','fs'])if(typeof m[k]==='boolean')f[k]=m[k];   // saves from before 'fs' get the default
+ for(const k of ['muted','rm','hints','tutDone','fs','vib'])if(typeof m[k]==='boolean')f[k]=m[k];   // saves from before 'fs' get the default
  if(typeof m.beach==='string'&&BEACHES.some(b=>b.id===m.beach))f.beach=m.beach;if(typeof m.jar==='string'&&JARS.some(j=>j.id===m.jar))f.jar=m.jar;
  if(f.filled>f.tide)f.filled=f.tide-1;if(beachOf(f.beach).need>f.total)f.beach='sand';if(jarOf(f.jar).need>f.total)f.jar='kilner';return f;}
 let meta=cleanMeta(sget(KEY));
@@ -312,6 +312,9 @@ function sfx(name,arg){if(!SND.ac||meta.muted||SND.ac.state!=='running')return;c
   case 'full':[1046.5,1318.5,1568,2093,2637].forEach((f,i)=>ping(f,t+i*0.13,1.1,0.05));break;
   case 'turn':[392,493.9,587.3].forEach((f,i)=>ping(f,t+i*0.02,2.2,0.035));break;
  }}catch(e){}}
+/* haptics: Android phones only (iPhone and desktops have no vibrate), with a switch in the pause menu */
+const canVib=(()=>{try{return typeof navigator.vibrate==='function'&&coarse;}catch(e){return false;}})();
+function buzz(p){if(!canVib||!meta.vib||document.hidden)return;try{navigator.vibrate(p);}catch(e){}}
 function setMute(m){meta.muted=m;saveMeta();try{if(SND.out)SND.out.gain.value=m?0:0.8;}catch(e){}}
 /* ---------- layout: sea on top, the board on wet sand, the tide and finds within thumb reach ---------- */
 let L={},dpr=1,W=360,H=640;
@@ -499,7 +502,7 @@ function pickHint(){if(run.easy&&P[run.easy.r1]&&swapGain(colourGrid(P),run.easy
 
 /* ---------- playback ---------- */
 function startStep(){cur=queue.shift();stepT=0;if(!cur){settle();return;}const T=TM();
- if(cur.type==='clear'){sub='lift';sfx('clink',cur.depth);
+ if(cur.type==='clear'){sub='lift';sfx('clink',cur.depth);buzz(Math.min(20,8+cur.depth*4));if(cur.freed.length)buzz([18,50,24]);
   cur.cleared.forEach((q,i)=>{const d=disp.get(q.id);if(d)d.going=true;fliers.push({c:q.c,x0:cellX(q.col),y0:cellY(q.r),t:-(T.clear*.55+i*.035),dur:(meta.rm?.45:.85)+Math.random()*.12,jar:!!q.jar});});
   cur.freed.forEach((id,i)=>{const f=run.finds.find(x=>x.id===id),slot=run.finds.indexOf(f);fx.push({f:FIND[id],slot,x0:cellX(f.c),y0:cellY(f.r),t:0,dur:meta.rm?1.1:1.7});sfx('find');
    toast((cur.fresh[i]?'New rare find: ':'Rare find: ')+FIND[id].name);say('Rare find freed: '+FIND[id].name+'.');});}
@@ -528,7 +531,7 @@ function finish(win){if(mode!=='play')return;pendingEnd=false;hideTutorial();
  const stars=freedCount();rndEnd(win,{score:run.gathered,stars});
  const unlocked=[...BEACHES.map(b=>({n:b.name,kind:'beach',need:b.need})),...JARS.map(j=>({n:j.name,kind:'jar',need:j.need}))].filter(u=>u.need>run.total0&&u.need<=meta.total);
  const done=run;if(win)meta.filled++;meta.tide=done.tide+1;saveMeta();sdel(RUNKEY);mode='end';sel=null;hint=null;
- sfx(win?'full':'turn');say(win?'The jar is full.':'The tide has turned.');showEnd(win,done,stars,unlocked);}
+ sfx(win?'full':'turn');buzz(win?[25,60,25,60,45]:40);say(win?'The jar is full.':'The tide has turned.');showEnd(win,done,stars,unlocked);}
 
 /* ---------- update ---------- */
 function update(dt){toastTick(dt);if(mode!=='play'||modalOpen)return;clock+=dt;const T=TM();
@@ -717,6 +720,7 @@ function openPause(){if(mode!=='play'||modalOpen)return;sel=null;drag=null;saveR
  ${sw('sSnd',!meta.muted,'Sound','Glass clinks and a quiet surf')}
  ${sw('sRm',meta.rm,'Reduce motion','Shorter, softer movement')}
  ${sw('sHint',meta.hints,'Move hints','A faint shimmer after 8 seconds')}
+ ${canVib?sw('sVib',meta.vib,'Vibration','A light buzz on clears and rare finds'):''}
  ${fsOK?sw('sFs',meta.fs,'Full screen','Hide the browser bars'):''}</div>
  <div class="sect">Your shore</div><div class="list">
  ${nav('pShelf','Collection shelf',foundN()+' of '+FINDS.length+' rare finds')}
@@ -727,6 +731,7 @@ function openPause(){if(mode!=='play'||modalOpen)return;sel=null;drag=null;saveR
   on('res',resumeTap);
   on('sSnd',()=>{audioInit();setMute(!meta.muted);P2();$('sSnd').focus();});
   on('sRm',()=>{meta.rm=!meta.rm;saveMeta();P2();$('sRm').focus();});
+  on('sVib',()=>{meta.vib=!meta.vib;saveMeta();if(meta.vib)buzz(15);P2();$('sVib').focus();});
   on('sHint',()=>{meta.hints=!meta.hints;hint=null;saveMeta();P2();$('sHint').focus();});
   on('sFs',()=>{setFS(!meta.fs);});
   on('pShelf',()=>showShelf(P2));on('pLooks',()=>showLooks(P2));
@@ -798,6 +803,5 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{}).catch(
 
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
