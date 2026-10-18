@@ -876,6 +876,7 @@ function loadSave(){
   }
   if(typeof s.fs!=="boolean")    s.fs=coarse;          // full screen: on for touch screens (§10)
   if(typeof s.sound!=="boolean") s.sound=true;
+  if(typeof s.vib!=="boolean")   s.vib=true;           // vibration has its own switch (v2.3); older saves get it on
   if(typeof s.rm!=="boolean")    s.rm=prefersRM;
   if(s.theme!=="day" && s.theme!=="night") s.theme="day";
   if(s.game && (typeof s.game!=="object" || !DIFFS[s.game.diffKey] || !s.game.d || !Array.isArray(s.game.rangers) || s.game.over)) s.game=null;
@@ -891,7 +892,7 @@ function persist(){
   if(S && !nightAnimating) save.game = S.over ? null : clone(S);      // never store a half-resolved night
   save.gi = goldenIdx;
   save.setup = setupState;
-  save.sound = soundOn; save.theme = theme; save.rm = motionReduced;
+  save.sound = soundOn; save.vib = vibOn; save.theme = theme; save.rm = motionReduced;
   try{ window.localStorage.setItem(SAVE_KEY, JSON.stringify(save)); return true; }
   catch(e){ return false; }
 }
@@ -920,6 +921,7 @@ function bestLine(diffKey){
 
 /* ---------------- SOUND ENGINE ---------------- */
 let soundOn = save.sound;
+let vibOn = save.vib;
 let _actx = null;
 function toggleSound(){ if(nightAnimating) return; soundOn=!soundOn; render(); refreshMenu(); }
 function _ctx(){
@@ -1031,6 +1033,7 @@ function setLabels(){
   return `<div class="setrow wide">
       ${fsOK?`<button class="btn ${save.fs?'sel':''}" onclick="toggleFS()">⛶ Full screen: ${save.fs?'on':'off'}</button>`:''}
       <button class="btn ${motionReduced?'':'sel'}" onclick="toggleMotion()">✨ Motion: ${motionReduced?'reduced':'full'}</button>
+      ${canVib?`<button class="btn ${vibOn?'sel':''}" onclick="toggleVib()">📳 Vibration: ${vibOn?'on':'off'}</button>`:''}
     </div>`;
 }
 
@@ -1049,7 +1052,9 @@ let lastLR=null, lastMoon=null, lastTick="";
 let overlayAt=0, overlayTimer=null;
 let fireC=null, fireScaleNow=1;
 const fxOn=()=>!motionReduced;
-function buzz(p){ if(!soundOn) return; try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+const canVib = (()=>{ try{ return typeof navigator.vibrate==="function"; }catch(e){ return false; } })();
+function buzz(p){ if(!vibOn) return; try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
+function toggleVib(){ if(nightAnimating) return; vibOn=!vibOn; if(vibOn) buzz(15); persist(); if(!S) renderSetup(); refreshMenu(); }
 function rectOf(sel){ const n=document.querySelector(sel); return n ? n.getBoundingClientRect() : null; }
 function centreOf(r){ return r ? { x:r.left+r.width/2, y:r.top+r.height/2 } : null; }
 function sndThrow(){ _n(0.16,1300,0.07,0,'bandpass'); }
@@ -2077,6 +2082,5 @@ if(window.__DGTEST===true){
 initFx();
 render();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
