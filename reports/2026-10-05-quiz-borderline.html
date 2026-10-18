@@ -144,7 +144,8 @@ a{color:inherit}
 .tile .mark{position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700;line-height:1}
 .tile .mark.ok{background:var(--ok)}
 .tile .mark.bad{background:var(--pin)}
-.cap{font-size:12px;line-height:1.15;text-align:center;margin-top:4px;font-stretch:85%;overflow-wrap:anywhere}
+.cap{font-size:12px;line-height:1.15;text-align:center;margin-top:4px;font-stretch:85%;overflow-wrap:anywhere;-webkit-hyphens:auto;hyphens:auto}
+.strip>div,.agrid>div{min-width:0}
 .endbtns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
 
 /* atlas */
@@ -554,7 +555,15 @@ function renderResults(q,correct,win,stars,best){
   $('rSub').textContent=sub;
   $('rStrip').innerHTML=q.qs.map((qq,i)=>{const c=C[qq.c],a=q.ans[i];
     return `<div><div class="tile">${tileSVG(c)}${a?`<span class="mark ${a.ok?'ok':'bad'}">${a.ok?'✓':'✕'}</span>`:''}</div><div class="cap">${c.n}</div></div>`;}).join('');
+  fitCaps($('rStrip'));
 }
+
+/* long one-word names (Turkmenistan) shrink a little to fit their tile rather than break mid-word */
+function fitCaps(host){for(const e of host.querySelectorAll('.cap')){
+  const word=e.textContent.split(/\s+/).reduce((x,y)=>y.length>x.length?y:x,'');if(word.length<8||!e.clientWidth)continue;
+  const m=document.createElement('span');m.style.whiteSpace='nowrap';m.textContent=word;e.appendChild(m);
+  const room=e.getBoundingClientRect().width-1;let f=12;while(f>9&&m.getBoundingClientRect().width>room){f-=0.5;e.style.fontSize=f+'px';}
+  m.remove();}}
 
 /* ---------- atlas ---------- */
 function renderAtlas(){
@@ -565,6 +574,7 @@ function renderAtlas(){
   const rest=shuffle(C.filter(c=>!save.found[c.id]),rng(7));
   $('agrid').innerHTML=got.map(c=>`<div><div class="tile">${tileSVG(c)}</div><div class="cap">${c.n}</div></div>`).join('')+
     rest.map(c=>`<div><div class="tile ghost">${tileSVG(c)}</div><div class="cap q">?</div></div>`).join('');
+  fitCaps($('agrid'));
 }
 
 /* ---------- pause ---------- */
@@ -617,6 +627,5 @@ if(window.__DGTEST===true){window.__dg={
 
 renderHome();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
