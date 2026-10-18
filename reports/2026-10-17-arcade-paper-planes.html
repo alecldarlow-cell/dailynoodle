@@ -896,6 +896,7 @@ let state = 'boot', paused = false, hangarRun = false;
 let run = null, pl = null, roll = null, P = null, fl = null, aim = null, lastPath = null, path = [];
 const holdPtrs = new Map(); let keyHold = false, keyDown = false;   // pointer id -> +1 right side (flaps up) / -1 left side (flaps down)
 let cam = { x: -6, y: -2, s: 12 }, camT = null;
+let camG = null;   // Skyscraper: the ground height the camera frames against, eased from the roof to the street
 let resultT = 0, result = null, timeT = 0, introT = 0, prevClips = 0, stallSnd = 0;
 let parts = [];
 
@@ -1431,7 +1432,14 @@ function updateCam(dt) {
   let fx, fy, spd = 0;
   if (fl) { fx = fl.x; fy = fl.y; spd = Math.hypot(fl.vx, fl.vy); }
   else { fx = 0; fy = pl.y0; }
-  const gy = groundAtFull(pl, fx);
+  let gy = groundAtFull(pl, fx);
+  if (pl.towers) {
+    // Frame the city against the street, not the tower underneath: towers would pump the zoom in and out,
+    // and stepping off the roof would snap it out 120 m at once. Ease down from the roof instead.
+    const street = pl.ground[pl.ground.length - 1][1], tgt = fl && fx > pl.roof[1] ? street : gy;
+    camG = (!fl || camG == null) ? gy : camG + (tgt - camG) * Math.min(1, dt / 1.6);
+    gy = camG;
+  }
   const alt = Math.max(0, fy - gy);
   // Tight on short, slow throws; eases out as the plane gets faster or higher, so the plane stays big on screen
   let visW = land ? 28 + alt * 0.9 : 24 + alt * 0.6;
