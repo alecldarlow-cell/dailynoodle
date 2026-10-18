@@ -5,6 +5,9 @@
    stable (dn-track.js and players' saved progress depend on them). */
 
 'use strict';
+/* the shared finish sheet (engines/finish.js): calls made before it loads are queued */
+window.dnFinish=window.dnFinish||{q:[],show(c){this.q.push(c)},hide(){}};
+document.write('<link rel="stylesheet" href="../engines/finish.css"><script src="../engines/finish.js"><\/script>');
 const PUZZLE=window.DN_PUZZLE;
 const N=4, MINLEN=3, ROUND=90;
 const $=id=>document.getElementById(id);
@@ -112,7 +115,7 @@ function day(){
   if(!d||!Array.isArray(d.found)||!['ready','playing','done'].includes(d.state)){d={state:'ready',found:[],left:ROUND,score:0};save.days[P.id]=d;}
   return d;
 }
-function show(id){view=id;for(const s of document.querySelectorAll('.screen'))s.classList.toggle('vis',s.id===id);if(id==='play')requestAnimationFrame(measure);}
+function show(id){view=id;if(id!=='winModal')window.dnFinish.hide();for(const s of document.querySelectorAll('.screen'))s.classList.toggle('vis',s.id===id);if(id==='play')requestAnimationFrame(measure);}
 function shareLine(){const star=D.found.includes(P.star)?' ★':'';return '🧶 Tangle #'+P.n+' — '+plural(D.score,'point','points')+', '+plural(D.found.length,'word','words')+star;}
 function shareText(){return shareLine();}   // score line only: no link
 
@@ -361,6 +364,25 @@ function endRound(){
   persist();
   setTimeout(()=>showResult(true),reduced()?100:600);
 }
+/* the finish sheet's recap: every common word, found ones filled, each with its points; long groups collapse */
+function recapNode(found){
+  const g=groups(P.main),all=P.main.reduce((n,w)=>n+pts(w),0),got=found.filter(w=>MAIN.has(w));
+  const score=got.reduce((n,w)=>n+pts(w),0);
+  let h=`<div class="fin-meter"><span>You found ${got.length} of ${P.main.length}</span><span>${score} of ${all} points</span></div>`+
+    `<div class="fin-bar"><i style="width:${Math.round(100*got.length/P.main.length)}%"></i></div>`+
+    `<div class="fin-key"><span><i class="fin-k-got"></i>Found</span><span><i class="fin-k-miss"></i>Missed</span><span><i class="fin-k-star"></i>Longest word, double points</span></div>`;
+  for(const L of Object.keys(g).map(Number).sort((a,b)=>b-a)){
+    const ws=g[L].slice().sort((a,b)=>(found.includes(b)-found.includes(a))||a.localeCompare(b)),n=ws.filter(w=>found.includes(w)).length,per=L-2;
+    h+=`<div class="fin-wl"><h4><span>${L} letters, ${plural(per,'point','points')} each</span><span>${n} of ${ws.length}</span></h4><div class="fin-ws">`;
+    ws.forEach((w,i)=>{h+=`<span class="fin-w ${found.includes(w)?'got':'miss'}${w===P.star?' star':''}${i>=12?' over':''}">${esc(w)}<sup>${pts(w)}</sup></span>`;});
+    h+='</div>'+(ws.length>12?`<button type="button" class="fin-more">Show ${ws.length-12} more</button>`:'')+'</div>';
+  }
+  const bf=found.filter(w=>BONUS.has(w));
+  h+=`<details class="fin-rare"><summary>Rarer words: ${bf.length} of ${P.bonus.length} found</summary><p>${P.bonus.map(w=>esc(found.includes(w)?w+' ✓':w)).join(' \u00b7 ')}</p></details>`;
+  const d=document.createElement('div');d.innerHTML=h;
+  d.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.fin-more');if(b)b.parentNode.classList.add('open');});
+  return d;
+}
 function wordsHTML(found){
   const g=groups(P.main);let h='';
   for(const L of Object.keys(g).map(Number).sort((a,b)=>b-a)){
@@ -375,7 +397,7 @@ function showResult(fresh){
   // fill every field first: the tracker reads #winTitle and #winTime the moment "on" lands
   $('rKick').textContent='Tangle '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date);
   $('rBig').innerHTML=r.score+'<small>'+(r.score===1?'point':'points')+'</small>';
-  $('winTitle').textContent='Time\'s up';
+  $('winTitle').textContent='Time’s up';
   $('winTime').textContent=mmss(ROUND-Math.max(0,r.left));
   $('rWords').textContent=r.found.length;
   $('rBest').textContent=save.best||0;
@@ -388,6 +410,14 @@ function showResult(fresh){
   $('bonSum').textContent=`Rarer words: you found ${bf.length} of ${P.bonus.length}`;
   $('bonList').textContent=P.bonus.map(w=>r.found.includes(w)?w+' ✓':w).join('  ');
   show('winModal');$('winModal').scrollTop=0;
+  const words=plural(r.found.length,'word','words');
+  window.dnFinish.show({
+    type:'tangle',id:P.id,n:P.n,date:P.date,box:'winModal',title:'winTitle',hero:'rBig',
+    note:r.found.includes(P.star)?`${words}, including the longest, <strong>${esc(sw)}</strong>, for ${pts(P.star)} points.`:`${words}. The longest was <strong>${esc(sw)}</strong>, worth ${pts(P.star)}.`,
+    share:{text:shareText},
+    stats:[{id:'rWords',label:'words'},{id:'rStreak',label:'day streak'},{id:'rBest',label:'best score'}],
+    recap:{title:'Today’s words',node:recapNode(r.found)}
+  });
   if(fresh)$('winModal').classList.add('on');      // once, when the day's round ends
 }
 
