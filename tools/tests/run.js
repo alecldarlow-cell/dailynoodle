@@ -103,6 +103,32 @@ const TESTS = {
     await shareNative(b, F.tangle, p2 => play.tangle(p2, { n: 3 }), 'tangle');
   },
 
+  async 'finish:link'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
+    await play.link(p, { wrong: 1 });
+    await sheetChecks(p, ev, { type: 'link', ids: ['winTitle', 'winTime', 'winStreak', 'winBest'],
+      shareRe: /^🔗 Link #71 — 🟩❌🟦🟨⬛ · \d:\d\d$/,
+      endCheck: x => ok(x && x.outcome === 'solved' && x.mistakes === 1, `link: tracker read solved, ${x && x.mistakes} mistake`) });
+    ok(await text(p, '#winTitle') === 'Linked', 'link: title Linked');
+    ok(await p.locator('.fin-guess i').count() === 5 && await p.locator('.fin-guess .fin-gx').count() === 1, 'link: five guess squares, one miss');
+    ok(/one mistake\. Hedgerow fruit caught you out\./.test(await text(p, '.fin-note')), 'link: note names the group that caught you out');
+    ok(await p.locator('.fin-band').count() === 4, 'link: four groups in the recap');
+    await shareClipboard(p, ctx, 'link');
+    await reopen(p, ev, 'link');
+    ok(/^🔗 Link #71 — 🟩❌🟦🟨⬛ · \d:\d\d$/.test(await text(p, '.fin-share-text')), 'link: reopened sheet shares the same line');
+    ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+    await shareNative(b, F.link, p2 => play.link(p2, { wrong: 0 }), 'link');
+  },
+  async 'finish:link-loss'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
+    await play.link(p, { wrong: 4 });
+    ok(await text(p, '#winTitle') === 'So close.' && ends(ev)[0] && ends(ev)[0].x.outcome === 'failed', 'link: loss keeps the exact title and logs failed');
+    ok(/^You found one group of four\./.test(await text(p, '.fin-note')), `link: loss note "${await text(p, '.fin-note')}"`);
+    await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
+    ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'link: Play again closes the sheet and marks the replay');
+    await ctx.close();
+  },
   /* ---------- the five fixes of 18 Oct ---------- */
   async 'fix:link-replay'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
