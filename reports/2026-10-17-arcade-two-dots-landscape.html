@@ -101,9 +101,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     <div id="xfer" class="layer hide">
       <div id="xName" class="orb"><span id="xNameT"></span></div>
       <div id="xStats">
-        <div class="xRow"><span class="xL">DIFFICULTY</span><span class="xV" id="xD"></span></div>
-        <div class="xRow"><span class="xL">SCORE</span><span class="xV" id="xS"></span></div>
-        <div class="xRow"><span class="xL">GRAVITY</span><span class="xV" id="xG"></span></div>
+        <div class="xRow"><span class="xV" id="xD"></span></div>
       </div>
     </div>
     <canvas id="fg"></canvas>
@@ -139,7 +137,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       <div id="pTitle" class="orb">PAUSED</div>
       <div id="pInfo">
         <div id="pWorld" class="orb"></div>
-        <div id="pDet"><div id="pG"></div><div id="pS"></div><div id="pD"></div></div>
+        <div id="pDet"><div id="pD"></div></div>
       </div>
       <div id="pSub">tap to resume</div>
     </div>
@@ -3009,7 +3007,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     if (show(xfer, cardA > 0.01), cardA > 0.01) {
       xferWasShown || fitXName(), set(xfer, "opacity", cardA.toFixed(3)), set(xfer, "transform", `scale(${(0.96 + 0.04 * cardA).toFixed(3)})`);
       let nm = worldTheme.label.toUpperCase();
-      $("xNameT").textContent !== nm && ($("xNameT").textContent = nm, fitXName()), set($("xD"), "text", worldTheme.difficulty), set($("xS"), "text", `\xD7${worldTheme.scoreMul.toFixed(1)}`), set($("xG"), "text", `\xD7${worldTheme.gravityMul.toFixed(1)}`);
+      $("xNameT").textContent !== nm && ($("xNameT").textContent = nm, fitXName()), set($("xD"), "text", worldTheme.difficulty);
     }
     fgCtx.setTransform(dpr, 0, 0, dpr, 0, 0), fgCtx.clearRect(0, 0, SCREEN_W, GAME_H);
     drawTree(fgCtx, createElement(GameCanvas, { display, nowMs, dotLDisplayY, dotRDisplayY, pauseShimmerOpacity, freezeAlpha, worldTheme: displayedWorldTheme }), "fg");
@@ -3028,8 +3026,8 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     }
     let pause = $("pause");
     if (show(pause, playing && display.paused), playing && display.paused) {
-      let difficulty = worldTheme.scoreMul < 1 ? "EASY" : worldTheme.scoreMul > 1 ? "HARD" : "NORMAL";
-      set($("pWorld"), "text", worldTheme.label.toUpperCase()), set($("pG"), "text", `\xD7${worldTheme.gravityMul.toFixed(1)} GRAVITY`), set($("pS"), "text", `\xD7${worldTheme.scoreMul.toFixed(1)} SCORE`), set($("pD"), "text", `${difficulty} DIFFICULTY`), set($("pSub"), "opacity", pauseSubOpacity.toFixed(3));
+      let difficulty = worldTheme.difficulty.toUpperCase();
+      set($("pWorld"), "text", worldTheme.label.toUpperCase()), set($("pD"), "text", `${difficulty} DIFFICULTY`), set($("pSub"), "opacity", pauseSubOpacity.toFixed(3));
     }
     let idle = display.phase === "idle";
     if (show($("idle"), idle), idle) {
@@ -3156,6 +3154,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
