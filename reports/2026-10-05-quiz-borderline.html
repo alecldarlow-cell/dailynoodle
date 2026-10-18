@@ -433,14 +433,14 @@ function bordersToday(){const t=today();if(t<BORDERS_FIRST||t>BORDERS_LAST)retur
   return {date:t,n,id:'DP\u00B7BORD\u00B7'+n,file:t+'-geo-borders-'+n+'.html'};}
 function bordersDone(id){try{const s=JSON.parse(localStorage.getItem('digi-borders-v1')||'null');const r=s&&s.done&&s.done[id];
   return r&&Number.isFinite(+r.c)?r:null;}catch(e){return null}}
-/* today's Borders answers, read from that file's PUZZLE.qs[].n, so the specimen never gives one away */
+/* today's Borders answers, read from that file's DN_PUZZLE (or older PUZZLE) .qs[].n, so the specimen never gives one away */
 let answers={date:null,names:null,pending:null};
 function bordersAnswers(b){
   if(answers.date===b.date&&(answers.names||answers.pending))return answers.pending||Promise.resolve(answers.names);
   answers={date:b.date,names:null,pending:null};
   let p;
   try{p=window.fetch(b.file,{credentials:'same-origin'}).then(r=>{if(!r.ok)throw new Error('status '+r.status);return r.text();}).then(t=>{
-    const line=(t.match(/const PUZZLE=\{.*$/m)||[''])[0];const names=[];const re=/"n":"((?:[^"\\]|\\.)*)"/g;let m;
+    const line=(t.match(/(?:const PUZZLE|window\.DN_PUZZLE)=\{.*$/m)||[''])[0];const names=[];const re=/"n":"((?:[^"\\]|\\.)*)"/g;let m;
     while((m=re.exec(line)))names.push(JSON.parse('"'+m[1]+'"'));
     if(names.length<NQ)throw new Error('no puzzle in file');return names;});}
   catch(e){p=Promise.reject(e);}
@@ -615,6 +615,5 @@ if(window.__DGTEST===true){window.__dg={
 
 renderHome();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
