@@ -210,6 +210,42 @@ body.reduce-motion .meter b{transition:none!important}
 @media(max-height:390px) and (min-aspect-ratio:1/1){#splash{padding-top:8px}#splashPlane{width:75px}#splash h1{font-size:36px}#splash p{font-size:13px;max-width:550px}#splash .rules{font-size:11px}.hbody{flex:0 0 auto}.controlHelp{font-size:11px}.pgrid{gap:6px}}
 body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- home (polished) ---------- */
+#splash{justify-content:center;align-items:center;padding:calc(10px + var(--st)) calc(14px + var(--sr)) calc(56px + var(--sb)) calc(14px + var(--sl));gap:0;overflow:auto;background:radial-gradient(circle at 82% 14%,#fff6c9 0 6%,rgba(255,246,201,.5) 9%,transparent 15%),linear-gradient(180deg,#a9dbff 0%,#d6efff 52%,#eef8ff 100%)}
+.homeSky{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.homeSky .cl{position:absolute;width:150px;opacity:.92;filter:drop-shadow(0 4px 6px rgba(70,120,170,.12));animation:homeDrift 60s linear infinite}.homeSky .cl svg{display:block;width:100%;height:auto}
+.homeSky .c1{top:12%;left:-10%}.homeSky .c2{top:26%;left:40%;transform:scale(.7);animation-duration:85s;animation-delay:-30s;opacity:.75}.homeSky .c3{top:6%;left:70%;transform:scale(.55);animation-duration:110s;animation-delay:-70s;opacity:.65}
+@keyframes homeDrift{from{translate:-30vw 0}to{translate:120vw 0}}
+.homeHills{position:absolute;left:0;right:0;bottom:0;width:100%;height:min(30vh,190px);pointer-events:none}
+.homeMain{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:560px;width:100%}
+#splashPlane{width:min(260px,52vw);height:auto;margin-bottom:-6px;animation:homeFloat 4s ease-in-out infinite;filter:drop-shadow(0 8px 10px rgba(48,88,130,.18))}
+#splashPlane .trail{stroke-dashoffset:0;animation:homeTrail 3s linear infinite}@keyframes homeTrail{to{stroke-dashoffset:-48}}
+#splash h1{font-size:clamp(46px,11vmin,80px);margin:0;line-height:.95;text-shadow:0 2px 0 #fffdf6}
+#splash .tagline{margin:6px 0 14px;font-size:clamp(14px,2.3vw,17px);color:#41546a;max-width:420px}
+.route{display:flex;align-items:center;justify-content:center;width:min(360px,100%);margin:0 auto}
+.route i{flex:1;height:0;border-top:2px dashed #8aa3bd;min-width:6px}
+.route .stop{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid #8aa3bd;background:#fffdf6;display:flex;align-items:center;justify-content:center;font:800 11px/1 Nunito,system-ui;color:#8aa3bd}
+.route .stop.done{background:var(--good);border-color:#21724a;color:#fff}
+.route .stop.next{border-color:var(--blue);color:var(--blue);box-shadow:0 0 0 4px rgba(47,111,214,.18);width:30px;height:30px;font-size:12px}
+.routeTxt{margin:6px 0 14px;font-size:13px;color:#41546a}
+#splash .homeActions{margin:0;gap:12px}#splash .homeActions .btn{min-width:150px;font-size:20px;padding:12px 22px;position:relative}
+.homeActions .ready{position:absolute;top:-6px;right:-6px;width:16px;height:16px;border-radius:50%;background:var(--good);border:2px solid #fffdf6;box-shadow:0 1px 0 var(--ink)}
+.homeChips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
+.homeChips .chip{background:rgba(255,253,246,.88);border:1.5px solid rgba(41,48,61,.18);border-radius:999px;padding:4px 11px;font-size:13px;color:#364e61;font-weight:700}
+.homeBar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:6px;padding:0 calc(8px + var(--sr)) calc(6px + var(--sb)) calc(8px + var(--sl))}
+.homeBar .sp{flex:1}.homeBar .back{background:rgba(255,253,246,.85);border-radius:10px}
+.homeBar .iconBtn{text-decoration:none;font-size:13px;padding:6px 12px;background:rgba(255,253,246,.85);border:1.5px solid rgba(41,48,61,.25);box-shadow:none;min-height:44px}
+.homeBar .iconBtn.on{border-color:var(--blue);color:#1f4f9e}
+#splash .foot,#splash .rules{display:none}
+@media(max-height:430px) and (min-aspect-ratio:1/1){#splash{padding-top:calc(4px + var(--st));padding-bottom:calc(50px + var(--sb))}#splashPlane{width:150px;margin-bottom:-10px}#splash h1{font-size:40px}#splash .tagline{margin:2px 0 8px;font-size:13px}.routeTxt{margin:3px 0 8px;font-size:12px}#splash .homeActions .btn{font-size:17px;padding:8px 18px;min-width:130px}.homeChips{margin-top:8px}.homeHills{height:90px}}
+@media(prefers-reduced-motion:reduce){.homeSky .cl,#splashPlane .trail{animation:none!important}}
+body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation:none!important}
+/* ---------- tutorial hint: a slim strip at the bottom, clear of the sky ---------- */
+#tut .msg{top:auto!important;bottom:calc(10px + var(--sb));max-width:min(560px,calc(100vw - 340px));font-size:14px;padding:4px 4px 4px 12px;border-width:1.5px;box-shadow:0 2px 0 var(--ink);background:rgba(255,253,246,.94)}
+#tut .msg #tutSkip{min-height:36px;padding:4px 10px;font-size:13px;box-shadow:none}
+@media(max-width:700px){#tut .msg{bottom:calc(64px + var(--sb));max-width:calc(100vw - 24px)}}
+@media(max-aspect-ratio:3/4){.homeHills{height:24vh}#splash{padding-bottom:calc(16vh + var(--sb))}#splashPlane{width:min(340px,84vw)}#splash h1{font-size:min(17vw,84px)}#splash .tagline{font-size:16px;margin:8px 0 22px}.route{width:min(380px,92vw)}.route .stop{width:30px;height:30px;font-size:12px}.route .stop.next{width:36px;height:36px}.routeTxt{font-size:14px;margin:8px 0 22px}#splash .homeActions{flex-direction:column;width:min(320px,86vw)}#splash .homeActions .btn{width:100%;font-size:22px;padding:14px}.homeChips{margin-top:18px}}
 </style>
 </head>
 <body>
@@ -231,13 +267,24 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 <div id="banner"><div class="in"><span>&#8635; Turn your phone sideways for the best view</span><button class="btn" id="uprightBtn">Play upright</button></div></div>
 
 <div class="ov" id="splash">
-  <svg id="splashPlane" viewBox="0 0 200 90" aria-hidden="true"><path d="M8 52 L190 30 L70 62 Z" fill="#fff" stroke="#29303d" stroke-width="3" stroke-linejoin="round"/><path d="M70 62 L190 30 L86 78 Z" fill="#dfe6ee" stroke="#29303d" stroke-width="3" stroke-linejoin="round"/><path d="M8 52 L190 30" stroke="#b9c4d2" stroke-width="2"/><path d="M4 70 q40 -30 80 -10" fill="none" stroke="#2f6fd6" stroke-width="3" stroke-dasharray="6 7" stroke-linecap="round"/></svg>
-  <h1 class="hand">Paper Planes</h1>
-  <p>Five throws to fly from the back garden to the mountains. Fold better planes as you go.</p>
-  <p class="rules">Start with five throws. Clears keep your throw; double the target to recover one.</p>
-  <div class="homeActions"><button class="btn pri tap" id="splashGo">✈ Fly now</button><button class="btn org tap" id="splashHangar">✦ Hangar</button></div>
-  <div class="homeFoot"><span id="homeProgress">Eight places. Earn clips. Fold better planes.</span><button class="btn ghost" id="homeFS" hidden>Full screen: On</button><button class="btn ghost" id="homeSettings">Settings ⚙</button></div>
-  <div class="foot"><a class="back" href="../games.html">← Digi Games</a></div>
+  <div class="homeSky" aria-hidden="true"><i class="cl c1"><svg viewBox="0 0 120 50"><path d="M14 44 C2 44 2 28 16 28 C16 14 36 10 44 20 C50 6 76 6 80 22 C94 16 112 26 104 38 C116 40 112 46 104 46 Z" fill="#fff"/></svg></i><i class="cl c2"><svg viewBox="0 0 120 50"><path d="M14 44 C2 44 2 28 16 28 C16 14 36 10 44 20 C50 6 76 6 80 22 C94 16 112 26 104 38 C116 40 112 46 104 46 Z" fill="#fff"/></svg></i><i class="cl c3"><svg viewBox="0 0 120 50"><path d="M14 44 C2 44 2 28 16 28 C16 14 36 10 44 20 C50 6 76 6 80 22 C94 16 112 26 104 38 C116 40 112 46 104 46 Z" fill="#fff"/></svg></i></div>
+  <svg class="homeHills" viewBox="0 0 800 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <path d="M0 92 C120 52 230 70 330 84 S560 46 800 78 V160 H0Z" fill="#b9dfb0"/>
+    <g fill="#8fc786"><circle cx="96" cy="86" r="16"/><circle cx="118" cy="82" r="20"/><circle cx="612" cy="74" r="18"/><circle cx="636" cy="70" r="22"/><circle cx="660" cy="78" r="15"/></g>
+    <path d="M0 116 C150 92 280 104 420 112 S650 94 800 106 V160 H0Z" fill="#8cc97f"/>
+    <path d="M0 136 C200 124 420 132 800 128 V160 H0Z" fill="#6fbf62"/>
+    <g stroke="#fffdf6" stroke-width="4" stroke-linecap="round" opacity=".85"><path d="M0 130 H800"/><path d="M20 120v18M60 120v18M100 120v18M140 120v18M180 120v18M220 120v18M260 120v18M300 120v18M340 120v18M380 120v18M420 120v18M460 120v18M500 120v18M540 120v18M580 120v18M620 120v18M660 120v18M700 120v18M740 120v18M780 120v18"/></g>
+  </svg>
+  <div class="homeMain">
+    <svg id="splashPlane" viewBox="0 0 260 120" aria-hidden="true"><path class="trail" d="M6 104 C40 100 60 84 78 64 C96 44 120 40 128 58 C136 76 112 88 100 72 C90 58 110 44 150 44" fill="none" stroke="#2f6fd6" stroke-width="3" stroke-dasharray="5 7" stroke-linecap="round"/><g transform="translate(150 14)"><path d="M0 34 L100 14 L36 44 Z" fill="#fff" stroke="#29303d" stroke-width="3" stroke-linejoin="round"/><path d="M36 44 L100 14 L46 58 Z" fill="#dfe6ee" stroke="#29303d" stroke-width="3" stroke-linejoin="round"/><path d="M0 34 L100 14" stroke="#b9c4d2" stroke-width="2"/></g></svg>
+    <h1 class="hand">Paper Planes</h1>
+    <p class="tagline">Five throws. Eight places. Fly from the back garden to the mountains.</p>
+    <div class="route" id="homeRoute" aria-label="Places reached"></div>
+    <p class="routeTxt" id="homeRouteTxt"></p>
+    <div class="homeActions"><button class="btn pri tap" id="splashGo">✈ Fly now</button><button class="btn org tap" id="splashHangar">✦ Hangar<i class="ready" id="homeReady" hidden></i></button></div>
+    <div class="homeChips" id="homeProgress"></div>
+  </div>
+  <div class="homeBar"><a class="back" href="../games.html">← Digi Games</a><span class="sp"></span><button class="btn ghost iconBtn" id="homeFS" hidden>⛶ Full screen</button><button class="btn ghost iconBtn" id="homeSettings">⚙ Settings</button></div>
 </div>
 
 <div id="hangar">
@@ -756,7 +803,7 @@ function resize() {
   lastLand = land;
   updateBanner();
   if (state === 'hangar') drawFoldPreview();
-  if (tutStage) placeBelowHud($('tut').querySelector('.msg'));
+  
 }
 window.addEventListener('resize', resize);
 
@@ -967,7 +1014,7 @@ function updateConditions(){
   if($('windReadout').textContent!==label)$('windReadout').textContent=label;
   const cue=state==='fly'&&fl?flightFeedback(fl,P,pl,roll):{kind:'',text:'In flight: right side flaps up · left side flaps down'};
   if($('flightCue').textContent!==cue.text)$('flightCue').textContent=cue.text;
-  $('flightCue').className=cue.kind+(learning()?'':' off');
+  $('flightCue').className=cue.kind+(learning()&&(cue.kind||state!=='fly')&&!(state==='fly'&&tutStage===2&&!cue.kind)?'':' off');
 }
 function updateBanner() {
   const show = H > W && !save.upright && (state === 'hangar' || state === 'aim');
@@ -988,7 +1035,7 @@ function placeBelowHud(el) {
   el.style.top = Math.round((hb.height > 0 ? hb.bottom : 50) + 8) + 'px';
 }
 function showTut() {
-  const t = $('tut'); placeBelowHud(t.querySelector('.msg'));
+  const t = $('tut');
   if (state === 'aim' && !save.tut1 && run) { tutStage = 1; $('tutTxt').textContent = coarse ? 'Pull back and release to throw · ☰ pauses' : 'Drag back to throw · or ←/→ aim, Space launches'; t.classList.add('on'); $('hand').style.display = 'block'; }
   else if (state === 'fly' && learning()) { tutStage = 2; $('tutTxt').textContent = LESSONS[save.lessons]; t.classList.add('on'); $('hand').style.display = 'none'; }
   else hideTut();
@@ -1037,12 +1084,23 @@ $('pUpright').addEventListener('click', () => { save.upright = !save.upright; pe
 $('splashGo').addEventListener('click',()=>{initAudio();goFS();$('splash').classList.remove('on');lastMode='run';startRun('new','run');});
 $('splashHangar').addEventListener('click',()=>{initAudio();openHangar();});
 $('homeSettings').addEventListener('click',()=>{initAudio();pausePlay(true);});
-function refreshHomeFS(){const b=$('homeFS');b.hidden=!fsOK;b.textContent='Full screen: '+(save.fs?'On':'Off');}
+function refreshHomeFS(){const b=$('homeFS');b.hidden=!fsOK;b.textContent='⛶ Full screen '+(save.fs?'on':'off');b.classList.toggle('on',!!save.fs);b.setAttribute('aria-pressed',save.fs?'true':'false');}
 $('homeFS').addEventListener('click',()=>{save.fs=!save.fs;persist();if(save.fs)goFS();else exitFS();refreshHomeFS();});
 $('homeBtn').addEventListener('click',()=>{if(hangarRun)continueFromHangar();else showHome();});
+function renderHomeRoute(){
+  const bp=Math.min(8,save.bestPlace||0), nextI=Math.min(7,bp);
+  $('homeRoute').innerHTML=PLACES.map((pl,i)=>'<span class="stop'+(i<bp?' done':'')+(i===nextI&&bp<8?' next':'')+'" title="'+pl.name+' · '+pl.target+' m"><b>'+(i+1)+'</b></span>').join('<i></i>');
+  $('homeRouteTxt').textContent=bp>=8?'All eight places cleared · try the Skyscraper from the hangar':bp?'Next: '+PLACES[nextI].name+' · beat '+PLACES[nextI].target+' m':'First stop: the back garden · beat 10 m';
+  const chips=[['✈',FOLDS[save.fold].name]];
+  if(save.runs)chips.push(['📏','Best '+fmt(save.bestThrow)+' m']);
+  chips.push(['📎',save.clips.toLocaleString()+' clips']);
+  $('homeProgress').innerHTML=chips.map(c=>'<span class="chip"><span aria-hidden="true">'+c[0]+'</span> '+c[1]+'</span>').join('');
+  let ready=false;try{ready=!!nextUpgrade().affordable;}catch(e){}
+  $('homeReady').hidden=!ready;$('splashHangar').setAttribute('aria-label',ready?'Hangar, upgrade ready':'Hangar');
+}
 function showHome(){
   run=null;state='home';paused=false;hideTut();hideAllOverlays();$('hud').classList.remove('on','flying');
-  refreshHomeFS(); $('homeProgress').textContent=save.runs?'Best '+fmt(save.bestThrow)+' m · '+save.clips+' clips ready to spend':'Eight places. Earn clips. Fold better planes.';
+  refreshHomeFS(); renderHomeRoute();
   $('splash').classList.add('on'); updateBanner(); focusPanel('splash','splashGo');
 }
 
@@ -1999,7 +2057,7 @@ function frame(now) {
   }
   render(); animHand();
   if (state === 'hangar') drawFoldPreview();
-  if (tutStage) placeBelowHud($('tut').querySelector('.msg'));
+  
   requestAnimationFrame(frame);
 }
 
@@ -2053,6 +2111,5 @@ requestAnimationFrame(frame);
 })();
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
