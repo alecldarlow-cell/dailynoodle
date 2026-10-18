@@ -74,6 +74,9 @@
     border-radius:999px;border:1px solid var(--hair);background:var(--paper);color:var(--ink);
     font:600 14px var(--body);cursor:pointer}
   .btn.go{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.alt{background:var(--accent-soft);border:1.5px solid var(--accent);color:var(--accent)}
+  .btn svg{width:17px;height:17px;flex:none}
+  .acts.main .btn{flex:1 1 150px}
   .btn.warn{color:#B3261E}
   .btn:disabled{opacity:.5;cursor:default}
   .bcard{margin-top:18px;padding:18px 16px;background:var(--paper);border:1px solid var(--hair);border-radius:12px}
@@ -318,13 +321,16 @@
       $app.innerHTML = '<p class="nobody">Couldn’t load the board. ' + esc(err.message) + '</p>';
     });
   }
+  // Person-with-plus, drawn in the button's text colour.
+  var INVITE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.1-6.5 7-6.5s7 2.5 7 6.5"/><path d="M19 8v6M16 11h6"/></svg>';
   function renderBoard(L, d) {
     var T = NB.BY_ID[S.type], ls = NB.leagues(), it = puzzleItem(S.type, S.date);
     var played = d.ranked.concat(d.unranked).some(function (r) { return r.me; });
     var h = '';
     if (S.created === L.code) {
       h += '<div class="bcard"><h2>' + esc(L.name) + ' is ready</h2><p>Share the link in your group chat. Anyone who taps it ' +
-           'picks a nickname and joins.</p><div class="acts"><button class="btn go" data-act="invite">Invite people</button></div></div>';
+           'picks a nickname and joins.</p><div class="acts"><button class="btn go" data-act="invite">' + INVITE_ICON + 'Invite people</button></div></div>';
       S.created = '';
     }
     var first = d.first || S.date;
@@ -341,8 +347,8 @@
     }
     if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
       return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
-    h += '<div class="acts">' + (d.ranked.length ? '<button class="btn go" data-act="share">Share leaderboard</button>' : '') +
-         '<button class="btn" data-act="invite">Invite people</button></div>';
+    h += '<div class="acts main">' + (d.ranked.length ? '<button class="btn go" data-act="share">Share leaderboard</button>' : '') +
+         '<button class="btn ' + (d.ranked.length ? 'alt' : 'go') + '" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
     h += settings(L, d);
     $app.innerHTML = h;
   }
