@@ -200,7 +200,7 @@ a{color:inherit}
    <span class="cardtxt"><b>Explore ten</b><small>Ten outlines, easiest first. Seven to pass.</small><span class="go">Play</span></span>
   </button>
   <div class="row home2">
-   <a id="dailyCard" class="bcard" href="../puzzles.html"><b id="dailyTitle">Today's Borders</b><small id="dailyStatus">The daily ten, in Digi Puzzles</small></a>
+   <a id="dailyCard" class="bcard" href="../puzzles.html"><b id="dailyTitle">Today's Borders</b><small id="dailyStatus">The daily ten, in Noodle Puzzles</small></a>
    <button id="atlasBtn" class="btn atlasbtn">Atlas <small id="atlasCount">0/0</small></button>
   </div>
   <div class="toggles" id="homeToggles"></div>
@@ -467,9 +467,9 @@ function renderHome(){
   const b=bordersToday(),card=$('dailyCard');
   if(b){card.href=b.file;card.setAttribute('aria-label',"Play today's Borders puzzle");$('dailyTitle').textContent="Today's Borders";
     const d=bordersDone(b.id);
-    $('dailyStatus').textContent=d?`Played today: ${d.c} of ${NQ}`:'The daily ten, in Digi Puzzles';}
-  else{card.href='../puzzles.html';card.setAttribute('aria-label','Daily puzzles in Digi Puzzles');$('dailyTitle').textContent='Borders';
-    $('dailyStatus').textContent='Daily puzzles, in Digi Puzzles';}
+    $('dailyStatus').textContent=d?`Played today: ${d.c} of ${NQ}`:'The daily ten, in Noodle Puzzles';}
+  else{card.href='../puzzles.html';card.setAttribute('aria-label','Daily puzzles in Noodle Puzzles');$('dailyTitle').textContent='Borders';
+    $('dailyStatus').textContent='Daily puzzles, in Noodle Puzzles';}
   $('atlasCount').textContent=foundCount()+'/'+C.length;
   const rb=$('resumeBtn');
   if(save.quiz&&save.quiz.qs){rb.hidden=false;rb.textContent=`Resume your quiz: question ${Math.min(NQ,save.quiz.ans.length+1)} of ${NQ}`;}else rb.hidden=true;
