@@ -500,7 +500,7 @@ function flightFeedback(f,P,pl,roll) {
   const [wx,wy]=airAt(pl,roll,f.x,f.y,f.t), speed=Math.hypot(f.vx-wx,f.vy-wy);
   const liftSpeed=Math.sqrt(G/(P.kq*(0.28+P.cla*P.as)));
   if(f.bumpT>0)return {kind:'warn',text:'Knocked off course · recover'};
-  if(f.stall>0)return {kind:'danger',text:f.hold?'Stall · release the pull':'Stalled · nose needs airflow'};
+  if(f.stall>0)return {kind:'danger',text:f.hold?'Stall · release the pull':'Stalled · recovery needs height'};
   if(Math.abs(f.a)>P.as*STALL_WARNING)return {kind:'warn',text:'Near stall · release now'};
   if(speed<liftSpeed*1.35)return {kind:'warn',text:'Low speed · need height to recover'};
   if(wy>0.8)return {kind:'',text:'Rising air · ride the lift'};
@@ -945,7 +945,7 @@ function placeBelowHud(el) {
 function showTut() {
   const t = $('tut'); placeBelowHud(t.querySelector('.msg'));
   if (state === 'aim' && !save.tut1 && run) { tutStage = 1; $('tutTxt').textContent = coarse ? 'Pull back and release to throw · two fingers pause' : 'Drag back to throw · or ←/→ aim, Space launches'; t.classList.add('on'); $('hand').style.display = 'block'; }
-  else if (state === 'fly' && !save.tut2) { tutStage = 2; $('tutTxt').textContent = 'Short holds trade speed for height · release to regain speed'; t.classList.add('on'); $('hand').style.display = 'none'; }
+  else if (state === 'fly' && !save.tut2) { tutStage = 2; $('tutTxt').textContent = 'Short holds trade speed for height · release stops your pull'; t.classList.add('on'); $('hand').style.display = 'none'; }
   else hideTut();
 }
 function hideTut() { tutStage = 0; $('tut').classList.remove('on'); }
@@ -1867,7 +1867,7 @@ function render() {
     pm.setAttribute('role','meter');pm.setAttribute('aria-label','Wing angle towards stall');
     pm.setAttribute('aria-valuemin','0');pm.setAttribute('aria-valuemax',(P.as*180/Math.PI).toFixed(1));
     pm.setAttribute('aria-valuenow',(Math.min(P.as,Math.abs(fl.a))*180/Math.PI).toFixed(1));
-    pm.title='Wing angle to the airflow · stall at '+(P.as*180/Math.PI).toFixed(1)+'°';
+    pm.title='Wing angle to the airflow · stall near ±'+(P.as*180/Math.PI).toFixed(1)+'°';
   }
   if (timeT - hudMeasured > 0.5) { hudMeasured = timeT; const r = $('hud').getBoundingClientRect(); if (r.height > 0) hudBottom = r.bottom; }
   if (!pl || state === 'hangar' || state === 'boot') { cx.fillStyle = '#bfe6ff'; cx.fillRect(0, 0, W, H); return; }
@@ -1974,6 +1974,5 @@ requestAnimationFrame(frame);
 })();
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
