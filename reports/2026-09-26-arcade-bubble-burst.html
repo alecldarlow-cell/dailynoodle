@@ -85,6 +85,10 @@ html.touch :focus-visible{outline:none}
 .stars{font-size:40px;letter-spacing:8px;margin:6px 0 0;line-height:1}
 .stars .on{color:#E8A300;text-shadow:0 2px 0 #B97F00}
 .stars .off{color:rgba(30,35,64,.18)}
+.stars .on{display:inline-block;animation:starIn .5s cubic-bezier(.3,1.7,.5,1) both}
+.stars span:nth-child(2){animation-delay:.18s}.stars span:nth-child(3){animation-delay:.36s}
+@keyframes starIn{0%{transform:scale(.2) rotate(-40deg);opacity:0}100%{transform:none;opacity:1}}
+html.calm .stars .on{animation:none}
 .lvgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
 .lv{aspect-ratio:1/1;border:1px solid var(--edge);border-radius:18px;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;
   font:600 19px 'Fredoka',system-ui,sans-serif;padding:0;background:linear-gradient(160deg,#FFFFFF,var(--t) 75%);box-shadow:0 3px 10px rgba(38,48,110,.1);min-height:48px;border-radius:15px}
@@ -738,6 +742,9 @@ const $ = id => document.getElementById(id);
 const cv = $('cv'), ctx = cv.getContext('2d');
 const RMQ = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
 const rm = () => save.calm != null ? save.calm : RMQ.matches;
+// the page's own CSS motion (the end-screen stars) follows the same calm setting as the canvas
+function syncCalm() { try { document.documentElement.classList.toggle('calm', rm()); } catch (e) {} }
+syncCalm(); try { RMQ.addEventListener('change', syncCalm); } catch (e) {}
 /* ---------- game state ---------- */
 const S = {
   mode: 'menu', kind: 'level', idx: 0, wi: 0, spec: LEVELS[0], grid: emptyGrid(), parity: 0, ceil: 0,
@@ -1036,7 +1043,7 @@ function starRow(n) {
 }
 function finish(win, reason) {
   if (S.mode !== 'play') return;
-  S.mode = 'over'; S.aiming = false; S.guide = false;
+  S.mode = 'over'; S.aiming = false; S.guide = false; S.endStars = 0;
   let html = '';
   if (S.kind === 'endless') {
     const nb = S.score > save.endlessBest;
@@ -1078,7 +1085,7 @@ function finish(win, reason) {
       (last ? '<p class="sub">All ' + LEVELS.length + ' levels done. Try Endless for a high score.</p><button class="btn primary" data-act="endless" data-focus>Play Endless</button>'
             : '<button class="btn primary" data-act="next" data-focus>' + (worldEnd ? 'On to ' + worldOf(i + 1).name : 'Next level') + '</button>') +
       '<div class="row2"><button class="btn" data-act="retry">Replay</button><button class="btn ghost" data-act="levels">Levels</button></div>';
-    snd('win');
+    snd('win'); S.endStars = st;
     rndEnd(true, { score: S.score, stars: st });
   } else {
     const msg = { room: 'The bubbles crossed the dotted line.', shots: 'You ran out of shots.', time: 'Time ran out.' }[reason] || '';
@@ -1151,6 +1158,7 @@ function snd(type, n = 0) {
       case 'power': [523, 659, 784].forEach((q, i) => tone(q, q, .12, 'triangle', .08, i * .07)); break;
       case 'thud': tone(120, 60, .2, 'sine', .14); break;
       case 'win': [523, 659, 784, 1047].forEach((q, i) => tone(q, q * 1.01, .18, 'triangle', .1, i * .1)); break;
+      case 'stars': [1047, 1319, 1568].slice(0, n).forEach((q, i) => { const d = (rm() ? 0 : .18 * i) + .08; tone(q, q, .16, 'triangle', .08, d); tone(q * 2, q * 2, .1, 'sine', .025, d + .02); }); break;   // one chime per star as it lands
       case 'lose': [440, 370, 311].forEach((q, i) => tone(q, q * .98, .22, 'sine', .09, i * .14)); break;
     }
   } catch (e) {}
@@ -1699,7 +1707,7 @@ function step(dt) {
   for (const t of S.texts) t.t += dt;
   S.texts = S.texts.filter(t => t.t < 1.1);
   S.danger = lowestEff(S) >= DEAD - 2;
-  if (S.mode === 'over' && S.endT > 0) { S.endT -= dt; if (S.endT <= 0) showOverlay(S.endHtml); }
+  if (S.mode === 'over' && S.endT > 0) { S.endT -= dt; if (S.endT <= 0) { showOverlay(S.endHtml); if (S.endStars) snd('stars', S.endStars); } }
 }
 
 /* ---------- HUD & UI ---------- */
@@ -1835,7 +1843,7 @@ card.addEventListener('click', e => {
   if (a === 'lv' || a === 'go' || a === 'endless' || a === 'resume' || a === 'retry' || a === 'next') goFS();
   if (a === 'fs' || a === 'calm') {
     if (a === 'fs') { save.fs = !save.fs; if (save.fs) goFS(); else exitFS(); }
-    else { save.calm = !rm(); for (const k in spr) delete spr[k]; }
+    else { save.calm = !rm(); for (const k in spr) delete spr[k]; syncCalm(); }
     persist(); showOverlay(b.dataset.arg === 'pause' ? pauseHtml() : homeHtml()); refocus(a); return;
   }
   if (a === 'lv') startLevel(+b.dataset.arg);
