@@ -65,7 +65,7 @@
   /* the overall run: consecutive London days with at least one puzzle finished, ending today or yesterday */
   function overallRun() {
     var days = {};
-    ORDER.forEach(function (t) { var d = done(t); for (var id in d) if (d[id] && d[id].d) days[d[id].d] = 1; });
+    ORDER.forEach(function (t) { var d = done(t); for (var id in d) { var day = d[id] && (d[id].d || d[id].on); if (day) days[day] = 1; } });   // Borders records its day as "on"
     ['digi-mini-streak', 'digi-link-streak', 'digi-sweep-streak', 'digi-path-streak'].forEach(function (k) {
       var s = read(k); if (s && Array.isArray(s.dates)) s.dates.forEach(function (d) { days[d] = 1; });
     });

@@ -129,6 +129,22 @@ const TESTS = {
     ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'link: Play again closes the sheet and marks the replay');
     await ctx.close();
   },
+  async 'finish:borders'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.borders, { events: ev });
+    await play.borders(p);
+    await sheetChecks(p, ev, { type: 'borders', ids: ['winTitle', 'winTime', 'rBig', 'rPts', 'rStreak'],
+      shareRe: /^🌍 Borders #14 — 7\/10 · \d+ pts$/,
+      endCheck: x => ok(x && x.outcome === 'scored' && x.got === 7 && x.of === 10 && x.score > 0, `borders: tracker read ${x && x.got} of ${x && x.of}, ${x && x.score} pts`) });
+    ok(await text(p, '#winTitle') === 'Spotted' && await text(p, '#rBig') === '7 of 10', 'borders: Spotted, 7 of 10');
+    ok(/^You missed \w[\w ]*, [\w ]+ and [\w ]+\./.test(await text(p, '.fin-note')), `borders: note "${await text(p, '.fin-note')}"`);
+    ok(await p.locator('.fin-outl figure').count() === 10 && await p.locator('.fin-outl figure.x').count() === 3, 'borders: ten outlines, three missed');
+    ok(await p.locator('.fin a.fin-link[href*="borderline"]').count() === 1, 'borders: Borderline link in the recap');
+    await shareClipboard(p, ctx, 'borders');
+    await reopen(p, ev, 'borders');
+    ok(!p.errs.length, 'borders: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+    await shareNative(b, F.borders, p2 => play.borders(p2), 'borders');
+  },
   /* ---------- the five fixes of 18 Oct ---------- */
   async 'fix:link-replay'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });

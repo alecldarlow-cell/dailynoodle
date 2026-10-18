@@ -5,6 +5,9 @@
    stable (dn-track.js and players' saved progress depend on them). */
 
 'use strict';
+/* the shared finish sheet (engines/finish.js): calls made before it loads are queued */
+window.dnFinish=window.dnFinish||{q:[],show(c){this.q.push(c)},hide(){}};
+document.write('<link rel="stylesheet" href="../engines/finish.css"><script src="../engines/finish.js"><\/script>');
 /* ================= puzzle: one dated ten, stamped at build ================= */
 const PUZZLE=window.DN_PUZZLE;
 /* outlines: Natural Earth 1:50m, pre-projected (Mercator centred on each country), 600 box.
@@ -100,7 +103,7 @@ function el(tag,attrs,parent){const e=document.createElementNS(SVGNS,tag);for(co
 
 /* ---------- state ---------- */
 let P=null, cur=null, view='home', paused=false, locked=false, last=0, ending=false;
-function show(id){view=id;for(const s of document.querySelectorAll('.screen'))s.classList.toggle('vis',s.id===id);}
+function show(id){view=id;if(id!=='winModal')window.dnFinish.hide();for(const s of document.querySelectorAll('.screen'))s.classList.toggle('vis',s.id===id);}
 
 /* ---------- map drawing ---------- */
 const VB={w:600,h:600,x:0,y:0};
@@ -232,7 +235,7 @@ function showResult(rec,fresh){
   // fill every field first: the tracker reads #winTitle and #winTime the moment "on" lands
   $('rKick').textContent='Borders '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date);
   $('rBig').textContent=rec.c+' of '+NQ;
-  $('winTitle').textContent='named today';
+  $('winTitle').textContent='Spotted';
   $('winTime').textContent=mmss(rec.secs);
   $('rPts').textContent=rec.p;
   const s=save.streak||{n:0},live=s.last===today()||s.last===dayBefore(today());
@@ -247,6 +250,22 @@ function showResult(rec,fresh){
     return `<div><div class="tile">${tileSVG(q)}${a?`<span class="mark ${a.ok?'ok':'bad'}">${a.ok?'✓':'✕'}</span>`:''}</div><div class="cap">${q.n}</div></div>`;}).join('');
   shown=rec;
   show('winModal');$('winModal').scrollTop=0;
+  // the shared finish sheet
+  const W=['no','one','two','three','four','five','six','seven','eight','nine','ten'];
+  const missed=P.qs.filter((q,i)=>rec.ans[i]&&!rec.ans[i].ok).map(q=>q.n);
+  const list=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1];
+  let note=missed.length?`You missed ${list(missed)}.`:'All ten named.';
+  if(fresh_n)note+=` ${W[fresh_n]?W[fresh_n][0].toUpperCase()+W[fresh_n].slice(1):fresh_n} new ${fresh_n===1?'country':'countries'} in your atlas.`;
+  const best=Math.max(0,...Object.values(save.done||{}).map(d=>+d.p||0));
+  const outl=document.createElement('div');outl.className='fin-outl';
+  outl.innerHTML=P.qs.map((q,i)=>{const a=rec.ans[i];return `<figure class="${a&&a.ok?'ok':'x'}">${tileSVG(q)}<figcaption>${q.n}${a&&a.ok&&a.h?' (map)':''}</figcaption></figure>`;}).join('');
+  const rc=document.createElement('div');rc.appendChild(outl);
+  const more=document.querySelector('.endbtns a[href*="borderline"]');
+  if(more){const a=document.createElement('a');a.className='fin-link';a.href=more.getAttribute('href');a.textContent='Explore more outlines in Borderline';rc.appendChild(a);}
+  window.dnFinish.show({type:'borders',id:P.id,n:parseInt(P.id.slice(-4),10),date:P.date,box:'winModal',title:'winTitle',hero:'rBig',note,
+    share:{text:()=>shareText(rec)},
+    stats:[{id:'rPts',label:'points'},{id:'rStreak',label:'day streak'},{value:best,label:'best score'}],
+    recap:{title:'Today’s ten',sub:'Easiest first',node:rc}});
   if(fresh)$('winModal').classList.add('on');      // only a finished ten, once per page
 }
 
