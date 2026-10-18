@@ -1508,7 +1508,7 @@ function seaEnd(win){const S=seaState(),L=S.leg;
  else{S.lost++;S.offer=null;if(ordLevels(S.ord)>0)S.strike=true;else{S.retry=true;if(S.last>=0)S.offer=[{ci:S.last,deal:newDeal()}];}}
  saveMeta();}
 function seaWinCard(){const S=seaState(),c=chartOf(st);
- showModal(`<div class="kick">Open sea ${S.leg-1}</div><h2>${c.name} ${['scilly','varr','channel','faroes','cyclades','narrows'].includes(c.id)?'are':'is'} yours</h2>
+ showModal(`<div class="kick">Open sea ${S.leg-1}</div><h2>${c.name} ${yoursVerb(c)} yours</h2>
   <p class="sub" style="text-align:center">${st.turn} turn${st.turn===1?'':'s'} · ${st.stats.taken} island${st.stats.taken===1?'':'s'} taken</p>
   <p class="tip">On to Open sea ${S.leg}. The rivals will muster ${Math.round((SEA.mul(S.leg)-1)*100)}% more.</p>
   <button class="cbtn pri" id="go">${S.draft?'Choose a standing order':'Sail on'}</button><div class="links">${homeLink}</div>`,'',()=>{$('go').addEventListener('click',()=>{st=null;D=null;seaCard();});});}
@@ -1642,6 +1642,8 @@ function endRound(win){if(st.phase==='over')return;st.phase='over';ui.busy=false
 let titleUp=false;
 function showModal(html,cls,bind){const m=$('modal'),c=$('card');titleUp=cls==='title';m.className=cls==='title'?'title':'';c.className=cls==='title'?'tscreen':'card';c.innerHTML=html;m.hidden=false;c.scrollTop=0;if(bind)bind();if(signCur)signDone();}
 function hideModal(){$('modal').hidden=true;titleUp=false;pumpSign();}
+/* "The Varr Skerries are yours", "Orkney is yours": plural chart names take "are" */
+const yoursVerb=c=>['scilly','varr','channel','hebrides','faroes','cyclades','narrows'].includes(c.id)?'are':'is';
 const homeLink='<a class="link home" href="../games.html">← Digi Games</a>';
 const starsHTML=n=>[0,1,2].map(k=>k<n?'★':'<span class="off">★</span>').join('');
 /* a small drawn chart for the cards */
@@ -1700,7 +1702,7 @@ function intro(ci,deal){const c=CHARTS[ci],assist=Math.round(assistFor(ci)*100);
 function resume(run){$('top').hidden=false;st=run.st;if(!st.cashF)st.cashF=st.fl.map(()=>0);cps=run.cps||[];resetScene();rndArm('resume');hideModal();$('dock').hidden=false;layout();syncD();auStart();
  if(finishIfOver())return;if(st.phase==='rivals-done'||st.phase==='rival'){beginTurn();return;}if(st.phase==='occupy'&&!st.occ)st.phase='attack';dockUI();note(st.sea?`Back on Open sea ${st.sea.leg}.`:'Back where you left off.',2400);}
 function winCard(stars){if(st.deal){dealWinCard();return;}const c=chartOf(st),nx=st.c+1<CAMP?st.c+1:-1;
- showModal(`<div class="kick">Chart ${st.c+1} · ${c.real?'Real':'Invented'}</div><h2>${c.name} ${['scilly','varr','channel','faroes','cyclades','narrows'].includes(c.id)?'are':'is'} yours</h2>
+ showModal(`<div class="kick">Chart ${st.c+1} · ${c.real?'Real':'Invented'}</div><h2>${c.name} ${yoursVerb(c)} yours</h2>
   <div class="big-stars">${[0,1,2].map(k=>`<span class="${k<stars?'':'off'}" style="animation-delay:${.15+k*.18}s">★</span>`).join('')}</div>
   <p class="sub" style="text-align:center">${st.turn} turn${st.turn===1?'':'s'} · par ${c.par} · ${st.stats.taken} island${st.stats.taken===1?'':'s'} taken</p>
   ${st.firstWin?`<p class="tip"><b>Shuffled deals are open</b> for ${c.name}: the same chart with fresh harbours, rivals and garrisons. Pick Shuffled on its card.</p>`:''}
@@ -1708,7 +1710,7 @@ function winCard(stars){if(st.deal){dealWinCard();return;}const c=chartOf(st),nx
   <button class="cbtn" id="ch">All charts</button><div class="links">${homeLink}</div>`,'',()=>{
   if(nx>=0)$('nx').addEventListener('click',()=>{goFS();intro(nx);});$('ch').addEventListener('click',()=>{st=null;D=null;home();});});}
 function dealWinCard(){const c=chartOf(st),d=meta.deals[c.id]||{w:1,b:st.turn},deal=st.deal;
- showModal(`<div class="kick">Chart ${st.c+1} · shuffled deal</div><h2>${c.name} ${['scilly','varr','channel','faroes','cyclades','narrows'].includes(c.id)?'are':'is'} yours</h2>
+ showModal(`<div class="kick">Chart ${st.c+1} · shuffled deal</div><h2>${c.name} ${yoursVerb(c)} yours</h2>
   <p class="sub" style="text-align:center">${st.turn} turn${st.turn===1?'':'s'} · par ${c.par} · ${st.stats.taken} island${st.stats.taken===1?'':'s'} taken</p>
   <p class="tip">Shuffled wins here: <b>${d.w}</b> · best <b>${d.b}</b> turn${d.b===1?'':'s'}${d.b===st.turn&&d.w>1?' (a new best)':''}.</p>
   <button class="cbtn pri" id="nd">New deal</button><button class="cbtn" id="sd">Same deal again</button><button class="cbtn" id="ch">All charts</button><div class="links">${homeLink}</div>`,'',()=>{
