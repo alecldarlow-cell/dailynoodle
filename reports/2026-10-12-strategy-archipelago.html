@@ -286,6 +286,8 @@ const FLEETS={
  gannet:{name:'Gannets',col:'#f2b134',ink:'#2a2109',mark:'triangle',thr:.5,trait:'aggressive',mood:'Spoiling for a fight',verb:'stormed',nature:'Aggressive. Attacks at even odds and goes for the strongest fleet.'},
  skua:{name:'Skuas',col:'#7d5bd6',ink:'#fbf8ff',mark:'diamond',thr:.62,trait:'opportunist',mood:'Looking for easy pickings',verb:'snatched',nature:'Opportunist. Picks off islands left on one or two troops.'}
 };
+/* The Varr Skerries' muster eased .91 → .80 (18 Oct 2026 review: average-player wins 19% → 34%, between Scilly and Channel);
+   its open-sea weight rose .86 → .98 to match, so open-sea Varr legs play as before */
 /* tuning, set by the balance bot (October 2026). aiMul and modeThr make the rival-strength setting bite;
    lead/dogpile/leadThr make the rivals turn on a player who is running away with the chart */
 /* spoils: a fleet's chests are worth more each time THAT fleet cashes in (+4, +5, +6, +7, then +8), so a steady trickle of
@@ -305,7 +307,7 @@ const CHARTS=[
    {n:'St Martin’s',x:85,y:42,r:7,ch:1},{n:'Samson',x:28,y:90,r:5.5,ch:2},{n:'Eastern Isles',x:86,y:84,r:5,ch:1,cl:3},{n:'St Agnes',x:32,y:130,r:6,ch:2}],
   lanes:[[1,2],[1,3],[3,4],[1,4],[2,5],[1,5],[5,0],[5,7],[0,7],[0,6],[4,6]],
   start:{puffin:{h:0,f:[7]},cormorant:{h:1,f:[2]}}},
- {id:'varr',name:'The Varr Skerries',real:false,par:8,ai:.91,thrAdd:.04,p0:2,deal:[0,7,8],
+ {id:'varr',name:'The Varr Skerries',real:false,par:8,ai:.80,thrAdd:.04,p0:2,deal:[0,7,8],
   flav:'An invented spread of northern skerries. The Gannets and Cormorants are already squabbling over the holms.',
   tip:'Let the Gannets and Cormorants wear each other down in the north while you take Brannoy Sound.',
   fleets:['puffin','gannet','cormorant'],
@@ -484,7 +486,7 @@ const ordMax=id=>ORDERS[id].v.length;
 const ROMAN=['','I','II','III'];
 /* the tide: rival muster, gull garrisons and rival boldness by leg. W = each chart's own weight so leg 1 plays
    about as hard on any chart (set by the open-sea simulation) */
-const SEA={W:{scilly:1.52,varr:.86,channel:.78,orkney:.83,crown:.88,hebrides:.71,faroes:0.91,shetland:0.91,lofoten:0.79,cyclades:0.83,tarrow:0.78,narrows:0.53},
+const SEA={W:{scilly:1.52,varr:.98,channel:.78,orkney:.83,crown:.88,hebrides:.71,faroes:0.91,shetland:0.91,lofoten:0.79,cyclades:0.83,tarrow:0.78,narrows:0.53},
  /* softened 16 Oct 2026: +5% a leg to leg 10, +7% to leg 16, then +2%; first garrison at leg 5 (was +8% a leg and leg 4) */
  k:.05,mul:L=>L<=10?1+SEA.k*(L-1):L<=16?1+SEA.k*9+.07*(L-10):1+SEA.k*9+.42+.02*(L-16),gar:L=>L<5?0:L<8?1:2,bold:L=>Math.min(.06,Math.max(0,.01*(L-3))),
  small:'scilly',smallUntil:4,fourthFrom:8};
