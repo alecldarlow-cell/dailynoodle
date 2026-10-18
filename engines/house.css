@@ -15,6 +15,18 @@ html.dn-house{
 }
 html.dn-house body{font-variant-numeric:tabular-nums}
 
+/* ---- first paint (18 Oct 2026) ----
+   This file is @imported by the engine's own CSS in <head>, so it applies
+   before any script. Until house.js has moved the page into the slim bar and
+   built the start card or finish sheet, the page is held back (a frame of
+   the old masthead, a light sheet, then the real thing was the flash);
+   only the background shows, in the phone's theme. If house.js never runs,
+   the page shows anyway after 2.5 s. */
+html:not(.dn-house) body{visibility:hidden;animation:dn-reveal 0s 2.5s forwards}
+@keyframes dn-reveal{to{visibility:visible}}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"]),html:not([data-theme="light"]) body{background:#11131A}}
+html[data-theme="dark"],html[data-theme="dark"] body{background:#11131A}
+
 /* ---- dark mode ---- */
 @media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]){
   --paper:#11131A; --card:#2E3344; --ink:#ECEEF4; --ink-soft:#A6ABBD; --line:#4A5066; --brand:#3D63FF; --brand-deep:#A9BBFF;

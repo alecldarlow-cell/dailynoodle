@@ -3,6 +3,8 @@
    The page supplies its puzzle as window.DN_PUZZLE before loading this file.
    Edit here to change every borders; keep element ids and localStorage keys
    stable (dn-track.js and players' saved progress depend on them). */
+/* shared sheets first, so dark mode and the finish sheet are right from the first paint (18 Oct 2026) */
+@import url("finish.css");
 
 :root{
   --bg:#E3ECE8; --sea:#CFE6E8; --grat:#A9D0D5; --ink:#1F3A4A; --ink2:#4E6673;

@@ -170,6 +170,28 @@ const TESTS = {
     }
   },
 
+  /* every painted frame while opening puzzles in dark mode: none light, none showing the old result layout */
+  async 'flash:dark'(b) {
+    const ctx = await newPhone(b, { scheme: 'dark' });
+    const { p } = await open(b, F.path, { ctx }); await play.path(p);
+    await p.goto('https://dailynoodle.co.uk/reports/' + F.tangle); await wait(p, 1200); await play.tangle(p, { n: 2 });
+    await p.goto('https://dailynoodle.co.uk/puzzles.html'); await wait(p, 1500);
+    const cdp = await ctx.newCDPSession(p), frames = [];
+    cdp.on('Page.screencastFrame', async f => { frames.push(f.data); try { await cdp.send('Page.screencastFrameAck', { sessionId: f.sessionId }); } catch (e) {} });
+    await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 40, everyNthFrame: 1, maxWidth: 195, maxHeight: 422 });
+    for (const f of ['reports/' + F.path, 'puzzles.html', 'reports/' + F.tangle, 'reports/' + F.mini]) {
+      await p.goto('https://dailynoodle.co.uk/' + f, { waitUntil: 'commit' });
+      for (let i = 0; i < 25; i++) { await p.clock.runFor(50); await p.waitForTimeout(40); }
+    }
+    await cdp.send('Page.stopScreencast');
+    // mean brightness of each frame, measured in the page itself
+    const lum = await p.evaluate(async fs => { const out = []; for (const d of fs) { const im = new Image(); im.src = 'data:image/jpeg;base64,' + d; await im.decode();
+      const c = document.createElement('canvas'); c.width = 20; c.height = 40; const x = c.getContext('2d'); x.drawImage(im, 0, 0, 20, 40);
+      const px = x.getImageData(0, 0, 20, 40).data; let t = 0; for (let i = 0; i < px.length; i += 4) t += (px[i] + px[i + 1] + px[i + 2]) / 3; out.push(Math.round(t / 800)); } return out; }, frames);
+    ok(frames.length > 5 && Math.max(...lum) < 90, `opening Path, Tangle and Mini in dark: ${frames.length} frames, brightest ${Math.max(...lum)} of 255 (a light frame is 200+)`);
+    await ctx.close();
+  },
+
   /* ---------- finish sheet, per type ---------- */
   async 'finish:tangle'(b) {
     const ev = []; const { ctx, p } = await open(b, F.tangle, { events: ev });

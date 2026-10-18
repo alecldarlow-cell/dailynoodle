@@ -1,7 +1,8 @@
 /* The Daily Noodle: the shared finish sheet (engines/finish.js). 18 Oct 2026.
    Everything is scoped to .fin-box so no engine's own styles leak in or out.
-   Dark values apply only on engines that set html.dn-dark (dark mode is being
-   added type by type). */
+   Dark values follow the phone from the first paint (all seven players have a
+   dark palette; it used to wait for the engine to set html.dn-dark, which
+   showed a light frame first). */
 .fin-box{
   --f-bg:#EDEEF2; --f-paper:#FFFFFF; --f-ink:#141726; --f-ink2:#545A6E; --f-line:#C6CAD6; --f-hair:#DCDFE7;
   --f-act:#2E5BFF; --f-onAct:#FFFFFF; --f-actInk:#1B3B9E; --f-actT:#DCE4FF;
@@ -12,13 +13,19 @@
   --f-sans:Archivo,"Helvetica Neue",Arial,system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){
-  html.dn-dark:not([data-theme="light"]) .fin-box{
+  html:not([data-theme="light"]) .fin-box{
     --f-bg:#11131A; --f-paper:#1B1E29; --f-ink:#ECEEF4; --f-ink2:#A6ABBD; --f-line:#3A3F52; --f-hair:#2A2E3C;
     --f-act:#3D63FF; --f-actInk:#A9BBFF; --f-actT:#25305C;
     --f-gold:#F2BE2E; --f-goldT:#3B3010; --f-goldInk:#FFE08A; --f-ok:#4CC793; --f-bad:#FF7A6E;
     --f-block:#050608; --f-frame:#4A5066; --f-cell:#2E3344; --f-cellAlt:#1E2230; --f-g4:#ECEEF4;
   }
 }
+
+/* Before finish.js has built the sheet, the engine's own result box is held back, so its old
+   layout never shows for a frame (Tangle and Borders open on it when reopened). Shown anyway
+   after 2.5 s if finish.js never runs. */
+html:not(.fin-ready) #winModal,html:not(.fin-ready) #modal{visibility:hidden;animation:fin-reveal 0s 2.5s forwards}
+@keyframes fin-reveal{to{visibility:visible}}
 
 /* the box: the engine's own result box, turned into a full-screen sheet */
 html.fin-ready .fin-box:not(.fin-open){display:none!important}
@@ -71,7 +78,7 @@ html.fin-shown body{overflow:hidden}
 .fin-next{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;margin:14px 0 0;color:var(--f-ink)!important;text-decoration:none;border-bottom:1px solid var(--f-line);font-weight:600;font-size:17px}
 .fin-next small{display:block;font-weight:400;font-size:14px;color:var(--f-ink2);margin-top:3px}
 .fin-next svg{color:var(--f-ink2);flex:none}
-.fin-board-slot:empty{display:none}
+.fin-board-slot{min-height:48px}   /* "See today's board" arrives a moment later (dn-board.js); its room is kept so nothing below jumps */
 .fin-board-slot .nn-board-wrap{text-align:left}
 .fin-board-slot .nn-board-link{padding:12px 0!important;min-height:44px;margin-top:4px!important;color:var(--f-actInk)!important;font-family:var(--f-sans)!important;font-size:15px!important}
 .fin-clock{font-size:14px;color:var(--f-ink2);margin:12px 0 0;font-variant-numeric:tabular-nums}

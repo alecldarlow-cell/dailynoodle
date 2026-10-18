@@ -124,17 +124,26 @@
 
   /* ---------- the next puzzle ---------- */
   var todayList = null;
+  /* today's list is kept for the day (dn-today-cache), so the row paints complete straight away instead of
+     jumping when the file arrives; the file is still fetched, and the row repainted only if it differs */
+  var CACHE = 'dn-today-cache';
   function loadToday(cb) {
     if (todayList) return cb(todayList);
+    var c = read(CACHE), t = londonDate(), painted = '';
+    if (c && c.today === t && Array.isArray(c.items)) { todayList = c; painted = JSON.stringify(c.items); cb(c); }
     try {
       fetch('../puzzles-today.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (j) { todayList = j && Array.isArray(j.items) ? j : null; cb(todayList); }, function () { cb(null); });
-    } catch (e) { cb(null); }
+        .then(function (j) {
+          if (!(j && Array.isArray(j.items))) { if (!painted) cb(null); return; }
+          todayList = j; try { localStorage.setItem(CACHE, JSON.stringify(j)); } catch (e) {}
+          if (JSON.stringify(j.items) !== painted) cb(j);
+        }, function () { if (!painted) cb(null); });
+    } catch (e) { if (!painted) cb(null); }
   }
   function fillNext(row, type) {
     loadToday(function (j) {
       var main = row.querySelector('.fin-next-main'), sub = row.querySelector('.fin-next-sub');
-      if (!j) { main.textContent = 'Today’s puzzles'; sub.textContent = ''; row.href = '../puzzles.html'; return; }
+      if (!j) { main.textContent = 'Today’s puzzles'; sub.textContent = '\u00a0'; row.href = '../puzzles.html'; return; }
       var items = j.items, playedN = 0, next = null, start = ORDER.indexOf(type);
       items.forEach(function (it) { if (done(it.type)[it.id]) playedN++; });
       for (var k = 1; k <= ORDER.length && !next; k++) {
@@ -213,7 +222,7 @@
     f.appendChild(st);
 
     // next, board link slot, countdown
-    var next = el('a', 'fin-next', '<span><span class="fin-next-main">Today’s puzzles</span><small class="fin-next-sub"></small></span>' + CHEVRON);
+    var next = el('a', 'fin-next', '<span><span class="fin-next-main">Today’s puzzles</span><small class="fin-next-sub">\u00a0</small></span>' + CHEVRON);
     next.href = '../puzzles.html'; f.appendChild(next); fillNext(next, cfg.type);
     f.appendChild(el('div', 'fin-board-slot'));
     var clock = el('p', 'fin-clock'); f.appendChild(clock); fillClock(clock, NAME[cfg.type]);
