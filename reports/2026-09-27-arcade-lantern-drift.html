@@ -194,11 +194,11 @@ const scene=()=>SCENES.find(c=>c.id===meta.scene)||SCENES[0];
    game_end adds skips; win = clean releases >= 40% of the groups attempted
    (tracking only: the screen stays gentle either way).                    */
 const GAME='lantern-drift';
-let rnd={armed:false,open:false,secs:0,how:'new'};
+let rnd={armed:false,open:false,secs:0,how:'new'},lastRM='';   // lastRM = mode of the last round started (a retry is the same mode again)
 const modeStr=()=>S.mode.charAt(0)==='u'?'unwind-'+U.n:S.len+'min';
 function trk(ev,x){try{if(window.digi&&window.digi.track)window.digi.track(ev,Object.assign({game:GAME},x));}catch(e){}}
 function rndArm(how){rnd={armed:true,open:false,secs:0,how:how||'new'};}
-function rndStart(){if(!rnd.armed||rnd.open)return;rnd.armed=false;rnd.open=true;trk('game_start',{mode:modeStr(),start:rnd.how});}
+function rndStart(){if(!rnd.armed||rnd.open)return;rnd.armed=false;rnd.open=true;lastRM=modeStr();trk('game_start',{mode:modeStr(),start:rnd.how});}
 function rndEnd(win,x){if(!rnd.open)rndStart();if(!rnd.open)return;rnd.open=false;trk('game_end',Object.assign({win:!!win,secs:Math.round(rnd.secs),mode:modeStr()},x));}
 // in the update loop, while playing and not paused: if(rnd.open) rnd.secs+=dt;
 
@@ -297,7 +297,7 @@ function yOf(h){const top=H*0.27+22,bot=waterY-24;return bot-h*(bot-top);}   // 
 
 function enterReady(){try{if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();}catch(e){}ov.hidden=true;ov.className='';S.mode='ready';S.paused=false;S.len=meta.len;S.dur=LENS[S.len];S.total=Math.round(S.dur/STEP);
  S.marks=new Uint8Array(S.total);S.idx=0;S.got=0;S.seen=0;S.tau=0;S.h=g(0);S.v=0;S.hold=false;S.parts=[];ptrs.clear();keyHold=false;
- rndArm(anyRound?'retry':'new');$('tut').hidden=meta.tutDone;S.guide=!meta.tutDone;lastCue='';}
+ rndArm(lastRM===modeStr()?'retry':'new');$('tut').hidden=meta.tutDone;S.guide=!meta.tutDone;lastCue='';}
 function beginSession(){if(S.mode!=='ready'||S.paused)return;S.mode='play';S.tau=0;S.h=g(0);S.v=-DOWN*BL;S.lh=true;S.th=0;anyRound=true;rndStart();}
 function onHold(){audioInit();if(S.mode==='ready'&&!S.paused)beginSession();else if(S.mode==='uready'&&!S.paused)uBegin();}
 function judge(i){const t=lightT(i),gd=g(t),n=needs(t);
@@ -349,7 +349,7 @@ let U={n:4,gs:[],res:[],gi:-1,ph:'idle',t:0,ht:0,tot:0,rep:0,soft:false,susp:fal
 function enterUnwind(){try{if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();}catch(e){}ov.hidden=true;ov.className='';
  S.mode='uready';S.paused=false;ptrs.clear();keyHold=false;$('tut').hidden=true;
  const n=meta.un===7?7:4;U={n,gs:GROUPS[n],res:GROUPS[n].map(()=>null),gi:-1,ph:'idle',t:0,ht:0,tot:0,rep:0,soft:false,susp:false,bell:false,nag:false,recue:false,nx:false,ten:0,sky:[],rip:[],dim:0,bodyA:0,moorA:0,half:-1};
- S.h=g(0);S.v=0;S.hold=false;S.parts=[];S.flashT=0;rndArm(anyRound?'retry':'new');lastCue='';}
+ S.h=g(0);S.v=0;S.hold=false;S.parts=[];S.flashT=0;rndArm(lastRM===modeStr()?'retry':'new');lastCue='';}
 function uBegin(){if(S.mode!=='uready'||S.paused)return;S.mode='uplay';U.ph='open';U.t=0;U.half=-1;S.h=g(0);S.v=-DOWN*BL;S.lh=true;S.th=0;anyRound=true;rndStart();}
 function breathStep(dt,hold){S.hold=hold;if(hold!==S.lh){S.lh=hold;S.th=0;}S.th+=dt;S.v+=(vTarget(hold,S.th)-S.v)*Math.min(1,dt*EASE);S.h+=S.v*dt;
  if(S.h<0){S.h=0;if(S.v<0)S.v=0;}if(S.h>HSOFT&&S.v>0)S.v*=Math.max(0,1-(S.h-HSOFT)/(HMAX-HSOFT));if(S.h>HMAX){S.h=HMAX;if(S.v>0)S.v=0;}}
@@ -787,6 +787,5 @@ addEventListener('resize',resize);
 resize();showTitle();requestAnimationFrame(frame);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
