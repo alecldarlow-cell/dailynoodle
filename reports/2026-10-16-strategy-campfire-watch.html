@@ -588,6 +588,12 @@
   .nightbanner{left:50%;right:auto;top:30%;transform:translateX(-50%);padding:10px 20px;border-radius:999px;white-space:nowrap;max-width:92vw;
     overflow:hidden;text-overflow:ellipsis;background:rgba(8,12,20,.86);box-shadow:0 6px 24px rgba(0,0,0,.45);font-size:19px;animation:banner2 1.8s ease forwards;}
   @keyframes banner2{0%{opacity:0;transform:translate(-50%,-10px) scale(.92)}20%,72%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-6px)}}
+  /* Setup (v2.3): settings sit below the rules as quiet switches; the start button lives in The Night panel. */
+  .setquiet{margin-top:14px;}
+  .setquiet .setrow{margin:8px 0 0;}
+  .setquiet .btn{font-size:13.5px;padding:9px 10px;}
+  .setquiet .btn.sel{background:transparent;color:var(--fire-ink);border-color:var(--ember);box-shadow:none;}
+  .panel .btn.big{margin-top:14px;}
 </style>
 <!-- og:start (tools/og-tags.js — do not edit by hand) -->
 <meta property="og:site_name" content="The Daily Noodle">
@@ -1633,14 +1639,19 @@ function renderSetup(){
       <div class="spark">🔥</div>
       <h1>Campfire Watch</h1>
       <div class="subtitle">A co-operative game for two — keep the fire, hold the dark.</div>
-      <div class="theme-toggle">
-        <button class="btn ${theme==='day'?'sel':''}" onclick="setTheme('day')">☀ Daylight</button>
-        <button class="btn ${theme==='night'?'sel':''}" onclick="setTheme('night')">☾ Night</button>
-        <button class="btn ghost" onclick="toggleSound()" style="padding:9px 14px;flex:0 0 auto">${soundOn?'🔊 Sound':'🔇 Muted'}</button>
-      </div>
-      ${setLabels()}
     </div>
     ${continueHtml}
+    <div class="panel">
+      <h3>The Night</h3>
+      <div class="seg">
+        ${Object.keys(DIFFS).map(k=>`<button class="btn ${st.diff===k?'sel':''}" onclick="setDiff('${k}')">${DIFFS[k].name}<span class="difftag">${DIFFS[k].tag}</span></button>`).join("")}
+      </div>
+      <div style="font-size:12px;color:var(--parch-2);opacity:.8;margin-top:9px;text-align:center;font-family:var(--serif);font-style:italic;">
+        Survive ${DIFFS[st.diff].rounds} nights · fire starts at ${DIFFS[st.diff].fuel} · camp holds ${DIFFS[st.diff].camp}
+      </div>
+      <div class="bestline">${bestLine(st.diff)}</div>
+      <button class="btn big" onclick="startGame()">${g?'Light a New Fire →':'Light the Fire →'}</button>
+    </div>
 
     <div class="panel">
       <h3>The Rangers</h3>
@@ -1660,17 +1671,6 @@ function renderSetup(){
     </div>
 
     <div class="panel">
-      <h3>The Night</h3>
-      <div class="seg">
-        ${Object.keys(DIFFS).map(k=>`<button class="btn ${st.diff===k?'sel':''}" onclick="setDiff('${k}')">${DIFFS[k].name}<span class="difftag">${DIFFS[k].tag}</span></button>`).join("")}
-      </div>
-      <div style="font-size:12px;color:var(--parch-2);opacity:.8;margin-top:9px;text-align:center;font-family:var(--serif);font-style:italic;">
-        Survive ${DIFFS[st.diff].rounds} nights · fire starts at ${DIFFS[st.diff].fuel} · camp holds ${DIFFS[st.diff].camp}
-      </div>
-      <div class="bestline">${bestLine(st.diff)}</div>
-    </div>
-
-    <div class="panel">
       <h3>How to Survive</h3>
       <div class="zkey">
         <span class="zchip" style="background:#e23b2e"><b>1</b> Clearing</span>
@@ -1687,7 +1687,14 @@ function renderSetup(){
       </ul>
     </div>
 
-    <button class="btn big" onclick="startGame()">${g?'Light a New Fire →':'Light the Fire →'}</button>
+    <div class="setquiet">
+      <div class="setrow">
+        <button class="btn ${theme==='day'?'sel':''}" onclick="setTheme('day')">☀ Daylight</button>
+        <button class="btn ${theme==='night'?'sel':''}" onclick="setTheme('night')">☾ Night</button>
+        <button class="btn ${soundOn?'sel':''}" onclick="toggleSound()">${soundOn?'🔊 Sound on':'🔇 Muted'}</button>
+      </div>
+      ${setLabels()}
+    </div>
     <div class="backrow"><a class="backlink" href="../games.html">← Digi Games</a></div>
     <div class="footnote">One phone, passed between you · v${VERSION}</div>
   `;
@@ -2070,6 +2077,5 @@ if(window.__DGTEST===true){
 initFx();
 render();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
