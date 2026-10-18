@@ -60,7 +60,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 #info .cost{float:right;color:var(--gold);font-weight:800;font-size:13px}
 #info .stat{margin-top:1px;color:#ffe9a6;font-weight:700;font-variant-numeric:tabular-nums}
 #info .desc{opacity:.8}
-#toast{position:absolute;left:50%;top:calc(118px + var(--st));transform:translateX(-50%);text-align:center;pointer-events:none;transition:opacity .5s;width:86%}
+#toast{position:absolute;left:50%;top:calc(118px + var(--st));transform:translateX(-50%);text-align:center;pointer-events:none;transition:opacity .5s;width:max-content;max-width:min(340px,calc(100% - 32px));box-sizing:border-box;background:rgba(8,20,33,.6);border-radius:14px;padding:8px 16px 10px}
 #toast h2{font-family:"Bree Serif",Georgia,serif;font-weight:400;font-size:28px;margin:0;text-shadow:0 2px 8px rgba(0,0,0,.6)}
 #toast p{margin:4px 0 0;font-weight:700;font-size:13px;text-shadow:0 1px 4px rgba(0,0,0,.8)}
 #toast.banner{top:calc(52px + var(--st));width:max-content;max-width:calc(100% - 24px);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 12px}
