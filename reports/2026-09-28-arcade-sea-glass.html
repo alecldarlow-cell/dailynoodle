@@ -258,11 +258,12 @@ function sset(k,v){try{window.localStorage.setItem(k,JSON.stringify(v));}catch(e
 function sdel(k){try{window.localStorage.removeItem(k);}catch(e){}}
 const isInt=(v,lo,hi)=>Number.isInteger(v)&&v>=lo&&v<=hi;
 const prefersRM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}})();
-function freshMeta(){return{v:1,tide:1,filled:0,total:0,found:{},beach:'sand',jar:'kilner',muted:false,rm:prefersRM,hints:true,tutDone:false};}
+const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches;}catch(e){return false;}})();   // full screen is on by default for touch screens (site contract §10)
+function freshMeta(){return{v:1,tide:1,filled:0,total:0,found:{},beach:'sand',jar:'kilner',muted:false,rm:prefersRM,hints:true,tutDone:false,fs:coarse};}
 function cleanMeta(m){const f=freshMeta();if(!m||typeof m!=='object')return f;
  if(isInt(m.tide,1,1e6))f.tide=m.tide;if(isInt(m.filled,0,1e6))f.filled=m.filled;if(isInt(m.total,0,1e9))f.total=m.total;
  if(m.found&&typeof m.found==='object')for(const k in m.found)if(FIND[k]&&isInt(m.found[k],1,1e6))f.found[k]=m.found[k];
- for(const k of ['muted','rm','hints','tutDone'])if(typeof m[k]==='boolean')f[k]=m[k];
+ for(const k of ['muted','rm','hints','tutDone','fs'])if(typeof m[k]==='boolean')f[k]=m[k];   // saves from before 'fs' get the default
  if(typeof m.beach==='string'&&BEACHES.some(b=>b.id===m.beach))f.beach=m.beach;if(typeof m.jar==='string'&&JARS.some(j=>j.id===m.jar))f.jar=m.jar;
  if(f.filled>f.tide)f.filled=f.tide-1;if(beachOf(f.beach).need>f.total)f.beach='sand';if(jarOf(f.jar).need>f.total)f.jar='kilner';return f;}
 let meta=cleanMeta(sget(KEY));
@@ -660,11 +661,17 @@ addEventListener('keydown',e=>{audioInit();
 /* ---------- full screen (Android and desktop browsers; iPhone Safari has no full-screen API for pages) ---------- */
 const fsOK=(()=>{try{return !!(document.fullscreenEnabled||document.webkitFullscreenEnabled);}catch(e){return false;}})();
 const isFS=()=>{try{return !!(document.fullscreenElement||document.webkitFullscreenElement);}catch(e){return false;}};
-function toggleFS(){try{if(isFS()){const x=document.exitFullscreen||document.webkitExitFullscreen;const p=x&&x.call(document);if(p&&p.catch)p.catch(()=>{});}
- else{const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;const p=rq&&rq.call(el,{navigationUI:'hide'});if(p&&p.catch)p.catch(()=>{});}}catch(e){}}
+const ORIENT='portrait';
+/* asked from the taps that start or resume play (click handlers only: phones ignore it from pointerdown), and again at each if it has been swiped away */
+function goFS(){if(!fsOK||!meta.fs||isFS())return;try{const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;if(!rq)return;
+ const lock=()=>{try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock(ORIENT).catch(()=>{});}catch(e){}};
+ const p=rq.call(el,{navigationUI:'hide'});if(p&&p.then)p.then(lock,()=>{});else lock();}catch(e){}}
+function exitFS(){try{if(!isFS())return;const x=document.exitFullscreen||document.webkitExitFullscreen;const p=x&&x.call(document);if(p&&p.catch)p.catch(()=>{});}catch(e){}}
+function setFS(on){meta.fs=on;saveMeta();if(on)goFS();else exitFS();fsSync();}
+function toggleFS(){setFS(!isFS());}
 function fsSync(){const b=$('fsBtn');b.hidden=!(fsOK&&mode==='title'&&onTitle);b.setAttribute('aria-label',isFS()?'Leave full screen':'Full screen');
  $('fsIcon').setAttribute('d',isFS()?'M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5':'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5');
- const s=$('sFs');if(s){const on=isFS();s.setAttribute('aria-checked',on);s.querySelector('.sw').classList.toggle('on',on);}}
+ const s=$('sFs');if(s){const on=meta.fs;s.setAttribute('aria-checked',on);s.querySelector('.sw').classList.toggle('on',on);}}
 $('fsBtn').addEventListener('click',()=>{audioInit();toggleFS();});
 document.addEventListener('fullscreenchange',()=>{fsSync();layout();});document.addEventListener('webkitfullscreenchange',()=>{fsSync();layout();});
 
@@ -692,7 +699,7 @@ function showTitle(){mode='title';const cont=run&&run.started;
  <div class="tv-links"><button class="btn" id="tShelf"><span>Collection shelf<small>${foundN()} of ${FINDS.length} rare finds</small></span></button>
  <button class="btn" id="tLooks"><span>Beaches and jars<small>${esc(beachOf(meta.beach).name)}</small></span></button></div>
  <p class="foot">${meta.total} piece${meta.total===1?'':'s'} of sea glass gathered so far</p></div>`,()=>{
-  on('go',()=>{audioInit();startPlay();});on('tShelf',()=>showShelf(showTitle));on('tLooks',()=>showLooks(showTitle));});}
+  on('go',()=>{audioInit();goFS();startPlay();});on('tShelf',()=>showShelf(showTitle));on('tLooks',()=>showLooks(showTitle));});}
 function startPlay(){mode='play';hideCard();if(!meta.tutDone&&!tutEl)showTutorial();if(!run.started&&run.easy&&!meta.tutDone)hint=run.easy;}
 function showTutorial(){tutEl=document.createElement('div');tutEl.className='card tut';tutEl.setAttribute('role','note');
  placeTut();
@@ -707,23 +714,24 @@ function openPause(){if(mode!=='play'||modalOpen)return;sel=null;drag=null;saveR
  ${sw('sSnd',!meta.muted,'Sound','Glass clinks and a quiet surf')}
  ${sw('sRm',meta.rm,'Reduce motion','Shorter, softer movement')}
  ${sw('sHint',meta.hints,'Move hints','A faint shimmer after 8 seconds')}
- ${fsOK?sw('sFs',isFS(),'Full screen','Hide the browser bars'):''}</div>
+ ${fsOK?sw('sFs',meta.fs,'Full screen','Hide the browser bars'):''}</div>
  <div class="sect">Your shore</div><div class="list">
  ${nav('pShelf','Collection shelf',foundN()+' of '+FINDS.length+' rare finds')}
  ${nav('pLooks','Beaches and jars',esc(beachOf(meta.beach).name)+' with the '+esc(jarOf(meta.jar).name.toLowerCase()))}</div>
  <div class="sect">This tide</div><div class="list">
  <button class="btn" id="again"><span>Start this tide again<small>Everything you've gathered stays on your shelf</small></span></button>
  <a class="btn" href="../games.html"><span>&larr; Digi Games<small>Your tide is saved for next time</small></span></a></div>`,()=>{
-  on('res',resume);
+  on('res',resumeTap);
   on('sSnd',()=>{audioInit();setMute(!meta.muted);P2();$('sSnd').focus();});
   on('sRm',()=>{meta.rm=!meta.rm;saveMeta();P2();$('sRm').focus();});
   on('sHint',()=>{meta.hints=!meta.hints;hint=null;saveMeta();P2();$('sHint').focus();});
-  on('sFs',()=>{toggleFS();});
+  on('sFs',()=>{setFS(!meta.fs);});
   on('pShelf',()=>showShelf(P2));on('pLooks',()=>showLooks(P2));
   on('again',()=>{const b=$('again');if(b.dataset.sure!=='1'){b.dataset.sure='1';b.classList.add('armed');b.querySelector('small').textContent='Tap again to start tide '+run.tide+' fresh';return;}
-   hideTutorial();newRun('retry');hideCard();toast('Tide '+run.tide+', fresh from the sea');});});
+   hideTutorial();newRun('retry');goFS();hideCard();toast('Tide '+run.tide+', fresh from the sea');});});
  P2();}
 function resume(){hideCard();}
+function resumeTap(){goFS();resume();}
 function showShelf(back){const groups=[['stopper','Stoppers'],['marble','Marbles'],['shard','Pottery shards']];
  showCard(cardKind||'shelf',head('Collection shelf')+`<p class="small">${foundN()} of ${FINDS.length} found. Rare finds wash up buried under the glass: clear a piece next to the twinkle to free one.</p>`+
   groups.map(([t,n])=>`<h3>${n}</h3><div class="shelf">`+FINDS.filter(f=>f.type===t).map(f=>{const c=meta.found[f.id]||0,bn=beachOf(f.beach);
@@ -749,7 +757,7 @@ function showEnd(win,done,stars,unlocked){
  <a class="btn" id="eBack" href="../games.html"><span>&larr; Digi Games</span></a></div>`,el=>{
   el.querySelectorAll('[data-g]').forEach(r=>r.prepend(glassIcon(+r.dataset.g,26)));
   el.querySelectorAll('[data-fd]').forEach(r=>{const f=FIND[r.dataset.fd],fr=done.finds.find(x=>x.id===f.id).freed;const ic=findIcon(fr?f:TYPE_GHOST[f.type],52,!fr);ic.setAttribute('aria-hidden','true');r.prepend(ic);});
-  on('next',()=>{newRun('new');mode='play';hideCard();});on('eShelf',()=>showShelf(card));on('eLooks',()=>showLooks(card));});
+  on('next',()=>{newRun('new');goFS();mode='play';hideCard();});on('eShelf',()=>showShelf(card));on('eLooks',()=>showLooks(card));});
  /* the card opens the moment the last piece lands, often under a finger still playing: ignore taps on it for a moment */
  card();const c=$('card');c.classList.add('settling');setTimeout(()=>c.classList.remove('settling'),450);}
 
@@ -784,6 +792,5 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{}).catch(
 
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
