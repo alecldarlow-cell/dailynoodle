@@ -20,8 +20,8 @@ body{font-family:var(--sans);font-size:16px;line-height:1.4;-webkit-tap-highligh
   -webkit-user-select:none;user-select:none;touch-action:manipulation}
 button{font:inherit;color:inherit}
 a{color:inherit}
-.screen{position:fixed;inset:0;height:100dvh;display:none;
-  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+.screen{position:fixed;inset:0;height:100dvh;height:var(--dn-vh,100dvh);display:none;
+  padding:var(--dn-top,env(safe-area-inset-top,0px)) env(safe-area-inset-right,0px) var(--dn-bot,env(safe-area-inset-bottom,0px)) env(safe-area-inset-left,0px)}
 .screen.vis{display:block}
 .wrap{max-width:560px;height:100%;margin:0 auto;padding:10px 16px 16px;display:flex;flex-direction:column;gap:12px;min-height:0}
 .scroll{overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -73,7 +73,7 @@ details.how[open] summary::before{transform:rotate(90deg)}
 details.how p{margin:6px 0}
 
 /* play */
-#play .wrap{gap:8px;padding-bottom:max(14px,env(safe-area-inset-bottom,0px))}
+#play .wrap{gap:8px;padding-bottom:max(14px,var(--dn-bot,env(safe-area-inset-bottom,0px)))}
 .ptop{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;min-height:52px}
 .iconbtn{width:44px;height:44px;border-radius:8px;border:1.5px solid var(--edge);background:var(--paper);display:grid;place-items:center;cursor:pointer;padding:0}
 .iconbtn svg{width:18px;height:18px}

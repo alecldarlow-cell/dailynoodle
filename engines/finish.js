@@ -23,6 +23,27 @@
      tracker's once-only finish signal, added by the engine, so reopening a
      finished puzzle shows the sheet without logging a second finish.
 --------------------------------------------------------------------------- */
+/* full-screen app only: hold the top and bottom insets and the screen height steady (dn-pin, 18 Oct 2026).
+   On every page load Android briefly brings its bars back, which changed these and made the page jump.
+   A value is taken up only once it has held for 0.7 s, and remembered per orientation for the next page. */
+(function(){try{
+  if(!window.__dnPinTest&&(!window.matchMedia||!matchMedia('(display-mode: fullscreen)').matches))return;   // __dnPinTest: tools/tests
+  var r=document.documentElement,K='dn-pin',saved={},cur=null,t=0;
+  var p=document.createElement('div');
+  p.style.cssText='position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none;height:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+  r.appendChild(p);
+  try{saved=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}
+  function key(){return innerWidth>innerHeight?'l':'p';}
+  function now(){var s=getComputedStyle(p);return {t:Math.round(parseFloat(s.height)||0),b:Math.round(parseFloat(s.paddingBottom)||0),h:innerHeight,w:innerWidth};}
+  function apply(v){r.style.setProperty('--dn-top',v.t+'px');r.style.setProperty('--dn-bot',v.b+'px');r.style.setProperty('--dn-vh',v.h+'px');}
+  var s0=saved[key()];cur=(s0&&s0.w===innerWidth)?s0:now();apply(cur);
+  function check(){clearTimeout(t);t=setTimeout(function(){var v=now();
+    if(v.t!==cur.t||v.b!==cur.b||v.h!==cur.h||v.w!==cur.w){cur=v;apply(v);}
+    saved[key()]=v;try{localStorage.setItem(K,JSON.stringify(saved));}catch(e){}},700);}
+  addEventListener('resize',check);if(window.visualViewport)visualViewport.addEventListener('resize',check);check();
+  setInterval(function(){if(document.hidden)return;var v=now();if(v.t!==cur.t||v.b!==cur.b||v.h!==cur.h||v.w!==cur.w)check();},1000);   // an inset can change without a resize
+}catch(e){}})();
+
 (function () {
   'use strict';
   var queued = (window.dnFinish && window.dnFinish.q) || [];

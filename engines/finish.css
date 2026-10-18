@@ -41,7 +41,7 @@ html.fin-shown body{overflow:hidden}
 .fin-box.fin-open>:not(.fin){display:none!important}
 
 .fin{box-sizing:border-box;max-width:480px;margin:0 auto;font-family:var(--f-sans);color:var(--f-ink);text-align:left;
-  padding:max(8px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) max(40px,env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));
+  padding:max(8px,var(--dn-top,env(safe-area-inset-top,0px))) max(20px,env(safe-area-inset-right,0px)) max(40px,var(--dn-bot,env(safe-area-inset-bottom,0px))) max(20px,env(safe-area-inset-left,0px));
   -webkit-font-smoothing:antialiased;line-height:1.4}
 .fin *,.fin *::before,.fin *::after{box-sizing:border-box}
 .fin a{color:inherit}

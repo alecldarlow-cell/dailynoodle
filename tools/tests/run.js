@@ -214,6 +214,29 @@ const TESTS = {
     }
   },
 
+  /* full-screen app: Android brings its bars back for a moment on each page load; the page must not move */
+  async 'flash:flick'(b) {
+    for (const [name, file, sel] of [['puzzles page', '../puzzles.html', '.mast'], ['mini start', F.mini, '.dn-start-title'], ['link board', F.link, '#board']]) {
+      const ctx = await newPhone(b, { scheme: 'dark' }); await ctx.addInitScript(() => { window.__dnPinTest = 1; });   // as display-mode: fullscreen
+      const p = await ctx.newPage(); const c = await ctx.newCDPSession(p);
+      await c.send('Emulation.setSafeAreaInsetsOverride', { insets: { top: 28, bottom: 16 } });
+      await p.goto('https://dailynoodle.co.uk/reports/' + file); await p.waitForTimeout(1200);
+      if (sel === '#board') { await tap(p, p.locator('#dnPlay')); await p.waitForTimeout(800); }
+      await p.evaluate(sel => { window.__pos = []; const go = () => { const e = document.querySelector(sel); if (e) { const r = e.getBoundingClientRect(); const k = Math.round(r.top) + ',' + Math.round(r.height);
+        if (window.__pos[window.__pos.length - 1] !== k) window.__pos.push(k); } if (!window.__stop) requestAnimationFrame(go); }; go(); }, sel);
+      await p.setViewportSize({ width: 390, height: 800 }); await c.send('Emulation.setSafeAreaInsetsOverride', { insets: { top: 44, bottom: 0 } });
+      await p.waitForTimeout(220);
+      await p.setViewportSize({ width: 390, height: 844 }); await c.send('Emulation.setSafeAreaInsetsOverride', { insets: { top: 28, bottom: 16 } });
+      await p.waitForTimeout(1500);
+      const flick = await p.evaluate(() => window.__pos.slice());
+      await c.send('Emulation.setSafeAreaInsetsOverride', { insets: { top: 48, bottom: 16 } }); await p.waitForTimeout(2600);
+      const all = await p.evaluate(() => { window.__stop = 1; return window.__pos; });
+      ok(flick.length === 1, `${name}: a 0.2 s flick of the system bars moves nothing (${flick.join(' -> ')})`);
+      ok(all.length === 2, `${name}: a lasting inset change is taken up once (${all.join(' -> ')})`);
+      await ctx.close();
+    }
+  },
+
   /* ---------- finish sheet, per type ---------- */
   async 'finish:tangle'(b) {
     const ev = []; const { ctx, p } = await open(b, F.tangle, { events: ev });

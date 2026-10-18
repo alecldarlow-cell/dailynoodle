@@ -125,10 +125,10 @@ footer{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spaci
 html.app-mode,html.app-mode body{height:100%;overflow:hidden;overscroll-behavior:none}
 html.app-mode body{padding:0;display:block}
 html.app-mode .app{
-  height:100vh;height:100dvh;height:100svh;
+  height:100vh;height:100dvh;height:100svh;height:var(--dn-vh,100svh);
   max-width:520px;margin:0 auto;
   display:flex;flex-direction:column;
-  padding:calc(6px + env(safe-area-inset-top)) 12px calc(8px + env(safe-area-inset-bottom));
+  padding:calc(6px + var(--dn-top,env(safe-area-inset-top,0px))) 12px calc(8px + var(--dn-bot,env(safe-area-inset-bottom,0px)));
 }
 html.app-mode header{margin-bottom:8px;padding-bottom:8px}
 html.app-mode .mono-mark{width:28px;height:28px;font-size:12px}

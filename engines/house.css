@@ -102,7 +102,7 @@ html.dn-house.dn-sweep .rules,html.dn-house.dn-link details.how{display:none}
 
 /* ---- the start card ---- */
 .dn-start{position:fixed;inset:0;z-index:50;overflow-y:auto;background:var(--paper);color:var(--ink);font-family:var(--sans)}
-.dn-start-in{max-width:480px;margin:0 auto;padding:max(8px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) max(32px,env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.dn-start-in{max-width:480px;margin:0 auto;padding:max(8px,var(--dn-top,env(safe-area-inset-top,0px))) max(20px,env(safe-area-inset-right,0px)) max(32px,var(--dn-bot,env(safe-area-inset-bottom,0px))) max(20px,env(safe-area-inset-left,0px))}
 html.dn-starting body{overflow:hidden}
 .dn-start-top{display:flex;justify-content:space-between;align-items:center;min-height:52px}
 .dn-back-text{color:var(--ink-soft);text-decoration:none;font-size:15px;min-height:44px;display:inline-flex;align-items:center;gap:6px}

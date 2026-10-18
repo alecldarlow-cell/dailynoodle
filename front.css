@@ -58,9 +58,9 @@
   /* Full-screen app on phones with a camera cutout: the page is drawn under
      it (viewport-fit=cover on each front page) and content keeps clear. */
   html{background:var(--canvas)}
-  .wrap{padding-top:env(safe-area-inset-top,0px);
+  .wrap{padding-top:var(--dn-top,env(safe-area-inset-top,0px));
     padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
-    padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+    padding-bottom:calc(72px + var(--dn-bot,env(safe-area-inset-bottom,0px)))}
   @media(min-width:560px){.wrap{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}}
   a{color:inherit;text-decoration:none}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
@@ -232,3 +232,6 @@
   .optout:disabled{cursor:default;text-decoration:none}
 
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* phones: no page scrollbar drawn (they scroll by touch; Android flashed one as a page settled or came back) */
+  @media(pointer:coarse){html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}}
