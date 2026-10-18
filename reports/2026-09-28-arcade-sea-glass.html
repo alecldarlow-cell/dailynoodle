@@ -330,13 +330,15 @@ function layout(){const wideNow=innerWidth>innerHeight*1.15&&innerHeight<620;sta
   L.by=L.tide.y-gapA-bh;L.bx=Math.round((W-bw)/2);
   L.sea={x:0,y:0,w:W,h:L.by-4,r:0};
   L.label={x:pad+8,y:28};
-  const jy=Math.max(48,Math.round(L.sea.h/2-jh/2+12));L.jar={x:pad+8,y:jy,w:jw,h:jh};
-  L.tg={x:L.jar.x+jw+20,y:jy+6,w:W-(L.jar.x+jw+20)-pad};}
+  /* on taller phones the jar (up to 1.5x) and the colour counts (up to 1.25x) grow into the empty sea, as far as the width allows */
+  const hs=Math.max(1,Math.min(1.5,1+(L.sea.h-230)/200,(W-2*pad-28-252)/64)),JW=Math.round(jw*hs),JH=Math.round(jh*hs);
+  const jy=Math.max(48,Math.round(L.sea.h/2-JH/2+12));L.jar={x:pad+8,y:jy,w:JW,h:JH};L.hs=hs;
+  L.tg={x:L.jar.x+JW+20,y:jy+6+Math.round((JH-jh)/2),w:W-(L.jar.x+JW+20)-pad};L.cs=Math.max(1,Math.min(hs,1.25,L.tg.w/252));}
  else{const side=Math.min(300,Math.round(W*0.42));
   const cell=Math.floor(Math.min((W-side-pad-16)/COLS,(H-20)/ROWS,64));L.cell=cell;L.side=side;
   L.bx=Math.round(side+(W-side-cell*COLS)/2);L.by=Math.round((H-cell*ROWS)/2);
   L.sea={x:0,y:0,w:side,h:Math.round(Math.min(176,H*0.5)),r:24};L.label={x:pad+8,y:26};
-  L.jar={x:pad+8,y:L.sea.h-jh-16,w:jw,h:jh};L.tg={x:L.jar.x+jw+16,y:L.jar.y+6,w:side-(L.jar.x+jw+16)-pad};
+  L.jar={x:pad+8,y:L.sea.h-jh-16,w:jw,h:jh};L.hs=1;L.cs=1;L.tg={x:L.jar.x+jw+16,y:L.jar.y+6,w:side-(L.jar.x+jw+16)-pad};
   L.tide={x:pad,y:L.sea.h+14,w:side-2*pad,h:30};L.finds={x:pad+6,y:L.tide.y+42,w:side-2*pad-12,h:56};}
  buildSprites();buildScene();placeTut();dirty=true;}
 
@@ -560,7 +562,7 @@ let amb=0;   // ambient time: the sea keeps moving on the title screen, and stop
 function draw(){const B=beachOf(meta.beach);ctx.setTransform(dpr,0,0,dpr,0,0);amb=meta.rm?0:performance.now()/1000;
  if(scene)ctx.drawImage(scene,0,0,W,H);if(!run)return;
  drawSea(B);drawHud(B);drawBoard(B);drawShoreEdge(B);drawTide(B);drawFinds(B);
- for(const f of fliers){if(f.t<0)continue;const k=Math.min(1,f.t/f.dur),e=easeS(k),tg=f.jar?{x:L.jar.x+L.jar.w/2,y:L.jar.y+24}:{x:L.tg.x+60,y:L.tg.y+64};
+ for(const f of fliers){if(f.t<0)continue;const k=Math.min(1,f.t/f.dur),e=easeS(k),tg=f.jar?{x:L.jar.x+L.jar.w/2,y:L.jar.y+24*L.hs}:{x:L.tg.x+60*L.cs,y:L.tg.y+64*L.cs};
   const x=f.x0+(tg.x-f.x0)*e,y=f.y0+(tg.y-f.y0)*e-(meta.rm?0:Math.sin(Math.PI*k)*46),s=L.cell*SPR*(1-.6*e);ctx.globalAlpha=f.jar?1:1-.75*k;ctx.drawImage(sprites[f.c],x-s/2,y-s/2,s,s);ctx.globalAlpha=1;}
  for(const e of fx){const k=e.t/e.dur,sl=slotPos(e.slot),s0=L.cell*.95,s1=sl.s*.95;let x,y,s,a=1;
   if(k<.45){const q=easeS(k/.45);x=e.x0;y=e.y0-q*L.cell*(meta.rm?.1:.5);s=s0;a=meta.rm?q:1;
@@ -589,12 +591,12 @@ function drawHud(B){const J=L.jar,total=Object.values(run.targets).reduce((a,b)=
  drawJar(ctx,J.x,J.y,J.w,J.h,jarShown,total,meta.jar,true);
  ctx.textBaseline='middle';ctx.textAlign='left';ctx.fillStyle=B.foam;
  ctx.globalAlpha=.92;ctx.font=`700 14px ${FONT}`;ctx.fillText('Tide '+run.tide,L.label.x,L.label.y);ctx.globalAlpha=1;
- const keys=Object.keys(run.targets),cw=Math.min(84,L.tg.w/keys.length);
- keys.forEach((k,i)=>{const x=L.tg.x+i*cw,y=L.tg.y+20,left=run.targets[k]-(shownGot[k]||0),done=left<=0;
-  ctx.globalAlpha=done?.55:1;ctx.drawImage(sprites[k],x-9,y-26,52,52);ctx.globalAlpha=1;
-  if(done){ctx.fillStyle=B.foam;ctx.beginPath();ctx.arc(x+28,y+10,8.5,0,7);ctx.fill();ctx.strokeStyle=B.deep;ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(x+24,y+10);ctx.lineTo(x+27,y+13);ctx.lineTo(x+32.5,y+7);ctx.stroke();}
-  else{ctx.fillStyle=B.foam;ctx.font=`800 22px ${FONT}`;ctx.fillText(String(left),x+39,y+1);}});
- ctx.fillStyle=B.foam;ctx.globalAlpha=.88;ctx.font=`600 13px ${FONT}`;ctx.fillText(shownGathered+(shownGathered===1?' piece':' pieces')+' gathered',L.tg.x,L.tg.y+62);ctx.globalAlpha=1;}
+ const q=L.cs||1,keys=Object.keys(run.targets),cw=Math.min(84*q,L.tg.w/keys.length);
+ keys.forEach((k,i)=>{const x=L.tg.x+i*cw,y=L.tg.y+20*q,left=run.targets[k]-(shownGot[k]||0),done=left<=0;
+  ctx.globalAlpha=done?.55:1;ctx.drawImage(sprites[k],x-9*q,y-26*q,52*q,52*q);ctx.globalAlpha=1;
+  if(done){ctx.fillStyle=B.foam;ctx.beginPath();ctx.arc(x+28*q,y+10*q,8.5*q,0,7);ctx.fill();ctx.strokeStyle=B.deep;ctx.lineWidth=2.2*q;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(x+24*q,y+10*q);ctx.lineTo(x+27*q,y+13*q);ctx.lineTo(x+32.5*q,y+7*q);ctx.stroke();}
+  else{ctx.fillStyle=B.foam;ctx.font=`800 ${Math.round(22*q)}px ${FONT}`;ctx.fillText(String(left),x+39*q,y+1);}});
+ ctx.fillStyle=B.foam;ctx.globalAlpha=.88;ctx.font=`600 ${Math.round(13*q)}px ${FONT}`;ctx.fillText(shownGathered+(shownGathered===1?' piece':' pieces')+' gathered',L.tg.x,L.tg.y+62*q);ctx.globalAlpha=1;}
 
 function drawCastle(cx,by,B){const c=B.castle,d=darken(c,.25);ctx.save();
  ctx.fillStyle='rgba(70,48,22,.16)';ctx.beginPath();ctx.ellipse(cx,by+.5,18,3,0,0,7);ctx.fill();
@@ -803,6 +805,5 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{}).catch(
 
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
