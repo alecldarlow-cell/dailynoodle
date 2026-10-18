@@ -1881,6 +1881,7 @@ cv.addEventListener('pointerdown', e => {
   if (Math.hypot(x - LX, y - LY) < 24) { downOnNext = [LX, LY]; return; }
   downOnNext = null;
   S.aiming = true; S.guide = true; aimAt(x, y);
+  hideHint();   // the tip card sits over the aim line, and dragging is what it was asking for
   try { cv.setPointerCapture(e.pointerId); } catch (er) {}
 });
 cv.addEventListener('pointermove', e => {
@@ -1918,7 +1919,7 @@ window.addEventListener('keydown', e => {
   const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
   if (k === 'p' || k === 'Escape') { if (S.mode === 'play') { pause(); e.preventDefault(); } else if (S.mode === 'paused' && card.querySelector('[data-act=resume]')) { resume(); e.preventDefault(); } return; }
   if (S.mode !== 'play' || !ov.hidden) return;
-  if (['ArrowLeft', 'ArrowRight', 'a', 'd', 'Shift'].includes(k)) { keys[k] = true; e.preventDefault(); }
+  if (['ArrowLeft', 'ArrowRight', 'a', 'd', 'Shift'].includes(k)) { keys[k] = true; e.preventDefault(); if (k !== 'Shift') hideHint(); }
   else if (k === ' ' || k === 'ArrowUp' || k === 'Enter' || k === 'w') { e.preventDefault(); if (!e.repeat) fire(); }
   else if (k === 's' || k === 'x' || k === 'ArrowDown') { e.preventDefault(); if (!e.repeat) swap(); }
 });
