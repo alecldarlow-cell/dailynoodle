@@ -470,6 +470,9 @@ function initAppMode(){
   addEventListener("resize",scheduleFit);
   addEventListener("orientationchange",scheduleFit);
   if(window.visualViewport)visualViewport.addEventListener("resize",scheduleFit);
+  /* refit whenever the board's space changes (e.g. the "Solved in" line appearing) */
+  const gw=document.querySelector(".gridwrap");
+  if(gw&&window.ResizeObserver)new ResizeObserver(scheduleFit).observe(gw);
   scheduleFit();
 }
 initAppMode();

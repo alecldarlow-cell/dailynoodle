@@ -197,3 +197,9 @@ html.app-mode .controls #fs{flex:0 0 auto}
 @media (max-height:660px){html.app-mode .cluebox{margin-top:5px}html.app-mode .controls{margin-bottom:5px}}
 /* once solved, checking and revealing have nothing left to do */
 body.win #checkWord,body.win #checkAll,body.win #revealWord{display:none}
+/* 18 Oct 2026 (2) — keep the keyboard clear of the phone's gesture bar
+   (fullscreen gives no safe-area inset on most Androids), and once solved let
+   Share result be an ordinary-sized button rather than a full-width bar. */
+html.app-mode .app{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+html.app-mode body.win .controls button{flex:0 0 auto}
+html.app-mode .controls #fs{margin-left:auto}
