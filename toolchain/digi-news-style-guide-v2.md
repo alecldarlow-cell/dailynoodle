@@ -1,8 +1,8 @@
-# DIGI NEWS — Headline & Style Guide (v2)
+# NOODLE NEWS — Headline & Style Guide (v2)
 
 The rubric decides what is true enough to print; this guide decides how it reads. It is binding on headlines, standfirsts and the first two paragraphs, and advisory everywhere else.
 
-All the examples below are real Digi News headlines and paragraphs, with rewrites. Each rewrite was checked against the piece's own figures and caveat.
+All the examples below are real Noodle News headlines and paragraphs, with rewrites. Each rewrite was checked against the piece's own figures and caveat.
 
 v2 adds the news lede (§3), the explanation paragraph (§3a) and the spine headings (§7). The aim is the clarity of the Economist, the FT and the Guardian: the reader knows what happened, why, and why it matters before any detail.
 
@@ -13,7 +13,7 @@ v2 adds the news lede (§3), the explanation paragraph (§3a) and the spine head
 **The rules**
 
 - **One idea.** If the headline needs "but", "after", "while" or a full stop to hold two facts, pick one. The second fact goes in the standfirst.
-- **About 12 words or fewer.** The median Digi News headline is 14 words, and four in ten run longer. Front-page cards and phone screens truncate them.
+- **About 12 words or fewer.** The median Noodle News headline is 14 words, and four in ten run longer. Front-page cards and phone screens truncate them.
 - **Say what it means, not what the data show.** "The NHS hit its waiting-time target in March. It has not improved since" beats "England's 18-week waiting performance has held near 65% since March". A headline built on a statistic should still tell the reader what the statistic means.
 - **Lead with the subject and an active verb.** "UK smoking rate halves", not "Fewer than one in ten UK adults now smoke".
 - **Rest on the claim that survives the caveat (rubric §5b).** The headline is written last, after the caveat card.
@@ -120,7 +120,7 @@ A piece that cannot answer "why now?" in a clause has failed rubric §0.
 
 ## 6. Links and follow-ups
 
-- When an earlier Digi News piece covered the topic, link to it in the sentence that mentions the earlier finding: "Digi News [reported in August](…) that NOAA's switch to a relative index moved 2026 down the rankings."
+- When an earlier Noodle News piece covered the topic, link to it in the sentence that mentions the earlier finding: "Noodle News [reported in August](…) that NOAA's switch to a relative index moved 2026 down the rankings."
 - A follow-up's headline says what is new. It does not restate the earlier headline with an updated number.
 
 ---

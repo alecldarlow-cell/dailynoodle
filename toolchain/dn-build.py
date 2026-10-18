@@ -40,7 +40,7 @@ OPTIONAL_META = {"statlabel": "", "subarea": "", "kicker": "ANALYSIS", "built": 
 # Rubric §12/§14: every report carries this line, identical on every piece.
 # Generated here so it cannot be forgotten; skipped if footer.html already has it.
 PRODUCTION_NOTE = ("Researched, written and checked by an AI system working to the "
-                   "Digi News standards; edited and published by the Digi News editor.")
+                   "Noodle News standards; edited and published by the Noodle News editor.")
 PRODUCTION_MARK = "Researched, written and checked by an AI system"
 TOPICS = ["UK politics", "Economy", "Immigration", "AI", "Science", "Medicine", "Society", "World"]
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -180,15 +180,15 @@ def build(args):
 
     head_tail = L[s["fonts"] - 1:s["head_close"]]
     head_tail = [re.sub(r"<title>.*?</title>",
-                        "<title>%s — Digi News</title>" % esc_attr(meta["headline"]), l)
+                        "<title>%s — Noodle News</title>" % esc_attr(meta["headline"]), l)
                  for l in head_tail]
     if not any("<title>" in l for l in head_tail):
-        head_tail.insert(0, "<title>%s — Digi News</title>" % esc_attr(meta["headline"]))
+        head_tail.insert(0, "<title>%s — Noodle News</title>" % esc_attr(meta["headline"]))
 
     masthead = [
         '  <header class="mast">',
         '    <div class="mono">DN</div>',
-        '    <div class="word">Digi<b>News</b></div>',
+        '    <div class="word">Noodle<b>News</b></div>',
         '    <div class="kick">%s</div>' % kicker,
         '  </header>',
         '',
@@ -212,7 +212,7 @@ def build(args):
         footer_inner,
     ] + production + [
         corrections,
-        '    <div><b>Figures to %s.</b> <span class="ver">Digi News &middot; %s &middot; %s.</span></div>'
+        '    <div><b>Figures to %s.</b> <span class="ver">Noodle News &middot; %s &middot; %s.</span></div>'
         % (built_human, meta["version"], meta["slug"]),
         '  </div>',
     ]

@@ -1,4 +1,4 @@
-# DIGI NEWS — Pre-Publish Checklist (v5)
+# NOODLE NEWS — Pre-Publish Checklist (v5)
 
 A piece does not ship until every box is ticked. Each item maps to a rubric section (§). If a box can't be ticked, fix the piece or cut the claim — don't wave it through.
 
@@ -18,7 +18,7 @@ The editorial pass is new in v4. It exists because every failure it catches cost
 - [ ] **Added-value sentence written.** It is one line saying what this piece tells the reader that the source's own headline does not.
 - [ ] **So-what sentence written** (§0, new in v5). One line naming the real-world consequence: for people, a service, money, a market or a pending decision. Not "the figure rose".
 - [ ] **Spine planned** (§0a): what happened → why → why it matters → what happens next, with the source for each.
-- [ ] **Feed checked for the last 30 days.** If Digi News has covered the topic, this is a follow-up: it links back and leads on what changed. If nothing material changed, the piece is dropped.
+- [ ] **Feed checked for the last 30 days.** If Noodle News has covered the topic, this is a follow-up: it links back and leads on what changed. If nothing material changed, the piece is dropped.
 
 ## Sourcing plan (§1, §1b, §1c)
 - [ ] At least one source **independent of the primary release** has been identified.
@@ -76,7 +76,7 @@ The editorial pass is new in v4. It exists because every failure it catches cost
 - [ ] The standing **production note** is present. §12, §14
 - [ ] Any **declaration of interest** is placed under the standfirst and in the footer. §14
 - [ ] No wrongdoing is imputed, or speculated about, without a Tier 1 record. Share-price pieces describe and do not forecast. §16
-- [ ] Prior Digi News coverage of the topic is linked in the body. Any earlier piece whose headline finding is now overturned gets a dated forward-link in its Corrections. §15
+- [ ] Prior Noodle News coverage of the topic is linked in the body. Any earlier piece whose headline finding is now overturned gets a dated forward-link in its Corrections. §15
 - [ ] If this is a revision of a published piece, the version bump has a dated one-line entry in Corrections. §15
 
 ## Writing (style guide)

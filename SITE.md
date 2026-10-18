@@ -23,7 +23,8 @@ in `toolchain/site-sections-and-tracking.md`.
 
 - Every piece, puzzle and game is one HTML file in `reports/`; its desk comes from `dn:kind`, not the folder.
 - Front pages share `front.css` and `front.js`; each page only sets `data-section` on `<html>`.
-- Brand status: front pages, privacy, admin and the app manifest say The Daily Noodle. Existing pieces, puzzle templates and engines still say Digi ("The Digi Mini", "← Digi Puzzles"). That rebrand is a separate, parked job; when done it must keep puzzle ids, filenames and localStorage keys unchanged.
+- Brand status: front pages, privacy, admin and the app manifest say The Daily Noodle. News pieces say **Noodle News** (masthead Noodle**News**, title "<headline> — Noodle News", byline "Noodle News data desk", production note and footer), rebranded 18 Oct 2026 across all published pieces and in the toolchain (`digi-news-house-template-v3-3-3.html`, `dn-build.py`, rubric, checklist, style guide), so new pieces are built with it. Toolchain file names and the internal `DN — Digi News visualization library` marker (which `dn-build.py` and `dn-lint.js` look for) deliberately keep the old name.
+- Puzzle templates and engines still say Digi ("The Digi Mini", "← Digi Puzzles"). That rebrand is a separate, parked job; when done it must keep puzzle ids, filenames and localStorage keys unchanged.
 
 ## Publishing
 - Push a file to `reports/` on `main`. `.github/workflows/build-feed.yml` then injects the tracker, patches share text, moves puzzles onto the shared engines, writes link-preview (Open Graph) tags from each file's `dn:*` metas (`tools/og-tags.js`) and rebuilds `feed.json`. If a scheduled task pushes at the same time, the workflow rebases and retries its push.

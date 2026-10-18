@@ -1,6 +1,6 @@
-# DIGI NEWS — Standards & Methodology Rubric (v5)
+# NOODLE NEWS — Standards & Methodology Rubric (v5)
 
-The binding reference for every Digi News piece. When a judgement call arises, this document governs.
+The binding reference for every Noodle News piece. When a judgement call arises, this document governs.
 
 v5 keeps every v4 standard and its section numbers, because the linter cites them (§1a, §3, §8, §10, §12, §13). It moves the desk from "what does the release say" to "what happened, why, and what it means": a so-what test (§0), a fixed news spine (§0a), a context floor (§1d), a search for explanations before declaring causes unknown (§4b), a cap on the caveat block (§6), a "what happens next" slot (§6b) and Medium as the default length (§9). The change log is at the end.
 
@@ -11,14 +11,14 @@ v5 keeps every v4 standard and its section numbers, because the linter cites the
 A piece is commissioned because it tells a reader something they did not know and could not easily get elsewhere. Accuracy is necessary, but it is not sufficient. Before research starts, the piece must pass three tests.
 
 - **The peg.** Why now? Name the release, event or decision the piece hangs on, and its date. If the source was published more than 14 days before the piece, either find a fresher peg or say in the first paragraph why the piece is running now.
-- **Added value.** Write one sentence the piece will say that the source's own headline does not. A rewrite of a statistical bulletin in the bulletin's order is not a Digi News piece. Added value can come from:
+- **Added value.** Write one sentence the piece will say that the source's own headline does not. A rewrite of a statistical bulletin in the bulletin's order is not a Noodle News piece. Added value can come from:
   - a longer time series;
   - a comparison the source does not draw;
   - a breakdown buried in the tables;
   - a check of an official claim against the data;
   - or a correction of a common misreading.
 - **The so-what *(new in v5)*.** Write one sentence naming the real-world consequence: for a person, a public service, a budget, a market, or a decision that is pending. "The figure rose" is not a consequence; "the NHS met its target and then stopped improving, with the 2029 promise no closer" is. No sentence, no commission. Added value from data alone (below) is necessary but not sufficient.
-- **Not already run.** Search the feed for the topic over the last 30 days. If Digi News has covered it, the new piece is a follow-up. It links to the earlier piece and leads on what has changed. If nothing material has changed, do not run it.
+- **Not already run.** Search the feed for the topic over the last 30 days. If Noodle News has covered it, the new piece is a follow-up. It links to the earlier piece and leads on what has changed. If nothing material has changed, do not run it.
 
 A piece that fails any test is reframed or dropped at the spine checkpoint, not after the build.
 
@@ -33,7 +33,7 @@ Every Medium or Long news piece is organised around four questions, in this orde
 
 The data is the evidence for this story, not the story. Exhibits sit inside the section they support. An evergreen explainer may use *context → causes → comparison → consequences* instead, but must still cover why and so-what.
 
-Statistics are the desk's strength and stay its spine of evidence. The aim is the standard of the Economist, the FT and the Guardian: each answers "so what?" by the third paragraph and organises everything after around it. Digi News does not do direct reporting; it reads, checks and attributes what is already on the record.
+Statistics are the desk's strength and stay its spine of evidence. The aim is the standard of the Economist, the FT and the Guardian: each answers "so what?" by the third paragraph and organises everything after around it. Noodle News does not do direct reporting; it reads, checks and attributes what is already on the record.
 
 ---
 
@@ -86,7 +86,7 @@ A statistical bulletin is a summary written by the producer, and it selects what
 
 ### 1c. Published positions of named organisations *(new in v4)*
 
-Digi News does not conduct interviews or send requests for comment. It does report what named people and organisations have **already said on the record**. This covers:
+Noodle News does not conduct interviews or send requests for comment. It does report what named people and organisations have **already said on the record**. This covers:
 
 - official statements;
 - press releases;
@@ -315,7 +315,7 @@ Every piece ends with these blocks.
 - **Sources** — numbered and grouped by what they support, **highest tier first**. Each carries its **T1/T2/T3 badge** and, where possible, a link and retrieval date. Inline citations resolve here.
 - **Production note** *(new in v4)* — one standing line, identical on every piece:
 
-  > *Researched, written and checked by an AI system working to the Digi News standards; edited and published by the Digi News editor.*
+  > *Researched, written and checked by an AI system working to the Noodle News standards; edited and published by the Noodle News editor.*
 
   `dn-build.py` generates it as a "Production" line on every report. Do not author it in `footer.html`; if it is already there, the builder skips its own copy rather than duplicating it.
 - **Declaration of interest** *(new in v4, when it applies — see §14)*.
@@ -341,13 +341,13 @@ The operative rules are in the project instructions (§Publication) and are enfo
 
 ## 14. Disclosure and interests *(new in v4)*
 
-- **AI production.** Every piece carries the standing production note (§12). The byline reads **"Digi News data desk"** and is not changed to imply human staff.
+- **AI production.** Every piece carries the standing production note (§12). The byline reads **"Noodle News data desk"** and is not changed to imply human staff.
 - **Declaration of interest.** When a piece covers an organisation in which the editor has a material interest, the piece carries a one-line declaration directly under the standfirst and repeats it in the footer. Material interests are:
   - the editor's employer;
   - a charity of which he is a trustee;
   - a company in which he holds more than a nominal stake.
 
-  The wording is: *"Declaration: the editor of Digi News works for / is a trustee of / holds shares in [organisation]. The analysis was produced to the same standards as every piece, and the editor did not alter its findings."*
+  The wording is: *"Declaration: the editor of Noodle News works for / is a trustee of / holds shares in [organisation]. The analysis was produced to the same standards as every piece, and the editor did not alter its findings."*
 
   Only the clauses that apply are used.
 - Where a declaration would apply, prefer a sector-level framing over a single-company one, unless the company itself is the news.
@@ -356,7 +356,7 @@ The operative rules are in the project instructions (§Publication) and are enfo
 
 ## 15. Continuity: follow-ups, links and revisions *(new in v4)*
 
-- **Link prior coverage.** If Digi News has covered the topic before, the piece links to the earlier piece in the body, at the point the earlier finding is mentioned. A follow-up leads with what has changed since the earlier piece.
+- **Link prior coverage.** If Noodle News has covered the topic before, the piece links to the earlier piece in the body, at the point the earlier finding is mentioned. A follow-up leads with what has changed since the earlier piece.
 - **Supersession.** When a new release overturns an earlier piece's headline finding, add a dated line to the earlier piece's Corrections block, linking forward. Examples are a revised ranking, a record that no longer stands, or a method change.
 - **Every version bump is logged.** Any revision after first publication adds a dated, one-line entry to Corrections stating what changed. Use "v1.1 (12 Oct 2026): Exhibit 02 relabelled; no figures changed". A version number that rises with nothing logged is a silent edit, and silent edits are not permitted. Pre-publication rebuilds stay at v1.0. Entries go in `meta.json` as `"corrections": ["v1.1 (12 Oct 2026): …"]`, and `dn-build.py` renders them. It refuses to build a version above v1.0 with no entry.
 
@@ -364,7 +364,7 @@ The operative rules are in the project instructions (§Publication) and are enfo
 
 ## 16. Legal and fairness *(new in v4)*
 
-Digi News is a personal, portfolio-scale publication, but its pieces are public and read like journalism. A light floor applies.
+Noodle News is a personal, portfolio-scale publication, but its pieces are public and read like journalism. A light floor applies.
 
 - **No imputation of wrongdoing** to a named person or organisation unless a Tier 1 record establishes it. That means a court finding, a regulator's decision or an official finding.
   - Do not speculate about undisclosed conduct, such as market abuse, stake-building, fraud or misconduct, even to rule it out.

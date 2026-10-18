@@ -1,6 +1,6 @@
 # DN toolchain
 
-Everything a Digi News build session needs, so a run outside the claude.ai Project
+Everything a Noodle News build session needs, so a run outside the claude.ai Project
 (scheduled, unattended, or a fresh sandbox) can bootstrap from this repo alone.
 The Project's knowledge files are the editing copies; this folder mirrors them.
 

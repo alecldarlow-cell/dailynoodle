@@ -289,7 +289,7 @@ for (const { dir, kind } of DIRS) {
     const headline = (
       meta(head, 'dn:headline') ||
       firstMatch(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) ||
-      firstMatch(head, /<title[^>]*>([\s\S]*?)<\/title>/i).replace(/\s*[—–-]\s*Digi News\s*$/i, '').replace(/^\s*Digi News\s*[—–-]\s*/i, '') ||
+      firstMatch(head, /<title[^>]*>([\s\S]*?)<\/title>/i).replace(/\s*[—–-]\s*(?:Digi|Noodle) News\s*$/i, '').replace(/^\s*(?:Digi|Noodle) News\s*[—–-]\s*/i, '') ||
       titleCase(fn.slug)
     ).replace(/^(Mini|Doku|Sweep|Path|Link|Borders|Tangle)\s+0*(\d+)$/, '$1 $2');
 
