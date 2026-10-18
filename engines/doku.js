@@ -393,14 +393,19 @@ async function saveStreak(obj){
   try{if(window.storage){await window.storage.set(KEY,JSON.stringify(obj));return;}}catch(e){}
   try{localStorage.setItem(KEY,JSON.stringify(obj));}catch(e){}
 }
-function today(){return new Date().toISOString().slice(0,10);}
+/* ---- dn-london-day-v1: streak days are London calendar days. They were UTC
+   dates, so a play between midnight and 1 am BST filed under the day before.
+   A save written before this change (no tz mark) may hold that UTC date, so
+   it is allowed one extra day of gap, once; the next write marks it. ---- */
+function today(){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}catch(e){return new Date().toISOString().slice(0,10);}}
+function dayBefore(s){const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10);}
+function followsOn(s,t){const y=dayBefore(t);return s.last===y||(!s.tz&&s.last===dayBefore(y));}
 async function bumpStreak(){
   let s=await store(true)||{last:null,streak:0,best:0,dates:[]};
   const t=today();
   if(s.dates&&s.dates.includes(t)){refreshStreakUI(s);return;}
-  const y=new Date(Date.now()-864e5).toISOString().slice(0,10);
-  s.streak=(s.last===y)?s.streak+1:1;
-  s.last=t;s.best=Math.max(s.best,s.streak);s.dates=[...new Set([...(s.dates||[]),t])].slice(-90);
+  s.streak=followsOn(s,t)?s.streak+1:1;
+  s.last=t;s.tz="L";s.best=Math.max(s.best,s.streak);s.dates=[...new Set([...(s.dates||[]),t])].slice(-90);
   await saveStreak(s);refreshStreakUI(s);
 }
 async function refreshStreakUI(s){
