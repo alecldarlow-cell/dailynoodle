@@ -218,10 +218,10 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
   <button class="btn" id="pauseBtn" aria-label="Pause and settings">☰</button>
   <div class="cockpit">
     <div class="flightMeasure distance"><small>DISTANCE</small><strong class="hand" id="hudDist">0.0 m</strong></div>
-    <div class="flightMeasure"><small>SPEED</small><strong class="hand" id="hudSpeed">— m/s</strong><i class="meter"><b id="speedFill"></b></i></div>
-    <div class="flightMeasure pitch"><small>NOSE</small><strong class="hand" id="hudPitch">—°</strong><i class="meter pitchMeter"><b id="pitchFill"></b></i></div>
+    <div class="flightMeasure"><small>AIRSPEED</small><strong class="hand" id="hudSpeed">— m/s</strong><i class="meter"><b id="speedFill"></b></i></div>
+    <div class="flightMeasure pitch"><small id="pitchLabel">LAUNCH</small><strong class="hand" id="hudPitch">—°</strong><i class="meter pitchMeter"><b id="pitchFill"></b></i></div>
   </div>
-  <div id="conditions"><div id="windReadout" aria-label="Wind conditions">Calm air</div><div id="flightCue" role="status" aria-live="polite">Hold briefly to climb</div></div>
+  <div id="conditions"><div id="windReadout" aria-label="Wind conditions">Calm air</div><div id="flightCue" role="status" aria-live="polite">Short holds trade speed for height</div></div>
 </div>
 <div id="toasts" role="status" aria-live="polite"></div>
 <div id="intro"><div class="in hand"><div class="p" id="introP">Place 1 of 8</div><div class="pn" id="introN">Back garden</div><div class="t" id="introT">Beat 12 m</div></div></div>
@@ -278,7 +278,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
       <button class="btn sw" id="pFS">Full screen <span class="k">On</span></button>
       <button class="btn sw" id="pUpright">Upright play <span class="k">Off</span></button>
     </div>
-    <p id="controlHelp" class="controlHelp">Drag back and release to throw. Hold briefly to climb; release to regain speed. Watch for nose-high and stall cues. Wind is shown before launch; arrows show its direction. Assistance stays consistent across places. Two-finger tap pauses. Keyboard: ←/→ aim, Space throws; hold Space/↑ to lift. P or Esc pauses. Clears keep your throw; 2× target restores one (maximum five).</p>
+    <p id="controlHelp" class="controlHelp">Drag back and release to throw. Short holds trade speed for height; release to stop pulling. Pulling up trades speed for height. Amber warns of a high wing angle; low speed is warned separately. Release removes your pitch input; the airflow acts on the wings. Recovery is not guaranteed. Airspeed measures motion through the air; wing angle is relative to that airflow. Wind is shown before launch; arrows show its direction. No flight assist: warnings never change your controls. Holding can loop or stall the plane; recovery needs height. Two-finger tap pauses. Keyboard: ←/→ aim, Space throws; hold Space/↑ to lift. P or Esc pauses. Clears keep your throw; 2× target restores one (maximum five).</p>
     <div class="row" style="margin-top:6px"><a class="back" href="../games.html">← Digi Games</a></div>
   </div>
 </div>
@@ -325,19 +325,19 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{an
 const G = 9.81;
 
 /* Five folds, bought in order. cla: lift slope /rad; cd0: base drag; k: induced drag; as: stall angle (rad);
-   kq: area/mass factor (higher = lighter, slower, pushed about more); lift/fall: hold/release pitch rates (rad/s);
+   kq: area/mass factor (higher = lighter, slower, pushed about more); lift: pilot pitch torque factor;
    v: top launch speed (m/s) before the Throwing arm. */
 const FOLDS = [
-  { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 16,  cla: 2.9, cd0: 0.050, k: 0.20,  as: 0.27, kq: 0.30, lift: 0.75, fall: 0.62, v: 13.5,
+  { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 16,  cla: 2.9, cd0: 0.050, k: 0.20,  as: 0.27, kq: 0.30, lift: 0.75, v: 13.5,
     blurb: 'Fast off the hand, little lift, noses down early.' },
-  { id: 'nakamura', name: 'Nakamura Lock',  cost: 120,  base: 40,  cla: 3.1, cd0: 0.046, k: 0.17,  as: 0.33, kq: 0.31, lift: 0.7, fall: 0.55, v: 13.5,
+  { id: 'nakamura', name: 'Nakamura Lock',  cost: 120,  base: 40,  cla: 3.1, cd0: 0.046, k: 0.17,  as: 0.33, kq: 0.31, lift: 0.7, v: 13.5,
     blurb: 'Locked nose: steadier, forgiving when you pull too hard.' },
-  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.044, k: 0.12,  as: 0.30, kq: 0.40, lift: 0.65, fall: 0.50, v: 14.0,
+  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.044, k: 0.12,  as: 0.30, kq: 0.40, lift: 0.65, v: 14.0,
     blurb: 'Big wings: floats and rides thermals, but slow.' },
-  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.036, k: 0.095, as: 0.30, kq: 0.34, lift: 0.7, fall: 0.52, v: 15.5,
+  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.036, k: 0.095, as: 0.30, kq: 0.34, lift: 0.7, v: 15.5,
     blurb: 'Efficient wings hold speed through long, clean glides.' },
-  { id: 'rdart',    name: 'Record Dart',    cost: 3500, base: 420, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, lift: 0.8, fall: 0.62, v: 18.0,
-    blurb: 'Fastest and furthest. Twitchy: rewards a good pilot.' }
+  { id: 'rdart',    name: 'Record Dart',    cost: 3500, base: 420, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, lift: 0.8, v: 18.0,
+    blurb: 'Fastest launch. Trade speed for height; ease off before the stall.' }
 ];
 const FOLD_STATS = [
   { id: 'paper', name: 'Paper weight', what: 'More momentum, steadier in rough air' },
@@ -362,7 +362,6 @@ function planeParams(fi, up, arm) {
     as: f.as + 0.015 * t,
     kq: f.kq / (1 + 0.12 * p),            // heavier paper: less aero push per unit mass
     lift: f.lift,
-    fall: f.fall * (1 - 0.05 * t),
     trimLv: t,
     v: f.v * (1 + 0.035 * p) * (1 + 0.07 * (arm || 0)),
     fi
@@ -490,68 +489,67 @@ function airAt(pl, roll, x, y, t=0) {
 /* ---------- one flight ---------- */
 function newFlight(pl, P, angDeg, power) {
   const a = angDeg * Math.PI / 180, v = P.v * Math.max(0.15, Math.min(1, power));
-  return { x: 0, y: pl.y0, vx: v * Math.cos(a), vy: v * Math.sin(a), th: a, a: 0, c: 0, stall: 0, bumpT: 0, t: 0, done: false, why: '', maxY: pl.y0, clips: 0, hold: false, flutter: 0 };
+  return { x: 0, y: pl.y0, vx: v * Math.cos(a), vy: v * Math.sin(a), th: a, a: 0, pitchRate: 0, stall: 0, bumpT: 0, t: 0, done: false, why: '', maxY: pl.y0, clips: 0, hold: false, flutter: 0 };
 }
 const DT = 1 / 120;
-// One assistance strength for every place and every moment of a flight.
-// Plane upgrades can change its aerodynamic response; level and time cannot.
-const GLIDE_ASSIST = 0.93;
-function glideTarget(P,v,gam) {
-  const eq=Math.min(P.as*0.85,G*Math.cos(gam)/(P.kq*v*v*P.cla));
-  const best=Math.sqrt(P.cd0/P.k)/P.cla;
-  return Math.max(0,Math.min(best,eq*1.05)*(GLIDE_ASSIST+0.02*(P.trimLv||0)));
-}
+// Unassisted flight: fixed passive wing stability and pilot pitch torque only.
+// No target glide angle, speed protection, nose push or automatic stall recovery.
+const STALL_WARNING = 0.65, STALL_RECOVER = 0.60;
+function wrapAngle(a) { return Math.atan2(Math.sin(a),Math.cos(a)); }
 function flightFeedback(f,P,pl,roll) {
   const [wx,wy]=airAt(pl,roll,f.x,f.y,f.t), speed=Math.hypot(f.vx-wx,f.vy-wy);
-  const liftSpeed=Math.sqrt(G/(P.kq*P.cla*P.as));
+  const liftSpeed=Math.sqrt(G/(P.kq*(0.28+P.cla*P.as)));
   if(f.bumpT>0)return {kind:'warn',text:'Knocked off course · recover'};
-  if(f.stall>0)return {kind:'danger',text:'Stall · release to recover'};
-  if(f.a>P.as*0.78)return {kind:'warn',text:'Nose high · release now'};
-  if(speed<liftSpeed*0.95)return {kind:'warn',text:'Low speed · release to glide'};
+  if(f.stall>0)return {kind:'danger',text:f.hold?'Stall · release the pull':'Stalled · recovery needs height'};
+  if(Math.abs(f.a)>P.as*STALL_WARNING)return {kind:'warn',text:'Near stall · release now'};
+  if(speed<liftSpeed*1.35)return {kind:'warn',text:'Low speed · need height to recover'};
   if(wy>0.8)return {kind:'',text:'Rising air · ride the lift'};
   if(wy< -0.8)return {kind:'warn',text:'Sinking air · losing height'};
-  return {kind:'',text:f.hold?'Lifting the nose uses speed':'Gliding · conserving speed'};
+  return {kind:'',text:f.hold?'Lifting the nose uses speed':'Coasting · no pitch input'};
 }
 function step(f, P, pl, roll, hold, magnet) {
   if (f.done) return;
   f.hold = hold;
-  // Hold lifts the nose; release eases toward efficient glide with consistent assistance.
   const [wx, wy] = airAt(pl, roll, f.x, f.y, f.t);
   const rx = f.vx - wx, ry = f.vy - wy, v = Math.hypot(rx, ry) || 0.001, gam = Math.atan2(ry, rx);
-  if (f.stall > 0) { f.stall -= DT; f.c -= P.fall * 1.8 * DT; }
-  else if (hold) f.c += P.lift * DT;
-  else {
-    // let go: the plane settles into its best glide (level-ish when fast), easing a touch below it like soft gravity
-    const auto = glideTarget(P,v,gam);
-    const d = auto - f.c, s = P.fall * DT;
-    f.c += Math.abs(d) <= s ? d : Math.sign(d) * s;
-  }
-  if (f.c < -0.25) f.c = -0.25; if (f.c > P.as * 1.7) f.c = P.as * 1.7;
-  f.a += (f.c - f.a) * Math.min(1, 12 * DT);
+  const q = P.kq * v * v;
+  // The nose has angular inertia. Airflow provides a restoring moment and damping;
+  // holding adds pilot torque. Releasing removes that torque, without setting a
+  // desired attitude or flight path. The nose can rotate through a complete loop.
+  const relative=wrapAngle(f.th-gam);
+  const moment=-0.3*q*Math.sin(relative) + (hold ? P.lift*2.4 : 0);
+  f.pitchRate += (moment - (1.8+0.06*q)*f.pitchRate)*DT;
+  f.th += f.pitchRate*DT;
+  f.a = wrapAngle(f.th-gam);
   const a = f.a;
-  f.th = gam + a;
   let cl;
   const aa = Math.abs(a);
-  if (aa <= P.as) cl = P.cla * a;
-  else cl = Math.sign(a) * P.cla * P.as * Math.max(0.3, 1 - (aa - P.as) * 4);
-  if (a > P.as && f.stall <= 0) { f.stall = 0.4; f.stalls = (f.stalls || 0) + 1; } // stall: lift collapses and the nose drops
-  if (v < 3.0 && f.stall <= 0 && f.t > 0.4 && a > 0.12) f.stall = 0.45; // too slow
-  let cd = P.cd0 + P.k * cl * cl;
-  if (f.stall > 0) { cl *= 0.65; cd += 0.1; f.flutter += DT * 30; }
-  const q = P.kq * v * v;
-  const ax = q * (cl * (-ry / v) - cd * (rx / v));
-  const ay = q * (cl * (rx / v) - cd * (ry / v)) - G;
-  f.vx += ax * DT; f.vy += ay * DT;
-  f.x += f.vx * DT; f.y += f.vy * DT; f.t += DT;
+  if (aa <= P.as) cl = 0.28 + P.cla * a;
+  else cl = Math.sign(a) * (0.28 + P.cla * P.as) * Math.max(0,Math.cos(a)) * Math.max(0.2, 1 - (aa - P.as) * 3);
+  // Hysteresis: crossing the critical angle stalls the wing; lowering it reattaches
+  // the flow. No fixed recovery timer, automatic nose push, or low-speed-only stall.
+  if (aa > P.as && !f.stall) { f.stall = 1; f.stalls = (f.stalls || 0) + 1; }
+  if (f.stall && aa < P.as * STALL_RECOVER) f.stall = 0;
+  const strain=Math.max(0,Math.min(1,(aa/P.as-STALL_WARNING)/(1-STALL_WARNING)));
+  let cd = P.cd0 + P.k * cl * cl + 0.025*strain*strain + 0.7*Math.sin(a)*Math.sin(a);
+  if (f.stall) { cl *= 0.65; cd += 0.1; f.flutter += DT * 30; }
+  // Rotate the air-relative velocity for lift and dissipate speed for drag.
+  // Explicit Euler lift spuriously adds energy in tight loops; this split step
+  // preserves speed under lift and integrates gravity without that free energy.
+  const turn=P.kq*v*cl*DT, drag=1/(1+P.kq*v*cd*DT);
+  const avx=(rx*Math.cos(turn)-ry*Math.sin(turn))*drag+wx;
+  const avy=(rx*Math.sin(turn)+ry*Math.cos(turn))*drag+wy;
+  f.vx=avx; f.vy=avy-G*DT;
+  f.x+=avx*DT; f.y+=(avy-G*DT/2)*DT; f.t+=DT;
   if (f.y > f.maxY) f.maxY = f.y;
   // clips
   const mr = 1.3 + 1.1 * (magnet || 0);
   for (const c of roll.clips) if (!c.got && Math.abs(c.x - f.x) < mr && Math.abs(c.y - f.y) < mr && Math.hypot(c.x - f.x, c.y - f.y) < mr) { c.got = true; f.clips++; f.lastClip = f.t; }
   // collisions
   const gy = groundAtFull(pl, f.x);
-  if (f.y <= gy) { f.y = gy; f.done = true; f.why = pl.sea && f.x > pl.sea ? 'sea' : 'ground'; return; }
+  if (f.y <= gy) { f.crashed = f.vy < -6 || (f.stall > 0 && Math.hypot(f.vx,f.vy) > 5); f.y = gy; f.done = true; f.why = pl.sea && f.x > pl.sea ? 'sea' : 'ground'; return; }
   // Trees, gulls and kites never end a flight: they knock the speed off and make the plane flutter.
-  if (f.bumpT > 0) f.bumpT = Math.max(0, f.bumpT - DT);
+  if (f.bumpT > 0) { f.bumpT = Math.max(0, f.bumpT - DT); f.flutter += DT * 30; }
   else for (const o of pl.obs) {
     let hit = false;
     if (o.t === 'tree') {
@@ -559,19 +557,19 @@ function step(f, P, pl, roll, hold, magnet) {
       hit = dx * dx + dy * dy < 1 || (Math.abs(f.x - o.x) < 0.35 && f.y < cy);
     } else { const [ox, oy] = obsPos(o, f.t); hit = Math.hypot(f.x - ox, f.y - oy) < (o.t === 'kite' ? 1.6 : 1.1); }
     if (hit) {
-      f.vx *= 0.85; f.vy = Math.max(f.vy * 0.7, 0.3); f.stall = Math.max(f.stall, 0.18); f.bumpT = 0.6; f.bumps = (f.bumps || 0) + 1;
+      f.vx *= 0.85; f.vy = Math.max(f.vy * 0.7, 0.3); f.bumpT = 0.6; f.bumps = (f.bumps || 0) + 1;
       f.bumpCol = o.t === 'tree' ? '#7fbb68' : o.t === 'kite' ? '#f39c32' : '#ffffff';
       break;
     }
   }
-  if (f.x < -15 || f.t > 240) { f.done = true; f.why = 'ground'; }
+  if (f.t > 240) { f.done = true; f.why = 'ground'; }
 }
 function obsPos(o, t) {
   if (o.t === 'gull') return [o.x + Math.sin(t * 2 * Math.PI / o.p) * o.a * 1.5, o.y + Math.sin(t * 2 * Math.PI / (o.p * 0.7)) * o.a * 0.6];
   return [o.x + Math.sin(t * 2 * Math.PI / o.p) * o.a * 0.6, o.y + Math.cos(t * 2 * Math.PI / o.p) * o.a];
 }
-function bestAlpha(P) { return Math.sqrt(P.cd0 / P.k) / P.cla; }
-function sinkAlpha(P) { return Math.min(P.as * 0.92, Math.sqrt(3 * P.cd0 / P.k) / P.cla); }
+function bestAlpha(P) { return Math.max(0,(Math.sqrt(P.cd0 / P.k)-0.28) / P.cla); }
+function sinkAlpha(P) { return Math.min(P.as * 0.92, (Math.sqrt(3 * P.cd0 / P.k)-0.28) / P.cla); }
 
 /* Clips earned for a throw */
 function throwClips(dist, pickups) { return Math.floor(Math.max(0, dist) / 4) + pickups * 3; }
@@ -781,7 +779,7 @@ function launch(v) {
   instrumentT = timeT - 0.12;
   fl = newFlight(pl, P, v.ang, 1);
   fl.ang0 = v.ang; fl.pow0 = 1;
-  state = 'fly'; introT = 0; $('intro').classList.remove('on'); aim = null; path = []; $('hud').classList.add('flying');
+  state = 'fly'; $('pitchLabel').textContent='WING ANGLE'; introT = 0; $('intro').classList.remove('on'); aim = null; path = []; $('hud').classList.add('flying');
   run.n++;
   sWhoosh(1);
   if (!save.tut1) { save.tut1 = true; persist(); }
@@ -828,12 +826,12 @@ function land() {
     } else {
       run.throws--;
       outcome = fmt(d) + ' m — short by ' + fmt(tgt - d) + ' m';
-      if (run.place === 0 && save.runs === 0 && run.n <= 2) msgs.push(['', 'Hold briefly to lift the nose; release before you stall']);
+      if (run.place === 0 && save.runs === 0 && run.n <= 2) msgs.push(['', 'Try a shallow throw. Short holds trade speed for height']);
       if (run.throws <= 0) next = 'end';
     }
   }
   const gain = earned + (run.mode === 'run' && d >= pl.target ? clearBonus(pl.n) : 0);
-  result = { d, outcome, next, earned:gain, base:earned, pickups:got, bonus:gain-earned, record:prevBest>0 && d>prevBest, clear:run.mode==='run'&&d>=pl.target };
+  result = { d, outcome, next, crashed:!!fl.crashed, earned:gain, base:earned, pickups:got, bonus:gain-earned, record:prevBest>0 && d>prevBest, clear:run.mode==='run'&&d>=pl.target };
   if(next !== 'aim') completeRun(next === 'win');
   sReward(gain,result.clear||result.record); buzz(result.clear?40:15); showLanding(result);
   for (const m of msgs) toast(m[1], m[0]);
@@ -894,6 +892,7 @@ function showLanding(v){
   $('lTitle').textContent=v.clear?'✓ Place cleared!':v.record?'✦ Personal best!':v.d>=WR?'Milestone distance!':'Every metre counts!';
   $('lDistance').textContent=fmt(v.d)+' m';$('lOutcome').textContent=v.clear?'Target beaten':v.next==='end'?'Last throw':'Plane landed';
   $('lOutcome').textContent = v.clear ? (v.d >= pl.target*2 ? '2× target · '+(run.throws<5?'bonus throw':'throw bank full') : 'Target beaten · throw kept') : run.mode==='run' ? 'Short by '+fmt(Math.max(0,pl.target-v.d))+' m' : 'Best '+fmt(run.best)+' m';
+  if(v.crashed)$('lOutcome').textContent='Crash landing · '+$('lOutcome').textContent;
   $('lEarned').textContent='+'+(RM()?v.earned:0);$('lReward').setAttribute('aria-label',v.earned+' paperclips earned this flight');
   const breakdown=[['Distance',Math.floor(v.d/4)],['Air clips',v.pickups*3]];if(v.bonus)breakdown.push(['Place bonus',v.bonus]);
   $('lBreak').innerHTML=breakdown.map(x=>'<span>'+x[0]+' <b>+'+x[1]+'</b></span>').join('');
@@ -920,7 +919,8 @@ const CLIP_ICON = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="h
 document.querySelectorAll('.clipI').forEach(e => e.style.backgroundImage = 'url("' + CLIP_ICON + '")');
 function updateHud(){
   if(!run)return;
-  if(state!=='fly'){$('hudSpeed').textContent='— m/s';$('hudPitch').textContent='—°';$('speedFill').style.width='0%';$('pitchFill').style.width='50%';}
+  $('pitchLabel').textContent=state==='fly'?'WING ANGLE':'LAUNCH';
+  if(state!=='fly'){$('hudSpeed').textContent='— m/s';$('hudPitch').textContent='—°';$('speedFill').style.width='0%';$('pitchFill').style.width='0%';$('pitchFill').style.background='#3199cb';}
   updateConditions();
 }
 function updateConditions(){
@@ -929,7 +929,7 @@ function updateConditions(){
   const wind=Math.abs(wx)<0.05?'Calm air':(wx<0?'← Headwind ':'→ Tailwind ')+Math.abs(wx).toFixed(1)+' m/s';
   const label=wind+(gust?' · gusts ±'+gust.toFixed(1):'');
   if($('windReadout').textContent!==label)$('windReadout').textContent=label;
-  const cue=state==='fly'&&fl?flightFeedback(fl,P,pl,roll):{kind:'',text:'Hold briefly to climb'};
+  const cue=state==='fly'&&fl?flightFeedback(fl,P,pl,roll):{kind:'',text:'Short holds trade speed for height'};
   if($('flightCue').textContent!==cue.text)$('flightCue').textContent=cue.text;
   $('flightCue').className=cue.kind;
 }
@@ -945,7 +945,7 @@ function placeBelowHud(el) {
 function showTut() {
   const t = $('tut'); placeBelowHud(t.querySelector('.msg'));
   if (state === 'aim' && !save.tut1 && run) { tutStage = 1; $('tutTxt').textContent = coarse ? 'Pull back and release to throw · two fingers pause' : 'Drag back to throw · or ←/→ aim, Space launches'; t.classList.add('on'); $('hand').style.display = 'block'; }
-  else if (state === 'fly' && !save.tut2) { tutStage = 2; $('tutTxt').textContent = 'Hold briefly to climb · release to regain speed'; t.classList.add('on'); $('hand').style.display = 'none'; }
+  else if (state === 'fly' && !save.tut2) { tutStage = 2; $('tutTxt').textContent = 'Short holds trade speed for height · release stops your pull'; t.classList.add('on'); $('hand').style.display = 'none'; }
   else hideTut();
 }
 function hideTut() { tutStage = 0; $('tut').classList.remove('on'); }
@@ -1041,8 +1041,8 @@ function openHangar(keepRun = false) {
 }
 function foldStats(fi) {
   const Q = planeParams(fi, save.owned[fi] ? save.up[fi] : { paper: 0, crease: 0, trim: 0 }, save.arm);
-  const ab = bestAlpha(Q), ld = Q.cla * ab / (2 * Q.cd0);
-  return [['Speed', (Q.v - 12) / 18], ['Glide', (ld - 4) / 8], ['Lift', (Q.cla * Q.as - 0.7) / 0.9], ['Steadiness', (Q.as - 0.24) / 0.2 * 0.6 + (0.75 - Q.fall) / 0.5 * 0.4]];
+  const ab = bestAlpha(Q), ld = (0.28+Q.cla*ab) / (Q.cd0+Q.k*Math.pow(0.28+Q.cla*ab,2)+0.7*Math.sin(ab)*Math.sin(ab));
+  return [['Speed', (Q.v - 12) / 18], ['Glide', (ld - 4) / 8], ['Lift', (Q.cla * Q.as - 0.7) / 0.9], ['Steadiness', (Q.as - 0.24) / 0.2 * 0.6 + (0.85 - Q.lift) / 0.3 * 0.4]];
 }
 function renderHangar() {
   if(hangarRun){save.run=runSnap();persist();}
@@ -1206,7 +1206,7 @@ function tick(dt) {
       const pr = fl.clips;
       step(fl, P, pl, roll, hold, save.magnet);
       if (fl.clips > pr) { sTick(); if (!RM()) for (let k = 0; k < 6; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4, t: 0, life: 0.5, c: '#ffd34d', r: 2.2 }); }
-      if (fl.stall > 0 && stallSnd <= 0) { sFlutter(); stallSnd = 0.5; }
+      if ((fl.stall > 0 || fl.bumpT > 0) && stallSnd <= 0) { sFlutter(); stallSnd = 0.5; }
       if (fl.bumpT === 0.6) { noiseHit(0.18, 900, 300, 0.3, 1); if (!RM()) for (let k = 0; k < 10; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.3) * 4, t: 0, life: 0.6, c: fl.bumpCol || '#7fbb68', r: 2.4, sq: 1 }); }
     }
     if (stallSnd > 0) stallSnd -= dt;
@@ -1852,15 +1852,22 @@ function render() {
   if(state==='fly'&&fl&&timeT-instrumentT>.11){
     instrumentT=timeT;
     updateConditions();
-    const v=Math.hypot(fl.vx,fl.vy),nose=Math.round(fl.th*180/Math.PI);
+    const [wx,wy]=airAt(pl,roll,fl.x,fl.y,fl.t);
+    const v=Math.hypot(fl.vx-wx,fl.vy-wy),nose=Math.round(fl.a*180/Math.PI);
     $('hudSpeed').textContent=v.toFixed(1)+' m/s';$('hudPitch').textContent=(nose>0?'+':'')+nose+'°';
     const max=speedScale(), meter=$('speedFill').parentElement;
-    meter.setAttribute('role','meter');meter.setAttribute('aria-label','Speed in metres per second');
+    meter.setAttribute('role','meter');meter.setAttribute('aria-label','Airspeed in metres per second');
     meter.setAttribute('aria-valuemin','0');meter.setAttribute('aria-valuemax',String(max));
     meter.setAttribute('aria-valuenow',String(Math.min(max,v).toFixed(1)));
-    meter.title='Speed · 0–'+max+' m/s';
+    meter.title='Airspeed · 0–'+max+' m/s';
     $('speedFill').style.width=Math.min(100,v/max*100).toFixed(1)+'%';
-    $('pitchFill').style.width=Math.max(0,Math.min(100,50+nose*.8)).toFixed(0)+'%';
+    const load=Math.abs(fl.a/P.as),pm=$('pitchFill').parentElement;
+    $('pitchFill').style.width=Math.min(100,load*100).toFixed(0)+'%';
+    $('pitchFill').style.background=fl.stall?'#c54b35':load>=STALL_WARNING?'#b97815':'#3199cb';
+    pm.setAttribute('role','meter');pm.setAttribute('aria-label','Wing angle towards stall');
+    pm.setAttribute('aria-valuemin','0');pm.setAttribute('aria-valuemax',(P.as*180/Math.PI).toFixed(1));
+    pm.setAttribute('aria-valuenow',(Math.min(P.as,Math.abs(fl.a))*180/Math.PI).toFixed(1));
+    pm.title='Wing angle to the airflow · stall near ±'+(P.as*180/Math.PI).toFixed(1)+'°';
   }
   if (timeT - hudMeasured > 0.5) { hudMeasured = timeT; const r = $('hud').getBoundingClientRect(); if (r.height > 0) hudBottom = r.bottom; }
   if (!pl || state === 'hangar' || state === 'boot') { cx.fillStyle = '#bfe6ff'; cx.fillRect(0, 0, W, H); return; }
@@ -1875,9 +1882,9 @@ function render() {
     const L = planeSize(), X = SX(fl.x), Y = SY(fl.y), gy = groundAtFull(pl, fl.x);
     ART.planeShadow(cx, X, SY(gy), fl.y - gy, L);
     speedLines(X, Y, fl.vx, fl.vy, L);
-    const roll = fl.stall > 0 && !RM() ? Math.sin(fl.flutter) * 0.35 : (RM() ? 0 : Math.sin(timeT * 2.1) * 0.05) + (fl.hold ? -0.1 : 0.05);
+    const roll = (fl.stall > 0 || fl.bumpT > 0) && !RM() ? Math.sin(fl.flutter) * 0.35 : (RM() ? 0 : Math.sin(timeT * 2.1) * 0.05) + (fl.hold ? -0.1 : 0.05);
     ART.plane(cx, X, Y, fl.th, save.fold, L, { roll });
-    if (fl.stall > 0) { const label=fl.bumpT>0?'bump!':'stall!'; cx.font = '400 17px "Patrick Hand", cursive'; const tw = cx.measureText(label).width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 17, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#d4553e'; cx.fillText(label, X, Y - L * 1.5); }
+    if (fl.stall > 0 || fl.bumpT > 0) { const label=fl.bumpT>0?'bump!':'stall!'; cx.font = '400 17px "Patrick Hand", cursive'; const tw = cx.measureText(label).width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 17, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#d4553e'; cx.fillText(label, X, Y - L * 1.5); }
     const alt = fl.y - gy;
     if (alt > 25 && SY(gy) > H) { cx.font = '400 15px "Patrick Hand", cursive'; const tx = '↓ ' + Math.round(alt) + ' m up', tw = cx.measureText(tx).width; cx.fillStyle = 'rgba(255,253,246,.85)'; rr(X - tw / 2 - 6, H - 30, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#29303d'; cx.fillText(tx, X, H - 14); }
   }
@@ -1921,15 +1928,14 @@ function frame(now) {
 const TEST = { speed: 1, auto: null };
 function autoHold() {
   if (!TEST.auto || !fl) return false;
-  const v2 = fl.vx * fl.vx + fl.vy * fl.vy, ab = bestAlpha(P), as = sinkAlpha(P);
-  const [, wy] = airAt(pl, roll, fl.x, fl.y, fl.t);
-  let tgt = wy > 0.4 && v2 < 100 ? as : Math.min(ab, G / (P.kq * v2 * P.cla));
-  const vg = Math.sqrt(G / (P.kq * P.cla * ab)), gam = Math.atan2(fl.vy, fl.vx);
-  if (Math.sqrt(v2) < vg * 1.15 && gam > 0.05 && !(wy > 0.4)) tgt = Math.min(tgt, 0);
-  if (fl.a > P.as * 0.85) tgt = -1;
-  const ahead = groundAtFull(pl, fl.x + 8); if (fl.y - ahead < 3 && fl.vy < 0) tgt = Math.min(P.as * 0.92, Math.max(tgt, ab) * 1.2);
-  for (const o of pl.obs) if (o.t === 'tree' && o.x - fl.x > 0 && o.x - fl.x < 14 && fl.y < o.h * 1.1 + 1) tgt = Math.min(P.as * 0.9, Math.max(tgt, ab) * 1.3);
-  return fl.a < tgt;
+  // Test-only pilot: readable attitude/speed policy; never used in normal play.
+  const [wx,wy]=airAt(pl,roll,fl.x,fl.y,fl.t),speed=Math.hypot(fl.vx-wx,fl.vy-wy);
+  let target=0.05;
+  const ahead=groundAtFull(pl,fl.x+12);
+  if(fl.y-ahead<5&&fl.vy<0)target=0.25;
+  for(const o of pl.obs)if(o.t==='tree'&&o.x-fl.x>0&&o.x-fl.x<18&&fl.y<o.h+2)target=0.3;
+  return wrapAngle(fl.th)<target&&speed>10&&!fl.stall;
+
 }
 if (window.__DGTEST === true) {
   window.__dg = {
@@ -1937,7 +1943,7 @@ if (window.__DGTEST === true) {
       if (run && (state === 'aim' || state === 'fly' || state === 'result')) endRun(!!win);
       else if (state === 'home' || state === 'splash' || state === 'hangar') { startRun('new', 'run'); endRun(!!win); }
     },
-    state: () => ({ state, paused, qual, hangarRun, wind: roll && { ...roll.wind, value: windAt(pl,roll,fl?fl.t:0), seed: roll.seed }, camera: {...cam}, speedMax: P && speedScale(), launchSpeed: P && P.v, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done, vx: fl.vx, vy: fl.vy, power: fl.pow0 } }),
+    state: () => ({ state, paused, qual, hangarRun, wind: roll && { ...roll.wind, value: windAt(pl,roll,fl?fl.t:0), seed: roll.seed }, camera: {...cam}, speedMax: P && speedScale(), launchSpeed: P && P.v, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done, vx: fl.vx, vy: fl.vy, power: fl.pow0, a: fl.a, stall: fl.stall, stalls: fl.stalls || 0, th:fl.th, pitchRate:fl.pitchRate, crashed:!!fl.crashed, hold: fl.hold } }),
     give: o => { Object.assign(save, o); persist(); if (state === 'hangar') renderHangar(); },
     speed: s => { TEST.speed = s; },
     auto: on => { TEST.auto = on; },
@@ -1946,7 +1952,7 @@ if (window.__DGTEST === true) {
     hangar: () => openHangar(),
     startRun: (how, mode) => startRun(how || 'new', mode || 'run'),
     place: n => { if (!run || run.mode !== 'run') return; run.place = Math.max(0, Math.min(7, n)); beginAim(true); },
-    model: { FOLDS, PLACES, TOWER, flightZoom, windProfile, windAt, glideTarget, flightFeedback }
+    model: { FOLDS, PLACES, TOWER, flightZoom, windProfile, windAt, flightFeedback }
   };
 }
 
