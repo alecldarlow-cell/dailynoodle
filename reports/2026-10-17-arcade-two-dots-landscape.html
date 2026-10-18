@@ -90,6 +90,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
 #death{background:rgba(0,0,0,.5)}
 .dl{font-weight:600;color:var(--label);letter-spacing:3px;line-height:normal}
 #dScore{color:var(--gold);letter-spacing:2px;text-align:center;line-height:1}
+#dTap{color:#fff;font-weight:400;font-size:14px;letter-spacing:2px;margin-top:14px;visibility:hidden}
 @media (prefers-reduced-motion: reduce){#turn svg{animation:none}}
 </style>
 </head>
@@ -157,6 +158,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     <div id="dWorld" class="dl"></div>
     <div id="dScore" class="orb">0</div>
     <div id="dBest" class="dl"></div>
+    <div id="dTap">tap to continue</div>
     <div id="dBack"><a class="back ui" href="../games.html">← Digi Games</a></div>
   </div>
 </div>
@@ -3039,6 +3041,8 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       set($("dWorld"), "text", WORLD_IDS[display.world].toUpperCase()), set($("dWorld"), "opacity", "0.6"), set($("dScore"), "text", String(display.scoreDisplay));
       let footerOpacity = countDone && display.score > 0 ? wasNewBest ? 0.9 : 0.6 : 0;
       set($("dBest"), "text", wasNewBest ? "★ NEW BEST ★" : `BEST ${save.best}`), set($("dBest"), "opacity", String(footerOpacity)), set($("dBack"), "visibility", countDone ? "visible" : "hidden");
+      /* same pulse as "tap to resume"; shown from the moment a tap will work */
+      set($("dTap"), "visibility", canRetry(s) ? "visible" : "hidden"), set($("dTap"), "opacity", still ? "0.75" : pauseSubOpacity.toFixed(3));
     }
   }
   var hidden = !1, renderMs = 0;
@@ -3150,6 +3154,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
