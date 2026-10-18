@@ -658,7 +658,7 @@ const fsOK=(()=>{try{return !!(document.fullscreenEnabled||document.webkitFullsc
 const isFS=()=>{try{return !!(document.fullscreenElement||document.webkitFullscreenElement);}catch(e){return false;}};
 function toggleFS(){try{if(isFS()){const x=document.exitFullscreen||document.webkitExitFullscreen;const p=x&&x.call(document);if(p&&p.catch)p.catch(()=>{});}
  else{const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;const p=rq&&rq.call(el,{navigationUI:'hide'});if(p&&p.catch)p.catch(()=>{});}}catch(e){}}
-function fsSync(){const b=$('fsBtn');b.hidden=!(fsOK&&mode==='title'&&cardKind==='title');b.setAttribute('aria-label',isFS()?'Leave full screen':'Full screen');
+function fsSync(){const b=$('fsBtn');b.hidden=!(fsOK&&mode==='title'&&onTitle);b.setAttribute('aria-label',isFS()?'Leave full screen':'Full screen');
  $('fsIcon').setAttribute('d',isFS()?'M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5':'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5');
  const s=$('sFs');if(s){const on=isFS();s.setAttribute('aria-checked',on);s.querySelector('.sw').classList.toggle('on',on);}}
 $('fsBtn').addEventListener('click',()=>{audioInit();toggleFS();});
@@ -668,10 +668,11 @@ document.addEventListener('fullscreenchange',()=>{fsSync();layout();});document.
 let lastFocus=null;
 function focusables(){return[...$('card').querySelectorAll('button:not([disabled]),a[href]')].filter(x=>x.offsetParent!==null);}
 function trapFocus(e){const f=focusables();if(!f.length)return;const i=f.indexOf(document.activeElement);if(e.shiftKey&&(i<=0)){e.preventDefault();f[f.length-1].focus();}else if(!e.shiftKey&&(i===f.length-1||i<0)){e.preventDefault();f[0].focus();}}
-function showCard(kind,html,mount){if(!modalOpen)lastFocus=document.activeElement;modalOpen=true;cardKind=kind;const tv=html.indexOf('tv-top')>=0;$('modal').classList.toggle('titlev',tv);$('card').innerHTML=html;$('modal').hidden=false;$('card').scrollTop=0;
+let onTitle=false;   // the title card itself (not the shelf or looks cards opened from it) carries the back link and full-screen button
+function showCard(kind,html,mount){if(!modalOpen)lastFocus=document.activeElement;modalOpen=true;cardKind=kind;const tv=html.indexOf('tv-top')>=0;onTitle=tv;$('modal').classList.toggle('titlev',tv);$('card').innerHTML=html;$('modal').hidden=false;$('card').scrollTop=0;
  drag=null;if(mount)mount($('card'));const first=$('card').querySelector('[data-focus]')||focusables()[0];if(first)try{first.focus({preventScroll:true});}catch(_){}
- $('back').hidden=!(kind==='title');$('pause').hidden=true;fsSync();}
-function hideCard(){modalOpen=false;cardKind=null;$('modal').hidden=true;$('card').innerHTML='';$('back').hidden=true;$('pause').hidden=mode!=='play';fsSync();
+ $('back').hidden=!onTitle;$('pause').hidden=true;fsSync();}
+function hideCard(){modalOpen=false;cardKind=null;onTitle=false;$('modal').hidden=true;$('card').innerHTML='';$('back').hidden=true;$('pause').hidden=mode!=='play';fsSync();
  if(mode==='play')try{cv.focus({preventScroll:true});}catch(_){}}
 const on=(id,fn)=>{const el=$(id);if(el)el.addEventListener('click',fn);};
 const sw=(id,v,label,sub)=>`<button class="btn" id="${id}" role="switch" aria-checked="${v}"><span>${label}${sub?`<small>${sub}</small>`:''}</span><i class="sw${v?' on':''}" aria-hidden="true"></i></button>`;
@@ -778,6 +779,5 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{}).catch(
 
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
