@@ -617,9 +617,11 @@ document.addEventListener('pointerup',()=>{if(fsTried||SIM)return;fsTried=true;f
 document.addEventListener('click',e=>{if(e.target&&e.target.closest&&e.target.closest('#go,#retry,#res,#collect'))fsAsk('start');},true);
 
 const msgQ=[];let msgCur=null,msgT=0,msgGap=0;
-function toast(h,p){if(SIM)return;if(msgCur&&msgCur.h===h&&msgCur.p===p)return;if(msgQ.some(m=>m.h===h&&m.p===p))return;msgQ.push({h,p});if(msgQ.length>6)msgQ.shift();}
+/* each message remembers the phase it was raised in: a day note (arrival tips, "Night in 8 seconds", builds) still waiting when night falls is dropped, and one on screen fades, so nothing day-sized covers the sea you aim at */
+function toast(h,p){if(SIM)return;if(msgCur&&msgCur.h===h&&msgCur.p===p)return;if(msgQ.some(m=>m.h===h&&m.p===p))return;msgQ.push({h,p,ph:st?st.phase:'day'});if(msgQ.length>6)msgQ.shift();}
 function msgClear(){msgQ.length=0;msgCur=null;msgGap=0;if(!SIM)$('toast').style.opacity=0;}
-function msgUpdate(dt){if(SIM)return;const el=$('toast');
+function msgUpdate(dt){if(SIM)return;const el=$('toast'),night=!!(st&&st.phase==='night');
+ if(night){for(let i=msgQ.length-1;i>=0;i--)if(msgQ[i].ph==='day')msgQ.splice(i,1);if(msgCur&&msgCur.ph==='day')msgT=99;}
  if(msgCur){msgT+=dt;if(msgT>=(msgQ.length?2.4:3.6)){msgCur=null;el.style.opacity=0;msgGap=0.35;}}
  else{msgGap-=dt;if(msgGap<=0&&msgQ.length){msgCur=msgQ.shift();msgT=0;el.querySelector('h2').textContent=msgCur.h;el.querySelector('p').textContent=msgCur.p;el.classList.toggle('banner',!!(st&&st.phase==='night'));el.style.opacity=1;}}}
 
@@ -1475,6 +1477,5 @@ addEventListener('resize',resize);
 resize();newIsland(false);requestAnimationFrame(frame);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
