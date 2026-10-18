@@ -69,6 +69,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
 #pBack{margin-top:8px}
 #root.short #pause{flex-direction:row;align-items:center;gap:clamp(28px,7vw,72px)}
 #root.short #pSet{display:grid;grid-template-columns:1fr 1fr;width:auto;margin-top:0}
+#root.short #pSet .tg:last-child{grid-column:1/-1}
 #root.short #pB{justify-content:center}
 #dBack{position:absolute;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:center}
 #iTop{position:absolute;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 max(6px,env(safe-area-inset-right)) 0 max(6px,env(safe-area-inset-left))}
@@ -144,6 +145,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     <div id="pB">
       <div id="pSet" class="ui">
         <button class="tg" id="tSound" aria-pressed="true">SOUND <b>ON</b></button>
+        <button class="tg" id="tMusic" aria-pressed="true">MUSIC <b>ON</b></button>
         <button class="tg" id="tVib" aria-pressed="true">VIBRATION <b>ON</b></button>
         <button class="tg" id="tFS" aria-pressed="true">FULL SCREEN <b>ON</b></button>
         <button class="tg" id="tRM" aria-pressed="false">REDUCE MOTION <b>OFF</b></button>
@@ -2815,46 +2817,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     };
   }
   var WORLD_IDS = ["moon", "earth", "jupiter"];
-  function sine(freq, dur, amp = 0.7, decay = 15) {
-    let n = Math.round(44100 * dur), atk = Math.round(44100 * 5e-3), rel = Math.round(44100 * 5e-3), buf = [];
-    for (let i = 0; i < n; i++) {
-      let v = Math.sin(2 * Math.PI * freq * i / 44100), env;
-      i < atk ? env = i / atk : i >= n - rel ? env = Math.exp(-decay * (i - atk) / 44100) * ((n - i) / rel) : env = Math.exp(-decay * (i - atk) / 44100), buf.push(v * amp * env);
-    }
-    return buf;
-  }
-  function delay(samples, delaySec) {
-    return new Array(Math.round(44100 * delaySec)).fill(0).concat(samples);
-  }
-  function mix(...tracks) {
-    let L = Math.max(...tracks.map((t) => t.length)), m = new Array(L).fill(0);
-    for (let t of tracks) t.forEach((v, i) => m[i] += v);
-    let pk = Math.max(...m.map(Math.abs));
-    return pk > 0.85 && m.forEach((v, i) => m[i] = v * 0.85 / pk), m;
-  }
-  function quantise(s2) {
-    let out = new Float32Array(s2.length);
-    for (let i = 0; i < s2.length; i++) {
-      let c = Math.max(-1, Math.min(1, s2[i]));
-      out[i] = Math.round(c * 32767) / 32767;
-    }
-    return out;
-  }
-  function recipes() {
-    let PENTATONIC_HZ = [523, 587, 659, 784, 880, 1047, 1175, 1319], r = {
-      jumpL: sine(380, 0.04),
-      jumpR: sine(507, 0.04),
-      tap: sine(440, 0.05),
-      pauseOn: sine(330, 0.05),
-      chordTier: mix(sine(660, 0.22), delay(sine(880, 0.24), 0.08), delay(sine(1320, 0.3), 0.18)),
-      chordFive: mix(sine(880, 0.18), delay(sine(1320, 0.22), 0.09)),
-      closeCall: sine(1100, 0.05),
-      death: mix(sine(240, 0.16), delay(sine(160, 0.26), 0.08))
-    };
-    for (let t = 1; t <= 8; t++) r["blip" + t] = sine(PENTATONIC_HZ[t - 1], t >= 7 ? 0.06 : 0.08);
-    return r;
-  }
-  var ctx = null, buffers = {}, muted = !1;
+  var ctx = null, muted = !1;
   function setMuted(m) {
     muted = m;
   }
@@ -2864,11 +2827,6 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
         let AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return;
         ctx = new AC({ latencyHint: "interactive" });
-        let rs = recipes();
-        for (let k of Object.keys(rs)) {
-          let data = quantise(rs[k]), b = ctx.createBuffer(1, data.length, 44100);
-          b.getChannelData(0).set(data), buffers[k] = b;
-        }
       }
       ctx.state !== "running" && ctx.resume().catch(() => {
       });
@@ -2876,15 +2834,88 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       ctx = null;
     }
   }
+  /* ---------- sound: the Glass direction (bells, soft sweeps, a night-sky echo), world ambience and layered music ----------
+     Everything is synthesised live with Web Audio, so it adds no files. Effects go straight to the mix; ambience follows
+     the Sound switch; music has its own switch and plays only while a run is live, one bar per pipe period, adding a
+     layer per world. A short convolution echo is generated once on the first tap. */
+  var SND = null, SND_PENTA = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51], SND_CLIMB = [0, 1, 2, 3, 4, 3, 4, 5, 6, 7];
+  function sndInit() {
+    if (SND || !ctx) return SND;
+    let comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16, comp.ratio.value = 4, comp.attack.value = 0.003, comp.release.value = 0.2;
+    let master = ctx.createGain(); master.gain.value = 0.85, master.connect(comp), comp.connect(ctx.destination);
+    let verb = ctx.createConvolver(), n = Math.floor(ctx.sampleRate * 2.6), b = ctx.createBuffer(2, n, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) { let d = b.getChannelData(c); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3.2); }
+    verb.buffer = b;
+    let verbIn = ctx.createGain(), wet = ctx.createGain(); wet.gain.value = 0.5, verbIn.connect(verb), verb.connect(wet), wet.connect(master);
+    let fx = ctx.createGain(), amb = ctx.createGain(), mus = ctx.createGain(); fx.connect(master), amb.gain.value = 0, amb.connect(master), mus.gain.value = 0, mus.connect(master);
+    let nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), nd = nb.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+    return SND = { master, verbIn, fx, amb, mus, noise: nb, ambWorld: -1, ambNodes: null, musNext: 0, musBar: 0, lastWorld: 0, playingWas: !1 };
+  }
+  function sOut(node, send, bus) { node.connect(bus || SND.fx); if (send) { let g = ctx.createGain(); g.gain.value = send, node.connect(g), g.connect(SND.verbIn); } }
+  function sEnv(g, t, a, peak, dur, lin) { g.gain.setValueAtTime(1e-4, t), g.gain.linearRampToValueAtTime(peak, t + a), lin ? g.gain.linearRampToValueAtTime(1e-4, t + dur) : g.gain.exponentialRampToValueAtTime(1e-4, t + dur); }
+  function sTone({ type = "sine", f, f2, glide = 0.04, at = 0, a = 0.004, dur = 0.12, gain = 0.3, send = 0, lp, lin, bus }) {
+    let t = ctx.currentTime + at, o = ctx.createOscillator(), g = ctx.createGain(), last = o; o.type = type, o.frequency.setValueAtTime(f, t), f2 && o.frequency.exponentialRampToValueAtTime(f2, t + glide);
+    if (lp) { let fl = ctx.createBiquadFilter(); fl.type = "lowpass", fl.frequency.value = lp, o.connect(fl), last = fl; }
+    last.connect(g), sEnv(g, t, a, gain, dur, lin), sOut(g, send, bus), o.start(t), o.stop(t + dur + 0.05);
+  }
+  function sBell({ f, at = 0, dur = 0.9, gain = 0.22, ratio = 3.5, index = 3, send = 0.45, bus }) {
+    let t = ctx.currentTime + at, c = ctx.createOscillator(), m = ctx.createOscillator(), mg = ctx.createGain(), g = ctx.createGain();
+    c.frequency.value = f, m.frequency.value = f * ratio, mg.gain.setValueAtTime(f * index, t), mg.gain.exponentialRampToValueAtTime(f * 0.05, t + dur * 0.6);
+    m.connect(mg), mg.connect(c.frequency), c.connect(g), sEnv(g, t, 3e-3, gain, dur), sOut(g, send, bus), c.start(t), m.start(t), c.stop(t + dur + 0.05), m.stop(t + dur + 0.05);
+  }
+  function sNoise({ at = 0, dur = 0.12, gain = 0.2, type = "bandpass", f = 1200, f2, q = 1.5, send = 0 }) {
+    let t = ctx.currentTime + at, s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain(); s.buffer = SND.noise, fl.type = type, fl.Q.value = q, fl.frequency.setValueAtTime(f, t), f2 && fl.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    s.connect(fl), fl.connect(g), sEnv(g, t, 4e-3, gain, dur), sOut(g, send), s.start(t, Math.random()), s.stop(t + dur + 0.05);
+  }
+  var GLASS = {
+    tap: () => { sBell({ f: 659.25, dur: 0.9, gain: 0.16 }), sBell({ f: 987.8, at: 0.06, dur: 0.9, gain: 0.1 }); },
+    pauseOn: () => sBell({ f: 392, dur: 0.6, gain: 0.12, index: 1.5 }),
+    jumpL: () => { sTone({ f: 440, f2: 392, glide: 0.03, dur: 0.11, gain: 0.26, send: 0.08 }), sTone({ type: "triangle", f: 784, dur: 0.06, gain: 0.05 }); },
+    jumpR: () => { sTone({ f: 659, f2: 587, glide: 0.03, dur: 0.11, gain: 0.24, send: 0.08 }), sTone({ type: "triangle", f: 1175, dur: 0.06, gain: 0.04 }); },
+    gate: () => { let k = Math.max(0, s.score - 1 - 10 * s.world); s.world === 2 && (k %= 10); sBell({ f: SND_PENTA[SND_CLIMB[Math.min(9, k)]], dur: 0.7, gain: 0.2 }); },
+    chordFive: () => { sBell({ f: 1046.5, dur: 1.1, gain: 0.2 }), sBell({ f: 1568, at: 0.07, dur: 1.2, gain: 0.15 }); },
+    chordTier: () => { [784, 1046.5, 1318.5, 1568].forEach((f, i) => sBell({ f, at: i * 0.075, dur: 1.3, gain: 0.16 })), sTone({ f: 2637, at: 0.3, dur: 0.9, gain: 0.03, send: 0.7, a: 0.2 }); },
+    closeCall: () => { sNoise({ f: 900, f2: 3800, dur: 0.16, gain: 0.22, q: 2.5, send: 0.2 }), sBell({ f: 2093, at: 0.03, dur: 0.35, gain: 0.07, index: 1.5 }); },
+    death: () => { sTone({ f: 330, f2: 70, glide: 0.5, dur: 0.6, gain: 0.3, send: 0.45 }); for (let i = 0; i < 4; i++) sNoise({ at: i * 0.035, f: 2600 - i * 300, dur: 0.07, gain: 0.18, q: 6, send: 0.3 }); },
+    world: () => { [220, 330.5, 440, 659].forEach((f, i) => sTone({ type: "sawtooth", f, at: i * 0.02, dur: 1.6, gain: 0.05, lp: 1400, a: 0.5, send: 0.7, lin: !0 })), [1046.5, 1318.5, 1568, 2093].forEach((f, i) => sBell({ f, at: 0.5 + i * 0.12, dur: 1.4, gain: 0.1 })); },
+    best: () => [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => sBell({ f, at: i * 0.11, dur: 1.2, gain: 0.17 })),
+  };
   function play(key) {
-    if (muted || !ctx || ctx.state !== "running") return;
-    let b = buffers[key];
-    if (b)
-      try {
-        let src = ctx.createBufferSource();
-        src.buffer = b, src.connect(ctx.destination), src.start();
-      } catch {
-      }
+    if (muted || !ctx || ctx.state !== "running" || !sndInit()) return;
+    try { (GLASS[key] || (/^blip/.test(key) ? GLASS.gate : null))?.(); } catch {}
+  }
+  /* ambience per world, crossfaded on a world change */
+  function sndAmbience(world) {
+    let A = SND, old = A.ambNodes, t = ctx.currentTime;
+    if (old) { old.g.gain.setTargetAtTime(0, t, 0.6); setTimeout(() => { old.nodes.forEach((n) => { try { n.stop(); } catch {} }), clearInterval(old.timer); }, 3e3); }
+    let g = ctx.createGain(), nodes = [], osc = (f, v) => { let o = ctx.createOscillator(), og = ctx.createGain(); o.frequency.value = f, og.gain.value = v, o.connect(og), og.connect(g), o.start(), nodes.push(o); };
+    g.gain.value = 0, g.connect(A.amb), g.gain.setTargetAtTime(1, t, 0.8);
+    let timer = null;
+    if (world === 0) { osc(55, 0.05), osc(82.6, 0.03); timer = setInterval(() => { !muted && !hidden && Math.random() < 0.45 && sBell({ f: [1568, 2093, 1760][Math.floor(Math.random() * 3)], dur: 2.2, gain: 0.025, send: 0.9, index: 1.2, bus: g }); }, 2200); }
+    else if (world === 1) {
+      let src = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), wg = ctx.createGain(), lfo = ctx.createOscillator(), lg = ctx.createGain();
+      src.buffer = A.noise, src.loop = !0, fl.type = "lowpass", fl.frequency.value = 520, fl.Q.value = 0.7, wg.gain.value = 0.16, lfo.frequency.value = 0.08, lg.gain.value = 320, lfo.connect(lg), lg.connect(fl.frequency), src.connect(fl), fl.connect(wg), wg.connect(g), src.start(), lfo.start(), nodes.push(src, lfo);
+      timer = setInterval(() => { if (!muted && !hidden && Math.random() < 0.5) { let b = 2400 + Math.random() * 900; for (let i = 0; i < 2 + Math.floor(Math.random() * 3); i++) sTone({ f: b, f2: b * 1.35, glide: 0.06, at: i * 0.13, dur: 0.09, gain: 0.03, send: 0.25, bus: g }); } }, 2600);
+    } else { osc(41.2, 0.06), osc(61.7, 0.035), osc(41.5, 0.03); timer = setInterval(() => { !muted && !hidden && Math.random() < 0.6 && sTone({ f: 3200 + Math.random() * 1500, f2: 600 + Math.random() * 300, glide: 1.4, dur: 1.6, gain: 0.025, send: 0.8, a: 0.15, bus: g }); }, 2100); }
+    A.ambNodes = { g, nodes, timer }, A.ambWorld = world;
+  }
+  /* music: one bar per pipe period (2.8 s), a layer per world; plays only while a run is live */
+  var SND_CHORDS = [[220, 261.6, 329.6, 392], [174.6, 220, 261.6, 329.6], [130.8, 196, 246.9, 329.6], [196, 246.9, 293.7, 329.6]], SND_BAR = 2.8;
+  function sndBar(t0, level) {
+    let ch = SND_CHORDS[SND.musBar++ % 4], rel = t0 - ctx.currentTime, beat = SND_BAR / 4, bus = SND.mus;
+    ch.forEach((f) => sTone({ type: "triangle", f, at: rel, dur: SND_BAR * 1.05, gain: 0.03, a: 0.6, lp: 900, send: 0.5, lin: !0, bus }));
+    if (level >= 2) { let nt = [ch[0] * 2, ch[2] * 2, ch[1] * 2, ch[3] * 2]; for (let i = 0; i < 8; i++) sBell({ f: nt[i % 4] * (level >= 3 && i % 4 === 3 ? 2 : 1), at: rel + i * beat / 2, dur: 0.6, gain: 0.05, index: 1.6, send: 0.5, bus }); }
+    if (level >= 3) for (let i = 0; i < 4; i++) sTone({ f: ch[0] / 2, at: rel + i * beat, dur: beat * 0.8, gain: 0.14, lp: 400, bus });
+  }
+  function sndFrame() {
+    if (!ctx || ctx.state !== "running" || !sndInit()) return;
+    let A = SND, t = ctx.currentTime, live = s.phase === "playing" && !s.paused, quiet = muted || hidden, music = live && !quiet && save.music;
+    A.amb.gain.setTargetAtTime(quiet ? 0 : s.paused ? 0.4 : 1, t, 0.25), A.mus.gain.setTargetAtTime(music ? 1 : 0, t, music ? 0.3 : 0.12);
+    let w = s.phase === "playing" ? s.world : 0;
+    A.ambWorld !== w && sndAmbience(w);
+    s.phase === "playing" && s.world > A.lastWorld && !muted && GLASS.world(), A.lastWorld = s.phase === "playing" ? s.world : 0;
+    if (music) { A.playingWas || (A.musNext = t + 0.05, A.musBar = 0); while (A.musNext < t + 0.6) sndBar(A.musNext, s.world + 1), A.musNext += SND_BAR; }
+    A.playingWas = music;
   }
   var $ = (id) => document.getElementById(id), GAME = "two-dots-landscape", LEVEL = 1, rnd = { armed: !1, open: !1, secs: 0, how: "new" };
   function trk(ev, x) {
@@ -2914,7 +2945,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     } catch {
       return !1;
     }
-  })(), save = { best: 0, sound: !0, vib: !0, fs: coarse, rm: null, upright: !1 };
+  })(), save = { best: 0, sound: !0, music: !0, vib: !0, fs: coarse, rm: null, upright: !1 };
   function loadSave() {
     let raw = null;
     try {
@@ -2925,7 +2956,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     if (raw)
       try {
         let o = JSON.parse(raw);
-        typeof o.best == "number" && o.best > 0 && (save.best = Math.floor(o.best)), typeof o.sound == "boolean" && (save.sound = o.sound), typeof o.vib == "boolean" && (save.vib = o.vib), typeof o.fs == "boolean" && (save.fs = o.fs), typeof o.rm == "boolean" && (save.rm = o.rm), typeof o.upright == "boolean" && (save.upright = o.upright);
+        typeof o.best == "number" && o.best > 0 && (save.best = Math.floor(o.best)), typeof o.sound == "boolean" && (save.sound = o.sound), typeof o.music == "boolean" && (save.music = o.music), typeof o.vib == "boolean" && (save.vib = o.vib), typeof o.fs == "boolean" && (save.fs = o.fs), typeof o.rm == "boolean" && (save.rm = o.rm), typeof o.upright == "boolean" && (save.upright = o.upright);
       } catch {
       }
   }
@@ -2998,7 +3029,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     }
   }
   function onDeath() {
-    wasNewBest = s.score > 0 && s.score > save.best, wasNewBest && (save.best = s.score, writeSave()), buzz([20, 40, 30]), LEVEL = s.world + 1, rndEnd(!1, { score: s.score });
+    wasNewBest = s.score > 0 && s.score > save.best, wasNewBest && (save.best = s.score, writeSave(), setTimeout(() => s.phase === "dead" && play("best"), 1200)), buzz([20, 40, 30]), LEVEL = s.world + 1, rndEnd(!1, { score: s.score });
   }
   function physicsStep(now) {
     if (s.phase === "playing") {
@@ -3209,6 +3240,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       let t0 = performance.now();
       render(), renderMs = performance.now() - t0;
     }
+    try { sndFrame(); } catch {}
   }
   function isUi(t) {
     return !!(t instanceof Element && t.closest(".ui"));
@@ -3244,7 +3276,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       let b = $(id);
       b.setAttribute("aria-pressed", String(on)), b.querySelector("b").textContent = on ? "ON" : "OFF";
     };
-    tg("tSound", save.sound), tg("tVib", save.vib), tg("tFS", save.fs), tg("tRM", reducedMotion()), $("tFS").classList.toggle("hide", !fsOK), $("tVib").classList.toggle("hide", !("vibrate" in navigator));
+    tg("tSound", save.sound), tg("tMusic", save.music), tg("tVib", save.vib), tg("tFS", save.fs), tg("tRM", reducedMotion()), $("tFS").classList.toggle("hide", !fsOK), $("tVib").classList.toggle("hide", !("vibrate" in navigator));
     let m = $("iMute");
     m.innerHTML = save.sound ? SPEAKER_ON : SPEAKER_OFF, m.setAttribute("aria-label", save.sound ? "Sound on" : "Sound off"), setMuted(!save.sound);
   }
@@ -3254,6 +3286,9 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       e.stopPropagation(), fn(), paintToggles(), writeSave();
     });
   }
+  onTap("tMusic", () => {
+    save.music = !save.music, unlockAudio();
+  });
   onTap("tSound", () => {
     save.sound = !save.sound, unlockAudio();
   });
@@ -3276,7 +3311,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     (a) => a.addEventListener("pointerdown", (e) => e.stopPropagation())
   );
   document.addEventListener("visibilitychange", () => {
-    hidden = document.visibilityState === "hidden", hidden && (s.phase === "playing" && (s.paused = !0), lastFrame = 0, acc = 0, writeSave());
+    hidden = document.visibilityState === "hidden", hidden && (s.phase === "playing" && (s.paused = !0), lastFrame = 0, acc = 0, writeSave(), ctx && ctx.state === "running" && ctx.suspend().catch(() => {}));
   });
   window.addEventListener("pagehide", () => writeSave());
   window.addEventListener("resize", layout);
@@ -3289,6 +3324,8 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       s.phase === "idle" && handleTouch(GEO.W * 0.25), s.phase === "playing" && (s.paused = !1, s.dotLY = VIS_H + 40, s.vyL = 4.2, physicsStep(Date.now()));
     },
     state: () => s,
+    snd: () => SND && { musBar: SND.musBar, ambWorld: SND.ambWorld, lastWorld: SND.lastWorld, ctx: ctx && ctx.state },
+    save: () => ({ ...save }),
     renderMs: () => renderMs,
     tap: (side) => handleTouch(side === "L" ? GEO.W * 0.25 : GEO.W * 0.75),
     visH: () => VIS_H,
@@ -3308,6 +3345,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
