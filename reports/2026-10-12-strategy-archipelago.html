@@ -65,7 +65,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .slots span svg{width:40px;height:32px}
 .slots span.off svg{opacity:.18;filter:grayscale(1)}
 .slots span.new{box-shadow:inset 0 0 0 2px var(--gold),0 0 12px rgba(242,196,107,.6)}
-#dTurn{flex:none;margin-left:6px;font-size:12.5px;font-weight:800;color:rgba(244,233,204,.55);font-variant-numeric:tabular-nums}
+#dTurn{flex:none;margin-left:6px;font-size:12.5px;font-weight:800;color:rgba(244,233,204,.72);font-variant-numeric:tabular-nums}
 #dTurn:empty{display:none}
 #turnLx{font-weight:900;font-size:14px;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 
@@ -81,7 +81,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .r1{display:flex;align-items:center;gap:8px;height:26px;margin:0 2px 0 4px}
 .r2{display:flex;align-items:center;gap:10px;height:54px}
 #dLine{flex:1;min-width:0;margin-left:4px;font-weight:800;font-size:13px;line-height:1.35;color:rgba(244,233,204,.78);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-#dLine .dim{font-weight:700;opacity:.8}
+#dLine .dim{font-weight:700}
 #dLine:empty,#dock.two #dLine,#dock.sl #dLine{display:none}
 #dock.two .btn,#dock.solo .btn{flex:1}
 .lnk{position:relative;flex:none;height:30px;border:1.5px solid rgba(244,233,204,.35);border-radius:15px;background:rgba(244,233,204,.08);padding:0 12px;font:800 13.5px var(--f-ui);color:var(--paper);white-space:nowrap}
@@ -162,7 +162,7 @@ button.ord.on{background:var(--ink);color:var(--paper)}button.ord.on small{color
 .oc .t{display:block;margin-top:4px;font-size:14.5px;line-height:1.38;font-weight:700;color:#4a4a3d}
 .oc .f{display:flex;align-items:center;gap:10px;margin-top:9px}
 .oc .f em{font-style:normal;font-weight:900;font-size:13px;color:var(--ink-2)}
-.oc .f em.up{color:#b8401c}.oc .f em.down{color:var(--bad)}
+.oc .f em.up{color:#b8401c}.oc .f em.down{color:#a8321f}
 .pips{display:inline-flex;gap:4px}.pips i{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(29,42,49,.45)}
 .pips i.h{background:var(--ink);box-shadow:none}.pips i.a{background:var(--verm);box-shadow:0 0 0 2px rgba(228,87,46,.25)}.pips i.l{background:transparent;box-shadow:inset 0 0 0 1.5px var(--bad)}
 .ocs{display:flex;flex-direction:column;gap:12px}
@@ -179,6 +179,8 @@ button.ord.on{background:var(--ink);color:var(--paper)}button.ord.on small{color
 .tscreen .cbtn:not(.pri){border-color:rgba(244,233,204,.55);color:var(--paper)}
 .tscreen .cbtn.danger{border-color:rgba(255,143,122,.75);color:#ffb3a3}
 .tscreen .cbtn:disabled{opacity:.45}
+/* a primary button waiting for a choice (draft, strike) stays readable over the cards scrolling under it */
+.tscreen .cbtn.pri:disabled{opacity:1;background:#185a7d;box-shadow:inset 0 0 0 2px rgba(244,233,204,.4);color:rgba(244,233,204,.92);text-shadow:none}
 .tscreen .offer{background:radial-gradient(120% 90% at 30% 0%,#fbf3dc,var(--paper) 60%,#e8d9b3);color:var(--ink);box-shadow:0 10px 26px rgba(0,0,0,.35);border-radius:18px;padding:12px;margin:0}
 .tscreen .offer .seats .cbtn{border-color:var(--ink);color:var(--ink)}.tscreen .offer .seats .cbtn.on{background:var(--ink);color:var(--paper)}
 .cta{position:sticky;bottom:calc(-1 * (env(safe-area-inset-bottom,0px) + 18px));margin:4px -16px 0;padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 18px);background:linear-gradient(rgba(23,90,124,0),rgba(20,82,114,.94) 30%);display:flex;flex-direction:column;gap:10px}
@@ -226,7 +228,7 @@ button.ord.on{background:var(--ink);color:var(--paper)}button.ord.on small{color
 .htext h1{margin:0;font-family:var(--f-chart);font-weight:400;font-size:clamp(30px,10.6vw,46px);line-height:.95;letter-spacing:.02em;text-shadow:0 3px 0 rgba(0,0,0,.35),0 0 24px rgba(0,0,0,.35)}
 .htext p{margin:6px 0 0;font-weight:800;font-size:15px;color:rgba(244,233,204,.9)}
 .tag{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;border:1.5px solid rgba(244,233,204,.55);color:rgba(244,233,204,.85);border-radius:20px;padding:2px 9px;margin-bottom:6px}
-.tscreen .kick{color:rgba(244,233,204,.75);margin-top:4px}
+.tscreen .kick{color:rgba(244,233,204,.9);margin-top:4px}
 .ccard{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:18px;padding:10px;text-align:left;color:var(--ink);background:radial-gradient(120% 90% at 30% 0%,#fbf3dc,var(--paper) 60%,#e8d9b3);box-shadow:0 10px 26px rgba(0,0,0,.35)}
 .ccard:disabled{filter:saturate(.3) brightness(.8);opacity:.85}
 .ccard canvas{width:84px;height:84px;border-radius:12px;flex:none;background:#2a86b0}
@@ -240,7 +242,7 @@ button.ord.on{background:var(--ink);color:var(--paper)}button.ord.on small{color
 .ccard .lock{font-size:12px;font-weight:800;color:var(--ink-2);align-self:center;max-width:72px;text-align:right}
 .tlinks{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:2px}
 .tlinks .link{color:var(--paper)}
-.tlinks .link.home{color:rgba(244,233,204,.75)}
+.tlinks .link.home{color:rgba(244,233,204,.9)}
 @media (prefers-reduced-motion:reduce){#chest.pop{animation:none}.rib{animation:ribfade 1.5s forwards}@keyframes ribfade{0%,100%{opacity:0}15%,80%{opacity:1}}.hero canvas,#hint.coach,.btn.glow{animation:none}#note,.chip{transition:none}}
 </style>
 <!-- og:start (tools/og-tags.js — do not edit by hand) -->
