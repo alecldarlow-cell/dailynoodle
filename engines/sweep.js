@@ -280,6 +280,7 @@ async function lose(i){
   for(const m of MS)if(m!==i)flagged.add(m);      // show where the others were
   for(let k=0;k<CELLS;k++)if(!MS.has(k))revealed.add(k);
   flagCheck=false; paint();
+  endRanked=ranked;
   if(ranked){await recordResult(false);
     $("#msg").innerHTML=`That was a mine. The grid never needed a guess — the step was there.`;}
   else $("#msg").innerHTML=`That was a mine. Replay — nothing recorded.`;
@@ -325,6 +326,7 @@ async function checkWin(){
   paint();
   $("#msg").innerHTML=`Swept in <b>${$("#timer").textContent}</b>.${ranked?" Nice.":" Replay — nothing recorded."}`;
   document.body.classList.add("win");
+  endRanked=ranked;
   if(ranked)await recordResult(true);
   celebrate();
 }
@@ -352,11 +354,15 @@ async function recordResult(win){
 }
 /* One ranked go per day. If today already has a result, say so plainly
    rather than pretending the replay counts. */
+/* ---- dn-replay-label-v1: "replay" marks a second go at today's puzzle, never
+   the first result (recordResult sets ranked=false before the card is filled)
+   or a finished puzzle reopened from its save. ---- */
+let endRanked=true, replayStarted=false;
+function rankLabel(){const show=!ranked&&(replayStarted||!doneGet(P.id));$("#rank").textContent=show?"· replay":"";return show;}
 async function initRanked(){
   const s=await store(true);
   ranked=!(s&&s.dates&&s.dates.includes(today()));
-  $("#rank").textContent=ranked?"":"· replay";
-  if(!ranked)$("#msg").textContent="Today's result is already in — this is a replay, and nothing is recorded.";
+  if(rankLabel())$("#msg").textContent="Today's result is already in — this is a replay, and nothing is recorded.";
   restoreDone();
   doneShow();
 }
@@ -379,7 +385,7 @@ function showEnd(win){
   $("#endIcon").className="check"+(win?"":" miss");
   $("#endIcon").textContent=win?"✓":"✕";
   $("#winTitle").textContent=win?"Swept!":"Boom.";
-  $("#winSub").textContent=`${dnLabel(P.id)}${ranked?"":" · replay"}`;
+  $("#winSub").textContent=`${dnLabel(P.id)}${endRanked?"":" · replay"}`;
   $("#winTime").textContent=$("#timer").textContent;
   $("#winStreak").textContent=$("#streak").textContent;
   $("#winBest").textContent=$("#best").textContent;
@@ -429,7 +435,7 @@ $("#winShare").onclick=async()=>{
   const txt=dnSweep(won?"win":"loss",$("#timer").textContent,$("#streak").textContent,P.id);
   doneCopy(txt,$("#winShare"));
 };
-$("#winNew").onclick=()=>{$("#winModal").classList.remove("on"); if(!won)load(curSrc);};
+$("#winNew").onclick=()=>{$("#winModal").classList.remove("on"); if(!won){replayStarted=true;load(curSrc);}};
 $("#winModal").addEventListener("click",e=>{if(e.target===$("#winModal"))$("#winModal").classList.remove("on");});
 
 /* ---- app mode (shared) ---- */

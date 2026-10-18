@@ -321,11 +321,15 @@ async function recordResult(win){
   s.last=t; s.dates=[...new Set([...(s.dates||[]),t])].slice(-90);
   await saveStreak(s); refreshStreakUI(s); ranked=false;
 }
+/* ---- dn-replay-label-v1: "replay" marks a second go at today's puzzle, never
+   the first result (recordResult sets ranked=false before the card is filled)
+   or a finished puzzle reopened from its save. ---- */
+let endRanked=true, replayStarted=false;
+function rankLabel(){const show=!ranked&&(replayStarted||!doneGet(P.id));$("#rank").textContent=show?"· replay":"";return show;}
 async function initRanked(){
   const s=await store();
   ranked=!(s&&s.dates&&s.dates.includes(today()));
-  $("#rank").textContent=ranked?"":"· replay";
-  if(!ranked)setMsg("Today's result is already in — this is a replay, and nothing is recorded.");
+  if(rankLabel())setMsg("Today's result is already in — this is a replay, and nothing is recorded.");
   refreshStreakUI(s);
   restoreDone();
   doneShow();
@@ -339,6 +343,7 @@ async function refreshStreakUI(s){
 const reduceMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
 async function finish(win){
   donePut(P.id,{o:win?"win":"loss",t:$("#timer").textContent,m:mistakes,r:solved.map(g=>g.rank),g:guesses});
+  endRanked=ranked;
   if(ranked)await recordResult(win);
   if(win)buzz([12,50,12,50,28]);
   if(win&&!reduceMotion){
@@ -350,7 +355,7 @@ function showEnd(win){
   $("#endIcon").className="check"+(win?"":" miss");
   $("#endIcon").textContent=win?"✓":"✕";
   $("#winTitle").textContent=win?"Linked!":"So close.";
-  $("#winSub").textContent=dnLabel(P.id)+(ranked?"":" · replay");
+  $("#winSub").textContent=dnLabel(P.id)+(endRanked?"":" · replay");
   $("#winTime").textContent=$("#timer").textContent;
   $("#winStreak").textContent=$("#streak").textContent;
   $("#winBest").textContent=$("#best").textContent;
@@ -410,7 +415,7 @@ $("#winShare").onclick=async()=>{
   }
   setTimeout(()=>b.textContent="Share result",1600);
 };
-$("#winNew").onclick=()=>{$("#winModal").classList.remove("on"); if(!won)start();};
+$("#winNew").onclick=()=>{$("#winModal").classList.remove("on"); if(!won){replayStarted=true;start();rankLabel();}};
 $("#winModal").addEventListener("click",e=>{if(e.target===$("#winModal"))$("#winModal").classList.remove("on");});
 
 /* ---- controls ---- */
