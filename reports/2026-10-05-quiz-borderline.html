@@ -309,7 +309,7 @@ const KEY='digi-borderline-v1';
 const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
 /* The atlas (found) is shared: the daily Borders puzzle adds to it, and may create this save as just
    {v:1,found:{}}. So writes merge with what is stored rather than overwrite it. */
-function defaults(){return {v:1,found:{},best:0,played:0,passed:0,snd:true,rm:null,fs:coarse,seenCoach:false,quiz:null};}
+function defaults(){return {v:1,found:{},best:0,played:0,passed:0,snd:true,vib:true,rm:null,fs:coarse,seenCoach:false,quiz:null};}
 let save=defaults();
 function storedFound(){try{const s=JSON.parse(localStorage.getItem(KEY)||'null');return s&&s.v===1&&s.found&&typeof s.found==='object'?s.found:{};}catch(e){return {}}}
 function mergeFound(f){for(const k in f){const n=+f[k]||0;if(n>(save.found[k]||0))save.found[k]=n;}}
@@ -333,6 +333,10 @@ function goFS(){if(!fsOK||!save.fs||isFS())return;try{const el=document.document
  const p=rq.call(el,{navigationUI:'hide'});if(p&&p.then)p.then(lock,()=>{});else lock();}catch(e){}}
 function exitFS(){try{if(!isFS())return;const x=document.exitFullscreen||document.webkitExitFullscreen;const p=x&&x.call(document);if(p&&p.catch)p.catch(()=>{});}catch(e){}}
 
+/* vibration (Android; iPhone has none): a tap for a right answer, a buzz for a wrong one */
+const vibOK=(()=>{try{return typeof navigator.vibrate==='function'}catch(e){return false}})();
+function buzz(ms){if(!vibOK||!save.vib)return;try{navigator.vibrate(ms);}catch(e){}}
+
 let actx=null;
 function audio(){if(!save.snd)return null;try{if(!actx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;actx=new A();}
   if(actx.state==='suspended')actx.resume().catch(()=>{});return actx;}catch(e){return null}}
@@ -349,8 +353,10 @@ const sfx={
 
 function toggles(host){
   host.innerHTML='';
-  const items=[['Sound',()=>save.snd,v=>{save.snd=v;if(v)audio();}],
-               ['Reduced motion',()=>reduced(),v=>{save.rm=v;applyRM();}]];
+  const items=[['Sound',()=>save.snd,v=>{save.snd=v;if(v)audio();}]];
+  if(vibOK)items.push(['Vibration',()=>save.vib!==false,v=>{save.vib=v;if(v)buzz(12);}]);
+  items.push(
+               ['Reduced motion',()=>reduced(),v=>{save.rm=v;applyRM();}]);
   if(fsOK)items.push(['Full screen',()=>!!save.fs,v=>{save.fs=v;if(v)goFS();else exitFS();}]);
   for(const [label,get,set] of items){const b=document.createElement('button');b.className='tog';b.setAttribute('role','switch');
     b.textContent=label;b.setAttribute('aria-checked',String(get()));
@@ -540,7 +546,7 @@ function answer(k,fast){
   $('hintBtn').hidden=true;$('nextBtn').hidden=false;$('nextBtn').textContent=quiz.i===NQ-1?'See results':'Next';
   buildTicks();updatePts();
   (ok?sfx.right:sfx.wrong)();
-  try{if(!ok&&navigator.vibrate&&!reduced())navigator.vibrate(30);}catch(e){}
+  buzz(ok?12:30);
   setTimeout(()=>{try{$('nextBtn').focus({preventScroll:true});}catch(e){}},50);
 }
 function next(){if(!locked||!quiz)return;quiz.i++;save.quiz=quiz;persist();if(quiz.i>=NQ)finish();else showQuestion(false);}
