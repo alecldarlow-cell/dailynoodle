@@ -1117,7 +1117,7 @@ function pausePlay(settingsOnly) {
   $('pTitle').textContent = settingsOnly ? 'Settings' : (resumeMenu ? 'Run in progress' : 'Paused');
   $('pResume').textContent = settingsOnly ? 'Close' : 'Resume';
   $('pHangar').classList.toggle('hidden', !!settingsOnly);
-  $('pHangar').textContent = resumeMenu ? 'New run' : 'Hangar';
+  $('pHangar').textContent = 'Hangar';   // same name as the "Go to the hangar?" step it opens, paused or resuming
   pauseMode = settingsOnly ? 'settings' : 'pause';
   refreshSwitches();
   try { $('howto').open = !(innerWidth > innerHeight && innerHeight <= 430); } catch (e) {}
