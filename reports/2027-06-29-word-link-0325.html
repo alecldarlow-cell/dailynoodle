@@ -1,0 +1,98 @@
+<!doctype html><html lang="en-GB"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="dn:headline"   content="Link 0325">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
+<meta name="dn:topic"      content="Word">
+<meta name="dn:date"       content="2027-06-29">
+<meta name="dn:kind"       content="puzzle">
+<meta name="dn:read"       content="~4 min">
+<meta name="theme-color" content="#2E5BFF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Digi Link">
+<title>Digi Puzzles — The Digi Link</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../engines/link.css">
+<!-- og:start (tools/og-tags.js — do not edit by hand) -->
+<meta property="og:site_name" content="The Daily Noodle">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Link 0325">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
+<meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-06-29-word-link-0325.html">
+<meta property="og:image" content="https://dailynoodle.co.uk/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<!-- og:end -->
+</head><body><div class="app">
+<header>
+  <div class="masthead">
+    <span class="mono-mark" aria-hidden="true">DP</span>
+    <span class="mh-text">
+      <span class="mh-name"><b>Digi</b><span class="accent">Puzzles</span></span>
+      <span class="mh-eyebrow">The Digi Link</span>
+    </span>
+  </div>
+  <div class="streakbox">streak <b id="streak">0</b> · best <b id="best">0</b></div>
+</header>
+<div class="meta"><span id="pid">DP·LINK·0325</span><span>·</span><span class="tag" id="pband">medium</span><span id="rank"></span><span id="timer">00:00</span></div>
+<main>
+  <div id="board" class="board" aria-label="Link board"></div>
+  <div class="lives">mistakes left <span id="pips" class="pips"></span></div>
+  <div id="msg" class="msg"></div>
+  <div class="controls">
+    <button id="shuffle">Shuffle</button>
+    <button id="clear">Deselect</button>
+    <button id="submit" class="primary" disabled>Submit</button>
+  </div>
+  <details class="how">
+    <summary>How to play</summary>
+    <p><b>Find the four groups of four.</b> Every tile belongs to exactly one group,
+    but several are dressed as members of another — that's the whole puzzle. Pick four,
+    then Submit. Get three right and you'll be told you're one away. Four mistakes ends it,
+    and guessing the same four twice costs nothing. Groups run easiest to hardest:
+    <b>green</b>, <b>cobalt</b>, <b>marigold</b>, <b>ink</b>.</p>
+  </details>
+</main>
+<footer>The Digi Link · gated at build, and again on load</footer>
+<canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
+<div id="winModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+  <div class="modalcard">
+    <div class="check" id="endIcon" aria-hidden="true">✓</div>
+    <h2 id="winTitle">Linked!</h2>
+    <div class="sub" id="winSub">The Digi Link</div>
+    <div class="statrow">
+      <div class="stat"><b id="winTime">00:00</b><span>time</span></div>
+      <div class="stat"><b id="winStreak">0</b><span>streak</span></div>
+      <div class="stat"><b id="winBest">0</b><span>best</span></div>
+    </div>
+    <div class="modalbtns">
+      <button id="winShare">Share result</button>
+      <button id="winNew" class="primary">Done</button>
+    </div>
+  </div>
+</div>
+<script>
+/* This puzzle's data. The player is ../engines/link.js, shared by every link. */
+window.DN_PUZZLE={
+  type:"link", id:"DP·LINK·0325", band:"medium",
+  groups:[
+    {rank:1, name:"Battles",           members:["HASTINGS","BOSWORTH","AGINCOURT","NASEBY"]},
+    {rank:2, name:"London stations",   members:["EUSTON","WATERLOO","MARYLEBONE","FENCHURCH"]},
+    {rank:3, name:"Fictional bears",   members:["PADDINGTON","BALOO","RUPERT","POOH"]},
+    {rank:4, name:"Sounds of disdain", members:["BAH","PSHAW","TUT","HUMPH"]}
+  ],
+  /* The trap ledger: every tile the author knows reads as a member of another
+     group, and the group it must NOT land in. Gated, so a trap can't silently
+     rot into a genuine ambiguity. The rule the ledger enforces: a trap is only
+     fair if the group it's tempting you away from is full of members at least
+     as well known as the trap itself. */
+  traps:[
+    {tile:"POOH",       not:"Sounds of disdain"},
+    {tile:"PADDINGTON", not:"London stations"},
+    {tile:"WATERLOO",   not:"Battles"}
+  ]
+};
+</script>
+<script src="../engines/link.js"></script></div><script src="../dn-track.js" defer></script>
+</body></html>

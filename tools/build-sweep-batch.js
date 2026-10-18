@@ -20,7 +20,9 @@
    Selection: score = rounds*10 + subsetUses*25 + hidden (typespec). Passing
    grids are drawn so the new run's score distribution matches the existing
    6x6 run's (quantile matching), so difficulty doesn't jump at the seam.
-   Then the chosen set is shuffled deterministically across the dates. */
+   Then the chosen set is shuffled deterministically across the dates.
+   After writing, run `node tools/og-tags.js` so each new page's link-preview
+   block names its own headline and URL (the template's block is copied as is). */
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm');
 

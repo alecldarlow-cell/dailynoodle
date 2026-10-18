@@ -17,7 +17,9 @@
      node tools/build-borders-batch.js --verify                 # rebuild every live day in memory, compare byte for byte
      node tools/build-borders-batch.js --through 2028-08-16 [--dry]
    New days are stamped from the newest Borders page; only the dn:headline,
-   dn:date and the DN_PUZZLE line change. */
+   dn:date and the DN_PUZZLE line change.
+   After writing, run `node tools/og-tags.js` so each new page's link-preview
+   block names its own headline and URL (the template's block is copied as is). */
 'use strict';
 const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports');
