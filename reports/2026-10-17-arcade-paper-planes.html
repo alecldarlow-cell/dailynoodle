@@ -624,8 +624,12 @@ const DT = 1 / 120;
    - Stall: lift sags and the nose drops; the wing recovers once its angle falls.
    - The steering strength scales with airspeed, with a floor, so the nose still
      follows the path slowly when the plane is slow (and can lag into a stall). */
-const ELEV_RISE = 0.38, ELEV_FALL = 0.12, WASH = 0.4, K_IND = 1.4, CD_SCALE = 1.4, LOOP_TURN = 5.24; // a loop: the path turns through 300°
-const PITCH_W = 1, PITCH_WMIN = 6, STALL_DROP = 0.15, UP_MAX = 0.85, SLOW_V = 0.65, DOWN = 0.5;
+const ELEV_RISE = 0.2, ELEV_FALL = 0.12, WASH = 0.4, K_IND = 0.7, CD_SCALE = 1.6, LOOP_TURN = 5.24; // a loop: the path turns through 300°
+const PITCH_W = 1, PITCH_WMIN = 6, STALL_DROP = 0.15, UP_MAX = 0.5, SLOW_V = 0.65, DOWN = 0.12;
+// Swooping flaps (Oct 2026 review, option C): raised flaps also add camber lift, so a press arcs the plane up hard
+// at speed without pushing the wing towards a stall; lowered flaps dive firmly but recoverably. Drag is rebalanced
+// so hands-off throws fly as far as before.
+const FLAP_CL = 0.5, FLAP_CL_DOWN = 0;
 const STALL_WARNING = 0.65, STALL_RECOVER = 0.6;
 function wrapAngle(a) { return Math.atan2(Math.sin(a),Math.cos(a)); }
 function liftSpeedOf(P) { return Math.sqrt(G/(P.kq*(0.28+P.cla*P.as))); }
@@ -681,6 +685,7 @@ function step(f, P, pl, roll, ctl, magnet) {
   // Lift: linear to the stall angle, then sagging; a stalled wing loses a further share.
   const clMax = 0.28 + P.cla * P.as;
   let cl = aa <= P.as ? 0.28 + P.cla * a : Math.sign(a) * clMax * Math.max(0.35, 1 - (aa - P.as) * 1.6);
+  if (!f.stall) cl += f.elev >= 0 ? FLAP_CL * f.elev : FLAP_CL_DOWN * f.elev;
   if (f.stall) { cl *= 0.7; f.flutter += DT * 30; }
   let cd = P.cd0 * CD_SCALE + P.k * K_IND * cl * cl + (aa > P.as ? 0.5 * Math.sin(aa - P.as) ** 2 + 0.05 : 0);
   // Rotate the air-relative velocity for lift and dissipate speed for drag (energy-safe split step).
@@ -2186,6 +2191,5 @@ requestAnimationFrame(frame);
 })();
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
