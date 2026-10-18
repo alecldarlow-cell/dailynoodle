@@ -81,7 +81,50 @@ async function reopen(p, ev, type, boxId = 'winModal') {
   ok(!!(await p.locator('.fin-board-slot .nn-board-link').count()), `${type}: board link on reopen too`);
 }
 
+/* ---- the house chrome: slim bar, start card, dark mode (Mini, Doku, Sweep, Path, Link) ---- */
+async function houseChecks(b, type, file, firstTap, driver) {
+  const ev = []; const { ctx, p } = await open(b, file, { events: ev });
+  const s = await p.evaluate(() => {
+    const bar = document.querySelector('.dn-bar'), card = document.querySelector('.dn-start'), hdr = document.querySelector('.app>header');
+    return { bar: !!bar, timer: !!bar && bar.contains(document.getElementById('timer')), pid: !!bar && bar.contains(document.getElementById('pid')),
+      hdrHidden: !hdr || getComputedStyle(hdr).display === 'none', card: !!card && !card.hidden && getComputedStyle(card).display !== 'none',
+      title: (document.querySelector('.dn-start-title') || {}).textContent, date: (document.querySelector('.dn-start-date') || {}).textContent,
+      font: getComputedStyle(document.body).fontFamily, scrollW: document.documentElement.scrollWidth, vw: innerWidth,
+      flame: getComputedStyle(document.querySelector('.dn-streak')).display };
+  });
+  ok(s.bar && s.timer && s.pid && s.hdrHidden, `${type}: slim bar holds the number and the clock; old masthead hidden`);
+  ok(s.card && /^No\. \d+, Sunday 18 October$/.test(s.date || ''), `${type}: start card up before play ("${s.title}", "${s.date}")`);
+  ok(/^Archivo/.test(s.font), `${type}: Archivo for the interface`);
+  ok(s.flame === 'none', `${type}: no flame while the streak is 0`);
+  ok(s.scrollW <= s.vw, `${type}: no sideways scroll on the start card`);
+  await tap(p, p.locator('#dnPlay')); await wait(p, 600);
+  const starts = () => ev.filter(e => e.ev === 'puzzle_start').length;
+  const flush = async () => { await p.evaluate(() => { document.dispatchEvent(new Event('visibilitychange')); window.dispatchEvent(new Event('pagehide')); }); await wait(p, 600); };
+  ok(!(await p.locator('.dn-start').isVisible()), `${type}: Play takes you to the board`);
+  await flush(); const afterPlay = starts();
+  await firstTap(p); await wait(p, 600); await flush();
+  ok(afterPlay === 0 && starts() === 1, `${type}: the first tap on the board starts the puzzle, Play does not (${afterPlay}, then ${starts()})`);
+  await driver(p);
+  await p.reload(); await wait(p, 1500);
+  ok(!(await p.locator('.dn-start').count()), `${type}: no start card once finished`);
+  ok(await p.evaluate(() => getComputedStyle(document.querySelector('.dn-streak')).display) !== 'none', `${type}: flame shows once there is a streak`);
+  ok(!p.errs.length, `${type}: no page errors ` + p.errs.join(' | '));
+  await ctx.close();
+  /* dark */
+  const d = await open(b, file, { scheme: 'dark' });
+  const k = await d.p.evaluate(() => ({ bg: getComputedStyle(document.body).backgroundColor, card: getComputedStyle(document.querySelector('.dn-start')).backgroundColor }));
+  ok(k.bg === 'rgb(17, 19, 26)' && k.card === 'rgb(17, 19, 26)', `${type}: dark mode follows the phone (${k.bg})`);
+  await d.ctx.close();
+}
+
 const TESTS = {
+  /* ---------- house chrome, per type ---------- */
+  async 'house:link'(b) { await houseChecks(b, 'link', F.link, p => tap(p, p.locator('#board .tile').first()), play.link); },
+  async 'house:mini'(b) { await houseChecks(b, 'mini', F.mini, p => tap(p, p.locator('#grid .cell:not(.block)').first()), play.grid); },
+  async 'house:doku'(b) { await houseChecks(b, 'doku', F.doku, p => tap(p, p.locator('#grid .cell:not(.block):not(.locked)').first()), play.grid); },
+  async 'house:sweep'(b) { await houseChecks(b, 'sweep', F.sweep, async p => { const P = await play.puzzle(p); await tap(p, p.locator('#grid .cell').nth((P.start[0] - 1) * 6 + P.start[1] - 1)); }, play.sweep); },
+  async 'house:path'(b) { await houseChecks(b, 'path', F.path, async p => { const P = await play.puzzle(p); const i = P.solution.flat().indexOf(1); await tap(p, p.locator('#grid .cell').nth(i)); }, play.path); },
+
   /* ---------- finish sheet, per type ---------- */
   async 'finish:tangle'(b) {
     const ev = []; const { ctx, p } = await open(b, F.tangle, { events: ev });

@@ -3,10 +3,13 @@
 const { tap, wait } = require('./harness');
 
 const puzzle = p => p.evaluate(() => window.DN_PUZZLE);
+/* the house start card (Mini, Doku, Sweep, Path, Link): tap Play if it is up */
+async function start(p) { const b = p.locator('#dnPlay'); if (await b.count() && await b.isVisible()) { await tap(p, b); await wait(p, 500); } }
 const boxOn = p => p.evaluate(() => { const b = document.getElementById('winModal') || document.getElementById('modal'); return !!b && b.classList.contains('on'); });
 
 /* Link: group 1, then `wrong` distinct wrong guesses, then the rest (wrong = 4 loses) */
 async function link(p, { wrong = 1 } = {}) {
+  await start(p);
   const P = await puzzle(p), G = P.groups.map(g => g.members);
   const pick = async ws => {
     if (await p.locator('#board .tile.sel').count()) { await tap(p, p.locator('#clear')); await wait(p, 300); }
@@ -21,6 +24,7 @@ async function link(p, { wrong = 1 } = {}) {
 }
 /* Sweep: open the start cell, then dig every safe cell (or hit a mine) */
 async function sweep(p, { boom = false } = {}) {
+  await start(p);
   const P = await puzzle(p), mines = new Set(P.mines.map(([r, c]) => (r - 1) * 6 + (c - 1)));
   const cells = p.locator('#grid .cell');
   await tap(p, cells.nth((P.start[0] - 1) * 6 + (P.start[1] - 1))); await wait(p, 1500);
@@ -34,6 +38,7 @@ async function sweep(p, { boom = false } = {}) {
 }
 /* Path: tap 1 to 35 in order (36 closes the thread) */
 async function path(p) {
+  await start(p);
   const P = await puzzle(p), at = {};
   P.solution.forEach((row, r) => row.forEach((v, c) => at[v] = [r, c]));
   for (let k = 1; k <= 35 && !(await boxOn(p)); k++) { const [r, c] = at[k]; await tap(p, p.locator('#grid .cell').nth(r * 6 + c)); await wait(p, 700); }
@@ -41,6 +46,7 @@ async function path(p) {
 }
 /* Mini and Doku: tap each open cell and type its letter */
 async function grid(p) {
+  await start(p);
   const P = await puzzle(p), locked = new Set((P.locked || []).map(([r, c]) => `${r - 1},${c - 1}`));
   for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) {
     if (P.grid[r][c] === '#' || locked.has(`${r},${c}`)) continue;
@@ -73,4 +79,4 @@ async function borders(p, { wrong = [3, 6, 8], hint = [5] } = {}) {
   await wait(p, 3000);
 }
 
-module.exports = { puzzle, boxOn, link, sweep, path, grid, tangle, borders };
+module.exports = { start, puzzle, boxOn, link, sweep, path, grid, tangle, borders };
