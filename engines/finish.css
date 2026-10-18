@@ -156,3 +156,6 @@ details.fin-rare p{font-size:14px;line-height:1.7;color:var(--f-ink2);margin:0 0
 .fin-outl .x figcaption{color:var(--f-ink2)}
 
 @media (prefers-reduced-motion:reduce){.fin *{transition:none!important;animation:none!important}}
+
+/* the title takes focus when the sheet opens (finish.js); no ring for that programmatic focus */
+.fin-box .fin-title:focus{outline:none}

@@ -238,6 +238,9 @@
   function open(box) {
     box.classList.add('fin-open'); document.documentElement.classList.add('fin-shown');
     try { box.scrollTop = 0; } catch (e) {}
+    // screen readers and keyboards land on the result, not on the board behind it
+    try { var ft = box.querySelector('.fin-title'); if (ft) { ft.setAttribute('tabindex', '-1'); ft.focus({ preventScroll: true }); } } catch (e) {}
+    if (!box.getAttribute('role')) { box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'Result'); }
   }
   function hide() {
     var b = document.querySelector('.fin-box.fin-open'); if (b) b.classList.remove('fin-open');
