@@ -42,15 +42,15 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
 #xName,.xRow{text-shadow:0 1px 10px rgba(0,0,0,.55)}
 /* HUD */
 #score{position:absolute;left:0;right:0;display:flex;justify-content:center;padding-bottom:8px}
-#scoreT{font-size:42px;letter-spacing:4px;text-align:center}
+#scoreT{font-size:42px;letter-spacing:4px;text-align:center;text-shadow:0 1px 2px rgba(7,7,15,.45),0 0 12px rgba(7,7,15,.3)}
 #pdots{position:absolute;left:0;right:0;display:flex;flex-direction:row;justify-content:center;align-items:center;gap:7px}
-#pdots i{width:8px;height:8px;border-radius:4px;background:var(--gold)}
+#pdots i{width:8px;height:8px;border-radius:4px;background:var(--gold);box-shadow:0 1px 3px rgba(7,7,15,.4)}
 #mile{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center}
-#mileT{color:var(--gold);font-size:14px;letter-spacing:2px}
+#mileT{color:var(--gold);font-size:14px;letter-spacing:2px;text-shadow:0 1px 2px rgba(7,7,15,.5)}
 #mileN{color:var(--gold);font-size:28px;letter-spacing:4px;margin-top:6px}
 #pbtn{position:absolute;width:44px;height:44px;display:flex;align-items:center;justify-content:center;pointer-events:auto;background:none;border:0;cursor:pointer}
 #pbtn span{display:flex;gap:5px;align-items:center}
-#pbtn i{width:4px;height:18px;border-radius:2px;background:rgba(255,255,255,.75)}
+#pbtn i{width:4px;height:18px;border-radius:2px;background:rgba(255,255,255,.8);box-shadow:0 0 0 1px rgba(7,7,15,.18),0 1px 4px rgba(7,7,15,.45)}
 /* pause: a column when there's height, two columns on a landscape phone */
 #pause{background:#07070fb8;gap:0}
 #pA,#pB{display:flex;flex-direction:column;align-items:center}
@@ -3156,6 +3156,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
