@@ -1602,8 +1602,10 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       p.moveTo(0, yPx + heightPx);
       let firstY = 0;
       for (let i = 0; i <= points; i++) {
-        let x = i / points * span, base = Math.sin(x * 0.018 + j1) * heightPx * 0.55 + Math.sin(x * 0.07 + j2) * heightPx * 0.2 + Math.sin(x * 0.18 + j3) * heightPx * 0.06 + heightPx * 0.4, crater = Math.sin(x * 5e-3) > 0.85 ? -heightPx * 0.12 : 0, y = base + crater;
-        i === 0 && (firstY = y), i === points && (y = firstY), p.lineTo(x, yPx + y);
+        let ridgeY = (x) => Math.sin(x * 0.018 + j1) * heightPx * 0.55 + Math.sin(x * 0.07 + j2) * heightPx * 0.2 + Math.sin(x * 0.18 + j3) * heightPx * 0.06 + heightPx * 0.4 + (Math.sin(x * 5e-3) > 0.85 ? -heightPx * 0.12 : 0);
+        /* the last eighth of the tile eases into the tile's start, so the repeat has no cliff at the seam */
+        let x = i / points * span, u = Math.max(0, (i / points - 0.875) / 0.125), e = u * u * (3 - 2 * u), y = ridgeY(x) * (1 - e) + ridgeY(x - span) * e;
+        p.lineTo(x, yPx + y);
       }
       return p.lineTo(span, yPx + heightPx), p.close(), p;
     }
@@ -3158,6 +3160,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
