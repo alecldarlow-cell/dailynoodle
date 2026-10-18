@@ -1720,7 +1720,9 @@ function dealWinCard(){const c=chartOf(st),d=meta.deals[c.id]||{w:1,b:st.turn},d
   <button class="cbtn pri" id="nd">New deal</button><button class="cbtn" id="sd">Same deal again</button><button class="cbtn" id="ch">All charts</button><div class="links">${homeLink}</div>`,'',()=>{
   $('nd').addEventListener('click',()=>{meta.set.shuf=true;saveMeta();const ci=st.c;st=null;D=null;intro(ci);});
   $('sd').addEventListener('click',()=>{goFS();startChart(st.c,'retry',deal);});$('ch').addEventListener('click',()=>{st=null;D=null;home();});});}
-function lossCard(){const c=chartOf(st),k=Math.max(0,cps.length-3),cp=cps[k];let tn=0;try{tn=JSON.parse(cp).turn;}catch(e){}
+function lossCard(){const c=chartOf(st),k=Math.max(0,cps.length-3);let cp=cps[k],tn=0;try{tn=JSON.parse(cp).turn;}catch(e){}
+ /* a checkpoint at turn 1 is the same as restarting, so only one of the two buttons shows */
+ if(tn<=1)cp=null;
  showModal(`<div class="kick">Chart ${st.c+1} · ${c.name}</div><h2>Driven from ${c.name}</h2><p>Your last island fell on turn ${st.turn}. The seas will be calmer next time: rivals muster ${Math.round(assistFor(st.c)*100)}% less.</p>
   ${cp?`<button class="cbtn pri" id="rt">Try again from turn ${tn}</button>`:''}<button class="cbtn${cp?'':' pri'}" id="rs">${st.deal?'Same deal again':'Restart the chart'}</button>${st.deal?'<button class="cbtn" id="nd">New deal</button>':''}<button class="cbtn" id="ch">All charts</button><div class="links">${homeLink}</div>`,'',()=>{
   if(cp)$('rt').addEventListener('click',()=>{goFS();retryFrom(cp);});$('rs').addEventListener('click',()=>{goFS();startChart(st.c,'retry',st.deal);});if($('nd'))$('nd').addEventListener('click',()=>{const ci=st.c;st=null;D=null;intro(ci);});$('ch').addEventListener('click',()=>{st=null;D=null;home();});});}
