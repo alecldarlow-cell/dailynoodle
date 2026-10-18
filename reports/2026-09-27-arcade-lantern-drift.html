@@ -272,6 +272,20 @@ function goFS(){if(!fsOK||!meta.fs||isFS())return;try{const el=document.document
  const lock=()=>{try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(()=>{});}catch(e){}};if(p&&p.then)p.then(lock,()=>{});else lock();}catch(e){}}
 function exitFS(){try{if(!isFS())return;const x=document.exitFullscreen||document.webkitExitFullscreen;const p=x&&x.call(document);if(p&&p.catch)p.catch(()=>{});}catch(e){}}
 
+/* ---------- keep the screen awake during a session ----------
+   Unwind rests leave the phone untouched for 25-37 s (release, rest, next
+   cue), longer than a 15 or 30 s screen timeout, and a locked screen pauses
+   the session. While a session is open (and not paused or hidden) the page
+   asks for a screen wake lock where the browser offers one (Android Chrome,
+   iPhone Safari 16.4+); it lets go on the end screen, title and pause menu.
+   The browser drops the lock itself when the page is hidden; hud() asks
+   again on return. Refusals change nothing else.                        */
+let wl=null,wlWant=null;
+const wakeWant=()=>!S.paused&&!document.hidden&&(S.mode==='play'||S.mode==='ready'||S.mode==='uplay'||S.mode==='uready');
+function wakeSync(want){try{
+ if(want&&!wl&&navigator.wakeLock&&navigator.wakeLock.request){wl='asking';navigator.wakeLock.request('screen').then(l=>{wl=l;l.addEventListener('release',()=>{if(wl===l){wl=null;wlWant=null;}});if(!wakeWant()){wl=null;l.release().catch(()=>{});}},()=>{wl=null;});}
+ else if(!want&&wl&&wl!=='asking'){const l=wl;wl=null;l.release().catch(()=>{});}}catch(e){wl=null;}}
+
 /* ---------- state ---------- */
 const S={mode:'title',paused:false,len:meta.len,dur:180,total:360,tau:0,h:LOW,v:0,hold:false,lh:false,th:0,idx:0,got:0,seen:0,marks:new Uint8Array(360),parts:[],flashT:0};
 let anyRound=false,clock=0,scroll=0,simHold=null;
@@ -727,6 +741,7 @@ function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h
 /* ---------- HUD ---------- */
 let lastCue='',lastCnt=-1,lastBar=-1,lastVis='',lastU=false,lastSk=false,lastSb=false;
 function hud(){const cue=$('cue');let t='';
+ const ww=wakeWant();if(ww!==wlWant){wlWant=ww;wakeSync(ww);}
  const um=S.mode.charAt(0)==='u';
  if(S.mode==='ready')t='Hold anywhere to breathe in';else if(S.mode==='play')t=(S.tau%CYCLE)<IN?'Breathe in':'Breathe out';else if(um)t=uCueText();
  if(um!==lastU){lastU=um;cue.classList.toggle('u',um);}
@@ -764,6 +779,5 @@ addEventListener('resize',resize);
 resize();showTitle();requestAnimationFrame(frame);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
