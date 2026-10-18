@@ -246,6 +246,22 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
 #tut .msg #tutSkip{min-height:36px;padding:4px 10px;font-size:13px;box-shadow:none}
 @media(max-width:700px){#tut .msg{bottom:calc(64px + var(--sb));max-width:calc(100vw - 24px)}}
 @media(max-aspect-ratio:3/4){.homeHills{height:24vh}#splash{padding-bottom:calc(16vh + var(--sb))}#splashPlane{width:min(340px,84vw)}#splash h1{font-size:min(17vw,84px)}#splash .tagline{font-size:16px;margin:8px 0 22px}.route{width:min(380px,92vw)}.route .stop{width:30px;height:30px;font-size:12px}.route .stop.next{width:36px;height:36px}.routeTxt{font-size:14px;margin:8px 0 22px}#splash .homeActions{flex-direction:column;width:min(320px,86vw)}#splash .homeActions .btn{width:100%;font-size:22px;padding:14px}.homeChips{margin-top:18px}}
+
+/* calmer home */
+#splash h1{font-size:clamp(42px,9vmin,64px)}
+#splashPlane{width:min(210px,44vw)}
+#splash .tagline{margin:4px 0 16px;font-size:15px}
+.route{width:min(300px,86vw)}.route .stop{width:22px;height:22px;font-size:10px;border-width:1.5px}.route .stop.next{width:26px;height:26px;font-size:11px}
+.routeTxt{margin:6px 0 18px;font-size:13px}
+#splash .homeActions{flex-direction:row;width:auto;gap:10px}
+#splash .homeActions .btn{width:auto;min-width:128px;font-size:17px;padding:9px 18px}
+.homeActions .ready{width:12px;height:12px;top:-4px;right:-4px}
+.homeChips{margin-top:14px;font-size:13px;color:#4c647d;font-weight:700}
+.homeBar .back{background:none;font-size:15px}
+.homeBar .iconBtn{background:none;border:none;color:#2e4458;font-size:13px;padding:6px 8px}
+.homeBar .iconBtn.on{color:#1f4f9e}
+@media(max-aspect-ratio:3/4){#splashPlane{width:min(240px,60vw)}#splash h1{font-size:min(13vw,64px)}#splash .tagline{font-size:15px;margin:6px 0 20px}.route{width:min(300px,84vw)}.route .stop{width:24px;height:24px;font-size:11px}.route .stop.next{width:28px;height:28px}.routeTxt{font-size:13px;margin:8px 0 22px}#splash .homeActions .btn{font-size:17px;padding:10px 18px;min-width:132px}.homeChips{margin-top:16px}}
+.homeBar .back,.homeBar .iconBtn{background:rgba(255,253,246,.96);border-radius:10px;padding:4px 10px;min-height:40px}
 </style>
 </head>
 <body>
@@ -278,7 +294,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
   <div class="homeMain">
     <svg id="splashPlane" viewBox="0 0 260 120" aria-hidden="true"><path class="trail" d="M6 104 C40 100 60 84 78 64 C96 44 120 40 128 58 C136 76 112 88 100 72 C90 58 110 44 150 44" fill="none" stroke="#2f6fd6" stroke-width="3" stroke-dasharray="5 7" stroke-linecap="round"/><g transform="translate(150 14)"><path d="M0 34 L100 14 L36 44 Z" fill="#fff" stroke="#29303d" stroke-width="3" stroke-linejoin="round"/><path d="M36 44 L100 14 L46 58 Z" fill="#dfe6ee" stroke="#29303d" stroke-width="3" stroke-linejoin="round"/><path d="M0 34 L100 14" stroke="#b9c4d2" stroke-width="2"/></g></svg>
     <h1 class="hand">Paper Planes</h1>
-    <p class="tagline">Five throws. Eight places. Fly from the back garden to the mountains.</p>
+    <p class="tagline">Fly from the back garden to the mountains.</p>
     <div class="route" id="homeRoute" aria-label="Places reached"></div>
     <p class="routeTxt" id="homeRouteTxt"></p>
     <div class="homeActions"><button class="btn pri tap" id="splashGo">✈ Fly now</button><button class="btn org tap" id="splashHangar">✦ Hangar<i class="ready" id="homeReady" hidden></i></button></div>
@@ -1090,11 +1106,11 @@ $('homeBtn').addEventListener('click',()=>{if(hangarRun)continueFromHangar();els
 function renderHomeRoute(){
   const bp=Math.min(8,save.bestPlace||0), nextI=Math.min(7,bp);
   $('homeRoute').innerHTML=PLACES.map((pl,i)=>'<span class="stop'+(i<bp?' done':'')+(i===nextI&&bp<8?' next':'')+'" title="'+pl.name+' · '+pl.target+' m"><b>'+(i+1)+'</b></span>').join('<i></i>');
-  $('homeRouteTxt').textContent=bp>=8?'All eight places cleared · try the Skyscraper from the hangar':bp?'Next: '+PLACES[nextI].name+' · beat '+PLACES[nextI].target+' m':'First stop: the back garden · beat 10 m';
+  $('homeRouteTxt').textContent=bp>=8?'All eight cleared · Skyscraper awaits in the hangar':bp?'Next: '+PLACES[nextI].name+' · beat '+PLACES[nextI].target+' m':'First stop: the back garden · beat 10 m';
   const chips=[['✈',FOLDS[save.fold].name]];
   if(save.runs)chips.push(['📏','Best '+fmt(save.bestThrow)+' m']);
   chips.push(['📎',save.clips.toLocaleString()+' clips']);
-  $('homeProgress').innerHTML=chips.map(c=>'<span class="chip"><span aria-hidden="true">'+c[0]+'</span> '+c[1]+'</span>').join('');
+  $('homeProgress').textContent=chips.map(c=>c[1]).join('  ·  ');
   let ready=false;try{ready=!!nextUpgrade().affordable;}catch(e){}
   $('homeReady').hidden=!ready;$('splashHangar').setAttribute('aria-label',ready?'Hangar, upgrade ready':'Hangar');
 }
@@ -2111,6 +2127,5 @@ requestAnimationFrame(frame);
 })();
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
