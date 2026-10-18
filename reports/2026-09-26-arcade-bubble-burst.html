@@ -74,6 +74,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .btn.ghost{background:transparent;box-shadow:none;border:1.5px solid rgba(30,35,64,.16)}
 .btn:active,.lv:active,.iconbtn:active{transform:translateY(1px)}
 button:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+html.touch :focus-visible{outline:none}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .logo{display:flex;justify-content:center;gap:5px;margin:2px 0 4px}
 .logo i{width:24px;height:24px;border-radius:50%;display:block;background:
@@ -1860,6 +1861,12 @@ document.addEventListener('visibilitychange', () => { releaseKeys(); if (documen
 window.addEventListener('pagehide', persist);
 window.addEventListener('blur', releaseKeys);
 
+/* Focus ring for keyboard use only. Each menu moves focus to its main button so a
+   keyboard can carry on; on a phone that has never pressed a key, that drew a ring. */
+const docEl = document.documentElement;
+if (coarse) docEl.classList.add('touch');
+window.addEventListener('pointerdown', () => docEl.classList.add('touch'), true);
+window.addEventListener('keydown', () => docEl.classList.remove('touch'), true);
 /* ---------- input ---------- */
 function toLogical(e) { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left - X0) / scale, (e.clientY - r.top) / scale]; }
 function aimAt(x, y) {
