@@ -1619,7 +1619,10 @@ async function endMyTurn(){if(ui.busy||!st||st.phase==='over')return;act();const
  if(finishIfOver())return;
  /* give the rivals' report a moment on its own before your turn is announced */
  if(lines.length&&!TEST)await wait(1800);if(!st||st.phase==='over')return;beginTurn();}
+/* tap to hurry (approved 18 Oct 2026): the rest of this rivals' turn plays at about three times the pace; the next turn starts normal again */
+function hurry(){if(speedK<=.34||speedK===0)return;speedK=.34;hint('Hurrying the rivals along');buzz(8);}
 async function replayRivals(ev){speedK=1;const lines=[],changed=new Set(),caps=[];
+ if(meta.turnsPlayed>=2)sign('hurry','Their turn','Tap the chart to hurry the rivals along.',()=>ui.rival>=0);
  for(const blk of ev){skipNow=false;speedMul=1;st.cur=blk.f;ui.rival=blk.f;dockUI();const k=st.fl[blk.f];
   /* fights against you play in full with the camera; everything else (gulls, rival against rival, musters, moves) plays a little brisker */
   const hitsYou=blk.ev.some(e=>e.t==='attack'&&e.was===0);
@@ -1776,7 +1779,7 @@ function how(back){showModal(`<div class="phead"><button class="cbtn" id="bk">�
  <li><b>Harbours</b> have a fort (+1 on the defender’s top die) and give whoever holds them +2 troops a turn.</li>
  <li><b>Spoils:</b> take at least one island in a turn and you earn a spoils chest (the chest counter at the top; tap it for details). Three chests cash in at the start of your next turn for +4 troops, and each of your cash-ins makes the next worth one more, up to +8.</li>
  <li><b>Move</b> once a turn: tap one of your islands, then where they go. They can travel through any chain of your own islands. Tap the destination again (or press Move) to send them, then the rivals sail.</li>
- <li><b>Rivals</b> fight each other, but if you pull ahead they turn on you together. Tap the fleet bar to see who’s winning.</li>
+ <li><b>Rivals</b> fight each other, but if you pull ahead they turn on you together. Tap the fleet bar to see who’s winning, and tap the chart during their turn to hurry it along.</li>
  <li><b>Shuffled deals:</b> once you’ve won a chart, its card offers Shuffled as well as Charted: the same islands, but your harbour, your rivals, their harbours and the gull garrisons are dealt fresh. Deal again until you like the look of it. Stars come from the charted start; shuffled wins keep their own record.</li>
  <li><b>The open sea</b> opens once every chart is won: endless legs, each a shuffled deal, with the rivals mustering a little more every leg. Win a leg and choose a standing order (new, or the next level of one you hold); lose one and you strike a level of your choice, then deal again.</li>
  <li><b>Camera:</b> each turn opens on the whole chart and it closes in on attacks. Pinch or drag to look around, and double-tap open sea to see the whole chart.</li></ol>`,'',()=>$('bk').addEventListener('click',back));}
@@ -1795,6 +1798,7 @@ cv.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.
  if(drag&&(drag.on||Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>12)){if(!drag.on){drag.on=true;drag.x=e.clientX;drag.y=e.clientY;drag.cx=cam.x;drag.cy=cam.y;}camManual(drag.cx-(e.clientX-drag.x)/cam.z,drag.cy-(e.clientY-drag.y)/cam.z,cam.z);}});
 function ptrEnd(e){pts.delete(e.pointerId);if(pinch){if(!pts.size)pinch=null;down=null;drag=null;return true;}drag=null;return false;}
 cv.addEventListener('pointerup',e=>{if(ptrEnd(e)||!down)return;clearTimeout(down.t);const d=down;down=null;if(d.held||Math.hypot(e.clientX-d.x,e.clientY-d.y)>=16)return;
+ if(st&&(ui.rival>=0||st.phase==='rival'))hurry();   /* a tap while the rivals sail hurries the rest of their turn (a double tap on open sea still swaps views) */
  if(d.i<0){const now=performance.now();if(now-lastSea<330){lastSea=0;toggleView();return;}lastSea=now;}tap(d.i);});
 cv.addEventListener('pointercancel',e=>{ptrEnd(e);if(down)clearTimeout(down.t);down=null;});
 cv.addEventListener('wheel',e=>{if(!st||!$('modal').hidden)return;e.preventDefault();const z=clamp(cam.z*Math.exp(-e.deltaY*.0016),1,ZMAN),[wx,wy]=toBase(e.clientX,e.clientY);camManual(wx-(e.clientX-MAP.cx)/z,wy-(e.clientY-MAP.cy)/z,z);},{passive:false});
