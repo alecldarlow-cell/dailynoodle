@@ -385,14 +385,25 @@ async function checkWin(){
   await bumpStreak();
   celebrate();
 }
+/* ---- dn-doku-streak-v1: Doku keeps its own streak in digi-doku-streak (18 Oct 2026; it
+   shared digi-mini-streak before). The first time it is read, it is rebuilt from the
+   days in Doku's own saved results (digi-doku-v1), so nobody's run resets. ---- */
+function dokuStreakSeed(){
+  try{const s=JSON.parse(localStorage.getItem("digi-doku-v1")||"null");const days=new Set();
+    if(s&&s.done)for(const id in s.done){const d=s.done[id]&&s.done[id].d;if(/^\d{4}-\d{2}-\d{2}$/.test(d||""))days.add(d);}
+    const list=[...days].sort();if(!list.length)return null;
+    let best=0,run=0,prev=null;for(const d of list){run=prev&&dayBefore(d)===prev?run+1:1;best=Math.max(best,run);prev=d;}
+    return {last:prev,streak:run,best,dates:list.slice(-90),tz:"L",seeded:1};}catch(e){return null;}
+}
 async function store(get){
-  const KEY="digi-mini-streak";
+  const KEY="digi-doku-streak";
+  if(get){try{if(!localStorage.getItem(KEY)){const seed=dokuStreakSeed();if(seed)localStorage.setItem(KEY,JSON.stringify(seed));}}catch(e){}}
   try{if(window.storage){if(get){const r=await window.storage.get(KEY);return r?JSON.parse(r.value):null;}}}catch(e){}
   if(get){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
   return null;
 }
 async function saveStreak(obj){
-  const KEY="digi-mini-streak";
+  const KEY="digi-doku-streak";
   try{if(window.storage){await window.storage.set(KEY,JSON.stringify(obj));return;}}catch(e){}
   try{localStorage.setItem(KEY,JSON.stringify(obj));}catch(e){}
 }

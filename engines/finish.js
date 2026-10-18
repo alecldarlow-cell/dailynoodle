@@ -66,7 +66,7 @@
   function overallRun() {
     var days = {};
     ORDER.forEach(function (t) { var d = done(t); for (var id in d) { var day = d[id] && (d[id].d || d[id].on); if (day) days[day] = 1; } });   // Borders records its day as "on"
-    ['digi-mini-streak', 'digi-link-streak', 'digi-sweep-streak', 'digi-path-streak'].forEach(function (k) {
+    ['digi-mini-streak', 'digi-doku-streak', 'digi-link-streak', 'digi-sweep-streak', 'digi-path-streak'].forEach(function (k) {
       var s = read(k); if (s && Array.isArray(s.dates)) s.dates.forEach(function (d) { days[d] = 1; });
     });
     var t = londonDate(), d = days[t] ? t : dayBefore(t), n = 0;
