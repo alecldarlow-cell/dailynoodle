@@ -33,7 +33,11 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
 button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:2px}
 #ov{position:absolute;inset:0;background:rgba(3,6,18,.62);display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;box-sizing:border-box}
 #ov.title{display:block;padding:0;background:linear-gradient(180deg,rgba(3,6,18,.35),rgba(3,6,18,.15) 40%,rgba(3,6,18,.55))}
-.tTop{position:absolute;left:20px;right:20px;top:8%;text-align:center}
+.tTop{position:absolute;left:20px;right:20px;top:max(8%,calc(66px + env(safe-area-inset-top,0px)));text-align:center}
+.tBar{position:absolute;left:10px;right:10px;top:calc(12px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:8px}
+.tBar .sq,.tBar .back{height:46px;box-sizing:border-box;border-radius:12px;border:1px solid var(--line);background:rgba(6,11,31,.5);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.tBar .sq{width:46px}.tBar .sq.off{color:var(--dim)}.tBar .sq.on{color:var(--warm);border-color:rgba(255,201,122,.45)}
+.tBar .back{padding:0 14px;margin-right:auto;font:800 14px Nunito,system-ui,sans-serif;text-decoration:none}
 .tTop h1{font-family:Lora,Georgia,serif;font-weight:500;font-size:40px;margin:0;letter-spacing:.01em;text-shadow:0 2px 18px rgba(0,0,0,.5)}
 .tTop p{margin:8px auto 0;max-width:300px;font-size:15px;line-height:1.4;color:var(--dim)}
 .tLen{position:absolute;left:0;right:0;top:calc(60% - 96px);display:flex;justify-content:center;gap:8px}
@@ -52,7 +56,6 @@ button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .chip.on{border-color:var(--warm);color:var(--warm)}
 .chip:disabled{opacity:.35;cursor:default}
 .note{font-size:12px;color:var(--dim);margin:8px 0 2px;line-height:1.35}
-.row{display:flex;justify-content:center;align-items:center;gap:0 10px;flex-wrap:wrap}.row .link{padding:0 4px}
 .link{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;background:none;border:0;color:var(--dim);font:700 14px Nunito,system-ui,sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .card{background:#0c1433;border:1px solid var(--line);border-radius:18px;padding:22px 18px 14px;max-width:360px;width:100%;text-align:center;box-sizing:border-box}
 .card h2{font-family:Lora,Georgia,serif;font-weight:500;font-size:28px;margin:0 0 6px}
@@ -84,7 +87,9 @@ button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .facts{display:flex;justify-content:center;gap:18px;margin:2px 0 8px;font-weight:800;font-size:15px}
 .facts b{display:block;font-family:Lora,Georgia,serif;font-weight:500;font-size:30px;color:var(--warm)}
 .chips.l{justify-content:flex-start;margin-top:6px}
-@media (max-height:600px){.tTop{top:4%}.tTop h1{font-size:30px}.tTop p{display:none}}
+@media (max-width:400px){.chips:not(.l) .chip{padding:0 9px}}   /* the four rivers fit one row at 360px */
+@media (max-height:700px){.tMore{top:calc(60% + 34px)}.tMore .lbl{margin:4px 0 2px}.tMore .note{margin:6px 0 2px}}
+@media (max-height:600px){.tTop{top:max(4%,calc(64px + env(safe-area-inset-top,0px)))}.tTop h1{font-size:30px}.tTop p{display:none}}
 @media (prefers-reduced-motion:reduce){#cue,#cnt,#sub{transition:none}.tg::after{transition:none}}
 </style>
 <!-- og:start (tools/og-tags.js — do not edit by hand) -->
@@ -235,7 +240,8 @@ function chime(y){if(!AU.ac||!AU.bus||meta.snd==='off')return;try{const ac=AU.ac
  const o=ac.createOscillator(),lp=ac.createBiquadFilter(),gn=ac.createGain(),s2=ac.createGain();o.type='sine';o.frequency.value=BELLS[Math.max(0,Math.min(4,Math.round((y-LOW)/AMP*4)))];
  lp.type='lowpass';lp.frequency.value=1600;gn.gain.setValueAtTime(0.0001,t);gn.gain.exponentialRampToValueAtTime(0.022,t+0.03);gn.gain.exponentialRampToValueAtTime(0.0001,t+3.2);
  o.connect(lp);lp.connect(gn);gn.connect(AU.bus);s2.gain.value=0.7;gn.connect(s2);s2.connect(AU.verb);o.start(t);o.stop(t+3.4);}catch(e){}}
-function setSound(m){meta.snd=SNDS[m]?m:'both';save();try{if(AU.out)AU.out.gain.value=meta.snd==='off'?0:0.9;if(AU.ac&&meta.snd!=='off'&&AU.ac.state!=='running')AU.ac.resume();}catch(e){}if(meta.snd==='off')hush();}
+// sndOn = the mix (both, waves or pad) to come back to after muting from the title
+function setSound(m){if(meta.snd!=='off')meta.sndOn=meta.snd;meta.snd=SNDS[m]?m:'both';if(meta.snd!=='off')meta.sndOn=meta.snd;save();try{if(AU.out)AU.out.gain.value=meta.snd==='off'?0:0.9;if(AU.ac&&meta.snd!=='off'&&AU.ac.state!=='running')AU.ac.resume();}catch(e){}if(meta.snd==='off')hush();}
 
 /* ---------- Unwind cues: tones, buzzes, optional speech ----------
    Three distinct soft tones so a session works with eyes closed:
@@ -423,6 +429,9 @@ let tGap=[0,0];   // [bottom of the title text, top of the mode buttons], in sta
 function measureTitle(){try{const s=stage.getBoundingClientRect(),a=ov.querySelector('.tTop'),b=ov.querySelector('.modes');if(!a||!b||ov.hidden)return;
  const p=a.querySelector('p'),last=p&&getComputedStyle(p).display!=='none'?p:a.querySelector('h1');tGap=[last.getBoundingClientRect().bottom-s.top,b.getBoundingClientRect().top-s.top];}catch(e){}}
 try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(measureTitle);}catch(e){}
+const IC={snd:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h3l5-4v14l-5-4H4z" fill="currentColor" stroke="none"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
+ mute:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h3l5-4v14l-5-4H4z" fill="currentColor" stroke="none"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>',
+ fsOff:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>'};
 // sessions, minutes breathed (saved since launch, never shown before) and the best Breathe score
 function calmLine(){const m=Math.max(0,Math.round(meta.mins)||0),b=Math.max(0,Math.min(100,Math.round(meta.best)||0)),p=[`Sessions: ${meta.sessions}`];
  if(m)p.push(`${m} minute${m===1?'':'s'} breathed`);if(b)p.push(`Best ${b}%`);return p.join(' · ')+'.';}
@@ -436,13 +445,16 @@ function showTitle(){S.mode='title';S.paused=false;rnd.armed=false;rnd.open=fals
   <div class="tMore"><div class="lbl">Lantern</div><div class="sws">${COLS.map(c=>`<button type="button" class="sw${meta.col===c.id?' on':''}" data-col="${c.id}" ${own(c)?'':'disabled'} aria-label="${c.name} lantern${own(c)?'':', locked'}" style="--g:${c.c}"><i style="background:${c.c}"></i></button>`).join('')}</div>
   <div class="lbl">River</div><div class="chips">${SCENES.map(s=>`<button type="button" class="chip${meta.scene===s.id?' on':''}" data-sc="${s.id}" ${own(s)?'':'disabled'}>${s.name}</button>`).join('')}</div>
   <p class="note">${calmLine()} ${nextUnlock()}</p>
-  <div class="row"><button type="button" class="link" id="snd">Sound: ${meta.snd==='both'?'Both':SNDS[meta.snd]}</button>${fsOK?`<button type="button" class="link" id="fsT" role="switch" aria-checked="${meta.fs}">Full screen: ${meta.fs?'On':'Off'}</button>`:''}<a class="link" href="../games.html">&larr; Digi Games</a></div></div>`;
+  </div>
+  <div class="tBar"><a class="back" href="../games.html">&larr; Digi Games</a>
+   <button type="button" class="sq${meta.snd==='off'?' off':''}" id="snd" aria-label="Sound: ${SNDS[meta.snd]}. Tap to turn ${meta.snd==='off'?'on':'off'}">${meta.snd==='off'?IC.mute:IC.snd}</button>
+   ${fsOK?`<button type="button" class="sq${meta.fs?' on':''}" id="fsT" role="switch" aria-checked="${meta.fs}" aria-label="Full screen">${IC.fsOff}</button>`:''}</div>`;
   ov.querySelectorAll('[data-len]').forEach(b=>b.addEventListener('click',()=>{meta.len=+b.dataset.len;save();r();}));
   ov.querySelectorAll('[data-un]').forEach(b=>b.addEventListener('click',()=>{meta.un=+b.dataset.un;save();r();}));
   ov.querySelectorAll('[data-gm]').forEach(b=>b.addEventListener('click',()=>{meta.gm=b.dataset.gm;save();r();}));
   ov.querySelectorAll('[data-col]').forEach(b=>b.addEventListener('click',()=>{meta.col=b.dataset.col;save();r();}));
   ov.querySelectorAll('[data-sc]').forEach(b=>b.addEventListener('click',()=>{meta.scene=b.dataset.sc;save();r();}));
-  $('snd').addEventListener('click',()=>{const k=Object.keys(SNDS);setSound(k[(k.indexOf(meta.snd)+1)%k.length]);audioInit();r();});
+  $('snd').addEventListener('click',()=>{setSound(meta.snd==='off'?(SNDS[meta.sndOn]&&meta.sndOn!=='off'?meta.sndOn:'both'):'off');audioInit();r();});
   if($('fsT'))$('fsT').addEventListener('click',()=>{meta.fs=!meta.fs;save();if(meta.fs)goFS();else exitFS();r();});
   measureTitle();
   $('go').addEventListener('click',()=>{if(meta.gm==='unwind'){if(!meta.usafe){audioInit();showSafety('first');return;}goFS();audioInit();enterUnwind();return;}goFS();audioInit();enterReady();});};
@@ -794,6 +806,5 @@ addEventListener('resize',resize);
 resize();showTitle();requestAnimationFrame(frame);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
