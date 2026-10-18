@@ -99,7 +99,7 @@ a{color:inherit}
 #ticks i{flex:1;height:7px;border-radius:2px;border:1.25px solid var(--ink2);opacity:.6}
 #ticks i.cur{opacity:1;border-color:var(--ink);border-width:2px}
 #ticks i.ok{background:var(--ok);border-color:var(--ok);opacity:1}
-#ticks i.bad{background:var(--pin);border-color:var(--pin);opacity:1}
+#ticks i.bad{background:var(--pinT);border-color:var(--pin);border-width:2px;opacity:1}   /* hollow, so a miss reads apart from a solid hit without colour */
 #pts{font-family:var(--serif);font-size:22px;min-width:64px;text-align:right}
 #pts small{font-family:var(--sans);font-size:12px;color:var(--ink2);margin-left:3px}
 #sheet{flex:1}
@@ -125,6 +125,9 @@ a{color:inherit}
 .opt.right{background:var(--okT);border-color:var(--ok);box-shadow:0 3px 0 var(--ok);color:#173F2A}
 .opt.wrong{background:var(--pinT);border-color:var(--pin);box-shadow:0 3px 0 var(--pin);color:#5E1E18}
 .opt.dim{opacity:.45}
+.opt.right::before,.opt.wrong::before{flex:none;font-weight:700;font-stretch:100%}
+.opt.right::before{content:"✓"}
+.opt.wrong::before{content:"✕"}
 .locked .opt{pointer-events:none}
 .qfoot{display:grid;min-height:52px}
 .qfoot>*{grid-area:1/1}
