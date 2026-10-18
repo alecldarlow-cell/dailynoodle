@@ -2853,6 +2853,8 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
       !s.paused && rnd.open && (rnd.secs += PHYSICS_STEP_MS / 1e3);
       let fx = stepPlaying(s, { now, visH: VIS_H, rng: Math.random });
       for (let ae of fx.audio) playAudioEvent(ae);
+      /* every fifth gate: a short buzz alongside the chime (death has its own pattern in onDeath) */
+      fx.haptics.some((h) => h.kind === "milestone") && !fx.died && buzz(18);
       fx.died && onDeath();
     } else s.phase === "dead" && stepDead(s);
   }
@@ -3154,6 +3156,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
