@@ -4,6 +4,9 @@
    Edit here to change every path; keep element ids and localStorage keys
    stable (dn-track.js and players' saved progress depend on them). */
 
+/* the shared finish sheet (engines/finish.js): calls made before it loads are queued */
+window.dnFinish=window.dnFinish||{q:[],show(c){this.q.push(c)},hide(){}};
+document.write('<link rel="stylesheet" href="../engines/finish.css"><script src="../engines/finish.js"><\/script>');
 (function(){
 "use strict";
 const N = 6, TOTAL = 36;
@@ -172,6 +175,7 @@ function streakBump(){
 }
 state.streak=streakLive();
 document.getElementById("streakn").textContent=state.streak;
+let usedHints=0;   // for the finish sheet's one line
 const lockedByValue = new Map(PUZZLE.locked.map(([r,c,v])=>[v,[r-1,c-1]]));
 for(const [r,c,v] of PUZZLE.locked) state.cellValue[r-1][c-1] = v;
 state.lowCell  = lockedByValue.get(1).slice();
@@ -357,6 +361,7 @@ document.getElementById("undoBtn").addEventListener("click",()=>{
 
 // ---------- Hint — scoped to the two active ends, same bracket rule as the prover ----------
 document.getElementById("hintBtn").addEventListener("click",()=>{
+  if(!state.solved)usedHints++;
   if(state.solved) return;
   const vmap = valueCellMap();
   const known=[]; for(let v=1;v<=TOTAL;v++) if(vmap[v]) known.push(v);
@@ -424,7 +429,8 @@ function checkWin(){
   document.getElementById("streakn").textContent = state.streak;
   document.getElementById("statStreak").textContent = state.streak;
   document.getElementById("statTime").textContent = timerEl.textContent;
-  setTimeout(()=>{ document.getElementById("modal").classList.add("on"); }, 900);
+  document.getElementById("statTime").textContent = dnTime(timerEl.textContent);
+  setTimeout(()=>{ finishSheet(true); document.getElementById("modal").classList.add("on"); }, 900);
 }
 
 // ---------- Timer ----------
@@ -520,6 +526,28 @@ function restoreDone(){
   timerEl.textContent=t; document.getElementById("statTime").textContent=t;
   paint();
   setMsg("Thread complete in "+t+".");
+  // reopen on the finish sheet (no "on": the tracker logged this finish the first time)
+  document.getElementById("statTime").textContent=dnTime(t);document.getElementById("statStreak").textContent=state.streak;
+  finishSheet(false);
+}
+/* ---- the shared finish sheet (engines/finish.js) ---- */
+function finishSheet(fresh){
+  const W=["no","one","two","three","four","five","six","seven","eight","nine","ten"];
+  const h2=document.querySelector("#modal h2"); if(h2){h2.id="winTitle";h2.textContent="Thread complete";}
+  const note=fresh?(usedHints?`One to 36 with ${usedHints===1?"one hint":(W[usedHints]||usedHints)+" hints"}.`:"One to 36 without a hint."):"";
+  let played=0;try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");played=s&&s.done?Object.keys(s.done).length:0;}catch(e){}
+  const st=streakGet()||{};
+  const at={};PUZZLE.solution.forEach((row,r)=>row.forEach((v,c)=>at[v]=[r,c]));
+  const giv=new Set(PUZZLE.locked.map(([r,c])=>(r-1)+","+(c-1)));
+  const pts=Object.keys(at).map(Number).sort((a,b)=>a-b).map(v=>`${at[v][1]*50+25},${at[v][0]*50+25}`).join(" ");
+  const wrap=document.createElement("div");wrap.className="fin-path";
+  wrap.innerHTML=`<svg viewBox="0 0 300 300" aria-hidden="true"><polyline points="${pts}"/></svg><div class="fin-grid g6">`+
+    PUZZLE.solution.map((row,r)=>row.map((v,c)=>`<i${giv.has(r+","+c)?' class="giv"':""}><span>${v}</span></i>`).join("")).join("")+`</div>`;
+  window.dnFinish.show({type:"path",id:PUZZLE.id,n:parseInt(String(PUZZLE.id).split("·").pop(),10),date:(document.querySelector('meta[name="dn:date"]')||{}).content||"",
+    box:"modal",title:"winTitle",hero:"statTime",note,
+    share:{text:()=>"〰️ Path "+dnNum(PUZZLE.id)+" — "+dnTime(timerEl.textContent)+dnStreak(String(state.streak))},
+    stats:[{id:"statStreak",label:"day streak"},{value:Math.max(st.best||0,state.streak||0),label:"best streak"},{value:played,label:"Paths played"}],
+    recap:{title:"The thread",sub:"The given numbers are shaded.",node:wrap}});
 }
 buildGrid();
 restoreDone();

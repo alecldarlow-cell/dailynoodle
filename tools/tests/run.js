@@ -198,6 +198,21 @@ const TESTS = {
     ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'sweep: Play again closes the sheet and marks the replay');
     await ctx.close();
   },
+  async 'finish:path'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.path, { events: ev });
+    await play.path(p);
+    await sheetChecks(p, ev, { type: 'path', boxId: 'modal', ids: ['winTitle', 'statTime', 'statStreak'],
+      shareRe: /^〰️ Path #92 — \d:\d\d$/,
+      endCheck: x => ok(x && x.outcome === 'solved' && x.secs > 0, `path: tracker read solved in ${x && x.secs}s`) });
+    ok(await text(p, '#winTitle') === 'Thread complete' && await text(p, '.fin-note') === 'One to 36 without a hint.', 'path: title and note');
+    ok(await p.locator('.fin-path .fin-grid i').count() === 36 && await p.locator('.fin-path polyline').count() === 1, 'path: the thread in the recap');
+    await shareClipboard(p, ctx, 'path');
+    await reopen(p, ev, 'path', 'modal');
+    ok(await text(p, '.fin-stats > div:first-child b') === '1', 'path: reopened sheet keeps the streak');
+    ok(!p.errs.length, 'path: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+    await shareNative(b, F.path, p2 => play.path(p2), 'path');
+  },
   /* ---------- the five fixes of 18 Oct ---------- */
   async 'fix:link-replay'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
