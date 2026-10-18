@@ -398,7 +398,7 @@ async function showYesterday(){
   $('yKick').textContent='Yesterday: Tangle '+String(P.n-1).padStart(4,'0')+', '+longDate(dayBefore(P.date));
   try{
     const r=await fetch(yesterdayFile(),{cache:'force-cache'});if(!r.ok)throw 0;
-    const html=await r.text();const m=html.match(/\nconst PUZZLE=(\{.*\});\n/);if(!m)throw 0;
+    const html=await r.text();const m=html.match(/\n(?:const PUZZLE|window\.DN_PUZZLE)=(\{.*\});\n/);if(!m)throw 0;
     const Y=JSON.parse(m[1].replace(/([{,])(id|date|n|band|grid|tiles|star|starPath|main|bonus):/g,'$1"$2":'));
     if(GATE(Y,null).length)throw 0;
     const yd=save.days[Y.id],mine=(yd&&yd.state==='done'&&yd.found)||[];
