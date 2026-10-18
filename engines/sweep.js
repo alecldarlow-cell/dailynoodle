@@ -5,7 +5,7 @@
    stable (dn-track.js and players' saved progress depend on them). */
 /* the shared finish sheet (engines/finish.js): calls made before it loads are queued */
 window.dnFinish=window.dnFinish||{q:[],show(c){this.q.push(c)},hide(){}};
-document.write('<link rel="stylesheet" href="../engines/finish.css"><script src="../engines/finish.js"><\/script>');
+document.write('<link rel="stylesheet" href="../engines/finish.css"><link rel="stylesheet" href="../engines/house.css"><script src="../engines/finish.js"><\/script><script src="../engines/house.js"><\/script>');
 
 /* ================= The Digi Sweep engine (gate only) ===============
    The GENERATOR does not ship. This file cannot mint a puzzle — it can only
