@@ -156,7 +156,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     <div id="dWorld" class="dl"></div>
     <div id="dScore" class="orb">0</div>
     <div id="dBest" class="dl"></div>
-    <div id="dTap">tap to continue</div>
+    <div id="dTap">tap to play again</div>
     <div id="dBack"><a class="back ui" href="../games.html">← Digi Games</a></div>
   </div>
 </div>
@@ -585,7 +585,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     s2.trans !== null && s2.phase === "playing" && !s2.paused && ++s2.trans >= TRANS_FRAMES && (s2.trans = null);
   }
   function transitionToDead(s2) {
-    s2.phase = "dead", s2.flash = 12, s2.deadFrames = 0;
+    s2.phase = "dead", s2.flash = 12, s2.deadFrames = 0, s2.lastDeadTap = 0;
     let diedL = s2.deathFlashL > 0, diedR = s2.deathFlashR > 0;
     s2.deathSide = diedL && diedR ? "both" : diedL ? "L" : "R", s2.deathFlashL > 0 && (s2.deathFlashL = Math.max(s2.deathFlashL, 20)), s2.deathFlashR > 0 && (s2.deathFlashR = Math.max(s2.deathFlashR, 20)), s2.deathGateInTier = gateInTier(s2.score);
     let countFrames = s2.score === 0 ? 0 : Math.min(60, Math.max(45, s2.score));
@@ -603,18 +603,22 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
     });
     return particles;
   }
-  /* A tap on the result screen only counts once the score has counted up, and never within 1 s of the death; the
-     title then ignores taps for 0.3 s. A player still tapping as they die sees their score instead of starting a
-     run they aren't playing. */
-  var RETRY_LOCK_FRAMES = 60, TITLE_LOCK_MS = 300;
+  /* A tap on the result screen starts the next run, but only once the score has counted up, never within 1 s of
+     the death, and not while taps are still coming in (one landed in the last 0.25 s). A player still tapping as
+     they die sees their score; a deliberate tap always works. */
+  var RETRY_LOCK_FRAMES = 60, RETRY_QUIET_MS = 250;
   function canRetry(s2) {
     return s2.phase === "dead" && s2.deathCountFrames === 0 && s2.deadFrames >= RETRY_LOCK_FRAMES;
   }
   /* tapX in world units; the middle strip toggles pause, as in the portrait game */
   function handleTap(s2, tapX, now, visH) {
     let events = [], isL = tapX < GEO.W / 2;
-    if (s2.phase === "idle") return now - (s2.idleSince || 0) < TITLE_LOCK_MS || (startPlaying(s2, now, visH), events.push({ kind: "tap-start" })), events;
-    if (s2.phase === "dead") return canRetry(s2) && (resetForNewRun(s2), s2.phase = "idle", s2.idleSince = now), events;
+    if (s2.phase === "idle") return startPlaying(s2, now, visH), events.push({ kind: "tap-start" }), events;
+    if (s2.phase === "dead") {
+      let quiet = now - (s2.lastDeadTap || 0) >= RETRY_QUIET_MS;
+      s2.lastDeadTap = now;
+      return canRetry(s2) && quiet && (resetForNewRun(s2), startPlaying(s2, now, visH), events.push({ kind: "tap-start" })), events;
+    }
     if (Math.abs(tapX - GEO.W / 2) < 22) return s2.paused = !s2.paused, events.push({ kind: "tap-pause", paused: s2.paused }), events;
     if (s2.paused) return s2.paused = !1, events.push({ kind: "tap-pause", paused: !1 }), events;
     isL ? (s2.vyL = FLAP_V, s2.pulseL = 8) : (s2.vyR = FLAP_V, s2.pulseR = 8);
@@ -2870,7 +2874,7 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
           play(ev.paused ? "pauseOn" : "tap");
           break;
       }
-    prevPhase === "dead" && s.phase === "idle" && (play("tap"), buzz(10), rndArm("retry")), prevPhase === "idle" && s.phase === "playing" && (LEVEL = 1, rndStart(), fsPending = !0), prevPhase === "playing" && wasPaused && !s.paused && (fsPending = !0);
+    prevPhase === "dead" && s.phase === "playing" && rndArm("retry"), prevPhase !== "playing" && s.phase === "playing" && (LEVEL = 1, rndStart(), fsPending = !0), prevPhase === "playing" && wasPaused && !s.paused && (fsPending = !0);
   }
   function togglePause() {
     if (s.phase !== "playing") return;
@@ -3154,6 +3158,5 @@ body{height:100dvh;font-family:Inter,system-ui,sans-serif;color:#fff;-webkit-use
   requestAnimationFrame(loop);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
