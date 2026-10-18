@@ -320,7 +320,7 @@
 
     <!-- LEAGUES (leaderboards) -->
     <section class="block" id="leagues" data-part="all">
-      <div class="bh"><h2>Leagues</h2><p>Leaderboard leagues, newest first. Rename anything that shouldn’t be there, or pause sign-ups.</p></div>
+      <div class="bh"><h2>Leagues</h2><p>Leaderboard leagues, newest first, closed ones last. Rename, remove a player or close anything that shouldn’t be there, or pause sign-ups. Nothing is deleted: removed players and closed leagues are only hidden.</p></div>
       <div class="panel">
         <h3>Sign-ups in the last 24 hours</h3>
         <div class="sub" id="lgToday">Loading…</div>
@@ -576,10 +576,15 @@
     $('#tLeagues').innerHTML = L.length
       ? '<tr><th>League</th><th>Players</th><th>Created</th><th>Last result</th><th></th></tr>' + L.map(function(l){
           var ps = l.players || [];
-          return '<tr><td><b>' + esc(l.name) + '</b><br><span class="sub">' + esc(l.code) + ' · owner ' + esc(l.owner || '–') + '</span></td>' +
-            '<td>' + ps.length + '<br><span class="sub">' + esc(ps.join(', ')) + '</span></td>' +
+          var gone = l.left || [];
+          return '<tr' + (l.closed ? ' style="opacity:.55"' : '') + '><td><b>' + esc(l.name) + '</b>' + (l.closed ? ' <span class="sub">(closed)</span>' : '') +
+            '<br><span class="sub">' + esc(l.code) + ' · owner ' + esc(l.owner || '–') + '</span></td>' +
+            '<td>' + ps.length + '<br><span class="sub">' + esc(ps.join(', ')) + (gone.length ? '<br>left/removed: ' + esc(gone.join(', ')) : '') + '</span></td>' +
             '<td>' + esc(fmtDate(String(l.created).slice(0,10))) + '</td><td>' + esc(fmtDate(String(l.active).slice(0,10))) + '</td>' +
-            '<td style="white-space:nowrap"><button type="button" class="ghost" data-lg="rename" data-code="' + esc(l.code) + '">Rename</button></td></tr>';
+            '<td style="white-space:nowrap"><button type="button" class="ghost" data-lg="rename" data-code="' + esc(l.code) + '">Rename</button> ' +
+            (l.closed ? '<button type="button" class="ghost" data-lg="reopen" data-code="' + esc(l.code) + '">Reopen</button>'
+                      : '<button type="button" class="ghost" data-lg="remove" data-code="' + esc(l.code) + '">Remove player</button> ' +
+                        '<button type="button" class="ghost" data-lg="close" data-code="' + esc(l.code) + '">Close</button>') + '</td></tr>';
         }).join('')
       : '<tr><td class="sub">No leagues yet.</td></tr>';
   }
@@ -589,6 +594,9 @@
     var b = e.target.closest('[data-lg]'); if (!b) return;
     var act = b.dataset.lg, code = b.dataset.code;
     if (act === 'rename') { var n = prompt('New name for league ' + code); if (n) loadLeagues('rename', code, n); }
+    else if (act === 'remove') { var k = prompt('Nickname to remove from league ' + code); if (k) loadLeagues('remove', code, k); }
+    else if (act === 'close' && confirm('Close league ' + code + '? It comes off its players’ boards (you can reopen it).')) loadLeagues('close', code);
+    else if (act === 'reopen') loadLeagues('reopen', code);
   });
 
   function applyFilter(){

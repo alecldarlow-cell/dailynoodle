@@ -8,8 +8,10 @@
 -- A player is a random id made by the browser (dn-board.js). It acts as the
 -- player's key, so no function ever returns one.
 --
--- No deletes, by choice (18 Oct 2026): there is no leave, remove-player or
--- close-league function, no tidy-up job, and old limit records are kept.
+-- No deletes, by choice (18 Oct 2026): no tidy-up job, and old limit records
+-- are kept. Leave, remove-player and close-league were added later as
+-- hide-only actions: see 2026-10-18-leaderboards-hide-only.sql, which also
+-- supersedes several functions below.
 -- Applied as migrations leaderboards_schema, _tables, _helpers,
 -- _player_functions, _limits_and_admin and _backfill.
 -- =========================================================================

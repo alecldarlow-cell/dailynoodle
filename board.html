@@ -344,14 +344,18 @@
   function settings(L, d) {
     var h = '<details class="set"><summary>League settings</summary>' +
       '<div class="grp"><h3>Invite</h3><p>Code <span class="code">' + esc(L.code) + '</span> · ' + d.members + (d.members === 1 ? ' player' : ' players') + '</p></div>' +
-      '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b></p></div>';
+      '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b></p>' +
+      '<div class="acts"><button class="btn warn" data-act="leave">Leave league</button></div></div>';
     if (L.owner) {
       h += '<div class="grp"><h3>League name</h3><div class="inline"><input id="rn" maxlength="30" value="' + esc(L.name) + '">' +
            '<button class="btn" data-act="rename">Save</button></div></div>' +
            '<div class="grp"><h3>Players</h3><ul class="plist">' + (d.players || []).map(function (p) {
-             return '<li><span>' + esc(p) + (p === L.nick ? ' (you)' : '') + '</span></li>'; }).join('') + '</ul></div>' +
+             return '<li><span>' + esc(p) + (p === L.nick ? ' (you)' : '') + '</span>' +
+               (p === L.nick ? '' : '<button data-act="remove" data-nick="' + esc(p) + '">Remove</button>') + '</li>'; }).join('') + '</ul></div>' +
            '<div class="grp"><h3>Join code</h3><p>A new code stops the old link and code working; everyone already in stays in.</p>' +
-           '<div class="acts"><button class="btn" data-act="newcode">New join code</button></div></div>';
+           '<div class="acts"><button class="btn" data-act="newcode">New join code</button></div></div>' +
+           '<div class="grp"><h3>Close league</h3><p>Takes the league off everyone’s boards.</p>' +
+           '<div class="acts"><button class="btn warn" data-act="close">Close league</button></div></div>';
     }
     return h + '<p class="msg" id="sm"></p></details>';
   }
@@ -379,6 +383,16 @@
     } else if (act === 'invite') {
       share('Join ' + L.name + ' on Noodle Puzzles: tap the link, pick a nickname, and your results go on our daily leaderboards.', link(L.code), a);
       track('board_invite', {});
+    } else if (act === 'leave') {
+      if (!confirm('Leave ' + L.name + '? You’ll come off its boards. You can rejoin with the link.')) return;
+      NB.leave(L.code).then(function () { S.data = null; NB.setCurrent(''); loadBoard(); }, fail);
+    } else if (act === 'remove') {
+      var who = a.getAttribute('data-nick');
+      if (!confirm('Remove ' + who + ' from ' + L.name + '? They come off its boards. They could rejoin with the link unless you make a new join code.')) return;
+      NB.owner('remove', L.code, { p_nick: who }).then(done, fail);
+    } else if (act === 'close') {
+      if (!confirm('Close ' + L.name + ' for everyone? It comes off all its players’ boards.')) return;
+      NB.owner('close', L.code).then(function () { NB.setCurrent(''); S.data = null; return done(); }, fail);
     } else if (act === 'rename') {
       NB.owner('rename', L.code, { p_name: document.getElementById('rn').value.trim() }).then(done, fail);
     } else if (act === 'newcode') {

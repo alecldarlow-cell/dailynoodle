@@ -114,11 +114,14 @@
     return rpc('board_join', { p_player: pid(), p_code: code, p_nick: nick })
       .then(function (l) { return refresh().then(function () { setCurrent(l.code); return l; }); });
   }
+  function leave(code) {   // off the league's boards; nothing is deleted
+    return rpc('board_leave', { p_player: pid(), p_code: code }).then(refresh);
+  }
   function peek(code) { return rpc('board_peek', { p_code: code }); }
   function day(code, type, date) {
     return rpc('board_day', { p_player: pid(), p_code: code, p_type: type, p_date: date });
   }
-  function owner(action, code, extra) {   // rename | new_code
+  function owner(action, code, extra) {   // rename | new_code | remove | close
     var args = { p_player: pid(), p_code: code };
     for (var k in extra || {}) args[k] = extra[k];
     return rpc('board_' + action, args);
@@ -188,7 +191,7 @@
   window.noodleBoard = {
     TYPES: TYPES, BY_ID: BY_ID, typeOfPath: typeOfPath, dateOfPath: dateOfPath,
     pid: pid, leagues: leagues, inAny: inAny, refresh: refresh, create: create, join: join,
-    peek: peek, backfill: backfill, day: day, owner: owner, current: current, setCurrent: setCurrent,
+    peek: peek, backfill: backfill, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
     lastType: lastType, setLastType: setLastType, today: today, rpc: rpc
   };
 
