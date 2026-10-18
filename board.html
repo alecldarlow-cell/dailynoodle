@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" data-section="puzzles">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#FCFCFB">
+<title>Leaderboard — The Daily Noodle</title>
+<meta name="description" content="Daily leaderboards for your group: one board per puzzle, every day.">
+<meta name="robots" content="noindex">
+<meta property="og:site_name" content="The Daily Noodle">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Daily Noodle · Leaderboard">
+<meta property="og:description" content="Daily leaderboards for your group: one board per puzzle, every day.">
+<meta property="og:url" content="https://dailynoodle.co.uk/board.html">
+<meta property="og:image" content="https://dailynoodle.co.uk/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  NOODLE PUZZLES — LEADERBOARD  (board.html)
+  Private leagues, one daily leaderboard per puzzle. Uses the shared front
+  styles (front.css) in the Puzzles colours; the data and league logic is in
+  dn-board.js. Reached from the Board pill on puzzles.html, the "See today's
+  board" link in each puzzle's result box, and league join links.
+-->
+<link rel="stylesheet" href="front.css">
+<style>
+  .mast .home{display:flex;align-items:center;gap:11px;flex:none}
+  .mast .home .mono{display:grid}
+  .lgslot{position:relative;margin-left:auto;min-width:0;text-align:right;line-height:1.25}
+  .lgk{display:block;font-weight:600;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .lgn{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    font-family:var(--display);font-weight:700;font-size:14.5px;color:var(--ink)}
+  .lgn .car{color:var(--accent);font-size:11px;margin-left:4px}
+  .lgslot select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
+  .pillbar{padding:6px 0 8px}
+  .pillbar .chips{padding-top:2px}
+  .daybar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 6px}
+  .daybtn{flex:none;width:40px;height:40px;display:grid;place-content:center;border:1px solid var(--hair);
+    background:var(--paper);color:var(--ink);border-radius:999px;font-size:18px;cursor:pointer}
+  .daybtn:disabled{opacity:.3;cursor:default}
+  .daylabel{position:relative;flex:1;text-align:center;font-family:var(--display);font-weight:700;font-size:16px;
+    padding:8px 0;border-radius:8px;cursor:pointer}
+  .daylabel small{display:block;font:600 11px var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+  .daylabel input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+  .play{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 4px;padding:12px 14px;
+    background:var(--accent-soft);border-radius:10px;font-size:14.5px}
+  .play a{font-weight:700;color:var(--accent);white-space:nowrap}
+  .rows{list-style:none;margin-top:10px;border-top:1px solid var(--hair)}
+  .row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:11px 2px;
+    border-bottom:1px solid var(--hair)}
+  .row .rk{font-family:var(--display);font-weight:800;font-size:16px;text-align:center;color:var(--muted)}
+  .row .rk.medal{font-size:20px}
+  .row .who{min-width:0;font-weight:600;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .who .you{font:700 10.5px var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-left:6px}
+  .row .who .st{display:block;font-weight:500;font-size:12.5px;color:var(--faint)}
+  .row .res{font-family:var(--display);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;text-align:right}
+  .row .res small{display:block;font:500 12px var(--body);color:var(--faint)}
+  .row.me{background:var(--accent-soft)}
+  .row.dim .res,.row.dim .who{color:var(--muted)}
+  .sub{margin-top:18px;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+  .notyet{margin-top:6px;font-size:14.5px;color:var(--muted)}
+  .nobody{padding:28px 0 10px;text-align:center;color:var(--muted);font-size:15px}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:9px 16px;
+    border-radius:999px;border:1px solid var(--hair);background:var(--paper);color:var(--ink);
+    font:600 14px var(--body);cursor:pointer}
+  .btn.go{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.warn{color:#B3261E}
+  .btn:disabled{opacity:.5;cursor:default}
+  .card{margin-top:18px;padding:18px 16px;background:var(--paper);border:1px solid var(--hair);border-radius:12px}
+  .card h2{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.01em;line-height:1.25}
+  .card p{margin-top:8px;font-size:15px;color:var(--muted);line-height:1.5}
+  .field{display:block;margin-top:14px}
+  .field span{display:block;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+  .field input{width:100%;font:500 16px var(--body);padding:10px 12px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);color:var(--ink)}
+  .msg{margin-top:10px;font-size:14px;color:#B3261E;min-height:1em}
+  .msg.ok{color:var(--accent)}
+  details.set{margin-top:26px;border-top:1px solid var(--hair);padding-top:12px}
+  details.set summary{cursor:pointer;font-weight:600;font-size:14.5px;color:var(--muted);list-style:none}
+  details.set summary::-webkit-details-marker{display:none}
+  details.set summary::before{content:"⚙︎ "}
+  .set .grp{margin-top:14px}
+  .set .grp h3{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .set .grp p{font-size:14.5px;margin-top:4px}
+  .code{font-family:var(--display);font-weight:800;letter-spacing:.12em}
+  .plist{list-style:none;margin-top:6px}
+  .plist li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--hair);font-size:15px}
+  .plist button{font:600 13px var(--body);color:#B3261E;background:none;border:0;cursor:pointer;padding:6px}
+  .inline{display:flex;gap:8px;margin-top:6px}
+  .inline input{flex:1;min-width:0;font:500 15px var(--body);padding:8px 10px;border:1px solid var(--hair);border-radius:8px}
+  .loading{padding:40px 0;text-align:center;color:var(--faint);font-size:14px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <a class="home" href="puzzles.html" aria-label="Back to Puzzles">
+      <span class="mono" aria-hidden="true">DP</span><span class="word">Noodle<b>Puzzles</b></span>
+    </a>
+    <div class="lgslot" id="lgslot"><span class="lgk">Leaderboard</span></div>
+  </header>
+  <nav class="controls pillbar" id="pillbar" aria-label="Puzzle" hidden>
+    <div class="chips" id="pills" role="group" aria-label="Puzzle"></div>
+  </nav>
+
+  <main id="app"><p class="loading">Loading…</p></main>
+
+  <footer class="foot">
+    <p><b>The Daily Noodle · Leaderboard</b> — private leagues for friends and family. Only people in a
+    league see its board.</p>
+    <p class="privacy"><a href="puzzles.html">← Puzzles</a> · <a href="privacy.html">Privacy</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
+  </footer>
+</div>
+<script src="dn-board.js"></script>
+<script>
+(function () {
+  var NB = window.noodleBoard, TYPES = NB.TYPES;
+  var $app = document.getElementById('app'), $pills = document.getElementById('pills');
+  var Q = new URLSearchParams(location.search);
+  var S = {
+    type: NB.BY_ID[Q.get('p')] ? Q.get('p') : (NB.lastType() || 'mini'),
+    date: /^\d{4}-\d{2}-\d{2}$/.test(Q.get('d') || '') ? Q.get('d') : NB.today(),
+    join: (Q.get('join') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12),
+    from: Q.get('from') || (Q.get('join') ? 'join' : 'direct'),
+    feed: null, data: null
+  };
+  if (S.date > NB.today()) S.date = NB.today();
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function track(e, p) { try { if (window.digi) { window.digi.track(e, p); window.digi.flush(); } } catch (x) {} }
+  function addDays(iso, n) { var d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  function dayName(iso) {
+    var d = new Date(iso + 'T12:00:00Z');
+    var s = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+    return iso === NB.today() ? 'Today' : iso === addDays(NB.today(), -1) ? 'Yesterday' : s;
+  }
+  function longDay(iso) {
+    return new Date(iso + 'T12:00:00Z').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+  }
+  function mmss(s) { if (s == null) return ''; s = Math.round(s); var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+    return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(x).padStart(2, '0'); }
+  function result(t, r) {
+    if (t === 'tangle' || t === 'borders') return { big: (r.score == null ? '–' : r.score) + ' pts', small: r.secs ? mmss(r.secs) : '' };
+    if (r.outcome === 'failed') return { big: t === 'link' ? 'Out of guesses' : 'Didn’t finish', small: '' };
+    if (r.outcome === 'revealed') return { big: 'Revealed', small: '' };
+    var small = t === 'link' ? (r.mistakes === 1 ? '1 mistake' : (r.mistakes || 0) + ' mistakes') : '';
+    return { big: mmss(r.secs), small: small };
+  }
+  var MEDAL = { 1: '🥇', 2: '🥈', 3: '🥉' };
+  function link(code) { return 'https://dailynoodle.co.uk/board.html?join=' + encodeURIComponent(code); }
+  function share(text, url, btn) {
+    if (navigator.share) return navigator.share({ text: text, url: url }).catch(function () {});
+    var all = text + '\n' + url;
+    (navigator.clipboard ? navigator.clipboard.writeText(all) : Promise.reject()).then(function () {
+      if (btn) { var o = btn.textContent; btn.textContent = 'Copied — paste into WhatsApp'; setTimeout(function () { btn.textContent = o; }, 2500); }
+    }, function () { window.prompt('Copy this:', all); });
+  }
+  function syncUrl() {
+    var u = new URL(location.href);
+    u.searchParams.set('p', S.type); u.searchParams.set('d', S.date);
+    u.searchParams.delete('join'); u.searchParams.delete('from');
+    try { history.replaceState(null, '', u.pathname + u.search); } catch (e) {}
+  }
+
+  /* ---------- puzzle pills ---------- */
+  function renderPills() {
+    $pills.innerHTML = TYPES.map(function (t) {
+      return '<button class="chip" type="button" data-p="' + t.id + '" aria-pressed="' + (t.id === S.type) + '">' +
+        t.emoji + ' ' + t.name + '</button>';
+    }).join('');
+    document.getElementById('pillbar').hidden = !NB.inAny();
+    var on = $pills.querySelector('[aria-pressed="true"]');
+    if (on && on.scrollIntoView) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }
+  $pills.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-p]'); if (!b) return;
+    S.type = b.getAttribute('data-p'); NB.setLastType(S.type); renderPills(); loadBoard();
+  });
+
+  /* ---------- feed (puzzle numbers and links) ---------- */
+  function puzzleItem(type, date) {
+    if (!S.feed) return null;
+    for (var i = 0; i < S.feed.length; i++) {
+      var it = S.feed[i], t = NB.typeOfPath(it.path);
+      if (it.kind === 'puzzle' && t && t.id === type && it.date === date) return it;
+    }
+    return null;
+  }
+
+  /* ---------- screens ---------- */
+  function intro() {
+    document.getElementById('pillbar').hidden = true;
+    $app.innerHTML =
+      '<div class="card"><h2>Daily leaderboards for your group</h2>' +
+      '<p>Start a league for your family or friends, share the link in your group chat, and everyone’s results ' +
+      'land on one board per puzzle, every day. No sign-up: just a nickname.</p>' +
+      '<div class="acts"><button class="btn go" data-go="start">Start a league</button>' +
+      '<button class="btn" data-go="code">Join with a code</button></div></div>';
+  }
+  function startForm() {
+    $app.innerHTML =
+      '<form class="card" id="f"><h2>Start a league</h2>' +
+      '<label class="field"><span>League name</span><input name="lname" maxlength="30" placeholder="e.g. Noodle family" required></label>' +
+      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" placeholder="e.g. Alec" required></label>' +
+      '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Start league</button>' +
+      '<button class="btn" type="button" data-go="back">Back</button></div></form>';
+    form(function (f) { return NB.create(f.elements.lname.value.trim(), f.elements.nick.value.trim()).then(function (l) {
+      track('board_create', {}); S.created = l.code; loadBoard(); }); });
+  }
+  function codeForm() {
+    $app.innerHTML =
+      '<form class="card" id="f"><h2>Join a league</h2><p>Ask someone in the league for its link or 8-letter code.</p>' +
+      '<label class="field"><span>League code</span><input name="code" maxlength="12" autocapitalize="characters" required></label>' +
+      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
+      '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join</button>' +
+      '<button class="btn" type="button" data-go="back">Back</button></div></form>';
+    form(function (f) { return NB.join(f.elements.code.value.trim().toUpperCase(), f.elements.nick.value.trim()).then(function () {
+      track('board_join', { via: 'code' }); loadBoard(); }); });
+  }
+  function joinForm(info) {
+    document.getElementById('pillbar').hidden = true;
+    $app.innerHTML =
+      '<form class="card" id="f"><h2>Join ' + esc(info.name) + '</h2>' +
+      '<p>' + info.members + (info.members === 1 ? ' player' : ' players') + ' so far. Pick a nickname and your ' +
+      'results will appear on the league’s daily boards.</p>' +
+      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
+      '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join league</button>' +
+      (NB.inAny() ? '<button class="btn" type="button" data-go="board">Not now</button>' : '') + '</div></form>';
+    form(function (f) { return NB.join(S.join, f.elements.nick.value.trim()).then(function () {
+      track('board_join', { via: 'link' }); S.join = ''; loadBoard(); }); });
+  }
+  function form(submit) {
+    var f = document.getElementById('f'), m = document.getElementById('m');
+    f.addEventListener('submit', function (e) {
+      e.preventDefault(); m.textContent = '';
+      var b = f.querySelector('.btn.go'); b.disabled = true;
+      submit(f).catch(function (err) { m.textContent = err.message; b.disabled = false; });
+    });
+    var first = f.querySelector('input'); if (first) first.focus();
+  }
+  $app.addEventListener('click', function (e) {
+    var g = e.target.closest('[data-go]'); if (!g) return;
+    var go = g.getAttribute('data-go');
+    if (go === 'start') startForm(); else if (go === 'code') codeForm();
+    else if (go === 'back') intro(); else if (go === 'board') { S.join = ''; loadBoard(); }
+  });
+
+  /* ---------- the board ---------- */
+  /* the league in the masthead: a name, or a switcher when there's more than one */
+  var $slot = document.getElementById('lgslot');
+  function renderLeague(L) {
+    var ls = NB.leagues(), h = '<span class="lgk">Leaderboard</span>';
+    if (L) {
+      h += '<span class="lgn">' + esc(L.name) + (ls.length > 1 ? '<span class="car" aria-hidden="true">▼</span>' : '') + '</span>';
+      if (ls.length > 1) h += '<select id="lg" aria-label="League">' + ls.map(function (l) {
+        return '<option value="' + esc(l.code) + '"' + (l.code === L.code ? ' selected' : '') + '>' + esc(l.name) + '</option>'; }).join('') + '</select>';
+    }
+    $slot.innerHTML = h;
+  }
+  $slot.addEventListener('change', function (e) {
+    if (e.target.id === 'lg') { NB.setCurrent(e.target.value); loadBoard(); }
+  });
+  function cur() {
+    var ls = NB.leagues(), c = NB.current();
+    for (var i = 0; i < ls.length; i++) if (ls[i].code === c) return ls[i];
+    return ls[0] || null;
+  }
+  function loadBoard() {
+    var L = cur(); if (!L) { renderLeague(null); return intro(); }
+    NB.setCurrent(L.code); renderPills(); renderLeague(L); syncUrl();
+    if (!S.data || S.data.code !== L.code || S.data.type !== S.type || S.data.date !== S.date) $app.innerHTML = '<p class="loading">Loading…</p>';
+    var want = [L.code, S.type, S.date].join('|');
+    NB.day(L.code, S.type, S.date).then(function (d) {
+      if (want !== [cur().code, S.type, S.date].join('|')) return;
+      d.code = L.code; d.type = S.type; d.date = S.date; S.data = d; renderBoard(L, d);
+    }).catch(function (err) {
+      if (err.code === 'not_member' || err.code === 'no_league') { NB.refresh().then(loadBoard, loadBoard); return; }
+      $app.innerHTML = '<p class="nobody">Couldn’t load the board. ' + esc(err.message) + '</p>';
+    });
+  }
+  function renderBoard(L, d) {
+    var T = NB.BY_ID[S.type], ls = NB.leagues(), it = puzzleItem(S.type, S.date);
+    var played = d.ranked.concat(d.unranked).some(function (r) { return r.me; });
+    var h = '';
+    if (S.created === L.code) {
+      h += '<div class="card"><h2>' + esc(L.name) + ' is ready</h2><p>Share the link in your group chat. Anyone who taps it ' +
+           'picks a nickname and joins.</p><div class="acts"><button class="btn go" data-act="invite">Invite people</button></div></div>';
+      S.created = '';
+    }
+    var first = d.first || S.date;
+    h += '<div class="daybar"><button class="daybtn" data-day="-1" aria-label="Previous day"' + (S.date <= first ? ' disabled' : '') + '>‹</button>' +
+         '<label class="daylabel">' + esc(dayName(S.date)) + '<small>' + esc(T.emoji + ' ' + (it ? it.headline : T.name) + ' · ' + longDay(S.date)) + '</small>' +
+         '<input type="date" id="pick" value="' + S.date + '" min="' + first + '" max="' + NB.today() + '" aria-label="Pick a day"></label>' +
+         '<button class="daybtn" data-day="1" aria-label="Next day"' + (S.date >= NB.today() ? ' disabled' : '') + '>›</button></div>';
+    if (!played && it) h += '<div class="play"><span>You haven’t played this one yet.</span><a href="' + esc(it.path) + '">Play ' + esc(it.headline) + ' →</a></div>';
+    if (!d.ranked.length && !d.unranked.length) {
+      h += '<p class="nobody">Nobody in ' + esc(L.name) + ' has played ' + esc(T.name) + ' ' + (S.date === NB.today() ? 'yet today' : 'on this day') + '.</p>';
+    } else {
+      h += '<ol class="rows">' + d.ranked.map(function (r) { return row(r, T, false); }).join('') +
+           d.unranked.map(function (r) { return row(r, T, true); }).join('') + '</ol>';
+    }
+    if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
+      return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
+    h += '<div class="acts">' + (d.ranked.length ? '<button class="btn go" data-act="share">Share leaderboard</button>' : '') +
+         '<button class="btn" data-act="invite">Invite people</button></div>';
+    h += settings(L, d);
+    $app.innerHTML = h;
+  }
+  function row(r, T, dim) {
+    var res = result(T.id, r);
+    var rk = dim ? '–' : (MEDAL[r.rank] || r.rank);
+    return '<li class="row' + (r.me ? ' me' : '') + (dim ? ' dim' : '') + '">' +
+      '<span class="rk' + (!dim && MEDAL[r.rank] ? ' medal' : '') + '">' + rk + '</span>' +
+      '<span class="who">' + esc(r.nick) + (r.me ? '<span class="you">you</span>' : '') +
+      (r.streak > 1 ? '<span class="st">🔥 ' + r.streak + '-day streak</span>' : '') + '</span>' +
+      '<span class="res">' + esc(res.big) + (res.small ? '<small>' + esc(res.small) + '</small>' : '') + '</span></li>';
+  }
+  function settings(L, d) {
+    var h = '<details class="set"><summary>League settings</summary>' +
+      '<div class="grp"><h3>Invite</h3><p>Code <span class="code">' + esc(L.code) + '</span> · ' + d.members + (d.members === 1 ? ' player' : ' players') + '</p></div>' +
+      '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b></p></div>';
+    if (L.owner) {
+      h += '<div class="grp"><h3>League name</h3><div class="inline"><input id="rn" maxlength="30" value="' + esc(L.name) + '">' +
+           '<button class="btn" data-act="rename">Save</button></div></div>' +
+           '<div class="grp"><h3>Players</h3><ul class="plist">' + (d.players || []).map(function (p) {
+             return '<li><span>' + esc(p) + (p === L.nick ? ' (you)' : '') + '</span></li>'; }).join('') + '</ul></div>' +
+           '<div class="grp"><h3>Join code</h3><p>A new code stops the old link and code working; everyone already in stays in.</p>' +
+           '<div class="acts"><button class="btn" data-act="newcode">New join code</button></div></div>';
+    }
+    return h + '<p class="msg" id="sm"></p></details>';
+  }
+  $app.addEventListener('change', function (e) {
+    if (e.target.id === 'pick' && e.target.value) { S.date = e.target.value > NB.today() ? NB.today() : e.target.value; loadBoard(); }
+  });
+  $app.addEventListener('click', function (e) {
+    var d = e.target.closest('[data-day]');
+    if (d && !d.disabled) { S.date = addDays(S.date, +d.getAttribute('data-day')); loadBoard(); return; }
+    var a = e.target.closest('[data-act]'); if (!a) return;
+    var L = cur(), act = a.getAttribute('data-act'), sm = document.getElementById('sm');
+    function fail(err) { if (sm) { sm.className = 'msg'; sm.textContent = err.message; } }
+    function done(msg) { return NB.refresh().then(function () { loadBoard(); }); }
+    if (act === 'share') {
+      var T = NB.BY_ID[S.type], it = puzzleItem(S.type, S.date), D = S.data;
+      var lines = ['🏆 ' + T.emoji + ' ' + (it ? it.headline : T.name) + ' · ' + longDay(S.date)];
+      D.ranked.slice(0, 5).forEach(function (r) {
+        var res = result(T.id, r);
+        lines.push((MEDAL[r.rank] || r.rank + '.') + ' ' + r.nick + ' ' + res.big + (res.small ? ' (' + res.small + ')' : ''));
+      });
+      if (D.ranked.length > 5) lines.push('+' + (D.ranked.length - 5) + ' more');
+      lines.push(L.name + ' leaderboard:');
+      share(lines.join('\n'), link(L.code) + '&p=' + S.type + '&d=' + S.date, a);
+      track('board_share', { type: S.type });
+    } else if (act === 'invite') {
+      share('Join ' + L.name + ' on Noodle Puzzles: tap the link, pick a nickname, and your results go on our daily leaderboards.', link(L.code), a);
+      track('board_invite', {});
+    } else if (act === 'rename') {
+      NB.owner('rename', L.code, { p_name: document.getElementById('rn').value.trim() }).then(done, fail);
+    } else if (act === 'newcode') {
+      if (!confirm('Make a new join code? The old link and code stop working; people already in the league stay in.')) return;
+      NB.owner('new_code', L.code).then(function (r) { NB.setCurrent(r.code); return done(); }, fail);
+    }
+  });
+
+  /* ---------- start ---------- */
+  track('board_open', { from: S.from });
+  var feed = fetch('feed.json', { cache: 'no-cache' }).then(function (r) { return r.json(); })
+    .then(function (j) { S.feed = j.items || []; }, function () { S.feed = []; });
+  var mine = NB.refresh().catch(function () { return NB.leagues(); });
+  Promise.all([feed, mine]).then(function () {
+    if (S.join) {
+      var have = NB.leagues().filter(function (l) { return l.code === S.join; })[0];
+      if (have) { NB.setCurrent(have.code); S.join = ''; return loadBoard(); }
+      return NB.peek(S.join).then(joinForm, function () {
+        S.join = '';
+        $app.innerHTML = '<div class="card"><h2>That link has expired</h2><p>The league may have closed or changed its code. ' +
+          'Ask for a new link.</p></div>';
+      });
+    }
+    NB.inAny() ? loadBoard() : intro();
+  });
+})();
+</script>
+<script src="dn-track.js" defer></script>
+</body>
+</html>

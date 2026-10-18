@@ -318,6 +318,24 @@
       </div>
     </section>
 
+    <!-- LEAGUES (leaderboards) -->
+    <section class="block" id="leagues" data-part="all">
+      <div class="bh"><h2>Leagues</h2><p>Leaderboard leagues, newest first. Rename anything that shouldn’t be there, or pause sign-ups.</p></div>
+      <div class="panel">
+        <h3>Sign-ups in the last 24 hours</h3>
+        <div class="sub" id="lgToday">Loading…</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button type="button" class="ghost" id="lgPauseCreate"></button>
+          <button type="button" class="ghost" id="lgPauseJoin"></button>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:12px">
+        <h3>All leagues</h3>
+        <div class="tscroll"><table id="tLeagues"></table></div>
+        <p class="sub" id="lgMsg" style="margin-top:8px"></p>
+      </div>
+    </section>
+
     <!-- BASIS OF PREPARATION -->
     <section class="block" id="basis" data-part="all">
       <div class="bh"><h2>Basis of preparation</h2><p>How every figure on this page is produced, and what it can't tell you.</p></div>
@@ -537,8 +555,41 @@
       }
       S.data = r.data;
       render();
+      loadLeagues();
     });
   }
+
+  /* ---------------- leagues (leaderboards) ---------------- */
+  var LG = null;
+  function loadLeagues(action, code, value){
+    return sb.rpc('admin_board', { p_action: action || 'list', p_code: code || null, p_value: value == null ? null : String(value) }).then(function(r){
+      if (r.error) { $('#lgMsg').textContent = 'Couldn’t ' + (action && action !== 'list' ? 'do that' : 'load leagues') + ': ' + r.error.message; return; }
+      LG = r.data; $('#lgMsg').textContent = ''; renderLeagues();
+    });
+  }
+  function renderLeagues(){
+    var T = LG.today || {}, P = LG.paused || {};
+    $('#lgToday').textContent = (T.creates||0) + ' of ' + (T.create_cap||0) + ' new leagues · ' + (T.joins||0) + ' of ' + (T.join_cap||0) + ' joins. Past either cap, sign-ups pause until the 24 hours roll on.';
+    $('#lgPauseCreate').textContent = P.create ? 'New leagues: paused · resume' : 'Pause new leagues';
+    $('#lgPauseJoin').textContent = P.join ? 'Joining: paused · resume' : 'Pause joining';
+    var L = LG.leagues || [];
+    $('#tLeagues').innerHTML = L.length
+      ? '<tr><th>League</th><th>Players</th><th>Created</th><th>Last result</th><th></th></tr>' + L.map(function(l){
+          var ps = l.players || [];
+          return '<tr><td><b>' + esc(l.name) + '</b><br><span class="sub">' + esc(l.code) + ' · owner ' + esc(l.owner || '–') + '</span></td>' +
+            '<td>' + ps.length + '<br><span class="sub">' + esc(ps.join(', ')) + '</span></td>' +
+            '<td>' + esc(fmtDate(String(l.created).slice(0,10))) + '</td><td>' + esc(fmtDate(String(l.active).slice(0,10))) + '</td>' +
+            '<td style="white-space:nowrap"><button type="button" class="ghost" data-lg="rename" data-code="' + esc(l.code) + '">Rename</button></td></tr>';
+        }).join('')
+      : '<tr><td class="sub">No leagues yet.</td></tr>';
+  }
+  $('#lgPauseCreate').addEventListener('click', function(){ if (LG) loadLeagues('pause', 'create', !(LG.paused||{}).create); });
+  $('#lgPauseJoin').addEventListener('click', function(){ if (LG) loadLeagues('pause', 'join', !(LG.paused||{}).join); });
+  $('#tLeagues').addEventListener('click', function(e){
+    var b = e.target.closest('[data-lg]'); if (!b) return;
+    var act = b.dataset.lg, code = b.dataset.code;
+    if (act === 'rename') { var n = prompt('New name for league ' + code); if (n) loadLeagues('rename', code, n); }
+  });
 
   function applyFilter(){
     $$('[data-filter]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.filter === S.filter)); });

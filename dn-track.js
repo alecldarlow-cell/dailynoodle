@@ -133,6 +133,7 @@
 (function () {
   'use strict';
 
+  var SELF = (document.currentScript && document.currentScript.src) || '';   // for loading dn-board.js
   var URL_ ='https://gnehttjheoyutrfsvslq.supabase.co/rest/v1/rpc/log_events';
   var KEY  = 'sb_publishable_dEMntRNiElpGHn3Hd5Ef1Q_HvLa2wTB';   // public by design
   var IDLE = 30 * 60 * 1000;
@@ -348,6 +349,13 @@
     return m ? +m[0] : null;
   }
   if (PTYPE) {
+    // Leaderboards: dn-board.js submits results for players in a league and
+    // adds "See today's board" to the result box. Independent of opt-out.
+    try {
+      var bs = document.createElement('script');
+      bs.src = SELF ? SELF.replace(/dn-track\.js(\?.*)?$/, 'dn-board.js') : '../dn-board.js';
+      bs.defer = true; document.head.appendChild(bs);
+    } catch (e) {}
     var startPuzzle = function(e){
       if (puz.started) return;
       /* A finished puzzle reopened from the player's own save is marked
@@ -411,6 +419,8 @@
         } else if (PTYPE === 'word-link') {
           end.mistakes = document.querySelectorAll('#pips .pip.gone').length;
         }
+        // For the leaderboard (dn-board.js), whether or not visits are recorded.
+        try { document.dispatchEvent(new CustomEvent('dn:puzzle_end', { detail: end })); } catch (x) {}
         track('puzzle_end', end);
         flush();
       }).observe(box, { attributes: true, attributeFilter: ['class'] });

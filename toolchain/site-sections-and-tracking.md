@@ -44,3 +44,9 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 ## Trimmed controls (15 Oct 2026)
 - Hidden in each `engines/<type>.css` (the engine binds to the ids, so the elements stay in the markup): Mini — Reveal all, Reset, on-screen-keys toggle, difficulty picker, New grid; Doku — Reveal all, Reset, Play again; Sweep — Reveal all, Restart, Flag check toggle (stays on); Path — Reset. The build-note `<footer>` is hidden on every type.
 - Mini phone layout (18 Oct 2026, Alec): in app mode the clue bar sits directly above the keyboard (the engine moves `.cluebox` out of `<main>` to just before `#kb`; ids unchanged), and Check word / Check all / Reveal word / fullscreen sit in one row under the meta line, above the grid. Once solved, Check and Reveal hide (`body.win`), leaving an ordinary-sized Share result. 18px extra bottom padding keeps the keys clear of the gesture bar in fullscreen. Desktop layout unchanged.
+
+## Leaderboards (18 Oct 2026)
+- `board.html` + `dn-board.js`; database in the private `board` schema, migration `toolchain/sql/2026-10-18-leaderboards.sql`. See SITE.md for the summary.
+- Puzzle types on the board: mini, doku, path, sweep, link, tangle, borders. Ranking: solved by time (Link: fewest mistakes, then time); Tangle and Borders by score, then time. Failed or revealed are listed unranked.
+- Streaks on the board are per puzzle, in consecutive puzzle dates completed since joining. They can differ from a puzzle's own streak (Mini and Doku share one in the engines).
+- A player's first result per puzzle stands; replays don't resubmit.
