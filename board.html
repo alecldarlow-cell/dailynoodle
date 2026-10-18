@@ -259,7 +259,7 @@
     var g = e.target.closest('[data-go]'); if (!g) return;
     var go = g.getAttribute('data-go');
     if (go === 'start') startForm(); else if (go === 'code') codeForm();
-    else if (go === 'back') intro(); else if (go === 'board') { S.join = ''; loadBoard(); }
+    else if (go === 'back') { NB.inAny() ? loadBoard() : intro(); } else if (go === 'board') { S.join = ''; loadBoard(); }
   });
 
   /* ---------- the board ---------- */
@@ -268,14 +268,25 @@
   function renderLeague(L) {
     var ls = NB.leagues(), h = '<span class="lgk">Leaderboard</span>';
     if (L) {
-      h += '<span class="lgn">' + esc(L.name) + (ls.length > 1 ? '<span class="car" aria-hidden="true">▼</span>' : '') + '</span>';
-      if (ls.length > 1) h += '<select id="lg" aria-label="League">' + ls.map(function (l) {
-        return '<option value="' + esc(l.code) + '"' + (l.code === L.code ? ' selected' : '') + '>' + esc(l.name) + '</option>'; }).join('') + '</select>';
+      // Always a menu: switch league, or start / join another. The phone's own picker opens it.
+      h += '<span class="lgn">' + esc(L.name) + '<span class="car" aria-hidden="true">▼</span></span>';
+      h += '<select id="lg" aria-label="League: switch, start or join">' + ls.map(function (l) {
+        return '<option value="' + esc(l.code) + '"' + (l.code === L.code ? ' selected' : '') + '>' + esc(l.name) + '</option>'; }).join('') +
+        '<option disabled>──────────</option>' +
+        '<option value="+start">＋ Start a new league</option><option value="+join">＋ Join with a code</option></select>';
     }
     $slot.innerHTML = h;
   }
   $slot.addEventListener('change', function (e) {
-    if (e.target.id === 'lg') { NB.setCurrent(e.target.value); loadBoard(); }
+    if (e.target.id !== 'lg') return;
+    var v = e.target.value, L = cur();
+    if (v === '+start' || v === '+join') {
+      e.target.value = L ? L.code : '';               // the picker keeps showing the current league
+      document.getElementById('pillbar').hidden = true;
+      v === '+start' ? startForm() : codeForm();
+      return;
+    }
+    NB.setCurrent(v); loadBoard();
   });
   function cur() {
     var ls = NB.leagues(), c = NB.current();
