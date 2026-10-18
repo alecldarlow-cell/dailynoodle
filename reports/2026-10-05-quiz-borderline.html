@@ -427,7 +427,7 @@ function tileSVG(c,cls){return `<svg viewBox="0 0 600 600" aria-hidden="true"><p
 /* Today's daily lives in Digi Puzzles as Borders: one file per day in this folder,
    YYYY-MM-DD-geo-borders-NNNN.html, NNNN = days since 2026-10-05 (London date) + 1. */
 const BORDERS_FIRST='2026-10-05';
-const BORDERS_LAST='2027-10-04';                    // last day of the current batch: bump when a new batch ships
+const BORDERS_LAST='2028-08-16';                    // last day of the current batch (DP·BORD·0682): bump when a new batch ships
 function bordersToday(){const t=today();if(t<BORDERS_FIRST||t>BORDERS_LAST)return null;
   const n=String(Math.round((Date.parse(t+'T12:00:00Z')-Date.parse(BORDERS_FIRST+'T12:00:00Z'))/864e5)+1).padStart(4,'0');
   return {date:t,n,id:'DP\u00B7BORD\u00B7'+n,file:t+'-geo-borders-'+n+'.html'};}
@@ -615,6 +615,5 @@ if(window.__DGTEST===true){window.__dg={
 
 renderHome();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
