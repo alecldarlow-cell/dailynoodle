@@ -130,6 +130,8 @@
   .ring.r3{width:84%;height:84%;} .ring.r2{width:58%;height:58%;} .ring.r1{width:32%;height:32%;}
   .ring.lit{border:2.5px solid var(--zc);box-shadow:inset 0 0 26px var(--zsoft);}
   .ring.dark{border:2px dashed rgba(150,165,185,.32);}
+  /* On the night-scene board the darkness mask sits over the rings, so an unlit ring needs more to show where it runs. */
+  .gscreen .ring.dark{border:2px dashed rgba(176,190,208,.62);}
   .zlegend{display:flex;gap:7px;justify-content:center;margin:0 0 8px;flex-wrap:wrap;}
 
   .firepit{position:absolute;top:50%;left:50%;
@@ -2068,6 +2070,5 @@ if(window.__DGTEST===true){
 initFx();
 render();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
