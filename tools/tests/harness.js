@@ -10,11 +10,11 @@
    and a Chromium (PW_CHROMIUM=/path/to/chrome, or Playwright's own).
    Fonts: Google Fonts are not fetched. Set DN_FONTS to a folder holding
    fonts.css plus the files it points at (served under /__fonts/) to get the
-   real faces in screenshots; without it pages fall back to system fonts.
+   real faces in screenshots; without it the suite serves its pinned Fontsource packages.
 --------------------------------------------------------------------------- */
 'use strict';
 const fs = require('fs'), path = require('path');
-const REPO = path.resolve(__dirname, '..', '..');
+const REPO = path.resolve(process.env.DN_TEST_ROOT || path.join(__dirname, '..', '..'));
 const PW = process.env.PLAYWRIGHT_DIR ? require(path.join(process.env.PLAYWRIGHT_DIR, 'playwright')) : require('playwright');
 const MIME = { html: 'text/html', js: 'text/javascript', css: 'text/css', json: 'application/json', svg: 'image/svg+xml', png: 'image/png', webmanifest: 'application/manifest+json', woff2: 'font/woff2' };
 const FONTS = process.env.DN_FONTS || null;
@@ -36,16 +36,16 @@ function dailyList(day) {
   const out = JSON.stringify({ today: day, items }); DAILY.set(day, out); return out;
 }
 
-function launch() {
+async function launch() {
   const o = { args: ['--no-sandbox'] };
-  if (process.env.PW_CHROMIUM) o.executablePath = process.env.PW_CHROMIUM;
-  return PW.chromium.launch(o);
+  if (!process.env.DN_BROWSER || process.env.DN_BROWSER === 'chromium') o.executablePath = process.env.PW_CHROMIUM || await require('./chromium').executable();
+  return (PW[process.env.DN_BROWSER || 'chromium']).launch(o);
 }
 
 /* opts: width, height, scheme ('light'|'dark'), engines (folder overriding engines/*.js), events (array to collect tracker events) */
 async function newPhone(browser, { width = 390, height = 844, scheme = 'light', reduced = false, engines = null, events = null } = {}) {
   const ctx = await browser.newContext({
-    viewport: { width, height }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+    viewport: { width, height }, deviceScaleFactor: 2, isMobile: process.env.DN_BROWSER !== 'firefox', hasTouch: true,
     colorScheme: scheme, reducedMotion: reduced ? 'reduce' : 'no-preference', locale: 'en-GB', timezoneId: 'Europe/London',
     serviceWorkers: 'block',   // sw.js has its own test (tools/tests/sw.js); here every request must go through the routes below
     userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36',
@@ -56,7 +56,11 @@ async function newPhone(browser, { width = 390, height = 844, scheme = 'light', 
   await ctx.route('**/*', async route => {
     const u = new URL(route.request().url());
     // fonts: honour ?display= as Google does, so font swaps show up in tests
-    if (u.host === 'fonts.googleapis.com' && !u.pathname.startsWith('/__fonts/')) return FONTS ? route.fulfill({ status: 200, contentType: 'text/css', body: fs.readFileSync(path.join(FONTS, 'fonts.css'), 'utf8').replace(/font-display:[^;}]*/g, 'font-display:' + (u.searchParams.get('display') || 'auto')) }) : route.fulfill({ status: 200, contentType: 'text/css', body: '' });
+    if (u.host === 'fonts.googleapis.com' && !u.pathname.startsWith('/__fonts/')) {
+      const css = FONTS ? fs.readFileSync(path.join(FONTS, 'fonts.css'), 'utf8') : require('./fonts').css();
+      return route.fulfill({ status: 200, contentType: 'text/css', body: css.replace(/font-display:[^;}]*/g, 'font-display:' + (u.searchParams.get('display') || 'auto')) });
+    }
+    if (u.pathname.startsWith('/__fonts/') && !FONTS) return route.fulfill({ status: 200, contentType: u.pathname.endsWith('.woff2') ? 'font/woff2' : 'font/woff', body: require('./fonts').file(u.pathname.slice(9)) });
     if (u.pathname.startsWith('/__fonts/') && FONTS) {
       const rel = decodeURIComponent(u.pathname.slice(9));
       let f = path.join(FONTS, rel); if (!fs.existsSync(f)) f = path.join(FONTS, 'node_modules', rel);   // an npm install of @fontsource puts them here

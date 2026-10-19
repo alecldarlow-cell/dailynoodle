@@ -6,3 +6,9 @@ node_modules/
 *.log
 _site/
 held.txt
+
+# Automated test artifacts
+test-results/
+playwright-report/
+registry.json
+published.json

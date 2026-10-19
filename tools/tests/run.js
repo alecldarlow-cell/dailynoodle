@@ -139,7 +139,7 @@ const TESTS = {
       const s = await p.evaluate(() => ({ date: document.getElementById('dateLine').textContent, back: document.querySelector('#home a.back').textContent,
         stats: document.querySelectorAll('#home .stats div, #home .hstats div').length, how: !!document.querySelector('#home details.how'),
         sw: document.documentElement.scrollWidth, vw: innerWidth }));
-      ok(/^No\. \d+, Sunday 18 October$/.test(s.date) && s.back === '← Puzzles', `${type}: home date line "${s.date}", back "${s.back}"`);
+      ok(/^No\. \d+, Sunday, 18 October$/.test(s.date) && s.back === '← Puzzles', `${type}: home date line "${s.date}", back "${s.back}"`);
       ok(s.stats === 3 && s.how && s.sw <= s.vw, `${type}: three stats, How to play, no sideways scroll`);
       ok(!p.errs.length, `${type}: no page errors ` + p.errs.join(' | '));
       await ctx.close();

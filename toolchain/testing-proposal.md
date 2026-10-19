@@ -1,6 +1,8 @@
 # Testing proposal — 19 October 2026
 
-**Recommendation:** extend the existing Playwright and puzzle checks, add small logic tests and a real visual comparison layer, then make a dependable subset block deployment. Keep the static site architecture. This is a proposal; the wider suite and CI changes have not been built. Only focused regressions for the requested fixes were added now.
+**Implementation update:** See [testing.md](testing.md) for the suite built from this proposal, commands and current coverage limits. The proposal below is retained as the original design and historical case backlog.
+
+**Original recommendation:** extend the existing Playwright and puzzle checks, add small logic tests and a real visual comparison layer, then make a dependable subset block deployment. Keep the static site architecture. This is a proposal; the wider suite and CI changes have not been built. Only focused regressions for the requested fixes were added now.
 
 ## Evidence and review scope
 

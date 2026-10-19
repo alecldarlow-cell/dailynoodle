@@ -1,0 +1,65 @@
+name: Tests
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Required regression suite
+        if: github.event_name != 'schedule'
+        run: npm test
+      - name: Full future content and seeded regression suite
+        if: github.event_name == 'schedule'
+        run: npm run test:nightly
+      - name: Test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-evidence
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
+  browser-matrix:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Browser contracts
+        env:
+          DN_CROSS_BROWSER: '1'
+        run: npm run test:browser -- --project=${{ matrix.browser }} artifact.spec.js platform.spec.js
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-${{ matrix.browser }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14

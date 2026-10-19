@@ -41,92 +41,40 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # full history so a push retry can rebase cleanly
-
+          ref: main
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Add reader-activity script to new pieces
-        run: node tools/inject-tracker.js
-
-      # New puzzles uploaded from an older template still get the one-line
-      # emoji share text. A file it can't patch is reported, not fatal.
-      - name: One-line share text on new puzzles
-        run: node tools/share-v2.js || echo "::warning::share-v2 refused some files (see log)"
-
-      # Puzzles whose player matches a shared engine become thin pages that
-      # load engines/<type>.js. Anything else is left self-contained.
-      - name: Move new puzzles onto the shared engines
-        run: for t in mini doku sweep link path tangle borders; do node tools/engine-shells.js $t || echo "::warning::engine-shells $t failed (see log)"; done
-
-      # Link-preview (Open Graph) tags from each file's dn:* metas, so a
-      # pasted link shows a card. Rewrites a file only when its tags change.
-      - name: Link-preview tags
-        run: node tools/og-tags.js
-
-      # Share button (share sheet / copy, WhatsApp-ready text) on every news
-      # piece. Rewrites a file only when its block changes.
-      - name: Share button on news pieces
-        run: node tools/news-share.js
-
-      # A way back to the site from every news piece: a "← News" link above
-      # the masthead and the masthead itself linking to News. Idempotent.
-      - name: Back-to-News link on news pieces
-        run: node tools/news-nav.js
-
-      # Dark mode on every news piece (follows the phone, like the front
-      # pages and puzzles): one marked block in <head>, idempotent.
-      - name: News dark mode
-        run: node tools/news-dark.js
-
-      - name: Build feed.json
-        run: node tools/build-feed.js
-
-      - name: Commit if changed
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Commit identity for generated content
         run: |
-          git config user.name  "dailynoodle-bot"
+          git config user.name "dailynoodle-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add feed.json puzzles-today.json reports
-          if git diff --staged --quiet; then
-            echo "nothing changed — nothing to commit"
-            exit 0
-          fi
-          git commit -m "chore: rebuild feed.json, add tracker to new pieces [skip ci]"
-          # A scheduled task may have pushed while this ran: rebase onto it
-          # and retry rather than failing and losing tonight's feed.
-          for i in 1 2 3; do
-            if git push; then exit 0; fi
-            echo "push rejected (attempt $i) — rebasing onto origin/main"
-            sleep $((i * 5))
-            git pull --rebase origin main
-          done
-          echo "::error::could not push after 3 attempts"; exit 1
-
-      # Publish only what's released: forward-dated files (the same ones the
-      # feed holds back) and the non-site folders stay out of the deployed
-      # site. build-site.js fails rather than publish a held file.
-      - name: Assemble the site
-        run: |
-          DN_HELD_OUT="$RUNNER_TEMP/held.txt" node tools/build-feed.js
-          node tools/build-site.js "$RUNNER_TEMP/held.txt" _site
-
+      - name: Prepare, test and commit the exact release
+        run: node tools/release.js
+      - name: Test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-test-evidence
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy tested artifact to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
-
-      # Runs after the feed is committed, so a batch missing the player-save
-      # patch fails this run (and alerts) without holding back publishing.
-      # Fix: node tools/add-done-state.js, then push.
-      - name: Check puzzle saves (reopen finished, Share result)
-        run: node tools/add-done-state.js --check
+      - name: Read-only live health check
+        run: npm run test:live

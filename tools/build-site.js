@@ -37,7 +37,7 @@ const held = new Set(fs.readFileSync(heldFile, 'utf8').split('\n').map(s => s.tr
 // Folders published whole, except reports/ which is filtered.
 const DIRS = ['icons', 'assets', 'engines', 'reports'];
 // Never published.
-const SKIP_ROOT = new Set(['.git', '.github', 'tools', 'toolchain', 'node_modules', '_site', 'CNAME', '.gitignore']);
+const SKIP_ROOT = new Set(['.git', '.github', 'tools', 'toolchain', 'node_modules', '_site', 'CNAME', '.gitignore', 'package.json', 'package-lock.json', 'playwright.config.js', 'registry.json', 'published.json']);
 const SKIP_EXT = /\.(md|txt|py|pyc|sql|log)$/i;
 
 fs.rmSync(OUT, { recursive: true, force: true });

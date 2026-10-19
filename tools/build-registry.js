@@ -364,4 +364,5 @@ if (tightRepeats.length) {
   for (const r of tightRepeats.slice(0, 10)) console.log(`  ${r.answer} — ${r.days}d apart, limit ${r.limit} (${r.on.join(" → ")})`);
 }
 if (!CHECK_ONLY) console.log("\nwrote registry.json, published.json");
+if (opt("--report")) fs.writeFileSync(opt("--report"), JSON.stringify({ today: TODAY, summary, problems }, null, 2) + "\n");
 process.exit(CHECK_ONLY && errs.length ? 1 : 0);

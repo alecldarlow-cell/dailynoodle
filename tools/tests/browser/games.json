@@ -1,0 +1,13 @@
+[
+ {"id":"bubble","file":"2026-09-26-arcade-bubble-burst.html","start":"[data-act=lv]","pause":"#pauseBtn"},
+ {"id":"lighthouse","file":"2026-09-26-arcade-lighthouse-keeper.html","start":"#tutSkip","pause":"#menu"},
+ {"id":"lantern","file":"2026-09-27-arcade-lantern-drift.html","start":"#go"},
+ {"id":"glass","file":"2026-09-28-arcade-sea-glass.html","start":"#go","pause":"#pause"},
+ {"id":"borderline","file":"2026-10-05-quiz-borderline.html","start":"#exploreBtn"},
+ {"id":"archipelago","file":"2026-10-12-strategy-archipelago.html","start":"#play"},
+ {"id":"ballpark","file":"2026-10-15-quiz-ballpark.html","start":"#playB"},
+ {"id":"cities","file":"2026-10-16-strategy-ancient-cities.html","start":"#hPlay","pause":"#pause"},
+ {"id":"campfire","file":"2026-10-16-strategy-campfire-watch.html","start":"text=Light the Fire"},
+ {"id":"planes","file":"2026-10-17-arcade-paper-planes.html","start":"#splashGo"},
+ {"id":"dots","file":"2026-10-17-arcade-two-dots-landscape.html","start":"#game"}
+]

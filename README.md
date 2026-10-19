@@ -31,7 +31,14 @@ except forward-dated files and the `tools/` and `toolchain/` folders. It also
 runs nightly so forward-dated items appear on their day. Details in `SITE.md` and
 `toolchain/site-sections-and-tracking.md`.
 
-## Checks
+## Testing
+
+Run `npm ci --ignore-scripts` then `npm test`. The suite gates Pages deployment and
+includes logic, content, database, browser, offline and visual checks.
+See [the developer testing guide](toolchain/testing.md) for focused commands,
+coverage boundaries, CI behavior and how to add a regression.
+
+## Individual checks
 
 ```sh
 node tools/add-done-state.js --check     # finished puzzles reopen as finished
@@ -44,4 +51,4 @@ node tools/tests/push-crypto.mjs         # push encryption and signing (toolchai
 node tools/tests/push-panel.js           # the hidden notifications test panel
 ```
 
-Testing expansion proposal and full-history inventory: [toolchain/testing-proposal.md](toolchain/testing-proposal.md). The proposal is not yet implemented.
+Testing expansion proposal and full-history inventory: [toolchain/testing-proposal.md](toolchain/testing-proposal.md). See [the developer testing guide](toolchain/testing.md) for the implemented suite and remaining coverage limits.
