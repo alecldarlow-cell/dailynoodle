@@ -1071,13 +1071,13 @@ function refreshTray(){if(!M)return;const st=M.st;document.querySelectorAll('.sl
  b.classList.toggle('empty',!inst);b.classList.toggle('sel',M.sel===i);b.classList.toggle('rv',!!(M.rvSlot&&M.rvSlot.i===i&&M.rvSlot.p===1));b.classList.toggle('rv2',!!(M.rvSlot&&M.rvSlot.i===i&&M.rvSlot.p===2));
  b.disabled=!inst||!myTurn();if(!inst)return;const r=M.sel===i&&M.ghost?M.ghost.r:0;
  g.save();PAINT.rr(g,0,0,116,116,16);g.clip();g.fillStyle='#3e968b';g.fillRect(0,0,116,116);g.save();g.scale(1,106/116);drawTileAt(g,inst,r,0,0,116,1,true);g.restore();g.fillStyle='rgba(255,255,255,.35)';g.fillRect(0,0,116,3);g.restore();});
- $('bRot').disabled=!(myTurn()&&M.ghost);$('bOk').disabled=!(myTurn()&&M.ghost);}
+ const gr=M.ghost&&M.legal&&M.legal.get(AC.K(M.ghost.x,M.ghost.y));$('bRot').disabled=!(myTurn()&&M.ghost&&gr&&gr.length>1);$('bOk').disabled=!(myTurn()&&M.ghost);}
 function setPrev(h){$('prev').innerHTML=h;}
 function refreshPrev(){if(!M)return;const st=M.st;if(M.tut){setPrev('&nbsp;');return;}if(M.ended||st.over){setPrev('The bag is empty — final scores');return;}
  if(M.busy){return;}
  if(M.ghost&&M.sel>=0){const pv=AC.preview(st,st.offer[M.sel],M.ghost.x,M.ghost.y,M.ghost.r,0);
   if(pv.length){setPrev(pv.map(v=>`Finishes a ${CITY.feat[v.kind].toLowerCase()}: `+v.gains.map((g,i)=>g>0?`<span class="${['g','r','r2'][i]}">${esc(M.names[i])} +${g}</span>`:'').filter(Boolean).join(' · ')).join('<br>')||'Finishes a feature');}
-  else setPrev(M.hint===2?'Tap the tile to turn it, then ✓ to set it':'Tap ✓ to set it, or tap the tile to turn it');return;}
+  else{const gr=M.legal&&M.legal.get(AC.K(M.ghost.x,M.ghost.y));setPrev(gr&&gr.length<2?'Only one way fits here. Tap ✓ to set it':M.hint===2?'Tap the tile to turn it, then ✓ to set it':'Tap ✓ to set it, or tap the tile to turn it');}return;}
  if(M.sel>=0){setPrev(M.legal&&M.legal.size?'Tap a glowing space on the lagoon':'No space fits this tile');return;}
  setPrev(M.hint===0?'Your turn: pick a tile below':'<span class="k">Your turn</span> — pick a tile');}
 function refresh(){if(!M)return;refreshScores();refreshMarket();refreshTray();refreshPrev();$('bagN').textContent=M.st.deck.length-M.st.di;}
@@ -1124,7 +1124,7 @@ function draw(){ctx.setTransform(DPR,0,0,DPR,0,0);const st=M?M.st:DEMO;drawPaper
  }
  const showB=s>=26,live=M&&!M.ended&&!st.over?liveTiles(st):null;st.tiles.forEach((t,i)=>{if(!vis(t))return;const[sx,sy]=w2s(t.x,t.y);if(showB&&(M||i>0))drawBadges(ctx,t.inst,t.rot,sx,sy,s);if(live&&t.owner>=0&&live.has(i))owner(ctx,sx,sy,s,t.owner);});
  if(gh){const inst=st.offer[M.sel],[sx,sy]=w2s(gh.x,gh.y),pulse=.5+.5*Math.sin(perf()*5);
-  ctx.save();ctx.shadowColor='rgba(60,40,10,.35)';ctx.shadowBlur=16;ctx.shadowOffsetY=7;let ang=gh.spin>0?-gh.spin*Math.PI/2:0;
+  ctx.save();ctx.shadowColor='rgba(60,40,10,.35)';ctx.shadowBlur=16;ctx.shadowOffsetY=7;let ang=(gh.spin>0?-gh.spin*Math.PI/2:0)+(gh.wob>0?Math.sin(gh.wob*Math.PI*5)*.13*gh.wob:0);
   ctx.translate(sx+s/2,sy+s/2-4);ctx.rotate(ang);ctx.translate(-sx-s/2,-sy-s/2+4);drawTileAt(ctx,inst,gh.r,sx,sy-4,s,1,true);ctx.restore();
   drawBadges(ctx,inst,gh.r,sx,sy-4,s);owner(ctx,sx,sy-4,s,0);
   ctx.strokeStyle=COLS[0];ctx.lineWidth=3+pulse;PAINT.rr(ctx,sx+1,sy-3,s-2,s-2,7);ctx.stroke();}
@@ -1146,7 +1146,7 @@ function frame(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;tcBudget=8;
  if(!M&&DEMO&&!S.rm){cam.tx=demoC[0]+Math.sin(t/9000)*.9;cam.ty=demoC[1]+Math.cos(t/11000)*.5;}
  for(const[i,v]of FX.drops){const n=v+dt*(S.rm?99:4.2);if(n>=1)FX.drops.delete(i);else FX.drops.set(i,n);}
  for(const g of FX.glows)g.t+=dt;FX.glows=FX.glows.filter(g=>g.t<1.4);for(const p of FX.pops)p.t+=dt;FX.pops=FX.pops.filter(p=>p.t<1.8);
- if(M&&M.ghost&&M.ghost.spin>0)M.ghost.spin=Math.max(0,M.ghost.spin-dt*(S.rm?99:7));
+ if(M&&M.ghost&&M.ghost.spin>0)M.ghost.spin=Math.max(0,M.ghost.spin-dt*(S.rm?99:7));if(M&&M.ghost&&M.ghost.wob>0)M.ghost.wob=Math.max(0,M.ghost.wob-dt*(S.rm?99:2.6));
  boardT+=dt;draw();requestAnimationFrame(frame);}
 
 /* ---------- input: tap, pan, pinch, wheel ---------- */
