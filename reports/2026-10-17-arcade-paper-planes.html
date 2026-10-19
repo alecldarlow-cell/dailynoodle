@@ -84,9 +84,20 @@ a.back:active{opacity:.6}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .pause .card{width:min(560px,100%)}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.plist{display:grid;grid-template-columns:1fr 1fr;column-gap:22px;margin:10px 0 4px}
+.plist .sw{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:0 2px;border:0;border-bottom:1px solid var(--rule);background:none;font:700 15px/1.2 Nunito,system-ui,sans-serif;color:var(--ink);cursor:pointer;text-align:left}
+.plist .sw.hidden{display:none}
+.sw .k{flex:none;position:relative;width:40px;height:24px;border-radius:12px;background:#c9d1db;font-size:0;padding:0;transition:background .15s}
+.sw .k:after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .15s}
+.sw .k.on:after{left:19px}
+.pfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}.pfoot .back{font-weight:800;text-decoration:none;color:var(--ink);min-height:44px;display:flex;align-items:center}
+.guide{list-style:none;margin:4px 0 2px;padding:0;font-size:14px;line-height:1.35;column-gap:22px}.guide li{display:grid;grid-template-columns:58px 1fr;gap:6px;padding:6px 0;border-bottom:1px solid var(--rule);break-inside:avoid}.guide b{color:#2e4458}
+@media(min-width:620px){.guide{columns:2}}
+#pGuideBack{position:absolute;top:12px;right:14px;min-height:40px;padding:4px 14px}#pause .card{position:relative}
+@media(max-width:440px){.plist{grid-template-columns:1fr}}
+@media(pointer:coarse){.guide .keys{display:none}}
 .pgrid .btn{width:100%}
 .sw{justify-content:space-between}
-.sw .k{font-size:13px;padding:2px 8px;border-radius:8px;background:#e8ecf2}
 .sw .k.on{background:var(--good);color:#fff}
 /* splash */
 #splash{flex-direction:column;text-align:center;background:linear-gradient(#bfe6ff,#eaf7ff)}
@@ -406,18 +417,33 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
 <div class="ov dim pause" id="pause">
   <div class="card">
     <h2 class="hand" id="pTitle">Paused</h2>
+    <div id="pMain">
     <div class="pgrid">
       <button class="btn pri" id="pResume">Resume</button>
       <button class="btn" id="pHangar">Hangar</button>
-      <button class="btn sw" id="pSound">Sound <span class="k">On</span></button>
-      <button class="btn sw" id="pHaptics">Vibration <span class="k">On</span></button>
-      <button class="btn sw" id="pMotion">Reduced motion <span class="k">Off</span></button>
-      <button class="btn sw" id="pFS">Full screen <span class="k">On</span></button>
-      <button class="btn sw" id="pUpright">Upright play <span class="k">Off</span></button>
-      <a class="btn back" href="../games.html">← Digi Games</a>
     </div>
-    <details class="howto" id="howto" open><summary>How to fly</summary>
-    <p id="controlHelp" class="controlHelp">Drag back and release to throw. In flight, hold the right side to raise the flaps (nose up) and the left side to lower them (nose down); let go and they go flat. Left alone the plane swoops up and down and glides steeply, so smooth it out: flaps down as it climbs, flaps up as it dives. Pulling up when slow stalls the wing; dive a little to get speed back. A steep throw plus a hold on the right makes a loop. ☰ pauses. Keyboard: ←/→ aim, Space throws; hold ↑ or Space for flaps up, ↓ for flaps down; P or Esc pauses. Clears keep your throw; 2× target restores one (maximum five).</p></details>
+    <div class="plist">
+      <button class="sw" id="pSound"><span>Sound</span><span class="k">On</span></button>
+      <button class="sw" id="pHaptics"><span>Vibration</span><span class="k">On</span></button>
+      <button class="sw" id="pMotion"><span>Reduced motion</span><span class="k">Off</span></button>
+      <button class="sw" id="pFS"><span>Full screen</span><span class="k">On</span></button>
+      <button class="sw" id="pUpright"><span>Upright play</span><span class="k">Off</span></button>
+    </div>
+    <div class="pfoot"><button class="btn" id="pHow">How to fly</button><a class="back" href="../games.html">← Digi Games</a></div>
+    </div>
+    <div id="pGuide" class="hidden">
+      <ul class="guide">
+        <li><b>Throw</b> Drag back and let go.</li>
+        <li><b>Flaps</b> Hold the right side to lift the nose, the left side to drop it. Let go to fly flat.</li>
+        <li><b>Glide</b> Flaps down as it climbs, flaps up as it dives.</li>
+        <li><b>Stall</b> Too slow with the nose up stalls the wing. Dive a little to get speed back.</li>
+        <li><b>Loop</b> Throw steep and hold the right side. Each loop earns +8 clips, up to three a throw.</li>
+        <li><b>Throws</b> Clearing a place keeps your throw. Fly twice the target to win one back (up to five).</li>
+        <li><b>Clips</b> Catch them in the air, then spend them in the Hangar.</li>
+        <li class="keys"><b>Keys</b> ←/→ aim · Space throws · ↑/↓ flaps · P pauses</li>
+      </ul>
+      <button class="btn" id="pGuideBack">Done</button>
+    </div>
   </div>
 </div>
 
@@ -1217,7 +1243,7 @@ function pausePlay(settingsOnly) {
   $('pHangar').textContent = 'Hangar';   // same name as the "Go to the hangar?" step it opens, paused or resuming
   pauseMode = settingsOnly ? 'settings' : 'pause';
   refreshSwitches();
-  try { $('howto').open = !(innerWidth > innerHeight && innerHeight <= 430); } catch (e) {}
+  $('pMain').classList.remove('hidden'); $('pGuide').classList.add('hidden');
   $('pause').classList.add('on'); focusPanel('pause','pResume');
 }
 let pauseMode = 'pause', resumeMenu = false;
@@ -1227,6 +1253,8 @@ function refreshSwitches() {
   $('pFS').classList.toggle('hidden', !fsOK);
 }
 $('pauseBtn').addEventListener('click', () => { initAudio(); pausePlay(); });
+$('pHow').addEventListener('click', () => { $('pTitle').dataset.was = $('pTitle').textContent; $('pTitle').textContent = 'How to fly'; $('pMain').classList.add('hidden'); $('pGuide').classList.remove('hidden'); $('pGuideBack').focus({preventScroll:true}); });
+$('pGuideBack').addEventListener('click', () => { $('pTitle').textContent = $('pTitle').dataset.was || 'Paused'; $('pGuide').classList.add('hidden'); $('pMain').classList.remove('hidden'); $('pHow').focus({preventScroll:true}); });
 $('cGo').addEventListener('click', () => { resumeMenu=false; $('confirm').classList.remove('on'); paused = false; abandonRun(); });
 $('cStay').addEventListener('click', () => { $('confirm').classList.remove('on'); focusPanel('pause','pResume'); });
 $('pResume').addEventListener('click', () => {
