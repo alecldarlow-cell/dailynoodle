@@ -13,7 +13,7 @@ npm test
 
 On Linux x64 this installs the exact browser, web fonts and test dependencies from `package-lock.json`. The browser is bundled in the pinned `@sparticuz/chromium` npm package; `tools/tests/chromium.js` extracts it and its fallback fonts to a versioned temporary cache. No separate browser download is required. On macOS, Windows or another architecture, install Playwright's Chromium with `npx playwright install chromium`; the behavioral tests can run there, but approve screenshot baselines on the canonical Linux environment. `PW_CHROMIUM=/absolute/path/to/chrome` overrides the binary for diagnosis or device capability checks. An override can change rendering, so do not use it to approve canonical images.
 
-`npm test` runs every required group in order, stops at the first failed group, writes logs and a timing summary to `test-results/`, and builds `_site/` in an isolated copy. It does not edit the tracked reports, commit, push, publish, send notifications, or write to production Supabase. The only normal installation network requests are npm dependencies; browser tests serve local files and mock external services. `npm run test:live` is the separate read-only check of the real public site.
+`npm test` runs every required group, writes logs and timing summaries to `test-results/`, and builds `_site/` in an isolated copy. Fast preflight checks and the build run first; then the long seven-puzzle run overlaps one sequential lane of browser/artifact/focused checks. At most two groups run together. A failure stops new groups from starting, waits for already-running work and fails the release. It does not edit tracked reports, commit, push, publish, send notifications, or write to production Supabase. The only normal installation network requests are npm dependencies; browser tests serve local files and mock external services. `npm run test:live` is the separate read-only check of the real public site.
 
 Do not update dependencies or snapshot images merely to get a green result. Find the behavior that changed, decide whether it is intended, and then update the relevant expectation and documentation.
 
@@ -22,6 +22,7 @@ Do not update dependencies or snapshot images merely to get a green result. Find
 | Command | Purpose |
 | --- | --- |
 | `npm test` | Full required release suite: logic, database, content, transformed build, browser flows, visuals, puzzle regressions, offline worker and push contracts |
+| `npm test -- --serial` | The same required checks without overlap, for timing comparison or diagnosing resource contention |
 | `npm run test:unit` | Fast Node tests for puzzle gates, clue rules, symmetry, deterministic game logic, build-tool fixtures and worker notification handlers |
 | `npm run test:backend` | Disposable PostgreSQL executing the actual checked-in board migrations; no server or credentials needed |
 | `npm run test:content` | Registry integrity plus the current day and next seven days of puzzle data, re-read from disk |
@@ -46,6 +47,26 @@ node tools/tests/offline-next.js
 ```
 
 For Firefox/WebKit, install the appropriate Playwright browser first, set `DN_CROSS_BROWSER=1`, and select `--project=firefox` or `--project=webkit`. The scheduled matrix currently runs frontend/artifact/accessibility/storage contracts in these browsers. All game and seven-type solve flows currently gate on Chromium; the other engines are not presented as equivalent full-game coverage.
+
+## Shared calendar and saved results
+
+`dn-core.js` is the editable source for London calendar days, previous-day arithmetic, first-result storage and merging Borders/Tangle history. The seven engines, finish/start screens, front pages, board and worker use these rules. Feed/release tools require the same source directly. Storage keys, puzzle ids, record shapes and old result dates are preserved. The existing timer implementations remain covered by their regressions; this change does not replace them.
+
+Browser entry points contain generated copies of this small helper so an engine has its dependencies synchronously, including offline, without a new script request. Do not edit a generated `dn-core:start` block. Edit `dn-core.js`, run `node tools/sync-core.js`, and commit the source and all changed copies. `node tools/sync-core.js --check` runs in pre-publication preparation and the unit suite; stale copies fail. New done-state patches also embed this source. Previously published self-contained archive players keep their existing writers, checked by `timing-dates.js`.
+
+The five grid/tile engines read the latest storage before recording a completion and keep the first result. Borders/Tangle additionally merge stored completed ids before each persist, keep the highest best score, preserve completed Tangle day records and merge streaks without counting a day twice. Only the active Tangle round can replace its stored unfinished round; unrelated stale day records cannot roll back another tab's progress. Storage errors remain guarded so play can continue.
+
+`core.test.js` covers midnight/DST, first-result retention, malformed/unavailable storage, streak merging, Tangle object references and bundle consistency. `save-history.spec.js` opens two real same-origin tabs before either finishes, completes different puzzles, verifies both results and reopens the first. These regressions fail against the old engines. This is a read/merge/write repair for stale tabs, not a cross-tab transaction or cloud sync: literally simultaneous writes and two tabs actively playing the same puzzle are not guaranteed conflict-free. Borders still has its existing single in-progress-round slot.
+
+## Test scheduling and evidence
+
+`tools/tests/plan.js` defines the complete required group inventory and its dependencies; `suite.js` runs it. Unit, database, content and build checks finish before the two browser lanes start. Within the second lane, source Playwright, transformed-artifact Playwright, timing/date, Next/offline, worker and push checks remain sequential. Optional nightly cross-browser work follows in that lane. No test group is skipped merely to speed up a release. `plan.test.js` verifies ordering, concurrency limits, the serial equivalent, failure propagation and waiting for active work.
+
+`test-results/summary.json` retains each started group's exit code, duration and start offset. `test-results/timing.json` records elapsed wall time, summed group durations, mode and success. In parallel mode the sum exceeds wall time. Compare serial and parallel runs on the same machine without other test runs competing for resources; timings do not include GitHub queueing, dependency installation or Pages deployment.
+
+The build group's short status is in `test-results/build.log`; transformation output is in `test-results/build-transform.log`. Separate files prevent the transformation subprocess and suite logger from overwriting each other's evidence.
+
+The suite sets `DN_TEST_GROUP` to isolate Playwright evidence: `test-results/browser/playwright.json` and `test-results/browser/browser/` hold source-run results; `test-results/artifact/` holds the transformed run. HTML reports are `playwright-report/browser/index.html` and `playwright-report/artifact/index.html`. Optional cross-browser evidence gets its own directory. A standalone focused browser command without this variable retains the old paths. Keeping reports separate also prevents later artifact checks from erasing source-run failures, screenshots or traces.
 
 ## What happens before deployment
 
@@ -109,7 +130,7 @@ This tests PostgreSQL behavior of repository SQL, not a complete hosted Supabase
 
 `tools/tests/fixtures/registry-debt.json` lists the eight existing July/August registry findings by exact type, path, message and, where applicable, file hash. It records an owner, reason and review date. New findings, changed legacy files, expired review dates and obsolete exceptions fail. A new old-dated error is never automatically exempt. Repair the archive defect or explicitly review the exact remaining exception; do not regenerate a blanket baseline from current failures. The review deadline is 19 November 2026.
 
-The review's unresolved multi-tab Borders/Tangle overwrite remains an explicit known issue; this suite does not claim to fix it or hide a failing regression as a pass. Add a two-tab regression when implementing its eventual repair.
+The review's stale-tab Borders/Tangle history overwrite is repaired by the shared save helper and covered by `SAVE-TABS` browser regressions. The limits of concurrent same-puzzle play and non-transactional browser storage are described above.
 
 Before a significant shared-UI/game release, use an available Android phone and iPhone where possible:
 
@@ -121,6 +142,6 @@ Before a significant shared-UI/game release, use an available Android phone and 
 
 ## Diagnose a failure and add a regression
 
-Start with `test-results/summary.json` and the failed group's log. Browser reports are in `playwright-report/index.html`; use `npx playwright show-report` or `npx playwright show-trace <trace.zip>`. Failure attachments include page errors, first-party missing assets and a screenshot. Node assertion messages identify the temporary fixture, puzzle filename or random seed. Reproduce with the smallest command above and the same browser, date, seed and fonts.
+Start with `test-results/summary.json` and the failed group's log. Full-suite browser reports are in `playwright-report/<group>/index.html`; use `npx playwright show-report playwright-report/browser` (or `artifact`) or `npx playwright show-trace <trace.zip>`. Focused standalone commands still use `playwright-report/index.html`. Failure attachments include page errors, first-party missing assets and a screenshot. Node assertion messages identify the temporary fixture, puzzle filename or random seed. Reproduce with the smallest command above and the same browser, date, seed and fonts.
 
 For a new bug fix, give the test an existing proposal case ID or a clear new one. Reproduce the old fault, assert the player's observable result, then implement the fix. Prefer a logic test for a scoring/save invariant, a temporary-file integration test for tooling, a real browser action for input/lifecycle behavior, and a reviewed screenshot only for appearance. Keep test hooks limited to arranging data/terminal conditions; assert behavior through the production code path. Every required test must run deterministically and fail on its own terms; a capability not exercised must be reported as such.

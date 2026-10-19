@@ -1,8 +1,10 @@
 'use strict';
 const { defineConfig } = require('@playwright/test');
+const group=process.env.DN_TEST_GROUP;
+const output=group?'./test-results/'+group:'./test-results';
 module.exports = defineConfig({
   testDir: './tools/tests/browser',
-  outputDir: './test-results/browser',
+  outputDir: output+'/browser',
   snapshotPathTemplate: '{testDir}/baselines/{projectName}/{arg}{ext}',
   timeout: 60000,
   expect: { timeout: 5000, toHaveScreenshot: { maxDiffPixelRatio: 0.002, animations: 'disabled' } },
@@ -10,7 +12,7 @@ module.exports = defineConfig({
   workers: process.env.CI ? 2 : 1,
   retries: 0,
   forbidOnly: !!process.env.CI,
-  reporter: [['list'], ['html', { open: 'never' }], ['json', { outputFile: 'test-results/playwright.json' }]],
+  reporter: [['list'], ['html', { open: 'never',outputFolder:group?'playwright-report/'+group:'playwright-report' }], ['json', { outputFile: output+'/playwright.json' }]],
   use: { headless: true, locale: 'en-GB', timezoneId: 'Europe/London', trace: 'retain-on-failure', screenshot: 'only-on-failure', launchOptions: process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {} },
   projects: [{ name: 'chromium', use: { browserName: 'chromium' } },
     ...(process.env.DN_CROSS_BROWSER ? [

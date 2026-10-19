@@ -2,6 +2,8 @@
 const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),{spawnSync}=require('node:child_process'),assert=require('node:assert/strict');
 const ROOT=path.resolve(__dirname,'../..');
 function build(out=path.join(ROOT,'_site')){
+ fs.mkdirSync(path.join(ROOT,'test-results'),{recursive:true});
+ const detailLog=path.join(ROOT,'test-results/build-transform.log');fs.writeFileSync(detailLog,'');
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'noodle-build-')),stage=path.join(tmp,'source');
  try{
   fs.cpSync(ROOT,stage,{recursive:true,filter:src=>{
@@ -11,8 +13,8 @@ function build(out=path.join(ROOT,'_site')){
   const env={...process.env,DN_HELD_OUT:held};
   for(const [file,args] of [['prepare-site.js',[]],['build-site.js',[held,path.join(tmp,'site')]]]){
    const r=spawnSync(process.execPath,[path.join(stage,'tools',file),...args],{cwd:stage,encoding:'utf8',env,maxBuffer:16*1024*1024});
-   fs.mkdirSync(path.join(ROOT,'test-results'),{recursive:true});fs.appendFileSync(path.join(ROOT,'test-results/build.log'),r.stdout+r.stderr);
-   assert.equal(r.status,0,file+' failed; see test-results/build.log\n'+r.stderr);
+   fs.appendFileSync(detailLog,r.stdout+r.stderr);
+   assert.equal(r.status,0,file+' failed; see test-results/build-transform.log\n'+r.stderr);
   }
   const site=path.join(tmp,'site'),feed=JSON.parse(fs.readFileSync(path.join(site,'feed.json'))),day=JSON.parse(fs.readFileSync(path.join(site,'puzzles-today.json'))).today;
   for(const it of feed.items){assert.ok(fs.existsSync(path.join(site,it.path)),it.path);assert.ok(it.date<=day,'Future card '+it.path);}
