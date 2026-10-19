@@ -320,6 +320,24 @@ const TESTS = {
     await ctx.close();
     await shareNative(b, F.mini, p2 => play.grid(p2), 'mini');
   },
+  async 'doku:full-wrong'(b) {
+    /* a full grid that isn't today's answer says so (19 Oct 2026); sending a letter back clears it */
+    const { ctx, p } = await open(b, F.doku);
+    await play.start(p);
+    const P = await play.puzzle(p), locked = new Set((P.locked || []).map(([r, c]) => `${r - 1},${c - 1}`));
+    const cells = []; for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) if (P.grid[r][c] !== '#' && !locked.has(`${r},${c}`)) cells.push([r, c]);
+    const L = ([r, c]) => P.grid[r][c], j = cells.findIndex(x => L(x) !== L(cells[0]));
+    const want = cells.map(L); [want[0], want[j]] = [want[j], want[0]];   // swap two different letters: full, but wrong
+    for (let k = 0; k < cells.length; k++) { const [r, c] = cells[k]; await tap(p, p.locator('#grid .cell').nth(r * 5 + c)); await wait(p, 200); await p.keyboard.press(want[k].toLowerCase()); await wait(p, 400); }
+    await wait(p, 800);
+    const m = await text(p, '#msg');
+    ok(/full, but 2 squares aren.t today.s answer/.test(m), `doku: a full wrong grid says so (${m})`);
+    ok(!(await play.boxOn(p)), 'doku: no win on a full wrong grid');
+    await tap(p, p.locator('#grid .cell').nth(cells[0][0] * 5 + cells[0][1])); await wait(p, 600);
+    ok((await text(p, '#msg')) === '', `doku: the note clears once a letter goes back (${await text(p, '#msg')})`);
+    ok(!p.errs.length, 'doku: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
   async 'finish:doku'(b) {
     const ev = []; const { ctx, p } = await open(b, F.doku, { events: ev });
     await play.grid(p);
@@ -395,7 +413,7 @@ const TESTS = {
     await play.link(p, { wrong: 0 });
     ok(/every day for 3 days\./.test(await text(p, '.fin-clock')), `run: finish sheet "${await text(p, '.fin-clock')}"`);
     await p.goto('https://dailynoodle.co.uk/puzzles.html'); await wait(p, 1500);
-    ok(/every day for 3 days\./.test(await text(p, '#run')), `run: Puzzles page "${await text(p, '#run')}"`);
+    ok(/3-day streak/.test(await text(p, '#run')), `run: Puzzles page "${await text(p, '#run')}"`);
     await ctx.close();
   },
   /* ---------- the five fixes of 18 Oct ---------- */
