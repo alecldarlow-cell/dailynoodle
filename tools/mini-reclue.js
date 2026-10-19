@@ -13,10 +13,11 @@
                   "standfirst": "..., and .... Medium." }]   // optional
 
    Refuses (and writes nothing) if: a file is dated today or earlier (London),
-   a clue key isn't an answer in the grid, a clue holds a double quote, brace
-   or backslash, the engine gate fails after re-parsing from disk, anything
-   outside the clue strings / standfirst / og:description changed (masked
-   diff), or tools/check-mini-clues.js finds a problem in an edited Mini.
+   a clue key isn't an answer in the grid, a clue holds a double quote, brace,
+   backslash, <, > or & (engines/mini.js inserts clue text as HTML), the
+   engine gate fails after re-parsing from disk, anything outside the clue
+   strings / standfirst / og:description changed (masked diff), or
+   tools/check-mini-clues.js finds a problem in an edited Mini.
 */
 "use strict";
 const fs = require("fs"), path = require("path"), vm = require("vm");
@@ -53,7 +54,7 @@ function apply(file, dry) {
     let block = cm[0];
     for (const [a, c] of Object.entries(ed.clues || {})) {
       if (!keys.includes(a)) { problems.push(`${f}: ${a} is not an answer in this grid`); continue; }
-      if (typeof c !== "string" || !c.trim() || /["{}\\\n]/.test(c)) { problems.push(`${f}: bad clue text for ${a}: ${JSON.stringify(c)}`); continue; }
+      if (typeof c !== "string" || !c.trim() || /["{}<>&\\\n]/.test(c)) { problems.push(`${f}: bad clue text for ${a}: ${JSON.stringify(c)}`); continue; }
       const re = new RegExp(`(\\n\\s*${a}:")((?:[^"\\\\]|\\\\.)*)(")`);
       if (!re.test(block)) { problems.push(`${f}: clue line for ${a} not found`); continue; }
       block = block.replace(re, (m, x, old, z) => x + c + z);
