@@ -20,11 +20,13 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - Reporting logic for these is in `toolchain/sql/2026-10-15-mi-audit-fixes.sql` (applied to Supabase as migration `mi_audit_fixes`).
 - Games must call the tracker themselves: `window.digi&&digi.track('game_start',{game:'<slug>',...})` when a round starts and `digi.track('game_end',{game:'<slug>',win:true|false,...})` when it ends. Lighthouse Keeper already does.
 - Link previews: `tools/og-tags.js` keeps a marked `<!-- og:start … og:end -->` block of Open Graph tags in every file's `<head>`, built from its dn:* metas. Like the tracker line, it is added by the workflow: don't add it by hand, and if dn-lint flags it on a rebuilt shipped piece, strip it before the gates.
+- Automated browsers send nothing (19 Oct 2026): `navigator.webdriver`, or a crawler / headless / page-tester user agent (`BOT` in dn-track.js). Browser tests clear the flag in `tools/tests/harness.js`.
 - Opt-out: footer "Don't record my visits" switch and `privacy.html`; GPC / Do Not Track respected.
 
 ## Admin
 - `admin.html` (linked in front-page footers): email magic-link sign-in; data only for emails in `insights.admins` (the two admin addresses; not listed here because this repo is public).
 - "This device: counted / excluded" at the top of the admin page adds or removes the browser you're on from `insights.excluded_readers` (`public.admin_exclude_device`). Use it on every phone, tablet or laptop you test with.
+- One-page readers (whole history at most one page load, only page_view/page_exit; mostly crawlers) are left out of every admin figure by default; the "Hiding / Including one-page readers" chip brings them back (`admin_dashboard(p_from, p_to, p_ghosts)`, 19 Oct 2026).
 - Figures come from `public.admin_dashboard(p_from, p_to)`; reporting views live in the private `insights` schema. `insights.excluded_readers` removes Alec's own test browsers from all figures.
 - Retention: raw events 13 months, then rolled into `public.daily_stats` by the nightly `digi-roll-up-old-events` cron job.
 - Plan doc: "Digi reader data plan" (Claude Docs).

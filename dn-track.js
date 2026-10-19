@@ -33,6 +33,12 @@
                               [score], [got, of], [words], [mistakes]}
    Games call digi.track('game_start' | 'game_end', {...}) themselves.
 
+   Automated browsers (19 Oct 2026): nothing is sent from a browser that says
+   it is automated (navigator.webdriver) or whose user agent names a crawler,
+   headless browser or page tester. Crawlers that hide it still get through;
+   the admin page hides "one-page readers" for those. The browser tests in
+   tools/tests clear the webdriver flag so they still see the events.
+
    Never sent: names, emails, IP addresses, answers, keystrokes.
    Opt-out: the "Don't record my visits" button in any footer, or a browser
    Global Privacy Control / Do Not Track signal.
@@ -172,6 +178,16 @@
   }
   function optedOut(){ return get('digi.optout') === '1' || signalOptOut(); }
 
+  // Automated browsers record nothing. Cubot is a phone brand, not a crawler.
+  var BOT = (function(){
+    try {
+      if (navigator.webdriver === true) return true;
+      var u = navigator.userAgent || '';
+      return /cubot/i.test(u) ? false
+           : /bot\b|bot\/|crawl|spider|slurp|headless|lighthouse|pagespeed|inspectiontool|pagerenderer|facebookexternalhit|ptst|gtmetrix|pingdom|phantomjs|puppeteer|playwright|selenium/i.test(u);
+    } catch (e) { return false; }
+  })();
+
   /* ---------- identity ---------- */
   var isNew = false;
   function ids(){
@@ -208,7 +224,7 @@
   /* ---------- queue + send ---------- */
   var queue = [];
   function track(ev, props, path){
-    if (optedOut()) return;
+    if (BOT || optedOut()) return;
     var id = ids(), x = {};
     if (props && typeof props === 'object') for (var k in props) if (props.hasOwnProperty(k)) x[k] = props[k];
     if (!('pv' in x)) x.pv = PV;
@@ -257,7 +273,7 @@
                      || mm('(display-mode: minimal-ui)').matches)) || navigator.standalone === true);
     } catch (e) { return false; }
   }
-  if (!optedOut()) ids();   // sets isNew before the first event
+  if (!BOT && !optedOut()) ids();   // sets isNew before the first event
   var pvProps = { topic: meta('dn:topic'), kind: KIND, new: isNew,
                   ref: refDomain(), screen: band(window.innerWidth), inst: installed() ? 1 : 0, tv: 3 };
   var VIA = viaTag(), APP = inApp();

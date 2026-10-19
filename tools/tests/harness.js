@@ -32,6 +32,9 @@ async function newPhone(browser, { width = 390, height = 844, scheme = 'light', 
     colorScheme: scheme, reducedMotion: reduced ? 'reduce' : 'no-preference', locale: 'en-GB', timezoneId: 'Europe/London',
     userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36',
   });
+  // dn-track.js sends nothing from a browser flagged as automated (19 Oct 2026);
+  // clear the flag so the tests see the tracker as a reader's phone would.
+  await ctx.addInitScript(() => { try { Object.defineProperty(Navigator.prototype, 'webdriver', { get: () => false, configurable: true }); } catch (e) {} });
   await ctx.route('**/*', async route => {
     const u = new URL(route.request().url());
     // fonts: honour ?display= as Google does, so font swaps show up in tests

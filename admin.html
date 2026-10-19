@@ -198,6 +198,7 @@
         <button class="chip sec" data-filter="news" data-sec="news">News</button>
         <button class="chip sec" data-filter="puzzles" data-sec="puzzles">Puzzles</button>
         <button class="chip sec" data-filter="games" data-sec="games">Games</button>
+        <button class="chip" id="ghosts" type="button" aria-pressed="false" title="Browsers that only ever loaded one page and did nothing on it (mostly crawlers). Hidden from every figure unless shown.">One-page readers</button>
         <span class="me" id="meDev" aria-live="polite"></span>
       </div>
       <nav class="jump" aria-label="Jump to">
@@ -349,7 +350,7 @@
           <li><b>Dates.</b> UK dates (Europe/London). A range includes both its start and end date.</li>
           <li><b>Not counted.</b> Readers who switched recording off, browsers sending Global Privacy Control or Do Not Track, readers whose browser blocked the script, visits to this admin page, and any browser on the exclusion list (<span id="exclCount">0</span> at present, e.g. your own test phone; add the device you're on with "Exclude this device" at the top).</li>
           <li><b>Losses.</b> Events are sent in small batches. Some are lost when a phone closes a page abruptly or goes offline, most often the "left the page" event that carries time on page. Timings are averaged over page loads where that event arrived; loads without it are left out of those averages rather than counted as zero.</li>
-          <li><b>Bots.</b> Automated traffic is not filtered. Most crawlers don't run the script, so they are largely absent, but treat sudden spikes with care.</li>
+          <li><b>Bots.</b> Browsers that say they are automated (the <code>webdriver</code> flag, or a crawler or headless user agent) send nothing, from 19 Oct 2026. Crawlers that hide it still get through, so one-page readers are left out of every figure by default (see Definitions); the chip at the top brings them back in. Treat sudden spikes with care.</li>
           <li><b>Small numbers.</b> Percentages from a handful of readers swing wildly. Signals ignore anything with fewer than 5 readers or starts.</li>
           <li><b>Retention.</b> Raw events are kept for 13 months, then reduced to daily totals; ranges older than that will read as empty here.</li>
         </ul>
@@ -381,7 +382,8 @@
 
   /* ---------------- definitions (basis of preparation) ---------------- */
   var DEFS = [
-    ['readers','Readers','Distinct browsers with at least one recorded event in the period.','A person on two devices counts twice.'],
+    ['readers','Readers','Distinct browsers with at least one recorded event in the period. One-page readers are left out unless the chip at the top says "Including".','A person on two devices counts twice.'],
+    ['ghosts','One-page reader','A browser whose whole recorded history (all time) is a single page load with nothing done on it: no second page, scroll through an article, puzzle, game or tap. Mostly crawlers that run the tracker with fresh storage on every page, plus one-off glances. Hidden from every figure by default.','A real person who opened one page and left is hidden too. Once a reader does anything more, even on a later day, they count for every day they were seen.'],
     ['new','New readers','Readers whose first ever recorded event falls inside the period.','Readers who cleared their browser data reappear as new.'],
     ['returning','Returning readers','Readers in the period who had also been seen on an earlier day.','Shown as a share of readers. Can include days before the period.'],
     ['loads','Page loads','Openings of any page, including the three front pages.','Reloads count again.'],
@@ -496,7 +498,7 @@
   function showChart(id){ var c=document.getElementById(id); c.hidden=false; var e=c.parentNode.querySelector('.empty'); if(e) e.remove(); }
 
   /* ---------------- state ---------------- */
-  var S = { range: store('digiAdmin.range') || '30', from: '', to: '', filter: store('digiAdmin.filter') || 'all', data: null };
+  var S = { range: store('digiAdmin.range') || '30', from: '', to: '', filter: store('digiAdmin.filter') || 'all', ghosts: store('digiAdmin.ghosts') === '1', data: null };
   function setRange(r){
     S.range = r; store('digiAdmin.range', r);
     var today = londonToday();
@@ -545,7 +547,7 @@
   function load(){
     $('#loadError').hidden = true;
     $('#updated').textContent = 'Loading…';
-    return sb.rpc('admin_dashboard', { p_from: S.from, p_to: S.to }).then(function(r){
+    return sb.rpc('admin_dashboard', { p_from: S.from, p_to: S.to, p_ghosts: S.ghosts }).then(function(r){
       if (r.error) {
         if (/not_admin/.test(r.error.message)) { sb.auth.signOut(); showSignin('That email isn’t on the admin list. Sign in with an admin email.', 'err'); return; }
         if (/JWT|expired|auth/i.test(r.error.message)) { showSignin('Your sign-in has expired. Send yourself a new link.', 'err'); return; }
@@ -613,6 +615,7 @@
     $('#updated').textContent = 'Updated ' + new Date(D.generated_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
     $('#genAt').textContent = 'generated ' + new Date(D.generated_at).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'});
     $('#exclCount').textContent = D.excluded_readers || 0;
+    renderGhosts();
 
     var F = S.filter;
     var items = (D.items || []).filter(function(i){ return F==='all' || i.section===F; });
@@ -855,6 +858,14 @@
   }); });
   $$('[data-filter]').forEach(function(b){ b.onclick = function(){ S.filter=b.dataset.filter; store('digiAdmin.filter', S.filter); if (S.data) render(); else applyFilter(); }; });
   $('#refresh').onclick = function(){ load(); };
+  // One-page readers: hidden from every figure by default; the chip brings them back in.
+  function renderGhosts(){
+    var g = S.data && S.data.ghost_readers, b = $('#ghosts');
+    b.setAttribute('aria-pressed', String(S.ghosts));
+    b.textContent = (S.ghosts ? 'Including' : 'Hiding') + ' one-page readers' + (g != null ? ' (' + n(g) + ')' : '');
+  }
+  $('#ghosts').onclick = function(){ S.ghosts = !S.ghosts; store('digiAdmin.ghosts', S.ghosts ? '1' : '0'); renderGhosts(); load(); };
+  renderGhosts();
   var qt; ['#qNews','#qPuz'].forEach(function(id){ $(id).addEventListener('input', function(){ clearTimeout(qt); qt=setTimeout(function(){ if(!S.data) return; id==='#qNews'?renderNews():renderPuz(); },150); }); });
 
   /* ---------------- boot ---------------- */
