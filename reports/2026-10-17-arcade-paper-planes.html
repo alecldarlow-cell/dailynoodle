@@ -6,7 +6,7 @@
 <title>Paper Planes</title>
 <meta name="dn:kind"       content="game">
 <meta name="dn:headline"   content="Paper Planes">
-<meta name="dn:standfirst" content="Five throws to fly from the back garden to the mountains. Fold better planes as you go.">
+<meta name="dn:standfirst" content="Fold, throw and steer paper planes to the mountains. Three stars a place and a new Daily Flight.">
 <meta name="dn:topic"      content="Arcade">
 <meta name="dn:date"       content="2026-10-17">
 <meta name="dn:updated"    content="2026-10-19">
@@ -1372,10 +1372,8 @@ let tutStage = 0;
 const LESSONS = [
   'Hold the right side · flaps up · nose up',
   'Hold the left side · flaps down · nose down',
-  'It swoops: left as it climbs, right as it dives',
-  'Slow and nose up stalls · dive a little for speed',
-  'Throw steep, then hold right · loop!'
-];
+  'It swoops: left as it climbs, right as it dives'
+];   // stalls and loops are in How to fly
 const learning = () => save.lessons < LESSONS.length;
 function placeBelowHud(el) {
   const hb = $('hud').getBoundingClientRect();
