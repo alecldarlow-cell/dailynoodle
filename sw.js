@@ -19,7 +19,8 @@
    2. Notifications (built, switched off, 19 Oct 2026). Shows whatever a
       push message carries ({title, body, url, tag}) and opens its link when
       tapped. Nothing sends pushes yet: the server side (board-push edge
-      function, board.push_subs) only answers a reader's own self-test.
+      function, board.push_subs) only answers a reader's own self-test from
+      the hidden panel on board.html?push=test (dn-push.js). See SITE.md.
 
    Kill switch: set OFF = true and push. Every open copy then deletes its
    caches and unregisters itself on its next update check (within a day,

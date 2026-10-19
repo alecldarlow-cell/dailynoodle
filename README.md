@@ -15,7 +15,8 @@ and the rules that keep players' streaks and saved progress safe.
 | `engines/` | One shared player per puzzle type; puzzle pages in `reports/` load these |
 | `feed.json` | Index of released items, built by the workflow; front pages read it |
 | `dn-track.js` | Anonymous usage events to Supabase, plus the domain-move progress import; registers `sw.js` |
-| `sw.js` | Service worker: offline copies of pages already opened and of today's puzzles (network first) |
+| `sw.js` | Service worker: offline copies of pages already opened and of today's puzzles (network first); shows push notifications |
+| `dn-push.js` | Hidden notifications test panel, loaded only by `board.html?push=test` (notifications are switched off) |
 | `admin.html` | Private stats page (magic-link sign-in) |
 | `tools/` | Build steps run by `.github/workflows/build-feed.yml`, plus puzzle batch tools |
 | `toolchain/` | The news production toolchain (template, gates, standards) and SQL migrations |
@@ -37,4 +38,6 @@ node tools/add-done-state.js --check     # finished puzzles reopen as finished
 node tools/share-v2.js --check           # one-line share text everywhere
 node tools/build-feed.js                 # rebuilds feed.json locally
 node tools/tests/sw.js                   # service worker: offline, today's puzzles, push, kill switch
+node tools/tests/push-crypto.mjs         # push encryption and signing (toolchain/edge/board-push)
+node tools/tests/push-panel.js           # the hidden notifications test panel
 ```

@@ -465,6 +465,11 @@
     }
     NB.inAny() ? loadBoard() : intro();
   });
+
+  // Notifications are switched off; ?push=test loads the hidden test panel (dn-push.js).
+  if (/[?&]push=test\b/.test(location.search)) {
+    var ps = document.createElement('script'); ps.src = 'dn-push.js'; ps.defer = true; document.body.appendChild(ps);
+  }
 })();
 </script>
 <script src="dn-track.js" defer></script>
