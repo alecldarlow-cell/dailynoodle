@@ -18,15 +18,26 @@
          generate replacement grids (engine filler + engine validator, plus
          layout ban, blocklist, answer-reuse gaps and D4 dedup) and write them
          to OUT.json for clue authoring. Minis need clues + a standfirst.
+     node tools/pinwheel-regen.js --plan OUT.json --gaps --from YYYY-MM-DD --until YYYY-MM-DD [--secs S]
+         (added 19 Oct 2026) target Minis instead of layouts: the fewest Minis
+         dated in the range whose replacement clears every answer that comes
+         back sooner than the reuse ladder allows (3:30d 4:60d 5:75d). These
+         are always filled at the full ladder, never the relaxed one.
+         Also: --strict (full ladder for --only/--next too), --exclude w,w (keep
+         these words out of this plan's fills).
      node tools/pinwheel-regen.js --apply PLAN.json
          stamp the authored plan into reports/, then re-parse every written file
          from disk and re-run the engine gate, the layout ban, the clue checks
-         (self-leak, cross-leak, duplicate clue text) and a masked diff.
+         (self-leak, cross-leak, duplicate clue text, and tools/check-mini-clues.js:
+         stray it/them, padding, Americanisms, same clue within a year) and a
+         masked diff. og:description is kept equal to the new standfirst.
 */
 "use strict";
 const fs = require("fs"), path = require("path"), vm = require("vm");
 // Dokus must also have no second fill in everyday British words, not just in the engine list (19 Oct 2026)
 const { broadAlts } = require("./doku-broad-check.js");
+// Mini clue gate: stray it/them, padding, Americanisms, same clue within 365 days (19 Oct 2026)
+const { checkMinis } = require("./check-mini-clues.js");
 
 const ROOT = path.resolve(__dirname, "..");
 const REPORTS = path.join(ROOT, "reports");
@@ -42,7 +53,9 @@ const VETO = ["non","abuse","pic","anti","amino","rep","xxx","iii","vii","viii",
   "crore","malik","mecca","torah","islam","hindu","hindi","iraqi","saudi","tamil","malay","norse","shiva","sunni","imam","urdu","erie",
   "thai","rome","york","japan","yang","afro","frat","feds","gaga","asap","nato","xmas","sync","exec","spec","sept","docs","bots","offs",
   "coco","duff","sire","mater","prima","synod","assay","basal","nodes","ionic","lymph","sinus","toxin","dandy","limbo","aides","overs",
-  "arab","arabs","aryan","turk","turks","brits","scots","danes","amish","gays","dyke","queer","slut","shia","sunni","sikh","jihad"];
+  "arab","arabs","aryan","turk","turks","brits","scots","danes","amish","gays","dyke","queer","slut","shia","sunni","sikh","jihad",
+  // 19 Oct 2026 (Mini clue pass): US spelling, slang, a unit symbol, breakfast test
+  "edema","eon","eons","gonna","wanna","gotta","mol","balls","sera","lea","rad","aging","hath","thine","thou","thee"];
 const GAP = { 3: 30, 4: 60, 5: 75 };            // Mini answer-reuse ladder (days)
 
 /* ---------- layout screen ---------------------------------------------- */
@@ -132,10 +145,12 @@ function plan(outFile, opts) {
   if (opts.next) targets = targets.slice(0, opts.next);
   // --only FILE,FILE: (re)do exactly these, even if already clean (e.g. a weak fill)
   if (opts.only) targets = all.filter(p => opts.only.split(",").includes(p.file));
+  // --gaps: the fewest Minis in [from, until] whose replacement clears every ladder breach touching the range
+  if (opts.gaps) targets = gapTargets(all, opts.from || "0000-00-00", opts.until || "9999-12-31");
   if (!targets.length) { console.log("nothing to do"); fs.writeFileSync(outFile, "[]\n"); return; }
 
   // vocabulary: answers already used in shipped Minis (each vetted when it shipped), minus lists
-  const ban = new Set([...BLOCKED, ...SENSITIVE, ...VETO]);
+  const ban = new Set([...BLOCKED, ...SENSITIVE, ...VETO, ...(opts.exclude ? opts.exclude.split(",") : [])]);
   // Mini answers were each clued by hand when they shipped, so they are trusted.
   // Doku-only fill is looser: its 4- and 5-letter words are admitted (minus the
   // vetoes above), its 3-letter words mostly are not (abbreviations).
@@ -192,7 +207,9 @@ function plan(outFile, opts) {
     // The schedule is already full both sides, so the full reuse ladder (3:30d
     // 4:60d 5:75d, checked in both directions) is often unfillable mid-run.
     // Try it first, then relax to half, then a quarter; the plan records which.
-    for (const [scale, secs] of [[1, 15], [0.5, 60], [0.25, 60]]) {
+    // --gaps and --strict fill at the full ladder only; the pinwheel clean-up may relax it
+    const tries = opts.gaps || opts.strict ? [[1, opts.secs || 120]] : [[1, opts.secs || 15], [0.5, 60], [0.25, 60]];
+    for (const [scale, secs] of tries) {
     if (got) break;
     ladder = scale; poolFor(tg.type, day, scale);
     const T0 = Date.now();
@@ -226,6 +243,31 @@ function plan(outFile, opts) {
   }
   fs.writeFileSync(outFile, JSON.stringify(result, null, 1) + "\n");
   console.log(`wrote ${result.length}/${targets.length} to ${outFile}`);
+}
+
+/* Ladder breaches: consecutive uses of a Mini answer closer than GAP days.
+   Returns a small set of Minis dated in [from, until] that covers every breach
+   with at least one end in the range (greedy cover; a breach whose other end
+   is outside the range can only be fixed from inside it). */
+function gapTargets(all, from, until) {
+  const minis = all.filter(p => p.type === "mini"), use = {};
+  for (const p of minis) for (const w of p.words) (use[w] || (use[w] = [])).push(p);
+  const inR = p => p.date >= from && p.date <= until, pairs = [];
+  for (const [w, L] of Object.entries(use)) {
+    L.sort((a, b) => a.date.localeCompare(b.date));
+    for (let i = 1; i < L.length; i++)
+      if (dayNum(L[i].date) - dayNum(L[i - 1].date) < GAP[w.length] && (inR(L[i]) || inR(L[i - 1]))) pairs.push([L[i - 1], L[i], w]);
+  }
+  const pick = [];
+  let left = pairs;
+  while (left.length) {
+    const n = new Map();
+    for (const [a, b] of left) for (const x of [a, b]) if (inR(x)) n.set(x, (n.get(x) || 0) + 1);
+    const best = [...n].sort((x, y) => y[1] - x[1] || x[0].date.localeCompare(y[0].date))[0][0];
+    pick.push(best); left = left.filter(([a, b]) => a !== best && b !== best);
+  }
+  console.log(`ladder breaches touching ${from}..${until}: ${pairs.length}; regenerating ${pick.length} Mini(s)`);
+  return pick.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 function lockFor(E, grid, band, rnd) {
@@ -278,6 +320,8 @@ function apply(planFile) {
       swap(/clues:\{[^\n]*\n[\s\S]*?\n\s*\}/, "clues:{ // keyed by answer (unique within a puzzle)\n" + order.join(",\n") + "\n  }", "clues");
       if (!/<meta name="dn:standfirst" content="[^"]*">/.test(s)) problems.push(`${p.file}: standfirst meta not found`);
       s = s.replace(/<meta name="dn:standfirst" content="[^"]*">/, `<meta name="dn:standfirst" content="${htmlAttr(p.standfirst || "")}">`);
+      // link preview: tools/og-tags.js copies the standfirst on the next build; keep them equal now
+      s = s.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${htmlAttr(p.standfirst || "")}">`);
       // clue screens
       for (const w of words) {
         const c = (p.clues[w] || "").toLowerCase(), toks = c.match(/[a-z]+/g) || [];
@@ -316,11 +360,16 @@ function apply(planFile) {
     }
     // masked diff: only the grid/locked/bank/clues block and the standfirst may differ
     const strip = x => x.replace(/<meta name="dn:standfirst" content="[^"]*">/, "")
+      .replace(/<meta property="og:description" content="[^"]*">/, "")
       .replace(/window\.DN_PUZZLE=\{[\s\S]*?\n\};/, "");
     if (strip(s) !== strip(before[p.file])) problems.push(`${p.file}: masked diff — unexpected change outside the puzzle data`);
     const keep = x => (x.match(/id:"[^"]+"/) || [])[0] + (x.match(/type:"[^"]+"/) || [])[0];
     if (keep(s) !== keep(before[p.file])) problems.push(`${p.file}: id/type changed`);
   }
+  // the Mini clue gate, run on what is now on disk
+  const miniFiles = planned.filter(p => p.type === "mini").map(p => p.file);
+  if (miniFiles.length) for (const q of checkMinis({ from: "0000-00-00", files: miniFiles }).problems)
+    problems.push(`${q.file}: ${q.kind} ${q.answer.toUpperCase()}: "${q.clue}" (${q.why})`);
   if (problems.length) {
     for (const p of planned) fs.writeFileSync(path.join(REPORTS, p.file), before[p.file]); // roll back
     console.log("REFUSED — nothing written:\n  " + problems.join("\n  "));
@@ -332,6 +381,7 @@ function apply(planFile) {
 /* ---------- cli ------------------------------------------------------------ */
 const a = process.argv.slice(2), arg = k => { const i = a.indexOf(k); return i < 0 ? undefined : a[i + 1]; };
 if (a.includes("--check")) check(+(arg("--days") || 21));
-else if (a.includes("--plan")) plan(arg("--plan"), { until: arg("--until"), next: arg("--next") ? +arg("--next") : 0, seed: arg("--seed") ? +arg("--seed") : 0, only: arg("--only") });
+else if (a.includes("--plan")) plan(arg("--plan"), { until: arg("--until"), next: arg("--next") ? +arg("--next") : 0, seed: arg("--seed") ? +arg("--seed") : 0, only: arg("--only"),
+  gaps: a.includes("--gaps"), strict: a.includes("--strict"), from: arg("--from"), secs: arg("--secs") ? +arg("--secs") : 0, exclude: arg("--exclude") });
 else if (a.includes("--apply")) apply(arg("--apply"));
 else { console.log(fs.readFileSync(__filename, "utf8").split("*/")[0]); process.exit(2); }
