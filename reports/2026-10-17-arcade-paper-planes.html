@@ -826,7 +826,6 @@ function clearBonus(n) { return 6 * n; }
 const GAME = 'paper-planes';
 const SAVE_KEY = 'digi-paper-planes-v1';
 const ORIENT = 'landscape';
-const WR = 88.3;
 const PLACES = mkPlaces();
 const TOWER = mkTower(7);
 const $ = id => document.getElementById(id);
@@ -1166,7 +1165,6 @@ function land() {
   if (run.mode === 'daily') { const dd = dailyToday(); if (d > dd.best) dd.best = d; save.daily = dd; }
   const msgs = [];
   if (run.mode === 'daily') {}
-  else if (d >= WR && !save.wr) { save.wr = true; msgs.push(['wr', "88.3 m milestone beaten — what a flight!"]); }
   else if (d > prevBest && prevBest > 0) msgs.push(['', 'New personal best: ' + fmt(d) + ' m']);
   if (run.mode !== 'daily' && d > save.bestThrow) { save.bestThrow = d; run.newBest = true; }
   if (save.tut1 && !save.tut2) { save.tut2 = true; }
@@ -1307,7 +1305,7 @@ function showLanding(v){
   const t=++rewardSequence;
   $('lStep').textContent='✈ '+run.throws+(run.throws===1?' THROW':' THROWS')+' LEFT';$('lPlace').textContent=(run.mode==='daily'?'DAILY · ':'')+pl.name.toUpperCase();
   const newStars = (v.star1 || 0) - (v.star0 || 0), daily = run.mode === 'daily';
-  $('lTitle').textContent=daily?(v.d>=dailyToday().best?'Today\'s best!':'Every metre counts!'):v.clear?'✓ Place cleared!':newStars>0?(newStars>1?'★ '+newStars+' new stars!':'★ New star!'):v.record?'✦ Personal best!':v.d>=WR?'Milestone distance!':'Every metre counts!';
+  $('lTitle').textContent=daily?(v.d>=dailyToday().best?'Today\'s best!':'Every metre counts!'):v.clear?'✓ Place cleared!':newStars>0?(newStars>1?'★ '+newStars+' new stars!':'★ New star!'):v.record?'✦ Personal best!':'Every metre counts!';
   { const ls = $('lStars'), s1 = v.star1 || 0, s0 = v.star0 || 0; ls.hidden = daily; ls.setAttribute('aria-label', s1 + ' of 3 stars at ' + pl.name);
     ls.innerHTML = [0, 1, 2].map(i => i < s1 ? '<b' + (i >= s0 ? ' class="new" style="animation-delay:' + (0.25 + (i - s0) * 0.22) + 's"' : '') + '>★</b>' : '☆').join('');
     if (newStars > 0 && !RM()) for (let i = 0; i < newStars; i++) setTimeout(() => { tone(988 * Math.pow(2, i * 4 / 12), .22, .08, 'triangle'); tone(1480 * Math.pow(2, i * 4 / 12), .3, .05, 'sine', .05); }, 250 + i * 220); }
@@ -2411,13 +2409,6 @@ function drawClips() {
 function drawMarkers() {
   const x0 = cam.x, x1 = cam.x + W / cam.s;
   cx.textAlign = 'center';   // (the ground tape measure was removed: the HUD shows the distance)
-  if (WR > x0 && WR < x1) {
-    const X = SX(WR), ly = hudBottom + 22;
-    cx.strokeStyle = 'rgba(214,85,62,.55)'; cx.lineWidth = 2; cx.setLineDash([6, 6]); cx.beginPath(); cx.moveTo(X, SY(groundAtFull(pl, WR))); cx.lineTo(X, ly + 6); cx.stroke(); cx.setLineDash([]);
-    cx.font = '400 15px "Patrick Hand", cursive'; const tw = cx.measureText('Milestone 88.3 m').width;
-    cx.fillStyle = 'rgba(255,253,246,.88)'; rr(X - tw / 2 - 6, ly - 15, tw + 12, 20, 6); cx.fill();
-    cx.fillStyle = 'rgba(190,70,50,.95)'; cx.fillText('Milestone 88.3 m', X, ly);
-  }
   if (!run) return;
   const marks = run.mode === 'tower' ? TOWER.medals.map((m, i) => [m, ['#c98450', '#a9b4c2', '#e7b53b'][i], ['Bronze', 'Silver', 'Gold'][i] + ' ' + m + ' m'])
     : run.mode === 'daily' ? (dailyToday().best > 0 ? [[dailyToday().best, '#2f6fd6', 'Today ' + fmt(dailyToday().best) + ' m']] : [])
