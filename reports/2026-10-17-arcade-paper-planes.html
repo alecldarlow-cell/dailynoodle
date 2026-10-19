@@ -899,7 +899,7 @@ let state = 'boot', paused = false, hangarRun = false;
 let run = null, pl = null, roll = null, P = null, fl = null, aim = null, lastPath = null, path = [];
 const holdPtrs = new Map(); let keyHold = false, keyDown = false;   // pointer id -> +1 right side (flaps up) / -1 left side (flaps down)
 let cam = { x: -6, y: -2, s: 12 }, camT = null;
-let camG = null;   // Skyscraper: the ground height the camera frames against, eased from the roof to the street
+let camG = null;   // the ground height the camera frames against, eased (see updateCam)
 let resultT = 0, result = null, timeT = 0, introT = 0, prevClips = 0, stallSnd = 0;
 let parts = [];
 
@@ -1436,13 +1436,14 @@ function updateCam(dt) {
   if (fl) { fx = fl.x; fy = fl.y; spd = Math.hypot(fl.vx, fl.vy); }
   else { fx = 0; fy = pl.y0; }
   let gy = groundAtFull(pl, fx);
-  if (pl.towers) {
-    // Frame the city against the street, not the tower underneath: towers would pump the zoom in and out,
-    // and stepping off the roof would snap it out 120 m at once. Ease down from the roof instead.
-    const street = pl.ground[pl.ground.length - 1][1], tgt = fl && fx > pl.roof[1] ? street : gy;
-    camG = (!fl || camG == null) ? gy : camG + (tgt - camG) * Math.min(1, dt / 1.6);
-    gy = camG;
-  }
+  // Frame against an eased ground height, not the ground directly underneath: a cliff edge or a valley
+  // would otherwise snap the zoom out in a moment. It follows rising ground closely and falls at a capped rate.
+  // Skyscraper frames the city against the street, not the towers it passes over.
+  { const tgt = pl.towers ? (fl && fx > pl.roof[1] ? pl.ground[pl.ground.length - 1][1] : gy) : gy;
+    if (!fl || camG == null) camG = gy;
+    else if (tgt > camG) camG += (tgt - camG) * Math.min(1, dt / 0.5);
+    else camG = Math.max(tgt, camG + Math.max((tgt - camG) * Math.min(1, dt / 0.5), -(pl.towers ? 40 : 8) * dt));   // falls at most 8 m/s
+    gy = camG; }
   const alt = Math.max(0, fy - gy);
   // Tight on short, slow throws; eases out as the plane gets faster or higher, so the plane stays big on screen
   let visW = land ? 28 + alt * 0.9 : 24 + alt * 0.6;
@@ -1457,7 +1458,10 @@ function updateCam(dt) {
   const t = { x: left, y: bottom, s };
   if (!camT) { cam = Object.assign({}, t); camT = t; camRef = t.y + H / t.s / 2; return; }
   const k = Math.min(1, dt * (RM() ? 9 : 4.5));
-  cam.s += (t.s - cam.s) * Math.min(1, t.s < cam.s ? k * 1.4 : k * 0.6); cam.x += (t.x - cam.x) * Math.min(1, k * 1.6); cam.y += (t.y - cam.y) * k;
+  // zoom eases in log space with a speed limit, so the ground's speed on screen changes gently
+  { const want = Math.log(t.s / cam.s) * Math.min(1, dt / (RM() ? 0.4 : 0.9)), lim = (RM() ? 1.2 : 0.4) * dt;
+    cam.s *= Math.exp(Math.max(-lim, Math.min(lim, want))); }
+  cam.x += (t.x - cam.x) * Math.min(1, k * 1.6); cam.y += (t.y - cam.y) * k;
   // keep the plane on screen whatever the smoothing
   const vw = W / cam.s, vh = H / cam.s;
   if (fx < cam.x + vw * 0.08) cam.x = fx - vw * 0.08; if (fx > cam.x + vw * 0.85) cam.x = fx - vw * 0.85;
@@ -1751,8 +1755,14 @@ const ART = (() => {
   }
 
   /* ---------- per-frame background ---------- */
+  // the backdrop scrolls with the camera in screen terms, so zooming speeds it up and slows it down
+  // together with the ground in front of it (16 = a typical flight zoom, in px per metre)
+  let scrollX = 0, lastCamX = null;
   function background(g, pl, cam, W, H, dpr, t, rm, camRef) {
     const sc = scene(pl, W, H, dpr), d = strips.length ? strips[0].d : 1;
+    if (lastCamX === null) scrollX = cam.x; else scrollX += (cam.x - lastCamX) * cam.s / 16;
+    lastCamX = cam.x;
+    const camX = scrollX;
     // vertical drift: the scenery sinks as the camera climbs (and rises when it dives below the start)
     const up = Math.max(-H * 0.5, Math.min(H * 2, (cam.y + H / cam.s / 2 - camRef) * 7));
     const gr = g.createLinearGradient(0, 0, 0, H); sc.sky.forEach((c, i) => gr.addColorStop(i / (sc.sky.length - 1), c));
@@ -1773,7 +1783,7 @@ const ART = (() => {
       const c = scClouds[i % scClouds.length]; if (!c) break;
       const tier = i % 3, depth = [0.008, 0.02, 0.04][tier], s = [0.42, 0.66, 0.95][tier] * (sc.grey ? 1.15 : 1);
       const cw = c.width / d * s, ch = c.height / d * s, span = W + cw + 200;
-      const x = (((R01(i + 41) * span - cam.x * 7 * depth - drift * (1.5 + tier * 2.2 + R01(i + 61))) % span) + span) % span - cw - 100;
+      const x = (((R01(i + 41) * span - camX * 7 * depth - drift * (1.5 + tier * 2.2 + R01(i + 61))) % span) + span) % span - cw - 100;
       const y = H * ([0.22, 0.12, 0.03][tier] + [0.14, 0.18, 0.18][tier] * R01(i + 71)) + up * depth * 2;
       g.globalAlpha = [0.72, 0.88, 0.97][tier]; g.drawImage(c, x, y, cw, ch); g.globalAlpha = 1;
     }
@@ -1781,7 +1791,7 @@ const ART = (() => {
     if (flocks.length) {
       g.strokeStyle = 'rgba(' + sc.shadow + ',.55)'; g.lineWidth = 1.3; g.lineCap = 'round'; g.lineJoin = 'round';
       for (const f of flocks) {
-        const span = W + 200, fx = (((f.x * span - cam.x * 7 * 0.015 + drift * f.v) % span) + span) % span - 100, fy = f.y * H + up * 0.04;
+        const span = W + 200, fx = (((f.x * span - camX * 7 * 0.015 + drift * f.v) % span) + span) % span - 100, fy = f.y * H + up * 0.04;
         for (const b of f.birds) {
           const x = fx - b.dx, y = fy + b.dy, w = 4.2 * b.s * Math.max(0.8, m / 400), fl = rm ? 0.4 : Math.sin(t * 7 + b.ph);
           g.beginPath(); g.moveTo(x - w, y - w * 0.25 - fl * w * 0.45); g.quadraticCurveTo(x - w * 0.4, y - w * 0.35, x, y); g.quadraticCurveTo(x + w * 0.4, y - w * 0.35, x + w, y - w * 0.25 - fl * w * 0.45); g.stroke();
@@ -1791,7 +1801,7 @@ const ART = (() => {
     }
     // paper layers back to front
     for (const s of strips) {
-      const ox = ((cam.x * 7 * s.par * 6) % s.w + s.w) % s.w;
+      const ox = ((camX * 7 * s.par * 6) % s.w + s.w) % s.w;
       const dy = Math.max(-H * 0.14, Math.min(H * 0.8, up * (0.12 + s.par * 1.6)));
       const top = H - s.h + dy;
       if (top >= H) continue;
@@ -1799,7 +1809,7 @@ const ART = (() => {
       g.drawImage(s.c, ox * s.d, 0, vis * s.d, s.h * s.d, 0, top, vis, s.h);
       if (vis < W) g.drawImage(s.c, 0, 0, (W - vis) * s.d, s.h * s.d, vis, top, W - vis, s.h);
       if (top + s.h < H) { g.fillStyle = s.bottom; g.fillRect(0, top + s.h - 1, W, H - top - s.h + 2); }
-      if (s.sea && !rm) seaGlints(g, 0, top + s.sea.top, W, s.h - s.sea.top, t, cam.x * 7 * s.par * 6, 0.6);
+      if (s.sea && !rm) seaGlints(g, 0, top + s.sea.top, W, s.h - s.sea.top, t, camX * 7 * s.par * 6, 0.6);
     }
   }
   const glints = Array.from({ length: 40 }, (_, i) => ({ d: Math.pow(R01(i + 700), 1.6), x: R01(i + 760), l: 0.5 + R01(i + 820), ph: R01(i + 990) * TAU, f: 0.3 + R01(i + 940) * 0.4 }));
