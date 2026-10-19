@@ -523,17 +523,19 @@ const G = 9.81;
    v: top launch speed (m/s) before the Throwing arm.
    Calibrated Oct 2026 (balance sim): each fold, fully upgraded, flies about 15% further than the one before, on flat
    ground (launch speed) and from height (glide) alike, and with or without flaps; a new fold un-upgraded starts below
-   the previous fold maxed and passes it at about its second upgrade level. The Record Dart is the fixed top end. */
+   the previous fold maxed and passes it at about its second upgrade level. The Record Dart is the fixed top end.
+   Prices (Oct 2026 progression sim, runs from a fresh save): all eight places in about 20–65 min depending on skill,
+   something to buy every 1–2 runs, never more than ~4 runs without a purchase, everything bought in about 3.5 hours. */
 const FOLDS = [
   { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 16,  cla: 3.2, cd0: 0.061, k: 0.20,  as: 0.29, kq: 0.30, pull: 1.15, v: 14.9,
     blurb: 'Fast off the hand, little lift, noses down early.' },
   { id: 'nakamura', name: 'Nakamura Lock',  cost: 120,  base: 40,  cla: 3.1, cd0: 0.050, k: 0.16,  as: 0.33, kq: 0.31, pull: 1.05, v: 15.6,
     blurb: 'Locked nose: steadier, forgiving when you pull too hard.' },
-  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.031, k: 0.158, as: 0.30, kq: 0.40, pull: 1.12, v: 16.3,
+  { id: 'glider',   name: 'Wide Glider',    cost: 450,  base: 110,  cla: 3.6, cd0: 0.031, k: 0.158, as: 0.30, kq: 0.40, pull: 1.12, v: 16.3,
     blurb: 'Big wings: floats and rides thermals, but the wind pushes it about.' },
-  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.030, k: 0.13,  as: 0.30, kq: 0.34, pull: 1.12, v: 17.2,
+  { id: 'rglider',  name: 'Record Glider',  cost: 1200, base: 180, cla: 3.8, cd0: 0.030, k: 0.13,  as: 0.30, kq: 0.34, pull: 1.12, v: 17.2,
     blurb: 'Efficient wings hold speed through long, clean glides.' },
-  { id: 'rdart',    name: 'Record Dart',    cost: 3500, base: 420, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, pull: 1.18, v: 18.0,
+  { id: 'rdart',    name: 'Record Dart',    cost: 2500, base: 300, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, pull: 1.18, v: 18.0,
     blurb: 'Fastest launch. Trade speed for height; ease off before the stall.' }
 ];
 const FOLD_STATS = [
