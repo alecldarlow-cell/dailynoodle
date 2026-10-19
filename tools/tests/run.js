@@ -4,6 +4,8 @@
 
      node tools/tests/run.js                 # everything
      node tools/tests/run.js finish:tangle   # tests whose name contains the text
+     node tools/tests/run.js --shard=1/2      # Link, Mini and Doku scenarios
+     node tools/tests/run.js --shard=2/2      # other players and shared UI
 
    Fixtures are the 18-19 Oct 2026 puzzles, played on a fake clock set to
    those days, so the tests mean the same thing whenever they run.
@@ -16,7 +18,6 @@ const F = {
   sweep: '2026-10-18-logic-sweep.html', path: '2026-10-18-logic-path-0092.html', path2: '2026-10-19-logic-path-0093.html',
   link: '2026-10-18-word-link-0071.html', tangle: '2026-10-18-word-tangle-0012.html', borders: '2026-10-18-geo-borders-0014.html',
 };
-const ONLY = process.argv[2] || '';
 let pass = 0, fail = 0;
 const ok = (c, m) => { if (c) { pass++; console.log('  ok  ', m); } else { fail++; console.log('  FAIL', m); } };
 const text = (p, sel) => p.locator(sel).first().textContent().then(t => (t || '').trim()).catch(() => '');
@@ -533,14 +534,21 @@ const TESTS = {
   },
 };
 
-(async () => {
+async function run() {
+  const fs=require('node:fs'),path=require('node:path');
+  const names=require('./puzzle-plan').selection(Object.keys(TESTS),process.argv.slice(2));
+  const timings=[],out=path.join(__dirname,'../../test-results',(process.env.DN_TEST_GROUP||'puzzles')+'-cases.json');
+  fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,'[]\n');
   const b = await launch();
-  for (const [name, fn] of Object.entries(TESTS)) {
-    if (ONLY && !name.includes(ONLY)) continue;
+  try{for (const name of names) {
+    const start=Date.now(),beforePass=pass,beforeFail=fail;
     console.log(name);
-    try { await fn(b); } catch (e) { fail++; console.log('  FAIL threw:', e.message.split('\n')[0]); }
-  }
-  await b.close();
+    try { await TESTS[name](b); } catch (e) { fail++; console.log('  FAIL threw:', e.message.split('\n')[0]); }
+    timings.push({name,passed:pass-beforePass,failed:fail-beforeFail,seconds:+((Date.now()-start)/1000).toFixed(2)});
+    fs.writeFileSync(out,JSON.stringify(timings,null,2)+'\n');
+  }}finally{await b.close();}
   console.log(`\n${pass} passed, ${fail} failed`);
-  process.exit(fail ? 1 : 0);
-})();
+  process.exitCode=fail?1:0;
+}
+module.exports={TESTS};
+if(require.main===module)run().catch(e=>{console.error(e);process.exitCode=1;});
