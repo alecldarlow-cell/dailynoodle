@@ -1,0 +1,228 @@
+/* ==========================================================================
+   The Daily Noodle — service worker (sw.js)
+   --------------------------------------------------------------------------
+   Registered by dn-track.js on every page (scope: the whole site). Two jobs:
+
+   1. Offline. Every same-site GET goes to the network first, so a reader
+      with signal always gets the newest feed, puzzles and code. A good
+      answer is kept in the cache; with no signal (or a network that hangs
+      for 6 s while a cached copy exists) the cached copy is used instead.
+      A page that was never cached gets a small "You're offline" page.
+      The front pages and shared scripts are cached when the worker installs,
+      and today's puzzles (puzzles-today.json) with their engines are cached
+      once a London day, the first time any page is opened with signal, so a
+      reader who opened the site in the morning can play them on the train.
+      Never cached: admin.html, anything not from this site (except Google
+      Fonts), non-GET requests, error answers. Supabase calls pass straight
+      through untouched.
+
+   2. Notifications (built, switched off, 19 Oct 2026). Shows whatever a
+      push message carries ({title, body, url, tag}) and opens its link when
+      tapped. Nothing sends pushes yet: the server side (board-push edge
+      function, board.push_subs) only answers a reader's own self-test.
+
+   Kill switch: set OFF = true and push. Every open copy then deletes its
+   caches and unregisters itself on its next update check (within a day,
+   or on the next page load that finds the new sw.js), and the site behaves
+   exactly as it did before this file existed.
+
+   Bump VERSION whenever this file's caching changes; old caches are
+   deleted when the new worker takes over.
+   ========================================================================== */
+'use strict';
+
+const OFF = false;
+const VERSION = 'nn-1';
+const PAGES = 'nn-pages-' + VERSION;      // this site's files
+const FONTS = 'nn-fonts-' + VERSION;      // Google Fonts (stylesheets and font files)
+const MAX_ENTRIES = 400;                  // pages cache trimmed past this, oldest first
+const SLOW_MS = 6000;                     // use the cached copy if the network takes longer
+const API = 'https://gnehttjheoyutrfsvslq.supabase.co/rest/v1/rpc/';
+const KEY = 'sb_publishable_dEMntRNiElpGHn3Hd5Ef1Q_HvLa2wTB';   // public by design
+
+const CORE = [
+  '/', '/index.html', '/puzzles.html', '/games.html', '/lab.html', '/board.html', '/privacy.html',
+  '/front.css', '/front.js', '/dn-track.js', '/dn-board.js',
+  '/feed.json', '/puzzles-today.json', '/manifest.webmanifest',
+  '/icons/favicon.svg', '/icons/favicon-32.png', '/icons/icon-192.png',
+  '/assets/borders-thumb.svg', '/assets/tangle-thumb.svg',
+  '/engines/finish.css', '/engines/finish.js', '/engines/house.css', '/engines/house.js'
+];
+const NEVER = /^\/(admin\.html|sw\.js)$/;
+
+/* ---------- install / activate ---------- */
+self.addEventListener('install', e => {
+  self.skipWaiting();
+  if (OFF) return;
+  // One by one, so a missing file doesn't stop the rest.
+  e.waitUntil(caches.open(PAGES).then(c => Promise.all(CORE.map(u =>
+    fetch(u, { cache: 'reload' }).then(r => r.ok ? c.put(u, r) : null).catch(() => null)))));
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil((async () => {
+    const keep = OFF ? [] : [PAGES, FONTS];
+    for (const k of await caches.keys()) if (k.startsWith('nn-') && !keep.includes(k)) await caches.delete(k);
+    if (OFF) { await self.registration.unregister(); return; }
+    await self.clients.claim();
+  })());
+});
+
+// Pages say 'warm' once the worker is ready (dn-track.js). Not done in
+// activate, which would hold up the page's own requests until it finished.
+self.addEventListener('message', e => { if (!OFF && e.data === 'warm') keep(e, warmIfDue()); });
+
+/* ---------- fetch ---------- */
+const bare = u => { const x = new URL(u); return x.origin + x.pathname; };   // one cached copy per file, whatever the ?query
+// Keep the worker alive for background work; after the answer has gone out
+// (a slow network lost the race) the event may be over, and the work still runs.
+const keep = (e, p) => { try { e.waitUntil(p); } catch (x) {} };
+
+self.addEventListener('fetch', e => {
+  if (OFF) return;
+  const req = e.request;
+  if (req.method !== 'GET' || req.headers.has('range')) return;
+  const url = new URL(req.url);
+  if (url.host === 'fonts.googleapis.com' || url.host === 'fonts.gstatic.com') return e.respondWith(font(req));
+  if (url.origin !== self.location.origin || NEVER.test(url.pathname)) return;
+  e.respondWith(fresh(e, req, url));
+  if (req.mode === 'navigate') keep(e, warmIfDue());
+});
+
+async function fresh(e, req, url) {
+  const cache = await caches.open(PAGES);
+  const key = bare(req.url);
+  const cached = await cache.match(key);
+  const net = fetch(req).then(r => {
+    if (r.ok && r.type === 'basic') {
+      keep(e, cache.put(key, r.clone()).then(() => trim(cache)).catch(() => {}));
+    }
+    return r;
+  });
+  if (!cached) {
+    return net.catch(() => req.mode === 'navigate' ? offlinePage() : Response.error());
+  }
+  // A cached copy exists: prefer the network, but don't wait on a hung one.
+  let timer;
+  const slow = new Promise(res => { timer = setTimeout(() => res(cached), SLOW_MS); });
+  return Promise.race([net.then(r => { clearTimeout(timer); return r; }, () => { clearTimeout(timer); return cached; }), slow]);
+}
+
+async function font(req) {
+  const cache = await caches.open(FONTS);
+  const hit = await cache.match(req.url);
+  const net = fetch(req).then(r => { if (r.ok || r.type === 'opaque') cache.put(req.url, r.clone()).catch(() => {}); return r; });
+  if (hit) { net.catch(() => {}); return hit; }   // files don't change; the stylesheet refreshes in the background
+  // Offline with nothing saved: an empty stylesheet so the page falls back to system fonts.
+  return net.catch(() => new URL(req.url).host === 'fonts.googleapis.com'
+    ? new Response('', { status: 200, headers: { 'Content-Type': 'text/css' } }) : Response.error());
+}
+
+async function trim(cache) {
+  const keys = await cache.keys();
+  const core = new Set(CORE.map(u => new URL(u, self.location.origin).href));
+  let extra = keys.length - MAX_ENTRIES;
+  for (const k of keys) { if (extra <= 0) break; if (!core.has(k.url)) { await cache.delete(k); extra--; } }
+}
+
+/* ---------- today's puzzles, once a London day ----------
+   Checked when the worker starts and on each page opened. Costs one cache
+   read when already done today; otherwise fetches puzzles-today.json and,
+   if it is today's, each puzzle page and the engine files it loads.      */
+let warming = null;
+function londonDay() {
+  try { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); }
+  catch (e) { return new Date().toISOString().slice(0, 10); }
+}
+function warmIfDue() {
+  if (!warming) warming = warmToday().catch(() => {}).then(() => { warming = null; });
+  return warming;
+}
+async function warmToday() {
+  const day = londonDay();
+  const cache = await caches.open(PAGES);
+  const mark = await cache.match('/__nn/warmed');
+  if (mark && (await mark.text()) === day) return;
+  const res = await fetch('/puzzles-today.json', { cache: 'no-cache' });
+  if (!res.ok) return;
+  await cache.put(self.location.origin + '/puzzles-today.json', res.clone());
+  const j = await res.json();
+  if (String(j.today || '') !== day) return;   // the night's build hasn't run yet: try again later
+  const files = new Set();
+  for (const it of j.items || []) {
+    if (!/^reports\/[\w.-]+\.html$/.test(it.path || '')) continue;
+    const r = await fetch('/' + it.path).catch(() => null);
+    if (!r || !r.ok) continue;
+    const html = await r.clone().text();
+    await cache.put(self.location.origin + '/' + it.path, r);
+    for (const m of html.matchAll(/\.\.\/(engines\/[\w-]+\.(?:js|css))/g)) files.add('/' + m[1]);
+  }
+  for (const f of files) {
+    const r = await fetch(f).catch(() => null);
+    if (r && r.ok) await cache.put(self.location.origin + f, r);
+  }
+  await cache.put('/__nn/warmed', new Response(day));
+}
+
+/* ---------- never cached, never online ---------- */
+function offlinePage() {
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Offline — The Daily Noodle</title>
+<style>
+:root{--bg:#FCFCFB;--ink:#16181D;--faint:#6E737B;--acc:#0E7A4B;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{--bg:#11131A;--ink:#ECEDEF;--faint:#9AA0A8;--acc:#4CC38A}}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--ink);
+font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:24px;box-sizing:border-box;text-align:center}
+h1{font-size:24px;margin:0 0 8px}p{color:var(--faint);margin:0 0 20px}
+a,button{display:inline-block;margin:4px;padding:12px 18px;min-height:44px;box-sizing:border-box;border-radius:999px;
+font:600 15px/1.2 inherit;font-family:inherit;color:var(--acc);border:1.5px solid currentColor;background:none;text-decoration:none}
+</style></head><body><main>
+<h1>You're offline</h1>
+<p>This page hasn't been saved on this phone yet.<br>Anything you've opened before still works.</p>
+<button onclick="location.reload()">Try again</button>
+<a href="/puzzles.html">Puzzles</a><a href="/games.html">Games</a><a href="/index.html">News</a>
+</main></body></html>`;
+  return new Response(html, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
+}
+
+/* ---------- notifications (nothing sends these yet) ---------- */
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data ? e.data.text() : '' }; }
+  const title = String(d.title || 'The Daily Noodle').slice(0, 80);
+  e.waitUntil(self.registration.showNotification(title, {
+    body: String(d.body || '').slice(0, 200),
+    icon: '/icons/icon-192.png',
+    tag: d.tag ? String(d.tag).slice(0, 64) : undefined,
+    data: { url: d.url || '/' }
+  }));
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  let to = '/';
+  try { const u = new URL((e.notification.data || {}).url || '/', self.location.origin); if (u.origin === self.location.origin) to = u.href; } catch (x) {}
+  e.waitUntil((async () => {
+    const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const w of wins) if (w.url === to && 'focus' in w) return w.focus();
+    if (wins[0] && 'navigate' in wins[0]) { try { await wins[0].navigate(to); return wins[0].focus(); } catch (x) {} }
+    return self.clients.openWindow(to);
+  })());
+});
+
+// The browser can renew a subscription on its own; tell the server which one replaced which.
+self.addEventListener('pushsubscriptionchange', e => {
+  e.waitUntil((async () => {
+    const old = e.oldSubscription;
+    let neu = e.newSubscription;
+    if (!neu && old && old.options) neu = await self.registration.pushManager.subscribe(old.options).catch(() => null);
+    if (!old || !neu) return;
+    const j = neu.toJSON();
+    await fetch(API + 'board_push_swap', {
+      method: 'POST', mode: 'cors',
+      headers: { apikey: KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_old: old.endpoint, p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth })
+    }).catch(() => {});
+  })());
+});

@@ -14,7 +14,8 @@ and the rules that keep players' streaks and saved progress safe.
 | `reports/` | Every news piece, puzzle and game, one self-describing HTML file each (`dn:*` metas) |
 | `engines/` | One shared player per puzzle type; puzzle pages in `reports/` load these |
 | `feed.json` | Index of released items, built by the workflow; front pages read it |
-| `dn-track.js` | Anonymous usage events to Supabase, plus the domain-move progress import |
+| `dn-track.js` | Anonymous usage events to Supabase, plus the domain-move progress import; registers `sw.js` |
+| `sw.js` | Service worker: offline copies of pages already opened and of today's puzzles (network first) |
 | `admin.html` | Private stats page (magic-link sign-in) |
 | `tools/` | Build steps run by `.github/workflows/build-feed.yml`, plus puzzle batch tools |
 | `toolchain/` | The news production toolchain (template, gates, standards) and SQL migrations |
@@ -35,4 +36,5 @@ runs nightly so forward-dated items appear on their day. Details in `SITE.md` an
 node tools/add-done-state.js --check     # finished puzzles reopen as finished
 node tools/share-v2.js --check           # one-line share text everywhere
 node tools/build-feed.js                 # rebuilds feed.json locally
+node tools/tests/sw.js                   # service worker: offline, today's puzzles, push, kill switch
 ```

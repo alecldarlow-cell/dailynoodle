@@ -480,3 +480,29 @@
 
   window.digi = { track: track, flush: flush, optOut: setOptOut, isOptedOut: optedOut };
 })();
+
+/* ==========================================================================
+   Service worker (19 Oct 2026): offline copies of pages already opened, plus
+   today's puzzles. See sw.js. Registered here because every page loads this
+   file; independent of tracking opt-out (it records nothing). Waits for the
+   page to finish loading so it never slows the first paint. Any failure
+   (old browser, private mode, no sw.js beside this file) is silent.
+   ========================================================================== */
+(function () {
+  try {
+    // __DGTEST: the games checker (4-dg-check.js) serves a game without sw.js
+    // beside it, and Chrome logs a missing worker as a console error.
+    if (!('serviceWorker' in navigator) || window.DN_MOVING || window.__DGTEST) return;
+    var me = document.currentScript && document.currentScript.src;
+    if (!me || !/\/dn-track\.js(\?.*)?$/.test(me)) return;
+    var sw = me.replace(/dn-track\.js(\?.*)?$/, 'sw.js');
+    var go = function () {
+      try {
+        navigator.serviceWorker.register(sw).then(function () { return navigator.serviceWorker.ready; })
+          .then(function (r) { if (r.active) r.active.postMessage('warm'); }).catch(function () {});
+      } catch (e) {}
+    };
+    if (document.readyState === 'complete') setTimeout(go, 1500);
+    else window.addEventListener('load', function () { setTimeout(go, 1500); });
+  } catch (e) {}
+})();
