@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0097", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of note",  members:["BANK","SICK","GRACE","POST-IT"]},
-    {rank:2, name:"Kinds of grace", members:["SAVING","AMAZING","DAYS OF","SOCIAL"]},
-    {rank:3, name:"Music values",   members:["CROTCHET","MINIM","QUAVER","BREVE"]},
-    {rank:4, name:"Ways to jot",    members:["SCRIBBLE","PEN","LIST","DRAFT"]}
+    {rank:1, name:"British newspapers",           members:["TIMES","OBSERVER","TELEGRAPH","METRO"]},
+    {rank:2, name:"Star Wars characters",         members:["YODA","LEIA","VADER","CHEWBACCA"]},
+    {rank:3, name:"Family card games",            members:["SNAP","CHEAT","OLD MAID","RUMMY"]},
+    {rank:4, name:"Rearrange for a capital city", members:["MORE","PAIRS","MAIL","SOLO"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"GRACE", not:"Kinds of grace"},
-    {tile:"BANK",  not:"Ways to jot"},
-    {tile:"DRAFT", not:"Kinds of note"}
+    {tile:"MAIL",  not:"British newspapers"},
+    {tile:"SOLO",  not:"Star Wars characters"},
+    {tile:"PAIRS", not:"Family card games"}
   ]
 };
 </script>

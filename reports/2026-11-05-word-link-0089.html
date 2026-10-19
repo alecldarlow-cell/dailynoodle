@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0089", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of case",  members:["BRIEF","NUT","PILLOW","LOWER"]},
-    {rank:2, name:"___ nut",        members:["WING","DOUGH","LUG","HAZEL"]},
-    {rank:3, name:"Court words",    members:["DOCK","BENCH","VERDICT","USHER"]},
-    {rank:4, name:"Ways to encase", members:["SHEATHE","WRAP","ENVELOP","JACKET"]}
+    {rank:1, name:"Facial expressions",                members:["FROWN","SNEER","POUT","SCOWL"]},
+    {rank:2, name:"Birds in the garden",               members:["SPARROW","NUTHATCH","BLACKBIRD","ROBIN"]},
+    {rank:3, name:"Batman villains",                   members:["JOKER","PENGUIN","RIDDLER","CATWOMAN"]},
+    {rank:4, name:"An imperial measure hides in each", members:["FINCH","BOUNCE","SMILE","SACRED"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"NUT",    not:"___ nut"},
-    {tile:"BENCH",  not:"Kinds of case"},
-    {tile:"PILLOW", not:"Ways to encase"}
+    {tile:"FINCH", not:"Birds in the garden"},
+    {tile:"SMILE", not:"Facial expressions"},
+    {tile:"ROBIN", not:"Batman villains"}
   ]
 };
 </script>

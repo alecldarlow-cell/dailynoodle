@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0086", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of code",   members:["BAR","POST","DRESS","MORSE"]},
-    {rank:2, name:"___ bar",         members:["CHIN-UP","HANDLE","TOW","CROSS"]},
-    {rank:3, name:"Dress words",     members:["HEM","BODICE","PLEAT","DART"]},
-    {rank:4, name:"Ways to encrypt", members:["SCRAMBLE","CIPHER","GARBLE","MASK"]}
+    {rank:1, name:"Bedding",                 members:["DUVET","PILLOW","SHEET","BLANKET"]},
+    {rank:2, name:"Cloth",                   members:["SILK","LINEN","CORDUROY","CHIFFON"]},
+    {rank:3, name:"British artists",         members:["TURNER","LOWRY","HOCKNEY","BANKSY"]},
+    {rank:4, name:"Furniture hides in each", members:["CONSTABLE","CHESTNUT","COTTON","PEWTER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BAR",   not:"___ bar"},
-    {tile:"DRESS", not:"Dress words"},
-    {tile:"DART",  not:"Kinds of code"}
+    {tile:"LINEN",     not:"Bedding"},
+    {tile:"COTTON",    not:"Cloth"},
+    {tile:"CONSTABLE", not:"British artists"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0098", band:"medium",
   groups:[
-    {rank:1, name:"Breeds of dog",         members:["BEAGLE","BOXER","SETTER","POINTER"]},
-    {rank:2, name:"Boxing weight classes", members:["FLY","BANTAM","FEATHER","WELTER"]},
-    {rank:3, name:"Gun dog commands",      members:["HEEL","STAY","FETCH","DOWN"]},
-    {rank:4, name:"Ways to indicate",      members:["SIGNAL","FLAG","MARK","POINT"]}
+    {rank:1, name:"Boats",                  members:["CANOE","YACHT","BARGE","DINGHY"]},
+    {rank:2, name:"Desserts",               members:["TRIFLE","CRUMBLE","SORBET","PAVLOVA"]},
+    {rank:3, name:"Hair products",          members:["SPRAY","WAX","SHAMPOO","MOUSSE"]},
+    {rank:4, name:"Backwards, a body part", members:["GEL","TUG","MUG","PAL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BOXER",   not:"Boxing weight classes"},
-    {tile:"POINTER", not:"Ways to indicate"},
-    {tile:"SETTER",  not:"Gun dog commands"}
+    {tile:"MOUSSE", not:"Desserts"},
+    {tile:"GEL",    not:"Hair products"},
+    {tile:"TUG",    not:"Boats"}
   ]
 };
 </script>

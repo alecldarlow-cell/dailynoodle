@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0095", band:"medium",
   groups:[
-    {rank:1, name:"Fish in the river", members:["GUDGEON","DACE","CHUB","BARBEL"]},
-    {rank:2, name:"Angling words",     members:["GROUNDBAIT","LEDGER","SWIM","STRIKE"]},
-    {rank:3, name:"Kinds of strike",   members:["LIGHTNING","HUNGER","GENERAL","LUCKY"]},
-    {rank:4, name:"Ways to lure",      members:["ENTICE","TEMPT","DRAW","BAIT"]}
+    {rank:1, name:"Seaside treats",           members:["CANDYFLOSS","ICE CREAM","FUDGE","DOUGHNUT"]},
+    {rank:2, name:"Cry",                      members:["SOB","WEEP","BLUB","HOWL"]},
+    {rank:3, name:"Musical styles",           members:["JAZZ","FOLK","PUNK","ROCK"]},
+    {rank:4, name:"Sound like sea creatures", members:["SOUL","WAIL","PLACE","MUSCLE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"STRIKE", not:"Kinds of strike"},
-    {tile:"DRAW",   not:"Angling words"},
-    {tile:"SWIM",   not:"Ways to lure"}
+    {tile:"ROCK", not:"Seaside treats"},
+    {tile:"SOUL", not:"Musical styles"},
+    {tile:"WAIL", not:"Cry"}
   ]
 };
 </script>

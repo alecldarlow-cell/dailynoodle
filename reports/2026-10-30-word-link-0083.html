@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0083", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of duck",   members:["CANVASBACK","TUFTED","MUSCOVY","SHOVELER"]},
-    {rank:2, name:"Kinds of shovel", members:["SNOW","COAL","POWER","TROWEL"]},
-    {rank:3, name:"Card suits",      members:["HEARTS","SPADES","CLUBS","DIAMONDS"]},
-    {rank:4, name:"Ways to dig",     members:["DELVE","BURROW","EXCAVATE","TUNNEL"]}
+    {rank:1, name:"From the ice cream van",       members:["CONE","FLAKE","SPRINKLES","CORNETTO"]},
+    {rank:2, name:"Slang for cash",               members:["DOSH","MOOLAH","BREAD","LOLLY"]},
+    {rank:3, name:"DIY fixings",                  members:["TACK","RIVET","BOLT","STAPLE"]},
+    {rank:4, name:"Put S in front for an animal", members:["QUID","WINE","NAIL","TAG"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SPADES",   not:"Kinds of shovel"},
-    {tile:"SHOVELER", not:"Kinds of shovel"},
-    {tile:"TROWEL",   not:"Ways to dig"}
+    {tile:"LOLLY", not:"From the ice cream van"},
+    {tile:"QUID",  not:"Slang for cash"},
+    {tile:"NAIL",  not:"DIY fixings"}
   ]
 };
 </script>

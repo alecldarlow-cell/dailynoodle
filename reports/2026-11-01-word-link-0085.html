@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0085", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of tide",        members:["NEAP","SPRING","EBB","RIP"]},
-    {rank:2, name:"Old words for autumn", members:["FALL","HARVEST","BACK END","MICHAELMAS"]},
-    {rank:3, name:"Kinds of mattress",    members:["FOAM","POCKET","AIR","SPRUNG"]},
-    {rank:4, name:"Ways to leap",         members:["VAULT","BOUND","HOP","CAPER"]}
+    {rank:1, name:"Black and white animals", members:["ZEBRA","PANDA","MAGPIE","SKUNK"]},
+    {rank:2, name:"Bad-tempered",            members:["GRUMPY","TETCHY","CRABBY","SHIRTY"]},
+    {rank:3, name:"Marks on the skin",       members:["FRECKLE","WART","SCAR","BIRTHMARK"]},
+    {rank:4, name:"The Wind in the Willows", members:["TOAD","MOLE","RATTY","BADGER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SPRING", not:"Ways to leap"},
-    {tile:"FALL",   not:"Kinds of tide"},
-    {tile:"SPRUNG", not:"Ways to leap"}
+    {tile:"RATTY",  not:"Bad-tempered"},
+    {tile:"BADGER", not:"Black and white animals"},
+    {tile:"MOLE",   not:"Marks on the skin"}
   ]
 };
 </script>

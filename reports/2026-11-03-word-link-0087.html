@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0087", band:"medium",
   groups:[
-    {rank:1, name:"Rivers of England", members:["TRENT","SEVERN","MERSEY","TYNE"]},
-    {rank:2, name:"Newcastle things",  members:["BRIDGE","ANGEL","BROWN ALE","QUAYSIDE"]},
-    {rank:3, name:"Kinds of angel",    members:["GUARDIAN","FALLEN","DELIGHT","INVESTOR"]},
-    {rank:4, name:"Ways to flow",      members:["STREAM","COURSE","POUR","RUN"]}
+    {rank:1, name:"Nordic countries",                     members:["NORWAY","DENMARK","FINLAND","ICELAND"]},
+    {rank:2, name:"Hackneyed",                            members:["TRITE","STALE","CLICHED","TIRED"]},
+    {rank:3, name:"On a mountain",                        members:["RIDGE","SUMMIT","SCREE","GLACIER"]},
+    {rank:4, name:"Lose the last letter for a vegetable", members:["SWEDEN","CORNY","PEAK","BEANO"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"ANGEL",  not:"Kinds of angel"},
-    {tile:"TYNE",   not:"Newcastle things"},
-    {tile:"COURSE", not:"Rivers of England"}
+    {tile:"SWEDEN", not:"Nordic countries"},
+    {tile:"CORNY",  not:"Hackneyed"},
+    {tile:"PEAK",   not:"On a mountain"}
   ]
 };
 </script>

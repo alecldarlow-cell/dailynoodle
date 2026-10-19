@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0092", band:"medium",
   groups:[
-    {rank:1, name:"Trees by leaf", members:["MAPLE","SYCAMORE","HORNBEAM","LIME"]},
-    {rank:2, name:"Kinds of lime", members:["QUICK","SLAKED","KAFFIR","SODA"]},
-    {rank:3, name:"Autumn jobs",   members:["MULCHING","RAKING","PRUNING","PLANTING"]},
-    {rank:4, name:"Ways to fall",  members:["DROP","PLUMMET","TOPPLE","SHED"]}
+    {rank:1, name:"Kitchen spices", members:["CUMIN","TURMERIC","CARDAMOM","NUTMEG"]},
+    {rank:2, name:"Frightening",    members:["EERIE","CREEPY","SPOOKY","SINISTER"]},
+    {rank:3, name:"Football moves", members:["STEPOVER","VOLLEY","HEADER","DUMMY"]},
+    {rank:4, name:"Spice Girls",    members:["GINGER","SCARY","POSH","SPORTY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"LIME", not:"Kinds of lime"},
-    {tile:"SHED", not:"Autumn jobs"},
-    {tile:"DROP", not:"Trees by leaf"}
+    {tile:"NUTMEG", not:"Football moves"},
+    {tile:"GINGER", not:"Kitchen spices"},
+    {tile:"SCARY",  not:"Frightening"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0093", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of tank",     members:["FISH","THINK","SEPTIC","PANZER"]},
-    {rank:2, name:"Aquarium kit",      members:["FILTER","GRAVEL","HEATER","NET"]},
-    {rank:3, name:"Kinds of thinking", members:["LATERAL","WISHFUL","BLUE-SKY","GROUP"]},
-    {rank:4, name:"Ways to submerge",  members:["DUNK","IMMERSE","SINK","DUCK"]}
+    {rank:1, name:"Public transport",      members:["BUS","TRAM","FERRY","COACH"]},
+    {rank:2, name:"Eye colours",           members:["BLUE","GREEN","BROWN","GREY"]},
+    {rank:3, name:"Royal dynasties",       members:["TUDOR","STUART","HANOVER","LANCASTER"]},
+    {rank:4, name:"Weather hides in each", members:["TRAIN","HAZEL","WINDSOR","CHEMIST"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FISH", not:"Aquarium kit"},
-    {tile:"NET",  not:"Ways to submerge"},
-    {tile:"DUCK", not:"Aquarium kit"}
+    {tile:"TRAIN",   not:"Public transport"},
+    {tile:"HAZEL",   not:"Eye colours"},
+    {tile:"WINDSOR", not:"Royal dynasties"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0099", band:"medium",
   groups:[
-    {rank:1, name:"Parts of a castle",  members:["KEEP","MOAT","TURRET","BAILEY"]},
-    {rank:2, name:"Kinds of goal",      members:["OWN","PENALTY","STRETCH","GOLDEN"]},
-    {rank:3, name:"Old London prisons", members:["NEWGATE","FLEET","CLINK","MARSHALSEA"]},
-    {rank:4, name:"Ways to hold",       members:["GRIP","CLUTCH","GRASP","CLASP"]}
+    {rank:1, name:"Valentine's Day",  members:["ROSES","CARD","CHOCOLATES","HEART"]},
+    {rank:2, name:"Female creatures", members:["DOE","EWE","SOW","MARE"]},
+    {rank:3, name:"Night sky sights", members:["MOON","METEOR","AURORA","SATELLITE"]},
+    {rank:4, name:"Santa's reindeer", members:["COMET","VIXEN","CUPID","DASHER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"KEEP",   not:"Kinds of goal"},
-    {tile:"BAILEY", not:"Old London prisons"},
-    {tile:"CLINK",  not:"Ways to hold"}
+    {tile:"COMET", not:"Night sky sights"},
+    {tile:"VIXEN", not:"Female creatures"},
+    {tile:"CUPID", not:"Valentine's Day"}
   ]
 };
 </script>
