@@ -26,7 +26,9 @@ const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports')
 const args = process.argv.slice(2), has = k => args.includes(k);
 const arg = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
 
-const HOUSE = ["anal","anus","arse","bastard","bitch","boob","boobs","cunt","cunts","dick","dicks","dildo","fuck","fucks","heroin","homo","jihad","meth","nazi","nazis","negro","nude","nudes","opium","orgy","penis","pimp","porn","porno","pussy","rape","raped","rapes","semen","sex","sexy","sperm","twat","whore"];
+const HOUSE = ["anal","anus","arse","bastard","bitch","boob","boobs","cunt","cunts","dick","dicks","dildo","fuck","fucks","heroin","homo","jihad","meth","nazi","nazis","negro","nude","nudes","opium","orgy","penis","pimp","porn","porno","pussy","rape","raped","rapes","semen","sex","sexy","sperm","twat","whore",
+  // 19 Oct 2026 (Alec's call): stripped from every Tangle from 21 Oct 2026; also in the kit's blocklist
+  "barf","bum","cig","cigs","pee","peed","pees","pleb","plebs","poo","poop","poos","ricin","sod","sods","tart","tarts","wees"];
 const NUM = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen'];
 const live = () => fs.readdirSync(REPORTS).filter(f => /^\d{4}-\d{2}-\d{2}-word-tangle-\d{4}\.html$/.test(f)).sort();
 const PZ_RE = /window\.DN_PUZZLE=(\{.*\});/;
@@ -127,7 +129,7 @@ function main() {
     const g = GATE(P, md); if (g.length) err(f, 'engine GATE: ' + g.join('; '));
     if (!s.includes(`content="Tangle ${String(P.n).padStart(4, '0')}"`)) err(f, 'headline');
     if (!s.includes(`${P.main.length} common words`) || !s.includes(`${NUM[P.star.length]}-letter longest word`)) err(f, 'standfirst disagrees with the board');
-    const traced = ALL.filter(w => traceable(P.tiles, w));
+    const traced = ALL.filter(w => !blocked(w) && traceable(P.tiles, w));   // blocked words are left out of the lists, not required in them
     const wm = traced.filter(w => MAINSET.has(w)).sort(), wb = traced.filter(w => BONUSSET.has(w)).sort();
     if (j(wm) !== j(P.main.slice().sort())) err(f, 'main list != independent solver');
     if (j(wb) !== j(P.bonus.slice().sort())) err(f, 'bonus list != independent solver');
