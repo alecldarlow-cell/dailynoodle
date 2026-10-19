@@ -327,7 +327,8 @@
   }
   function loadBoard() {
     var L = cur(); if (!L) { renderLeague(null); return intro(); }
-    // First time in a league on this browser: copy its earlier results in, then show the board.
+    // Copy this browser's earlier results in (first time in a league, or when it has more), then show the board.
+    if (!S.filling && !S.filled && !NB.backfillDue(S.feed)) S.filled = true;
     if (!S.filling && !S.filled) {
       S.filling = true;
       $app.innerHTML = '<p class="loading">Adding your earlier results…</p>';

@@ -113,7 +113,20 @@
     if (location.hash.indexOf(TAG) !== 0) return;
     var p = parse(b64d(location.hash.slice(TAG.length)));
     if (isObj(p) && p.v === 1 && isObj(p.d)) {
+      // The new address may already have its own tracker id. Keep the old one
+      // too (digi.aid.prev), so the leaderboard's history copy can also read
+      // this browser's earlier finishes. Same browser only, never sent on its own.
+      try {
+        var oldAid = p.d['digi.aid'], nowAid = localStorage.getItem('digi.aid');
+        if (/^[0-9a-f-]{36}$/i.test(oldAid || '') && nowAid && nowAid !== oldAid && localStorage.getItem('digi.optout') !== '1') {
+          var prev = parse(localStorage.getItem('digi.aid.prev') || '[]');
+          if (!Array.isArray(prev)) prev = [];
+          if (prev.indexOf(oldAid) < 0) prev.push(oldAid);
+          localStorage.setItem('digi.aid.prev', JSON.stringify(prev.slice(-5)));
+        }
+      } catch (e) {}
       for (var k in p.d) {
+        if (k === 'digi.aid.prev') continue;
         var oldV = p.d[k], here = null;
         try { here = localStorage.getItem(k); } catch (e) {}
         var val = oldV;
@@ -439,7 +452,7 @@
     });
   }
   function setOptOut(on){
-    if (on) { set('digi.optout', '1'); queue.length = 0; del('digi.aid'); del('digi.sid'); del('digi.last'); }
+    if (on) { set('digi.optout', '1'); queue.length = 0; del('digi.aid'); del('digi.aid.prev'); del('digi.sid'); del('digi.last'); }
     else    { del('digi.optout'); }
     paint();
   }

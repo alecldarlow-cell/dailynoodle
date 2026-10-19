@@ -16,7 +16,7 @@
      - adds a "See today's board" link to the result box.
 
    Saved in localStorage under noodle-board-v1:
-     { pid, leagues: [{code, name, nick, owner}], cur: code, ptype }
+     { pid, leagues: [{code, name, nick, owner}], cur: code, ptype, fill: {n, aids} }
    All server calls go through public.board_* functions (security definer);
    the board tables live in the private `board` schema.
    ========================================================================== */
@@ -126,12 +126,18 @@
     for (var k in extra || {}) args[k] = extra[k];
     return rpc('board_' + action, args);
   }
-  /* ---------- history: copied in once, when this browser is first in a league ----------
+  /* ---------- history: copied in when this browser is in a league, and again when it has more ----------
      Two sources, both from this browser only: the finished puzzles it
      remembers (each puzzle type's own save), and its earlier finishes in the
-     visit records (the tracker's id, used by the server for this copy only).
-     The server prefers the saved result where both exist, applies the same
-     checks as a live result and keeps the first result per puzzle.        */
+     visit records (the tracker's id, plus any older id the domain-move handoff
+     brought into this browser as digi.aid.prev; used by the server for this
+     copy only). The server prefers the saved result where both exist, applies
+     the same checks as a live result and keeps the first result per puzzle,
+     so copying again never changes a result already on the board.
+     Copies again when the saves hold more finished puzzles than last time
+     (e.g. after the handoff merged an old address's saves in) or a tracker
+     id hasn't been read yet. Saved as fill: {n, aids} in noodle-board-v1
+     (replaces the old one-off `filled` flag).                              */
   var SAVES = [   // key, id code in the save, board type, how to read a record
     { key: 'digi-mini-v1',    code: 'MINI',  t: 'mini',    read: function (r) { return { outcome: 'solved', secs: r.s }; } },
     { key: 'digi-doku-v1',    code: '',      t: 'doku',    read: function (r) { return { outcome: 'solved', secs: r.s }; } },
@@ -167,12 +173,39 @@
     });
     return rows;
   }
+  function trackerIds() {   // this browser's own tracker ids: current first, then any from the old address
+    var out = [];
+    try {
+      if (localStorage.getItem('digi.optout') === '1') return out;
+      var prev = JSON.parse(localStorage.getItem('digi.aid.prev') || '[]');
+      [localStorage.getItem('digi.aid')].concat(Array.isArray(prev) ? prev : []).forEach(function (a) {
+        if (a && /^[0-9a-f-]{36}$/i.test(a) && out.indexOf(a) < 0) out.push(a);
+      });
+    } catch (e) {}
+    return out;
+  }
+  function backfillPlan(feed) {
+    if (!inAny()) return null;
+    var f = load().fill || { n: 0, aids: [] };
+    var rows = savedResults(feed);
+    var aids = trackerIds().filter(function (a) { return (f.aids || []).indexOf(a) < 0; });
+    if (rows.length <= (f.n || 0) && !aids.length) return null;
+    return { rows: rows.length > (f.n || 0) ? rows : [], aids: aids, n: Math.max(rows.length, f.n || 0), done: f.aids || [] };
+  }
+  function backfillDue(feed) { return !!backfillPlan(feed); }
   function backfill(feed) {
-    var s = load(); if (s.filled || !inAny()) return Promise.resolve(0);
-    var aid = null; try { aid = localStorage.getItem('digi.aid'); } catch (e) {}
-    if (aid && !/^[0-9a-f-]{36}$/i.test(aid)) aid = null;
-    return rpc('board_backfill', { p_player: pid(), p_aid: aid, p_rows: savedResults(feed) }).then(function (n) {
-      var s2 = load(); s2.filled = true; save(s2); return n;
+    var plan = backfillPlan(feed); if (!plan) return Promise.resolve(0);
+    var calls = plan.aids.length ? plan.aids.map(function (a, i) { return { aid: a, rows: i ? [] : plan.rows }; })
+                                 : [{ aid: null, rows: plan.rows }];
+    var total = 0;
+    return calls.reduce(function (p, c) {
+      return p.then(function () {
+        return rpc('board_backfill', { p_player: pid(), p_aid: c.aid, p_rows: c.rows }).then(function (n) { total += +n || 0; });
+      });
+    }, Promise.resolve()).then(function () {
+      var s2 = load(); delete s2.filled;
+      s2.fill = { n: plan.n, aids: plan.done.concat(plan.aids) };
+      save(s2); return total;
     });
   }
 
@@ -191,7 +224,7 @@
   window.noodleBoard = {
     TYPES: TYPES, BY_ID: BY_ID, typeOfPath: typeOfPath, dateOfPath: dateOfPath,
     pid: pid, leagues: leagues, inAny: inAny, refresh: refresh, create: create, join: join,
-    peek: peek, backfill: backfill, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
+    peek: peek, backfill: backfill, backfillDue: backfillDue, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
     lastType: lastType, setLastType: setLastType, today: today, rpc: rpc
   };
 
