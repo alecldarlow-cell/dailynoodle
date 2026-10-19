@@ -425,11 +425,8 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
     <h2 class="hand" id="lTitle">Great flight!</h2>
     <div class="landingResult"><strong class="hand" id="lDistance">0.0 m</strong><span id="lOutcome">Landed</span></div>
     <div class="rewardHero" id="lReward"><span class="rewardIcon" aria-hidden="true"><svg viewBox="0 0 40 54" width="39" height="47" fill="none"><path d="M11 38V14a9 9 0 0 1 18 0v27a7 7 0 0 1-14 0V16" stroke="#855727" stroke-width="5" stroke-linecap="round"/><path d="M11 38V14a9 9 0 0 1 18 0v27a7 7 0 0 1-14 0V16" stroke="#e9b35c" stroke-width="1.4" stroke-linecap="round"/></svg></span><span class="clipBurst" aria-hidden="true">✦</span><span class="rewardAmount"><small>PAPERCLIPS EARNED</small><strong class="hand" id="lEarned">+0</strong></span><span class="rewardGlint" aria-hidden="true">✦</span></div>
-    <div class="rewardBreak" id="lBreak"></div>
     <div class="landingBalance" id="lBalance"></div>
-    <div class="windNote" id="lWind"></div>
-    <div class="upgradeHint" id="lUpgrade"></div>
-    <div class="landingActions"><button class="btn pri" id="lNext">Next throw ➤</button><button class="btn" id="lHangar">✦ Hangar · upgrades</button></div>
+    <div class="landingActions"><button class="btn pri" id="lNext">Next throw ➤</button><button class="btn" id="lHangar">Hangar</button></div>
   </div>
 </div>
 <div class="ov dim end" id="end">
@@ -438,9 +435,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
     <div class="dots" id="eDots"></div>
     <div class="medals hidden" id="eMedals"></div>
     <div class="endReward" id="eReward"><span>✦ PAPERCLIPS BANKED</span><strong class="hand" id="eClips">+0</strong><small id="eBalance">Balance: 0</small></div>
-    <div class="stats" id="eStats"></div>
-    <div class="upgradeHint" id="eUpgrade"></div>
-    <div class="row" id="eNote" style="font-size:13px;color:var(--soft);justify-content:center"></div>
+    <div class="row" id="eNote" style="font-size:14px;font-weight:700;color:var(--soft);justify-content:center;margin-top:4px"></div>
     <div class="row" style="margin-top:8px;justify-content:center">
       <button class="btn pri" id="eAgain">Fly again</button>
       <button class="btn" id="eHangar">Hangar</button>
@@ -1060,17 +1055,16 @@ function setUpgradeHint(el){const hint=nextUpgrade();el.textContent=hint.text;el
 let rewardSequence=0;
 function showLanding(v){
   const t=++rewardSequence;
-  $('lStep').textContent='FLIGHT '+run.n+' OF THIS RUN';$('lPlace').textContent=run.mode==='tower'?'SKYSCRAPER':pl.name.toUpperCase();
+  $('lStep').textContent='✈ '+run.throws+(run.throws===1?' THROW':' THROWS')+' LEFT';$('lPlace').textContent=run.mode==='tower'?'SKYSCRAPER':pl.name.toUpperCase();
   $('lTitle').textContent=v.clear?'✓ Place cleared!':v.record?'✦ Personal best!':v.d>=WR?'Milestone distance!':'Every metre counts!';
   $('lDistance').textContent=fmt(v.d)+' m';$('lOutcome').textContent=v.clear?'Target beaten':v.next==='end'?'Last throw':'Plane landed';
-  $('lOutcome').textContent = v.clear ? (v.d >= pl.target*2 ? '2× target · '+(run.throws<5?'bonus throw':'throw bank full') : 'Target beaten · throw kept') : run.mode==='run' ? 'Short by '+fmt(Math.max(0,pl.target-v.d))+' m' : 'Best '+fmt(run.best)+' m';
-  if(v.crashed)$('lOutcome').textContent='Crash landing · '+$('lOutcome').textContent;
-  { const w = v.wind || 0; $('lWind').textContent = Math.abs(w) >= 1 ? (w < 0 ? 'Headwind cost you about ' : 'Tailwind added about ') + Math.round(Math.abs(w)) + ' m' : ''; $('lWind').style.display = Math.abs(w) >= 1 ? '' : 'none'; }
+  $('lOutcome').textContent = v.clear ? (v.d >= pl.target*2 ? '2× target · '+(run.throws<5?'bonus throw':'throw bank full') : 'Target beaten') : run.mode==='run' ? 'Short by '+fmt(Math.max(0,pl.target-v.d))+' m' : 'Best '+fmt(run.best)+' m';
+  
+  
   $('lEarned').textContent='+'+(RM()?v.earned:0);$('lReward').setAttribute('aria-label',v.earned+' paperclips earned this flight');
   const breakdown=[['Distance',Math.floor(v.d/4)],['Air clips',v.pickups*3]];if(v.bonus)breakdown.push(['Place bonus',v.bonus]);
-  $('lBreak').innerHTML=breakdown.map(x=>'<span>'+x[0]+' <b>+'+x[1]+'</b></span>').join('');
-  $('lBalance').textContent='✈ '+run.throws+' throws left  ·  '+save.clips.toLocaleString()+' paperclips banked';setUpgradeHint($('lUpgrade'));$('lUpgrade').style.display=$('lUpgrade').classList.contains('ready')?'':'none';
-  if (v.next === 'aim' && nextUpgrade().affordable) $('lUpgrade').textContent='✦ Upgrade ready! Visit the Hangar, then continue this run.';
+  void breakdown;
+  $('lBalance').textContent=save.clips.toLocaleString()+' clips banked';$('lHangar').textContent=nextUpgrade().affordable?'✦ Hangar · upgrade ready':'Hangar';
   $('lNext').textContent=v.next==='end'||v.next==='win'?'See run results ➤':v.clear?'Next place ➤':'Next throw ➤';
   $('landing').classList.add('on'); focusPanel('landing','lNext');
   if(!RM()&&v.earned>0){const start=performance.now(),dur=Math.min(950,480+v.earned*3);const count=now=>{
@@ -1210,15 +1204,13 @@ function showEnd(r, win) {
   const st = tower
     ? [['Best throw',fmt(r.best)+' m'],['Personal best',fmt(save.towerBest)+' m'],['Throws',r.n],['Medal',['None','Bronze','Silver','Gold'][medalFor(r.best)]]] : [['Places',Math.min(8,r.cleared)+' / 8'],['Best throw',fmt(r.best)+' m'],['Total flown',Math.round(r.total)+' m'],['Throws',r.n]];
   $('eClips').textContent='+'+r.clips;
-  $('eBalance').textContent='Balance '+save.clips.toLocaleString()+' clips';
-  setUpgradeHint($('eUpgrade'));
-  $('eHangar').textContent=nextUpgrade().affordable?'✦ Hangar · upgrade ready':'✦ Visit hangar';
-  $('eStats').innerHTML = st.map(s => '<div class="stat"><b>' + s[0] + '</b><span class="hand">' + s[1] + '</span></div>').join('');
-  const notes = [];
+  $('eBalance').textContent='Total '+save.clips.toLocaleString();
+  $('eHangar').textContent=nextUpgrade().affordable?'✦ Hangar · upgrade ready':'Hangar';
+  void st;
+  const notes = [tower ? 'Best throw ' + fmt(r.best) + ' m' : (win ? 'All 8 places' : Math.min(8, r.cleared) + ' of 8 places') + ' · best throw ' + fmt(r.best) + ' m'];
   if (r.newBest) notes.push('New best throw!');
   if (!tower && win && save.clears === 1) notes.push('Skyscraper unlocked in the hangar.');
-  if (!tower && !win) notes.push('Spend your clips in the hangar, then go again.');
-  $('eNote').textContent = notes.join('  ');
+  $('eNote').textContent = notes.join(' · ');
   $('end').classList.add('on'); focusPanel('end','eAgain');
 }
 $('eAgain').addEventListener('click', () => { initAudio(); goFS(); const m = lastMode; startRun('retry', m); });
