@@ -5,7 +5,7 @@
   "description": "News, daily puzzles and games. Fresh every morning.",
   "start_url": "./",
   "scope": "./",
-  "display": "fullscreen",
+  "display": "standalone",
   "background_color": "#FCFCFB",
   "theme_color": "#FCFCFB",
   "icons": [
