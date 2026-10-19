@@ -162,6 +162,46 @@ table.bd th{font-size:12px;font-weight:900}
 #toast.on{opacity:1}
 [hidden]{display:none!important}
 @media (min-width:560px){.htop h1{font-size:46px}}
+.tgs{margin-top:10px}
+/* ---------- held sideways on a phone: the board fills the left, tiles and scores sit in a panel on the right ---------- */
+@media (orientation:landscape) and (max-height:560px){
+ :root{--pw:216px;--safe-l:env(safe-area-inset-left,0px);--safe-r:env(safe-area-inset-right,0px)}
+ #hud{bottom:0;padding:0;display:block}
+ #bPause,#bFit{position:absolute;left:calc(var(--safe-l) + 10px)}
+ #bPause{top:calc(var(--safe-t) + 8px)}#bFit{top:calc(var(--safe-t) + 60px)}
+ #score{position:absolute;z-index:2;right:calc(var(--safe-r) + 10px);top:calc(var(--safe-t) + 8px);width:var(--pw);padding:9px 8px 0;gap:5px}
+ #score .pl{padding:5px 8px 5px 7px;gap:5px;box-shadow:none;background:var(--paper2)}
+ #score .pl b{max-width:58px}#score .pl span{font-size:17px}
+ #score.three .pl b{display:none}
+ #tray{left:auto;right:0;top:0;bottom:0;width:calc(var(--pw) + var(--safe-r) + 10px);padding:calc(var(--safe-t) + 8px) calc(var(--safe-r) + 10px) calc(var(--safe-b) + 8px) 0}
+ #tray .wrap{height:100%;max-width:none;border-radius:18px;padding:52px 8px 8px;display:flex;flex-direction:column;gap:6px;box-shadow:0 2px 18px rgba(30,50,60,.2)}
+ #prev{flex:1;padding:2px 40px 2px 4px;text-align:left;font-size:13px}
+ #bag{top:56px;right:10px}
+ .row{flex-wrap:wrap;gap:6px}
+ .slot{width:62px;height:62px}.slot canvas{width:54px;height:54px}
+ .acts{width:100%;margin:0;gap:6px}
+ .ab{height:52px}#bRot{width:62px;flex:none}#bOk{flex:1;width:auto}
+ #banner,#info,#coach{left:calc(var(--safe-l) + 64px);right:calc(var(--pw) + var(--safe-r) + 20px);max-width:460px}
+ #info,#coach{bottom:calc(var(--safe-b) + 8px)}
+ #toast{top:calc(var(--safe-t) + 10px);left:calc(50% - (var(--pw) - 54px)/2);max-width:calc(100% - var(--pw) - 100px)}
+ /* home: title and city on the left, the menu scrolls on the right */
+ #home{background:none}
+ .hwrap{max-width:940px;display:flex;gap:28px;align-items:flex-start;padding:0 calc(var(--safe-r) + 16px) calc(var(--safe-b) + 16px) calc(var(--safe-l) + 16px)}
+ .htop{flex:1;min-width:0;min-height:0;height:100dvh;position:sticky;top:0;padding-top:calc(var(--safe-t) + 16px)}
+ .htop h1{font-size:34px}
+ .hcol{flex:0 0 min(390px,52%);padding-top:calc(var(--safe-t) + 16px)}
+ .big{height:64px}
+ /* menus: two columns so nothing needs more than about 320px of height */
+ #modal{padding:calc(var(--safe-t) + 8px) calc(var(--safe-r) + 14px) calc(var(--safe-b) + 8px) calc(var(--safe-l) + 14px)}
+ .mbox{max-width:660px;padding:14px 16px 12px}
+ .mbox h2{font-size:21px}.mbox .lead{margin-bottom:8px}
+ .mcols{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;align-items:start}
+ .mcols .tgs{margin-top:4px}.mcols>div>.mbtn:first-child{margin-top:0}
+ #modal{z-index:10}   /* above the score pills, which sit over the side panel */
+ .mbtn{height:46px;line-height:46px}
+ .bigstars{font-size:32px}.res{margin:4px 0 6px}table.bd td,table.bd th{padding:3px 4px}
+ .isl3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.isl3 .mbtn{margin-top:0}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <!-- og:start (tools/og-tags.js — do not edit by hand) -->
@@ -831,35 +871,49 @@ function buzz(ms){try{if(S.snd&&navigator.vibrate)navigator.vibrate(ms);}catch(e
 const fsOK=(()=>{try{return !!(document.fullscreenEnabled||document.webkitFullscreenEnabled)}catch(e){return false}})();
 const isFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
 function goFS(){if(!fsOK||!S.fs||isFS())return;try{const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;if(!rq)return;
- const lock=()=>{try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(()=>{});}catch(e){}};
- const p=rq.call(el,{navigationUI:'hide'});if(p&&p.then)p.then(lock,()=>{});else lock();}catch(e){}}
+ /* no orientation lock: the game plays held either way, and the island turns with the phone */
+ const p=rq.call(el,{navigationUI:'hide'});if(p&&p.catch)p.catch(()=>{});}catch(e){}}
 function exitFS(){try{if(!isFS())return;const x=document.exitFullscreen||document.webkitExitFullscreen;const p=x&&x.call(document);if(p&&p.catch)p.catch(()=>{});}catch(e){}}
 
 /* ---------- canvas, camera ---------- */
 const cv=$('cv'),ctx=cv.getContext('2d'),app=$('app');
 let W=360,H=640,DPR=1,VR={x:0,y:0,w:360,h:640};
-const cam={x:.5,y:.5,s:80,tx:.5,ty:.5,ts:80,man:false,full:false};
-const w2s=(x,y)=>[(x-cam.x)*cam.s+VR.x+VR.w/2,(y-cam.y)*cam.s+VR.y+VR.h/2];
-const s2w=(x,y)=>[(x-VR.x-VR.w/2)/cam.s+cam.x,(y-VR.y-VR.h/2)/cam.s+cam.y];
+const cam={x:.5,y:.5,s:80,tx:.5,ty:.5,ts:80,man:false,full:false,q:0};
+/* q=1 turns the view a quarter clockwise, so the tall island lies along a sideways screen. The city itself never turns:
+   world north shows to the right, world east shows downwards. */
+const w2s=(x,y)=>cam.q?[(cam.y-y)*cam.s+VR.x+VR.w/2,(x-cam.x)*cam.s+VR.y+VR.h/2]:[(x-cam.x)*cam.s+VR.x+VR.w/2,(y-cam.y)*cam.s+VR.y+VR.h/2];
+const s2w=(x,y)=>{const u=(x-VR.x-VR.w/2)/cam.s,v=(y-VR.y-VR.h/2)/cam.s;return cam.q?[cam.x+v,cam.y-u]:[cam.x+u,cam.y+v];};
+const c2s=(x,y)=>cam.q?w2s(x,y+1):w2s(x,y);          // a cell's top-left corner on screen
+const SDX=[0,1,0,-1],SDY=[-1,0,1,0],wside=k=>(k-cam.q+4)%4;   // the city side (0 N, 1 E, 2 S, 3 W) facing screen side k (0 top, 1 right, 2 bottom, 3 left)
+const sideMQ=(()=>{try{return matchMedia('(orientation:landscape) and (max-height:560px)');}catch(e){return null;}})();
+const sideUI=()=>!!(sideMQ&&sideMQ.matches);         // a phone held sideways: tray in a side panel (matches the CSS)
 function viewRect(){
- if(M&&!$('game').hidden){const top=$('hud').getBoundingClientRect().bottom+6,co=$('coach'),bot=M.viewCity?H-86:(!co.hidden?co.getBoundingClientRect().top:$('tray').querySelector('.wrap').getBoundingClientRect().top)-4;VR={x:0,y:top,w:W,h:Math.max(120,bot-top)};}
- else VR={x:W*.08,y:H*.215-homeY,w:W*.84,h:H*.28};
+ if(M&&!$('game').hidden){const co=$('coach');
+  if(sideUI()){const pb=$('bPause').getBoundingClientRect(),x0=pb.right+8,top=pb.top,tr=$('tray'),wr=tr.querySelector('.wrap').getBoundingClientRect(),
+    right=M.viewCity||tr.hidden?W-10:wr.left-8,bot=M.viewCity?H-80:!co.hidden?co.getBoundingClientRect().top-4:H-Math.max(8,H-wr.bottom);
+   VR={x:x0,y:top,w:Math.max(120,right-x0),h:Math.max(120,bot-top)};}
+  else{const top=$('hud').getBoundingClientRect().bottom+6,bot=M.viewCity?H-86:(!co.hidden?co.getBoundingClientRect().top:$('tray').querySelector('.wrap').getBoundingClientRect().top)-4;VR={x:0,y:top,w:W,h:Math.max(120,bot-top)};}
+  cam.q=M.st.lim&&W>H?1:0;}   // held sideways, the island lies along the screen
+ else{cam.q=0;const ht=sideUI()&&document.querySelector('.htop');
+  if(ht){const r=ht.getBoundingClientRect(),sb=ht.querySelector('.sub'),y=(sb?sb.getBoundingClientRect().bottom:r.top+110)+12;VR={x:r.left+r.width*.06,y,w:r.width*.88,h:Math.max(80,H-y-18)};}
+  else VR={x:W*.08,y:H*.215-homeY,w:W*.84,h:H*.28};}
 }
-function resize(){DPR=Math.min(2.5,window.devicePixelRatio||1);W=app.clientWidth||innerWidth;H=app.clientHeight||innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);viewRect();
- fitCam(true,true);}
+function resize(){DPR=Math.min(2.5,window.devicePixelRatio||1);W=app.clientWidth||innerWidth;H=app.clientHeight||innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);const q=cam.q;viewRect();
+ fitCam(true,q===cam.q);if(M)refreshTray();}   // turning the phone re-frames the city; the tray previews turn with the board
 function bbox(st){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const t of st.tiles){x0=Math.min(x0,t.x);y0=Math.min(y0,t.y);x1=Math.max(x1,t.x+1);y1=Math.max(y1,t.y+1);}return[x0,y0,x1,y1];}
 function fitCam(snap,keepMan,focus){const st=M?M.st:DEMO;if(!st)return;
  if(M&&st.lim){const[x0,y0,x1,y1]=bbox(st),W=st.lim[0],Hh=st.lim[1],w=limWin(st),done=M.ended||st.over||M.viewCity;
-  const sIsl=clamp(Math.min(VR.w/(W+.8),VR.h/(Hh+.8)),24,140);
-  if(done){cam.ts=clamp(Math.min(VR.w/(x1-x0+.4),VR.h/(y1-y0+.4)),24,140);cam.tx=(x0+x1)/2;cam.ty=(y0+y1)/2;}   // the finished city, whole
+  const vw=cam.q?VR.h:VR.w,vh=cam.q?VR.w:VR.h,short=Math.min(VR.w,VR.h);   // room along the city's x and y
+  const sIsl=clamp(Math.min(vw/(W+.8),vh/(Hh+.8)),24,140);
+  if(done){cam.ts=clamp(Math.min(vw/(x1-x0+.4),vh/(y1-y0+.4)),24,140);cam.tx=(x0+x1)/2;cam.ty=(y0+y1)/2;}   // the finished city, whole
   else if(cam.full){cam.ts=sIsl;   // the whole island, on request (the ⤢ button)
    cam.tx=(Math.max(w[0],x0-(W-(x1-x0))/2)+Math.min(w[2],x1+(W-(x1-x0))/2))/2;cam.ty=(Math.max(w[1],y0-(Hh-(y1-y0))/2)+Math.min(w[3],y1+(Hh-(y1-y0))/2))/2;}
   else{/* close view: start near the first tiles and pull back as the city grows, but never below a comfortable tile size.
           It frames the city plus one ring of spaces it can still grow into; once that is bigger than the screen it follows the play. */
    const rx0=Math.max(w[0],x0-1),rx1=Math.min(w[2],x1+1),ry0=Math.max(w[1],y0-1),ry1=Math.min(w[3],y1+1);
-   const sMax=Math.min(118,VR.w/3.1),sNice=Math.max(sIsl,Math.min(sMax,VR.w/4.8));
-   cam.ts=Math.max(sNice,Math.min(sMax,Math.min(VR.w/(rx1-rx0+.4),VR.h/(ry1-ry0+.4))));
-   const hw=VR.w/cam.ts/2,hh=VR.h/cam.ts/2,t=focus||st.tiles[st.tiles.length-1];
+   const sMax=Math.min(118,short/3.1),sNice=Math.max(sIsl,Math.min(sMax,short/4.8));
+   cam.ts=Math.max(sNice,Math.min(sMax,Math.min(vw/(rx1-rx0+.4),vh/(ry1-ry0+.4))));
+   const hw=vw/cam.ts/2,hh=vh/cam.ts/2,t=focus||st.tiles[st.tiles.length-1];
    const ax=(lo,hi,cur,f,half)=>{if(hi-lo<=2*half)return(lo+hi)/2;let c=cur;if(f!=null)c=clamp(c,f+1.3-half,f-.3+half);return clamp(c,lo+half,hi-half);};
    cam.tx=ax(rx0,rx1,cam.tx,t&&t.x,hw);cam.ty=ax(ry0,ry1,cam.ty,t&&t.y,hh);}
   if(!keepMan)cam.man=false;if(snap||S.rm){cam.s=cam.ts;cam.x=cam.tx;cam.y=cam.ty;}fitLabel();return;}
@@ -867,7 +921,7 @@ function fitCam(snap,keepMan,focus){const st=M?M.st:DEMO;if(!st)return;
  const bw=x1-x0+2*m,bh=y1-y0+2*m,mx=M?Math.min(96,VR.w/3.4):40;let s=Math.min(VR.w/bw,VR.h/bh);s=clamp(s,M?30:24,mx);
  cam.ts=s;cam.tx=(x0+x1)/2;cam.ty=(y0+y1)/2;if(!keepMan)cam.man=false;if(snap||S.rm){cam.s=cam.ts;cam.x=cam.tx;cam.y=cam.ty;}}
 function fitLabel(){const b=$('bFit');if(b)b.setAttribute('aria-label',cam.full?'Zoom back in':'Show the whole city');}
-function ensureVisible(x,y){if(!cam.man){fitCam(false,false,{x,y});return;}const[sx,sy]=w2s(x+.5,y+.5),m=cam.s*.6;if(sx<m||sx>W-m||sy<VR.y+m||sy>VR.y+VR.h-m)fitCam(false);}
+function ensureVisible(x,y){if(!cam.man){fitCam(false,false,{x,y});return;}const[sx,sy]=w2s(x+.5,y+.5),m=cam.s*.6;if(sx<VR.x+m||sx>VR.x+VR.w-m||sy<VR.y+m||sy>VR.y+VR.h-m)fitCam(false);}
 
 /* ---------- tile image cache ---------- */
 const TC=new Map();let tcBudget=0;   // per instance+turn canvases by size bucket; while zooming, reuse the nearest size
@@ -891,7 +945,7 @@ function drawPaper(st){ctx.fillStyle=CITY.pal.paper;ctx.fillRect(0,0,W,H);if(FIB
  const v=ctx.createRadialGradient(W/2,H*.45,Math.min(W,H)*.2,W/2,H*.45,Math.max(W,H)*.8);v.addColorStop(0,'rgba(255,255,255,.6)');v.addColorStop(1,'rgba(205,185,145,.32)');ctx.fillStyle=v;ctx.fillRect(0,0,W,H);
  if(!st||!M)return;const[x0,y0,x1,y1]=bbox(st),r=Math.max(1.1,cam.s*.022);ctx.fillStyle='rgba(150,120,80,.3)';
  for(let y=y0-4;y<=y1+4;y++)for(let x=x0-4;x<=x1+4;x++){const[sx,sy]=w2s(x,y);if(sx<-4||sx>W+4||sy<-4||sy>H+4)continue;ctx.beginPath();ctx.arc(sx,sy,r,0,7);ctx.fill();}}
-function cityPath(st,extra){const p=new Path2D(),s=cam.s;for(const t of st.tiles){const[sx,sy]=w2s(t.x,t.y);p.rect(sx,sy,s,s);}if(extra){const[sx,sy]=w2s(extra.x,extra.y);p.rect(sx,sy,s,s);}return p;}
+function cityPath(st,extra){const p=new Path2D(),s=cam.s;for(const t of st.tiles){const[sx,sy]=c2s(t.x,t.y);p.rect(sx,sy,s,s);}if(extra){const[sx,sy]=c2s(extra.x,extra.y);p.rect(sx,sy,s,s);}return p;}
 function drawWater(st,path){const s=cam.s;
  ctx.save();ctx.translate(s*.05,s*.15);ctx.fillStyle='rgba(90,70,35,.2)';ctx.fill(path);ctx.restore();
  ctx.save();ctx.clip(path);ctx.fillStyle=CITY.pal.water;ctx.fillRect(0,0,W,H);
@@ -902,21 +956,22 @@ function drawWater(st,path){const s=cam.s;
 function limWin(st){const[x0,y0,x1,y1]=bbox(st),W=st.lim[0],H2=st.lim[1];return[x1-W,y1-H2,x0+W,y0+H2];}
 function bboxC(st){const b=bbox(st);return[(b[0]+b[2])/2,(b[1]+b[3])/2];}
 function drawLimit(st){const s=cam.s,[a0,b0,a1,b1]=limWin(st),[x0,y0,x1,y1]=bbox(st),fw=x1-x0>=st.lim[0],fh=y1-y0>=st.lim[1];
- const[sx0,sy0]=w2s(a0,b0),[sx1,sy1]=w2s(a1,b1);ctx.save();
+ const[pa,pb]=[w2s(a0,b0),w2s(a1,b1)],sx0=Math.min(pa[0],pb[0]),sy0=Math.min(pa[1],pb[1]),sx1=Math.max(pa[0],pb[0]),sy1=Math.max(pa[1],pb[1]);ctx.save();
  ctx.setLineDash([7,6]);ctx.lineWidth=1.6;ctx.strokeStyle='rgba(140,100,50,.55)';PAINT.rr(ctx,sx0-3,sy0-3,sx1-sx0+6,sy1-sy0+6,10);ctx.stroke();ctx.setLineDash([]);
  const bank=(xa,ya,xb,yb)=>{const t=Math.max(5,s*.11);ctx.lineCap='butt';ctx.strokeStyle='rgba(90,70,40,.35)';ctx.lineWidth=t+3;ctx.beginPath();ctx.moveTo(xa,ya);ctx.lineTo(xb,yb);ctx.stroke();
   ctx.strokeStyle='#d8c39a';ctx.lineWidth=t;ctx.stroke();ctx.strokeStyle='rgba(120,95,55,.45)';ctx.lineWidth=t;ctx.setLineDash([2,Math.max(6,s*.16)]);ctx.stroke();ctx.setLineDash([]);
   ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1.2;ctx.stroke();};
- const o=Math.max(3,s*.06);
- if(fw){bank(sx0-o,sy0,sx0-o,sy1);bank(sx1+o,sy0,sx1+o,sy1);}
- if(fh){bank(sx0,sy0-o,sx1,sy0-o);bank(sx0,sy1+o,sx1,sy1+o);}
+ const o=Math.max(3,s*.06)/s,bw=(xa,ya,xb,yb)=>bank(...w2s(xa,ya),...w2s(xb,yb));   // banks follow the city's own sides, wherever they show
+ if(fw){bw(a0-o,b0,a0-o,b1);bw(a1+o,b0,a1+o,b1);}
+ if(fh){bw(a0,b0-o,a1,b0-o);bw(a0,b1+o,a1,b1+o);}
  ctx.restore();}
 function drawRim(st){const s=cam.s,d=Math.max(3,s*.08);ctx.save();
  const col={W:'#3e968b',X:'#3e968b',G:'#5c8a31',C:'#b49a6b'};
- for(const t of st.tiles){if(st.grid.has(AC.K(t.x,t.y+1)))continue;const[sx,sy]=w2s(t.x,t.y);
-  if(t.e[2]==='G'){ctx.fillStyle=col.W;ctx.fillRect(sx,sy+s,s,d);ctx.fillStyle=col.G;ctx.fillRect(sx+s*.14,sy+s,s*.72,d);}else{ctx.fillStyle=col[t.e[2]]||col.W;ctx.fillRect(sx,sy+s,s,d);}ctx.fillStyle='rgba(0,0,0,.14)';ctx.fillRect(sx,sy+s+d*.55,s,d*.45);}
+ const dn=wside(2),up=wside(0),lf=wside(3);   // the slab's front face is whichever side faces the bottom of the screen
+ for(const t of st.tiles){if(st.grid.has(AC.K(t.x+SDX[dn],t.y+SDY[dn])))continue;const[sx,sy]=c2s(t.x,t.y),fe=t.e[dn];
+  if(fe==='G'){ctx.fillStyle=col.W;ctx.fillRect(sx,sy+s,s,d);ctx.fillStyle=col.G;ctx.fillRect(sx+s*.14,sy+s,s*.72,d);}else{ctx.fillStyle=col[fe]||col.W;ctx.fillRect(sx,sy+s,s,d);}ctx.fillStyle='rgba(0,0,0,.14)';ctx.fillRect(sx,sy+s+d*.55,s,d*.45);}
  ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=Math.max(1,s*.025);ctx.beginPath();
- for(const t of st.tiles){const[sx,sy]=w2s(t.x,t.y);if(!st.grid.has(AC.K(t.x,t.y-1))){ctx.moveTo(sx,sy+1);ctx.lineTo(sx+s,sy+1);}if(!st.grid.has(AC.K(t.x-1,t.y))){ctx.moveTo(sx+1,sy);ctx.lineTo(sx+1,sy+s);}}
+ for(const t of st.tiles){const[sx,sy]=c2s(t.x,t.y);if(!st.grid.has(AC.K(t.x+SDX[up],t.y+SDY[up]))){ctx.moveTo(sx,sy+1);ctx.lineTo(sx+s,sy+1);}if(!st.grid.has(AC.K(t.x+SDX[lf],t.y+SDY[lf]))){ctx.moveTo(sx+1,sy);ctx.lineTo(sx+1,sy+s);}}
  ctx.stroke();ctx.restore();}
 
 /* ---------- fx ---------- */
@@ -955,7 +1010,7 @@ function selSlot(i){if(!myTurn()||!M.st.offer[i])return;if(M.tut){const T=TUT[M.
  if(M.sel===i){return;}
  M.sel=i;const inst=M.st.offer[i];M.legal=new Map();for(const L of AC.legal(M.st,inst))if(!M.tut||!M.tut.cell||(L.x===M.tut.cell[0]&&L.y===M.tut.cell[1]))M.legal.set(AC.K(L.x,L.y),L.rots);
  if(M.legal.size){let vis=false,best=null,bd=1e9;for(const k of M.legal.keys()){const x=Math.floor(k/4096)-2048,y=k%4096-2048,[sx,sy]=w2s(x+.5,y+.5);
-  if(sx>0&&sx<W&&sy>VR.y&&sy<VR.y+VR.h){vis=true;break;}const d=Math.hypot(x+.5-cam.x,y+.5-cam.y);if(d<bd){bd=d;best={x,y};}}if(!vis&&best)fitCam(false,false,best);}
+  if(sx>VR.x&&sx<VR.x+VR.w&&sy>VR.y&&sy<VR.y+VR.h){vis=true;break;}const d=Math.hypot(x+.5-cam.x,y+.5-cam.y);if(d<bd){bd=d;best={x,y};}}if(!vis&&best)fitCam(false,false,best);}
  if(M.ghost){const r=M.legal.get(AC.K(M.ghost.x,M.ghost.y));if(r){if(!r.includes(M.ghost.r))M.ghost.r=r[0];}else M.ghost=null;}
  if(M.hint===0)M.hint=1;sfx('sel');refresh();if(M.tut&&M.tut.i===1)tutGo(2);}
 function rotate(){if(!myTurn()||!M.ghost)return;const r=M.legal.get(AC.K(M.ghost.x,M.ghost.y));if(!r||r.length<2){M.ghost.wob=1;sfx('tap');return;}
@@ -995,7 +1050,7 @@ async function runEvents(ev,p){const id=M.id,st=M.st;
   else if(e.type==='market'){marketAnim(e);if(!e.drift){await wait(240);if(!M.tutorial&&!S.mkTip&&!FAST){S.mkTip=1;save();await tip(marketTip(e));if(!M||M.id!==id)return;}}}
   else if(e.type==='discard'){toast('A tile that fitted nowhere was set aside');await wait(380);}
   else if(e.type==='toward'){toast('No space fitted a tile, so it was rebuilt as a palace');await wait(500);}
-  else if(e.type==='shore'){toast(e.axis?'The city is full height: the shore is set top and bottom':'The city is full width: the shore is set left and right');sfx('road');await wait(600);}
+  else if(e.type==='shore'){toast(e.axis^cam.q?'The city is full height: the shore is set top and bottom':'The city is full width: the shore is set left and right');sfx('road');await wait(600);}
   else if(e.type==='over'){await wait(500);}}
  if(M&&M.id===id){M.shown=M.st.scores.slice();refresh();}}
 function finish(forced){if(!M||M.ended)return;if(M.tutorial){M.ended=true;M.busy=false;S.tut=2;save();sfx('win');refresh();return setTimeout(()=>{if(M&&M.ended)showTutEnd();},FAST?0:500);}
@@ -1069,7 +1124,7 @@ function marketAnim(e,keep){document.querySelectorAll('.mk').forEach((m,i)=>{con
 function clearMarketMarks(){document.querySelectorAll('.mk').forEach(m=>{clearTimeout(m._t);m.querySelector('em').className='';m.classList.remove('flash');});}
 function refreshTray(){if(!M)return;const st=M.st;document.querySelectorAll('.slot').forEach((b,i)=>{const inst=st.offer[i],c=b.querySelector('canvas'),g=c.getContext('2d');g.clearRect(0,0,116,116);
  b.classList.toggle('empty',!inst);b.classList.toggle('sel',M.sel===i);b.classList.toggle('rv',!!(M.rvSlot&&M.rvSlot.i===i&&M.rvSlot.p===1));b.classList.toggle('rv2',!!(M.rvSlot&&M.rvSlot.i===i&&M.rvSlot.p===2));
- b.disabled=!inst||!myTurn();if(!inst)return;const r=M.sel===i&&M.ghost?M.ghost.r:0;
+ b.disabled=!inst||!myTurn();if(!inst)return;const r=((M.sel===i&&M.ghost?M.ghost.r:0)+cam.q)%4;
  g.save();PAINT.rr(g,0,0,116,116,16);g.clip();g.fillStyle='#3e968b';g.fillRect(0,0,116,116);g.save();g.scale(1,106/116);drawTileAt(g,inst,r,0,0,116,1,true);g.restore();g.fillStyle='rgba(255,255,255,.35)';g.fillRect(0,0,116,3);g.restore();});
  const gr=M.ghost&&M.legal&&M.legal.get(AC.K(M.ghost.x,M.ghost.y));$('bRot').disabled=!(myTurn()&&M.ghost&&gr&&gr.length>1);$('bOk').disabled=!(myTurn()&&M.ghost);}
 function setPrev(h){$('prev').innerHTML=h;}
@@ -1085,7 +1140,7 @@ function refresh(){if(!M)return;refreshScores();refreshMarket();refreshTray();re
 /* ---------- banner, info, toast ---------- */
 function showBanner(){const L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff,M.st.island);const b=$('banner');
  b.innerHTML=`<button class="x" id="bnX" aria-label="Close">×</button><h3>${lvLabel(M.lv)}${esc(L.name)}</h3><p>${esc(L.rule)}</p>
- <p>Rival: <span class="rv">${esc(L.rival)}</span>, ${esc(L.style)} \u00b7 ${DIFFS[M.diff].n}</p>${M.st.lim?`<p>${AC.ISLAND[M.st.island].n} island: the city can grow to ${M.st.lim[0]} wide and ${M.st.lim[1]} tall, any way you choose.</p>`:''}<p>★ win · ★★ win by ${th[1]} · ★★★ by ${th[2]}</p>`;
+ <p>Rival: <span class="rv">${esc(L.rival)}</span>, ${esc(L.style)} \u00b7 ${DIFFS[M.diff].n}</p>${M.st.lim?`<p>${AC.ISLAND[M.st.island].n} island: the city can grow to ${M.st.lim[cam.q]} wide and ${M.st.lim[1-cam.q]} tall, any way you choose.</p>`:''}<p>★ win · ★★ win by ${th[1]} · ★★★ by ${th[2]}</p>`;
  b.hidden=false;$('bnX').onclick=e=>{e.stopPropagation();hideBanner();};b.style.top=(VR.y+6)+'px';}
 function hideBanner(){$('banner').hidden=true;$('bFit').hidden=false;}
 let toastT=0;function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2200);}
@@ -1106,27 +1161,27 @@ function showInfo(ti){const st=M.st,fs=AC.tileInfo(st,ti),t=st.tiles[ti];
 
 /* ---------- drawing ---------- */
 function draw(){ctx.setTransform(DPR,0,0,DPR,0,0);const st=M?M.st:DEMO;drawPaper(st);if(!st)return;
- const s=cam.s,[vx0,vy0]=s2w(-s,-s),[vx1,vy1]=s2w(W+s,H+s),vis=t=>!(t.x<vx0||t.x>vx1||t.y<vy0||t.y>vy1);
+ const s=cam.s,q=cam.q,[ax,ay]=s2w(-s,-s),[bx,by]=s2w(W+s,H+s),vx0=Math.min(ax,bx),vx1=Math.max(ax,bx),vy0=Math.min(ay,by),vy1=Math.max(ay,by),vis=t=>!(t.x<vx0||t.x>vx1||t.y<vy0||t.y>vy1);
  const gh=M&&M.ghost&&M.sel>=0&&M.st.offer[M.sel]?M.ghost:null;
  drawWater(st,cityPath(st,gh));
- st.tiles.forEach((t,i)=>{if(!vis(t))return;const[sx,sy]=w2s(t.x,t.y);
+ st.tiles.forEach((t,i)=>{if(!vis(t))return;const[sx,sy]=c2s(t.x,t.y),tr=(t.rot+q)%4;
   if(FX.drops.has(i)){const k=FX.drops.get(i),sc=1+.16*(1-k)*(1-k),d=(sc-1)*s/2;ctx.save();ctx.shadowColor='rgba(60,40,10,.3)';ctx.shadowBlur=14*(1-k);ctx.shadowOffsetY=8*(1-k);
-   drawTileAt(ctx,t.inst,t.rot,sx-d,sy-d-6*(1-k),s*sc,Math.min(1,.35+k*1.4),true);ctx.restore();}
-  else drawTileAt(ctx,t.inst,t.rot,sx,sy,s);});
+   drawTileAt(ctx,t.inst,tr,sx-d,sy-d-6*(1-k),s*sc,Math.min(1,.35+k*1.4),true);ctx.restore();}
+  else drawTileAt(ctx,t.inst,tr,sx,sy,s);});
  drawRim(st);if(M&&st.lim)drawLimit(st);
  if(M){
-  for(const g of FX.glows){const a=g.t<.25?g.t/.25:Math.max(0,1-(g.t-.25)/1.1);ctx.fillStyle=g.col+(.5*a)+')';for(const ti of g.tiles){const t=st.tiles[ti],[sx,sy]=w2s(t.x,t.y);ctx.fillRect(sx,sy,s,s);}}
-  if(M.info){ctx.fillStyle='rgba(255,255,255,.3)';ctx.strokeStyle='#fff';ctx.lineWidth=2;for(const ti of M.info.tiles){const t=st.tiles[ti],[sx,sy]=w2s(t.x,t.y);ctx.fillRect(sx,sy,s,s);ctx.strokeRect(sx+1,sy+1,s-2,s-2);}}
-  if(M.lastRv&&st.tiles[M.lastRv.ti]){const t=st.tiles[M.lastRv.ti],[sx,sy]=w2s(t.x,t.y);ctx.strokeStyle=COLS[M.lastRv.p];ctx.lineWidth=3;PAINT.rr(ctx,sx+1.5,sy+1.5,s-3,s-3,6);ctx.stroke();}
+  for(const g of FX.glows){const a=g.t<.25?g.t/.25:Math.max(0,1-(g.t-.25)/1.1);ctx.fillStyle=g.col+(.5*a)+')';for(const ti of g.tiles){const t=st.tiles[ti],[sx,sy]=c2s(t.x,t.y);ctx.fillRect(sx,sy,s,s);}}
+  if(M.info){ctx.fillStyle='rgba(255,255,255,.3)';ctx.strokeStyle='#fff';ctx.lineWidth=2;for(const ti of M.info.tiles){const t=st.tiles[ti],[sx,sy]=c2s(t.x,t.y);ctx.fillRect(sx,sy,s,s);ctx.strokeRect(sx+1,sy+1,s-2,s-2);}}
+  if(M.lastRv&&st.tiles[M.lastRv.ti]){const t=st.tiles[M.lastRv.ti],[sx,sy]=c2s(t.x,t.y);ctx.strokeStyle=COLS[M.lastRv.p];ctx.lineWidth=3;PAINT.rr(ctx,sx+1.5,sy+1.5,s-3,s-3,6);ctx.stroke();}
   if(myTurn()&&M.sel>=0&&M.legal){const pulse=.5+.5*Math.sin(perf()*4);ctx.save();ctx.setLineDash([6,5]);ctx.lineWidth=2.2;
-   for(const[k]of M.legal){const x=Math.floor(k/4096)-2048,y=k%4096-2048,[sx,sy]=w2s(x,y);if(gh&&gh.x===x&&gh.y===y)continue;
+   for(const[k]of M.legal){const x=Math.floor(k/4096)-2048,y=k%4096-2048,[sx,sy]=c2s(x,y);if(gh&&gh.x===x&&gh.y===y)continue;
     ctx.fillStyle=`rgba(198,90,51,${.07+.07*pulse})`;PAINT.rr(ctx,sx+4,sy+4,s-8,s-8,8);ctx.fill();ctx.strokeStyle=`rgba(198,90,51,${.5+.35*pulse})`;ctx.stroke();}ctx.restore();}
  }
- const showB=s>=26,live=M&&!M.ended&&!st.over?liveTiles(st):null;st.tiles.forEach((t,i)=>{if(!vis(t))return;const[sx,sy]=w2s(t.x,t.y);if(showB&&(M||i>0))drawBadges(ctx,t.inst,t.rot,sx,sy,s);if(live&&t.owner>=0&&live.has(i))owner(ctx,sx,sy,s,t.owner);});
- if(gh){const inst=st.offer[M.sel],[sx,sy]=w2s(gh.x,gh.y),pulse=.5+.5*Math.sin(perf()*5);
+ const showB=s>=26,live=M&&!M.ended&&!st.over?liveTiles(st):null;st.tiles.forEach((t,i)=>{if(!vis(t))return;const[sx,sy]=c2s(t.x,t.y);if(showB&&(M||i>0))drawBadges(ctx,t.inst,(t.rot+q)%4,sx,sy,s);if(live&&t.owner>=0&&live.has(i))owner(ctx,sx,sy,s,t.owner);});
+ if(gh){const inst=st.offer[M.sel],[sx,sy]=c2s(gh.x,gh.y),pulse=.5+.5*Math.sin(perf()*5);
   ctx.save();ctx.shadowColor='rgba(60,40,10,.35)';ctx.shadowBlur=16;ctx.shadowOffsetY=7;let ang=(gh.spin>0?-gh.spin*Math.PI/2:0)+(gh.wob>0?Math.sin(gh.wob*Math.PI*5)*.13*gh.wob:0);
-  ctx.translate(sx+s/2,sy+s/2-4);ctx.rotate(ang);ctx.translate(-sx-s/2,-sy-s/2+4);drawTileAt(ctx,inst,gh.r,sx,sy-4,s,1,true);ctx.restore();
-  drawBadges(ctx,inst,gh.r,sx,sy-4,s);owner(ctx,sx,sy-4,s,0);
+  ctx.translate(sx+s/2,sy+s/2-4);ctx.rotate(ang);ctx.translate(-sx-s/2,-sy-s/2+4);drawTileAt(ctx,inst,(gh.r+q)%4,sx,sy-4,s,1,true);ctx.restore();
+  drawBadges(ctx,inst,(gh.r+q)%4,sx,sy-4,s);owner(ctx,sx,sy-4,s,0);
   ctx.strokeStyle=COLS[0];ctx.lineWidth=3+pulse;PAINT.rr(ctx,sx+1,sy-3,s-2,s-2,7);ctx.stroke();}
  for(const p of FX.pops){if(p.t<0)continue;const[sx,sy]=w2s(p.wx,p.wy),a=p.t<1.1?1:Math.max(0,1-(p.t-1.1)/.6),y=sy-18-p.t*26;
   ctx.globalAlpha=a;ctx.font=`900 ${Math.round(clamp(s*.42,20,30))}px Nunito,system-ui,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';
@@ -1157,7 +1212,7 @@ cv.addEventListener('pointermove',e=>{const p=PT.get(e.pointerId);if(!p)return;p
  if(PT.size>=2&&pinch){const[a,b]=[...PT.values()],d=Math.hypot(a.x-b.x,a.y-b.y),mx=(a.x+b.x)/2,my=(a.y+b.y)/2,[wx,wy]=s2w(mx,my);
   cam.s=cam.ts=clamp(pinch.s*d/pinch.d,22,140);const[nx,ny]=s2w(mx,my);cam.x+=wx-nx;cam.y+=wy-ny;cam.tx=cam.x;cam.ty=cam.y;cam.man=true;return;}
  if(pan){const dx=e.clientX-pan.x,dy=e.clientY-pan.y;if(!pan.moved&&Math.hypot(e.clientX-p.x0,e.clientY-p.y0)>9)pan.moved=true;
-  if(pan.moved){cam.x-=dx/cam.s;cam.y-=dy/cam.s;cam.tx=cam.x;cam.ty=cam.y;cam.man=true;}pan.x=e.clientX;pan.y=e.clientY;}});
+  if(pan.moved){const[ux,uy]=cam.q?[dy,-dx]:[dx,dy];cam.x-=ux/cam.s;cam.y-=uy/cam.s;cam.tx=cam.x;cam.ty=cam.y;cam.man=true;}pan.x=e.clientX;pan.y=e.clientY;}});
 function ptrEnd(e){const p=PT.get(e.pointerId);PT.delete(e.pointerId);if(!p)return;if(pinch){if(PT.size<2)pinch=null;pan=null;return;}
  if(pan&&!pan.moved&&e.type==='pointerup')boardTap(e.clientX-app.getBoundingClientRect().left,e.clientY-app.getBoundingClientRect().top);pan=null;}
 cv.addEventListener('pointerup',ptrEnd);cv.addEventListener('pointercancel',ptrEnd);
@@ -1182,14 +1237,14 @@ function renderHome(){const P=prog(),L=CITY.levels;if(S.cur&&(!L[S.cur.lv]||curD
  if(!unlocked(next))next=0;
  const playLbl=cur?`Continue<small>${lvLabel(cur.lv)}${esc(L[cur.lv].name)} · turn ${cur.moves.length+1} · ${DIFFS[cur.diff].n}</small>`:S.tut<2?'Play<small>Start with a one-minute guided game</small>':`Play<small>${lvLabel(next)}${esc(L[next].name)}</small>`;
  $('home').innerHTML=`<div class="hwrap"><div class="htop"><h1><em>DIGI GAMES</em>Ancient Cities</h1><div><span class="sub"><b>${esc(CITY.name)}</b> · ${esc(CITY.tag)}</span></div></div>
- <button class="big" id="hPlay" style="flex-direction:column;gap:0">${playLbl}</button>
+ <div class="hcol"><button class="big" id="hPlay" style="flex-direction:column;gap:0">${playLbl}</button>
  <div class="seg" id="hDiff">${Object.keys(DIFFS).map(k=>`<button data-d="${k}" class="${S.diff===k?'on':''}">${DIFFS[k].n}</button>`).join('')}</div>
  <div class="dnote">${esc(DIFFS[S.diff].d)}</div>
  <h2 class="lh">${esc(CITY.name)}</h2>
  <button class="lv" id="hTut"><span class="num">?</span><span class="nm"><b>Learn to play</b><span>A one-minute guided game</span></span><span class="stars">${S.tut>=2?'<i>\u2713</i>':''}</span></button>
  ${L.map((l,i)=>{const lk=!unlocked(i);return `<button class="lv${lk?' lock':''}${l.grand?' grand':''}" data-l="${i}" ${lk?'aria-disabled="true"':''}><span class="num">${l.grand?'✦':i+1}</span><span class="nm"><b>${esc(l.name)}</b><span>${lk?(l.grand?'Win The Great City to unlock':'Win level '+i+' to unlock'):(l.grand?'Choose a small, medium or large island':'vs '+esc(l.rival)+' \u00b7 '+AC.ISLAND[AC.LEVELS[i].size].n+' island')}</span></span><span class="stars">${lk?'\u{1F512}':stars(P.st[i])}</span></button>`;}).join('')}
  <div class="foot"><button class="chip" id="hHelp">How to play</button><button class="chip${S.snd?'':' off'}" id="hSnd">${S.snd?'Sound on':'Sound off'}</button><button class="chip${S.rm?' off':''}" id="hRm">${S.rm?'Motion off':'Motion on'}</button>${fsOK?`<button class="chip${S.fs?'':' off'}" id="hFs">${S.fs?'Full screen on':'Full screen off'}</button>`:''}</div>
- <a class="back" href="../games.html">← Digi Games</a></div>`;
+ <a class="back" href="../games.html">← Digi Games</a></div></div>`;
  $('hPlay').onclick=()=>{goFS();sfx('sel');if(cur)startMatch(cur.lv,'resume',cur);else if(S.tut<2)startMatch(0,'new',null,true);else startMatch(next,'new');};
  if($('hTut'))$('hTut').onclick=()=>{goFS();sfx('sel');startMatch(0,'new',null,true);};
  $('hDiff').querySelectorAll('button').forEach(b=>b.onclick=()=>{S.diff=b.dataset.d;save();sfx('tap');renderHome();});
@@ -1199,7 +1254,7 @@ function renderHome(){const P=prog(),L=CITY.levels;if(S.cur&&(!L[S.cur.lv]||curD
  $('hRm').onclick=()=>{S.rm=!S.rm;save();renderHome();};
  if($('hFs'))$('hFs').onclick=()=>{S.fs=!S.fs;save();if(S.fs)goFS();else exitFS();renderHome();};}
 function pickIsland(lv){const I=AC.ISLAND;
- openModal(`<h2>Grand Market</h2><p class="lead">You against two rivals. Choose your island.</p>${['S','M','L'].map(k=>`<button class="mbtn${k==='M'?' pri':''}" data-isl="${k}" style="height:60px;line-height:1.15;display:flex;flex-direction:column;justify-content:center;align-items:center"><span>${I[k].n} island \u00b7 ${I[k].lim[0]}\u00d7${I[k].lim[1]}</span><small style="font-weight:700;opacity:.8;font-size:13px">${AC.bagSize(lv,k)} tiles \u00b7 about ${I[k].mins} min</small></button>`).join('')}<button class="mbtn" id="pkX">Back</button>`);
+ openModal(`<h2>Grand Market</h2><p class="lead">You against two rivals. Choose your island.</p><div class="isl3">${['S','M','L'].map(k=>`<button class="mbtn${k==='M'?' pri':''}" data-isl="${k}" style="height:60px;line-height:1.15;display:flex;flex-direction:column;justify-content:center;align-items:center"><span>${I[k].n} island \u00b7 ${I[k].lim[0]}\u00d7${I[k].lim[1]}</span><small style="font-weight:700;opacity:.8;font-size:13px">${AC.bagSize(lv,k)} tiles \u00b7 about ${I[k].mins} min</small></button>`).join('')}</div><button class="mbtn" id="pkX">Back</button>`);
  document.querySelectorAll('[data-isl]').forEach(b=>b.onclick=()=>{S.island=b.dataset.isl;save();goFS();sfx('sel');startMatch(lv,{how:'new',island:b.dataset.isl});});$('pkX').onclick=()=>closeModal();}
 function toastHome(b){b.animate&&!S.rm&&b.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:260});}
 let demoC=[0,0];
@@ -1208,12 +1263,12 @@ function openModal(h){$('mbox').innerHTML=h;$('modal').hidden=false;$('modal').s
 function closeModal(){$('modal').hidden=true;}
 function pause(){if(!M||M.ended)return;paused=true;hideInfo();const L=CITY.levels[M.lv];
  openModal(`<h2>Paused</h2><p class="lead">${lvLabel(M.lv)}${esc(L.name)} · ${DIFFS[M.diff].n}</p>
- <button class="mbtn pri" id="mRes">Resume</button><button class="mbtn" id="mHelp">How to play</button>
- <div class="mrow"><button class="mbtn" id="mRe">Restart</button><button class="mbtn" id="mLv">Levels</button></div>
- <div style="margin-top:10px"><div class="tg"><span>Sound &amp; haptics</span><button id="tSnd" class="${S.snd?'on':''}" aria-label="Sound"></button></div>
+ <div class="mcols"><div><button class="mbtn pri" id="mRes">Resume</button><button class="mbtn" id="mHelp">How to play</button>
+ <div class="mrow"><button class="mbtn" id="mRe">Restart</button><button class="mbtn" id="mLv">Levels</button></div></div>
+ <div><div class="tgs"><div class="tg"><span>Sound &amp; haptics</span><button id="tSnd" class="${S.snd?'on':''}" aria-label="Sound"></button></div>
  <div class="tg"><span>Motion</span><button id="tRm" class="${S.rm?'':'on'}" aria-label="Motion"></button></div>
  ${fsOK?`<div class="tg"><span>Full screen</span><button id="tFs" class="${S.fs?'on':''}" aria-label="Full screen"></button></div>`:''}</div>
- <a class="mbtn" href="../games.html">← Digi Games</a>`);
+ <a class="mbtn" href="../games.html">← Digi Games</a></div></div>`);
  $('mRes').onclick=()=>{goFS();resume();};$('mHelp').onclick=()=>showHelp(true);
  $('mRe').onclick=()=>{goFS();const lv=M.lv,isl=M.st.island;S.cur=null;startMatch(lv,{how:'retry',island:isl});};
  $('mLv').onclick=()=>{saveCur();home();};
@@ -1228,7 +1283,7 @@ function showHelp(fromPause){const g=CITY.goods;
  <h3>Fields</h3><p>A field (a milpa of maize) is finished when water surrounds it. It sells its ${g[0].n}: ${AC.RULES.start[0]} points for each crop shown on it. Finishing a field pays whoever laid most of it, even if a rival lays the last tile, so building onto someone else’s field can win you its sale.</p>
  <h3>White roads</h3><p>The Maya built raised white roads called sacbe. A road scores 1 point per tile once both ends finish, plus 3 for each end at ${esc(CITY.market)} or a temple.</p>
  <h3>Temples</h3><p>A temple quarter is the temple and the eight spaces around it. It scores 9 once all nine are filled.</p>
- <h3>Island limits</h3><p>Each level is an island with room to spare: the city can grow in any direction, up to its size (Small 4×6, Medium 6×9, Large 8×12). The dashed line shows how far it can still grow. When the city reaches full width, the shore is set along both sides, and any field or road touching the shore is finished. The same happens top and bottom at full height. A tile that would fit nowhere is rebuilt as a palace.</p>
+ <h3>Island limits</h3><p>Each level is an island with room to spare: the city can grow in any direction, up to its size (Small 4×6, Medium 6×9, Large 8×12). The dashed line shows how far it can still grow. When the city reaches full width, the shore is set along both sides, and any field or road touching the shore is finished. The same happens top and bottom at full height. Turn your phone sideways and the island turns with it. A tile that would fit nowhere is rebuilt as a palace.</p>
  <h3>Palaces</h3><p>A palace fits against any edge. A field touching it is closed by its wall, and a road ends at its gate. It scores nothing itself, so laying one can finish a rival\u2019s field as easily as yours.</p>
  <h3>Canoe landings</h3><p>A field with a canoe jetty sells for 1 more per crop.</p>
  <h3>The end</h3><p>When the bag is empty, unfinished fields pay 1 per crop, unfinished roads 1 per tile, and unfinished temple quarters 1 per tile, to whoever leads them (runner-up half).</p>
@@ -1239,13 +1294,13 @@ function showHelp(fromPause){const g=CITY.goods;
 function showEnd(r){M.reopen=()=>showEnd(r);const st=M.st,L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff,M.st.island),winner=r.win?'You win!':r.draw?'A draw':`${esc(M.names[st.scores.indexOf(Math.max(...st.scores))])} wins`;
  const hasNext=M.lv<GRAND()&&unlocked(M.lv+1);const rows=[['Fields','G'],['Roads','C'],['Temples','P'],['Unfinished','E'],['Head start','H']].filter(([,k])=>st.br.some(b=>b[k]));
  openModal(`<h2>${winner}</h2><p class="lead">${lvLabel(M.lv)}${esc(L.name)} · ${DIFFS[M.diff].n}</p>
- <div class="bigstars">${stars(r.stars)}</div><div class="th">★ win · ★★ by ${th[1]} · ★★★ by ${th[2]}${r.win?` · you won by ${r.margin}${r.best?' (best yet)':''}`:''}</div>
+ <div class="mcols"><div><div class="bigstars">${stars(r.stars)}</div><div class="th">★ win · ★★ by ${th[1]} · ★★★ by ${th[2]}${r.win?` · you won by ${r.margin}${r.best?' (best yet)':''}`:''}</div>
  <div class="res">${M.names.map((n,i)=>`<div class="pl p${i}"><i></i><b>${esc(n)}</b><span>${st.scores[i]}</span></div>`).join('')}</div>
  <table class="bd"><tr><th></th>${M.names.map((n,i)=>`<th style="color:${COLS[i]}">${esc(n)}</th>`).join('')}</tr>${rows.map(([lab,k])=>`<tr><td>${lab}</td>${st.br.map(b=>`<td>${b[k]}</td>`).join('')}</tr>`).join('')}</table>
- ${!r.win&&M.diff!=='calm'?'<p class="th">Calm gives you a head start and a gentler rival.</p>':''}
- <button class="mbtn jd" id="eView">See your city</button>
+ ${!r.win&&M.diff!=='calm'?'<p class="th">Calm gives you a head start and a gentler rival.</p>':''}</div>
+ <div><button class="mbtn jd" id="eView">See your city</button>
  <div class="mrow"><button class="mbtn pri" id="eAgain">Again</button>${hasNext?'<button class="mbtn jd" id="eNext">Next level</button>':''}</div>
- <button class="mbtn" id="eLv">Levels</button><a class="mbtn" href="../games.html">← Digi Games</a>`);
+ <button class="mbtn" id="eLv">Levels</button><a class="mbtn" href="../games.html">← Digi Games</a></div></div>`);
  $('eView').onclick=()=>viewCity(true);$('eAgain').onclick=()=>{goFS();viewCity(false);startMatch(M.lv,{how:'retry',island:M.st.island});};if($('eNext'))$('eNext').onclick=()=>{goFS();startMatch(M.lv+1,'new');};$('eLv').onclick=()=>home();}
 
 /* ---------- lifecycle ---------- */
