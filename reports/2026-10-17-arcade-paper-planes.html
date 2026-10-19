@@ -109,7 +109,7 @@ a.back:active{opacity:.6}
 .foldCard{display:flex;flex-direction:column;padding:8px 10px 8px 40px;min-height:0}
 .foldHead{display:flex;align-items:center;gap:6px}
 .foldHead .nm{flex:1;text-align:center;font-size:24px;line-height:1.05}
-.foldHead .ct{font-size:12px;color:var(--soft)}
+.foldHead .ct{font-size:12px;color:var(--soft)}#fPrev,#fNext{font-size:28px;line-height:1;padding-top:0;padding-bottom:4px}
 #foldCv{width:100%;height:96px;display:block}
 .blurb{font-size:13px;color:var(--soft);text-align:center;min-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bars{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:3px 8px;font-size:12px;align-items:center;margin:4px 0}
@@ -127,7 +127,7 @@ a.back:active{opacity:.6}
 .pips{display:flex;gap:3px}
 .pips i{width:9px;height:14px;border-radius:3px;background:#dfe4ec;border:1px solid #b9c1cc}
 .pips i.on{background:var(--good);border-color:#227445}
-.up .btn{min-width:78px;padding:4px 8px;font-size:14px}
+.up .btn{min-width:78px;padding:4px 8px;font-size:14px}.up .maxed{min-width:78px;text-align:center;font:800 14px/1 Nunito,system-ui,sans-serif;color:var(--good)}
 .bests{font-size:12.5px;color:var(--soft);text-align:center;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-aspect-ratio:1/1){
   .hbody{grid-template-columns:1fr}
@@ -181,7 +181,7 @@ a.back:active{opacity:.6}
 .rewardIcon{font-size:40px;line-height:1;color:#7b5930;transform:rotate(24deg)}.rewardHero .rewardAmount{display:flex;flex-direction:column;text-align:left}.rewardHero small{font-size:10px;letter-spacing:1.1px;font-weight:800;color:#926820}.rewardHero strong{font-size:clamp(32px,5.5vmin,48px);font-weight:400;line-height:1;color:#704a1b}.rewardGlint{position:absolute;right:15px;top:2px;color:#e2b14a;font-size:22px}
 .landing.on .rewardGlint{animation:rewardTwinkle .9s ease-in-out 2}@keyframes rewardTwinkle{50%{transform:rotate(28deg) scale(1.35);opacity:.55}}
 .rewardBreak{font-size:12px;color:#536579;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.rewardBreak b{color:#263b50}.landingBalance{margin-top:5px;font-size:12px;font-weight:800;color:#48596c}
-.upgradeHint{font-size:12px;text-align:center;background:#e6f0f4;border:1px solid #c8d8df;color:#2b566d;border-radius:9px;padding:5px 9px;margin:8px 0 5px}.upgradeHint.ready{background:#e5f3d7;border-color:#c0deb1;color:#26653b;font-weight:800}
+.windNote{font-size:13px;text-align:center;color:var(--soft);margin:6px 0 2px}.upgradeHint{font-size:12px;text-align:center;background:#e6f0f4;border:1px solid #c8d8df;color:#2b566d;border-radius:9px;padding:5px 9px;margin:8px 0 5px}.upgradeHint.ready{background:#e5f3d7;border-color:#c0deb1;color:#26653b;font-weight:800}
 .landingActions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:6px}.landingActions .btn{min-width:190px}
 @media(min-aspect-ratio:1/1){.landing .card{width:min(600px,100%)}}
 .endReward{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px 12px;border-radius:11px;background:linear-gradient(120deg,#fff0ad,#fff9df);padding:6px;margin:5px auto;border:1.5px solid #d9bc73}.endReward span{font-size:11px;font-weight:800;letter-spacing:.9px;color:#7e5a25}.endReward strong{font-size:35px;line-height:1;color:#73501f}.endReward small{font-size:11px;color:#775e39}
@@ -427,7 +427,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
     <div class="rewardHero" id="lReward"><span class="rewardIcon" aria-hidden="true"><svg viewBox="0 0 40 54" width="39" height="47" fill="none"><path d="M11 38V14a9 9 0 0 1 18 0v27a7 7 0 0 1-14 0V16" stroke="#855727" stroke-width="5" stroke-linecap="round"/><path d="M11 38V14a9 9 0 0 1 18 0v27a7 7 0 0 1-14 0V16" stroke="#e9b35c" stroke-width="1.4" stroke-linecap="round"/></svg></span><span class="clipBurst" aria-hidden="true">✦</span><span class="rewardAmount"><small>PAPERCLIPS EARNED</small><strong class="hand" id="lEarned">+0</strong></span><span class="rewardGlint" aria-hidden="true">✦</span></div>
     <div class="rewardBreak" id="lBreak"></div>
     <div class="landingBalance" id="lBalance"></div>
-    <div class="upgradeHint" id="lWind"></div>
+    <div class="windNote" id="lWind"></div>
     <div class="upgradeHint" id="lUpgrade"></div>
     <div class="landingActions"><button class="btn pri" id="lNext">Next throw ➤</button><button class="btn" id="lHangar">✦ Hangar · upgrades</button></div>
   </div>
@@ -1052,7 +1052,8 @@ function nextUpgrade(){
   if(next>=0)opts.push({name:FOLDS[next].name+' fold',cost:FOLDS[next].cost});
   opts.sort((a,b)=>a.cost-b.cost);
   const affordable=opts.filter(x=>x.cost<=save.clips),pick=affordable[0]||opts[0];
-  if(!pick)return {affordable:false,text:'This plane and pilot are fully upgraded. Try another fold or chase a record!'};
+  if(!pick){const other=save.owned.some((o,i)=>o&&i!==fi&&FOLD_STATS.some(s=>save.up[i][s.id]<FOLD_MAX));
+    return {affordable:false,done:true,text:other?'Fully tuned! Another fold still has upgrades.':'Everything is fully upgraded. Chase a record!'};}
   return {affordable:!!affordable.length,text:affordable.length?'✦ Upgrade ready: '+pick.name+' · '+pick.cost+' clips. Open the Hangar!':'Next upgrade: '+pick.name+' · '+pick.cost+' clips ('+(pick.cost-save.clips)+' more to earn)'};
 }
 function setUpgradeHint(el){const hint=nextUpgrade();el.textContent=hint.text;el.classList.toggle('ready',hint.affordable);}
@@ -1068,7 +1069,7 @@ function showLanding(v){
   $('lEarned').textContent='+'+(RM()?v.earned:0);$('lReward').setAttribute('aria-label',v.earned+' paperclips earned this flight');
   const breakdown=[['Distance',Math.floor(v.d/4)],['Air clips',v.pickups*3]];if(v.bonus)breakdown.push(['Place bonus',v.bonus]);
   $('lBreak').innerHTML=breakdown.map(x=>'<span>'+x[0]+' <b>+'+x[1]+'</b></span>').join('');
-  $('lBalance').textContent='✈ '+run.throws+' throws left  ·  '+save.clips.toLocaleString()+' paperclips banked';setUpgradeHint($('lUpgrade'));
+  $('lBalance').textContent='✈ '+run.throws+' throws left  ·  '+save.clips.toLocaleString()+' paperclips banked';setUpgradeHint($('lUpgrade'));$('lUpgrade').style.display=$('lUpgrade').classList.contains('ready')?'':'none';
   if (v.next === 'aim' && nextUpgrade().affordable) $('lUpgrade').textContent='✦ Upgrade ready! Visit the Hangar, then continue this run.';
   $('lNext').textContent=v.next==='end'||v.next==='win'?'See run results ➤':v.clear?'Next place ➤':'Next throw ➤';
   $('landing').classList.add('on'); focusPanel('landing','lNext');
@@ -1242,7 +1243,7 @@ function foldStats(fi) {
 function renderHangar() {
   if(hangarRun){save.run=runSnap();persist();}
   $('homeBtn').textContent=hangarRun?'Continue run ➤':'⌂ Home';
-  $('hClips').textContent=save.clips; const suggestion=nextUpgrade();$('hangarGuide').textContent=suggestion.text;$('hangarGuide').classList.toggle('ready',suggestion.affordable);
+  $('hClips').textContent=save.clips.toLocaleString(); const suggestion=nextUpgrade();$('hangarGuide').textContent=suggestion.text;$('hangarGuide').classList.toggle('ready',suggestion.affordable);
   const fi = viewFold, f = FOLDS[fi], own = save.owned[fi];
   $('fName').textContent = f.name; $('fCount').textContent = 'Fold ' + (fi + 1) + ' of 5' + (own ? (fi === save.fold ? ' · flying' : ' · owned') : '');
   $('fBlurb').textContent = f.blurb;
@@ -1275,7 +1276,8 @@ function renderHangar() {
 function row(id, name, what, lv, max, isMax, cost, dis) {
   let p = ''; for (let i = 0; i < max; i++) p += '<i class="' + (i < lv ? 'on' : '') + '"></i>';
   return '<div class="up' + (!dis && !isMax ? ' can' : '') + '"><div class="tx"><b>' + name + '</b><span>' + what + '</span></div><div class="pips">' + p + '</div>' +
-    '<button class="btn" aria-label="'+name+', level '+lv+' of '+max+(isMax?', maximum':', upgrade for '+cost+' paperclips')+'" data-up="' + id + '"' + (dis ? ' disabled' : '') + '>' + (isMax ? 'Max' : '▲ ' + cost) + '</button></div>';
+    (isMax ? '<span class="maxed" aria-label="'+name+', fully upgraded">✓ Max</span></div>'
+      : '<button class="btn" aria-label="'+name+', level '+lv+' of '+max+', upgrade for '+cost+' paperclips" data-up="' + id + '"' + (dis ? ' disabled' : '') + '>▲ ' + cost + '</button></div>');
 }
 function buyUp(id) {
   initAudio();
