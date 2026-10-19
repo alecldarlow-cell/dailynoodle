@@ -59,7 +59,7 @@ const LEGACY = new Set([
 const helpers = key => `/* ---- ${MARK}: a finished puzzle reopens finished (${key} → done[id]) ---- */
 const DONE_KEY="${key}";
 function doneGet(id){try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");return (s&&s.v===1&&s.done&&s.done[id])||null;}catch(e){return null;}}
-function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=new Date().toISOString().slice(0,10);s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}}
+function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}}
 let doneTried=false;`;
 
 const secs = 'Math.max(0,Math.min(359999,Math.floor(+rec.s)||0))';

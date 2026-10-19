@@ -170,6 +170,7 @@ function fitFont(force){
 addEventListener("resize",()=>{fitBoard();fitFont(true);});
 function toggle(w){
   if(over||busy)return;
+  startTimer();   // also works if the start card could not load
   if(sel.has(w))sel.delete(w);
   else{ if(sel.size>=4){setMsg("Four at a time");return;} sel.add(w); }
   setMsg(""); render();
@@ -299,9 +300,10 @@ function flyIntoBand(first,g,done){
 }
 
 /* ---- timer ---- */
-function stamp(){const s=Math.floor((Date.now()-t0)/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
-function startTimer(){t0=Date.now();tick=setInterval(()=>{$("#timer").textContent=stamp();},250);}
-function stopTimer(){clearInterval(tick);$("#timer").textContent=stamp();}
+function stamp(){const s=t0?Math.floor((Date.now()-t0)/1000):0;return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+function startTimer(){if(over||tick)return;t0=Date.now();tick=setInterval(()=>{$("#timer").textContent=stamp();},250);}
+function stopTimer(){clearInterval(tick);tick=0;$("#timer").textContent=stamp();}
+window.addEventListener('dn:play',startTimer);
 
 /* ---- streak (shared: advances once per calendar day on any solve) ---- */
 const KEY="digi-link-streak";
@@ -467,12 +469,13 @@ function start(){
   _fitKey="";_unitW=0;_unitH=0;
   sel.clear(); solved=[]; mistakes=0; over=false; won=false; guesses=[]; tried=new Set(); busy=false; newBand=null;
   $("#pid").textContent=dnLabel(P.id); $("#pband").textContent=P.band;
-  setMsg(""); render(); stopTimer(); startTimer();
+  setMsg(""); render(); stopTimer(); t0=0; $("#timer").textContent="00:00";
+  if(replayStarted)startTimer();   // replays open straight on the board, without a start card
 }
 /* ---- digi-done-v1: a finished puzzle reopens finished (digi-link-v1 → done[id]) ---- */
 const DONE_KEY="digi-link-v1";
 function doneGet(id){try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");return (s&&s.v===1&&s.done&&s.done[id])||null;}catch(e){return null;}}
-function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=new Date().toISOString().slice(0,10);s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}doneShow();}
+function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=today();s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}doneShow();}
 let doneTried=false;
 /* ---- digi-done-share-v1: the day's saved result stays shareable after a revisit ---- */
 function doneId(){return P.id;}

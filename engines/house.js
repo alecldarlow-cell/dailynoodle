@@ -125,6 +125,7 @@
   root.classList.add('dn-starting');
   $('dnPlay').addEventListener('click', function () {
     root.classList.remove('dn-starting'); card.hidden = true;
+    window.dispatchEvent(new Event('dn:play'));   // Path and Link start their clocks when the board is shown
     // Doku: keep the bank at its starting height, so the grid doesn't jump as it empties
     var bank = TYPE === 'doku' && $('bank'); if (bank) requestAnimationFrame(function () { bank.style.minHeight = bank.offsetHeight + 'px'; });
     try { window.scrollTo(0, 0); } catch (e) {}

@@ -479,7 +479,7 @@ async function saveStreak(obj){
   try{if(window.storage){await window.storage.set(KEY,JSON.stringify(obj));return;}}catch(e){}
   try{localStorage.setItem(KEY,JSON.stringify(obj));}catch(e){}
 }
-function today(){return new Date().toISOString().slice(0,10);}
+function today(){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}catch(e){return new Date().toISOString().slice(0,10);}}
 async function bumpStreak(){
   let s=await store(true)||{last:null,streak:0,best:0,dates:[]};
   const t=today();
@@ -622,7 +622,7 @@ $("#winModal").addEventListener("click",e=>{if(e.target===$("#winModal"))$("#win
 /* ---- digi-done-v1: a finished puzzle reopens finished (digi-mini-v1 → done[id]) ---- */
 const DONE_KEY="digi-mini-v1";
 function doneGet(id){try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");return (s&&s.v===1&&s.done&&s.done[id])||null;}catch(e){return null;}}
-function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=new Date().toISOString().slice(0,10);s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}doneShow();}
+function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=today();s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}doneShow();}
 let doneTried=false;
 /* ---- digi-done-share-v1: the day's saved result stays shareable after a revisit ---- */
 function doneId(){return SAMPLE.id;}

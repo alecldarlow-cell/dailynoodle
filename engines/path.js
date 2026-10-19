@@ -153,7 +153,7 @@ const state = {
   activeEnd: "low",
   history: [],
   solved: false,
-  startTime: Date.now(),
+  startTime: null,
   timerHandle: null,
   streak: 0
 };
@@ -233,6 +233,7 @@ function reject(r,c,text){
 // ---------- Tap-to-extend (the whole input model — no typing, per typespec v4) ----------
 function onTap(r,c){
   if(state.solved) return;
+  startTimer();   // also works if the start card could not load
   const key = r+","+c;
 
   // Selecting an end: only the 1-square and the 36-square are ever selectable.
@@ -400,9 +401,9 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
   state.lowHead=1; state.highHead=TOTAL;
   state.lowCell=lockedByValue.get(1).slice(); state.highCell=lockedByValue.get(TOTAL).slice();
   state.activeEnd="low"; state.history=[]; state.solved=false;
-  state.startTime=Date.now();
   clearInterval(state.timerHandle);
-  state.timerHandle=setInterval(tick,1000);
+  state.startTime=null;
+  startTimer();
   timerEl.textContent="0:00";
   gridEl.classList.remove("celebrate");
   setMsg("Reset. Tap the marigold square, then tap an adjacent square to place the next number.");
@@ -434,13 +435,18 @@ function checkWin(){
 }
 
 // ---------- Timer ----------
+function startTimer(){
+  if(state.solved || state.startTime!==null) return;
+  state.startTime=Date.now();
+  state.timerHandle=setInterval(tick,1000);
+}
 function tick(){
-  if(state.solved) return;
+  if(state.solved || state.startTime===null) return;
   const s = Math.floor((Date.now()-state.startTime)/1000);
   const m = Math.floor(s/60), ss = String(s%60).padStart(2,"0");
   timerEl.textContent = m+":"+ss;
 }
-state.timerHandle = setInterval(tick, 1000);
+window.addEventListener('dn:play',startTimer);
 
 // ---------- Confetti (simple canvas burst) ----------
 function fireConfetti(){
@@ -486,7 +492,7 @@ document.getElementById("shareBtn").addEventListener("click",()=>{
 /* ---- digi-done-v1: a finished puzzle reopens finished (digi-path-v1 → done[id]) ---- */
 const DONE_KEY="digi-path-v1";
 function doneGet(id){try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");return (s&&s.v===1&&s.done&&s.done[id])||null;}catch(e){return null;}}
-function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=new Date().toISOString().slice(0,10);s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}doneShow();}
+function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=today();s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}doneShow();}
 let doneTried=false;
 /* ---- digi-done-share-v1: the day's saved result stays shareable after a revisit ---- */
 function doneId(){return PUZZLE.id;}
