@@ -884,7 +884,7 @@ function resize() {
   W = Math.max(1, window.innerWidth); H = Math.max(1, window.innerHeight);
   DPR = Math.min(2, window.devicePixelRatio || 1) * QUAL[qual];
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
-  BDPR = 1; bgc.width = Math.round(W * BDPR); bgc.height = Math.round(H * BDPR);
+  BDPR = DPR; bgc.width = Math.round(W * BDPR); bgc.height = Math.round(H * BDPR);
   const land = W > H;
   if (lastLand !== null && land !== lastLand && (state === 'aim' || state === 'fly') && !paused && performance.now() - fsAt > 2500) pausePlay();
   lastLand = land;
@@ -1474,7 +1474,7 @@ const ART = (() => {
   const mk = (w, h) => { const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); return c; };
   const R01 = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
   const TAU = Math.PI * 2;
-  function hex(c) { c = c.replace('#', ''); if (c.length === 3) c = c.split('').map(x => x + x).join(''); const n = parseInt(c, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+  function hex(c) { if (c[0] === 'r') return c.match(/\d+/g).slice(0, 3).map(Number); c = c.replace('#', ''); if (c.length === 3) c = c.split('').map(x => x + x).join(''); const n = parseInt(c, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
   function mix(a, b, t) { const A = hex(a), B = hex(b); return 'rgb(' + A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',') + ')'; }
   function shade(a, t) { return t >= 0 ? mix(a, '#ffffff', t) : mix(a, '#000000', -t); }
 
@@ -1493,49 +1493,99 @@ const ART = (() => {
   let grainPat = null;
   function addGrain(g, w, h, a) { if (!grainPat) grainPat = g.createPattern(grain, 'repeat'); g.save(); g.globalCompositeOperation = 'source-atop'; g.globalAlpha = a; g.fillStyle = grainPat || 'transparent'; g.fillRect(0, 0, w, h); g.restore(); }
 
-  /* paper clouds: overlapping puffs, shaded underside, soft halo */
+  /* paper clouds: overlapping puffs, shaded underside, soft halo.
+     Neutral set (greyClouds feed the downdraft zones); each scene also gets its own tinted set. */
   const clouds = [], greyClouds = [];
+  const cpad = w => Math.round(w * 0.1 + 14);
+  function cloudShape(v, w, h) {
+    const P = cpad(w), shape = mk(w + P * 2, h + P * 2), s = shape.getContext('2d');
+    s.fillStyle = '#fff'; s.beginPath();
+    const n = 4 + (v % 3);
+    for (let i = 0; i < n; i++) { const t = (i + 0.5) / n, r = h * (0.28 + 0.22 * Math.sin(Math.PI * t) + 0.08 * R01(v * 10 + i)); s.moveTo(P + w * t + r, P + h * 0.72 - r * 0.55); s.arc(P + w * t, P + h * 0.72 - r * 0.55, r, 0, TAU); }
+    s.rect(P + w * 0.06, P + h * 0.55, w * 0.88, h * 0.3); s.fill();
+    return shape;
+  }
+  function paintCloud(v, w, h, tint, sc) {
+    const shape = cloudShape(v, w, h), s = shape.getContext('2d'), P = cpad(w), CW = shape.width, CH = shape.height;
+    s.globalCompositeOperation = 'source-atop';
+    const gr = s.createLinearGradient(0, P, 0, P + h); gr.addColorStop(0, tint[0]); gr.addColorStop(0.55, tint[1]); gr.addColorStop(1, tint[2]);
+    s.fillStyle = gr; s.fillRect(0, 0, CW, CH);
+    // a lit rim on the sun side of each puff top
+    const rim = s.createLinearGradient(0, P, 0, P + h * 0.35); rim.addColorStop(0, tint[3] || tint[0]); rim.addColorStop(1, 'rgba(255,255,255,0)');
+    s.globalAlpha = 0.6; s.fillStyle = rim; s.fillRect(0, 0, CW, P + h * 0.35); s.globalAlpha = 1;
+    const c = mk(CW, CH), g = c.getContext('2d');
+    g.shadowColor = 'rgba(' + (tint[4] || '40,60,90') + ',.22)'; g.shadowBlur = 10 * sc; g.shadowOffsetY = 3 * sc; g.drawImage(shape, 0, 0);
+    g.shadowColor = 'transparent'; addGrain(g, CW, CH, 0.5);
+    return c;
+  }
   function buildClouds(scale) {
     clouds.length = 0; greyClouds.length = 0;
     for (let v = 0; v < 5; v++) {
-      const w = (150 + v * 26) * scale, h = w * 0.5, c = mk(w + 40, h + 40), g = c.getContext('2d');
-      const shape = mk(w + 40, h + 40), s = shape.getContext('2d');
-      s.fillStyle = '#fff'; s.beginPath();
-      const n = 4 + (v % 3);
-      for (let i = 0; i < n; i++) { const t = (i + 0.5) / n, r = h * (0.28 + 0.22 * Math.sin(Math.PI * t) + 0.08 * R01(v * 10 + i)); s.moveTo(20 + w * t + r, 20 + h * 0.72 - r * 0.55); s.arc(20 + w * t, 20 + h * 0.72 - r * 0.55, r, 0, TAU); }
-      s.rect(20 + w * 0.06, 20 + h * 0.55, w * 0.88, h * 0.3); s.fill();
-      s.globalCompositeOperation = 'source-atop';
-      const gr = s.createLinearGradient(0, 20, 0, 20 + h); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.65, 'rgba(236,241,248,1)'); gr.addColorStop(1, 'rgba(206,216,232,1)');
-      s.fillStyle = gr; s.fillRect(0, 0, w + 40, h + 40);
-      g.shadowColor = 'rgba(40,60,90,.22)'; g.shadowBlur = 10 * scale; g.shadowOffsetY = 3 * scale; g.drawImage(shape, 0, 0);
-      g.shadowColor = 'transparent'; addGrain(g, w + 40, h + 40, 0.5);
+      const w = (150 + v * 26) * scale, h = w * 0.5;
+      const c = paintCloud(v, w, h, ['#ffffff', '#ecf1f8', '#ced8e8'], scale);
       clouds.push(c);
       const gc = mk(c.width, c.height), gg = gc.getContext('2d'); gg.drawImage(c, 0, 0); gg.globalCompositeOperation = 'source-atop'; gg.fillStyle = 'rgba(96,108,128,.42)'; gg.fillRect(0, 0, c.width, c.height);
       greyClouds.push(gc);
     }
   }
+  // scene clouds: tinted to the scene's light, built at the backdrop's resolution
+  let scClouds = [];
+  function buildSceneClouds(sc, scale, d) {
+    scClouds = [];
+    const t = sc.cloud;
+    for (let v = 0; v < 5; v++) {
+      const w = (150 + v * 26) * scale * d, h = w * 0.5;
+      scClouds.push(paintCloud(v, w, h, t, scale * d));
+    }
+  }
 
-  /* ---------- scene definitions ---------- */
-  // base: height of the silhouette above the bottom of the screen, as a share of screen height
+  /* ---------- scene definitions ----------
+     Each scene is one light: sky, sun and haze set the mood, and every layer is pushed towards the haze by
+     its depth (fade) and fades into mist at its foot, so the layers step back in clear value steps.
+     base: height of the silhouette above the bottom of the screen, as a share of screen height.
+     cloud: [top, middle, underside, sun-lit rim, shadow rgb]. */
   const SCENES = {
-    garden: { sky: ['#6fc0f2', '#a9dcf7', '#e4f4fb', '#fff6dc'], sun: [0.8, 0.18, '255,240,190', 0.5], cl: 4,
-      layers: [{ k: 'hills', par: 0.04, base: 0.36, amp: 0.05, col: '#b5d9c9', cap: '#d4ece0', house: '#c9dcd8' }, { k: 'trees', par: 0.1, base: 0.26, amp: 0.03, col: '#8cc497', cap: '#a9d6ae' }, { k: 'hedge', par: 0.22, base: 0.17, amp: 0.012, col: '#6fb170', cap: '#8fc98a', houses: 1 }] },
-    playground: { sky: ['#5fb9f0', '#a0d8f8', '#e8f6fc', '#fff4d6'], sun: [0.18, 0.2, '255,236,170', 0.55], cl: 5,
-      layers: [{ k: 'town', par: 0.04, base: 0.34, amp: 0.04, col: '#c3d6e6', cap: '#dbe7f1', town: '#b1c6da' }, { k: 'trees', par: 0.1, base: 0.25, amp: 0.03, col: '#93c98d', cap: '#b3dcaa' }, { k: 'play', par: 0.22, base: 0.15, amp: 0.01, col: '#7fbf74', cap: '#a1d394' }] },
-    green: { sky: ['#78bfe6', '#b4dbef', '#eaf4f3', '#f8f4e2'], sun: [0.76, 0.16, '255,240,200', 0.45], cl: 6,
-      layers: [{ k: 'fields', par: 0.04, base: 0.37, amp: 0.07, col: '#b8d3a6', cap: '#d3e6c3', alt: '#c9dcae' }, { k: 'village', par: 0.11, base: 0.25, amp: 0.025, col: '#93b886', cap: '#acc99e' }, { k: 'wall', par: 0.22, base: 0.16, amp: 0.012, col: '#76a46a', cap: '#93bd85' }] },
-    park: { sky: ['#e9b36f', '#f4cf8f', '#f9e6bd', '#fdf3dc'], sun: [0.7, 0.3, '255,214,140', 0.75], cl: 4,
-      layers: [{ k: 'city', par: 0.03, base: 0.36, amp: 0.02, col: '#e6c99a', cap: '#efdab4', lit: 0 }, { k: 'oaks', par: 0.1, base: 0.27, amp: 0.035, col: '#c3a45a', cap: '#d8bd72' }, { k: 'bushes', par: 0.22, base: 0.16, amp: 0.02, col: '#a48b45', cap: '#bea55a', lamps: 1 }] },
-    beach: { sky: ['#3fa9e8', '#86cdf2', '#d4eefa', '#fbf3df'], sun: [0.82, 0.14, '255,246,210', 0.5], cl: 3,
-      layers: [{ k: 'sea', par: 0.03, base: 0.4, amp: 0, col: '#4ea3d4', cap: '#7cc0e6', head: '#9fc4d8', boats: 1 }, { k: 'dunes', par: 0.12, base: 0.2, amp: 0.035, col: '#efdcaa', cap: '#f7ebc8', huts: 1 }] },
-    cliff: { sky: ['#4ba6e6', '#8ccdf2', '#d8effa', '#f6f6ee'], sun: [0.2, 0.15, '255,246,214', 0.5], cl: 5,
-      layers: [{ k: 'sea', par: 0.03, base: 0.42, amp: 0, col: '#3f8fc6', cap: '#69b1dd', head: '#e6e1d3', light: 1, boats: 1 }] },
-    valley: { sky: ['#8ea2b6', '#b4c3d0', '#d6dee5', '#e8ece9'], sun: [0.7, 0.2, '240,245,250', 0.25], cl: 7, grey: 1,
-      layers: [{ k: 'peaks', par: 0.03, base: 0.42, amp: 0.12, col: '#9eb0bf', cap: '#c7d3dd', snow: 0.3 }, { k: 'pines', par: 0.09, base: 0.3, amp: 0.06, col: '#7f9c8c', cap: '#97b3a3' }, { k: 'pines', par: 0.2, base: 0.18, amp: 0.04, col: '#5e7d6a', cap: '#749583' }] },
-    mountains: { sky: ['#3d3a6e', '#7a5f91', '#d9879a', '#f7c39b'], sun: [0.84, 0.52, '255,190,140', 0.9], cl: 3, stars: 0.6,
-      layers: [{ k: 'peaks', par: 0.025, base: 0.5, amp: 0.18, col: '#8a7fb4', cap: '#b7abd8', snow: 0.42, lit: '#e9b9c6' }, { k: 'peaks', par: 0.07, base: 0.36, amp: 0.12, col: '#625b92', cap: '#7f77ac', snow: 0.25, lit: '#c99bb6' }, { k: 'pines', par: 0.16, base: 0.2, amp: 0.05, col: '#423f6c', cap: '#55507f' }] },
-    tower: { sky: ['#1f2a55', '#43477a', '#b06c86', '#ffb27d'], sun: [0.18, 0.78, '255,170,110', 1.1], cl: 3, stars: 1,
-      layers: [{ k: 'city', par: 0.025, base: 0.36, amp: 0.06, col: '#4a4f80', cap: '#5c6194', lit: 0.5 }, { k: 'city', par: 0.07, base: 0.26, amp: 0.08, col: '#323864', cap: '#41487a', lit: 0.8, bridge: 1 }] }
+    garden: { sky: ['#4fa6de', '#8fcaee', '#d3ecf6', '#fbf0d2'], sun: [0.8, 0.18, '255,242,196', 0.55], haze: '#d8ecf0', glow: '255,236,190', cl: 5, birds: 2,
+      cloud: ['#ffffff', '#eef4f9', '#c9d8e8', '#fffbe9', '46,78,110'], shadow: '36,70,84',
+      layers: [{ k: 'hills', par: 0.04, base: 0.36, amp: 0.05, col: '#a3cdbf', cap: '#cfe9dc', house: '#c3d7d4', fade: 0.27, mist: 0.45 },
+        { k: 'trees', par: 0.1, base: 0.26, amp: 0.03, col: '#76b183', cap: '#a0d2a5', fade: 0.1, mist: 0.38 },
+        { k: 'hedge', par: 0.22, base: 0.17, amp: 0.012, col: '#4f9455', cap: '#7cbf7a', houses: 1, fade: 0.0, mist: 0.21 }] },
+    playground: { sky: ['#4aa4e0', '#8ccbf1', '#d8eff9', '#fdf0cf'], sun: [0.18, 0.2, '255,238,178', 0.6], haze: '#dcedf4', glow: '255,232,176', cl: 6, birds: 2,
+      cloud: ['#ffffff', '#eef4fa', '#cad9ea', '#fff8e2', '46,78,112'], shadow: '38,66,92',
+      layers: [{ k: 'town', par: 0.04, base: 0.34, amp: 0.04, col: '#b4c9dc', cap: '#d8e5f0', town: '#a3b9cf', fade: 0.28, mist: 0.45 },
+        { k: 'trees', par: 0.1, base: 0.25, amp: 0.03, col: '#7fbb7b', cap: '#a8d69f', fade: 0.08, mist: 0.36 },
+        { k: 'play', par: 0.22, base: 0.15, amp: 0.01, col: '#63a95c', cap: '#8fca82', fade: 0.0, mist: 0.18 }] },
+    green: { sky: ['#5fa9d8', '#9ecbe6', '#dcebec', '#f6efd8'], sun: [0.76, 0.16, '255,242,206', 0.5], haze: '#dde9e2', glow: '255,238,200', cl: 7, birds: 3,
+      cloud: ['#ffffff', '#f0f3f2', '#ccd8dc', '#fffbea', '52,80,98'], shadow: '44,72,62',
+      layers: [{ k: 'fields', par: 0.04, base: 0.37, amp: 0.07, col: '#adc99c', cap: '#d0e3bf', alt: '#c0d6a6', fade: 0.24, mist: 0.43 },
+        { k: 'village', par: 0.11, base: 0.25, amp: 0.025, col: '#7fa673', cap: '#a2c393', fade: 0.08, mist: 0.35 },
+        { k: 'wall', par: 0.22, base: 0.16, amp: 0.012, col: '#5f8f55', cap: '#86b377', fade: 0.0, mist: 0.18 }] },
+    park: { sky: ['#87a2c4', '#d0b39f', '#f2c98d', '#fce8c4'], sun: [0.7, 0.3, '255,214,140', 0.85], haze: '#f4ddb8', glow: '255,200,128', cl: 5, birds: 2,
+      cloud: ['#fff4e6', '#f8dcc6', '#c8a3a0', '#ffe6c2', '104,66,62'], shadow: '92,58,36',
+      layers: [{ k: 'city', par: 0.03, base: 0.36, amp: 0.02, col: '#d6b28a', cap: '#ecd2ab', lit: 0, fade: 0.22, mist: 0.42 },
+        { k: 'oaks', par: 0.1, base: 0.27, amp: 0.035, col: '#ae8d3f', cap: '#d0b062', fade: 0.06, mist: 0.34 },
+        { k: 'bushes', par: 0.22, base: 0.16, amp: 0.02, col: '#82672b', cap: '#a68a45', lamps: 1, fade: 0, mist: 0.18 }] },
+    beach: { sky: ['#2f97da', '#74c0ec', '#c9e9f7', '#fbf2dc'], sun: [0.82, 0.14, '255,246,212', 0.55], haze: '#d4edf6', glow: '255,244,214', cl: 4, birds: 0,
+      cloud: ['#ffffff', '#eef6fb', '#c6dcec', '#fffcef', '40,84,120'], shadow: '34,80,110',
+      layers: [{ k: 'sea', par: 0.03, base: 0.4, amp: 0, col: '#4a9fd2', cap: '#86c7ea', head: '#a9c9da', boats: 1, fade: 0.04, mist: 0.0 },
+        { k: 'dunes', par: 0.12, base: 0.2, amp: 0.035, col: '#ead39c', cap: '#f8ecc8', huts: 1, fade: 0.0, mist: 0.14 }] },
+    cliff: { sky: ['#3793d8', '#7bc0ec', '#cfe9f7', '#f6f3e8'], sun: [0.2, 0.15, '255,246,216', 0.55], haze: '#d6ebf5', glow: '255,244,220', cl: 6, birds: 0,
+      cloud: ['#ffffff', '#eff5fa', '#c7d9e9', '#fffcf1', '40,80,118'], shadow: '30,72,104',
+      layers: [{ k: 'sea', par: 0.03, base: 0.42, amp: 0, col: '#3a8bc2', cap: '#74b6df', head: '#e3ddce', light: 1, boats: 1, fade: 0.04, mist: 0.0 }] },
+    valley: { sky: ['#7f94aa', '#a8b9c8', '#cdd7df', '#e4e9e6'], sun: [0.7, 0.2, '240,245,250', 0.3], haze: '#d3dcdf', glow: '236,240,236', cl: 7, birds: 3, grey: 1,
+      cloud: ['#e3e8ec', '#c4ccd5', '#8e9cab', '#eef1f3', '50,62,82'], shadow: '40,56,60',
+      layers: [{ k: 'peaks', par: 0.03, base: 0.42, amp: 0.12, col: '#98aab9', cap: '#c7d3dd', snow: 0.3, fade: 0.22, mist: 0.46 },
+        { k: 'pines', par: 0.09, base: 0.3, amp: 0.06, col: '#6f8e7d', cap: '#8faa9b', fade: 0.1, mist: 0.41 },
+        { k: 'pines', par: 0.2, base: 0.18, amp: 0.04, col: '#4b6b58', cap: '#678a75', fade: 0.0, mist: 0.27 }] },
+    mountains: { sky: ['#332f63', '#6d5689', '#cf8098', '#f6bf98'], sun: [0.84, 0.52, '255,190,140', 0.95], haze: '#e7a8a8', glow: '255,170,130', cl: 4, stars: 0.6, birds: 0,
+      cloud: ['#fbe4e2', '#e7b8c4', '#9a7fa8', '#ffd9bb', '50,36,80'], shadow: '36,26,66',
+      layers: [{ k: 'peaks', par: 0.025, base: 0.5, amp: 0.18, col: '#8a7fb4', cap: '#b7abd8', snow: 0.42, lit: '#ecbcc8', fade: 0.15, mist: 0.38 },
+        { k: 'peaks', par: 0.07, base: 0.36, amp: 0.12, col: '#5c548b', cap: '#7b72a9', snow: 0.25, lit: '#c497b3', fade: 0.04, mist: 0.32 },
+        { k: 'pines', par: 0.16, base: 0.2, amp: 0.05, col: '#37345e', cap: '#4b4776', fade: 0.0, mist: 0.2 }] },
+    tower: { sky: ['#17204a', '#3b3f72', '#a86584', '#ffad78'], sun: [0.18, 0.78, '255,170,110', 1.1], haze: '#b8778e', glow: '255,150,110', cl: 3, stars: 1, birds: 0,
+      cloud: ['#d9b6c6', '#a983a5', '#5d5584', '#ffc9a8', '20,16,48'], shadow: '14,14,40',
+      layers: [{ k: 'city', par: 0.025, base: 0.36, amp: 0.06, col: '#464b7c', cap: '#5a5f92', lit: 0.5, fade: 0.13, mist: 0.32 },
+        { k: 'city', par: 0.07, base: 0.26, amp: 0.08, col: '#2c3260', cap: '#3d4478', lit: 0.8, bridge: 1, fade: 0.0, mist: 0.21 }] }
   };
 
   /* ---------- background strips ---------- */
@@ -1545,24 +1595,31 @@ const ART = (() => {
     const u = x / TW * TAU;
     return base - amp * (0.5 * Math.sin(u * 2 + seed) + 0.28 * Math.sin(u * 5 + seed * 1.7) + 0.14 * Math.sin(u * 11 + seed * 2.3) + 0.08 * Math.sin(u * 23 + seed * 0.7));
   }
-  function buildStrip(L, i, H, dpr) {
+  const rgbOf = c => hex(c).join(',');
+  function buildStrip(L, i, H, dpr, sc) {
     const reach = L.k === 'city' ? 0.34 : L.k === 'peaks' ? 0.06 : L.k === 'sea' ? 0.16 : 0.14;   // room above the ridge for spires, towers, peaks
     const SH = Math.round(H * (L.base + L.amp * 1.2 + reach + 0.55)), base = SH - L.base * H, amp = L.amp * H, seed = i * 1.9 + 0.7;
     const sh = mk(TW * dpr, SH * dpr), g = sh.getContext('2d');
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
     const Y = x => ridge(x, base, amp, seed);
-    const fillRidge = (col, yOff, ampK) => { g.fillStyle = col; g.beginPath(); g.moveTo(0, SH); for (let x = 0; x <= TW; x += 6) g.lineTo(x, ridge(x, base + (yOff || 0), amp * (ampK || 1), seed)); g.lineTo(TW, SH); g.closePath(); g.fill(); };
-    const capLine = () => { g.strokeStyle = L.cap; g.lineWidth = 2; g.beginPath(); for (let x = 0; x <= TW; x += 6) { const y = Y(x) + 1; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); };
+    const fillRidge = (col, yOff, ampK) => { g.fillStyle = col; g.beginPath(); g.moveTo(0, SH); for (let x = 0; x <= TW; x += 4) g.lineTo(x, ridge(x, base + (yOff || 0), amp * (ampK || 1), seed)); g.lineTo(TW, SH); g.closePath(); g.fill(); };
+    const capLine = () => { g.strokeStyle = L.cap; g.lineWidth = 2; g.lineJoin = 'round'; g.beginPath(); for (let x = 0; x <= TW; x += 4) { const y = Y(x) + 1; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); };
     const rnd = n => R01(n + i * 977);
     const k = L.k;
     if (k === 'sea') {
       // distant headland, then the sea band
       g.fillStyle = L.head; g.beginPath(); g.moveTo(TW * 0.55, base + 2);
       g.quadraticCurveTo(TW * 0.62, base - H * 0.07, TW * 0.72, base - H * 0.065); g.lineTo(TW * 0.8, base - H * 0.05); g.quadraticCurveTo(TW * 0.86, base - H * 0.02, TW * 0.9, base + 2); g.fill();
+      g.fillStyle = shade(L.head, 0.25); g.beginPath(); g.moveTo(TW * 0.6, base - H * 0.045); g.quadraticCurveTo(TW * 0.64, base - H * 0.068, TW * 0.72, base - H * 0.065); g.lineTo(TW * 0.71, base - H * 0.058); g.quadraticCurveTo(TW * 0.65, base - H * 0.06, TW * 0.6, base - H * 0.045); g.fill();
       if (L.light) { const lx = TW * 0.7, ly = base - H * 0.065; g.fillStyle = '#fff'; g.fillRect(lx - 4, ly - 30, 8, 30); g.fillStyle = '#d6553e'; g.fillRect(lx - 4, ly - 22, 8, 6); g.fillRect(lx - 4, ly - 10, 8, 5); g.fillStyle = '#3a4a5c'; g.fillRect(lx - 5, ly - 36, 10, 6); g.beginPath(); g.moveTo(lx - 6, ly - 36); g.lineTo(lx, ly - 42); g.lineTo(lx + 6, ly - 36); g.fill(); }
-      const gr = g.createLinearGradient(0, base, 0, SH); gr.addColorStop(0, L.cap); gr.addColorStop(0.08, L.col); gr.addColorStop(1, shade(L.col, -0.25));
+      const gr = g.createLinearGradient(0, base, 0, SH); gr.addColorStop(0, L.cap); gr.addColorStop(0.06, L.col); gr.addColorStop(1, shade(L.col, -0.28));
       g.fillStyle = gr; g.fillRect(0, base, TW, SH - base);
+      // haze sits on the far sea at the horizon
+      const hz = g.createLinearGradient(0, base - 2, 0, base + H * 0.06); hz.addColorStop(0, 'rgba(' + rgbOf(sc.haze) + ',.7)'); hz.addColorStop(1, 'rgba(' + rgbOf(sc.haze) + ',0)');
+      g.fillStyle = hz; g.fillRect(0, base - 2, TW, H * 0.06 + 2);
       g.fillStyle = 'rgba(255,255,255,.55)'; g.fillRect(0, base, TW, 1.5);
+      // long swells: paler bands that read as distance on the water
+      for (let s = 0; s < 4; s++) { const yy = base + H * (0.025 + s * s * 0.012); g.fillStyle = 'rgba(255,255,255,' + (0.1 - s * 0.018).toFixed(3) + ')'; g.fillRect(0, yy, TW, 1 + s * 0.8); }
       if (L.boats) for (let b = 0; b < 5; b++) { const bx = TW * rnd(b + 50), by = base + 6 + rnd(b + 60) * H * 0.04, s = 0.6 + rnd(b + 70) * 0.6;
         g.fillStyle = '#f4efe6'; g.beginPath(); g.moveTo(bx, by - 2); g.lineTo(bx, by - 26 * s); g.lineTo(bx + 14 * s, by - 2); g.fill(); g.fillStyle = 'rgba(214,85,62,.9)'; g.beginPath(); g.moveTo(bx - 1, by - 2); g.lineTo(bx - 1, by - 18 * s); g.lineTo(bx - 9 * s, by - 2); g.fill();
         g.fillStyle = '#5b4a3c'; g.beginPath(); g.moveTo(bx - 11 * s, by - 2); g.lineTo(bx + 15 * s, by - 2); g.lineTo(bx + 11 * s, by + 3 * s); g.lineTo(bx - 8 * s, by + 3 * s); g.fill(); }
@@ -1582,7 +1639,7 @@ const ART = (() => {
     } else {
       fillRidge(L.col);
       if (k === 'fields') { // patchwork stripes clipped to the hills
-        g.save(); g.beginPath(); g.moveTo(0, SH); for (let x = 0; x <= TW; x += 6) g.lineTo(x, Y(x)); g.lineTo(TW, SH); g.closePath(); g.clip();
+        g.save(); g.beginPath(); g.moveTo(0, SH); for (let x = 0; x <= TW; x += 4) g.lineTo(x, Y(x)); g.lineTo(TW, SH); g.closePath(); g.clip();
         for (let f = 0; f < 22; f++) { const x0 = TW * f / 22; g.fillStyle = f % 2 ? L.alt : shade(L.col, 0.06); g.beginPath(); g.moveTo(x0, base - amp * 2); g.lineTo(x0 + TW / 22, base - amp * 2); g.lineTo(x0 + TW / 22 - 30, SH); g.lineTo(x0 - 30, SH); g.fill();
           g.strokeStyle = 'rgba(90,120,70,.25)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(x0, base - amp * 2); g.lineTo(x0 - 30, SH); g.stroke(); }
         g.restore();
@@ -1591,12 +1648,15 @@ const ART = (() => {
       if (k === 'hills' && L.house) for (let h = 0; h < 7; h++) { const x = TW * rnd(h + 80), y = Y(x) + 3, s = 0.7 + rnd(h + 90) * 0.5; g.fillStyle = L.house; g.fillRect(x, y - 9 * s, 13 * s, 9 * s); g.fillStyle = shade(L.house, -0.12); g.beginPath(); g.moveTo(x - 2, y - 9 * s); g.lineTo(x + 6.5 * s, y - 15 * s); g.lineTo(x + 13 * s + 2, y - 9 * s); g.fill(); }
       if (k === 'trees' || k === 'oaks' || k === 'village' || k === 'bushes' || k === 'hedge' || k === 'play') {
         const n = k === 'oaks' ? 26 : k === 'bushes' ? 40 : k === 'hedge' ? 70 : k === 'trees' ? 46 : 30;
+        const dk = shade(L.col, -0.12);
         for (let t = 0; t < n; t++) {
           const x = TW * (t + rnd(t + 200) * 0.8) / n, y = Y(x) + 4;
           const r = (k === 'oaks' ? 22 : k === 'hedge' ? 9 : k === 'bushes' ? 11 : 14) * (0.7 + rnd(t + 300) * 0.6);
           if (k === 'oaks' || k === 'trees' || k === 'village') { g.fillStyle = shade(L.col, -0.35); g.fillRect(x - 1.6, y - r * 0.9, 3.2, r * 0.9 + 4); }
           const cy = y - (k === 'hedge' || k === 'bushes' ? r * 0.4 : r * 1.25);
-          g.fillStyle = L.col; g.beginPath(); g.arc(x, cy, r, 0, TAU); g.arc(x + r * 0.6, cy + r * 0.25, r * 0.75, 0, TAU); g.arc(x - r * 0.6, cy + r * 0.3, r * 0.7, 0, TAU); g.fill();
+          // shaded underside, body, then a sun-lit crown
+          g.fillStyle = dk; g.beginPath(); g.arc(x + r * 0.1, cy + r * 0.12, r, 0, TAU); g.arc(x + r * 0.68, cy + r * 0.35, r * 0.72, 0, TAU); g.fill();
+          g.fillStyle = L.col; g.beginPath(); g.arc(x, cy, r * 0.95, 0, TAU); g.arc(x + r * 0.6, cy + r * 0.22, r * 0.7, 0, TAU); g.arc(x - r * 0.6, cy + r * 0.3, r * 0.7, 0, TAU); g.fill();
           g.fillStyle = L.cap; g.beginPath(); g.arc(x - r * 0.25, cy - r * 0.3, r * 0.55, 0, TAU); g.fill();
         }
       }
@@ -1613,25 +1673,30 @@ const ART = (() => {
         for (let b = 0; b < n; b++) {
           const w = (k === 'city' ? 26 : 22) * (0.6 + rnd(b + 400) * 0.9), x = TW * b / n + rnd(b + 410) * 10, y = Y(x) + 6;
           const h = (k === 'city' ? H * 0.06 + rnd(b + 420) * H * 0.2 : 14 + rnd(b + 420) * 34);
-          g.fillStyle = L.col; g.fillRect(x, y - h, w, h + 10);
+          const tone = rnd(b + 450) > 0.5 ? L.col : shade(L.col, lit ? -0.06 : 0.05);
+          g.fillStyle = tone; g.fillRect(x, y - h, w, h + 10);
+          g.fillStyle = shade(tone, lit ? -0.1 : -0.06); g.fillRect(x + w * 0.72, y - h, w * 0.28, h + 10);      // shaded side
           g.fillStyle = L.cap; g.fillRect(x, y - h, w, 2);
           if (k === 'town' && rnd(b + 430) > 0.5) { g.fillStyle = L.town; g.beginPath(); g.moveTo(x - 2, y - h); g.lineTo(x + w / 2, y - h - 10); g.lineTo(x + w + 2, y - h); g.fill(); }
-          if (k === 'city' && rnd(b + 440) > 0.75) { g.fillStyle = L.col; g.fillRect(x + w * 0.45, y - h - 12, 2, 12); }
-          const ws = 2.4, gap = 6;
-          for (let yy = y - h + 6; yy < y; yy += gap) for (let xx = x + 3; xx < x + w - 3; xx += gap) {
-            const on = rnd(b * 131 + xx * 0.7 + yy * 1.3) < (lit ? lit * 0.6 : 0.35);
-            g.fillStyle = on ? (lit ? 'rgba(255,214,140,.95)' : shade(L.col, 0.25)) : shade(L.col, lit ? -0.15 : 0.1);
-            g.fillRect(xx, yy, ws, ws * 1.3);
-          }
+          if (k === 'city' && rnd(b + 440) > 0.75) { g.fillStyle = tone; g.fillRect(x + w * 0.45, y - h - 12, 2, 12); }
+          // windows: lit at night; by day only a quiet row pattern on the taller blocks
+          if (lit || h > 30) { const ws = 2.4, gap = lit ? 6 : 8;
+            for (let yy = y - h + 6; yy < y; yy += gap) for (let xx = x + 3; xx < x + w * 0.7 - 2; xx += gap) {
+              const on = rnd(b * 131 + xx * 0.7 + yy * 1.3) < (lit ? lit * 0.6 : 0.3);
+              if (!lit && !on) continue;
+              g.fillStyle = on ? (lit ? 'rgba(255,214,140,.95)' : shade(tone, 0.16)) : shade(L.col, -0.15);
+              g.fillRect(xx, yy, ws, ws * 1.3);
+            } }
         }
         if (L.bridge) { const by = Y(TW * 0.5) - H * 0.07; g.strokeStyle = shade(L.col, 0.12); g.lineWidth = 3; g.beginPath(); g.moveTo(TW * 0.3, by); g.lineTo(TW * 0.62, by); g.stroke(); g.lineWidth = 1.2; for (let s = 0; s < 2; s++) { const tx = TW * (0.38 + s * 0.16); g.fillStyle = shade(L.col, 0.12); g.fillRect(tx - 3, by - 40, 6, 60); g.beginPath(); for (let c = -1; c <= 1; c += 2) { g.moveTo(tx, by - 40); g.quadraticCurveTo(tx + c * 40, by - 4, tx + c * 80, by); } g.stroke(); } }
       }
       if (k === 'pines') for (let t = 0; t < 70; t++) { const x = TW * (t + rnd(t + 500) * 0.9) / 70, y = Y(x) + 5, h = (22 + rnd(t + 510) * 26) * (L.par > 0.15 ? 1.3 : 1);
         g.fillStyle = L.col; for (let s = 0; s < 3; s++) { const w = h * (0.42 - s * 0.1), yy = y - h * s * 0.28; g.beginPath(); g.moveTo(x - w, yy); g.lineTo(x, yy - h * 0.55); g.lineTo(x + w, yy); g.fill(); }
+        g.fillStyle = shade(L.col, -0.14); for (let s = 0; s < 3; s++) { const w = h * (0.42 - s * 0.1), yy = y - h * s * 0.28; g.beginPath(); g.moveTo(x, yy - h * 0.55); g.lineTo(x + w, yy); g.lineTo(x + w * 0.15, yy); g.fill(); }
         g.fillStyle = L.cap; g.globalAlpha = 0.6; g.beginPath(); g.moveTo(x, y - h * 1.1); g.lineTo(x - h * 0.2, y - h * 0.62); g.lineTo(x, y - h * 0.68); g.fill(); g.globalAlpha = 1; }
       if (k === 'dunes') { g.strokeStyle = 'rgba(120,140,70,.7)'; g.lineWidth = 1.3; for (let t = 0; t < 160; t++) { const x = TW * rnd(t + 600), y = Y(x) + 2; for (let b = 0; b < 3; b++) { g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + (b - 1) * 3, y - 6, x + (b - 1) * 6, y - 11 - rnd(t + b) * 5); g.stroke(); } }
         if (L.huts) { const cols = ['#e8553e', '#2f8fd6', '#f2b632', '#2e9a5a', '#f08aa8', '#7c6bd6']; for (let h = 0; h < 9; h++) { const x = TW * 0.05 + h * 30, y = Y(x) + 8; g.fillStyle = cols[h % 6]; g.fillRect(x, y - 22, 22, 22); g.fillStyle = '#fff'; for (let s = 3; s < 22; s += 6) g.fillRect(x + s, y - 20, 2, 18); g.fillStyle = shade(cols[h % 6], -0.25); g.beginPath(); g.moveTo(x - 3, y - 22); g.lineTo(x + 11, y - 32); g.lineTo(x + 25, y - 22); g.fill(); } } }
-      if (k === 'hedge' && L.houses) for (let h = 0; h < 5; h++) { const x = TW * (0.1 + h * 0.2), y = Y(x) - 10, wall = ['#f1e2c6', '#e9d3c0', '#efe6d2'][h % 3]; g.fillStyle = wall; g.fillRect(x, y - 34, 52, 34); g.fillStyle = '#b8684e'; g.beginPath(); g.moveTo(x - 5, y - 34); g.lineTo(x + 26, y - 54); g.lineTo(x + 57, y - 34); g.fill(); g.fillStyle = '#88a8c4'; g.fillRect(x + 8, y - 26, 10, 9); g.fillRect(x + 34, y - 26, 10, 9); g.fillStyle = '#9c7454'; g.fillRect(x + 21, y - 16, 10, 16); g.fillStyle = '#7f8c99'; g.fillRect(x + 38, y - 60, 6, 12); }
+      if (k === 'hedge' && L.houses) for (let h = 0; h < 5; h++) { const x = TW * (0.1 + h * 0.2), y = Y(x) - 10, wall = ['#f1e2c6', '#e9d3c0', '#efe6d2'][h % 3]; g.fillStyle = wall; g.fillRect(x, y - 34, 52, 34); g.fillStyle = shade(wall, -0.08); g.fillRect(x + 40, y - 34, 12, 34); g.fillStyle = '#b8684e'; g.beginPath(); g.moveTo(x - 5, y - 34); g.lineTo(x + 26, y - 54); g.lineTo(x + 57, y - 34); g.fill(); g.fillStyle = '#9c5640'; g.beginPath(); g.moveTo(x + 26, y - 54); g.lineTo(x + 57, y - 34); g.lineTo(x + 40, y - 34); g.fill(); g.fillStyle = '#88a8c4'; g.fillRect(x + 8, y - 26, 10, 9); g.fillRect(x + 34, y - 26, 10, 9); g.fillStyle = '#9c7454'; g.fillRect(x + 21, y - 16, 10, 16); g.fillStyle = '#7f8c99'; g.fillRect(x + 38, y - 60, 6, 12); }
       if (k === 'play') { // swings, slide and climbing frame
         for (let p = 0; p < 4; p++) { const x = TW * (0.12 + p * 0.25), y = Y(x) + 4;
           g.lineWidth = 4; g.lineCap = 'round';
@@ -1641,49 +1706,88 @@ const ART = (() => {
       }
       if (L.lamps) for (let l = 0; l < 8; l++) { const x = TW * (l + 0.5) / 8, y = Y(x) + 4; g.fillStyle = '#5e5440'; g.fillRect(x - 1.2, y - 40, 2.4, 40); g.fillRect(x - 5, y - 42, 10, 3); g.fillStyle = 'rgba(255,236,180,.95)'; g.fillRect(x - 3, y - 40, 6, 4); }
     }
+    // atmosphere: push the whole layer towards the haze by its depth, then let its foot sink into mist
+    const hz = rgbOf(sc.haze);
+    g.save(); g.globalCompositeOperation = 'source-atop';
+    if (L.fade) { g.fillStyle = 'rgba(' + hz + ',' + L.fade + ')'; g.fillRect(0, 0, TW, SH); }
+    if (L.mist) {
+      const top = k === 'sea' ? base : base - amp * 0.35, foot = base + H * 0.16;
+      const mg = g.createLinearGradient(0, top, 0, foot); mg.addColorStop(0, 'rgba(' + hz + ',0)'); mg.addColorStop(1, 'rgba(' + hz + ',' + L.mist + ')');
+      g.fillStyle = mg; g.fillRect(0, top, TW, SH - top);
+    }
+    g.restore();
     addGrain(g, TW, SH, 0.9);
-    // the soft shadow halo that makes it read as stacked paper
+    // the soft shadow halo that makes it read as stacked paper (softer for far layers)
     const out = mk(TW * dpr, SH * dpr), o = out.getContext('2d');
-    o.shadowColor = 'rgba(30,40,70,.28)'; o.shadowBlur = 14 * dpr; o.shadowOffsetY = -2 * dpr;
+    o.shadowColor = 'rgba(' + sc.shadow + ',' + (0.3 * (1 - (L.fade || 0) * 1.4)).toFixed(3) + ')'; o.shadowBlur = 14 * dpr; o.shadowOffsetY = -2 * dpr;
     o.drawImage(sh, 0, 0);
-    return { c: out, d: dpr, w: TW, h: SH, par: L.par, base: L.base, bottom: k === 'sea' ? shade(L.col, -0.25) : L.col, sea: k === 'sea' ? { top: base, col: L.cap } : null };
+    sh.width = sh.height = 1;   // release the working copy now rather than at the next GC
+    const mixHex = (a, b, t) => { const A = hex(a), B = hex(b); return '#' + A.map((v, j) => Math.round(v + (B[j] - v) * t).toString(16).padStart(2, '0')).join(''); };
+    const bottom = k === 'sea' ? shade(L.col, -0.28) : mixHex(mixHex(L.col, sc.haze, L.fade || 0), sc.haze, L.mist || 0);
+    return { c: out, d: dpr, w: TW, h: SH, par: L.par, base: L.base, bottom, sea: k === 'sea' ? { top: base, col: L.cap } : null };
   }
   function scene(pl, W, H, dpr) {
-    const d = Math.min(1.5, dpr), key = pl.id + '|' + Math.round(W) + 'x' + Math.round(H) + '|' + d;
+    const d = Math.min(2, dpr), key = pl.id + '|' + Math.round(W) + 'x' + Math.round(H) + '|' + d;
     if (key !== cacheKey) {
       scnRef = SCENES[pl.id] || SCENES.garden;
-      strips = scnRef.layers.map((L, i) => buildStrip(L, i, H, d));
+      strips = scnRef.layers.map((L, i) => buildStrip(L, i, H, d, scnRef));
       cacheKey = key;
       const cs = Math.max(0.55, Math.min(1.1, Math.min(W, H) / 520));
       if (cs !== cloudScale) { cloudScale = cs; buildClouds(cs); }
+      buildSceneClouds(scnRef, cs, d);
+      flocks = buildFlocks(scnRef.birds || 0);
     }
     return scnRef;
   }
   const stars = Array.from({ length: 80 }, (_, i) => ({ x: R01(i + 11), y: R01(i + 311) * 0.55, r: 0.5 + R01(i + 611) * 1.1, ph: R01(i + 911) * TAU }));
+  // small far-off birds: a few loose flocks that drift across the sky
+  let flocks = [];
+  function buildFlocks(n) {
+    const out = [];
+    for (let f = 0; f < n; f++) { const m = 3 + Math.floor(R01(f + 1300) * 3), birds = [];
+      for (let b = 0; b < m; b++) birds.push({ dx: b * 13 + R01(f * 9 + b + 1400) * 8, dy: Math.abs(b - (m - 1) / 2) * 5 + R01(f * 9 + b + 1500) * 4, ph: R01(f * 9 + b + 1600) * TAU, s: 0.8 + R01(f * 9 + b + 1700) * 0.4 });
+      out.push({ x: R01(f + 1800), y: 0.12 + R01(f + 1900) * 0.2, v: 5 + R01(f + 2000) * 5, birds }); }
+    return out;
+  }
 
   /* ---------- per-frame background ---------- */
   function background(g, pl, cam, W, H, dpr, t, rm, camRef) {
-    const sc = scene(pl, W, H, dpr);
+    const sc = scene(pl, W, H, dpr), d = strips.length ? strips[0].d : 1;
     // vertical drift: the scenery sinks as the camera climbs (and rises when it dives below the start)
     const up = Math.max(-H * 0.5, Math.min(H * 2, (cam.y + H / cam.s / 2 - camRef) * 7));
     const gr = g.createLinearGradient(0, 0, 0, H); sc.sky.forEach((c, i) => gr.addColorStop(i / (sc.sky.length - 1), c));
     g.fillStyle = gr; g.fillRect(0, 0, W, H);
     if (sc.stars) for (const s of stars) { const tw = rm ? 0.7 : 0.55 + 0.45 * Math.sin(t * 0.8 + s.ph); g.fillStyle = 'rgba(255,255,255,' + (0.6 * tw * sc.stars).toFixed(3) + ')'; g.beginPath(); g.arc(s.x * W, s.y * H, s.r, 0, TAU); g.fill(); }
-    const sx = sc.sun[0] * W, sy = sc.sun[1] * H + Math.max(-H * 0.1, Math.min(H * 0.3, up * 0.08));
-    blob(g, sc.sun[2], sx, sy, Math.min(W, H) * 0.5, 0.6 * sc.sun[3]);
-    g.fillStyle = 'rgba(' + sc.sun[2] + ',.95)'; g.beginPath(); g.arc(sx, sy, Math.min(W, H) * 0.055, 0, TAU); g.fill();
-    g.fillStyle = 'rgba(255,255,255,.55)'; g.beginPath(); g.arc(sx, sy, Math.min(W, H) * 0.04, 0, TAU); g.fill();
-    // paper clouds in two depths
+    const m = Math.min(W, H), sx = sc.sun[0] * W, sy = sc.sun[1] * H + Math.max(-H * 0.1, Math.min(H * 0.3, up * 0.08));
+    // horizon glow: the sky is brightest along the horizon under the sun
+    const hy = H * (1 - (sc.layers[0].base + 0.02)) + Math.max(-H * 0.14, Math.min(H * 0.8, up * 0.15));
+    g.save(); g.translate(sx, hy); g.scale(1, 0.32); blob(g, sc.glow, 0, 0, W * 0.75, 0.5 * Math.min(1, sc.sun[3])); g.restore();
+    // the sun: wide soft halo, a nearer bloom, then the disc
+    blob(g, sc.sun[2], sx, sy, m * 0.62, 0.55 * sc.sun[3]);
+    blob(g, sc.sun[2], sx, sy, m * 0.16, 0.7 * Math.min(1, sc.sun[3]));
+    g.fillStyle = 'rgba(' + sc.sun[2] + ',.97)'; g.beginPath(); g.arc(sx, sy, m * 0.055, 0, TAU); g.fill();
+    g.fillStyle = 'rgba(255,255,255,.6)'; g.beginPath(); g.arc(sx - m * 0.008, sy - m * 0.008, m * 0.038, 0, TAU); g.fill();
     const drift = rm ? 0 : t;
+    // clouds in three depths: far ones small, low and hazy; near ones big, high and quicker
     for (let i = 0; i < sc.cl; i++) {
-      const c = clouds[i % clouds.length]; if (!c) break;
-      const depth = i % 2 ? 0.035 : 0.015, s = (i % 2 ? 0.85 : 0.6) * (sc.grey ? 1.2 : 1);
-      const span = W + c.width / dpr * s + 200;
-      const x = (((R01(i + 41) * span - cam.x * 7 * depth - drift * (3 + i * 1.3)) % span) + span) % span - c.width / dpr * s - 100;
-      const y = H * (0.08 + 0.32 * R01(i + 71)) + up * depth * 2;
-      g.globalAlpha = sc.grey ? 0.9 : 0.95;
-      g.drawImage(sc.grey ? (greyClouds[i % greyClouds.length] || c) : c, x, y, c.width / dpr * s, c.height / dpr * s);
-      g.globalAlpha = 1;
+      const c = scClouds[i % scClouds.length]; if (!c) break;
+      const tier = i % 3, depth = [0.008, 0.02, 0.04][tier], s = [0.42, 0.66, 0.95][tier] * (sc.grey ? 1.15 : 1);
+      const cw = c.width / d * s, ch = c.height / d * s, span = W + cw + 200;
+      const x = (((R01(i + 41) * span - cam.x * 7 * depth - drift * (1.5 + tier * 2.2 + R01(i + 61))) % span) + span) % span - cw - 100;
+      const y = H * ([0.22, 0.12, 0.03][tier] + [0.14, 0.18, 0.18][tier] * R01(i + 71)) + up * depth * 2;
+      g.globalAlpha = [0.72, 0.88, 0.97][tier]; g.drawImage(c, x, y, cw, ch); g.globalAlpha = 1;
+    }
+    // birds, drawn between the clouds and the hills
+    if (flocks.length) {
+      g.strokeStyle = 'rgba(' + sc.shadow + ',.55)'; g.lineWidth = 1.3; g.lineCap = 'round'; g.lineJoin = 'round';
+      for (const f of flocks) {
+        const span = W + 200, fx = (((f.x * span - cam.x * 7 * 0.015 + drift * f.v) % span) + span) % span - 100, fy = f.y * H + up * 0.04;
+        for (const b of f.birds) {
+          const x = fx - b.dx, y = fy + b.dy, w = 4.2 * b.s * Math.max(0.8, m / 400), fl = rm ? 0.4 : Math.sin(t * 7 + b.ph);
+          g.beginPath(); g.moveTo(x - w, y - w * 0.25 - fl * w * 0.45); g.quadraticCurveTo(x - w * 0.4, y - w * 0.35, x, y); g.quadraticCurveTo(x + w * 0.4, y - w * 0.35, x + w, y - w * 0.25 - fl * w * 0.45); g.stroke();
+        }
+      }
+      g.lineCap = 'butt';
     }
     // paper layers back to front
     for (const s of strips) {
@@ -1803,13 +1907,14 @@ const ART = (() => {
     const k = Math.max(0, 1 - alt / 60), w = L * (1.6 - 0.6 * k);
     g.fillStyle = 'rgba(20,30,40,' + (0.22 * k).toFixed(3) + ')'; g.beginPath(); g.ellipse(X, gy - 2, w, Math.max(1.5, L * 0.12), 0, 0, TAU); g.fill();
   }
-  return { scene, background, plane, planeShadow, blob, glow, glowSpr, clouds, greyClouds, shade, mix, seaGlints, R01, addGrain };
+  return { scene, background, plane, planeShadow, blob, glow, glowSpr, clouds, greyClouds, shade, mix, seaGlints, R01, addGrain, grain };
 })();
 
 let camRef = 0;
 const planeSize = () => { const m = Math.min(W, H); return Math.max(m * 0.065, Math.min(m * 0.12, cam.s * 1.5)); };
 function hash(n) { const s = Math.sin(n * 127.1) * 43758.5453; return s - Math.floor(s); }
 function rr(x, y, w, h, r) { cx.beginPath(); cx.moveTo(x + r, y); cx.arcTo(x + w, y, x + w, y + h, r); cx.arcTo(x + w, y + h, x, y + h, r); cx.arcTo(x, y + h, x, y, r); cx.arcTo(x, y, x + w, y, r); cx.closePath(); }
+let soilPat = null;
 function drawGround() {
   const p = pl.pal, x0 = cam.x - 2, x1 = cam.x + W / cam.s + 2, st = Math.max(0.35, 3 / cam.s);
   const pts = [];
@@ -1821,6 +1926,10 @@ function drawGround() {
   const gr = cx.createLinearGradient(0, Math.max(0, minY), 0, H); gr.addColorStop(0, p.soil); gr.addColorStop(1, ART.shade(p.soil, -0.28));
   cx.fillStyle = gr; cx.beginPath(); cx.moveTo(pts[0][0], H + 10); pts.forEach(q => cx.lineTo(q[0], q[1])); cx.lineTo(pts[pts.length - 1][0], H + 10); cx.closePath(); cx.fill();
   const band = Math.max(5, Math.min(14, 0.7 * cam.s));
+  // paper grain on the soil, fixed to the world so it scrolls with it, and a darker topsoil seam under the turf
+  if (qual > 0) { try { if (!soilPat) soilPat = cx.createPattern(ART.grain, 'repeat');
+    if (soilPat) { soilPat.setTransform(new DOMMatrix([1, 0, 0, 1, -((cam.x * cam.s) % 180), 0])); cx.globalAlpha = 0.9; cx.fillStyle = soilPat; cx.fill(); cx.globalAlpha = 1; } } catch (e) {} }
+  cx.strokeStyle = ART.shade(p.soil, -0.14); cx.lineWidth = Math.max(2, band * 0.45); cx.beginPath(); pts.forEach((q, i) => i ? cx.lineTo(q[0], q[1] + band + cx.lineWidth / 2 - 1) : cx.moveTo(q[0], q[1] + band + cx.lineWidth / 2 - 1)); cx.stroke();
   cx.strokeStyle = p.ground; cx.lineWidth = band; cx.beginPath(); pts.forEach((q, i) => i ? cx.lineTo(q[0], q[1] + band / 2) : cx.moveTo(q[0], q[1] + band / 2)); cx.stroke();
   cx.strokeStyle = ART.shade(p.ground, 0.35); cx.lineWidth = 1.5; cx.beginPath(); pts.forEach((q, i) => i ? cx.lineTo(q[0], q[1] + 0.8) : cx.moveTo(q[0], q[1] + 0.8)); cx.stroke();
   // grass tufts and pebbles, fixed to the world so they scroll with it
@@ -1836,7 +1945,9 @@ function drawGround() {
     cx.lineCap = 'butt';
   }
   if (pl.id === 'cliff') { // chalk face with strata
-    cx.fillStyle = '#f2eee3'; cx.beginPath(); cx.moveTo(SX(8), SY(15)); cx.lineTo(SX(11), SY(3)); cx.lineTo(SX(15), SY(0)); cx.lineTo(SX(-40), SY(0)); cx.lineTo(SX(-40), SY(15)); cx.closePath(); cx.fill();
+    const chalk = cx.createLinearGradient(0, SY(15), 0, SY(0)); chalk.addColorStop(0, '#f7f3ea'); chalk.addColorStop(0.6, '#ebe4d6'); chalk.addColorStop(1, '#d6cdbb');
+    cx.fillStyle = chalk; cx.beginPath(); cx.moveTo(SX(8), SY(15)); cx.lineTo(SX(11), SY(3)); cx.lineTo(SX(15), SY(0)); cx.lineTo(SX(-40), SY(0)); cx.lineTo(SX(-40), SY(15)); cx.closePath(); cx.fill();
+    if (soilPat && qual > 0) { cx.globalAlpha = 0.7; cx.fillStyle = soilPat; cx.fill(); cx.globalAlpha = 1; }
     cx.strokeStyle = 'rgba(160,150,130,.35)'; cx.lineWidth = 1.2;
     for (let i = 1; i < 6; i++) { const y = 15 - i * 2.6; cx.beginPath(); cx.moveTo(SX(-40), SY(y)); cx.lineTo(SX(8 + (15 - y) * 0.25 + (y < 3 ? (3 - y) * 1.3 : 0)), SY(y)); cx.stroke(); }
     cx.fillStyle = 'rgba(120,110,95,.25)'; cx.beginPath(); cx.moveTo(SX(8), SY(15)); cx.lineTo(SX(11), SY(3)); cx.lineTo(SX(9.5), SY(3)); cx.closePath(); cx.fill();
@@ -2207,6 +2318,5 @@ requestAnimationFrame(frame);
 })();
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
