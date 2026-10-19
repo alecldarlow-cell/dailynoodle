@@ -15,9 +15,16 @@ on:
     # "today" in Europe/London at run time and this job only commits when
     # feed.json changes, so a slot that fires before London midnight is a
     # harmless no-op and the next one publishes. Later slots are backstops.
+    # 19 Oct 2026: over the previous fortnight every slot fired 2-3 h late,
+    # and the first run of the night landed between 02:01 and 04:33 London.
+    # The three extra slots below are more independent chances of an early
+    # run, aiming for today's puzzles reliably live by 4-5 am London.
     - cron: '13 23 * * *'   # BST 00:13 | GMT 23:13 (no-op)
+    - cron: '31 23 * * *'   # BST 00:31 | GMT 23:31 (no-op)
+    - cron: '49 23 * * *'   # BST 00:49 | GMT 23:49 (no-op)
     - cron: '13 0 * * *'    # BST 01:13 | GMT 00:13
     - cron: '43 0 * * *'    # BST 01:43 | GMT 00:43
+    - cron: '29 1 * * *'    # BST 02:29 | GMT 01:29
     - cron: '27 2 * * *'    # backstop
     - cron: '41 4 * * *'    # backstop
   workflow_dispatch:
