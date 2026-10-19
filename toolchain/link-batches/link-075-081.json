@@ -1,0 +1,429 @@
+[
+ {
+  "serial": 75,
+  "band": "medium",
+  "r4kind": "fill",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Times to eat",
+    "members": [
+     "BREAKFAST",
+     "ELEVENSES",
+     "HIGH TEA",
+     "SUPPER"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Kinds of TV programme",
+    "members": [
+     "SITCOM",
+     "QUIZ",
+     "DRAMA",
+     "CHAT SHOW"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Parts of a fence",
+    "members": [
+     "RAIL",
+     "PICKET",
+     "SLAT",
+     "GATE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "___BOX",
+    "members": [
+     "LUNCH",
+     "SOAP",
+     "POST",
+     "JUKE"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "LUNCH",
+    "not": "Times to eat"
+   },
+   {
+    "tile": "SOAP",
+    "not": "Kinds of TV programme"
+   },
+   {
+    "tile": "POST",
+    "not": "Parts of a fence"
+   }
+  ]
+ },
+ {
+  "serial": 76,
+  "band": "medium",
+  "r4kind": "hidden",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Dried fruit",
+    "members": [
+     "RAISIN",
+     "CURRANT",
+     "PRUNE",
+     "DATE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Take without asking",
+    "members": [
+     "PINCH",
+     "NICK",
+     "SWIPE",
+     "NAB"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Flowers in a border",
+    "members": [
+     "TULIP",
+     "DAISY",
+     "LILY",
+     "PANSY"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A colour hides in each",
+    "members": [
+     "SULTANA",
+     "STEAL",
+     "PRIMROSE",
+     "HUNDRED"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "SULTANA",
+    "not": "Dried fruit"
+   },
+   {
+    "tile": "STEAL",
+    "not": "Take without asking"
+   },
+   {
+    "tile": "PRIMROSE",
+    "not": "Flowers in a border"
+   }
+  ]
+ },
+ {
+  "serial": 77,
+  "band": "medium",
+  "r4kind": "decoy",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Footwear",
+    "members": [
+     "CLOG",
+     "SANDAL",
+     "SLIPPER",
+     "BROGUE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "World rivers",
+    "members": [
+     "AMAZON",
+     "ZAMBEZI",
+     "YANGTZE",
+     "VOLGA"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "In Scotland",
+    "members": [
+     "OBAN",
+     "STIRLING",
+     "PERTH",
+     "DUNDEE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Wombles",
+    "members": [
+     "WELLINGTON",
+     "ORINOCO",
+     "TOBERMORY",
+     "BUNGO"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "WELLINGTON",
+    "not": "Footwear"
+   },
+   {
+    "tile": "ORINOCO",
+    "not": "World rivers"
+   },
+   {
+    "tile": "TOBERMORY",
+    "not": "In Scotland"
+   }
+  ]
+ },
+ {
+  "serial": 78,
+  "band": "medium",
+  "r4kind": "anagram",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "In the fruit bowl",
+    "members": [
+     "APPLES",
+     "BANANAS",
+     "ORANGES",
+     "PLUMS"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Weapons",
+    "members": [
+     "SWORD",
+     "AXE",
+     "BOW",
+     "DAGGER"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Ten-pin bowling terms",
+    "members": [
+     "STRIKE",
+     "GUTTER",
+     "ALLEY",
+     "SPLIT"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Anagrams of one another",
+    "members": [
+     "PEARS",
+     "SPEAR",
+     "SPARE",
+     "REAPS"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "PEARS",
+    "not": "In the fruit bowl"
+   },
+   {
+    "tile": "SPEAR",
+    "not": "Weapons"
+   },
+   {
+    "tile": "SPARE",
+    "not": "Ten-pin bowling terms"
+   }
+  ]
+ },
+ {
+  "serial": 79,
+  "band": "medium",
+  "r4kind": "homophone",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Money around the world",
+    "members": [
+     "EURO",
+     "YEN",
+     "RAND",
+     "PESO"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Golf words",
+    "members": [
+     "TEE",
+     "PAR",
+     "BOGEY",
+     "BIRDIE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "German words",
+    "members": [
+     "JA",
+     "DANKE",
+     "BITTE",
+     "GUTEN TAG"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Sound like numbers",
+    "members": [
+     "WON",
+     "FORE",
+     "NEIN",
+     "ATE"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "WON",
+    "not": "Money around the world"
+   },
+   {
+    "tile": "FORE",
+    "not": "Golf words"
+   },
+   {
+    "tile": "NEIN",
+    "not": "German words"
+   }
+  ]
+ },
+ {
+  "serial": 80,
+  "band": "medium",
+  "r4kind": "decoy",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Played with a pack",
+    "members": [
+     "CRIBBAGE",
+     "CANASTA",
+     "PONTOON",
+     "GIN RUMMY"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Wisecracks",
+    "members": [
+     "GAG",
+     "QUIP",
+     "WITTICISM",
+     "ONE-LINER"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "At a coronation",
+    "members": [
+     "ORB",
+     "SCEPTRE",
+     "ROBE",
+     "THRONE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "In a Christmas cracker",
+    "members": [
+     "SNAP",
+     "JOKE",
+     "CROWN",
+     "GIFT"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "SNAP",
+    "not": "Played with a pack"
+   },
+   {
+    "tile": "JOKE",
+    "not": "Wisecracks"
+   },
+   {
+    "tile": "CROWN",
+    "not": "At a coronation"
+   }
+  ]
+ },
+ {
+  "serial": 81,
+  "band": "medium",
+  "r4kind": "reversal",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Coffee orders",
+    "members": [
+     "CORTADO",
+     "MOCHA",
+     "FLAT WHITE",
+     "MACCHIATO"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Feeling anxious",
+    "members": [
+     "TENSE",
+     "ON EDGE",
+     "FRAZZLED",
+     "WORRIED"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Parts of a clock",
+    "members": [
+     "HANDS",
+     "FACE",
+     "PENDULUM",
+     "SPRING"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Backwards, another word",
+    "members": [
+     "DECAF",
+     "STRESSED",
+     "DIAL",
+     "DRAWER"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "DECAF",
+    "not": "Coffee orders"
+   },
+   {
+    "tile": "STRESSED",
+    "not": "Feeling anxious"
+   },
+   {
+    "tile": "DIAL",
+    "not": "Parts of a clock"
+   }
+  ]
+ }
+]

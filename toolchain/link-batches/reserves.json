@@ -1,0 +1,372 @@
+[
+ {
+  "serial": 108,
+  "band": "medium",
+  "r4kind": "anagram",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "On the barbecue",
+    "members": [
+     "BURGER",
+     "SAUSAGE",
+     "KEBAB",
+     "RIBS"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Poets",
+    "members": [
+     "WORDSWORTH",
+     "BYRON",
+     "TENNYSON",
+     "SHELLEY"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Women's names",
+    "members": [
+     "SHARON",
+     "TRACEY",
+     "KAREN",
+     "JULIE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Same five letters",
+    "members": [
+     "SKATE",
+     "STEAK",
+     "STAKE",
+     "KEATS"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "KEATS",
+    "not": "Poets"
+   },
+   {
+    "tile": "STEAK",
+    "not": "On the barbecue"
+   },
+   {
+    "tile": "SHELLEY",
+    "not": "Women's names"
+   }
+  ],
+  "cold": "flat; names group leans on stereotype",
+  "note": "flat; names group leans on stereotype - change names group before use"
+ },
+ {
+  "serial": 112,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Places of learning",
+    "members": [
+     "COLLEGE",
+     "ACADEMY",
+     "NURSERY",
+     "UNIVERSITY"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "South American animals",
+    "members": [
+     "LLAMA",
+     "JAGUAR",
+     "TOUCAN",
+     "PIRANHA"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Animal collective nouns",
+    "members": [
+     "GAGGLE",
+     "MURDER",
+     "PARLIAMENT",
+     "SCHOOL"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Seven deadly sins",
+    "members": [
+     "PRIDE",
+     "SLOTH",
+     "ENVY",
+     "GREED"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "SCHOOL",
+    "not": "Places of learning"
+   },
+   {
+    "tile": "PRIDE",
+    "not": "Animal collective nouns"
+   },
+   {
+    "tile": "SLOTH",
+    "not": "South American animals"
+   }
+  ],
+  "cold": "flat; reserve",
+  "note": "flat; label fixed to Animal collective nouns"
+ },
+ {
+  "serial": 114,
+  "band": "medium",
+  "r4kind": "fill",
+  "shape": "C",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Fish",
+    "members": [
+     "COD",
+     "HADDOCK",
+     "TROUT",
+     "PIKE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Baking spices",
+    "members": [
+     "GINGER",
+     "ALLSPICE",
+     "NUTMEG",
+     "CINNAMON"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "In the armoury",
+    "members": [
+     "SWORD",
+     "DAGGER",
+     "SPEAR",
+     "MACE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "___BACK",
+    "members": [
+     "HUNCH",
+     "PIGGY",
+     "FLASH",
+     "PAPER"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "PIKE",
+    "not": "In the armoury"
+   },
+   {
+    "tile": "MACE",
+    "not": "Baking spices"
+   }
+  ],
+  "cold": "flat; hard group by elimination",
+  "note": "flat; ___BACK by elimination"
+ },
+ {
+  "serial": 121,
+  "band": "medium",
+  "r4kind": "fill",
+  "shape": "C",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Olympic sportspeople",
+    "members": [
+     "SPRINTER",
+     "DIVER",
+     "FENCER",
+     "BOXER"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Kinds of dog",
+    "members": [
+     "LABRADOR",
+     "SPANIEL",
+     "TERRIER",
+     "POINTER"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Gym equipment",
+    "members": [
+     "TREADMILL",
+     "DUMBBELL",
+     "KETTLEBELL",
+     "ROWER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "___FLOWER",
+    "members": [
+     "WALL",
+     "CORN",
+     "ELDER",
+     "MAY"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "BOXER",
+    "not": "Kinds of dog"
+   },
+   {
+    "tile": "ROWER",
+    "not": "Olympic sportspeople"
+   }
+  ],
+  "cold": "flat; hard group by elimination",
+  "note": "flat; ___FLOWER by elimination"
+ },
+ {
+  "serial": 124,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "C",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Birds of prey",
+    "members": [
+     "KESTREL",
+     "OSPREY",
+     "BUZZARD",
+     "FALCON"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Severe weather",
+    "members": [
+     "GALE",
+     "CYCLONE",
+     "BLIZZARD",
+     "MONSOON"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "RAF aircraft",
+    "members": [
+     "SPITFIRE",
+     "LANCASTER",
+     "HARRIER",
+     "HURRICANE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A musical instrument hides in each",
+    "members": [
+     "CONUNDRUM",
+     "SALUTE",
+     "THORN",
+     "VIOLATE"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "HARRIER",
+    "not": "Birds of prey"
+   },
+   {
+    "tile": "HURRICANE",
+    "not": "Severe weather"
+   }
+  ],
+  "note": "flat; hidden instruments have no decoys; keep label RAF aircraft"
+ },
+ {
+  "serial": 131,
+  "band": "medium",
+  "r4kind": "reversal",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Times of day",
+    "members": [
+     "DAWN",
+     "DUSK",
+     "TWILIGHT",
+     "SUNRISE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Family elders, informally",
+    "members": [
+     "GRAN",
+     "GRAMPS",
+     "GRANDAD",
+     "GRANNY"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Knots",
+    "members": [
+     "REEF",
+     "BOWLINE",
+     "SHEEPSHANK",
+     "HALF HITCH"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Palindromes",
+    "members": [
+     "NAN",
+     "NOON",
+     "KAYAK",
+     "RADAR"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "NAN",
+    "not": "Family elders, informally"
+   },
+   {
+    "tile": "NOON",
+    "not": "Times of day"
+   },
+   {
+    "tile": "GRANNY",
+    "not": "Knots"
+   }
+  ],
+  "note": "flat; palindromes too easy"
+ }
+]

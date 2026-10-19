@@ -1,0 +1,1218 @@
+[
+ {
+  "serial": 82,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "A",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "On your feet",
+    "members": [
+     "WELLY",
+     "TRAINER",
+     "FLIP-FLOP",
+     "SOCK"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Jam flavours",
+    "members": [
+     "STRAWBERRY",
+     "APRICOT",
+     "DAMSON",
+     "CHERRY"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Bits of a car",
+    "members": [
+     "CLUTCH",
+     "BONNET",
+     "EXHAUST",
+     "BUMPER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A tool hides in each",
+    "members": [
+     "SHOE",
+     "BRAKE",
+     "RASPBERRY",
+     "PLANET"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "SHOE",
+    "not": "On your feet"
+   },
+   {
+    "tile": "BRAKE",
+    "not": "Bits of a car"
+   },
+   {
+    "tile": "RASPBERRY",
+    "not": "Jam flavours"
+   }
+  ]
+ },
+ {
+  "serial": 83,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "From the ice cream van",
+    "members": [
+     "CONE",
+     "FLAKE",
+     "SPRINKLES",
+     "CORNETTO"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Slang for cash",
+    "members": [
+     "DOSH",
+     "MOOLAH",
+     "BREAD",
+     "LOLLY"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "DIY fixings",
+    "members": [
+     "TACK",
+     "RIVET",
+     "BOLT",
+     "STAPLE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Put S in front for an animal",
+    "members": [
+     "QUID",
+     "WINE",
+     "NAIL",
+     "TAG"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "LOLLY",
+    "not": "From the ice cream van"
+   },
+   {
+    "tile": "QUID",
+    "not": "Slang for cash"
+   },
+   {
+    "tile": "NAIL",
+    "not": "DIY fixings"
+   }
+  ]
+ },
+ {
+  "serial": 84,
+  "band": "medium",
+  "r4kind": "reversal",
+  "shape": "C",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Dog breeds",
+    "members": [
+     "POODLE",
+     "BEAGLE",
+     "CORGI",
+     "BOXER"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Angler's gear",
+    "members": [
+     "LINE",
+     "REEL",
+     "FLOAT",
+     "BAIT"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "In the boxing ring",
+    "members": [
+     "JAB",
+     "UPPERCUT",
+     "ROPES",
+     "HOOK"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Backwards, an animal",
+    "members": [
+     "FLOW",
+     "REED",
+     "TAR",
+     "TAB"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "BOXER",
+    "not": "In the boxing ring"
+   },
+   {
+    "tile": "HOOK",
+    "not": "Angler's gear"
+   }
+  ]
+ },
+ {
+  "serial": 85,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "A",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Black and white animals",
+    "members": [
+     "ZEBRA",
+     "PANDA",
+     "MAGPIE",
+     "SKUNK"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Bad-tempered",
+    "members": [
+     "GRUMPY",
+     "TETCHY",
+     "CRABBY",
+     "SHIRTY"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Marks on the skin",
+    "members": [
+     "FRECKLE",
+     "WART",
+     "SCAR",
+     "BIRTHMARK"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "The Wind in the Willows",
+    "members": [
+     "TOAD",
+     "MOLE",
+     "RATTY",
+     "BADGER"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "RATTY",
+    "not": "Bad-tempered"
+   },
+   {
+    "tile": "BADGER",
+    "not": "Black and white animals"
+   },
+   {
+    "tile": "MOLE",
+    "not": "Marks on the skin"
+   }
+  ]
+ },
+ {
+  "serial": 86,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Bedding",
+    "members": [
+     "DUVET",
+     "PILLOW",
+     "SHEET",
+     "BLANKET"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Cloth",
+    "members": [
+     "SILK",
+     "LINEN",
+     "CORDUROY",
+     "CHIFFON"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "British artists",
+    "members": [
+     "TURNER",
+     "LOWRY",
+     "HOCKNEY",
+     "BANKSY"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Furniture hides in each",
+    "members": [
+     "CONSTABLE",
+     "CHESTNUT",
+     "COTTON",
+     "PEWTER"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "LINEN",
+    "not": "Bedding"
+   },
+   {
+    "tile": "COTTON",
+    "not": "Cloth"
+   },
+   {
+    "tile": "CONSTABLE",
+    "not": "British artists"
+   }
+  ]
+ },
+ {
+  "serial": 87,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "A",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Nordic countries",
+    "members": [
+     "NORWAY",
+     "DENMARK",
+     "FINLAND",
+     "ICELAND"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Hackneyed",
+    "members": [
+     "TRITE",
+     "STALE",
+     "CLICHED",
+     "TIRED"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "On a mountain",
+    "members": [
+     "RIDGE",
+     "SUMMIT",
+     "SCREE",
+     "GLACIER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Lose the last letter for a vegetable",
+    "members": [
+     "SWEDEN",
+     "CORNY",
+     "PEAK",
+     "BEANO"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "SWEDEN",
+    "not": "Nordic countries"
+   },
+   {
+    "tile": "CORNY",
+    "not": "Hackneyed"
+   },
+   {
+    "tile": "PEAK",
+    "not": "On a mountain"
+   }
+  ]
+ },
+ {
+  "serial": 88,
+  "band": "medium",
+  "r4kind": "reversal",
+  "shape": "C",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "British bands",
+    "members": [
+     "OASIS",
+     "BLUR",
+     "PULP",
+     "MADNESS"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Clergy",
+    "members": [
+     "VICAR",
+     "CURATE",
+     "DEAN",
+     "RECTOR"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Chessmen",
+    "members": [
+     "KING",
+     "KNIGHT",
+     "BISHOP",
+     "QUEEN"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Backwards, found in a kitchen",
+    "members": [
+     "NAP",
+     "TOP",
+     "PAT",
+     "NIB"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "QUEEN",
+    "not": "British bands"
+   },
+   {
+    "tile": "BISHOP",
+    "not": "Clergy"
+   }
+  ]
+ },
+ {
+  "serial": 89,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Facial expressions",
+    "members": [
+     "FROWN",
+     "SNEER",
+     "POUT",
+     "SCOWL"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Birds in the garden",
+    "members": [
+     "SPARROW",
+     "NUTHATCH",
+     "BLACKBIRD",
+     "ROBIN"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Batman villains",
+    "members": [
+     "JOKER",
+     "PENGUIN",
+     "RIDDLER",
+     "CATWOMAN"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "An imperial measure hides in each",
+    "members": [
+     "FINCH",
+     "BOUNCE",
+     "SMILE",
+     "SACRED"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "FINCH",
+    "not": "Birds in the garden"
+   },
+   {
+    "tile": "SMILE",
+    "not": "Facial expressions"
+   },
+   {
+    "tile": "ROBIN",
+    "not": "Batman villains"
+   }
+  ]
+ },
+ {
+  "serial": 90,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "A",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Parts of a boat",
+    "members": [
+     "BOW",
+     "HULL",
+     "KEEL",
+     "DECK"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Cowardly",
+    "members": [
+     "YELLOW",
+     "CHICKEN",
+     "SPINELESS",
+     "GUTLESS"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Lawbreakers",
+    "members": [
+     "THIEF",
+     "BURGLAR",
+     "MUGGER",
+     "FORGER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Lose the first letter for a bird",
+    "members": [
+     "STERN",
+     "CRAVEN",
+     "CROOK",
+     "SCOOT"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "STERN",
+    "not": "Parts of a boat"
+   },
+   {
+    "tile": "CRAVEN",
+    "not": "Cowardly"
+   },
+   {
+    "tile": "CROOK",
+    "not": "Lawbreakers"
+   }
+  ]
+ },
+ {
+  "serial": 91,
+  "band": "medium",
+  "r4kind": "reversal",
+  "shape": "C",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Sauces",
+    "members": [
+     "PESTO",
+     "GRAVY",
+     "KETCHUP",
+     "MAYO"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Dance styles",
+    "members": [
+     "WALTZ",
+     "JIVE",
+     "POLKA",
+     "SALSA"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Radio code words",
+    "members": [
+     "ALPHA",
+     "HOTEL",
+     "OSCAR",
+     "FOXTROT"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Backwards, a boy's name",
+    "members": [
+     "SINNED",
+     "NOMAD",
+     "NOD",
+     "DEN"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "SALSA",
+    "not": "Sauces"
+   },
+   {
+    "tile": "FOXTROT",
+    "not": "Dance styles"
+   }
+  ]
+ },
+ {
+  "serial": 92,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Kitchen spices",
+    "members": [
+     "CUMIN",
+     "TURMERIC",
+     "CARDAMOM",
+     "NUTMEG"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Frightening",
+    "members": [
+     "EERIE",
+     "CREEPY",
+     "SPOOKY",
+     "SINISTER"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Football moves",
+    "members": [
+     "STEPOVER",
+     "VOLLEY",
+     "HEADER",
+     "DUMMY"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Spice Girls",
+    "members": [
+     "GINGER",
+     "SCARY",
+     "POSH",
+     "SPORTY"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "NUTMEG",
+    "not": "Football moves"
+   },
+   {
+    "tile": "GINGER",
+    "not": "Kitchen spices"
+   },
+   {
+    "tile": "SCARY",
+    "not": "Frightening"
+   }
+  ]
+ },
+ {
+  "serial": 93,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "A",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Public transport",
+    "members": [
+     "BUS",
+     "TRAM",
+     "FERRY",
+     "COACH"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Eye colours",
+    "members": [
+     "BLUE",
+     "GREEN",
+     "BROWN",
+     "GREY"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Royal dynasties",
+    "members": [
+     "TUDOR",
+     "STUART",
+     "HANOVER",
+     "LANCASTER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Weather hides in each",
+    "members": [
+     "TRAIN",
+     "HAZEL",
+     "WINDSOR",
+     "CHEMIST"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "TRAIN",
+    "not": "Public transport"
+   },
+   {
+    "tile": "HAZEL",
+    "not": "Eye colours"
+   },
+   {
+    "tile": "WINDSOR",
+    "not": "Royal dynasties"
+   }
+  ]
+ },
+ {
+  "serial": 94,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "C",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "In a pack of cards",
+    "members": [
+     "JACK",
+     "ACE",
+     "SPADES",
+     "CLUBS"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Affectionate names",
+    "members": [
+     "DUCK",
+     "PET",
+     "HONEY",
+     "DEAR"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Tennis words",
+    "members": [
+     "LET",
+     "RALLY",
+     "SMASH",
+     "LOVE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Add a letter at the front for transport",
+    "members": [
+     "HIP",
+     "LANE",
+     "RAM",
+     "OAT"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "ACE",
+    "not": "Tennis words"
+   },
+   {
+    "tile": "LOVE",
+    "not": "Affectionate names"
+   }
+  ]
+ },
+ {
+  "serial": 95,
+  "band": "medium",
+  "r4kind": "homophone",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Seaside treats",
+    "members": [
+     "CANDYFLOSS",
+     "ICE CREAM",
+     "FUDGE",
+     "DOUGHNUT"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Cry",
+    "members": [
+     "SOB",
+     "WEEP",
+     "BLUB",
+     "HOWL"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Musical styles",
+    "members": [
+     "JAZZ",
+     "FOLK",
+     "PUNK",
+     "ROCK"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Sound like sea creatures",
+    "members": [
+     "SOUL",
+     "WAIL",
+     "PLACE",
+     "MUSCLE"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "ROCK",
+    "not": "Seaside treats"
+   },
+   {
+    "tile": "SOUL",
+    "not": "Musical styles"
+   },
+   {
+    "tile": "WAIL",
+    "not": "Cry"
+   }
+  ]
+ },
+ {
+  "serial": 96,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "C",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Blown instruments",
+    "members": [
+     "RECORDER",
+     "BAGPIPES",
+     "BUGLE",
+     "DIDGERIDOO"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Things with keys",
+    "members": [
+     "MAP",
+     "LAPTOP",
+     "TYPEWRITER",
+     "FLUTE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Things with pedals",
+    "members": [
+     "BICYCLE",
+     "DRUM KIT",
+     "BIN",
+     "PIANO"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A metal hides in each",
+    "members": [
+     "MARIGOLD",
+     "TINSEL",
+     "PLEAD",
+     "IRONIC"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "PIANO",
+    "not": "Things with keys"
+   },
+   {
+    "tile": "FLUTE",
+    "not": "Blown instruments"
+   }
+  ]
+ },
+ {
+  "serial": 97,
+  "band": "medium",
+  "r4kind": "anagram",
+  "shape": "A",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "British newspapers",
+    "members": [
+     "TIMES",
+     "OBSERVER",
+     "TELEGRAPH",
+     "METRO"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Star Wars characters",
+    "members": [
+     "YODA",
+     "LEIA",
+     "VADER",
+     "CHEWBACCA"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Family card games",
+    "members": [
+     "SNAP",
+     "CHEAT",
+     "OLD MAID",
+     "RUMMY"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Rearrange for a capital city",
+    "members": [
+     "MORE",
+     "PAIRS",
+     "MAIL",
+     "SOLO"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "MAIL",
+    "not": "British newspapers"
+   },
+   {
+    "tile": "SOLO",
+    "not": "Star Wars characters"
+   },
+   {
+    "tile": "PAIRS",
+    "not": "Family card games"
+   }
+  ]
+ },
+ {
+  "serial": 98,
+  "band": "medium",
+  "r4kind": "reversal",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Boats",
+    "members": [
+     "CANOE",
+     "YACHT",
+     "BARGE",
+     "DINGHY"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Desserts",
+    "members": [
+     "TRIFLE",
+     "CRUMBLE",
+     "SORBET",
+     "PAVLOVA"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Hair products",
+    "members": [
+     "SPRAY",
+     "WAX",
+     "SHAMPOO",
+     "MOUSSE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Backwards, a body part",
+    "members": [
+     "GEL",
+     "TUG",
+     "MUG",
+     "PAL"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "MOUSSE",
+    "not": "Desserts"
+   },
+   {
+    "tile": "GEL",
+    "not": "Hair products"
+   },
+   {
+    "tile": "TUG",
+    "not": "Boats"
+   }
+  ]
+ },
+ {
+  "serial": 99,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "A",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Valentine's Day",
+    "members": [
+     "ROSES",
+     "CARD",
+     "CHOCOLATES",
+     "HEART"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Female creatures",
+    "members": [
+     "DOE",
+     "EWE",
+     "SOW",
+     "MARE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Night sky sights",
+    "members": [
+     "MOON",
+     "METEOR",
+     "AURORA",
+     "SATELLITE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Santa's reindeer",
+    "members": [
+     "COMET",
+     "VIXEN",
+     "CUPID",
+     "DASHER"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "COMET",
+    "not": "Night sky sights"
+   },
+   {
+    "tile": "VIXEN",
+    "not": "Female creatures"
+   },
+   {
+    "tile": "CUPID",
+    "not": "Valentine's Day"
+   }
+  ]
+ },
+ {
+  "serial": 100,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "C",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Flowers",
+    "members": [
+     "TULIP",
+     "PANSY",
+     "ORCHID",
+     "CROCUS"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Woodland trees",
+    "members": [
+     "OAK",
+     "BEECH",
+     "ELM",
+     "HOLLY"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Popular girls' names",
+    "members": [
+     "CHLOE",
+     "EMMA",
+     "SOPHIE",
+     "POPPY"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A fish hides in each",
+    "members": [
+     "SCARPER",
+     "CONSOLE",
+     "EMBASSY",
+     "SPIKE"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "HOLLY",
+    "not": "Popular girls' names"
+   },
+   {
+    "tile": "POPPY",
+    "not": "Flowers"
+   }
+  ]
+ },
+ {
+  "serial": 101,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "B",
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Young animals",
+    "members": [
+     "FOAL",
+     "CALF",
+     "LAMB",
+     "KID"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Tease playfully",
+    "members": [
+     "RIB",
+     "JOSH",
+     "RAG",
+     "WIND UP"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Pre-euro currencies",
+    "members": [
+     "LIRA",
+     "PESETA",
+     "DRACHMA",
+     "GUILDER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Add a letter to the end for a country",
+    "members": [
+     "CHIN",
+     "MALT",
+     "CUB",
+     "FRANC"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "KID",
+    "not": "Tease playfully"
+   },
+   {
+    "tile": "CUB",
+    "not": "Young animals"
+   },
+   {
+    "tile": "FRANC",
+    "not": "Pre-euro currencies"
+   }
+  ]
+ }
+]
