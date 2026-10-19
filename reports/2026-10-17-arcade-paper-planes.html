@@ -99,6 +99,7 @@ a.back:active{opacity:.6}
 .sw .k{flex:none;position:relative;width:40px;height:24px;border-radius:12px;background:#c9d1db;font-size:0;padding:0;transition:background .15s}
 .sw .k:after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .15s}
 .sw .k.on:after{left:19px}
+.linkish{all:unset;cursor:pointer;font:700 13px Nunito,system-ui,sans-serif;color:#8a4b3c;text-decoration:underline;min-height:44px;display:flex;align-items:center}#resetAsk{z-index:13}
 .pfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}.pfoot .back{font-weight:800;text-decoration:none;color:var(--ink);min-height:44px;display:flex;align-items:center}
 .guide{list-style:none;margin:4px 0 2px;padding:0;font-size:14px;line-height:1.35;column-gap:22px}.guide li{display:grid;grid-template-columns:58px 1fr;gap:6px;padding:6px 0;border-bottom:1px solid var(--rule);break-inside:avoid}.guide b{color:#2e4458}
 @media(min-width:620px){.guide{columns:2}}
@@ -454,7 +455,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
       <button class="sw" id="pFS"><span>Full screen</span><span class="k">On</span></button>
       <button class="sw" id="pUpright"><span>Upright play</span><span class="k">Off</span></button>
     </div>
-    <div class="pfoot"><button class="btn" id="pHow">How to fly</button><a class="back" href="../games.html">← Digi Games</a></div>
+    <div class="pfoot"><button class="btn" id="pHow">How to fly</button><button class="linkish" id="pReset">Reset progress</button><a class="back" href="../games.html">← Digi Games</a></div>
     </div>
     <div id="pGuide" class="hidden">
       <ul class="guide">
@@ -472,6 +473,13 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
   </div>
 </div>
 
+<div class="ov dim" id="resetAsk">
+  <div class="card" style="width:min(420px,100%)">
+    <h2 class="hand">Reset all progress?</h2>
+    <p style="margin:2px 0 10px">Clips, folds, upgrades, stars, bests and today's Daily go back to the start, and the flying lessons show again. Your settings stay. This can't be undone.</p>
+    <div class="row"><button class="btn" id="rGo" style="border-color:#b3412e;color:#b3412e">Reset</button><button class="btn pri" id="rStay">Keep my progress</button></div>
+  </div>
+</div>
 <div class="ov dim" id="confirm">
   <div class="card" style="width:min(460px,100%)">
     <h2 class="hand">Go to the hangar?</h2>
@@ -974,8 +982,9 @@ function setCrossLines() {
   if (!run || !pl) { crossLines = []; return; }
   starsHeld0 = pl.n >= 1 && pl.n <= 8 ? save.stars[pl.n - 1] : 0;
   const starX = starLines(pl).map((x, i) => ({ x, kind: 'star', n: i + 1, label: i === 0 && run.mode === 'run' ? 'Target beaten! ★' : '★'.repeat(i + 1) + ' new star!' }));
-  if (run.mode === 'run') crossLines = starX.filter(l => l.n === 1 || l.n > starsHeld0).concat([{ x: pl.target * 2, kind: 'double', label: '2× target · +1 throw' }]).sort((a, b) => a.x - b.x);
-  else if (run.mode === 'place') crossLines = starX.filter(l => l.n > starsHeld0);
+  starX.forEach(l => { if (l.n <= starsHeld0 && !(l.n === 1 && run.mode === 'run')) l.kind = 'held'; });
+  if (run.mode === 'run') crossLines = starX.concat([{ x: pl.target * 2, kind: 'double', label: '2× target · +1 throw' }]).sort((a, b) => a.x - b.x);
+  else if (run.mode === 'place') crossLines = starX;
   else if (run.mode === 'daily') { const b = dailyToday().best; crossLines = b > 0 ? [{ x: b, kind: 'best', label: 'Past today\'s best!' }] : []; }
   else crossLines = [];
   crossLines.forEach(l => l.done = false);
@@ -983,6 +992,9 @@ function setCrossLines() {
 // the moment the plane passes a line: fanfare, a burst of paper at the flag, a banner, the distance turns green
 function crossLine(l) {
   l.done = true;
+  if (l.kind === 'held') { tone(1047, .16, .05, 'triangle'); tone(1568, .2, .03, 'sine', .06); buzz(12);
+    if (!RM()) { const gy = groundAtFull(pl, l.x); for (let i = 0; i < 10; i++) parts.push({ x: l.x, y: gy + 4, vx: (Math.random() - 0.5) * 5, vy: 2 + Math.random() * 4, t: 0, life: 0.8, c: '#ffd34d', r: 2, sq: 1 }); }
+    return; }
   const big = l.kind === 'target' || l.kind === 'star' || l.kind === 'best';
   const notes = l.kind === 'double' ? [784, 988, 1175, 1568] : l.kind === 'star' ? [659, 880, 1047, 1319].map(f => f * Math.pow(2, (l.n - 1) * 2 / 12)) : [523, 659, 784, 1047];
   notes.forEach((f, i) => { tone(f, .28, .085, 'triangle', i * .075); tone(f * 2, .2, .03, 'sine', i * .075 + .02); });
@@ -991,6 +1003,7 @@ function crossLine(l) {
   const gy = groundAtFull(pl, l.x), fy = gy + Math.max(44, Math.min(80, H * 0.16)) / cam.s;
   if (!RM()) { const cols = ['#f39c32', '#2f6fd6', '#2e9a5a', '#e64a6b', '#ffd34d', '#ffffff'];
     for (let i = 0; i < (big ? 46 : 26); i++) { const a = Math.random() * Math.PI * 2, s = 3 + Math.random() * 9; parts.push({ x: l.x, y: fy, vx: Math.cos(a) * s, vy: Math.abs(Math.sin(a)) * s + 2, t: 0, life: 1.1 + Math.random() * 0.6, c: cols[i % 6], r: 2.4 + Math.random() * 1.6, sq: 1 }); } }
+  for (const c of crossFx) c.t = Math.max(c.t, 1.4);
   crossFx.push({ t: 0, label: l.label, kind: l.kind });
   const d = $('hudDist').parentElement; d.classList.remove('passed'); void d.offsetWidth; d.classList.add('passed');
 }
@@ -1052,9 +1065,12 @@ document.getElementById('homeRoute').addEventListener('click', e => { const b = 
 function startDaily() { const d = dailyToday(); if (d.n >= 3) return; initAudio(); goFS(); lastMode = 'daily'; startRun('new', 'daily'); }
 let lastPlace = 0;
 function towerUnlocked() { return false; }   // the Skyscraper was retired in Oct 2026; its code stays dormant
-/* Star distances. ★ is the target; ★★ and ★★★ were set from a balance sim (Oct 2026): about 85% of the median best
-   throw of a skilled pilot at a progression stage, so the top stars at later places need the later folds. */
-const STAR_UP = { garden: [50, 75], playground: [75, 105], green: [70, 105], park: [80, 175], beach: [130, 220], cliff: [200, 310], valley: [190, 230], mountains: [300, 350] };
+/* Star distances. ★ is the target (reachable with a fully tuned Classroom Dart everywhere). ★★ and ★★★ follow a fold
+   ladder set from the balance sim (Oct 2026): each line sits between the median best throw of the fold that should
+   earn it and the fold before, so a star at a later place needs a later fold.
+     ★★  Dart+ · Nakamura · Nakamura · Nakamura · Wide Glider · Wide Glider · Wide Glider · Wide Glider
+     ★★★ Nakamura · Wide Glider · Wide Glider · Record Glider · Record Glider · Record Dart · Record Glider+ · Record Dart */
+const STAR_UP = { garden: [50, 75], playground: [75, 105], green: [72, 105], park: [86, 175], beach: [130, 185], cliff: [215, 330], valley: [210, 255], mountains: [310, 385] };
 const starLines = p => [p.target].concat(STAR_UP[p.id] || []);
 const starsFor = (p, d) => starLines(p).filter(x => d >= x).length;
 const starTotal = () => save.stars.reduce((a, b) => a + b, 0);
@@ -1345,7 +1361,7 @@ $('tutSkip').addEventListener('click', e => { e.stopPropagation(); save.tut1 = s
 $('uprightBtn').addEventListener('click', () => { save.upright = true; persist(); updateBanner(); });
 
 /* ---------- overlays ---------- */
-function hideAllOverlays() { ['splash', 'pause', 'end', 'confirm', 'landing'].forEach(i => $(i).classList.remove('on')); $('hangar').classList.remove('on'); }
+function hideAllOverlays() { ['splash', 'pause', 'end', 'confirm', 'resetAsk', 'landing'].forEach(i => $(i).classList.remove('on')); $('hangar').classList.remove('on'); }
 function pausePlay(settingsOnly) {
   if (!settingsOnly && !(state === 'aim' || state === 'fly' || state === 'result')) return;
   paused = !settingsOnly; aim = null; holdPtrs.clear(); keyHold = keyDown = false; setWind(0);
@@ -1354,6 +1370,7 @@ function pausePlay(settingsOnly) {
   $('pHangar').classList.toggle('hidden', !!settingsOnly);
   $('pHangar').textContent = 'Hangar';   // same name as the "Go to the hangar?" step it opens, paused or resuming
   pauseMode = settingsOnly ? 'settings' : 'pause';
+  $('pReset').classList.toggle('hidden', !settingsOnly);
   refreshSwitches();
   $('pMain').classList.remove('hidden'); $('pGuide').classList.add('hidden');
   $('pause').classList.add('on'); focusPanel('pause','pResume');
@@ -1387,6 +1404,16 @@ $('pUpright').addEventListener('click', () => { save.upright = !save.upright; pe
 $('splashGo').addEventListener('click',()=>{initAudio();goFS();$('splash').classList.remove('on');lastMode='run';startRun('new','run');});
 $('splashHangar').addEventListener('click',()=>{initAudio();openHangar();});
 $('homeSettings').addEventListener('click',()=>{initAudio();pausePlay(true);});
+$('pReset').addEventListener('click', () => { $('resetAsk').classList.add('on'); focusPanel('resetAsk', 'rStay'); });
+$('rStay').addEventListener('click', () => { $('resetAsk').classList.remove('on'); focusPanel('pause', 'pReset'); });
+$('rGo').addEventListener('click', () => {
+  // progress lives only in this browser's storage; play data already sent to the site is not touched
+  const keep = { snd: save.snd, haptics: save.haptics, rm: save.rm, fs: save.fs, upright: save.upright };
+  save = Object.assign(defaults(), keep, { seen: true });
+  run = null; persist();
+  $('resetAsk').classList.remove('on'); $('pause').classList.remove('on');
+  showHome(); toast('Progress reset');
+});
 function refreshHomeFS(){const b=$('homeFS');b.hidden=!fsOK;b.textContent='⛶ Full screen '+(save.fs?'on':'off');b.classList.toggle('on',!!save.fs);b.setAttribute('aria-pressed',save.fs?'true':'false');}
 $('homeFS').addEventListener('click',()=>{save.fs=!save.fs;persist();if(save.fs)goFS();else exitFS();refreshHomeFS();});
 $('homeBtn').addEventListener('click',()=>{if(hangarRun)continueFromHangar();else showHome();});
@@ -2549,7 +2576,7 @@ if (window.__DGTEST === true) {
       if (run && (state === 'aim' || state === 'fly' || state === 'result')) endRun(!!win);
       else if (state === 'home' || state === 'splash' || state === 'hangar') { startRun('new', 'run'); endRun(!!win); }
     },
-    state: () => ({ state, paused, qual, hangarRun, wind: roll && { ...roll.wind, value: windAt(pl,roll,fl?fl.t:0), seed: roll.seed }, camera: {...cam}, speedMax: P && speedScale(), launchSpeed: P && P.v, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done, vx: fl.vx, vy: fl.vy, power: fl.pow0, a: fl.a, stall: fl.stall, stalls: fl.stalls || 0, th:fl.th, pitchRate:fl.pitchRate, crashed:!!fl.crashed, hold: fl.hold, clips: fl.clips, loops: fl.loops || 0 } }),
+    state: () => ({ cross: crossLines.map(l => [l.x, l.kind, l.done]), fx: crossFx.map(c => c.label), state, paused, qual, hangarRun, wind: roll && { ...roll.wind, value: windAt(pl,roll,fl?fl.t:0), seed: roll.seed }, camera: {...cam}, speedMax: P && speedScale(), launchSpeed: P && P.v, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done, vx: fl.vx, vy: fl.vy, power: fl.pow0, a: fl.a, stall: fl.stall, stalls: fl.stalls || 0, th:fl.th, pitchRate:fl.pitchRate, crashed:!!fl.crashed, hold: fl.hold, clips: fl.clips, loops: fl.loops || 0 } }),
     give: o => { Object.assign(save, o); persist(); if (state === 'hangar') renderHangar(); },
     speed: s => { TEST.speed = s; },
     auto: on => { TEST.auto = on; },
