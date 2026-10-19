@@ -237,19 +237,15 @@
     while (days[d] && n < 4000) { n++; d = back(d); }
     // 19 Oct 2026 (Alec): a chip on the count row, not a sentence under it.
     // "You've played every day for N days" read as a plain fact in body text
-    // and didn't feel like a win. Filled once today is played; outlined, with a
-    // nudge, while the run is still open (played up to yesterday, not today).
+    // and didn't feel like a win. Celebration only, never a nudge (Alec): the
+    // same chip whether or not today has been played yet.
     var el = document.getElementById('run');
     if (!el) {
       var row = document.createElement('div'); row.className = 'countrow';
       $count.parentNode.insertBefore(row, $count); row.appendChild($count);
       el = document.createElement('p'); el.id = 'run'; el.className = 'run'; row.appendChild(el);
     }
-    var safe = !!days[t];
-    el.innerHTML = n < 2 ? ''
-      : safe ? '<span aria-hidden="true">🔥</span><span><b>' + n + '-day</b> streak</span>'
-             : '<span aria-hidden="true">🔥</span><span><b>' + n + '-day</b> streak · play today</span>';
-    el.classList.toggle('risk', !safe);
+    el.innerHTML = n < 2 ? '' : '<span aria-hidden="true">🔥</span><span><b>' + n + '-day</b> streak</span>';
     el.hidden = n < 2;
   }
 
