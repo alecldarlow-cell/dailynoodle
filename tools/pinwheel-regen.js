@@ -38,6 +38,8 @@ const fs = require("fs"), path = require("path"), vm = require("vm");
 const { broadAlts } = require("./doku-broad-check.js");
 // Mini clue gate: stray it/them, padding, Americanisms, same clue within 365 days (19 Oct 2026)
 const { checkMinis } = require("./check-mini-clues.js");
+// Doku difficulty rule (19 Oct 2026): easy needs a crossing deduction, medium/hard never need trial and error
+const { fitsOK: gradeFits, shapeOK: lockShapeOK } = require("./doku-grade.js");
 
 const ROOT = path.resolve(__dirname, "..");
 const REPORTS = path.join(ROOT, "reports");
@@ -270,17 +272,24 @@ function gapTargets(all, from, until) {
   return pick.sort((a, b) => a.date.localeCompare(b.date));
 }
 
+// Locks for a new Doku: within the band's density, passing the engine gate, with
+// no second fill in everyday words, and meeting the difficulty rule of
+// tools/doku-grade.js (easy: at least one crossing deduction and no stall;
+// medium/hard: at most one stall). The first 300 tries also ask a medium or
+// hard one for a way in (first move a deduction); the last 150 drop that.
+// The lock pattern is screened like a layout too, as the feed card shades it.
 function lockFor(E, grid, band, rnd) {
   const cells = []; for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) if (grid[r][c] !== "#") cells.push([r, c]);
   const [lo, hi] = E.DENSITY[band];
   const nMin = Math.ceil(lo * cells.length - 1e-9), nMax = Math.floor(hi * cells.length + 1e-9);
-  for (let t = 0; t < 300; t++) {
+  for (let t = 0; t < 450; t++) {
     const n = nMin + Math.floor(rnd() * (Math.max(nMax, nMin) - nMin + 1));
     const sh = cells.slice().sort(() => rnd() - 0.5).slice(0, n).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
     const locked = sh.map(([r, c]) => [r + 1, c + 1]);
     const lk = new Set(sh.map(([r, c]) => r + "," + c));
     const bank = cells.filter(([r, c]) => !lk.has(r + "," + c)).map(([r, c]) => grid[r][c]).sort(() => rnd() - 0.5);
     const pz = { grid, locked, bank, band };
+    if (!lockShapeOK(grid, locked) || !gradeFits(pz, t < 300)) continue;   // cheapest checks first
     if (E.validateLexi(pz).pass && broadAlts(pz) === 0) return { locked, bank };
   }
   return null;
@@ -357,6 +366,7 @@ function apply(planFile) {
       const v = E.doku.validateLexi(pz);
       if (!v.pass) problems.push(`${p.file}: Doku gate FAILS ${JSON.stringify(v.checks)}`);
       if (broadAlts(pz)) problems.push(`${p.file}: Doku has a second fill in everyday words (tools/doku-broad-check.js)`);
+      if (!gradeFits(pz, false)) problems.push(`${p.file}: Doku breaks the difficulty rule (tools/doku-grade.js)`);
     }
     // masked diff: only the grid/locked/bank/clues block and the standfirst may differ
     const strip = x => x.replace(/<meta name="dn:standfirst" content="[^"]*">/, "")
