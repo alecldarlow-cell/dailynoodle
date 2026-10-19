@@ -21,6 +21,8 @@ let pass = 0, fail = 0;
 const ok = (c, m) => { if (c) { pass++; console.log('  ok  ', m); } else { fail++; console.log('  FAIL', m); } };
 const text = (p, sel) => p.locator(sel).first().textContent().then(t => (t || '').trim()).catch(() => '');
 const ends = ev => ev.filter(e => e.ev === 'puzzle_end');
+const honest = s => (s.verdict === 'mine') === (s.truth === 'mine');   // Hint's verdict on the square it marks matches the real board
+const nbHas = (i, j) => i !== j && Math.abs(Math.floor(i / 6) - Math.floor(j / 6)) <= 1 && Math.abs(i % 6 - j % 6) <= 1;
 const ls = (p, k) => p.evaluate(k => { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }, k);
 
 /* ---- what every finish sheet must do, whatever the type ---- */
@@ -397,12 +399,12 @@ const TESTS = {
     });
     const bad = seen.filter(s => !s.ok);
     ok(seen.length >= 10 && !bad.length, `sweep: all ${seen.length} Hint lines match the board they describe` + bad.map(s => ` | ${s.err}: "${s.line}"`).join(''));
-    ok(seen.every(s => s.verdict === s.truth), 'sweep: every square Hint marks is what its line says (safe or a mine)');
+    ok(seen.every(honest), 'sweep: every square Hint marks is what its line says (safe or a mine)');
     ok(seen.every(s => s.marked === 1), `sweep: one square marked at a time (${seen.map(s => s.marked).join('')})`);
     ok(seen[0].line === 'This 1 has only one hidden square next to it, so that square is a mine.', `sweep: first line "${seen[0].line}"`);
     ok(seen.some(s => s.line === 'This 2 and this 1 share two hidden squares. The 2 needs one more mine than the 1, and it can only be in its other square.'), 'sweep: the two-square step is explained as one');
     ok(seen.filter(s => s.kind === 'pair').length === 2 && seen.some(s => s.kind === 'pair' && s.verdict === 'safe'), `sweep: both two-number steps on this board are explained (${seen.filter(s => s.kind === 'pair').map(s => s.verdict).join(', ')})`);
-    const want = { single: 1, pair: 2, 'count-pair': 1, count: 0 };
+    const want = { single: 1, pair: 2, 'count-pair': 1, count: 0, wrongflag: 0 };
     ok(look.every((l, i) => l.rings.length === want[seen[i].kind] && l.rings.every(Boolean)), 'sweep: the numbers each line talks about are ringed (one, or two for a two-number step)');
     ok(look.every(l => !l.cut && l.inView && l.order), `sweep: the line shows in full between the board and the buttons (${look.filter(l => l.cut || !l.inView || !l.order).length} not)`);
     ok(look.every(l => l.live === 'polite'), 'sweep: a screen reader hears the line');
@@ -411,6 +413,40 @@ const TESTS = {
     ok(await play.boxOn(p) && end && end.x.outcome === 'solved' && end.x.hints === seen.length, `sweep: solved by Hint alone; tracker read ${end && end.x.hints} hints of ${seen.length}`);
     ok(!p.errs.length, 'sweep: no page errors ' + p.errs.join(' | '));
     await ctx.close();
+
+    /* (a) a wrong flag on a provably safe square: Hint names it, and only it (18 Oct; r1c4 is provably safe from the opening,
+       and trusting it the old Hint called the mine at r1c5 safe) */
+    const flagAt = async (pg, i) => { await tap(pg, pg.locator('#modeFlag')); await tap(pg, pg.locator('#grid .cell').nth(i)); await tap(pg, pg.locator('#modeDig')); await wait(pg, 300); };
+    {
+      const ev2 = []; const { ctx, p } = await open(b, F.sweep, { events: ev2 }); const rings = [];
+      const seen = await play.sweepByHint(p, { afterOpen: () => flagAt(p, 3), onHint: async () => rings.push(await p.evaluate(() => document.querySelectorAll('#grid .cell.why').length)) });
+      ok(seen[0].line === play.SWEEP_WRONG_FLAG && seen[0].pick === 3 && seen[0].ok && rings[0] === 0, `sweep: a flag on a provably safe square is named as wrong, with no ring ("${seen[0].line}" on ${seen[0].pick})`);
+      ok(seen.filter(s => s.verdict === 'wrongflag').length === 1, 'sweep: the wrong flag is named once; taken off, it is never mentioned again');
+      ok(seen.every(s => s.ok) && seen.every(honest), `sweep: with a wrong flag, every line still matches the board and never calls a mine safe` + seen.filter(s => !s.ok).map(s => ` | ${s.err}: "${s.line}"`).join(''));
+      ok(await play.boxOn(p) && ends(ev2)[0] && ends(ev2)[0].x.outcome === 'solved', 'sweep: and the board is still solved by Hint alone');
+      ok(!p.errs.length, 'sweep: no page errors ' + p.errs.join(' | '));
+      await ctx.close();
+    }
+    /* (b) a wrong flag on a square the numbers can't decide yet, next to a number: Hint ignores it (5 Oct; flag r3c1,
+       which made the old Hint call the mine at r4c1 safe) */
+    {
+      const ev3 = []; const { ctx, p } = await open(b, '2026-10-05-logic-sweep.html', { events: ev3, time: '2026-10-05T14:30:00+01:00' });
+      let pre = null;
+      const seen = await play.sweepByHint(p, { afterOpen: async ({ mines }) => {
+        await flagAt(p, 12);
+        const st = await play.sweepHintState(p), total = st.left + st.flag.filter(Boolean).length, pv = play.sweepProvable(st.num, total);
+        const fooled = [...Array(36).keys()].filter(j => st.num[j] > 0 && nbHas(j, 12) && nbHas(j, 18) && st.num[j] === [...Array(36).keys()].filter(x => nbHas(j, x) && st.flag[x]).length);
+        pre = { unprovable: !pv.S.has(12) && !pv.K.has(12), mine18: mines.has(18), fooled };
+      } });
+      ok(pre.unprovable && pre.mine18 && pre.fooled.length > 0, `sweep: the setup: r3c1 can't be proved either way, and trusting its flag, the number at ${pre.fooled.map(j => 'r' + (Math.floor(j / 6) + 1) + 'c' + (j % 6 + 1))} would call the mine at r4c1 safe`);
+      ok(seen[0].ok && seen[0].pick === 16 && seen[0].verdict === 'mine' && seen[0].truth === 'mine', `sweep: Hint ignores the unproved flag and finds a true step ("${seen[0].line}")`);
+      ok(!seen.some(s => s.verdict === 'safe' && s.truth === 'mine'), 'sweep: Hint never marks a real mine as safe');
+      ok(seen.every(s => s.ok) && seen.every(honest), `sweep: every line matches the board` + seen.filter(s => !s.ok).map(s => ` | ${s.err}: "${s.line}"`).join(''));
+      ok(seen.filter(s => s.verdict === 'wrongflag').length === 1 && seen.findIndex(s => s.verdict === 'wrongflag') > 0, `sweep: the flag is named only once the numbers prove it wrong (hint ${seen.findIndex(s => s.verdict === 'wrongflag') + 1} of ${seen.length})`);
+      ok(await play.boxOn(p) && ends(ev3)[0] && ends(ev3)[0].x.outcome === 'solved', 'sweep: and the board is solved by Hint alone');
+      ok(!p.errs.length, 'sweep: no page errors ' + p.errs.join(' | '));
+      await ctx.close();
+    }
   },
   async 'finish:path'(b) {
     const ev = []; const { ctx, p } = await open(b, F.path, { events: ev });

@@ -122,7 +122,7 @@ button.primary:hover{background:var(--brand-deep)}
 .stat span{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
 .modalbtns{display:flex;gap:8px}
 .modalbtns button{flex:1;margin:0}
-@media(prefers-reduced-motion:reduce){.grid.celebrate .cell{animation:none}.modalcard{animation:none}.cell.hint{animation:none;outline:3px solid var(--active);outline-offset:-3px}.cell.start.hid{animation:none;outline:3px solid var(--active);outline-offset:-3px}}
+@media(prefers-reduced-motion:reduce){.grid.celebrate .cell{animation:none}.modalcard{animation:none}.cell.hint{animation:none;outline:3px solid var(--active);outline-offset:-3px}.cell.flag.hint{outline-color:#141726}.cell.start.hid{animation:none;outline:3px solid var(--active);outline-offset:-3px}}
 footer{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.05em;margin-top:6px;text-align:center}
 .gridwrap{display:contents}
 /* ---------- APP MODE — no keyboard to fit, so the board takes the room ---------- */

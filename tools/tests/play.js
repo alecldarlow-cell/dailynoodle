@@ -45,16 +45,44 @@ const sweepHintState = p => p.evaluate(() => {
     flag: cells.map(c => c.classList.contains('flag')), why: cells.flatMap((c, i) => c.classList.contains('why') ? [i] : []),
     pick: cells.findIndex(c => c.classList.contains('hint')), marked: cells.filter(c => c.classList.contains('hint')).length };
 });
-/* st: {line, left (mines not yet flagged), num[36] (number on an open square, else null), flag[36], why[] (ringed squares), pick}.
-   Returns {ok, verdict:'safe'|'mine', kind, err}. Every claim in the line is re-derived from st, not taken on trust. */
+const sweepNb = i => { const r = Math.floor(i / 6), c = i % 6, o = []; for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) { if (!a && !b) continue; const y = r + a, x = c + b; if (y >= 0 && y < 6 && x >= 0 && x < 6) o.push(y * 6 + x); } return o; };
+/* What the open numbers and the mine count alone prove (mines K, safe squares S), ignoring flags.
+   Written apart from the engine's provable(): it tries pairs every round, not only when single numbers stall. */
+function sweepProvable(num, total) {
+  const K = new Set(), S = new Set(), open = i => num[i] !== null;
+  for (;;) {
+    const out = j => open(j) || K.has(j) || S.has(j), cons = [];
+    for (let i = 0; i < 36; i++) if (open(i)) { const c = sweepNb(i).filter(j => !out(j)); if (c.length) cons.push({ c, n: num[i] - sweepNb(i).filter(j => K.has(j)).length }); }
+    const all = [...Array(36).keys()].filter(j => !out(j)); if (all.length) cons.push({ c: all, n: total - K.size });
+    const ns = new Set(), nm = new Set(), tri = cs => { for (const x of cs) { if (x.n === 0) x.c.forEach(j => ns.add(j)); else if (x.n === x.c.length) x.c.forEach(j => nm.add(j)); } };
+    tri(cons);
+    const der = []; for (const A of cons) for (const B of cons) if (A !== B && A.c.length < B.c.length && A.c.every(j => B.c.includes(j))) der.push({ c: B.c.filter(j => !A.c.includes(j)), n: B.n - A.n });
+    tri(der);
+    if (!ns.size && !nm.size) return { K, S };
+    ns.forEach(j => S.add(j)); nm.forEach(j => K.add(j));
+  }
+}
+const SWEEP_WRONG_FLAG = "This flag can't be right: this square is provably safe.";
+/* st: {line, left (the counter: mines minus flags), num[36] (number on an open square, else null), flag[36], why[] (ringed squares), pick}.
+   Returns {ok, verdict:'safe'|'mine'|'wrongflag', kind, err}. Every claim in the line is re-derived from st, not taken on trust.
+   Flags: a flag on a provably safe square must be named (and only then); otherwise the line's "flagged mines" are the
+   flags the numbers prove, and any other flag counts as an unknown square, as Hint treats it. */
 function sweepHintCheck(st) {
   const W = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'], w = x => W.indexOf(String(x).toLowerCase());
-  const nb = i => { const r = Math.floor(i / 6), c = i % 6, o = []; for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) { if (!a && !b) continue; const y = r + a, x = c + b; if (y >= 0 && y < 6 && x >= 0 && x < 6) o.push(y * 6 + x); } return o; };
+  const nb = sweepNb, L = st.line, P = st.pick;
+  const said = L === SWEEP_WRONG_FLAG ? 'wrongflag' : /safe\.$/.test(L) ? 'safe' : 'mine';   // what the line calls the square, read from its wording alone
+  const fail = err => ({ ok: false, err, line: L, verdict: said });
+  const total = st.left + st.flag.filter(Boolean).length, { K, S } = sweepProvable(st.num, total);
+  const wrong = [...Array(36).keys()].filter(i => st.flag[i] && S.has(i));
+  if (L === SWEEP_WRONG_FLAG) return P >= 0 && wrong.includes(P) && st.why.length === 0 ? { ok: true, verdict: 'wrongflag', kind: 'wrongflag' } : fail('wrong-flag line on a square that is not a provably safe flag');
+  if (wrong.length) return fail('a flag on a provably safe square went unmentioned');
+  if (P < 0 || st.flag[P]) return fail('no unflagged square is marked');
+  const flags = st.flag.map((f, i) => f && K.has(i));
+  st = { ...st, flag: flags, left: total - flags.filter(Boolean).length };
   const hidden = i => st.num[i] === null && !st.flag[i];
   const hidOf = i => nb(i).filter(hidden), flOf = i => nb(i).filter(j => st.flag[j]).length, need = i => st.num[i] - flOf(i);
   const allHid = [...Array(36).keys()].filter(hidden);
-  const L = st.line, P = st.pick, fail = err => ({ ok: false, err, line: L });
-  if (P < 0 || !hidden(P)) return fail('no hidden square is marked');
+  if (!hidden(P)) return fail('no hidden square is marked');
   let m;
   const one = () => { if (st.why.length !== 1) return null; const a = st.why[0]; return st.num[a] ? a : null; };
   if ((m = L.match(/^This (\d) already touches (?:its flagged mine|its (\w+) flagged mines), so its other hidden (square is|squares are) safe\.$/))) {
@@ -111,10 +139,11 @@ function sweepHintCheck(st) {
   return fail('line matches no known deduction');
 }
 /* Solve a Sweep by Hint alone: press Hint, check its line, dig or flag the square it marks; returns every check */
-async function sweepByHint(p, { onHint, afterMove } = {}) {
+async function sweepByHint(p, { onHint, afterMove, afterOpen } = {}) {
   await start(p);
   const P = await puzzle(p), mines = new Set(P.mines.map(([r, c]) => (r - 1) * 6 + (c - 1))), cells = p.locator('#grid .cell');
   await tap(p, cells.nth((P.start[0] - 1) * 6 + (P.start[1] - 1))); await wait(p, 1200);
+  if (afterOpen) await afterOpen({ P, mines, cells });
   const seen = [];
   for (let k = 0; k < 40 && !(await boxOn(p)); k++) {
     if (await p.evaluate(() => document.querySelectorAll('#grid .cell.hid').length === 0)) break;
@@ -123,7 +152,7 @@ async function sweepByHint(p, { onHint, afterMove } = {}) {
     seen.push({ ...r, line: st.line, pick: st.pick, marked: st.marked, truth: mines.has(st.pick) ? 'mine' : 'safe' });
     if (onHint) await onHint(st, r);
     if (!r.ok || st.pick < 0) break;
-    if (mines.has(st.pick)) { await tap(p, p.locator('#modeFlag')); await tap(p, cells.nth(st.pick)); await tap(p, p.locator('#modeDig')); }
+    if (mines.has(st.pick) || r.verdict === 'wrongflag') { await tap(p, p.locator('#modeFlag')); await tap(p, cells.nth(st.pick)); await tap(p, p.locator('#modeDig')); }   // flag it, or take a wrong flag off
     else await tap(p, cells.nth(st.pick));
     await wait(p, 600);
     if (afterMove) await afterMove(st, r);
@@ -174,4 +203,4 @@ async function borders(p, { wrong = [3, 6, 8], hint = [5] } = {}) {
   await wait(p, 3000);
 }
 
-module.exports = { start, puzzle, boxOn, link, sweep, sweepHintState, sweepHintCheck, sweepByHint, path, grid, tangle, borders };
+module.exports = { start, puzzle, boxOn, link, sweep, sweepHintState, sweepHintCheck, sweepProvable, sweepByHint, SWEEP_WRONG_FLAG, path, grid, tangle, borders };

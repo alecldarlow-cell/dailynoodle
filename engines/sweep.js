@@ -44,15 +44,19 @@ function cascade(start,n){const seen=new Set([start]),q=[start];
    `why` (19 Oct 2026, for Hint's explanation) maps each square found to the
    constraint that found it first: {src,fl,cells,n} for one number (src = its
    square) or the mine count (src = -1), or {A,B,cells,n} for a two-constraint
-   (subset) step. It only records; safe, mine and usedSubset are unchanged. */
-function deduceStep(revealed,flagged,n,total,useSubset){
+   (subset) step. It only records; safe, mine and usedSubset are unchanged.
+   `known` (optional, 19 Oct 2026, for Hint's closure): squares already proved
+   safe but not opened, left out of every constraint like a flag is, so they
+   aren't found again (their numbers stay unknown). The gate never passes it. */
+function deduceStep(revealed,flagged,n,total,useSubset,known){
+  const out=j=>revealed.has(j)||flagged.has(j)||(known&&known.has(j));
   const cons=[];
   for(const i of revealed){
-    const hid=NB[i].filter(j=>!revealed.has(j)&&!flagged.has(j));
+    const hid=NB[i].filter(j=>!out(j));
     const fl=NB[i].filter(j=>flagged.has(j)).length;
     if(hid.length)cons.push({cells:new Set(hid),n:n[i]-fl,src:i,fl});
   }
-  const allHid=[];for(let i=0;i<CELLS;i++)if(!revealed.has(i)&&!flagged.has(i))allHid.push(i);
+  const allHid=[];for(let i=0;i<CELLS;i++)if(!out(i))allHid.push(i);
   if(allHid.length)cons.push({cells:new Set(allHid),n:total-flagged.size,src:-1,fl:flagged.size});
   const safe=new Set(),mine=new Set(),why=new Map();
   const note=(x,c)=>{if(!why.has(x))why.set(x,c);};
@@ -303,7 +307,12 @@ $("#modeFlag").onclick=()=>{flagMode=true;paint();};
 /* Hint reuses the prover: it doesn't peek at the mines, it finds the next
    step you could have found — from what's on your board right now — and
    says, in one line, the deduction that found it (19 Oct 2026). The numbers
-   that line talks about get a ring (.why) until your next move. */
+   that line talks about get a ring (.why) until your next move.
+   Flags (19 Oct 2026): Hint never trusts a flag the numbers don't prove, so a
+   wrong flag can't make it call a mine safe. It first works out everything
+   the open numbers alone prove (provable(): mines K, safe squares S). A flag
+   on a square in S is named as wrong; otherwise it deduces with only the
+   flags in K (so "flagged mines" stays true) and ignores the rest. */
 const HW=["no","one","two","three","four","five","six","seven","eight"];
 const hintSq=k=>k===1?"other hidden square is":"other hidden squares are";
 const hintAll=k=>k===1?"it":k===2?"both":"all "+HW[k];
@@ -340,6 +349,29 @@ function hintWhy(c){
   return same?`${open}. One of them ${st}needs ${more} than the other, and ${tail}.`
     :`${open}. The ${Nb} ${st}needs ${more} than the ${Na}, and ${tail}.`;
 }
+/* everything the open numbers (and the mine count) prove, ignoring the player's flags */
+function provable(){
+  const K=new Set(),S=new Set();
+  for(;;){
+    const d=deduceStep(revealed,K,NUM,MS.size,true,S);
+    if(!d.safe.length&&!d.mine.length)return {K,S};
+    for(const x of d.mine)K.add(x);
+    for(const x of d.safe)S.add(x);
+  }
+}
+const WRONG_FLAG="This flag can't be right: this square is provably safe.";
+/* what Hint marks: {pick,wrong:true} for a flag on a provably safe square,
+   {pick,c,safe} for the next deduction, or null when nothing is deducible */
+function hintPick(){
+  const {K,S}=provable();
+  for(const x of S)if(flagged.has(x))return {pick:x,wrong:true};
+  const F=new Set([...flagged].filter(x=>K.has(x)));
+  const d=deduceStep(revealed,F,NUM,MS.size,true);
+  const safe=d.safe.filter(x=>!revealed.has(x)&&!flagged.has(x));
+  const mine=d.mine.filter(x=>!flagged.has(x)&&!boomed.has(x));
+  const pick=safe.length?safe[0]:(mine.length?mine[0]:null);
+  return pick===null?null:{pick,c:d.why.get(pick),safe:safe.length>0};
+}
 let hintShown=false,hintT=0;
 $("#msg").setAttribute("aria-live","polite");   // so a screen reader hears Hint's line
 function clearWhy(){
@@ -350,17 +382,18 @@ $("#hint").onclick=()=>{
   if(!over)usedHints++;
   if(over)return;
   clearWhy();
-  const d=deduceStep(revealed,flagged,NUM,MS.size,true);
-  const safe=d.safe.filter(x=>!revealed.has(x)&&!flagged.has(x));
-  const mine=d.mine.filter(x=>!flagged.has(x)&&!boomed.has(x));
-  const pick=safe.length?safe[0]:(mine.length?mine[0]:null);
-  if(pick===null){$("#msg").textContent="Nothing new is deducible from the board as it stands — check your flags.";return;}
-  const cell=$(`#grid .cell[data-i="${pick}"]`);
+  const h=hintPick();
+  if(!h){$("#msg").textContent="Nothing new is deducible from the board as it stands — check your flags.";return;}
+  const cell=$(`#grid .cell[data-i="${h.pick}"]`);
   $$("#grid .cell.hint").forEach(x=>x.classList.remove("hint"));   // one marked square, the one the line is about
   void cell.offsetWidth; cell.classList.add("hint");
-  const c=d.why.get(pick);
-  for(const s of (c.A?[c.A.src,c.B.src]:[c.src]))if(s>=0)$(`#grid .cell[data-i="${s}"]`).classList.add("why");
-  $("#msg").textContent=hintWhy(c); hintShown=true; scheduleFit();
+  if(h.wrong)$("#msg").textContent=WRONG_FLAG;                     // no ring: no number is being read
+  else{
+    const c=h.c;
+    for(const s of (c.A?[c.A.src,c.B.src]:[c.src]))if(s>=0)$(`#grid .cell[data-i="${s}"]`).classList.add("why");
+    $("#msg").textContent=hintWhy(c);
+  }
+  hintShown=true; scheduleFit();
   clearTimeout(hintT); hintT=setTimeout(()=>cell.classList.remove("hint"),2400);
 };
 $("#revealAll").onclick=async()=>{
