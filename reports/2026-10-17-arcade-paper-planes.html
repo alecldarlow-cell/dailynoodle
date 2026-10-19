@@ -50,6 +50,15 @@ a.back:active{opacity:.6}
 #hudClips{font-size:20px;pointer-events:auto;cursor:pointer;min-height:44px;min-width:44px;font-family:inherit;color:inherit}
 #hudClips:active{transform:translateY(1px)}
 .clipI{width:18px;height:18px;display:inline-block;background:no-repeat center/contain}
+#hudClips{position:fixed;z-index:4;top:calc(10px + var(--st));left:calc(14px + var(--sl));display:none;align-items:center;gap:4px;padding:4px 11px 4px 8px;border-radius:999px;background:rgba(255,248,222,.94);border:1.5px solid #c99a3e;box-shadow:0 3px 10px rgba(120,80,20,.16);pointer-events:none;font:400 24px/1 "Patrick Hand",cursive;color:#704a1b;transform-origin:30% 50%}
+#hudClips.on{display:flex}#hudClips .clipI{width:20px;height:20px}
+#hudClips.bump{animation:clipBump .28s ease-out}
+@keyframes clipBump{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
+.bank{margin:6px auto 2px;max-width:330px}.bankBar{height:10px;border-radius:999px;background:#ece4cf;border:1.5px solid #c8b27d;overflow:hidden}
+.bankBar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#e9b35c,#f3cd6b);border-radius:999px;transition:width .12s linear}
+.bank.ready .bankBar i{background:linear-gradient(90deg,#3fae6b,#2e9a5a)}
+.bankTx{display:flex;justify-content:space-between;gap:8px;margin-top:3px;font-size:12px;font-weight:800;color:#48596c}.bank.ready .bankTx .goal{color:var(--good)}
+.pourClip{position:fixed;z-index:30;width:18px;height:18px;pointer-events:none;background:no-repeat center/contain;transition:transform .45s cubic-bezier(.5,0,.75,.4),opacity .45s ease-in}
 /* toasts */
 #toasts{position:fixed;left:0;right:0;top:calc(56px + var(--st));display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:6}
 .toast{background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:6px 14px;box-shadow:0 3px 0 var(--ink);font-weight:800;max-width:92vw;text-align:center;animation:tin .25s ease-out}
@@ -328,6 +337,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
 <canvas id="bg" aria-hidden="true"></canvas>
 <canvas id="cv" tabindex="0" aria-label="Paper Planes play area" aria-describedby="controlHelp"></canvas>
 
+<div id="hudClips" aria-live="off"><i class="clipI"></i><b id="hudClipsN">+0</b></div>
 <div id="hud" aria-label="Flight instruments">
   <button class="btn" id="pauseBtn" aria-label="Pause and settings">☰</button>
   <div class="cockpit">
@@ -425,7 +435,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
     <h2 class="hand" id="lTitle">Great flight!</h2>
     <div class="landingResult"><strong class="hand" id="lDistance">0.0 m</strong><span id="lOutcome">Landed</span></div>
     <div class="rewardHero" id="lReward"><span class="rewardIcon" aria-hidden="true"><svg viewBox="0 0 40 54" width="39" height="47" fill="none"><path d="M11 38V14a9 9 0 0 1 18 0v27a7 7 0 0 1-14 0V16" stroke="#855727" stroke-width="5" stroke-linecap="round"/><path d="M11 38V14a9 9 0 0 1 18 0v27a7 7 0 0 1-14 0V16" stroke="#e9b35c" stroke-width="1.4" stroke-linecap="round"/></svg></span><span class="clipBurst" aria-hidden="true">✦</span><span class="rewardAmount"><small>PAPERCLIPS EARNED</small><strong class="hand" id="lEarned">+0</strong></span><span class="rewardGlint" aria-hidden="true">✦</span></div>
-    <div class="landingBalance" id="lBalance"></div>
+    <div class="bank" id="lBank"><div class="bankBar"><i id="lBankFill"></i></div><div class="bankTx"><span id="lBankN"></span><span class="goal" id="lBankGoal"></span></div></div>
     <div class="landingActions"><button class="btn pri" id="lNext">Next throw ➤</button><button class="btn" id="lHangar">Hangar</button></div>
   </div>
 </div>
@@ -734,7 +744,8 @@ function obsPos(o, t) {
 }
 
 /* Clips earned for a throw */
-function throwClips(dist, pickups) { return Math.floor(Math.max(0, dist) / 4) + pickups * 3; }
+const LOOP_CLIPS = 8, LOOP_CAP = 3;   // clips for each loop-the-loop, up to three a throw
+function throwClips(dist, pickups, loops) { return Math.floor(Math.max(0, dist) / 4) + pickups * 3 + Math.min(LOOP_CAP, loops || 0) * LOOP_CLIPS; }
 function clearBonus(n) { return 6 * n; }
 
 
@@ -896,6 +907,44 @@ const holdPtrs = new Map(); let keyHold = false, keyDown = false;   // pointer i
 let cam = { x: -6, y: -2, s: 12 }, camT = null;
 let camG = null;   // the ground height the camera frames against, eased (see updateCam)
 let resultT = 0, result = null, timeT = 0, introT = 0, prevClips = 0, stallSnd = 0;
+// clips earned in the air this throw: each pickup pops '+3' and flies to the counter in the corner
+let cfx = { live: 0, shown: 0, chain: 0, lastT: -9, fly: [], pops: [] };
+function resetClipFx() { cfx = { live: 0, shown: 0, chain: 0, lastT: -9, fly: [], pops: [] }; const h = $('hudClips'); h.classList.remove('on'); $('hudClipsN').textContent = '+0'; }
+function clipFx(v, chainable) {
+  cfx.live += v;
+  if (chainable) { cfx.chain = timeT - cfx.lastT < 0.7 ? Math.min(cfx.chain + 1, 9) : 0; cfx.lastT = timeT; }
+  const semis = chainable ? cfx.chain * 2 : 7;
+  tone(1150 * Math.pow(2, semis / 12), .075, .09, 'sine'); tone(1770 * Math.pow(2, semis / 12), .1, .055, 'triangle', .035);
+  const X = SX(fl.x), Y = SY(fl.y);
+  const last = cfx.pops[cfx.pops.length - 1];
+  if (chainable && last && !last.big && last.t < 0.35) { last.sum += v; last.txt = '+' + last.sum; last.t = 0; last.x = X; last.y = Y - 14; }
+  else cfx.pops.push({ x: X, y: Y - 14, t: 0, sum: v, txt: '+' + v, big: !chainable });
+  if (RM()) { cfx.shown = cfx.live; showClipCount(true); return; }
+  cfx.fly.push({ x0: X, y0: Y, t: -cfx.fly.length * 0.04, v });
+}
+function showClipCount(bump) {
+  const h = $('hudClips'); $('hudClipsN').textContent = '+' + cfx.shown;
+  if (bump && !RM()) { h.classList.remove('bump'); void h.offsetWidth; h.classList.add('bump'); }
+}
+function drawClipFx(dt) {
+  if (!cfx.fly.length && !cfx.pops.length) return;
+  let r = $('hudClips').getBoundingClientRect(); if (!r.width) r = { left: 14, top: 10, width: 64, height: 34 };
+  const tx = r.left + 18, ty = r.top + r.height / 2;
+  for (const f of cfx.fly) {
+    f.t += dt; if (f.t < 0) continue;
+    const q = Math.min(1, f.t / 0.55), e = q * q, x = f.x0 + (tx - f.x0) * e, y = f.y0 + (ty - f.y0) * e - Math.sin(Math.PI * q) * 40;
+    cx.save(); cx.translate(x, y); cx.rotate(q * 6); cx.scale(1.5, 1.5); cx.strokeStyle = '#8a5a14'; cx.lineWidth = 3; cx.lineCap = 'round';
+    cx.beginPath(); cx.moveTo(-3, 5); cx.lineTo(-3, -3); cx.arc(0, -3, 3, Math.PI, 0); cx.lineTo(3, 4); cx.arc(1.2, 4, 1.8, 0, Math.PI); cx.lineTo(-0.6, -2); cx.stroke(); cx.strokeStyle = '#f0c25a'; cx.lineWidth = 1.4; cx.stroke(); cx.restore();
+    if (q >= 1 && !f.done) { f.done = true; cfx.shown += f.v; showClipCount(true); }
+  }
+  cfx.fly = cfx.fly.filter(f => !f.done);
+  for (const p of cfx.pops) {
+    p.t += dt; const q = Math.min(1, p.t / 0.8);
+    cx.globalAlpha = 1 - q * q; cx.font = '400 ' + (p.big ? 24 : 20) + 'px "Patrick Hand", cursive'; cx.textAlign = 'center';
+    cx.lineWidth = 3.5; cx.strokeStyle = 'rgba(255,253,246,.9)'; cx.strokeText(p.txt, p.x, p.y - q * 26); cx.fillStyle = p.big ? '#2e9a5a' : '#a8701c'; cx.fillText(p.txt, p.x, p.y - q * 26);
+  }
+  cx.globalAlpha = 1; cfx.pops = cfx.pops.filter(p => p.t < 0.8);
+}
 let parts = [];
 
 function placeOf(r) { return r.mode === 'tower' ? TOWER : PLACES[Math.min(7, r.place)]; }
@@ -915,7 +964,7 @@ function beginAim(intro) {
   pl = placeOf(run);
   roll = rollThrow(pl, (Date.now() & 0xffff) + run.n * 31 + 1);
   P = planeParams(save.fold, save.up[save.fold], save.arm);
-  fl = null; aim = null; path = []; prevClips = 0; result = null;
+  fl = null; aim = null; path = []; prevClips = 0; result = null; resetClipFx();
   state = 'aim'; keyAngle = 25; holdPtrs.clear(); keyHold = keyDown = false; $('hud').classList.add('on'); cv.focus({preventScroll:true});
   camT = null;
   updateHud();
@@ -955,7 +1004,7 @@ function land() {
   lastPath = path.slice();
   state = 'result'; holdPtrs.clear(); keyHold = keyDown = false; resultT = 0; $('hud').classList.remove('flying','on'); updateBanner(); setWind(0); sThud();
   if (!RM()) for (let i = 0; i < 10; i++) parts.push({ x: fl.x, y: fl.y + 0.2, vx: (Math.random() - 0.5) * 3, vy: Math.random() * 2.5, t: 0, life: 0.7, c: '#d9cfb8', r: 2 });
-  const got = fl.clips, earned = throwClips(d, got);
+  const got = fl.clips, earned = throwClips(d, got, fl.loops || 0);
   run.clips += earned; save.clips += earned;
   run.total += d;
   const prevBest = save.bestThrow;
@@ -1048,8 +1097,34 @@ function nextUpgrade(){
   opts.sort((a,b)=>a.cost-b.cost);
   const affordable=opts.filter(x=>x.cost<=save.clips),pick=affordable[0]||opts[0];
   if(!pick){const other=save.owned.some((o,i)=>o&&i!==fi&&FOLD_STATS.some(s=>save.up[i][s.id]<FOLD_MAX));
-    return {affordable:false,done:true,text:other?'Fully tuned! Another fold still has upgrades.':'Everything is fully upgraded. Chase a record!'};}
-  return {affordable:!!affordable.length,text:affordable.length?'✦ Upgrade ready: '+pick.name+' · '+pick.cost+' clips. Open the Hangar!':'Next upgrade: '+pick.name+' · '+pick.cost+' clips ('+(pick.cost-save.clips)+' more to earn)'};
+    return {affordable:false,done:true,goal:null,text:other?'Fully tuned! Another fold still has upgrades.':'Everything is fully upgraded. Chase a record!'};}
+  return {affordable:!!affordable.length,goal:opts[0],text:affordable.length?'✦ Upgrade ready: '+pick.name+' · '+pick.cost+' clips. Open the Hangar!':'Next upgrade: '+pick.name+' · '+pick.cost+' clips ('+(pick.cost-save.clips)+' more to earn)'};
+}
+const GOLD_CLIP = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 15V5a3 3 0 0 1 6 0v9a2 2 0 0 1-4 0V6" fill="none" stroke="#855727" stroke-width="3" stroke-linecap="round"/><path d="M7 15V5a3 3 0 0 1 6 0v9a2 2 0 0 1-4 0V6" fill="none" stroke="#e9b35c" stroke-width="1.2" stroke-linecap="round"/></svg>');
+function bankShow(n, goal) {
+  const ready = !!goal && n >= goal.cost, b = $('lBank');
+  $('lBankN').textContent = Math.round(n).toLocaleString() + ' clips';
+  $('lBankGoal').textContent = !goal ? '' : ready ? '✦ ' + goal.name + ' ready!' : goal.name + ' · ' + goal.cost.toLocaleString();
+  $('lBankFill').style.width = (goal ? Math.min(100, 100 * n / goal.cost) : 100).toFixed(1) + '%';
+  b.classList.toggle('ready', ready);
+  return ready;
+}
+function pourClips(seq, from, to) {
+  const goal = nextUpgrade().goal, wasReady = !!goal && from >= goal.cost, hero = $('lEarned').getBoundingClientRect(), bar = $('lBankFill').parentElement.getBoundingClientRect();
+  const k = Math.max(1, Math.min(10, Math.ceil((to - from) / 8))); let got = 0;
+  for (let i = 0; i < k; i++) setTimeout(() => {
+    if (rewardSequence !== seq || !$('landing').classList.contains('on')) return;
+    const c = document.createElement('i'); c.className = 'pourClip'; c.style.backgroundImage = 'url("' + GOLD_CLIP + '")';
+    c.style.left = (hero.left + hero.width / 2 - 8) + 'px'; c.style.top = (hero.top + hero.height / 2 - 8) + 'px'; document.body.appendChild(c);
+    const fill = goal ? Math.min(1, (from + (to - from) * (i + 1) / k) / goal.cost) : 1;
+    const dx = bar.left + bar.width * fill - (hero.left + hero.width / 2), dy = bar.top + bar.height / 2 - (hero.top + hero.height / 2);
+    requestAnimationFrame(() => { c.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(200deg) scale(.7)'; c.style.opacity = '.4'; });
+    setTimeout(() => { c.remove(); if (rewardSequence !== seq) return; got++;
+      tone(1320 * Math.pow(2, got / 12), .05, .06, 'sine');
+      const ready = bankShow(from + (to - from) * got / k, goal);
+      if (got === k) { bankShow(to, goal); if (ready && !wasReady) { sChime(); buzz(20); } }
+    }, 460);
+  }, i * 70);
 }
 function setUpgradeHint(el){const hint=nextUpgrade();el.textContent=hint.text;el.classList.toggle('ready',hint.affordable);}
 let rewardSequence=0;
@@ -1064,14 +1139,15 @@ function showLanding(v){
   $('lEarned').textContent='+'+(RM()?v.earned:0);$('lReward').setAttribute('aria-label',v.earned+' paperclips earned this flight');
   const breakdown=[['Distance',Math.floor(v.d/4)],['Air clips',v.pickups*3]];if(v.bonus)breakdown.push(['Place bonus',v.bonus]);
   void breakdown;
-  $('lBalance').textContent=save.clips.toLocaleString()+' clips banked';$('lHangar').innerHTML=nextUpgrade().affordable?'✦ Hangar<span class="rdot" aria-label="upgrade ready"></span>':'Hangar';
+  bankShow(save.clips - v.earned, nextUpgrade().goal);$('lHangar').innerHTML=nextUpgrade().affordable?'✦ Hangar<span class="rdot" aria-label="upgrade ready"></span>':'Hangar';
   $('lNext').textContent=v.next==='end'||v.next==='win'?'See run results ➤':v.clear?'Next place ➤':'Next throw ➤';
   $('landing').classList.add('on'); focusPanel('landing','lNext');
   if(!RM()&&v.earned>0){const start=performance.now(),dur=Math.min(950,480+v.earned*3);const count=now=>{
     if(rewardSequence!==t||!$('landing').classList.contains('on'))return;
     const q=Math.min(1,(now-start)/dur);$('lEarned').textContent='+'+Math.round(v.earned*(1-Math.pow(1-q,3)));
-    if(q<1)requestAnimationFrame(count);
+    if(q<1)requestAnimationFrame(count); else setTimeout(()=>{ if(rewardSequence===t) pourClips(t, save.clips - v.earned, save.clips); }, 180);
   };requestAnimationFrame(count);}
+  else bankShow(save.clips, nextUpgrade().goal);
 }
 $('lNext').addEventListener('click',()=>{initAudio();if(state==='result'&&!paused){goFS();afterResult();}});
 $('lHangar').addEventListener('click',()=>{initAudio();if(state==='result'&&!paused)openHangar(result.next==='aim');});
@@ -1398,8 +1474,8 @@ function tick(dt) {
     for (let i = 0; i < n && !fl.done; i++) {
       const pr = fl.clips, lp = fl.loops;
       step(fl, P, pl, roll, hold, save.magnet);
-      if (fl.loops > lp) { tone(784, .18, .06, 'triangle'); tone(1175, .26, .05, 'triangle', .09); }
-      if (fl.clips > pr) { sTick(); if (!RM()) for (let k = 0; k < 6; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4, t: 0, life: 0.5, c: '#ffd34d', r: 2.2 }); }
+      if (fl.loops > lp) { tone(784, .18, .06, 'triangle'); tone(1175, .26, .05, 'triangle', .09); if (fl.loops <= LOOP_CAP) clipFx(LOOP_CLIPS, false); }
+      if (fl.clips > pr) { clipFx(3 * (fl.clips - pr), true); if (!RM()) for (let k = 0; k < 6; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4, t: 0, life: 0.5, c: '#ffd34d', r: 2.2 }); }
       if ((fl.stall > 0 || fl.bumpT > 0) && stallSnd <= 0) { sFlutter(); stallSnd = 0.5; }
       if (fl.bumpT === 0.6) { noiseHit(0.18, 900, 300, 0.3, 1); if (!RM()) for (let k = 0; k < 10; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.3) * 4, t: 0, life: 0.6, c: fl.bumpCol || '#7fbb68', r: 2.4, sq: 1 }); }
     }
@@ -2219,12 +2295,15 @@ function render() {
     speedLines(X, Y, fl.vx, fl.vy, L);
     const roll = (fl.stall > 0 || fl.bumpT > 0) && !RM() ? Math.sin(fl.flutter) * 0.35 : (RM() ? 0 : Math.sin(timeT * 2.1) * 0.05) + (fl.hold ? -0.1 : 0.05);
     ART.plane(cx, X, Y, fl.th, save.fold, L, { roll, flap: fl.elev });
-    if (fl.loopT && fl.t - fl.loopT < 1.4 && !(fl.stall > 0 || fl.bumpT > 0)) { cx.font = '400 19px "Patrick Hand", cursive'; const tw = cx.measureText('loop!').width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 18, tw + 12, 24, 6); cx.fill(); cx.fillStyle = '#2e9a5a'; cx.fillText('loop!', X, Y - L * 1.5); }
+    if (fl.loopT && fl.t - fl.loopT < 1.4 && !(fl.stall > 0 || fl.bumpT > 0)) { cx.font = '400 19px "Patrick Hand", cursive'; const lt = fl.loops <= LOOP_CAP ? 'loop! +' + LOOP_CLIPS : 'loop!', tw = cx.measureText(lt).width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 18, tw + 12, 24, 6); cx.fill(); cx.fillStyle = '#2e9a5a'; cx.fillText(lt, X, Y - L * 1.5); }
     if (fl.stall > 0 || fl.bumpT > 0) { const label=fl.bumpT>0?'bump!':'stall!'; cx.font = '400 17px "Patrick Hand", cursive'; const tw = cx.measureText(label).width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 17, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#d4553e'; cx.fillText(label, X, Y - L * 1.5); }
     const alt = fl.y - gy;
     if (alt > 25 && SY(gy) > H) { cx.font = '400 15px "Patrick Hand", cursive'; const tx = '↓ ' + Math.round(alt) + ' m up', tw = cx.measureText(tx).width; cx.fillStyle = 'rgba(255,253,246,.85)'; rr(X - tw / 2 - 6, H - 30, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#29303d'; cx.fillText(tx, X, H - 14); }
   }
   if (state === 'fly' && fl && learning() && !paused) drawThumbs();
+  { const want = (state === 'fly' || state === 'aim') && !paused && cfx.shown > 0, h = $('hudClips');
+    if (want !== h.classList.contains('on')) h.classList.toggle('on', want); }
+  { const now = performance.now(), dt = Math.min(0.05, (now - (render.fxT || now)) / 1000); render.fxT = now; if (!paused) drawClipFx(dt); }
   for (const p of parts) { cx.globalAlpha = Math.max(0, 1 - p.t / p.life); cx.fillStyle = p.c; if (p.sq) { cx.save(); cx.translate(SX(p.x), SY(p.y)); cx.rotate(p.t * 8 + p.r); cx.fillRect(-p.r, -p.r * 0.6, p.r * 2, p.r * 1.2); cx.restore(); } else { cx.beginPath(); cx.arc(SX(p.x), SY(p.y), p.r, 0, 7); cx.fill(); } }
   cx.globalAlpha = 1;
 }
@@ -2296,7 +2375,7 @@ if (window.__DGTEST === true) {
       if (run && (state === 'aim' || state === 'fly' || state === 'result')) endRun(!!win);
       else if (state === 'home' || state === 'splash' || state === 'hangar') { startRun('new', 'run'); endRun(!!win); }
     },
-    state: () => ({ state, paused, qual, hangarRun, wind: roll && { ...roll.wind, value: windAt(pl,roll,fl?fl.t:0), seed: roll.seed }, camera: {...cam}, speedMax: P && speedScale(), launchSpeed: P && P.v, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done, vx: fl.vx, vy: fl.vy, power: fl.pow0, a: fl.a, stall: fl.stall, stalls: fl.stalls || 0, th:fl.th, pitchRate:fl.pitchRate, crashed:!!fl.crashed, hold: fl.hold } }),
+    state: () => ({ state, paused, qual, hangarRun, wind: roll && { ...roll.wind, value: windAt(pl,roll,fl?fl.t:0), seed: roll.seed }, camera: {...cam}, speedMax: P && speedScale(), launchSpeed: P && P.v, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done, vx: fl.vx, vy: fl.vy, power: fl.pow0, a: fl.a, stall: fl.stall, stalls: fl.stalls || 0, th:fl.th, pitchRate:fl.pitchRate, crashed:!!fl.crashed, hold: fl.hold, clips: fl.clips, loops: fl.loops || 0 } }),
     give: o => { Object.assign(save, o); persist(); if (state === 'hangar') renderHangar(); },
     speed: s => { TEST.speed = s; },
     auto: on => { TEST.auto = on; },
