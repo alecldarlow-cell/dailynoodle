@@ -952,12 +952,14 @@ let camG = null;   // the ground height the camera frames against, eased (see up
 let resultT = 0, result = null, timeT = 0, introT = 0, prevClips = 0, stallSnd = 0;
 // clips earned in the air this throw: each pickup pops '+3' and flies to the counter in the corner
 let cfx = { live: 0, shown: 0, chain: 0, lastT: -9, fly: [], pops: [] };
-let crossLines = [], crossFx = [];
+let crossLines = [], crossFx = [], starsHeld0 = 0;
 function setCrossLines() {
   crossFx = [];
   if (!run || !pl) { crossLines = []; return; }
-  if (run.mode === 'run') crossLines = [{ x: pl.target, kind: 'target', label: 'Target beaten!' }, { x: pl.target * 2, kind: 'double', label: '2× target!' }];
-  else if (run.mode === 'place') crossLines = starLines(pl).map((x, i) => ({ x, kind: 'star', n: i + 1, label: '★'.repeat(i + 1) })).filter(l => l.n > save.stars[pl.n - 1]);
+  starsHeld0 = pl.n >= 1 && pl.n <= 8 ? save.stars[pl.n - 1] : 0;
+  const starX = starLines(pl).map((x, i) => ({ x, kind: 'star', n: i + 1, label: i === 0 && run.mode === 'run' ? 'Target beaten! ★' : '★'.repeat(i + 1) + ' new star!' }));
+  if (run.mode === 'run') crossLines = starX.filter(l => l.n === 1 || l.n > starsHeld0).concat([{ x: pl.target * 2, kind: 'double', label: '2× target · +1 throw' }]).sort((a, b) => a.x - b.x);
+  else if (run.mode === 'place') crossLines = starX.filter(l => l.n > starsHeld0);
   else if (run.mode === 'daily') { const b = dailyToday().best; crossLines = b > 0 ? [{ x: b, kind: 'best', label: 'Past today\'s best!' }] : []; }
   else crossLines = [];
   crossLines.forEach(l => l.done = false);
@@ -981,7 +983,7 @@ function drawCrossFx(dt) {
     c.t += dt; const q = c.t, inn = Math.min(1, q / 0.25), out = q > 1.4 ? Math.max(0, 1 - (q - 1.4) / 0.4) : 1;
     const s = RM() ? 1 : 0.6 + 0.4 * (1 - Math.pow(1 - inn, 3)) + (inn < 1 ? 0 : 0.04 * Math.sin(q * 8) * Math.max(0, 1 - q)), y = Math.min(H * 0.34, hudBottom + 60);
     cx.save(); cx.globalAlpha = out * (RM() ? 1 : inn); cx.translate(W / 2, y); cx.scale(s, s); cx.rotate(-0.03);
-    cx.font = '400 ' + (c.kind === 'star' ? 40 : 30) + 'px "Patrick Hand", cursive'; const tw = cx.measureText(c.label).width;
+    cx.font = '400 ' + (c.kind === 'star' ? 32 : 28) + 'px "Patrick Hand", cursive'; const tw = cx.measureText(c.label).width;
     cx.fillStyle = 'rgba(41,48,61,.2)'; rr(-tw / 2 - 18, -26 + 4, tw + 36, 46, 12); cx.fill();
     cx.fillStyle = c.kind === 'star' ? '#fff6d6' : c.kind === 'double' ? '#e5f3d7' : '#fffdf6'; rr(-tw / 2 - 18, -26, tw + 36, 46, 12); cx.fill();
     cx.strokeStyle = c.kind === 'star' ? '#d9a12a' : '#2e9a5a'; cx.lineWidth = 2.5; cx.stroke();
@@ -2322,29 +2324,29 @@ function drawMarkers() {
   }
   if (!run) return;
   const marks = run.mode === 'tower' ? TOWER.medals.map((m, i) => [m, ['#c98450', '#a9b4c2', '#e7b53b'][i], ['Bronze', 'Silver', 'Gold'][i] + ' ' + m + ' m'])
-    : run.mode === 'place' ? starLines(pl).map((m, i) => [m, ['#f39c32', '#e7a52b', '#d98b10'][i], '★'.repeat(i + 1) + ' ' + m + ' m']).filter((m, i) => i >= save.stars[pl.n - 1] || i === 2)
     : run.mode === 'daily' ? (dailyToday().best > 0 ? [[dailyToday().best, '#2f6fd6', 'Today ' + fmt(dailyToday().best) + ' m']] : [])
-    : [[pl.target, '#f39c32', pl.target + ' m']];
+    : starLines(pl).map((m, i) => [m, ['#f39c32', '#f0b429', '#e8a10c'][i], '★'.repeat(i + 1) + ' ' + m + ' m', 1 + i * 0.22, i < starsHeld0 && !(i === 0 && run.mode === 'run') ? 0.5 : 1]);
   let ahead = null;
-  for (const mk of marks) { const won = crossLines.some(l => l.done && Math.abs(l.x - mk[0]) < 0.01); if (mk[0] > x0 - 5 && mk[0] < x1 + 5) flag(mk[0], won ? '#2e9a5a' : mk[1], won ? '✓ ' + mk[2] : mk[2]); else if (mk[0] >= x1 + 5 && !ahead) ahead = mk; }
-  if (run.mode === 'run') { const tg = pl.target * 2; if (tg > x0 && tg < x1) { const X = SX(tg), Y = SY(groundAtFull(pl, tg)); cx.strokeStyle = 'rgba(46,154,90,.7)'; cx.setLineDash([4, 5]); cx.lineWidth = 2; cx.beginPath(); cx.moveTo(X, Y); cx.lineTo(X, Y - 40); cx.stroke(); cx.setLineDash([]); cx.font = '400 14px "Patrick Hand", cursive'; const tw = cx.measureText('2× = +1 throw').width; cx.fillStyle = 'rgba(255,253,246,.85)'; rr(X - tw / 2 - 5, Y - 60, tw + 10, 18, 5); cx.fill(); cx.fillStyle = 'rgba(30,110,64,.95)'; cx.fillText('2× = +1 throw', X, Y - 46); } }
+  for (const mk of marks) { const won = crossLines.some(l => l.done && Math.abs(l.x - mk[0]) < 0.01); if (mk[0] > x0 - 5 && mk[0] < x1 + 5) flag(mk[0], won ? '#2e9a5a' : mk[1], won ? '✓ ' + mk[2] : mk[2], mk[3] || 1, won ? 1 : mk[4] || 1); else if (mk[0] >= x1 + 5 && !ahead && (mk[4] || 1) === 1) ahead = mk; }
+  if (run.mode === 'run') { const tg = pl.target * 2; if (tg > x0 && tg < x1 && !starLines(pl).some(s => Math.abs(s - tg) < 4)) { const X = SX(tg), Y = SY(groundAtFull(pl, tg)); cx.strokeStyle = 'rgba(46,154,90,.7)'; cx.setLineDash([4, 5]); cx.lineWidth = 2; cx.beginPath(); cx.moveTo(X, Y); cx.lineTo(X, Y - 40); cx.stroke(); cx.setLineDash([]); cx.font = '400 14px "Patrick Hand", cursive'; const tw = cx.measureText('2× = +1 throw').width; cx.fillStyle = 'rgba(255,253,246,.85)'; rr(X - tw / 2 - 5, Y - 60, tw + 10, 18, 5); cx.fill(); cx.fillStyle = 'rgba(30,110,64,.95)'; cx.fillText('2× = +1 throw', X, Y - 46); } }
   if (ahead) { // off-screen target: a tab on the right edge
-    const label = (run.mode === 'run' ? 'Target ' + ahead[2] : ahead[2]) + ' ›';
+    const label = ahead[2] + ' ›';
     cx.font = '400 16px "Patrick Hand", cursive'; const tw = cx.measureText(label).width, y = H * 0.55;
     cx.fillStyle = 'rgba(255,253,246,.92)'; rr(W - tw - 22, y - 16, tw + 30, 26, 8); cx.fill(); cx.strokeStyle = '#29303d'; cx.lineWidth = 1.5; cx.stroke();
     cx.fillStyle = ahead[1]; cx.fillRect(W - tw - 22, y - 16, 5, 26);
     cx.fillStyle = '#29303d'; cx.textAlign = 'right'; cx.fillText(label, W - 10, y + 2); cx.textAlign = 'center';
   }
 }
-function flag(x, col, label) {
-  const X = SX(x), Y = SY(groundAtFull(pl, x)), h = Math.max(44, Math.min(80, H * 0.16));
+function flag(x, col, label, hk, alpha) {
+  const X = SX(x), Y = SY(groundAtFull(pl, x)), h = Math.max(44, Math.min(80, H * 0.16)) * (hk || 1);
+  cx.save(); cx.globalAlpha = alpha || 1;
   cx.fillStyle = 'rgba(20,30,40,.18)'; cx.beginPath(); cx.ellipse(X + 4, Y, 9, 2.5, 0, 0, 7); cx.fill();
   cx.strokeStyle = '#29303d'; cx.lineWidth = 3; cx.beginPath(); cx.moveTo(X, Y); cx.lineTo(X, Y - h); cx.stroke();
   const wv = RM() ? 0 : Math.sin(timeT * 4) * 3;
   cx.fillStyle = col; cx.beginPath(); cx.moveTo(X, Y - h); cx.quadraticCurveTo(X + 18, Y - h + 4 + wv, X + 36, Y - h + 10 + wv * 0.5); cx.quadraticCurveTo(X + 18, Y - h + 14 - wv, X, Y - h + 20); cx.closePath(); cx.fill(); cx.lineWidth = 1.5; cx.stroke();
   cx.font = '400 17px "Patrick Hand", cursive'; cx.textAlign = 'left';
   const tw = cx.measureText(label).width; cx.fillStyle = 'rgba(255,253,246,.92)'; rr(X - 3, Y - h - 24, tw + 12, 21, 6); cx.fill();
-  cx.fillStyle = '#29303d'; cx.fillText(label, X + 3, Y - h - 8); cx.textAlign = 'center';
+  cx.fillStyle = '#29303d'; cx.fillText(label, X + 3, Y - h - 8); cx.textAlign = 'center'; cx.restore();
 }
 function drawTrail(pts, rgb, w, fade) {
   if (!pts || pts.length < 2) return;
