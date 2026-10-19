@@ -828,7 +828,7 @@ function exitFS(){try{if(!isFS())return;const x=document.exitFullscreen||documen
 /* ---------- canvas, camera ---------- */
 const cv=$('cv'),ctx=cv.getContext('2d'),app=$('app');
 let W=360,H=640,DPR=1,VR={x:0,y:0,w:360,h:640};
-const cam={x:.5,y:.5,s:80,tx:.5,ty:.5,ts:80,man:false};
+const cam={x:.5,y:.5,s:80,tx:.5,ty:.5,ts:80,man:false,full:false};
 const w2s=(x,y)=>[(x-cam.x)*cam.s+VR.x+VR.w/2,(y-cam.y)*cam.s+VR.y+VR.h/2];
 const s2w=(x,y)=>[(x-VR.x-VR.w/2)/cam.s+cam.x,(y-VR.y-VR.h/2)/cam.s+cam.y];
 function viewRect(){
@@ -838,14 +838,26 @@ function viewRect(){
 function resize(){DPR=Math.min(2.5,window.devicePixelRatio||1);W=app.clientWidth||innerWidth;H=app.clientHeight||innerHeight;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);viewRect();
  $('bFit').style.top=(VR.y+6)+'px';fitCam(true,true);}
 function bbox(st){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const t of st.tiles){x0=Math.min(x0,t.x);y0=Math.min(y0,t.y);x1=Math.max(x1,t.x+1);y1=Math.max(y1,t.y+1);}return[x0,y0,x1,y1];}
-function fitCam(snap,keepMan){const st=M?M.st:DEMO;if(!st)return;
- if(M&&st.lim){const[x0,y0,x1,y1]=bbox(st),W=st.lim[0],Hh=st.lim[1];cam.ts=clamp(Math.min(VR.w/(W+.8),VR.h/(Hh+.8)),24,140);
-  const w=limWin(st);cam.tx=(Math.max(w[0],x0-(W-(x1-x0))/2)+Math.min(w[2],x1+(W-(x1-x0))/2))/2;cam.ty=(Math.max(w[1],y0-(Hh-(y1-y0))/2)+Math.min(w[3],y1+(Hh-(y1-y0))/2))/2;
-  if(!keepMan)cam.man=false;if(snap||S.rm){cam.s=cam.ts;cam.x=cam.tx;cam.y=cam.ty;}return;}
+function fitCam(snap,keepMan,focus){const st=M?M.st:DEMO;if(!st)return;
+ if(M&&st.lim){const[x0,y0,x1,y1]=bbox(st),W=st.lim[0],Hh=st.lim[1],w=limWin(st),done=M.ended||st.over||M.viewCity;
+  const sIsl=clamp(Math.min(VR.w/(W+.8),VR.h/(Hh+.8)),24,140);
+  if(done){cam.ts=clamp(Math.min(VR.w/(x1-x0+.4),VR.h/(y1-y0+.4)),24,140);cam.tx=(x0+x1)/2;cam.ty=(y0+y1)/2;}   // the finished city, whole
+  else if(cam.full){cam.ts=sIsl;   // the whole island, on request (the ⤢ button)
+   cam.tx=(Math.max(w[0],x0-(W-(x1-x0))/2)+Math.min(w[2],x1+(W-(x1-x0))/2))/2;cam.ty=(Math.max(w[1],y0-(Hh-(y1-y0))/2)+Math.min(w[3],y1+(Hh-(y1-y0))/2))/2;}
+  else{/* close view: start near the first tiles and pull back as the city grows, but never below a comfortable tile size.
+          It frames the city plus one ring of spaces it can still grow into; once that is bigger than the screen it follows the play. */
+   const rx0=Math.max(w[0],x0-1),rx1=Math.min(w[2],x1+1),ry0=Math.max(w[1],y0-1),ry1=Math.min(w[3],y1+1);
+   const sMax=Math.min(118,VR.w/3.1),sNice=Math.max(sIsl,Math.min(sMax,VR.w/4.8));
+   cam.ts=Math.max(sNice,Math.min(sMax,Math.min(VR.w/(rx1-rx0+.4),VR.h/(ry1-ry0+.4))));
+   const hw=VR.w/cam.ts/2,hh=VR.h/cam.ts/2,t=focus||st.tiles[st.tiles.length-1];
+   const ax=(lo,hi,cur,f,half)=>{if(hi-lo<=2*half)return(lo+hi)/2;let c=cur;if(f!=null)c=clamp(c,f+1.3-half,f-.3+half);return clamp(c,lo+half,hi-half);};
+   cam.tx=ax(rx0,rx1,cam.tx,t&&t.x,hw);cam.ty=ax(ry0,ry1,cam.ty,t&&t.y,hh);}
+  if(!keepMan)cam.man=false;if(snap||S.rm){cam.s=cam.ts;cam.x=cam.tx;cam.y=cam.ty;}fitLabel();return;}
  const[x0,y0,x1,y1]=bbox(st),m=M?1:0;
  const bw=x1-x0+2*m,bh=y1-y0+2*m,mx=M?Math.min(96,VR.w/3.4):40;let s=Math.min(VR.w/bw,VR.h/bh);s=clamp(s,M?30:24,mx);
  cam.ts=s;cam.tx=(x0+x1)/2;cam.ty=(y0+y1)/2;if(!keepMan)cam.man=false;if(snap||S.rm){cam.s=cam.ts;cam.x=cam.tx;cam.y=cam.ty;}}
-function ensureVisible(x,y){if(!cam.man){fitCam(false);return;}const[sx,sy]=w2s(x+.5,y+.5),m=cam.s*.6;if(sx<m||sx>W-m||sy<VR.y+m||sy>VR.y+VR.h-m)fitCam(false);}
+function fitLabel(){const b=$('bFit');if(b)b.setAttribute('aria-label',cam.full?'Zoom back in':'Show the whole city');}
+function ensureVisible(x,y){if(!cam.man){fitCam(false,false,{x,y});return;}const[sx,sy]=w2s(x+.5,y+.5),m=cam.s*.6;if(sx<m||sx>W-m||sy<VR.y+m||sy>VR.y+VR.h-m)fitCam(false);}
 
 /* ---------- tile image cache ---------- */
 const TC=new Map();let tcBudget=0;   // per instance+turn canvases by size bucket; while zooming, reuse the nearest size
@@ -916,7 +928,7 @@ function startMatch(lv,how,cur,tut){$('tray').hidden=false;$('bRes').hidden=true
  if(tut){opt.lead=TUT_LEAD;opt.size=10;}
  let st;try{st=cur?AC.replay(lv,seed,opt,cur.moves):AC.newMatch(lv,seed,opt);}catch(e){st=AC.newMatch(lv,seed,opt);}
  if(cur&&st.over){S.cur=null;save();return home();}   // a saved round that had already finished: nothing to continue, and nothing to report twice
- M={id:++mid,lv,diff,seed,opt,st,sel:-1,ghost:null,legal:null,busy:false,info:null,lastRv:null,rvSlot:null,ai:AC.mulberry(seed^0x5bd1e995),fast:false,ended:false,
+ cam.full=false;M={id:++mid,lv,diff,seed,opt,st,sel:-1,ghost:null,legal:null,busy:false,info:null,lastRv:null,rvSlot:null,ai:AC.mulberry(seed^0x5bd1e995),fast:false,ended:false,
   names:names(lv),shown:st.scores.slice(),hint:!tut&&S.tut<1?0:-1,tut:tut?{i:0}:null,tutorial:!!tut};
  TIMERS.length=0;FX.pops=[];FX.glows=[];FX.drops.clear();
  if(!tut){saveCur();rndArm(how);}else rnd={armed:false,open:false,secs:0,how:'new'};
@@ -932,6 +944,8 @@ function myTurn(){return M&&!M.busy&&!M.st.over&&M.st.turn===0&&!M.ended;}
 function selSlot(i){if(!myTurn()||!M.st.offer[i])return;if(M.tut){const T=TUT[M.tut.i];if(!T.slot||i!==M.tut.slot){nudge('.slot[data-i="'+i+'"]');return;}}rndStart();hideBanner();hideInfo();
  if(M.sel===i){return;}
  M.sel=i;const inst=M.st.offer[i];M.legal=new Map();for(const L of AC.legal(M.st,inst))if(!M.tut||!M.tut.cell||(L.x===M.tut.cell[0]&&L.y===M.tut.cell[1]))M.legal.set(AC.K(L.x,L.y),L.rots);
+ if(M.legal.size){let vis=false,best=null,bd=1e9;for(const k of M.legal.keys()){const x=Math.floor(k/4096)-2048,y=k%4096-2048,[sx,sy]=w2s(x+.5,y+.5);
+  if(sx>0&&sx<W&&sy>VR.y&&sy<VR.y+VR.h){vis=true;break;}const d=Math.hypot(x+.5-cam.x,y+.5-cam.y);if(d<bd){bd=d;best={x,y};}}if(!vis&&best)fitCam(false,false,best);}
  if(M.ghost){const r=M.legal.get(AC.K(M.ghost.x,M.ghost.y));if(r){if(!r.includes(M.ghost.r))M.ghost.r=r[0];}else M.ghost=null;}
  if(M.hint===0)M.hint=1;sfx('sel');refresh();if(M.tut&&M.tut.i===1)tutGo(2);}
 function rotate(){if(!myTurn()||!M.ghost)return;const r=M.legal.get(AC.K(M.ghost.x,M.ghost.y));if(!r||r.length<2){M.ghost.wob=1;sfx('tap');return;}
@@ -1141,7 +1155,7 @@ cv.addEventListener('wheel',e=>{if(!M)return;e.preventDefault();const[wx,wy]=s2w
 document.querySelectorAll('.slot').forEach(b=>b.addEventListener('click',()=>selSlot(+b.dataset.i)));
 $('bRot').addEventListener('click',()=>{rndStart();rotate();});
 $('bOk').addEventListener('click',()=>{rndStart();confirmMove();});
-$('bFit').addEventListener('click',()=>{fitCam(false);sfx('tap');});
+$('bFit').addEventListener('click',()=>{cam.full=!(cam.full&&!cam.man);fitCam(false);sfx('tap');});
 $('bRes').addEventListener('click',()=>{if(!M||!M.reopen)return;M.viewCity=false;$('tray').hidden=false;$('bRes').hidden=true;viewRect();fitCam(false);sfx('tap');M.reopen();});
 $('bPause').addEventListener('click',()=>pause());
 $('game').addEventListener('pointerdown',e=>{if(e.target.closest('#tray'))rndStart();},true);
@@ -1209,7 +1223,7 @@ function showHelp(fromPause){const g=CITY.goods;
  <h3>Canoe landings</h3><p>A field with a canoe jetty sells for 1 more per crop.</p>
  <h3>The end</h3><p>When the bag is empty, unfinished fields pay 1 per crop, unfinished roads 1 per tile, and unfinished temple quarters 1 per tile, to whoever leads them (runner-up half).</p>
  <h3>Stars</h3><p>★ for a win, more for a bigger winning margin. The margins are shown when a level starts and depend on the difficulty.</p>
- <h3>Controls</h3><p>Drag to look around, pinch to zoom, tap any tile to see what it belongs to and what it’s worth. The ⤢ button fits the whole city in view.</p></div>
+ <h3>Controls</h3><p>Drag to look around, pinch to zoom, tap any tile to see what it belongs to and what it’s worth. The ⤢ button switches between a close view and the whole city.</p></div>
  <button class="mbtn pri" id="hlpOk">${fromPause?'Back':'Got it'}</button>${fromPause?'':'<button class="mbtn" id="hlpTut">Play the guided game</button>'}`);
  $('hlpOk').onclick=()=>{if(fromPause)pause();else closeModal();};if($('hlpTut'))$('hlpTut').onclick=()=>{goFS();startMatch(0,'new',null,true);};}
 function showEnd(r){M.reopen=()=>showEnd(r);const st=M.st,L=CITY.levels[M.lv],th=AC.starTh(M.lv,M.diff,M.st.island),winner=r.win?'You win!':r.draw?'A draw':`${esc(M.names[st.scores.indexOf(Math.max(...st.scores))])} wins`;
