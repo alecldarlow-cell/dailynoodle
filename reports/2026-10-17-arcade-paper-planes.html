@@ -63,6 +63,10 @@ a.back:active{opacity:.6}
 .route .stop small{position:absolute;top:100%;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:-1px;color:#c9c2b1;white-space:nowrap;margin-top:2px;line-height:1}.route .stop small b{color:#e9a21a;font-weight:400}
 .route .stop{position:relative}.route button.stop{cursor:pointer;font:inherit;padding:0}.route button.stop:before{content:"";position:absolute;inset:-9px}
 #splash .homeActions #homeDaily{min-width:0;background:#fffdf6;flex-direction:column;line-height:1.05;padding-top:7px;padding-bottom:7px}@media(max-width:440px){#splash .homeActions .btn{font-size:17px;padding-left:8px;padding-right:8px;white-space:nowrap}}#homeDaily small{display:block;font-size:11px;font-weight:700;color:#5b6372;margin-top:1px}
+.flightMeasure.distance.passed strong{color:#23794a}.flightMeasure.distance.passed{animation:distPass .5s ease-out}
+@keyframes distPass{0%{background:#c9efd5}100%{background:transparent}}
+.landing h2.stamp{animation:stamp .45s cubic-bezier(.2,1.6,.4,1) both;color:#23794a}
+@keyframes stamp{0%{transform:scale(1.8) rotate(-6deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
 .pourClip{position:fixed;z-index:30;width:18px;height:18px;pointer-events:none;background:no-repeat center/contain;transition:transform .45s cubic-bezier(.5,0,.75,.4),opacity .45s ease-in}
 /* toasts */
 #toasts{position:fixed;left:0;right:0;top:calc(56px + var(--st));display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:6}
@@ -917,6 +921,7 @@ const sThud = () => { noiseHit(.22,570,130,.2,.85); noiseHit(.09,2450,540,.11,2.
 const sFlutter = () => { noiseHit(.13,2300,800,.14,3); noiseHit(.2,1500,370,.07,1.2); };
 const sBuy = () => { noiseHit(.16,2200,480,.1,1.7); [587,740,987].forEach((f,i)=>tone(f,.22,.065,'triangle',i*.07)); };
 const sReward = (count,special) => { if(!save.snd||!AC)return; noiseHit(.14,2800,750,.11,2.4); [523,659,784].forEach((f,i)=>tone(f,.23,.065,'sine',i*.07)); if(special)tone(1047,.32,.075,'triangle',.22); };
+const sFanfare = () => { if(!save.snd||!AC)return; [[523,0],[659,.1],[784,.2],[1047,.32],[784,.46],[1047,.56]].forEach(([f,w],i)=>{ tone(f,i===5?.6:.2,.09,'triangle',w); tone(f/2,i===5?.6:.2,.05,'sine',w); }); noiseHit(.5,4200,1200,.06,1.4); };
 function setWind(level) { try { if (windG && AC) { windG.gain.setTargetAtTime(save.snd ? Math.min(0.22, level) : 0, AC.currentTime, 0.15); windF.frequency.setTargetAtTime(300 + 1400 * Math.min(1, level * 4), AC.currentTime, 0.2); } } catch (e) {} }
 function buzz(ms) { if(RM()||!save.haptics||document.hidden)return; try { if(navigator.vibrate)navigator.vibrate(ms); }catch(e){} }
 
@@ -947,6 +952,43 @@ let camG = null;   // the ground height the camera frames against, eased (see up
 let resultT = 0, result = null, timeT = 0, introT = 0, prevClips = 0, stallSnd = 0;
 // clips earned in the air this throw: each pickup pops '+3' and flies to the counter in the corner
 let cfx = { live: 0, shown: 0, chain: 0, lastT: -9, fly: [], pops: [] };
+let crossLines = [], crossFx = [];
+function setCrossLines() {
+  crossFx = [];
+  if (!run || !pl) { crossLines = []; return; }
+  if (run.mode === 'run') crossLines = [{ x: pl.target, kind: 'target', label: 'Target beaten!' }, { x: pl.target * 2, kind: 'double', label: '2× target!' }];
+  else if (run.mode === 'place') crossLines = starLines(pl).map((x, i) => ({ x, kind: 'star', n: i + 1, label: '★'.repeat(i + 1) })).filter(l => l.n > save.stars[pl.n - 1]);
+  else if (run.mode === 'daily') { const b = dailyToday().best; crossLines = b > 0 ? [{ x: b, kind: 'best', label: 'Past today\'s best!' }] : []; }
+  else crossLines = [];
+  crossLines.forEach(l => l.done = false);
+}
+// the moment the plane passes a line: fanfare, a burst of paper at the flag, a banner, the distance turns green
+function crossLine(l) {
+  l.done = true;
+  const big = l.kind === 'target' || l.kind === 'star' || l.kind === 'best';
+  const notes = l.kind === 'double' ? [784, 988, 1175, 1568] : l.kind === 'star' ? [659, 880, 1047, 1319].map(f => f * Math.pow(2, (l.n - 1) * 2 / 12)) : [523, 659, 784, 1047];
+  notes.forEach((f, i) => { tone(f, .28, .085, 'triangle', i * .075); tone(f * 2, .2, .03, 'sine', i * .075 + .02); });
+  noiseHit(.25, 3200, 900, .08, 2.2);
+  buzz(big ? [30, 40, 60] : 25);
+  const gy = groundAtFull(pl, l.x), fy = gy + Math.max(44, Math.min(80, H * 0.16)) / cam.s;
+  if (!RM()) { const cols = ['#f39c32', '#2f6fd6', '#2e9a5a', '#e64a6b', '#ffd34d', '#ffffff'];
+    for (let i = 0; i < (big ? 46 : 26); i++) { const a = Math.random() * Math.PI * 2, s = 3 + Math.random() * 9; parts.push({ x: l.x, y: fy, vx: Math.cos(a) * s, vy: Math.abs(Math.sin(a)) * s + 2, t: 0, life: 1.1 + Math.random() * 0.6, c: cols[i % 6], r: 2.4 + Math.random() * 1.6, sq: 1 }); } }
+  crossFx.push({ t: 0, label: l.label, kind: l.kind });
+  const d = $('hudDist').parentElement; d.classList.remove('passed'); void d.offsetWidth; d.classList.add('passed');
+}
+function drawCrossFx(dt) {
+  for (const c of crossFx) {
+    c.t += dt; const q = c.t, inn = Math.min(1, q / 0.25), out = q > 1.4 ? Math.max(0, 1 - (q - 1.4) / 0.4) : 1;
+    const s = RM() ? 1 : 0.6 + 0.4 * (1 - Math.pow(1 - inn, 3)) + (inn < 1 ? 0 : 0.04 * Math.sin(q * 8) * Math.max(0, 1 - q)), y = Math.min(H * 0.34, hudBottom + 60);
+    cx.save(); cx.globalAlpha = out * (RM() ? 1 : inn); cx.translate(W / 2, y); cx.scale(s, s); cx.rotate(-0.03);
+    cx.font = '400 ' + (c.kind === 'star' ? 40 : 30) + 'px "Patrick Hand", cursive'; const tw = cx.measureText(c.label).width;
+    cx.fillStyle = 'rgba(41,48,61,.2)'; rr(-tw / 2 - 18, -26 + 4, tw + 36, 46, 12); cx.fill();
+    cx.fillStyle = c.kind === 'star' ? '#fff6d6' : c.kind === 'double' ? '#e5f3d7' : '#fffdf6'; rr(-tw / 2 - 18, -26, tw + 36, 46, 12); cx.fill();
+    cx.strokeStyle = c.kind === 'star' ? '#d9a12a' : '#2e9a5a'; cx.lineWidth = 2.5; cx.stroke();
+    cx.fillStyle = c.kind === 'star' ? '#e09a12' : '#23794a'; cx.textAlign = 'center'; cx.fillText(c.label, 0, 9); cx.restore();
+  }
+  crossFx = crossFx.filter(c => c.t < 1.8);
+}
 function resetClipFx() { cfx = { live: 0, shown: 0, chain: 0, lastT: -9, fly: [], pops: [] }; const h = $('hudClips'); h.classList.remove('on'); $('hudClipsN').textContent = '+0'; }
 function clipFx(v, chainable) {
   cfx.live += v;
@@ -1021,7 +1063,7 @@ function beginAim(intro) {
   pl = placeOf(run);
   roll = rollThrow(pl, run.mode === 'daily' ? dayNum() * 131 + dailyToday().n * 17 + 5 : (Date.now() & 0xffff) + run.n * 31 + 1);
   P = run.mode === 'daily' ? planeParams(DAILY_FOLD, DAILY_UP, DAILY_ARM) : planeParams(save.fold, save.up[save.fold], save.arm);
-  fl = null; aim = null; path = []; prevClips = 0; result = null; resetClipFx();
+  fl = null; aim = null; path = []; prevClips = 0; result = null; resetClipFx(); setCrossLines(); $('hudDist').parentElement.classList.remove('passed');
   state = 'aim'; keyAngle = 25; holdPtrs.clear(); keyHold = keyDown = false; $('hud').classList.add('on'); cv.focus({preventScroll:true});
   camT = null;
   updateHud();
@@ -1101,8 +1143,8 @@ function land() {
       let extra = '';
       if (d >= 2 * tgt) { if (run.throws < 5) { run.throws++; extra = ' · 2× target: +1 throw'; } else extra = ' · 2× target'; }
       outcome = 'Cleared! ' + fmt(d) + ' m' + extra;
-      sChime(); buzz(30);
-      if (!RM()) confetti();
+      buzz([30, 50, 80]);
+      if (!RM()) { confetti(); confetti(); }
       run.place++;
       const reached = Math.min(8, run.place + 1);
       if (reached > save.bestPlace) { save.bestPlace = reached; run.newPlace = true; }
@@ -1117,7 +1159,7 @@ function land() {
   const gain = earned + (run.mode === 'run' && d >= pl.target ? clearBonus(pl.n) : 0) + (run.mode === 'place' ? run.starBonus || 0 : 0);
   result = { d, outcome, next, star0, star1, wind: fl.windX || 0, crashed:!!fl.crashed, earned:gain, base:earned, pickups:got, bonus:gain-earned, record:prevBest>0 && d>prevBest, clear:run.mode==='run'&&d>=pl.target };
   if(next !== 'aim') completeRun(next === 'win');
-  sReward(gain,result.clear||result.record); buzz(result.clear?40:15); showLanding(result);
+  if (result.clear || (result.star1 || 0) > (result.star0 || 0)) sFanfare(); else sReward(gain, result.record); buzz(result.clear?40:15); showLanding(result);
   for (const m of msgs) toast(m[1], m[0]);
   save.run = next === 'aim' ? runSnap() : null;
   persist();
@@ -1216,6 +1258,7 @@ function showLanding(v){
   void breakdown;
   bankShow(save.clips - v.earned, nextUpgrade().goal);$('lHangar').innerHTML=nextUpgrade().affordable?'✦ Hangar<span class="rdot" aria-label="upgrade ready"></span>':'Hangar';
   $('lNext').textContent=v.next==='end'||v.next==='win'?(run.mode==='run'?'See run results ➤':'Finish ➤'):v.clear?'Next place ➤':'Next throw ➤';
+  { const h = $('lTitle'); h.classList.remove('stamp'); if ((v.clear || newStars > 0) && !RM()) { void h.offsetWidth; h.classList.add('stamp'); } }
   $('landing').classList.add('on'); focusPanel('landing','lNext');
   if(!RM()&&v.earned>0){const start=performance.now(),dur=Math.min(950,480+v.earned*3);const count=now=>{
     if(rewardSequence!==t||!$('landing').classList.contains('on'))return;
@@ -1564,6 +1607,7 @@ function tick(dt) {
       const pr = fl.clips, lp = fl.loops;
       step(fl, P, pl, roll, hold, run.mode === 'daily' ? DAILY_MAGNET : save.magnet);
       if (fl.loops > lp) { tone(784, .18, .06, 'triangle'); tone(1175, .26, .05, 'triangle', .09); if (fl.loops <= LOOP_CAP) clipFx(LOOP_CLIPS, false); }
+      for (const l of crossLines) if (!l.done && fl.x >= l.x) crossLine(l);
       if (fl.clips > pr) { clipFx(3 * (fl.clips - pr), true); if (!RM()) for (let k = 0; k < 6; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 4, vy: (Math.random() - 0.5) * 4, t: 0, life: 0.5, c: '#ffd34d', r: 2.2 }); }
       if ((fl.stall > 0 || fl.bumpT > 0) && stallSnd <= 0) { sFlutter(); stallSnd = 0.5; }
       if (fl.bumpT === 0.6) { noiseHit(0.18, 900, 300, 0.3, 1); if (!RM()) for (let k = 0; k < 10; k++) parts.push({ x: fl.x, y: fl.y, vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.3) * 4, t: 0, life: 0.6, c: fl.bumpCol || '#7fbb68', r: 2.4, sq: 1 }); }
@@ -2282,7 +2326,7 @@ function drawMarkers() {
     : run.mode === 'daily' ? (dailyToday().best > 0 ? [[dailyToday().best, '#2f6fd6', 'Today ' + fmt(dailyToday().best) + ' m']] : [])
     : [[pl.target, '#f39c32', pl.target + ' m']];
   let ahead = null;
-  for (const mk of marks) { if (mk[0] > x0 - 5 && mk[0] < x1 + 5) flag(mk[0], mk[1], mk[2]); else if (mk[0] >= x1 + 5 && !ahead) ahead = mk; }
+  for (const mk of marks) { const won = crossLines.some(l => l.done && Math.abs(l.x - mk[0]) < 0.01); if (mk[0] > x0 - 5 && mk[0] < x1 + 5) flag(mk[0], won ? '#2e9a5a' : mk[1], won ? '✓ ' + mk[2] : mk[2]); else if (mk[0] >= x1 + 5 && !ahead) ahead = mk; }
   if (run.mode === 'run') { const tg = pl.target * 2; if (tg > x0 && tg < x1) { const X = SX(tg), Y = SY(groundAtFull(pl, tg)); cx.strokeStyle = 'rgba(46,154,90,.7)'; cx.setLineDash([4, 5]); cx.lineWidth = 2; cx.beginPath(); cx.moveTo(X, Y); cx.lineTo(X, Y - 40); cx.stroke(); cx.setLineDash([]); cx.font = '400 14px "Patrick Hand", cursive'; const tw = cx.measureText('2× = +1 throw').width; cx.fillStyle = 'rgba(255,253,246,.85)'; rr(X - tw / 2 - 5, Y - 60, tw + 10, 18, 5); cx.fill(); cx.fillStyle = 'rgba(30,110,64,.95)'; cx.fillText('2× = +1 throw', X, Y - 46); } }
   if (ahead) { // off-screen target: a tab on the right edge
     const label = (run.mode === 'run' ? 'Target ' + ahead[2] : ahead[2]) + ' ›';
@@ -2395,7 +2439,7 @@ function render() {
   if (state === 'fly' && fl && learning() && !paused) drawThumbs();
   { const want = (state === 'fly' || state === 'aim') && !paused && cfx.shown > 0, h = $('hudClips');
     if (want !== h.classList.contains('on')) h.classList.toggle('on', want); }
-  { const now = performance.now(), dt = Math.min(0.05, (now - (render.fxT || now)) / 1000); render.fxT = now; if (!paused) drawClipFx(dt); }
+  { const now = performance.now(), dt = Math.min(0.05, (now - (render.fxT || now)) / 1000); render.fxT = now; if (!paused) { drawClipFx(dt); drawCrossFx(dt); } }
   for (const p of parts) { cx.globalAlpha = Math.max(0, 1 - p.t / p.life); cx.fillStyle = p.c; if (p.sq) { cx.save(); cx.translate(SX(p.x), SY(p.y)); cx.rotate(p.t * 8 + p.r); cx.fillRect(-p.r, -p.r * 0.6, p.r * 2, p.r * 1.2); cx.restore(); } else { cx.beginPath(); cx.arc(SX(p.x), SY(p.y), p.r, 0, 7); cx.fill(); } }
   cx.globalAlpha = 1;
 }
