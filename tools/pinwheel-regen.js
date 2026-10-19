@@ -25,6 +25,8 @@
 */
 "use strict";
 const fs = require("fs"), path = require("path"), vm = require("vm");
+// Dokus must also have no second fill in everyday British words, not just in the engine list (19 Oct 2026)
+const { broadAlts } = require("./doku-broad-check.js");
 
 const ROOT = path.resolve(__dirname, "..");
 const REPORTS = path.join(ROOT, "reports");
@@ -66,7 +68,8 @@ function loadEngine(file, cutMarker, extra) {
   const src = fs.readFileSync(path.join(ROOT, "engines", file), "utf8");
   let code = src.slice(0, src.indexOf(cutMarker));
   if (extra) { const a = src.indexOf(extra[0]), b = src.indexOf(extra[1]); code += "\n" + src.slice(a, b); }
-  const ctx = {}; vm.createContext(ctx);
+  // the engines open with the finish-sheet stub (window.dnFinish, document.write) since 18 Oct 2026
+  const ctx = { window: {}, document: { write() {} } }; vm.createContext(ctx);
   vm.runInContext(code + "\n;globalThis.__E={WORDS,BANDS,findSlots,fillBand,validate,mulberry32" +
     (extra ? ",countSolutions,validateLexi,DENSITY" : "") + "};", ctx);
   return ctx.__E;
@@ -236,7 +239,7 @@ function lockFor(E, grid, band, rnd) {
     const lk = new Set(sh.map(([r, c]) => r + "," + c));
     const bank = cells.filter(([r, c]) => !lk.has(r + "," + c)).map(([r, c]) => grid[r][c]).sort(() => rnd() - 0.5);
     const pz = { grid, locked, bank, band };
-    if (E.validateLexi(pz).pass) return { locked, bank };
+    if (E.validateLexi(pz).pass && broadAlts(pz) === 0) return { locked, bank };
   }
   return null;
 }
@@ -309,6 +312,7 @@ function apply(planFile) {
     } else {
       const v = E.doku.validateLexi(pz);
       if (!v.pass) problems.push(`${p.file}: Doku gate FAILS ${JSON.stringify(v.checks)}`);
+      if (broadAlts(pz)) problems.push(`${p.file}: Doku has a second fill in everyday words (tools/doku-broad-check.js)`);
     }
     // masked diff: only the grid/locked/bank/clues block and the standfirst may differ
     const strip = x => x.replace(/<meta name="dn:standfirst" content="[^"]*">/, "")

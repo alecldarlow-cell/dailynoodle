@@ -288,6 +288,7 @@ function buildBank(){
 
 /* ---- paint. green means "this is right", never "this is a word" ---- */
 function paint(){
+  fullNote();
   const active=wordAt(sel.r,sel.c,sel.dir);
   const good=new Set();
   if(hints){
@@ -372,6 +373,24 @@ $("#toggleHints").onclick=()=>{
 function startTimer(){if(started||solved)return;started=true;tHandle=setInterval(()=>{seconds++;renderTime();},1000);}
 function stopTimer(){if(tHandle)clearInterval(tHandle);tHandle=null;}
 function renderTime(){const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");$("#timer").textContent=`${m}:${s}`;}
+
+/* ---- dn-doku-full-note (19 Oct 2026): a full grid that isn't today's answer says so,
+   instead of sitting silent. With Hints on it also says how many squares are off. ---- */
+var fullShown=false;
+function fullNote(){
+  if(solved||!P)return;
+  const cells=fillables(P.grid);
+  if(cells.every(([r,c])=>letterAt(r,c))){
+    const off=cells.filter(([r,c])=>letterAt(r,c)!==P.grid[r][c]).length;
+    if(off){
+      $("#msg").textContent=hints
+        ?`The grid's full, but ${off===1?"1 square isn't":off+" squares aren't"} today's answer. Tap a letter to send it back.`
+        :"The grid's full, but it isn't today's answer. Tap a letter to send it back.";
+      fullShown=true;return;
+    }
+  }
+  if(fullShown){$("#msg").textContent="";fullShown=false;}
+}
 
 /* ---- win + streak (shared with the Mini: once per calendar day, any solve) ---- */
 async function checkWin(){
