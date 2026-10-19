@@ -13,9 +13,19 @@
        centroid), seeded `borders-opts-<date>-<q>`, option order seeded too.
    Hash and RNG are Borderline's own hashStr (FNV-1a) and rng (mulberry32).
 
+   Schedule v2 (19 Oct 2026, Alec's call: wider easy and medium pools, the same
+   ten for everyone): from V2_FROM, the countries in V2_MOVES change tier (only
+   here: Borderline's own tiers are untouched) and each tier gets fresh decks,
+   `borders-v2-deck-<tier>-<n>`, with cycles of floor(pool / per-day) days.
+   Deck 0 swaps out anything shown on the 3 days before V2_FROM, so the 4-day
+   rule holds across the change. Days before V2_FROM are built exactly as before.
+
    Usage:
      node tools/build-borders-batch.js --verify                 # rebuild every live day in memory, compare byte for byte
      node tools/build-borders-batch.js --through 2028-08-16 [--dry]
+     node tools/build-borders-batch.js --stats                  # pool sizes, cycles, smallest gap between repeats
+     node tools/build-borders-batch.js --restamp [--dry]        # rewrite forthcoming days from V2_FROM in place
+                                                                # (only the DN_PUZZLE line may change; refuses released days)
    New days are stamped from the newest Borders page; only the dn:headline,
    dn:date and the DN_PUZZLE line change.
    After writing, run `node tools/og-tags.js` so each new page's link-preview
@@ -73,13 +83,41 @@ function deck(t, n) {
   }
   return decks[key] = d;
 }
+/* ---- schedule v2 ---- */
+const V2_FROM = '2026-10-21';
+const V2_MOVES = {
+  // medium -> easy
+  'Netherlands': 1, 'Switzerland': 1, 'Austria': 1, 'Denmark': 1, 'Croatia': 1, 'Israel': 1,
+  // hard -> medium
+  'Gambia': 2, 'Azerbaijan': 2, "Côte d'Ivoire": 2, 'Sierra Leone': 2, 'Bahamas': 2, 'Belize': 2,
+};
+for (const k in V2_MOVES) if (!C.some(c => c.n === k)) throw new Error('V2_MOVES: not in the atlas: ' + k);
+const V2_DI = dayIdx(V2_FROM);
+const tier2 = c => V2_MOVES[c.n] || c.t;
+const POOL2 = { 1: [], 2: [], 3: [] }; C.forEach(c => POOL2[tier2(c)].push(c.i));
+const CYCLE2 = { 1: Math.floor(POOL2[1].length / PER[1]), 2: Math.floor(POOL2[2].length / PER[2]), 3: Math.floor(POOL2[3].length / PER[3]) };
+function ids1(di) { const ids = []; for (const t of [1, 2, 3]) { const n = Math.floor(di / CYCLE[t]), p = di % CYCLE[t]; ids.push(...deck(t, n).slice(p * PER[t], (p + 1) * PER[t])); } return ids; }
+function deck2(t, n) {
+  const key = 'v2-' + t + '-' + n; if (decks[key]) return decks[key];
+  const d = shuffle(POOL2[t].slice(), rng(hashStr(`borders-v2-deck-${t}-${n}`)));
+  const M = 3 * PER[t];
+  const ban = new Set(n > 0 ? deck2(t, n - 1).slice((CYCLE2[t] - 3) * PER[t], CYCLE2[t] * PER[t])
+                            : [1, 2, 3].flatMap(k => ids1(V2_DI - k)));
+  let j = M;
+  for (let k = 0; k < M; k++) if (ban.has(d[k])) {
+    while (j < d.length && ban.has(d[j])) j++;
+    if (j >= d.length) throw new Error('v2 deck swap ran out');
+    [d[k], d[j]] = [d[j], d[k]]; j++;
+  }
+  return decks[key] = d;
+}
+function ids2(di) { const e = di - V2_DI, ids = []; for (const t of [1, 2, 3]) { const n = Math.floor(e / CYCLE2[t]), p = e % CYCLE2[t]; ids.push(...deck2(t, n).slice(p * PER[t], (p + 1) * PER[t])); } return ids; }
 function day(date) {
-  const di = dayIdx(date), ids = [];
-  for (const t of [1, 2, 3]) { const n = Math.floor(di / CYCLE[t]), p = di % CYCLE[t]; ids.push(...deck(t, n).slice(p * PER[t], (p + 1) * PER[t])); }
+  const di = dayIdx(date), v2 = di >= V2_DI, ids = v2 ? ids2(di) : ids1(di);
   const qs = ids.map((i, q) => {
     const c = C[i], r = rng(hashStr(`borders-opts-${date}-${q}`));
     const opts = shuffle([c.i, ...shuffle(near8(c), r).slice(0, 3)], r);
-    const [n, t, lo, la, km, x, y, d, K, tx, ty] = c.row;
+    const [n, t0, lo, la, km, x, y, d, K, tx, ty] = c.row, t = v2 ? tier2(c) : t0;
     return { n, i, t, lo, la, km, x, y, d, K, tx, ty, o: opts.map(k => C[k].n) };
   });
   const serial = di + 1;
@@ -99,7 +137,7 @@ function stamp(tpl, p) {
 const fileOf = p => `${p.date}-geo-borders-${String(p.serial).padStart(4, '0')}.html`;
 const live = () => fs.readdirSync(REPORTS).filter(f => /^\d{4}-\d{2}-\d{2}-geo-borders-\d{4}\.html$/.test(f)).sort();
 
-module.exports = { DATA, C, day, stamp, pzLine, near8, dayIdx, dateOf, PLAN, live, fileOf };
+module.exports = { DATA, C, day, stamp, pzLine, near8, dayIdx, dateOf, PLAN, live, fileOf, V2_FROM, V2_MOVES, POOL2, CYCLE2 };
 if (require.main === module) main();
 
 function main() {
@@ -117,6 +155,39 @@ function main() {
     }
     console.log(JSON.stringify({ live: files.length, puzzleLineIdentical: pzSame, wholeFileIdenticalFromNewestTemplate: same, mismatches: bad.slice(0, 10) }));
     process.exit(bad.length ? 1 : 0);
+  }
+  if (has('--stats')) {
+    // smallest gap between two showings of the same country, and mean gap per tier, over a window
+    const from = arg('--from', V2_FROM), days = +arg('--days', 365), seen = new Map(), gaps = { 1: [], 2: [], 3: [] }; let minGap = 1e9, where = '';
+    for (let di = dayIdx(from) - 20; di < dayIdx(from) + days; di++) {
+      const p = day(dateOf(di));
+      p.qs.forEach(q => { const last = seen.get(q.i); if (last != null && di >= dayIdx(from)) { gaps[q.t].push(di - last); if (di - last < minGap) { minGap = di - last; where = q.n + ' ' + dateOf(di); } } seen.set(q.i, di); });
+    }
+    const mean = a => a.length ? +(a.reduce((x, y) => x + y, 0) / a.length).toFixed(1) : null;
+    console.log(JSON.stringify({ from, days, pools: { 1: POOL2[1].length, 2: POOL2[2].length, 3: POOL2[3].length }, cycles: CYCLE2,
+      meanGapDays: { easy: mean(gaps[1]), medium: mean(gaps[2]), hard: mean(gaps[3]) }, minGap, minGapAt: where }));
+    return;
+  }
+  if (has('--restamp')) {
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(new Date());
+    const PZ_ONLY = t => t.replace(PZ_RE, 'PZ');
+    let n = 0, same = 0;
+    for (const f of files) {
+      const date = f.slice(0, 10); if (date < V2_FROM) continue;
+      if (date <= today) throw new Error(`${f}: released; never re-edit a released Borders`);
+      const before = fs.readFileSync(path.join(REPORTS, f), 'utf8'), p = day(date);
+      if (f !== fileOf(p)) throw new Error(`${f}: name does not match ${fileOf(p)}`);
+      const out = before.replace(PZ_RE, () => pzLine(p));
+      if (PZ_ONLY(out) !== PZ_ONLY(before)) throw new Error(`${f}: masked diff`);
+      if (out === before) { same++; continue; }
+      if (!has('--dry')) {
+        fs.writeFileSync(path.join(REPORTS, f), out);
+        if ((fs.readFileSync(path.join(REPORTS, f), 'utf8').match(PZ_RE) || [])[0] !== pzLine(p)) throw new Error(`${f}: re-read mismatch`);
+      }
+      n++;
+    }
+    console.log(JSON.stringify({ restamped: n, unchanged: same, from: V2_FROM, dry: has('--dry') }));
+    return;
   }
   const through = arg('--through');
   if (!through) { console.error('need --through YYYY-MM-DD (or --verify)'); process.exit(1); }
