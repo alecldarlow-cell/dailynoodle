@@ -148,18 +148,21 @@
   /* today's list is kept for the day (dn-today-cache), so the row paints complete straight away instead of
      jumping when the file arrives; the file is still fetched, and the row repainted only if it differs */
   var CACHE = 'dn-today-cache';
+  var nextRow = null, nextType = '';
+  function isToday(j) { return !!(j && j.today === londonDate() && Array.isArray(j.items) && j.items.length); }
   function loadToday(cb) {
-    if (todayList) return cb(todayList);
-    var c = read(CACHE), t = londonDate(), painted = '';
-    if (c && c.today === t && Array.isArray(c.items)) { todayList = c; painted = JSON.stringify(c.items); cb(c); }
+    var c = isToday(todayList) ? todayList : read(CACHE), painted = '';
+    todayList = isToday(c) ? c : null;
+    if (todayList) painted = JSON.stringify(todayList.items);
+    cb(todayList);   // clear yesterday's link immediately, even while offline
     try {
       fetch('../puzzles-today.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; })
         .then(function (j) {
-          if (!(j && Array.isArray(j.items))) { if (!painted) cb(null); return; }
+          if (!isToday(j)) { if (!isToday(todayList)) cb(null); return; }
           todayList = j; try { localStorage.setItem(CACHE, JSON.stringify(j)); } catch (e) {}
           if (JSON.stringify(j.items) !== painted) cb(j);
-        }, function () { if (!painted) cb(null); });
-    } catch (e) { if (!painted) cb(null); }
+        }, function () { if (!isToday(todayList)) cb(null); });
+    } catch (e) { if (!isToday(todayList)) cb(null); }
   }
   function fillNext(row, type) {
     loadToday(function (j) {
@@ -176,6 +179,12 @@
       else { main.textContent = 'All today’s puzzles done'; row.href = '../puzzles.html'; }
     });
   }
+  function refreshNext() {
+    if (nextRow && nextRow.isConnected && nextRow.closest('.fin-open')) fillNext(nextRow, nextType);
+  }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshNext(); });
+  window.addEventListener('online', refreshNext);
+  window.addEventListener('pageshow', function (e) { if (e.persisted) refreshNext(); });
 
   /* ---------- countdown and run ---------- */
   var clockTimer = 0;
@@ -188,7 +197,7 @@
         var a = p.querySelector('.fin-reload'); if (a) a.addEventListener('click', function (e) { e.preventDefault(); location.reload(); });
       } else p.innerHTML = 'A new ' + esc(name) + ' in <b>' + hm(s) + '</b>.' + runTxt;
     }
-    paint(); clearInterval(clockTimer); clockTimer = setInterval(paint, 30000);
+    paint(); clearInterval(clockTimer); clockTimer = setInterval(function () { paint(); if (!document.hidden) refreshNext(); }, 30000);
   }
 
   /* ---------- build ---------- */
@@ -244,7 +253,7 @@
 
     // next, board link slot, countdown
     var next = el('a', 'fin-next', '<span><span class="fin-next-main">Today’s puzzles</span><small class="fin-next-sub">\u00a0</small></span>' + CHEVRON);
-    next.href = '../puzzles.html'; f.appendChild(next); fillNext(next, cfg.type);
+    next.href = '../puzzles.html'; f.appendChild(next); nextRow = next; nextType = cfg.type; fillNext(next, cfg.type);
     f.appendChild(el('div', 'fin-board-slot'));
     var clock = el('p', 'fin-clock'); f.appendChild(clock); fillClock(clock, NAME[cfg.type]);
 

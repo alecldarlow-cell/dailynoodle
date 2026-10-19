@@ -496,13 +496,15 @@
     var me = document.currentScript && document.currentScript.src;
     if (!me || !/\/dn-track\.js(\?.*)?$/.test(me)) return;
     var sw = me.replace(/dn-track\.js(\?.*)?$/, 'sw.js');
+    var warm = function (r) { if (r.active) r.active.postMessage('warm'); };
     var go = function () {
       try {
         navigator.serviceWorker.register(sw).then(function () { return navigator.serviceWorker.ready; })
-          .then(function (r) { if (r.active) r.active.postMessage('warm'); }).catch(function () {});
+          .then(warm).catch(function () {});
       } catch (e) {}
     };
     if (document.readyState === 'complete') setTimeout(go, 1500);
     else window.addEventListener('load', function () { setTimeout(go, 1500); });
+    window.addEventListener('online', function () { navigator.serviceWorker.ready.then(warm).catch(function () {}); });
   } catch (e) {}
 })();

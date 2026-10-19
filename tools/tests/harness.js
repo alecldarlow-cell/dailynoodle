@@ -18,6 +18,23 @@ const REPO = path.resolve(__dirname, '..', '..');
 const PW = process.env.PLAYWRIGHT_DIR ? require(path.join(process.env.PLAYWRIGHT_DIR, 'playwright')) : require('playwright');
 const MIME = { html: 'text/html', js: 'text/javascript', css: 'text/css', json: 'application/json', svg: 'image/svg+xml', png: 'image/png', webmanifest: 'application/manifest+json', woff2: 'font/woff2' };
 const FONTS = process.env.DN_FONTS || null;
+// Keep the daily list consistent with each page's fake London date. Reading
+// the live generated list made fixture tests treat yesterday as "today".
+const DAILY = new Map();
+function dailyList(day) {
+  if (DAILY.has(day)) return DAILY.get(day);
+  const types = { 'crossword-mini': 'mini', 'logic-doku': 'doku', 'logic-sweep': 'sweep', 'logic-path': 'path', 'word-link': 'link', 'word-tangle': 'tangle', 'geo-borders': 'borders' };
+  const items = [];
+  for (const file of fs.readdirSync(path.join(REPO, 'reports')).filter(f => f.startsWith(day + '-'))) {
+    const slug = (file.match(/^\d{4}-\d{2}-\d{2}-([a-z]+-[a-z]+)(?:-\d+)?\.html$/) || [])[1], type = types[slug];
+    if (!type) continue;
+    const src = fs.readFileSync(path.join(REPO, 'reports', file), 'utf8');
+    const id = (src.match(/\bid\s*:\s*"(DP·[A-Z]+·[0-9-]+)"/) || [])[1];
+    const name = ((src.match(/name="dn:headline"\s+content="([^"]+)"/) || [])[1] || type).replace(/ 0+(\d+)$/, ' $1');
+    if (id) items.push({ type, id, name, path: 'reports/' + file });
+  }
+  const out = JSON.stringify({ today: day, items }); DAILY.set(day, out); return out;
+}
 
 function launch() {
   const o = { args: ['--no-sandbox'] };
@@ -51,6 +68,10 @@ async function newPhone(browser, { width = 390, height = 844, scheme = 'light', 
     }
     if (u.host === 'dailynoodle.co.uk') {
       let p = decodeURIComponent(u.pathname);
+      if (p === '/puzzles-today.json') {
+        const day = await route.request().frame().evaluate(() => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()));
+        return route.fulfill({ status: 200, contentType: MIME.json, body: dailyList(day) });
+      }
       if (engines && p.startsWith('/engines/') && fs.existsSync(path.join(engines, p.slice(9)))) {
         const f = path.join(engines, p.slice(9));
         return route.fulfill({ status: 200, contentType: MIME[path.extname(f).slice(1)], body: fs.readFileSync(f) });

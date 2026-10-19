@@ -33,7 +33,7 @@
 'use strict';
 
 const OFF = false;
-const VERSION = 'nn-1';
+const VERSION = 'nn-2';
 const PAGES = 'nn-pages-' + VERSION;      // this site's files
 const FONTS = 'nn-fonts-' + VERSION;      // Google Fonts (stylesheets and font files)
 const MAX_ENTRIES = 400;                  // pages cache trimmed past this, oldest first
@@ -148,12 +148,15 @@ async function warmToday() {
   if (!res.ok) return;
   await cache.put(self.location.origin + '/puzzles-today.json', res.clone());
   const j = await res.json();
-  if (String(j.today || '') !== day) return;   // the night's build hasn't run yet: try again later
-  const files = new Set();
-  for (const it of j.items || []) {
-    if (!/^reports\/[\w.-]+\.html$/.test(it.path || '')) continue;
+  if (String(j.today || '') !== day || !Array.isArray(j.items) || !j.items.length) return;   // the night's build hasn't run yet: try again later
+  // A dropped connection must leave the batch due. Include the shared files
+  // here too: an interrupted install may not have saved the finish sheet.
+  let complete = true;
+  const files = new Set(CORE.filter(f => f.startsWith('/engines/')));
+  for (const it of j.items) {
+    if (!/^reports\/[\w.-]+\.html$/.test(it.path || '')) { complete = false; continue; }
     const r = await fetch('/' + it.path).catch(() => null);
-    if (!r || !r.ok) continue;
+    if (!r || !r.ok) { complete = false; continue; }
     const html = await r.clone().text();
     await cache.put(self.location.origin + '/' + it.path, r);
     for (const m of html.matchAll(/\.\.\/(engines\/[\w-]+\.(?:js|css))/g)) files.add('/' + m[1]);
@@ -161,8 +164,9 @@ async function warmToday() {
   for (const f of files) {
     const r = await fetch(f).catch(() => null);
     if (r && r.ok) await cache.put(self.location.origin + f, r);
+    else complete = false;
   }
-  await cache.put('/__nn/warmed', new Response(day));
+  if (complete) await cache.put('/__nn/warmed', new Response(day));
 }
 
 /* ---------- never cached, never online ---------- */

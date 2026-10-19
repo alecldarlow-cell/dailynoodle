@@ -1,0 +1,1231 @@
+commit,date,subject,classification,core_change,game_change,changed_paths
+3a7598705060827245f603b43b923e44126c45a3,2026-10-19,Fix puzzle start-card clocks and London completion dates,described change,True,False,43
+9f49d0411f2a357be0aa9d24d3deceb9243f5ad5,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+56729b4e1633600eb8786d13b2f2b3ec7093d21b,2026-10-19,"Ancient Cities: top bar on one row, bag count in the tray",described change,False,True,1
+9fc2d573a31573232d6c7d7cda6c10ffd92b31aa,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f740af3bc9865f40163ef2b750a46ef7c5a67835,2026-10-19,Ancient Cities: fields join without a dip between tiles,described change,False,True,1
+ca14d7798e4f50ac3a7afdafb921dfbe6bf4bd60,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+694a93cdbcc92909bf2ea56ecb18a7b8991f4360,2026-10-19,Ancient Cities: variable zoom with a comfortable close view,described change,False,True,1
+751d38cc9269f32270f6cfb8ac9d80c1deeeddf3,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+98cd348a9ef9357730259a27e4af80787c7876ad,2026-10-19,Path: regenerate 652 forthcoming Paths (1 Nov 2026 on) under the Phase 6 rules,described change,False,False,652
+3dd76c90d24d931dfd62281799cec388bc9cc708,2026-10-19,"Path: add tools/build-path-batch.js, the Path batch tool (Phase 6)",described change,True,False,1
+9e8a5fbfe9eeab6b2caf3bee3ba3a3b6703f563c,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+bede60ef8a69457e07912f024405240556165f33,2026-10-19,Ancient Cities: Jade Lagoon becomes a Maya city in clay,described change,False,True,1
+849eaaaa4f497e43c176a96d92a9a74c7bd19bb1,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+6662b56787bc1f643a973890057b1eb74d9484dc,2026-10-19,"Mini clue gate: check-mini-clues.js, restored check-clue-leaks.js, reclue and gap tools",described change,True,False,5
+f53d9471cce7349f22659d4cddcc8dd4a945f6c3,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+19177b5ae3cc6a676a4797fa7ed03ad00640e32c,2026-10-19,"Ancient Cities: one crop, no market; level 2 becomes Shared Gardens",described change,False,True,1
+5ff4530774eed922d3f8326020b7321882b98540,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+873e5ff8b9d089d15762c0fe8fbb5877dbf57d79,2026-10-19,Paper Planes: clearer bronze and silver wing trim,described change,False,True,1
+9846c313bfcb774fe3a93948eddaf99d4d399fc5,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+04aa1fa70f5451644da6e60398607df2b3359b0c,2026-10-19,Paper Planes: planes show their upgrades,described change,False,True,1
+ac3e8c5e1a2a01d42c543194511e13d0d7adf136,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+c31f7a1828796dd3e2a166b99c0b6effd41c9ab0,2026-10-19,Link 75-81: re-edited under the new editing rules,described change,False,False,7
+5bbe3b33283fb4a1b930e08a70809b7405b24ed3,2026-10-19,"Paper Planes: three flying tips, new standfirst",described change,False,True,1
+b9636ee3cdca725bcb05e146813d106339106851,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+5bab219e7865b5317f90c886a81e3e73f09eb365,2026-10-19,"Tools: link-reedit.js, re-edit forthcoming Links in place",described change,True,False,1
+99725517e88d4b153da5d1b2da3d7d886a328258,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+40106207f5c532037c8d8651a7b2627f25bec91a,2026-10-19,Paper Planes: remove the 88.3 m world-record milestone,described change,False,True,1
+0f1f9553f26b0d7897c21cd73a892bf903aa0efc,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e6c16c7631e01c3f89185fcc93e0fa372560a66d,2026-10-19,Paper Planes: choose to go on or try again; a proper unlock moment,described change,False,True,1
+325d568b085622ef2fd6c815c8d0c0a7e219327a,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+48b06851e77bd4a4ae536f5b0c38278c4f87501d,2026-10-19,"Tests: doku:full-wrong, and the Puzzles run check matches the streak chip",described change,True,False,1
+22563e8a1dfc5f7c23e325ded95ea26f4211ac26,2026-10-19,Doku: no second answers in everyday words,described change,True,False,88
+62d6779c9ab606b424d5e253babeac0d1e9cbd04,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+0a3d118c93c1a8200c18fc379e0add32b7411fd4,2026-10-19,Paper Planes: economy tuned for steady progress,described change,False,True,1
+100e236e800fa686ebaf779574361665ecd417cc,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+2ccb1b3e8fd77d468e5ee4e96112ab345dda4ea6,2026-10-19,Paper Planes: two stars to progress,described change,False,True,1
+aa02b7d40cc53cdc83bfe4d83d2c0782e8634eb2,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+b8f2c7acf71402f62cf364d4535a206564373f2c,2026-10-19,"Paper Planes: reset progress, every flag answers, stars on a fold ladder",described change,False,True,1
+1b9d0cdfcff69627025e9e1a407533d065709c57,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+3ffb1210c16d76a5faadc22c40b828a522299a6d,2026-10-19,Paper Planes: fix tapping a place on the home screen,described change,False,True,1
+dad119747364519ed83faea436058b1f5a683453,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+337ed7974247d3e444c6519eb9eb78b51e987a58,2026-10-19,Paper Planes: rename the place-card number class (n is reserved for articles),described change,False,True,1
+f60b03fb638d5207e81cc1071dfe5aaf6a3a2849,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+b631bd0bf37854225c74fcda104e4401d1b4238e,2026-10-19,Paper Planes: places as tappable postcards on the home screen,described change,False,True,1
+8975ac37a5ea80250c19a6833794fba8890978db,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+73023d46846d12e615468e5abe31f8f50e07c865,2026-10-19,Paper Planes: three star flags at every place,described change,False,True,1
+02200f150627a34d303ed8af144c9fb0ff36eb5b,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+9e8a8cd74f7149f33050c40dfc0e18866f230836,2026-10-19,Paper Planes: a proper moment for clearing the distance,described change,False,True,1
+68b434536c02d4b5d0010fc2b24010c70e818f3c,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+37d47bfc44203d662ca45053ca13a1acfc120a5c,2026-10-19,"Paper Planes: stars per place, replay a place, Daily Flight; Skyscraper retired",described change,False,True,1
+4ffdb75060b6d0ff6d3bdb7c25c3747d177cb85f,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f4f2fae9b31f21455f3f63e643f42f824ef415e7,2026-10-19,"Puzzles streak chip: celebration only, drop the play-today nudge",described change,True,False,3
+5c00d38d67a69ef3993ded7d992d15152cecefb1,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c31bf9bcc24fe6606d9fd78e7ab65bb59c8f3690,2026-10-19,"Puzzles front page: run as a streak chip on the count row, with a play-today nudge",described change,True,False,3
+4f0883adf560f20bc844534bf93032ec8dd3b19c,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+5883e358921aeb8cdc51657d263b8cb6ba972892,2026-10-19,Paper Planes: tidier pause card with a How to fly button,described change,False,True,1
+f48a223f1948a214b3c8459b7451f0fe0d465e97,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+05c3ab4a5f289bf0ed781fc20467ed4cc34777a2,2026-10-19,Paper Planes: paperclips feel like a reward,described change,False,True,1
+2f31865f9d5948ad4916b212344485533914b2ce,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+89d75c11e875436e93104d20d6818b7722be0085,2026-10-19,"Paper Planes: narrower cards, edge padding, no 'fully tuned' banner",described change,False,True,1
+0c62213482669d936a693824f7b54004a62dde76,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+550882d58711043c9db4f45b17fba22ede958138,2026-10-19,Paper Planes: simpler flight and end-of-run cards,described change,False,True,1
+7d31b65e3d22006fbfa35843ed2699a1f416454b,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e730b5a67fc8a75eefa854fc9e3a71a6cf3ae8a8,2026-10-19,Paper Planes: simpler Hangar and landing card,described change,False,True,1
+cd94d731254da4570d0fb1c5731ab4a23a2ed8d1,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+cb68c35347348c23d135abcc25fca4903357a7ef,2026-10-19,Installed app: standalone instead of full screen,described change,True,False,2
+75ff74a6a501b9c1d3ba938b92229f92616a391d,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+fdfa998e29d3d1c5841bd5a777ca4ecdab69b061,2026-10-19,"Notifications plumbing, switched off",described change,True,False,10
+9b76e3593041e2ee7a02362a7fb4becaff16faa5,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+34ec9e10cab6faacd6fb24639764718aaf1b3207,2026-10-19,"Offline play: service worker (sw.js), registered from dn-track.js",described change,True,False,6
+72f7a54d454d9445fddbe89864d14dd7e6abf419,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+7b4e8ec95044cd1e2631f0adc600e615945cf472,2026-10-19,Paper Planes: ground no longer slides backwards; no blue focus frame,described change,False,True,1
+fe12665079e74f855e190998c2752405596efadc,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+07bb9c5c6e8f26797e4a7c3ad9e03d8e9859baec,2026-10-19,Paper Planes: steady camera — no more ground racing then slowing,described change,False,True,1
+7c608633768623f70eea5c3308009158cad97d4e,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c9e8c1c9be82c39e4340595291eb25234a380dc5,2026-10-19,Tracker: skip automated browsers; admin: hide one-page readers,described change,True,False,6
+0d2a39f8b4be4f09f4fdac2246885bf2fd919229,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+59363f8863919a5d2e74849f94755f0b117ede7f,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+45e4b8cf25d7a2af261fa2985a065010d41d8f45,2026-10-19,Paper Planes: the eight places read as one long day,described change,False,True,1
+41f1f6f985bf7e740e051aeb0568c3318f88cb78,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+b8f0a71fd40e6ebf11803a5a8ada59bd35e995b5,2026-10-19,"Paper Planes: sharper, deeper backdrops",described change,False,True,1
+f96fa72982d07f37b6330b8d518e73d18c9d6ad1,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+ee99309c3a084d8c5cc9eb2cfaa21635cd8c4609,2026-10-19,Paper Planes: recalibrate the five folds so each one flies further than the last,described change,False,True,1
+1d76355d3008a8c5a59d5878c0c138ee7f5e6686,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+4c822a76c54da00ef281f27b355711fbe426a103,2026-10-19,Build workflow: three more nightly slots so puzzles are live by 4-5 am,described change,True,False,2
+4c053ec721d61d6149f4a98ca4ced04c32e77b86,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+9edd372762449265e33d4e67f43d6208d1ada143,2026-10-19,News pieces link back to News; privacy contact email; readable grey on front pages,described change,True,False,134
+9f99be9ba45ccceb6d983f3bcd89483b8b1c5503,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+61769b40713ca9db64a67a8edb4a9fa87eeda904,2026-10-19,"Front pages: offline retry, keep place on Back, faster Puzzles list, clearer dates; 404 for not-yet-out puzzles",described change,True,False,9
+91a08217ebbd069463bcd9e58c23b7d7b25354ff,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+50aa72cc0b222bae9aaa40ade93f407da2d8e4b1,2026-10-19,"Leaderboard: copy history again when a browser has more, and use the old address's tracker id",described change,True,False,6
+782754e7b06f35a31bca5b4649d4058a0364d9bb,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+1d4565f6c2e445ca03fb75fb7753c1f3639ec1cb,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+a23f250c0c9b9b2b9a541a4bd0ba008ddce0fe36,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+36355b4ca084ee87156ae75376e9cbae159ea405,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+9e14734f11a67c6f5a7208e1772d0c6cc0716b5b,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+5ec9c7c60e4989b61457b8cc6de461bda47adb70,2026-10-19,Add 2026-10-19-asylum-appeals-waits-tribunal-replacement.html,described change,False,False,1
+b7873706b59f4c11befe1b22a011d05f887d5e6e,2026-10-19,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,3
+662218add5dfe8479cf9740d64c98d040d455bad,2026-10-19,Add 2026-10-19-ifs-budget-spending-pressures-headroom.html,described change,False,False,1
+30e45dc68da0cc8819cf30f2efd0b02da70379e3,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+9829ca0c9baeacf07dacc539a660f4da00412417,2026-10-18,Lantern Drift: title links move to the top corners (approved),described change,False,True,1
+7bc704c5ed887469cb118e22ebdf0ab78eebe4f4,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+6246b1819ddc445b35b731488f251104cb141aa9,2026-10-18,Lantern Drift: minutes breathed and best score on the title (approved),described change,False,True,1
+9b6386b31a9ef92fcdde5d32841e2aceea65fa51,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+99a6c911e09c2b79fd77eb4d62729589dcdaf7b9,2026-10-18,Lantern Drift: Vibration switch in Unwind's pause menu (approved),described change,False,True,1
+eca6749db51145994d337c83fa93081cf73e8176,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+4237abb10ad75159543bd9af3ff11bcc53657c35,2026-10-18,Sea Glass: bigger jar and counts on tall phones (approved),described change,False,True,1
+c4d437ca4ec679bb278a8f5254cf140c415779ea,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+4c47c856144d984ceeff439d57960a4e644a1e7d,2026-10-18,Archipelago: three-card quick start before a newcomer's first chart (approved),described change,False,True,1
+9f241dc8e396b3b11b501b9eeca6ea21ed54a4b1,2026-10-18,Archipelago: turn-your-phone-upright card in landscape (approved),described change,False,True,1
+b5b5811b4dc724a1a9ef8568efa93709e43e3d42,2026-10-18,Archipelago: tap the chart to hurry the rivals' turn (approved),described change,False,True,1
+596dcb5d760f32f4b766408ef911763b47a73c92,2026-10-18,"Archipelago: title tag says ""A Noodle strategy game"" (approved)",described change,False,True,1
+0d66ca9e31f2d36e6e1877a9c752965c570d9b65,2026-10-18,Archipelago: deeper orange on primary buttons (approved),described change,False,True,1
+a42eb53b8a81d2d50410883306fac1d795b17117,2026-10-18,"Archipelago: ease chart 2, The Varr Skerries (approved)",described change,False,True,1
+de875155bbca619d638d02326badea78a7c5fb33,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+bc2ba7f4cd2e3e6d25a42e802081c3f3110ded0b,2026-10-18,"Lantern Drift: readable ""keep breathing"" hint while tensing",described change,False,True,1
+3f205a7d990d18d6eee6b5e721374c6a16e19cef,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+8e5cfa6999d97ff32d4440f645e0f38d8252db57,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+23ca4ed069c2ab82be9a467f9411db9ffa28b548,2026-10-18,Sea Glass: Android haptics with a Vibration switch (approved),described change,False,True,1
+508f5dd0cd9bcbb1e273ee6d7ab3343e0b08fdf7,2026-10-18,"Lantern Drift: game_start says ""new"" when the mode changes",described change,False,True,1
+d65b62e6495a13a0211a0f26f42bd7b2cbe5c130,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+41357d633b3367db0750279f2efc23f343bd8fe7,2026-10-18,Bubble Burst: card says levels never run out; dn:updated 2026-10-18,described change,False,True,1
+adec09b515602b467be6bee2eff6a57117001cce,2026-10-18,"Bubble Burst: Beyond the Summit, generated levels from 151 that never run out",described change,False,True,1
+f48e1ce683d3a407e9d67c71f7f59f526e65ae0c,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+e9811e08ad98c3e9fa64bcbfedcc52b8a28c483b,2026-10-18,Sea Glass: the tide comes in faster once the jar is full size (approved),described change,False,True,1
+03c465075893aa38269a357b4a937507e5575771,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+7e0dc9c49cc4697b5153646f403666aab9b39ee5,2026-10-18,Lantern Drift: show the title lantern on phones with browser bars,described change,False,True,1
+1ea968597df9757c6840801072a113376e72aab7,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+a4b904c56e9530c4695c7a4c58a852652a9ac8a4,2026-10-18,Sea Glass: card read time ~2 min (approved),described change,False,True,1
+db4582be9a48e10868a69e40d1341874a5b5a07a,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+f6d15df3c6b7f01e354b42e1579bd68c1de60903,2026-10-18,"Lighthouse Keeper: open-sea twists (meaningful update, dn:updated)",described change,False,True,1
+b6e240f8399457d92ede05374266caa4282b2243,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+b79a5b80c265b8e246411b1689f40aeeec9ccea8,2026-10-18,Lantern Drift: full-screen switch on the home screen (contract §10),described change,False,True,1
+4da54f75dcdfb554c812206eaf3c525bf5f8688c,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+22a47883e017b8638a2ab2982b869c7f0c7901a7,2026-10-18,Sea Glass: stop redrawing the board under the pause and end cards,described change,False,True,1
+3796046ba5c05caab2caa54fbbda0f75a6bb9d9e,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,3
+03ebe6227dc3d9eef3d075738468cb2de92d6227,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,3
+0cf1772daca5d4395297f75550156e534dcd325f,2026-10-18,Lighthouse Keeper: pause behind a turn-upright card when held sideways,described change,False,True,1
+501acdc86ea4282e7da696a7da88e6e6d46b79f6,2026-10-18,Lighthouse Keeper: card read time ~8 min,described change,False,True,1
+abb3407b961f83aa8d79c13a828e860cb77de2c6,2026-10-18,Campfire Watch: the fire matters (burns 2 a night on True Dark and Black Forest),described change,False,True,1
+fc700aa5f0cdc65ef29a13b233c04432b4dd04b6,2026-10-18,Sea Glass: full screen as the site contract asks (§10),described change,False,True,1
+dcf55f6c2ff784000da906d94fab49828aa812bd,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+d596cac7ae2e19f84f64b5bef2e3bbf62ab90dc7,2026-10-18,Borderline: show the run behind the streak bonus (approved),described change,False,True,1
+049118433ffde34e2d24fe9848d66496ead7e616,2026-10-18,Lantern Drift: keep the screen awake during a session,described change,False,True,1
+a079571c898135df90dcce26bc84b489469623c3,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+b39d61bcd45df15f144821ade2c3abbf118dee94,2026-10-18,"Borderline: a tap for a right answer, with a Vibration switch (approved)",described change,False,True,1
+8e0c96a868412eb97f2292f0412442725ac0fe96,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+5f72a296340987de2efdc47be4929e7a96cfd338,2026-10-18,Borderline: a sideways layout for the quiz (approved),described change,False,True,1
+3100114ee6eaa88fff5657c6a24ed9977b029821,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+440cedf73d603d202a27141a3c5382d0bf1cb1eb,2026-10-18,Sea Glass: a last tap no longer opens the shelf from the end card,described change,False,True,1
+95320eb5b7d26780f1cfc494ab60a6ae82d60e17,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f7260492e8d7692267af346ca25836e2916a4e99,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+6f22b2eb879044fcc12843fa753787ef4e8e04d0,2026-10-18,Sea Glass: every tide buries all three rare finds,described change,False,True,1
+b813c13eb36c4afad516eb2f42089f50bc45c83e,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+e6e43bd3396d38a1c767eb594c70609b9632e689,2026-10-18,Archipelago: one restart button when the checkpoint is turn 1,described change,False,True,1
+bfca3fd0255d1c3afc24393afac58c37cbf4d89f,2026-10-18,"Archipelago: ""17 to place"" no longer cut off beside Fortify",described change,False,True,1
+b9047fa23b31c1270902c35d88d067658b547ba8,2026-10-18,Archipelago: readable small text (contrast),described change,False,True,1
+23337e6b697666da5d24dae7635291ccb2da79fd,2026-10-18,Archipelago: open-sea leg cards use the chart lettering,described change,False,True,1
+c7cc9c9b798c087b26be0eb892ea329a8fd7b961,2026-10-18,"Archipelago: ""Outer Hebrides are yours"", not ""is yours""",described change,False,True,1
+65e2e7499481439b87c6d27e510389a9c44f72b4,2026-10-18,Archipelago: say how a chart is really won (every rival fleet out),described change,False,True,1
+92da7cb39bb7d30197756f87dbf645ec822c0215,2026-10-18,Borderline: daily card says Noodle Puzzles,described change,False,True,1
+42785d780a07c13819f8ed2eb554e5df0a94fb49,2026-10-18,Sea Glass: Back on the shelf and looks cards no longer leaves the game,described change,False,True,1
+1807230ae21bd58f8e136744c9c141799a20008d,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+d3d18403cdfd043c583148e4b6cfc684dd6322bc,2026-10-18,Borderline: right and wrong readable without colour,described change,False,True,1
+8a7a3a788d28ea089fe933c53689a9fe086bbdcf,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+dccdcda3621a3c4deaaa71a8501d2f7e07350708,2026-10-18,Borderline: country names on result and atlas tiles no longer break mid-word,described change,False,True,1
+e91cd97d5c9c7d115620df257e4e559d05432138,2026-10-18,Lighthouse Keeper: 44px tap targets in menus and the tutorial,described change,False,True,1
+96d333e61125b065fe5268f96d09e52c908351d3,2026-10-18,Lighthouse Keeper: panel behind daytime messages,described change,False,True,1
+7d28c3ea6c1c1e0adb5aa7271428132a13b2d83f,2026-10-18,Lighthouse Keeper: drop day messages once night falls,described change,False,True,1
+370afe4826ada477958b7e27171e7c3d56f9161f,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+86091f36c9721b7ea7c329fab5045b3f75c48122,2026-10-18,Borderline: home scrolls on short screens,described change,False,True,1
+699660e91638fb3d7ec10ae5cb510c1c68fece1d,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+c32544ad4c909235e916ce18b41d19b7aab40b54,2026-10-18,Borderline: today's Borders card covers the whole batch (to 16 Aug 2028),described change,False,True,1
+c198697a44fb06aa8dcf33c83e96346b59af0a07,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+aa8a497800fc75118b2ed1e41ab5a0ade22798b9,2026-10-18,Borderline: read today's Borders answers from engine pages again,described change,False,True,1
+fcabf4ffdb248b6d41f812224180fae9b70110a7,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+797e95bb97a200e45444354024588084ec5fe64e,2026-10-18,Campfire Watch: invite one player or two,described change,False,True,1
+d7772b504672e89c275cbe8372dccec2d96c641b,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+f971e174c33be995cabf30935526ec4fb9d47fa4,2026-10-18,Campfire Watch: vibration gets its own switch,described change,False,True,1
+f57cbb681047a27ccca71b98b5b7cc9cca2e5f06,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+8f381d1bc3c66a762f67d71fa56d4f340d7c9a09,2026-10-18,Campfire Watch: Light the Fire on the first screen,described change,False,True,1
+746de92d362cb09968953e2123ff9f5e89f1f2b3,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+1979b41c31573339a46fd2b5c057b585d77753b2,2026-10-18,"Ballpark: 13 more fact fixes (Weather, Britain, Science)",described change,False,True,1
+bfcf9ccdd187e28a7e6b0a5e4bfed11e28b23dfc,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+ac9a9aeb362e458998053d52322f6db32495dd5e,2026-10-18,Bubble Burst: a new player's first Play goes straight into Level 1,described change,False,True,1
+2f007d8a6c33a9dcd4d3159583e869c8dd568297,2026-10-18,"Bubble Burst: light vibration on Android, with a Vibration switch",described change,False,True,1
+8497f2e761da8a618ea61e26a41d21fdb8a7cbeb,2026-10-18,Bubble Burst: card says ~1 min a round (was ~3 min),described change,False,True,1
+4e5ab7251a82e969603481497973c0ab31fb4114,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+f23398e60e7964083af3e3d44fbe4244081d8b43,2026-10-18,"Ballpark: 15 fact fixes from a check of all 1,200 questions",described change,False,True,1
+75dcb418fac40bc01a2aa07b9a745eefa25811be,2026-10-18,"Ballpark: deeper tomato, so white button text reads (4.6:1)",described change,False,True,1
+b17f4b04da7afddfe81d8757d6e2da35f781da07,2026-10-18,"Ballpark: varied rounds, at most 3 questions of one kind",described change,False,True,1
+a1b72a2ca8a4a7883d8a5c46b87d02a4a50abb61,2026-10-18,"Ballpark: wider scoring bands (15% / 30% / 60% / 3x), dn:updated",described change,False,True,1
+15d84ddb0222f0ee730192ce79ed4cc6c90a0e1d,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+df6d4f464a8fb45d169e1916933d05b35f6e2c8b,2026-10-18,"Bubble Burst: stars land one by one on the level-clear card, with a chime each",described change,False,True,1
+0fdead559faca99c51090bb715188ad7966d189f,2026-10-18,Bubble Burst: readable 'New' tag on the start cards,described change,False,True,1
+bc6e2dc6a58a41bf2c01aec3edf14e93412ec8fa,2026-10-18,Bubble Burst: the tip card gets out of the way when you start aiming,described change,False,True,1
+b16fb27ebaff0138251a7168437243994e8fa319,2026-10-18,Bubble Burst: focus ring only after a key is pressed,described change,False,True,1
+479eb92ea463216106281ca5731a657f91512155,2026-10-18,Bubble Burst: no keyboard help line on touch-only phones,described change,False,True,1
+61c9e066f86fe66be22f3850eda0924a662ac510,2026-10-18,Bubble Burst: 44px tap height for the back link,described change,False,True,1
+7c077fd5077f7a098dc1d148139f1bd8435d1cb7,2026-10-18,Bubble Burst: take out the build's tracker line (the build adds it back),described change,False,True,1
+7f4b072f2643da37238b7dc9be6ab15b0f72885d,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+20a00a06351eb87ae11b66aaeb7dd591747d1ee9,2026-10-18,Campfire Watch: show where the unlit Deep Woods ring runs,described change,False,True,1
+e21b9bc8a46a66383787b8cc68c69cc79491d144,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+72e7f1db15deb4b268b5a4c0ecab61189f1d1873,2026-10-18,Campfire Watch: rules text matches the cards,described change,False,True,1
+7581653304a0e098fd451dd099b014af6685cc64,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+5ffae097ec6789b4953a474ddfcc76495806f560,2026-10-18,Campfire Watch: creature info card no longer sits under the creatures,described change,False,True,1
+dbfa9981b1c517cb392f8e248b8cf93e8bc965d1,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+aa28d744f2b29f1d09ce487d96c45cc6be9fd043,2026-10-18,Campfire Watch: readable ring labels on the cards,described change,False,True,1
+46531669f5e622c8515049ff0501f368157c1e1d,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+c0e345245d4d18c43c4b29b684878f4a26a59ea4,2026-10-18,Campfire Watch: keep every control on screen when a phone is held sideways,described change,False,True,1
+a441f2db4a87c55c849939e8ac443727f72bc9a1,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+8fa8b3616b55470cb8a98f267a147d2a4448165a,2026-10-18,Ballpark: readable gold on the small stars,described change,False,True,1
+3adceab11963f04b24577da2eb5e3b2f0854a748,2026-10-18,Ballpark: 44px tap areas for the question arrows,described change,False,True,1
+28f2bc46f3b34976bc2cdd0b1f54ca82c3cf94c7,2026-10-18,"Ballpark: rules card says packs of 100, not 40",described change,False,True,1
+5bf58dd4b0a968d6a526675020c47c691c3e1e61,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+37a0c7886b41272c21c5c746deb6c151969cb497,2026-10-18,Full-screen app: pages no longer jump when Android flicks its bars; no scrollbar on front pages,described change,True,False,19
+b0ed1a63ff531a5a84e34d2d04fd3571e9391365,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+2dd04019110efe3af9bb57cea7ff0ed07ad701a9,2026-10-18,"Players on phones: no page scrollbar, theme declared up front",described change,True,False,1
+f6f21e99b5b9f26a07496a0ef26438d2d6b57c09,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+cca4396926a99de52e605a1e0f7c66e3d9bc195d,2026-10-18,Borders and Tangle card tiles: dark versions,described change,True,False,4
+da0d8543a7c1496aeddbe6adc95b23519ccb8433,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+b55247828a73cd8305125bbfeeaa631e915a5390,2026-10-18,"Finish sheet: no re-flow as fonts arrive, no focus or scrollbar flash on reopen",described change,True,False,7
+72d56ce7280de54cece7ba2c88f5f670d092c9da,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f2dda0f48292c7c2e7fb6d2e920e964a9f052b83,2026-10-18,Paper Planes: smooth the Skyscraper camera zoom,described change,False,True,1
+edc09f51a8f1d8b5897ee47b358295cb615699e4,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+5235e6650613714d31db99857182f71345262456,2026-10-18,Paper Planes: remove the ground tape measure (HUD distance readout replaces it),described change,False,True,1
+3600a2e072c9c85ead68eb5c69361a639ade74f8,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+534fddb7cddfde6e47f9a66cdb8e57f0b444ff3d,2026-10-18,Players: no flash when opening a puzzle in dark mode,described change,True,False,12
+aa0389fe2fd1ff2c49fb851ef11476a33b761f64,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+4366dfccb4a08b2fb97cebca71c2546c8e2ca8b0,2026-10-18,"Tangle: a reopened result says ""Your score"", not ""Time's up""",described change,True,False,1
+a86cb308f23ecdb93bad21821612077534d3b595,2026-10-18,Finish sheet: takes focus and is announced as a dialog,described change,True,False,2
+2d17d5b080d96a72295551ba10b7e5a1225b8e03,2026-10-18,"Players: mop-up from the design audit (tap sizes, Path thread, Doku bank, Sweep count)",described change,True,False,3
+1457df02f8b335ff4254e7a6ccefbdce77e40afd,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+681ca9dc5dc09cf6ae8cb2b83e1bae8d5688c5db,2026-10-18,"News pieces: dark mode, matching the front pages and puzzles",described change,True,False,131
+563a7b422854faa08794ad67238c7032be842ab0,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e5906560ec082a27927b64e8214937408345c8c0,2026-10-18,"Front pages: dark mode, so the site matches the players",described change,True,False,11
+b18f943f6fadd9eac5d58512e1b2b0f17d74a4ae,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+6b938617747866e1f58c590b7ab1deebc3185ea4,2026-10-18,Rebrand the puzzle pages: Path (tools/rebrand-pages.js path),described change,False,False,760
+223da987877c28ef5153051090323807c86ac17d,2026-10-18,Rebrand the puzzle pages: Sweep (tools/rebrand-pages.js sweep),described change,False,False,761
+f84537890c9d896f84fdb0ddb832a98d71dae206,2026-10-18,Rebrand the puzzle pages: Doku (tools/rebrand-pages.js doku),described change,False,False,747
+a2b780c8413530f7cf14fa29634daf74dd9e31de,2026-10-18,Rebrand the puzzle pages: Mini (tools/rebrand-pages.js mini),described change,False,False,764
+ee09b5be79de5080951728b85923805a4ec9131a,2026-10-18,Rebrand the puzzle pages: Link (tools/rebrand-pages.js link),described change,False,False,347
+01cb1a2e19a38f998cc6ae98c85d2d98a495b5f7,2026-10-18,Rebrand the puzzle pages: Borders (tools/rebrand-pages.js borders),described change,False,False,682
+4a7f8fe83567f8046fae6d1bb5a4b19c22a3a417,2026-10-18,Rebrand the puzzle pages: Tangle (tool and SITE.md),described change,True,False,682
+59f47b1efada26b4a3b96d4207b7e8d8a9c4987b,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+496dc6959e0eeaa513f9ab613da167102f8cb713,2026-10-18,"Borders: start card, stats, How to play, dark mode",described change,True,False,3
+e3a871737da1c7ba6f4ad095412b13015a48de68,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+74c9029cc35cc304df9e1445fdef5c8abede209c,2026-10-18,"Path: adopt the shared chrome (slim bar, start card, dark mode)",described change,True,False,1
+5281474bd3e3c50dd1a47c6faa2db6e3fcb14285,2026-10-18,"Sweep: adopt the shared chrome (slim bar, start card, dark mode)",described change,True,False,1
+51e44c23a3d858b225da383a1a21f8edfc8c1e1c,2026-10-18,"Doku: adopt the shared chrome (slim bar, start card, dark mode)",described change,True,False,1
+3f03c1973c2b8c73b610acd6e872f25a19467afe,2026-10-18,"Mini: adopt the shared chrome (slim bar, start card, dark mode)",described change,True,False,1
+f1ca8e4f2f990ab01b960ad1c9af069504caedd7,2026-10-18,Shared chrome for the grid and tile players; Link adopts it,described change,True,False,6
+4adc84a9814ef15e5d68b3bca382d81e23751f28,2026-10-18,"Tangle: start card and dark mode, as in the approved mocks",described change,True,False,2
+fe590be63c5bfef083bb7de4c878fa52622e3517,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d6dfbf5472b76bd2356e03fa7b0c8aa923adc86f,2026-10-18,tools/build-registry.js: keep the registry check in the repo,described change,True,False,2
+fdede95dbf1028e10e23bef9abcb4662dedebe32,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d54ad34a7289e94f5c3646e59fcfacc458ffeba5,2026-10-18,Invite links get a preview version so WhatsApp shows the new banner,described change,True,False,2
+bf03e07af0d9ddc9783e4b030aa68f063a164fd8,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c1ddf4367c4b3767895e1a7a437ebe775eeb4c65,2026-10-18,Puzzles page: show your overall run,described change,True,False,4
+475a66cd00c3e83cbd5ecb3518f2378e1225705f,2026-10-18,"Doku: its own streak (digi-doku-streak), rebuilt from its saved results",described change,True,False,3
+83f2030df0312b31fa247cc8f8c96e74f9f55d62,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+4e426628973b06b07a3d1095c21fac4ea0d4d1bd,2026-10-18,Leaderboard: make Invite people easy to see,described change,True,False,1
+d5d88ee79986752409b800d391ae11edd98383dd,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e8afff9eec02f2e6c7519edda59992446125a60a,2026-10-18,Path: result on the shared finish sheet,described change,True,False,3
+f6d3a19692c7eabbd1537b592e9fc953ea4fbb65,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c4449bc55282e221eb35535d108cf0b3426899da,2026-10-18,Sweep: result on the shared finish sheet,described change,True,False,3
+bfca5b7bd2ce47d6ae031f49624df4336872cb10,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,4884
+a8e8d2c951c4b7965e6ae811d797cad8fc5a8be7,2026-10-18,"Share banner on every piece, puzzle and game preview",described change,True,False,2
+eb6f19be5917eccaa9b040e45281e4f1367dbc95,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+a254d7818ac1444b40d929328a0d86389a734cb6,2026-10-18,Doku: result on the shared finish sheet,described change,True,False,3
+bbe9e2084830be58d17d1dfe176a39ca61354595,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f0897175681cc84f62e471cd7b6453ab6a1f607a,2026-10-18,Mini: result on the shared finish sheet,described change,True,False,3
+019498e3aeecda4a9292986f2ed2730b54bf0e25,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+26f4507e8012ca36e620ae930b5b35b03b85c312,2026-10-18,Large share image for link previews on the front pages,described change,True,False,7
+fabc2be24a0168f47a3bdb06c43f63149a2ccda5,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+5a2d5068f80c6411e5ef8d8ee29906b0dc2a5104,2026-10-18,Borders: result on the shared finish sheet,described change,True,False,4
+e9e1173f9be9035437dfc4f238aacd3f2b28cf85,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+af8d131ac09a5617393e609f6f23baf162fecb9a,2026-10-18,Link: result on the shared finish sheet,described change,True,False,3
+a3d93de22bdb9b4a3890cb98d3b9b3743b18173a,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f122174153349b61aa805ea793c9e394e169a3de,2026-10-18,Tangle: result on the shared finish sheet,described change,True,False,2
+d036cc5cd62c359b1b41fcc5c810b4167044683b,2026-10-18,Shared finish sheet: engines/finish.js and finish.css (no type uses it yet),described change,True,False,10
+207fbd3d7a62567bd5e213805e11726d979ed224,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c4a7b81a7763f399fefa1f26112d62faf0316ac5,2026-10-18,"Two Dots: launch from the Lab to Games (drop In development badge, set dn:updated)",described change,False,True,1
+18c284767785f9921bdf3c99b2359feabee3bc71,2026-10-18,Campfire Watch: move to the Lab (In development badge),described change,False,True,1
+e9e7f48afc626862f710a910b0dcb93f03239e54,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+cececc5597656c76c1950c2e0f1f7f254ab766ae,2026-10-18,Leaderboard: start or join another league from the league menu,described change,True,False,1
+81ed231cb92a1ba902aae869021c83f3c8616201,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f5ba13ad23eaa17a0916b5ea1b695172d5e01b10,2026-10-18,"Leaderboards: leave, remove player and close league (hide only)",described change,True,False,7
+ea0036e543a596343d29e7712df2bba1f462aea7,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+59786c9a70a684d9ab46a4bcd98e42783915f4c3,2026-10-18,"Leaderboard: tidier form fields (focus ring, nickname hint)",described change,True,False,1
+e9357bea7a81f9bba7e732d69b8ac1ec2ec2b294,2026-10-18,"Leaderboard: fix intro layout, clearer first-visit card",described change,True,False,1
+748e20872c2f49c2cecc795ed4b7089580d2251e,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f59d79764b385709aa93496858680841298056aa,2026-10-18,Leaderboards: copy in each player's earlier results on joining,described change,True,False,6
+e6c2f66c9b72fa6b8f29f43c63484b8b6a3b140d,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+20f41fc8e5ff9de9ea1175c5709d0cc4d84aad49,2026-10-18,"Mini, Doku, Link, Sweep: streak days are London days",described change,True,False,5
+4a14757692791b943a539a7d6e0f25f620c5e4bc,2026-10-18,Path: keep the streak (new key digi-path-streak),described change,True,False,2
+ca216ebebd3bf2e917f5ae05a7b0e3577449d412,2026-10-18,Tangle: Yesterday's answers reads thin pages,described change,True,False,1
+dc75cb1a4e4800e336775bc487f4522b76c1c3f1,2026-10-18,"Link, Sweep: a first result is not a replay",described change,True,False,2
+bb871d70eaebf338f55be94745c44d88cf58ea49,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+a603f2ad7b2d5c1ff902b28cfa1a795e73614f2f,2026-10-18,Leaderboards: private leagues with a daily board per puzzle,described change,True,False,10
+f0cb59739a8c865034ebce49770432d8de4390bf,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+9a2d4abff06e243d3e1491ed3c77ab076624afce,2026-10-18,"Tangle: 317 new days, 2027-10-05 to 2028-08-16 (Tangle 364–680)",described change,True,False,318
+61db46284a94a07b18f43f5429d508fe4f386857,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+359caeb34e6ac69cbe3e29d5a28569d2832251c4,2026-10-18,"Mini phone layout: clear the gesture bar, smaller Share button",described change,True,False,3
+6cae31aa5509f836b29567fb949a63051341cd7b,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e26ce7dfff1b935d18ba51bcb26c5bc975b706b7,2026-10-18,Mini: clue bar above the keyboard on phones; Noodle branding,described change,True,False,768
+0ffce9703d1d0ee501851934fb7128c4dbe77ab6,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d90171e74fc84cc9667352e9a31e11393d4d62ec,2026-10-18,Share button on news pieces; record home-screen installs,described change,True,False,133
+777d0e6285486c7196b191df3d1e7a98b4b43ddf,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+196b828d1d594e5e4c066ebcfb81ebd751be8644,2026-10-18,Rebrand news pieces and toolchain from Digi News to Noodle News,described change,True,False,135
+ea3568a850b0b126fe8a7cd92a9d9561c614b7ee,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+37cad9e6668fb654f09d7d5b4b072c4335fcbcf4,2026-10-18,"Link: 50 new puzzles, 2027-06-02 to 2027-07-21 (Link 298–347)",described change,True,False,53
+668464155a86b1824dc1f3b7f8f3cc49241047a6,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+787315c8e9de5ef7490ad95e1fb39534581d358e,2026-10-18,Trigger first deploy from GitHub Actions,described change,False,False,0
+9dec47cefa4d9e7aa2e9d1ab09f0a254ba90b596,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e6f9d3e35ec48e9678ad2fbe70a2380fff13557d,2026-10-18,Deploy only released files: hold forward-dated puzzles off the live site,described change,True,False,6
+54e9f6afcf254b4c3c415609386d6788412187e3,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+de37d9fa2500d36b20d972ffca4de63cd9351c10,2026-10-18,"Add link-preview tags to every piece, puzzle and game",described change,False,True,4516
+f9bb8f89ff53d3bca3661bca8e65bcd254da6e04,2026-10-18,"Tidy and harden: Lab tracking, build push retry, link previews, 404",described change,True,False,15
+a9b70fd0c3ef1eea66c33b72c3aa85196937397c,2026-10-18,"front: soften stat tiles — accent wash, no ink outline, muted unit",described change,True,False,1
+5eca9fa86d46ba34b8b4c6b938e88ce37a621a0b,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+98e5e5fd7d41d956948740b5d15e801b4e5a3ca6,2026-10-18,"Two Dots: Glass sound, world ambience and layered music",described change,False,True,1
+ba9a61899e37edba451d82ca018d24f09f2b1a3b,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+2539953f7013765584cfccad44d9a0e6ecde75fc,2026-10-18,"Borders: 317 new dailies, 2027-10-05 to 2028-08-16 (Borders 366–682)",described change,True,False,318
+d23a12803cfbc9a3e0caf1f8edfc4536ef79d39e,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e2c09a5ba86305598bbd45094e29c9d9ab6e9575,2026-10-18,"Sweep: 366 new dailies, 2027-08-17 to 2028-08-16 (Sweep 397–762)",described change,True,False,367
+a2e0e56a534539b183f01117c30b60a90da4cbbc,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+1c108d98f885f3efa4270a4a8b06c063d63ca86d,2026-10-18,Two Dots: rebuild Jupiter's ground as Europa ice,described change,False,True,1
+ab292e653705c59068dff26906a89bfb8f24b3ec,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+70bcb4b624355c99edb26e34f8910ba80172d037,2026-10-18,Two Dots: remove the cliff at the Moon ridge's repeat,described change,False,True,1
+2b7d7e62fa70ebedc6f2632861fbaa7b10be75ad,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+07aaa0e315e72e066afa4436c9544fe57622c729,2026-10-18,"Paper Planes: swooping flaps (approved option C, meaningful update)",described change,False,True,1
+7a4d6546f3ef0a8061cb7898ca47df2f8168c39e,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,4
+7feb11e2972ec100519bbb3cf4ef7627aeb966f8,2026-10-18,Rewrite 18 Oct news pieces to v5 standards (v2.0),described change,False,False,3
+ba0d65d1833845ca4d25102e2ad4202be551a2e4,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+65954e8086f6b4786de7974c18bc8bcfa5fbad4c,2026-10-18,"Paper Planes: lower the Mountains ridge from 24 m to 13 m (approved, meaningful update)",described change,False,True,1
+3a12ac94e0734043ebf93927439d17c85e9361d7,2026-10-18,Paper Planes: round time counts aiming and flying only (approved),described change,False,True,1
+f5a750e55ee8f1df2cbd8e105c829e35efb73e18,2026-10-18,Paper Planes: Park 42 -> 36 m and Beach 55 -> 48 m (approved),described change,False,True,1
+e3ffacbe36ab8f1bcc61ac4c839fb727e474442f,2026-10-18,Paper Planes: Village green target 26 m -> 23 m (approved),described change,False,True,1
+568ca4a2b1edc5104ba65085ad2b72dd08db4c42,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+a75ef9c7a62a1f7d852715612232096512f48a98,2026-10-18,Ancient Cities: new card standfirst,described change,False,True,1
+12a84b81f5b63414a6703067352b8111d7754cdf,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+6a92fcedca512a1158bc6718aa3ebf9fa8d29cee,2026-10-18,Two Dots: one tap on the result screen starts the next run,described change,False,True,1
+fbbd1361d993a27cbd6d39a2c30601f06cb88a1a,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+01695a74114a4663484d71f78fac1d455e091139,2026-10-18,Mini/Doku: replace pinwheel layouts (2028-06-27..2028-08-13),described change,False,False,8
+d441db619a6382ad2bc0cdffd8752096e33d7cda,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+b6aee24db324ecef71a3869952a0a76868783b1f,2026-10-18,Mini/Doku: replace pinwheel layouts (2028-05-26..2028-06-27),described change,False,False,10
+32933fbdc53de73945082882302e8a2ceaa07254,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+eef58c1fba872cadc60f54fd62a07430db2841ac,2026-10-18,Two Dots: show only the world's difficulty on its card and in pause,described change,False,True,1
+8e40c9715ec2bba615f6c5c5c028decc901ee1cc,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+dcb2056164929004e1e826b4d68d3792a2b8ca0a,2026-10-18,Mini/Doku: replace pinwheel layouts (2028-04-16..2028-05-23),described change,False,False,10
+fa17b43efe69d2b1273b69e758b433618c382f7f,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+bf4561c9c6a26db55b49f968c616c08799591a83,2026-10-18,Mini/Doku: replace pinwheel layouts (2028-02-26..2028-04-14),described change,False,False,10
+eb49b841c6c15a30e68b3c00e3b9535c7020f524,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d98631cf0a17f5f33d8e72f426aaa90ee13a3900,2026-10-18,Mini/Doku: replace pinwheel layouts (2028-01-24..2028-02-23),described change,False,False,10
+2dff0a5ac939ffb7f0a1c3125df2ed5663fe6b1e,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+7e2179de46e6a30059bc087e66a63707ebb5e809,2026-10-18,Paper Planes: a held throw key no longer raises the flaps,described change,False,True,1
+0c96f5bc40d90f163053c89697b8b1c857fb3784,2026-10-18,Paper Planes: small labels to AA contrast,described change,False,True,1
+a4b248f9ba02572b03fda930d99d1109fc586ca5,2026-10-18,Paper Planes: LAUNCH readout follows the drag,described change,False,True,1
+3a201ce505deb019e323e8b65a228a4e3b897270,2026-10-18,Paper Planes: resume menu's hangar button keeps its name,described change,False,True,1
+3a2ef1fca4fb72257bdc6dfa2ba6a5bc8e96b73b,2026-10-18,Paper Planes: pause card fits a landscape phone,described change,False,True,1
+9bb73b4e3429fa23789385dec1b55fd25240a8f7,2026-10-18,Paper Planes: hide the upright banner in flight; stack the hint above it,described change,False,True,1
+9ad5d4a09946f8e2882a03a1dda000ae1fa96f16,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+5e7ce405de36058f49b52e4ffc3ecdeb9bb5db66,2026-10-18,Mini/Doku: replace pinwheel layouts (2027-12-06..2028-01-22),described change,False,False,10
+09f0cf9548bc09468e7e4ab4613a577c51fc4e7f,2026-10-18,Two Dots: correct the build tag in the head,described change,False,True,1
+feb722a4c13413dac3fe7c5a6c8f99681a6f45a4,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+9d4027ff4fe1621a9170597900ec27eb3c25c71b,2026-10-18,Mini/Doku: replace pinwheel layouts (2027-10-30..2027-12-01),described change,False,False,10
+e94e50b6330b4a16da7c6a4880a7846eacacd055,2026-10-18,Two Dots: hold pulsing UI still when reduced motion is on,described change,False,True,1
+4b4c2559be202ef53ca07e26f2d5757a1a8b2c9a,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+46782de3b7d43e8fc8380bd43cc9a295ab4aa33c,2026-10-18,Mini/Doku: replace pinwheel layouts (2027-10-02..2027-10-27),described change,False,False,10
+c71296727119cfb05120d9940f46812058242fa3,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+f5f70d13524f85cab6820d88b724be7947747f99,2026-10-18,Two Dots: keep the score and pause button legible on bright skies,described change,False,True,1
+549d2195b5214fb55e2c8e6a9d4088317790eeb1,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+bd3c83c995d66c7a4b634779a9df2e1d28147231,2026-10-18,Ancient Cities: test hook starts seeded rounds on the level's island,described change,False,True,1
+2aab0102a12af2870b447906ca00fac1afaba551,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+4677a55adf28df707d5c23def3b9c41b495c1d8c,2026-10-18,Mini/Doku: replace pinwheel layouts (2027-08-29..2027-09-30),described change,False,False,10
+3a5a7bf96cef12006dbd51f440c8d1fa6c00d64b,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+14855073e9f89ddbe7ae034ba52053200686da27,2026-10-18,Two Dots: play the haptic for every fifth gate,described change,False,True,1
+8ded0fb92a8bb1720629d632f5c3f98f7998deec,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d3d6d54ce09198925778eda698c6c7df6ddacf54,2026-10-18,Mini/Doku: replace pinwheel layouts (2027-07-18..2027-08-28),described change,False,False,10
+9e6c20ac820314765a0f81fc3adfbc9c74aaa6b0,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+6ec1b9cde513f3b847884cd2d9df5bd1afdc5391,2026-10-18,Two Dots: say how to carry on from the result screen,described change,False,True,1
+18f3fe9095ca656f6a0c5d4521c6f3c7da643604,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+cbe67149002c0bd81b1954a2eeb43fd566814c3e,2026-10-18,Mini/Doku: replace pinwheel layouts (2027-06-19..2027-07-16),described change,False,False,10
+d760d45e4968476cc91c0d93252605afe1896aeb,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d892904854bd29c6e57333662ce0e60aa8a89407,2026-10-18,Mini/Doku: replace pinwheel layouts (2027-05-23..2027-06-15),described change,False,False,10
+50930b64171e1d7f261d17a37c32692f83cc39b9,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+77fddf953ac050ed1c54018f913a47d3c5a38b1f,2026-10-18,Two Dots: stop a death tap-through from skipping the result,described change,False,True,1
+2d7f761e9fa29502469975d1ea7afcc17d5c2db7,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e73cbb8226be1f1c943f3901ed7eef5a4417714a,2026-10-18,Mini/Doku: replace pinwheel layouts (2027-03-19..2027-05-14),described change,False,False,10
+a2712bbb319853a47531b7d120d774c9d24c555c,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+18d8590695dcbbbff91b8cb7568deeb5eec38a58,2026-10-18,Mini/Doku: replace pinwheel layouts (2027-01-17..2027-03-17),described change,False,False,10
+7fcd69f96cc9709a2ca943777868b3f8203d83a8,2026-10-18,Ancient Cities: 44px tap targets and readable low-contrast text,described change,False,True,1
+157f76ceda390a63cc949588cd6e3b8841bd79a3,2026-10-18,"News desk standards v5: news spine, context floor, explanation search, Medium default",described change,True,False,10
+64bcf59b69b5550e2789faad72baadab32010bb0,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+5b7039964a4096fea9d03954a4338fa402384c94,2026-10-18,Mini/Doku: replace pinwheel layouts (2026-12-16..2027-01-13),described change,False,False,6
+cd8657e32e2995678516c0cfca7c8d3d81de94f6,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+a8861c9c4ced08fadac70abe69cfe4a8f3d9f086,2026-10-18,"Ancient Cities: fix stale wording (tutorial unlock, Grand Market, house markers)",described change,False,True,1
+376f176ef828883f77ab243572630ae9523053c5,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+1ff3d0a35a4103f0b8653a72e36eb2c2dc68c8a2,2026-10-18,Ancient Cities: stop finished rounds coming back as Continue,described change,False,True,1
+dddd7c2ee87f1ca40f7e24884e7e793a946bdd7b,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+987e2c9a6ed275c99aec409c7c4b73d3e1b2b6e3,2026-10-18,"Update 2026-10-17-arcade-paper-planes.html: home screen spread into heading, route and thumb zone",described change,False,True,1
+794ed6342abed47fc3d0db9c474d334abc4badfd,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+f75daa60e28dcb5ca87c0b76644fce1a2c9fb1a8,2026-10-18,Update 2026-10-17-arcade-paper-planes.html: calmer home screen,described change,False,True,1
+19ada96b32a1f4bab6cd6ce9045805b142c3a151,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+3868f93625ba0ff6c5dd8ae55b2e6bfb1200155d,2026-10-18,"Update 2026-10-17-arcade-paper-planes.html: home screen polish, hints out of the sky",described change,False,True,1
+bcaefa1f4ddb62e046337f9405ece2f3850973aa,2026-10-18,Add SITE.md: one place for site-wide facts,described change,True,False,2
+46bb556b9c4017a56d96ac10498b197c8816cbaf,2026-10-18,Front pages: fill the camera-cutout area in full-screen app mode,described change,True,False,6
+a9890063dba3897e9489c23a37b243791935cf2c,2026-10-18,Create CNAME,file operation,True,False,1
+e061871e6116206795eb8da096487cf43110213a,2026-10-18,Tracker: leave the old-address side of the move to the forwarding repo,described change,True,False,1
+c4f04b854a3664edca370ae96ff27ac9b574b106,2026-10-18,Rename to The Daily Noodle; point docs at the renamed repo,file operation,True,False,10
+c44c2a482127b9d85cb22c77f9c5a7a8bd2c926f,2026-10-18,Carry saved progress across the move to dailynoodle.co.uk,described change,True,False,2
+14c91df13a2f28d2a7cf968a89e400d56a454c6b,2026-10-18,Delete CNAME,file operation,True,False,1
+1cb6d99cfd4aab57d6bd780ec176dedb32a0e7ba,2026-10-18,Create CNAME,file operation,True,False,1
+39ff9f0d67be2e3776a370e4f3391926333d6d69,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+8d166a8a0e4302035bda2bbe42b1d083044911df,2026-10-18,"Update 2026-10-17-arcade-paper-planes.html: two-thumb flaps, harder glide, lessons",described change,False,True,1
+4f123206c78b78cfe6fd4257a5b3f1da3bf67b65,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+b55f3d3122e5679c8a6b3beb0a384ecf1e0487d5,2026-10-18,Update 2026-10-17-arcade-paper-planes.html: flap-based flight physics,described change,False,True,1
+6e9c979d094872bb113bce897fd3832408ef31ec,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c5cf4234afac6af62a34efea4c863567d4e0b2dd,2026-10-18,"Unassisted Paper Planes flight, loops and stall feedback",described change,False,True,2
+6df28d743d2b8d52d8a638f5c9c893d76cf36c3d,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f085c111527f1ae22ea11732413693a796566db3,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+4cb125313a6d546c07d7213e6602327093d21f0d,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c9190ad85ff56ef60315b5d1bd40c5b09ad2f86a,2026-10-18,Improve Paper Planes controls and consistent flight feedback,described change,False,True,2
+bbcba387eebeed500107eae20ceb3665d2eb99bc,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e2a43fd8a401aede000a25770c0dfdb007da2f0e,2026-10-18,Mini/Doku: replace pinwheel layouts (2026-12-05..2026-12-09),described change,False,False,6
+2b8ef4038181ab996adaf9dbaf9ba8e9e685408a,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d59a9c8e4683d2773dbe4f14d2c1eb32f2444dcc,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+d1c15d1bd24ab6e7ffde68ae34263b44b5abcaaa,2026-10-18,Add 2026-10-18-student-visa-grants-peak-fall.html,described change,False,False,1
+d68bfa6620299f601eff0a1f64e7603ad0e2bc89,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+4b75f52afbef068ba4e252997333603ec8c50ac3,2026-10-18,Add 2026-10-18-health-care-visas-new-workers-fall.html,described change,False,False,1
+2b296b7afa496fb41ba2bd05533fd1d814adc9e0,2026-10-18,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+faa2d6ef1c5b3a3e6fc473175e41e803ac13fc68,2026-10-18,Add 2026-10-18-nhs-galleri-late-stage-cancer.html,described change,False,False,1
+48fc46254c380e17b711ca9b766758ad8842a086,2026-10-17,Lab: switch accent to raspberry pink,described change,True,False,1
+7d4a83e5ecaec746be7587c92af5ffb9d0626c44,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+d20699a3d33eca4ba6e09e5a95b0a10d85d84c1c,2026-10-17,Add files via upload,generic upload,False,True,1
+dcf0794d82dec3a591e47e546c4cba318ab3fcc0,2026-10-17,Add Lab section: fourth pill lists In development items; hide search,described change,True,False,7
+95e4ff536bfabc3ba28fd91b38faf2dc65c1604f,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+e62c575ae584be0f93fa0503d5198acba85a5609,2026-10-17,"Two Dots: closer dots, taught opening, quick world changes, new Jupiter",described change,False,True,1
+ff3bcfc9341afe1c5b54cebe7cce86c0406d62c7,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+a94504b4102e07688322205a96d6a8be27d0707c,2026-10-17,"Update 2026-10-17-arcade-paper-planes.html: art, handling and balance pass",described change,False,True,1
+734335cf398f078e3f38c30ca1008217597d588a,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+10879c61c1aae2169f48b8e11bb3e5d7d8d13712,2026-10-17,Rename landscape Two Dots to Two Dots; remove portrait version,file operation,False,True,2
+b7db77ff6ee20d404683fc0408913b7c6b64bf71,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+5ec6a170d8e2053762846b23ec319e47210e51d1,2026-10-17,Add 2026-10-17-arcade-two-dots-landscape.html,described change,False,True,1
+f73826b4cc37726576bb28c379d3b1b8969ef1fa,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+5dd162c9c6cb7d72751cf2d76ce71a04ec11aa53,2026-10-17,Update 2026-10-17-arcade-paper-planes.html: add In development badge,described change,False,True,1
+e0d60e16396c7bfd1697ae6dd24e50eb30a8ab32,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+b8eb25930cd6942a8afd165c7b950f57e5193d2a,2026-10-17,Add 2026-10-17-arcade-paper-planes.html,described change,False,True,1
+1fc1daa4ec89f1e84f23c6f69b585c4f31d0cea8,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+246d4b72b315f40e7bdeee36d9c9797381c153bd,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+7640bdc7a65f7808de04f1b030f10955b85bfbf2,2026-10-17,"Mini: rare word tier, per-band cap, crossing rule, +754 reviewed words",described change,True,False,2
+d5483089443fb5f92cff702f209211320eeb308a,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+11b857c131e70f44b988bdc9e57dfde4b9ec097b,2026-10-17,Mini: add 330 everyday words to the word bank,described change,True,False,3
+c856e3a62c6f564440095ceb9553e37f6388c595,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d8ae7c1ab93fa0896d77ab1f5d499e53901cf190,2026-10-17,Mini/Doku: replace pinwheel layouts (first 30 days) + add pinwheel-regen tool,described change,True,False,18
+1b17a7360c098589dc23da18275089443ebb4287,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+784b6032b0e74f9cab2f137d9ab25445cf904b96,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c8d0bfbd98cc111a50de28699aeab8d0a5559ce4,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+114e1d43633166138be3929114fa489b076b8111,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+8304fcc199dee0e55f1575a6f64c59d732da78d9,2026-10-17,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,4
+b8c5db0f1a1a2e12e1c7e7978247d1d1197b8840,2026-10-17,Add 2026-10-17-uk-september-rainfall-england-dry.html,described change,False,False,1
+ee79929b147eb9b38868bf9176677398f2a5d6ef,2026-10-17,Add 2026-10-17-uk-gdp-august-slowdown.html,described change,False,False,1
+9cd734d584f6c15ff8dc541938e93540ca230f98,2026-10-17,Add 2026-10-17-uk-electric-car-mandate-gap.html,described change,False,False,1
+0eb26954ffcb9e84ae2de9cd3e39eafd451dd7f0,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+3df803af9ced089dcd4630cad0c9c026607e032f,2026-10-16,Campfire Watch v2.2: board redrawn as a night scene,described change,False,True,1
+bc9325eff66f8cb8ba4f463a1a8f1002c2e7eb41,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+02c67c9682fdf1d451ad1f14a6ce4029078f81ee,2026-10-16,Campfire Watch v2.1: one-screen layout and animations,described change,False,True,1
+83fd0834d3a9d8d46485dd9eacf59d1a08e4bffa,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+e9877b7cb02cd69dffe17d59dd9e406d840d512d,2026-10-16,Add 2026-10-16-strategy-campfire-watch.html,described change,False,True,1
+f29fd17d957644f50f51c01452f39056978be36b,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+4148988c56f1e27eb63c68b93be9aa5c17df0ff7,2026-10-16,"Ancient Cities: keep sharpened standfirst, finish pre-island saved rounds without a limit",described change,False,True,1
+8eaa0d82ec90e9cbbeb2d88899ae61129d0c4915,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+f9a8474c6514f1fed9497eee31ca89cb56d8a45a,2026-10-16,"Ancient Cities: 2:3 islands (Small, Medium, Large), Grand Market island picker",described change,False,True,1
+7aa95daf698887aa8e7a982a1aa3c6a045f53b54,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+897c3b2faf258a8d94a23754d1e748060cc4a894,2026-10-16,Borderline: embed its own card thumbnail,described change,False,True,1
+c174493702fd7d576133269d4a2adbcbad607df2,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+bd3fbada6ae1904757278769346c50f3e3a167c8,2026-10-16,Sharpen game standfirsts to fit the phone card,described change,False,True,9
+7d5cf767926a9db78218de4b519aee2d4ad34cb9,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+35ceeb27f9b550c7fef09659aac3ede7bd9f9884,2026-10-16,"Ancient Cities: authentic Tenochtitlan styling, chinampa crops, walled wards and bags tuned for finished cities",described change,False,True,1
+f1dc007563c612975d115b610c17ca9c6dbf378f,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+e91f002b417c8a7874c90dd69082d05f84d6fb6e,2026-10-16,"Ancient Cities: Market Day level (fixed prices on level 1), tie rule in tutorial, see your finished city",described change,False,True,1
+ebea98a76e181983c08caf43cdbf384b92d24132,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+bca5d09364212fbeebec6003f7cf525d0969e482,2026-10-16,Ancient Cities: clearer sale explanation in the tutorial,described change,False,True,1
+41c594a5696b9a74f176a296ccd5dec35f2766f2,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+b90e4209ff1932c2b3460c1213301c122e84d812,2026-10-16,"Update 2026-10-16-strategy-ancient-cities.html: paper board, house markers, guided tutorial, shorter early levels",described change,False,True,1
+4187e86d775f9b58946f60d1baf64b9a7450ac9a,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+6f59e5d3999d19473c5446879411f222e2ae5f5f,2026-10-16,Add optional dn:badge card label; mark Ancient Cities as in development,described change,True,True,4
+4903b12b7b69f9103ceced5ee332ea48ca99779e,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+ec3b31b530fbe130ac697f0d25b67494593862b2,2026-10-16,Add 2026-10-16-strategy-ancient-cities.html,described change,False,True,1
+5357f2864b7702d1d7cd916cace2574972f705be,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+5f41860fe22aae152a546373d18b6f5059f660ba,2026-10-16,"Update 2026-10-16-arcade-two-dots.html: shorter transition, smooth fades, no tile seams",described change,False,True,1
+d88b1dd010d7cd4d6f1932bf590f127e8855f4b7,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+ea42268e3bac28d61108393a410356f03477afe8,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+b257567d913dd62c3fb875865d1d9ab30b002b25,2026-10-16,"Update 2026-10-16-arcade-two-dots.html: wide lanes, pipes wait at the edge, narrower transition",described change,False,True,1
+5d284c947089fefdd652a707b39cb86223e920a3,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+0e750b6d0c24ede464c311b8efe2c9aa9ead8ec5,2026-10-16,Add 2026-10-16-arcade-two-dots.html,described change,False,True,1
+0c5b8e40ea8a1476cd438403069b909d9b71cf79,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+049323836ac5f746030000d3bbfae80fe23c1ccf,2026-10-16,Update 2026-10-12-strategy-archipelago.html: soften open-sea ramp,described change,False,True,1
+617c4045392014cac890399edae613c3b4f201e5,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+14f6feed2cda4ff5d24602e5690514b2480d223c,2026-10-16,Show puzzle numbers without leading zeros,described change,True,False,58
+efecbb9045b00f02cd718170a9dbbeef9be80250,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f6f21c828ea5f22f27e3a2870fb9a08d6638ca6f,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+eed822b910e97e34152c6b35bdf7a27a55a0d3b6,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f88805ff3fb8c52f84b339f6e22b7d74ee34a6e0,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+3a2cbd6e192e391396ab56d6a2cfba0a1be2d150,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+984ce02fbafd60939b8b3e70fb6bc0d5b4900c28,2026-10-16,Add 2026-10-16-prison-population-recalls-remand.html,described change,False,False,1
+bbd066bc8f0b3511f0aa0e8bdccc7503bfcbf194,2026-10-16,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+e783eb38a0f703dcfba0657b3522cb49f2e37a84,2026-10-16,Add 2026-10-16-finland-spain-unemployment-converge.html,described change,False,False,1
+75d133f3b58104a99e00b95eedd6216f0ce9ac8a,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+02650f6fcae78946d197d0a68ee4075a9bd921e7,2026-10-15,Mini: regenerate 18 forward-dated grids that repeated answers too soon,described change,False,False,18
+386f1cad9b72b00a40b41c931f81365df040c3bc,2026-10-15,Doku: remove grids whose layout forms a swastika,described change,False,False,561
+3afb03178d8ce6f164a2d9c97f1abb9cffd0b636,2026-10-15,Doku: remove nine forward-dated duplicates and redate the tail,described change,False,False,381
+072660c7b005d7361d20b972feffa34eb70ab97f,2026-10-15,"Mini + Doku: delete New grid, Play again and the band picker",described change,True,False,1526
+8be3a2860f7a22c0c755d7f34d8e14ec2bcdad31,2026-10-15,"Puzzles: trim controls on Doku, Sweep and Path; hide build footer",described change,True,False,8
+ef435bceed8f9e3aa8fab7d7a67b332ff7909aee,2026-10-15,"Mini: trim controls to Check word, Check all, Reveal word, fullscreen",described change,True,False,1
+748ae538f03f72e2465c727525b4302a0e994f95,2026-10-15,Record insights RLS migration,described change,True,False,1
+6448d0d3884f7a69786294cb7a16bf5d5b25db6e,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+411955cf5432e6eaaa3e57d89bb6b8ec19f12c73,2026-10-15,Add 2026-09-26-arcade-bubble-burst.html,described change,False,True,1
+1abbc8c894f795973ccee3fa886747327856a440,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+2e052c2e6c1a44bb7d0af79eb7d5437024bdd2dc,2026-10-15,Shared engines for every puzzle type,described change,True,False,2915
+e390bbab3dbee9f993f8a052ea8ed4a445a89fd3,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+17461f0951fe19dedb4b5e12162973b99df828e9,2026-10-15,"Mini engine pilot: one shared player, thin puzzle pages",described change,True,False,768
+d8df6fe8078591cc1d6f4462858e70d136df3b23,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+dcc16fb31190521ed1b7458f59146dbbdc9b19ca,2026-10-15,Add 2026-10-15-quiz-ballpark.html,described change,False,True,1
+feda7e471a3041b54f08d37b6ecaf5348a0a75eb,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+28164a6874106e35e5504747e30fef94ef95cb65,2026-10-15,Puzzles: one-line emoji share text (digi-share-v2),described change,True,False,3343
+e286b53bbb17a8f526ce95bbed04c59fec5d1edb,2026-10-15,MI audit fixes: tracker v3 and admin dashboard,described change,True,False,4
+11cbc69b981d061c2b7afab080ba0eb28e15e506,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+4287ed68d9ebc2529eed4fda6da76a3a51778eb4,2026-10-15,Add 2026-10-15-quiz-ballpark.html,described change,False,True,1
+9b82551658340e38c90a55e245338bed2fb5f269,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+936856f5ed3a6a3eb3765fb70f259c9a25c1d50a,2026-10-15,Add 2026-10-15-quiz-ballpark.html,described change,False,True,1
+ded09a8bc503a9023536f08b63c58e44c7db98bf,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+4d4eb7d4ee9cfc1ae942f970b014e55f0bfe59f1,2026-10-15,Add 2026-10-15-quiz-ballpark.html,described change,False,True,1
+24289a86e21ce383c12b6cb795a4d4baffc14289,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+ffed2d935100613e71493bdfd77e08f62398f58f,2026-10-15,Add 2026-10-15-quiz-ballpark.html,described change,False,True,1
+f5daffd1737ea43c58d1228de1caed3c025ce6d2,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+0e1bfa7f6986642cbba838c25a2954a0ccc4ac1d,2026-10-15,Add 2026-10-15-quiz-ballpark.html,described change,False,True,1
+a3f070195367b071eadefb607ef8a5251c6d4bac,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+11f54174aae0ea653c344a220b3ee9dbc25793e8,2026-10-15,Add 2026-10-15-quiz-ballpark.html,described change,False,True,1
+54d47f519d19ea0a86bba4daa2aba17d2be3d803,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+3132e30d2c2c65a36b5e4dcdecf7af9af2207e44,2026-10-15,Add 2026-09-26-arcade-bubble-burst.html,described change,False,True,1
+30b119ea88e1c211758b35a25432dd27d4cc88b7,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+b2be27b7c5b7cbde0699c1f04746657f81e219b1,2026-10-15,"Update 2026-10-15-quiz-ballpark.html: reveal polish (no nudges, guess vs answer), layout for tall screens",described change,False,True,1
+a1a49b64d7317a388b8d870420c92ffa28cfd4e8,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+66adc2c27e298589e2a39486afeef675a5fbca9c,2026-10-15,"Update 2026-10-15-quiz-ballpark.html: 40 questions per pack, 2-decade scale, gentler scoring",described change,False,True,1
+5001e10f152a3d65b23bfa8702c623f1d87d9e31,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+ca3dd2dfc6403d0fbf2f739ad77fcaae95042ece,2026-10-15,Add 2026-09-26-arcade-bubble-burst.html,described change,False,True,1
+7be2f5a67b44db68cea5da7fe5a9ab943659578e,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+148135aea404dcc08871d09224b171596a3ccd4f,2026-10-15,Add 2026-10-15-quiz-ballpark.html,described change,False,True,1
+871935024783067afc6f6dec10cabddd0c70261d,2026-10-15,Web app: open full screen instead of standalone,described change,True,False,1
+83db98329533f33ae7ad667c52b3e2097c63e394,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+fc6b6519abaf24f7a77f5a5853ab079d78eac957,2026-10-15,Tangle: 3-2-1 count-in before the clock runs (2026-10-16 onward),described change,False,False,354
+3f4f78b7d4f390819b3467ab6168e1f884c07df0,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+6f3367b38ba1f005cf81e695e3c80985654ec19f,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c6e8255a1118f82ac896752ea0b5584411870b31,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+75ee8a18c5c0a797e9afeb2acbe4fb42abacba97,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+45dd6c8529abbb57af0e6e07d61c17f0488a2d8e,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+95dc41e9fbceb7af6777003e46b834fb2fa7e128,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+c32e5b906ea6403e75483d94caf53ceeef39d295,2026-10-15,Add 2026-10-15-nhs-waits-benefits-ons.html,described change,False,False,1
+d56c794f4961f5e32f73f4935f698ae6fdd44a23,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+18f77edb317b5d6b98b6aabc5cedfae1df4dce03,2026-10-15,Add 2026-10-15-fao-food-price-index-september.html,described change,False,False,1
+376df0368fb8751b0a6b2a00e870860747e7f3fc,2026-10-15,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+9f9c111eb7b7005ec7e0c67258f74b7edd90b0e3,2026-10-15,Add 2026-10-15-suicides-registered-vs-occurred.html,described change,False,False,1
+6f924a1ecaa71da1221628b668fcf5829fbae995,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+3f5294ff5ecec9a1d1ed358d23aafbc52a64ab71,2026-10-14,Update 2026-10-12-strategy-archipelago.html,described change,False,True,1
+571763134ad09e54576e16d63bda44e584e6f9b6,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+208085aa14dcb50897f7ee9e59b6a0cdc1991d47,2026-10-14,Update 2026-10-12-strategy-archipelago.html,described change,False,True,1
+3b11ff3d398f8620b5345b3ab91b20093dcddbd3,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+a77fdf159efadf7fab903eb4769f95b19e9a8172,2026-10-14,Update 2026-10-12-strategy-archipelago.html: daylight look,described change,False,True,1
+7ae5ca26a16f961af22b2a9a6354f7ccec83cccc,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+aeb10ffca1b13d317e27802bf91f999fe9097cae,2026-10-14,Update 2026-10-12-strategy-archipelago.html: fill the screen under the iPhone home bar,described change,False,True,1
+020162fa10009f37291efc23eecf1a5ec0e6642f,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+720aa67ada8fc0403a75b25a7bdfead5d84c1337,2026-10-14,Update 2026-10-12-strategy-archipelago.html: UI review fixes,described change,False,True,1
+ab1698a50b7232909ec08e23a9df781f3a4b41d2,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+387ebe60b86264756e49b49c444917813dbacfee,2026-10-14,Update 2026-10-12-strategy-archipelago.html: the open sea,described change,False,True,1
+806387a7ecdc105bcbcaa86fa34259b387cd45f2,2026-10-13,Add home-screen app icon and web app manifest,described change,True,False,12
+b2e54fa3c5b3c3f3379b30a6c75f00d64fd6603a,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+cbc9508ab6f6e25e8ac8a6026780448d4b5d09f2,2026-10-14,Update 2026-10-12-strategy-archipelago.html: shuffled deals,described change,False,True,1
+0ced3b2dd05b4e59efbb32d8338cb2e95d924c55,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+b31aeea30f021e6253cee4ba1936039ce8b420dc,2026-10-14,Update 2026-10-12-strategy-archipelago.html: attacking ships no longer hide troop badges,described change,False,True,1
+d4257ed2f8b77f360882953a74511d845409d431,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+cf4d28a4510069f59d551c66ff0aabe2f95f2431,2026-10-14,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+281c23385f79d70dbe2eb389cb2ec9e90871db1d,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+7802ddc75a31c5ba20daf996263e30a2fdfb8960,2026-10-14,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+373d663a6cec5cbb2137fee7b81fcd736a392e35,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+1df68cd36d26ab0d1021d27421bb1c0a23b0f0df,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+3b983a6f5cfb8d6acebcaa766235a6a7b1853649,2026-10-14,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+f26eb60d1ef61ef9dbd950be525966902ac184df,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+8a75447404b62b711229ac6a97b3cbee808746bc,2026-10-14,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+d87a0ecbdd6b38998803129a0892cbd2b41a72e5,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c25bf0fd25599c81bb3a56f190155a0e603c6a52,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+6293028962d5283adb79dacd3f3efab9d8824e29,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+bf9bb22c9a106918d57af1a2e3a745e01859f788,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+88f79425255d562cae18a2b2b76c5e368c93fc5f,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+dcf69be36f766bddd71108b87e3f0eb64eede4d3,2026-10-14,Add 2026-10-14-england-mmr-second-dose-coverage.html,described change,False,False,1
+a2ab63b261c72b77809daac76a230e2c81049366,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+9d1f0556e34660f60bba84b474b8e292822aad34,2026-10-14,Add 2026-10-14-uk-industry-concentration-weighted-gap.html,described change,False,False,1
+281e927ba263061061e50954d4c7ea0a2d6b2f93,2026-10-14,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+f00a82dd4150a3629eba8bd6d78838deeec766c0,2026-10-14,Add 2026-10-14-farmland-specialist-birds-decline.html,described change,False,False,1
+e287d07cdd03c42263fa6c57a44dd705cc4a8045,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+517f08778314405f5db56ac8da33cdb7315af84c,2026-10-13,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+09d08f06d17256524ab572a20423f24b5ed9d57e,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+6a3d58b3e10d4058795db7d2fc6e680e6ca33b93,2026-10-13,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+7b5ce89452951fd1fd238f08e87f9ea31d02958e,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+5a67557a7a0dbbdd6d79a549969359d397b737d7,2026-10-13,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+9fb21df9db14a35e0ded21b40d225b696ff48acd,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+d589254463a49e4c4d4ba7909a3552d80f9035cd,2026-10-13,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+10c082c77386f0139ad757fcad36f22143ea1ae9,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+5edc9b3edae3508b875bdcca60a684e3e51f8b16,2026-10-13,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+03cf86a95297aea4f7aff32dd11f68c2c7500ea4,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+2ae998bd4dc0e01961450dcef5d1ee1f2cc2e8c5,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f2345c7684a34f1eec723504feed4dacc5a68ad4,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+ce6548c2edd8be464958eebd2232415a5c00f66d,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e272472262ee526427aacd209c558561cc814385,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+5da3c9b75d3b522d8a2407a32e375f92049f52ea,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+4ca71c919938b04f9eb822d5d993540db527e03d,2026-10-13,Add 2026-10-13-religious-hate-crime-police-vs-survey.html,described change,False,False,1
+b2a4f515f79c63d3dcc6ef7968f8d1e62fd432c8,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+f2ee2f40b8aae65cf60fe15d892e382ac37e5203,2026-10-13,Add 2026-10-13-england-wildfires-2026.html,described change,False,False,1
+81a66eab3bada99dbb5d15eb425d1c2bfdb8d278,2026-10-13,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+5267cda0a0e93ae45e818edab32e037c6ff5bec6,2026-10-13,Add 2026-10-13-nhs-18-week-plateau.html,described change,False,False,1
+c663ebdf2204225dd7a55f4c1a1f50739f2a2aa6,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+46d2ee1e0866460bb1c3ab3ae2379fdee158ee17,2026-10-12,Update 2026-10-12-strategy-archipelago.html,described change,False,True,1
+9322f24b354f41f2412717b27fba1e799e05dea6,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+02f360f57e493bd769e49ac0cd8d244f0aff20f7,2026-10-12,Add 2026-10-12-strategy-archipelago.html,described change,False,True,1
+72a5cdcdc16d239e659a78a2f01b57270f442f55,2026-10-12,"Toolchain: standards v4, checklist v4, style guide, builder updates",described change,True,False,8
+fe0ea7da5b50ccd414a55e076cb26d8e3e92dfad,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+14118cafedf5a9219066709ece3ba0d8861395be,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+90c7739b270aac8afa3d819609d27c7cbed8c0a8,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+c48630265e06961b659fcc26887a529b9581170f,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+2452b8174282ec168044652b13b2856ceb7296ed,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e4a410a879008b27d06fb621dcc88b4160eb20d5,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+a75fe974ca12acbddea09e35d64cfe88c0292fcd,2026-10-12,Add 2026-10-12-uk-gdp-second-in-g7-after-flat-2025.html,described change,False,False,1
+f1908adc2d45eea705ddd3d89a740096010022eb,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+4afb9d7afd9fae7d677b979b80acd65a3bc55bda,2026-10-12,Add 2026-10-12-uk-productivity-component-approach.html,described change,False,False,1
+996903300b270b5e04b2f46d88848ed10bcbf82c,2026-10-12,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+30e825f321336204742f7a6e117a92954f39f23f,2026-10-12,Add 2026-10-12-uk-smoking-below-one-in-ten.html,described change,False,False,1
+5d0066554bce1e54b9dadfe7b3e75e13a417efd1,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+c5ac1d812dcd33f8aaa5e064c39649dbdef496a0,2026-10-11,Add 2026-10-11-uk-borrowing-above-forecast-benefits.html,described change,False,False,1
+01c0eb889d4f36b50413e810c3bfda2f7fbe6c72,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+498cdedfc30075a51ceea0081a2081e7be0033f9,2026-10-11,Add 2026-10-11-co2-rise-slows-emissions-record.html,described change,False,False,1
+aa42809fe44601b8e3b6ad230008d325e7958295,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+decaba4be7c8cd7274d0de175b3ac2f689bde54f,2026-10-11,Add 2026-10-11-uk-unemployed-per-vacancy.html,described change,False,False,1
+07111d9e183042adb21acb9c3d38a23be223181e,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+3918edb17b7efdd069acbe79af8717811c8f74d5,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+4cd8d9f76df142618c8ac32e581dfb91ea1ab0bb,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+7b1ba79f647f7c5bb2ead047e3a1ccf25e1030e2,2026-10-11,Add 2026-10-11-uk-asylum-grant-rate-halves.html,described change,False,False,1
+7d6edf62e8a9befd130412c431900a9e53e6032a,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+6e16307bba564a9efa006359a3aeed093e378546,2026-10-11,Add 2026-10-11-uk-hottest-summer-back-to-back.html,described change,False,False,1
+481557993d2834a4ee179313c0f7bd3dae850b8d,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+ebf6b4e8471e9a16c9fcec85663a494c319a89bc,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+05446717bd852c484d8ae4b26397254028ba1613,2026-10-11,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+2df2ab95205cf21fc30cc67b0d2d8b802da9a784,2026-10-10,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+e161cb6e38bebbf53a4ee85dd0a8d9e70c2a7fd0,2026-10-10,Add 2026-09-26-arcade-lighthouse-keeper.html,described change,False,True,1
+d4cca4c66c44e3c43cdcccaaa11ffa11abcaaa21,2026-10-10,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+5dae8cc2c33ca915e042a7f9614bf6d2cb170bdb,2026-10-10,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+fbff1a6492598361e229e6f7ac3b2922db1549b4,2026-10-10,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f97f3e59238a1b1b857b2abd1f13fe3b67d8be9d,2026-10-10,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+58973c51c47f98aca40df59a058d39ee1d91e744,2026-10-10,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,7
+472cfb0ca65f86f306a0c656909c46967439143e,2026-10-10,Add 6 reports: 2026-10-09 and 2026-10-10,described change,False,False,6
+b668bdc455b53719e7c9d72e57399964472f8f20,2026-10-10,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+704b72ef777f7711d16d3832ee91140737569226,2026-10-09,"Accept dn:kind ""game"" in the toolchain",described change,True,False,4
+210485b469d481d72d4b96a04f4e52c53347e9fa,2026-10-09,Add DN toolchain for unattended builds,described change,True,False,14
+f310b14da83aa1823348f49ca46ae7d18976aeba,2026-10-09,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+917dd94a17bb671772cfbf41bb96feb4d0762429,2026-10-09,Add 2026-10-09-arctic-sea-ice-minimum-plateau.html,described change,False,False,1
+932d63956710ade8ad6273c8947fcc8569c37177,2026-10-09,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+3c95cc4d43ad89f076d77aa4732662eed2d68554,2026-10-09,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d9707aa4e0e19c6b8c11c03edf3fddcd1f25ebef,2026-10-09,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+64cbd50cf8c124c9447dd85e88740b84b48a3cfb,2026-10-09,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+b8844bbc69f88c286b2b8fa5a09bbd3ae3bf8b7c,2026-10-09,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+6d4b4eeacfa048195d9cb113f82de67142895bec,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+34f634cc68d0ab1826a96a2e24c257e1fd889924,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+a0767b58d6f668e84c0b716948f0105bb0e03ec7,2026-10-08,Renumber Sweep headlines to serials (Sweep 0032–0396),described change,False,False,365
+874ea33a08909334e2c7ca22c8648761662f0682,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+2fd804da55619f332b9bf8515ad79d155e40044d,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+edc8bd5ae14da4e770febf9c921f1cb8f68582fa,2026-10-08,Borders: drop the seven-to-pass mark — score is simply out of ten,described change,False,False,366
+d092c4e38555b69a11d26332697a644f5eab3d12,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+dd7222298bd8f381d31eb406289abaad1d7f6d7f,2026-10-08,"Tangle share: drop the link, add 🧶 emoji",described change,False,False,363
+54b38d45512969c9cef5b25409117f15b116d2d8,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+b2c481eef50167d0c8847354e1f4a3344ade8277,2026-10-08,Add 2026-10-08-hormuz-shipping-transits.html,described change,False,False,1
+68bbebd1770aaa7b350caf487c8d151f2305e216,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+afba71bebd0151a983e555c907720d3be3c411b1,2026-10-08,add-done-state.js: --type=<t> to patch a template or any file,described change,True,False,1
+e6981297d1b09d04a7f3b6163aaa1741985e3ab5,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+e4ca4f1aaad6d07e270d9dd2b87908c1f3b42cfe,2026-10-08,Add 2026-10-08-indonesia-fire-carbon-2026-vs-2015.html,described change,False,False,1
+3ec567a56dd23c8c0757ba722cc41aa623b0334f,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+f59180f0b050c846fc94a1bb3d0a891277e8812c,2026-10-08,Build feed: check puzzle saves after publishing,described change,True,False,1
+303a8d8c340cdf22a7136d938a5309039cb526e1,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+396a48cb6d16f6472b36e9fa8cd2b88d6c06a97a,2026-10-08,Puzzles: Share result stays available on a finished puzzle,described change,True,False,2979
+245f2f2259aa11256ffc757b6fd2651c28bc80a7,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+0fddad99a59f26fcbec8cf1317717f23a12e9693,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+4d3d4bd5936dcaf4d13482888b397981bb2af0c8,2026-10-08,Remove 2026-09-30-strategy-pocket-weather.html,described change,False,True,1
+18778ed15cefd26aa43cca3855d7ad797ce00866,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+5cf85ae1aa01a0e807044418d032b61b1bcf5378,2026-10-08,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d4b4afca858a323dd307d401cd06eb18de8a8f36,2026-10-07,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+bf5defd02bd5b01880685c413640edb4b31361fa,2026-10-07,Build feed: spread nightly schedule across off-peak slots around London midnight,described change,True,False,1
+3cc3b3edff91af64d3927e2575592db45a397b44,2026-10-07,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,364
+3b2704bd9af3b4d6b0b08bf11d399d34c87f4638,2026-10-07,Add 2026-10-07-word-tangle-0001.html to 2027-10-04-word-tangle-0363.html,described change,False,False,363
+a04a7c1410e49a7579b1713118a9b7284075b93e,2026-10-07,"Add word-tangle to tracker, admin and feed builder",described change,True,False,3
+b8b95f5f80469735fc77e016c3cc683ad550e9e5,2026-10-07,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+020d6f18e799d024dfd03b1ed44cebe8c83f6c53,2026-10-07,Borders: replace card tile with a world-globe outline,described change,True,True,368
+4aee177d0cc537bc5c3cb678e42a258771d1020f,2026-10-07,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+007650c041e5e32ae5959ec2f5f58d1e7fabf779,2026-10-07,"Borders: add Share result to today's puzzle, DP·BORD·0003 (shell v2)",described change,False,False,1
+8ee8fb35738078990ad3d2aabf9b9f2b1e066b85,2026-10-07,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,363
+52762e18299482280f21efd531457a5a906bc041,2026-10-07,"Borders: add Share result, shell v2, for DP·BORD·0004–0365 (from 2026-10-08)",described change,False,False,362
+ffbd1b4aa5586a236cea44195be3cd1ecea5bb69,2026-10-07,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+589db3757520ed82fd2dd417da403b1df76e820b,2026-10-07,Set dn:updated on games from their latest upload dates,described change,False,True,5
+9bc883b0111ce3adca28d936b74d266442dc3293,2026-10-07,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+0a8f6fceb364a4a63cbd6ef96568657c43120e82,2026-10-07,Sort games by the later of dn:date and optional dn:updated,described change,True,False,2
+2db2b0dbd7d1889494cd1a6c68c5d8dd34e7a44c,2026-10-07,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+fb4392d4bfe7871afdfd3d3925eec85796fe3158,2026-10-07,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+8c64052141da96b6c012ed7e8e84d88de4ed9126,2026-10-07,Add 2026-10-07-el-nino-roni-second-only-to-1997.html,described change,False,False,1
+bc7c47960bac482562888e106538d4b770e3c6a1,2026-10-06,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+1307d0f48b588c66a15421b41c31948785fd9169,2026-10-06,"Puzzles: finished puzzles reopen finished (Mini, Doku, Sweep, Path, Link)",described change,True,False,2978
+dec977295408888f2ba1a47063e11ebaf62dfb06,2026-10-06,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+d451655e1331d7745522226cc6241291747ec28a,2026-10-06,"Update 2026-10-05-quiz-borderline.html (daily moves to Borders: link card, shared atlas, own daily removed)",described change,False,True,1
+24e1e028692b88ec0f4354c4099f850638a19b64,2026-10-06,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+e2df946581775e59b7fe6a7794080f9147df2f7a,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,366
+a6c8ebdf3752bdcae04dc656273d9702713b1d91,2026-10-05,Add Borders: 365 daily puzzles DP·BORD·0001–0365 (2026-10-05 to 2027-10-04) + site wiring,described change,True,False,369
+16de307ab93068b05fb44fdf4bfb16d94b853a69,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+add66acfc4d9bfa0912b18b6356d06a751865d41,2026-10-05,"Update 2026-10-05-quiz-borderline.html (daily ten dealt from decks, no early repeats)",described change,False,True,1
+aff91763b4318043af5490611fbd1071c1eff2c5,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+fe0cfc7c8657d424fb3e3c8ee0585edf455505be,2026-10-05,"Update 2026-10-05-quiz-borderline.html (QA fixes: portrait lock, full-screen resize)",described change,False,True,1
+59a26abe4c902e9686e2927415fddc981ea06882,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+57c920054149fd59f9317a2b70c19f47674c66c9,2026-10-05,Add files via upload,generic upload,False,True,1
+747b80fdc0ea960c754fb2145a8e4a6274d0a6e8,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+726b2b5c64a345b49b7db09075a6f8352c3c324e,2026-10-05,Add 2026-10-05-quiz-borderline.html,described change,False,True,1
+b7f72ff204120d827971b6c5d6e4301bd0c5371f,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+bc0f87c198055d8df54705dff26561f544cbb44e,2026-10-05,Add files via upload,generic upload,False,True,1
+3c24d3a8eb26d91b3498fefa0174d338bf022887,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+d6f8c4918d28dd374207f15183e1579b931d983e,2026-10-05,Add 2026-09-26-arcade-lighthouse-keeper.html,described change,False,True,1
+fd1d6d87633ee093d2fb8d9f1d9f04be2d474a79,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+2d6cf3dca2223d7e23120d941fd54ddd0768e081,2026-10-05,Add 2026-09-26-arcade-lighthouse-keeper.html,described change,False,True,1
+92f37be21ae3d55ce3e8ec3171d9da9ac76c65e8,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+b49171a5481baba3642b40390729d8cf3af79eba,2026-10-05,Add 2026-09-26-arcade-lighthouse-keeper.html,described change,False,True,1
+a8fa01cb05de63412c3322423436d1345796ca97,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+dc7ea476dd2649bbfd9aecc42295f7e38ca8e582,2026-10-05,Add 2026-09-26-arcade-lighthouse-keeper.html,described change,False,True,1
+fcd5f08bb86b8cfc6dee9c57fecff6803f4f25b6,2026-10-05,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+dbc01f632b337fe717bfaf0f6440f53a28542026,2026-10-04,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+adfc41e7f565f1e6602334fc2161cedb8da45243,2026-10-04,Add 2026-09-26-arcade-lighthouse-keeper.html,described change,False,True,1
+7e0bef432ae7f8d6fda1713321a82db1aaef27b6,2026-10-04,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+fc1c58ac45c01dffcd40b2dd28c507953b3f9925,2026-10-04,Add 2026-09-26-arcade-lighthouse-keeper.html,described change,False,True,1
+3058ff0d86ecc70bb702ba59302476842b3bcdcc,2026-10-04,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+8f96eadcca6d9eddb0a94f551720fc624b840d3b,2026-10-04,Add 2026-09-26-arcade-lighthouse-keeper.html,described change,False,True,1
+0d66bd05e940ef6982c3cde6c004e033be7fc601,2026-10-04,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+1370e64a1519f817643920ac90f41df8112d428a,2026-10-04,Lighthouse Keeper: mason pad repairs and shields the tower,described change,False,True,1
+6374198cf9d772e808f73cf3ec195544ea91050e,2026-10-04,Lighthouse Keeper: feedback round fixes,described change,False,True,1
+a61ced76010c900528df7330e3a064e73f09d1fa,2026-10-04,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+825f33e2f91bef190be35b7f1d04c4ad910442b6,2026-10-03,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+2070f631d891a216217b44122f83f10cc570c17c,2026-10-03,Add files via upload,generic upload,False,False,1
+a0bb3cb6699286fc6d40007b691ebcdcbe55d225,2026-10-03,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+15a61bd33f26bd50a435b58ca321b899ef32074b,2026-10-02,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+99b1f06111ddf2baefed0c51601b46b55e79dfa0,2026-10-01,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,4
+d5a724d4d32bc239c39126a5b240d77a6a82af9c,2026-10-01,Add files via upload,generic upload,False,False,3
+22d811d2afc9d08e770c20c6fb52ad94cbaba1c4,2026-10-01,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+61a89e71d53495330c1465e9f6a7bff502bf91df,2026-10-01,Add files via upload,generic upload,False,True,1
+e6c1a246c00671041bc0b444ab497bd2ecb54524,2026-10-01,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+94d4444eea49b16b0ff23b45ad28da01175761ab,2026-10-01,Add files via upload,generic upload,False,True,1
+c2e248dc62cabb7abe3c968735775c8818c1904d,2026-10-01,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+3b984499a024601cbcaa2955dd8ae97cbf130c80,2026-09-30,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+1b3039d04d124a5ae29333412919986519f9f3b7,2026-09-29,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+8b8ca745b67ae12ecec09c92caf73e9efd0e35d4,2026-09-29,Add 2026-09-29-innovation-inputs-outputs.html,described change,False,False,1
+6f9c3c4bb32ebefaf6149f89febd62a423e37e90,2026-09-29,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+74bc814875aa987b611bd94945175f860675868a,2026-09-28,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+f281bde9cbc54309243f5ca499ac817e5bf397b8,2026-09-28,Fix merchant beyond beam reach on tall screens (2026-09-26-arcade-lighthouse-keeper.html),described change,False,True,1
+287fa7af37d807f0fe19a96ec2927bd38bad9a5a,2026-09-28,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+d2b26d29478638b5b5d8c6e25e078e7069967b33,2026-09-28,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+649b007270f701df5d2bb26b4ed7c69c5d01b347,2026-09-28,Add 2026-09-28-ageing-doctors-regional-gaps.html,described change,False,False,1
+d593901fb9bc2d938ca88edfcb642e6484bbaaab,2026-09-28,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+5f052071c8f1d105cad92648040fb29fa434b1d6,2026-09-28,"Add report: Ageing doctors, unequal staffing (2026-09-28)",described change,False,False,1
+240fbe3cf7dace460767a50fdc11e4e3d16731f5,2026-09-28,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+0bd0a2bc12d5a3eef394e8b9b87e663570e4af78,2026-09-28,Add files via upload,generic upload,False,True,1
+ff1ae22bddc39ebcf3bf6e1f7f5b19b9d4eaafc3,2026-09-28,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+03eb39dea2db61f89346be9513f95a2df2beb94b,2026-09-28,Add files via upload,generic upload,False,False,1
+18c796942974d212691576dea7968a9c4b4f8960,2026-09-28,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+3d0df4c04b3872eff64125f62392cd1dd7b8db79,2026-09-28,Add files via upload,generic upload,False,True,1
+d442c82d0dd8a61eb48405e4370252a3dad65686,2026-09-28,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+68586678fad9b67691059223a1e7b4e7f67c3305,2026-09-28,Add files via upload,generic upload,False,True,1
+40bfe0879a1c99c5ab1896122fab4c54c97bcecb,2026-09-28,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+df7d8b04eff8cec32cfb47df2f4eb9c8333f4911,2026-09-28,Add files via upload,generic upload,False,True,1
+94bdc0cd20349f1dbfacccd33954ba68f195846a,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+65ef8cbd3ab7cc596254986ce23ed088779c7bce,2026-09-27,Add files via upload,generic upload,False,True,1
+730ae30bc32b6345ef3e111bb8bb69cb50ed966c,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,3
+f0fa3c9ca2d27ad3b6da070e67a70c672a9c758b,2026-09-27,Add files via upload,generic upload,False,True,2
+43011695767baa438a2b16ef07b101cc0a36a367,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,2
+1fd04a0e3d42ff32d3cede389ff56482a80663fb,2026-09-27,Add files via upload,generic upload,False,False,1
+b783c692f2ed473ad25adc2a01f5e0c245ec8586,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,3
+39b691e49d860a78ceea5183b7973922e8932f9c,2026-09-27,Add files via upload,generic upload,False,True,2
+4e663b3216bb9f34202879dc5b35827eb3e64384,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+466cd1077fafb42a75bde9268dac878a597758da,2026-09-27,Add files via upload,generic upload,False,True,1
+d2225f99341fbee2dbddc2b83c38217241a07cdf,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+8c93b2b5d64eb503b7cff050c329293637e5b687,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,4
+c8cbb901145303f397ffca9e8dfb26ab7eb3af28,2026-09-27,Add files via upload,generic upload,False,True,3
+5bdd72423c8098424062b26dd3e4184d3d96846c,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+d99f23a0327816952206b15adea726e185e30b18,2026-09-27,Add files via upload,generic upload,False,True,1
+d8d359daf6a8b8d21ab27de39abfe0d4050896ea,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+a02b72954a58b896ac89d86a5de49ceb06b5aac7,2026-09-27,Add files via upload,generic upload,False,True,1
+56d5e1766a1612f53c8ef6352fe72cbfaa11f7fa,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+4102a8e665e3f76ff569ff5f0fba94b3545ebf36,2026-09-27,Add files via upload,generic upload,False,True,1
+c64fbf8c1ac91255f32bd8d33e7b256b55c8ac0b,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+0689e38178380bf74ec332c7a93f7e84617b9b60,2026-09-27,Delete reports/2026-09-26-arcade-lighthouse-keeper-v2.html,file operation,False,True,1
+303b8a6ad88d9108494acb8a7c7c2fd0ce6f234a,2026-09-27,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+891d367a43f0442fcee7c9818f316bad61f3a862,2026-09-27,Delete reports/2026-09-26-arcade-lighthouse-keeper.html,file operation,False,True,1
+c53a2f2933d37b5269647544912e18d3747b55ae,2026-09-26,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+1df4da567b46c253d40b4123616a325d0bd91ae1,2026-09-26,Add files via upload,generic upload,False,True,1
+8b60891398a9b465c1691f9163c71d654f95c8ba,2026-09-26,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+e9442a842ebd1a17c9510e2d0e4d565a757d7ea5,2026-09-26,Add files via upload,generic upload,False,True,1
+b1b745e450213d73097a6ac688cbcf85bc34562c,2026-09-26,Add files via upload,generic upload,True,False,1
+9b16cf8d9d82af83cf2ba81a0d11b8ee0931c0ad,2026-09-26,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+9cf903dc7711cb651244752f334734b5f1d79bee,2026-09-26,Add files via upload,generic upload,False,True,1
+c911a7e1dc432cab62dc128cdfd59210c2cd61cf,2026-09-26,Add files via upload,generic upload,True,False,3
+da9db84fb9d2d311b93259a5a4ac915d024b9117,2026-09-26,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,2
+a65b71b777ce070e7dbe4ae0adc3c59c35b1dbc8,2026-09-26,Add files via upload,generic upload,False,True,1
+00df5379846bf2a82204329a0e31427a980168be,2026-09-26,Add files via upload,generic upload,True,False,1
+88673f2a4b804fe1bf4576435409c34e348e054e,2026-09-26,Add files via upload,generic upload,True,False,1
+39947655e4c876b683957ce1927b7b161ed215a4,2026-09-26,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,False,1
+20e7f8bd6c2484b5e7237a5147af3f39119ea6b0,2026-09-26,Add files via upload,generic upload,False,True,1
+09f8dab6eb27324248bcf59d822855b455d2b8b0,2026-09-26,Add files via upload,generic upload,True,False,2
+c5b1e9f10f8b5068d47a18ddd2e6f1e07873cf6e,2026-09-26,"chore: rebuild feed.json, add tracker to new pieces [skip ci]",generated feed,False,True,3069
+b7b1819a52db78790a84d936426397c4f661c47c,2026-09-26,Add files via upload,generic upload,True,False,1
+125a64de4806af3e67f3ae75abd59e9b26871352,2026-09-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b4e975b407fb83ed04e15d7b9370d1219dc02277,2026-09-26,Add files via upload,generic upload,True,False,1
+30744ea8f09b21bfcb11088dd88dbaab00bb36fb,2026-09-26,Delete .github/workflows/delete-stale-links.yml,file operation,True,False,1
+2f46233f334cd08d0163b2aee86b0f169de6b2e0,2026-09-26,Delete .github/workflows/tidy-root.yml,file operation,True,False,1
+787dc813da1074a584f1eda666abad69edb9448d,2026-09-26,Add files via upload,generic upload,True,False,6
+5e4dccb5563f680bc3414ed919f21ba2ffd65baa,2026-09-26,chore: remove duplicate puzzles uploaded to repo root,described change,True,False,100
+274211b00caa61c49a28a1c9fcca434d3e91cd8b,2026-09-26,Add files via upload,generic upload,True,False,1
+fcda00e5f901af869aa806cc250e4a479099a328,2026-09-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e5232949fe6e1f9469f3e1837e99e7d1b87d6710,2026-09-26,Add files via upload,generic upload,False,True,1
+c85e8d5fd51126995318566bc3ad1034ffc8670e,2026-09-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c8eb29e2da46d8deadcd90ed8598612cc15e0d10,2026-09-26,Add files via upload,generic upload,True,False,1
+eeebe0b8b70cb37c5226da9402692bbb8c5f0171,2026-09-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+a025e9e92e843926b47eefeffb35ae00f6c505db,2026-09-26,Add files via upload,generic upload,True,False,1
+604dcbb3804fa83b68709133d3b4d2072aa13279,2026-09-26,Add files via upload,generic upload,True,False,5
+86e53d3030d9baaa4ddafdf4aca62826f0cf001e,2026-09-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+5448ef19b939aa78fec839338b78f07cffad3be7,2026-09-25,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+0de4d6425d12d9fd669748996c2a1c413cf55b86,2026-09-24,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e74fcdc5eecb0918b614e7d9ce601d781a1127ea,2026-09-24,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b1dacd0ce2e9090640924dd3f4796aa0bae9a47a,2026-09-24,Add files via upload,generic upload,False,False,2
+766b854e3bee8e63e4851eb5d5c199135fc8b122,2026-09-24,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e034c22a479a0578a7847f9adb17d89b61f80dbf,2026-09-24,Add files via upload,generic upload,False,False,1
+ec2f316952d8d3b4126faad3e72147ca13ad9c6a,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b1dce59a98762c32838f2a76fabdb745222eded9,2026-09-23,Add files via upload,generic upload,False,False,65
+0f57de2f67f03889d5031df1b88d06f344aba191,2026-09-23,Add files via upload,generic upload,False,False,0
+e92dd6f9d31912c8d13acdaa08a8886289d52f05,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+03ddbb426731f180bd83bf3b7dfe6ad653254a78,2026-09-23,Add files via upload,generic upload,False,False,100
+df987e09e8450b0a4c5c942d0bee1cc233741795,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ad15da1d5a028506e447e455a47083ac18c976d2,2026-09-23,Add files via upload,generic upload,False,False,100
+c85be4145a3a630e5143fdee39a5de40f561722c,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+4851b3a601bba53a061f00f3e6adbfc2750bba28,2026-09-23,Add files via upload,generic upload,False,False,100
+733743edba078a5d60aa9e45d7b929490605748a,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+fc737866c3b284ca6d48f5f21cbd6f182eba325e,2026-09-23,Add files via upload,generic upload,False,False,65
+d0347087b3e0d2a0ee20287c5d2ca2046ae81074,2026-09-23,Add files via upload,generic upload,False,False,0
+582d92c4832f2cceb2b31d292157d5dcb4d33be3,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+202f40b41787078446898a26dce63c63273667e5,2026-09-23,Add files via upload,generic upload,False,False,100
+917ea159d1cae02cbd1275d5bcb00ebda987c734,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+3abb0618e5570dd807a7ce41fc8f9c31c85453d7,2026-09-23,Add files via upload,generic upload,False,False,100
+daab64c1b53ce7e6cfa427a5e3b83c5e9a08d4c5,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ae12a3614a766abedb7d0c89004785f34970e55c,2026-09-23,Add files via upload,generic upload,False,False,100
+941aabf0104f54138315f9ed346f1d42131bebb6,2026-09-23,Add files via upload,generic upload,True,False,100
+dbc1f11799e7b1faed8fc2917d612745f7265f69,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+3b5a884c8050d26930df50a10ccb3cd5748ebe72,2026-09-23,Add files via upload,generic upload,False,False,65
+220a80dc6e13465f7f795d60e911981baa6496c7,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e1c5c87147caa09a75a8e2b9c4ebd83f58aac036,2026-09-23,Add files via upload,generic upload,False,False,100
+c81d14530f8150e6aa081312c0792f5013eaf4cc,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+45e11bad3b3f57cb0e402592d1cd6e431d9119e0,2026-09-23,Add files via upload,generic upload,False,False,100
+733b5aa49f7f94eb85287756abb058ce3e07c6c0,2026-09-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+af4b8dc58dcc98bb182eddffa4b8e950b8a680df,2026-09-23,Add files via upload,generic upload,False,False,100
+3f709a5e8e1ac7904950873d2160f0f100d358ac,2026-09-22,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+7df299d45f6f42b11c646e20bae2e7c35113ffcc,2026-09-22,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+38cc795cbf0335bc16fb378d12f160c54d0ca5b4,2026-09-21,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+8e5637bcb2f98c07ffa148beff08944eb2ac8cdc,2026-09-21,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+a4fb0377697065f4e688373c847913b91451ed39,2026-09-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+4bdfb98fd4868407a57013c21f2a9ba235ca8065,2026-09-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+2a86fa63c6d532f4eba5bec25c1fac91503eb23a,2026-09-19,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+3562c2904d5f74b66a84938f2df3117941021d64,2026-09-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+36e1661fe991770f6ad44b5626768ba0f1066b6f,2026-09-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e701488954ed987076a7d44e42c7005ea6f14046,2026-09-16,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+52e0e0a0bbb29a034f8be42d4026b3ac1c4f2600,2026-09-16,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+dbaa06c6797aeaaea69f6649b94e81ac7195f3b7,2026-09-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+0ac0001b1d8a17c2cbad19a05dd5137cf544356e,2026-09-14,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+4b5d1ff8169c9d17b3bda87785b213b4e5a6f9fb,2026-09-13,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+da1be3f43284224ecea6f6e569b926cf5f53a302,2026-09-12,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+1985f1fba5b47e6d5ef9fca902888b87c8750a39,2026-09-11,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d7c75993a4ccff105ca5675bb3cc08a4995cb2d2,2026-09-10,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+06e740f1bcc275fb63f1034225c9e57635480f36,2026-09-09,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+8fa0a2da888bd9c29acf654cffaa4baadb0c0a3b,2026-09-08,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e9aeb3e249fd1c728ba06f9d6a02e1d60b9812b0,2026-09-07,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d7d09e99103c03c1b7b5d3c2ba106ccaf68d0487,2026-09-07,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+81a3252e998a7995188e9c2c30c6c32c40358446,2026-09-06,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f634fbf0ab0d2c1665046cf27c70a22f87c3a10f,2026-09-05,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+1ff855e1b1c8cf517d53c38ba3814f6cdd9d8924,2026-09-05,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+80c54a4e250ba7727e5a269181a95231aebfd31d,2026-09-04,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+2ecd0dd03ba2be5703fa161eb68b66830920df29,2026-09-04,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+2577aecbcd552fcc2b78d0962b52f6ed56b718bd,2026-09-03,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+181929042ab2479e2bdf4c848a2f41538b32325c,2026-09-03,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+293d43366a28e96d9f3bcda1820c29fd635adb51,2026-09-02,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+2661829f258d49dd69efc9861e279b4854c4a680,2026-09-02,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ed6956e90971c141496703048d61f592113fbdb7,2026-09-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+9ecc136d40673c85abd6b504a10ca69f691c606d,2026-09-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ef1138422f1081642286f75ccf5f3aa9efce5efe,2026-08-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+70c2450cdffed5ec6529273364a29084c19afbd3,2026-08-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+5d6c8e90072706499fcfee1cec22d532480acff6,2026-08-30,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+67394fba449b635c5cded207a8f5ff4930bdb6b5,2026-08-30,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+9f0dcbf2a7a7bc706f2cf3a24c22e53e5e68c1f6,2026-08-29,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+bdbbfaba7fa81970fab07a182c9d29dcb1be2c31,2026-08-28,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+1112b9e1f4e894c9bd7d3cdb705e656a2f403de9,2026-08-28,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+1e806ab9378c84f625386a0535638b3c057a7306,2026-08-27,Add files via upload,generic upload,False,False,0
+29ad5c3af4c4270c0ddbba4ffd6d9aecebec4f4b,2026-08-27,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f52f547455dc526ad7849fd355d607cf213ab643,2026-08-27,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+630d21e08d7d54131f665647b23c0c9f5e56a488,2026-08-27,Add files via upload,generic upload,False,False,1
+0588942404b83383c41d27dcf631dc6928765d5b,2026-08-27,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+4b5a14e9388ee9bdace7f854c7edcc7ae89a6967,2026-08-27,Add files via upload,generic upload,False,False,1
+5b4be06831c1821bfd1c7d1bda469694c20252c8,2026-08-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c4ea9b5eb891de8fe56e96db61ad246738ee2eaf,2026-08-26,Add files via upload,generic upload,False,False,46
+a46686511bd3d09c44654856da92271c2048ae4d,2026-08-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+4c1ccfb1b1f0a88419b93d3bb62021318f36024c,2026-08-26,Add files via upload,generic upload,False,False,34
+7ef10e3ef6f72a7f094dee251c5130c2ba9c7e4e,2026-08-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+919becfa567d3d5bcffbb982a39485e4f6e4987a,2026-08-26,Add files via upload,generic upload,False,False,63
+c84e1673a42f72140640dd8bfafdccafbc11ce5b,2026-08-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+dea55552461b7460ccee8c0fd9f7d8174da5fc3f,2026-08-26,Add files via upload,generic upload,False,False,39
+e01e9b1ffc799f053e2aaaf569dc1856a1252f44,2026-08-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+1cf53bf76e4babd0cb37ef91d61b12e80c76213a,2026-08-26,Add files via upload,generic upload,False,False,100
+8459c954b6e06e6c9f70e6c7b1c46a7190b27334,2026-08-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c59e274ecee03d31dd6566ca30df3f3eb2260737,2026-08-25,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+55877fb0894bdf5c167494d9f631c13a39557077,2026-08-24,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+9543735d940e711d7ef275157bff9b902cab7ae1,2026-08-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c9f2aa0bbbab6e71452bd3c1d80caa71a3f2c590,2026-08-22,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+a6c8508a81debb37d1a50bf4d2b449d8984713f8,2026-08-21,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f31d535b4841de0cd312b2c7c6f44bbb5fdf508c,2026-08-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+976c7b8079a5615d258c5e808208930f62b56738,2026-08-19,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+607ec9ab41fc1f4e064c64da57355d15d650139a,2026-08-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b68db70a0cee35c84aa8f1234bd89b68d3938f45,2026-08-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+9805c3d0a41879fe2206828d44f48a8c37577851,2026-08-16,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+3194f0e7fe8e8be8a80b374ca7ab1ef358700341,2026-08-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+41ad8574496f0ca1718cb7e61ba8ca2367cb669a,2026-08-14,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+8ce207c132768d12ccfc65918ec5619d4aaed3e1,2026-08-13,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b29b319e7e79a78b7fb2745d9464511ea1605197,2026-08-12,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+5059f15644894aa60e835d5c01de47cd2c64e56c,2026-08-11,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+aed266828848cc2746d8346115d1935dc464c3b8,2026-08-11,Add files via upload,generic upload,False,False,28
+b9af7c9511f512ea0f72f9723c2540d3decfc019,2026-08-11,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+56f5ce084957cdf98b42552ab7630018657a7bc4,2026-08-10,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e60e8c4a507f5e4ce2ccce305b3b469b49896b0a,2026-08-10,Add files via upload,generic upload,False,False,3
+83d827e0176763fe3ce738ea66add008d8607315,2026-08-10,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d7f42052126d9839f30b6090723e47a3c8ed1e25,2026-08-09,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ad3951940fb545dbf3de896f65046cc6c0b5a431,2026-08-09,Add files via upload,generic upload,False,False,1
+f157c80008a48d386b7c683aa857f5307d95b86b,2026-08-09,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e4331ba0031fa0a66f90310a31205a6e748f2d9c,2026-08-09,chore: remove undated Link files superseded by the dated batch,described change,False,False,14
+9815e829221731f3607904ba84908684b1a6dc41,2026-08-09,Rename delete-stale-links.yml. to delete-stale-links.yml,file operation,True,False,2
+572fb4641bd9dd200e208727ee198e3fc591db9a,2026-08-09,Add workflow to delete stale Link files,described change,True,False,1
+f9736eedb738abd5c76b8141794ffd1573ca9a99,2026-08-09,Add files via upload,generic upload,True,False,1
+436b3a18315ea8660db937b5d3226ec32a9dbd06,2026-08-09,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b7ffc7f1276123ea2d806c79f04d9954d077fa48,2026-08-09,Add files via upload,generic upload,True,False,1
+292220e5cb27699f7b4cfdc708fd47c36a2824f0,2026-08-09,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+cfc686a056a463e9dd5904134474cef0f94c81cc,2026-08-09,Add files via upload,generic upload,False,False,14
+989ff0a9beed059515650b90f2822f32c58d7a0d,2026-08-09,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d41906144c31eea92b5be0fe704c4c34f3a82a71,2026-08-09,Add files via upload,generic upload,False,False,14
+ff34c397e2f373daf721f2126d1836d58c60465e,2026-08-09,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+4be0ede54ff38ab7fe0c092edbf7481f274a257a,2026-08-08,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+41ab62bac95bf6c7c96a030dd6e384a154aa0e55,2026-08-08,Add files via upload,generic upload,False,False,1
+ec50d163d2012acb52c71c3db551e103932cea89,2026-08-08,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f31b9f0417e1f96371f7455f6d9ee3113cb34306,2026-08-08,Add files via upload,generic upload,False,False,2
+ef723b1121ab4702cec1426b95901e402c5868f7,2026-08-08,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+003d486936b2e81c9d7b93d9569897eb2b9c89cd,2026-08-07,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+bbe2fc1380c831385a9a626ae3b1fa02eebe8b44,2026-08-07,Add files via upload,generic upload,False,False,1
+9db47f6a841199bdb69f10654efcf86837c53899,2026-08-07,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+78d23b85bac89a6e108265947b8517929c95919b,2026-08-07,Add files via upload,generic upload,False,False,3
+9d36a1f109e26d27664d717e3368135f7e0a7d70,2026-08-07,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+70916e1d56a7dcc03157c49b54f9eb5d01cb8dff,2026-08-06,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+3b532d0988ff6c9621c3a921c86a905aabe2438e,2026-08-05,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+0bf409f8de21d67da4a9b0d3f6424f510b92b467,2026-08-05,Add files via upload,generic upload,False,False,1
+75f74b6a342f8e46335f31c888500ee371cb4672,2026-08-05,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d86b62a45d01ad04dd8bc2980fef276502db1299,2026-08-05,Add files via upload,generic upload,False,False,1
+1017141d24ee2965881ef41aafec97eeabae9207,2026-08-05,Add files via upload,generic upload,False,False,0
+20ab0d4bc7850a238c1d6518444be4fba9b66aab,2026-08-05,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+75f9c1cb0b22a7f7bbab49c78ae3aacc80b41ad6,2026-08-05,Add files via upload,generic upload,False,False,1
+2cb1b9488a2b1cc3dbf003d0ba7b34066baf3c42,2026-08-05,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+3a915c776f7f20b37d2b871a52aaf1a46626e32a,2026-08-04,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+bac07516cf182b522591b5140e72ee3976955a4f,2026-08-04,Add files via upload,generic upload,False,False,1
+178acfbe3b26b5d40897d8863082952e5a757401,2026-08-04,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ddc583714ba66c5a69244fe477ff82787f42065f,2026-08-03,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ce18789f804fc8b26012e9eff65999092afeb10f,2026-08-02,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+a2bb2021c8f280af2417b4044f22b29bbd3bb3d0,2026-08-02,Add files via upload,generic upload,False,False,1
+3949dfe3911c28f3d49534c4fda0f8802fa86825,2026-08-02,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f5a0744173beaafb09821b710c41fa1094468698,2026-08-02,Add files via upload,generic upload,False,False,1
+eb09448b8dff0841ba24d1cb18e114f55eeecf74,2026-08-02,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c9e98f05063a7921f3ff73c286c98ecece53c424,2026-08-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+5823460549b0ab08ded8e52be8505395cf425856,2026-08-01,Add files via upload,generic upload,False,False,1
+45f09c8ec92fafceab03956bed02574611dc8dfd,2026-08-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c7998f5c7a05cce1e6d67ea3d673dfa02619bc45,2026-08-01,Add files via upload,generic upload,False,False,2
+86f1b60f1d24298d08121103f9898aa0804ca161,2026-08-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+2882281d5a8d36a3173b86288467070af6e6fdd8,2026-08-01,Add files via upload,generic upload,False,False,73
+058da231e0ce8680b6a434d7b8d6b06658f08b3e,2026-08-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b8eecf26cdc2a289a59e0c90e335e596217f2c18,2026-08-01,Add files via upload,generic upload,False,False,100
+094cf554d23de553514e1460ca3569d8ea021ee1,2026-08-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f4531ed7fee58c3e8c02581a018d7330ea8492c5,2026-08-01,Add files via upload,generic upload,False,False,65
+d9f0691541ea900f796ee749ca4424057b7d02fe,2026-08-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+15ee7990b86ac641d9b306df6df133d4a3d42895,2026-08-01,Add files via upload,generic upload,False,False,100
+99ce2df1a1a34335654e67d2321c3a7b21b17b5a,2026-08-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d97dfa1d325f2ae29d9436d3445d0f74f6da7d2c,2026-08-01,Add files via upload,generic upload,False,False,100
+7f480c02b5854b92a8e004c7b5fc987a03370ee8,2026-08-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f460e4e903caea8dc956aef402fce401c60e32ef,2026-08-01,Add files via upload,generic upload,False,False,100
+cd1c644bc71a12713cdade9321623a0b5e39e26c,2026-08-01,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+0f592fa1bfbb337834861b1b4b30ab031b8a7ccf,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+82e711fd0c9537c0771c00a0fbdcb6da2a6c4d7e,2026-07-31,Add files via upload,generic upload,False,False,65
+70a1736bb0984f48ea65270cb959f9f0a0633cc7,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+3f6610e656a2019b4549c22fb2d6d1d78ec26a6c,2026-07-31,Add files via upload,generic upload,False,False,100
+5dac97ade4bdf81c94d4d51c6258a7498ce569ff,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f8d1c8c4f186367ad939870108b393aee49f8d7d,2026-07-31,Add files via upload,generic upload,False,False,100
+1b3a1eece93ff82758af61a54933c89accaef933,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ac37f38a890376e4dade3b88f1d76b6bb47cdd6a,2026-07-31,Add files via upload,generic upload,False,False,100
+cf60c99a4552bb495e851928166db29afbf95887,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+4a05aa5b3a5d0fe0bea02d14400005e6daee22c9,2026-07-31,Add files via upload,generic upload,True,False,1
+6c4e954ff8446bae3bdb80cf81db8d9096662fb2,2026-07-31,Add files via upload,generic upload,True,False,1
+277197c6103972ef728de23238f6d0af46615aba,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+438204cba4bcdd38099362d0a25f0ac16a596bb2,2026-07-31,Add files via upload,generic upload,False,False,65
+d61cf8faf1042419890b04d12e5552ea619df386,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d7abd89d38a0411e24466fcb1c3171265f5272a6,2026-07-31,Add files via upload,generic upload,False,False,100
+bdd431ec3e32ff1f5922d93134b27c61ead6049e,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+2e62b9b2919ec4f3d1c279c14d32c082b6513798,2026-07-31,Add files via upload,generic upload,False,False,100
+e1994f5fa65f9056969d0feaeae48b2731528f46,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c962331c9bd635fec2415c1eff77031ced2bb740,2026-07-31,Add files via upload,generic upload,False,False,19
+c73dbbc42c9cee7f33714eb3b5daa08ada6a697b,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ab0d0b5b44c1955a61497a7745a531fb7fa936e7,2026-07-31,Add files via upload,generic upload,False,False,92
+3c95879e83047df6d7ff1e79452eb3344c52df31,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+169a472555c94a43eaee0baece412ee873e532a3,2026-07-31,Add files via upload,generic upload,False,False,89
+eda20097393e6dab846343f2f4a5e55273580654,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+7eac8b74d13e396c656e622da41e0a3acff17a1e,2026-07-31,Add files via upload,generic upload,False,False,92
+cd4fdd215e32e74132194e370110c2d0037e7c21,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+88f273be7507457ccbbd6913e739b6aabb219105,2026-07-31,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+a39e616b85b207171ea197c89527f509cd876756,2026-07-30,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+26c3f8b8ba531302286849dfb41f2b777b0b9cac,2026-07-30,Add files via upload,generic upload,False,False,1
+bca7a68fb1c992b7cfe284af3ec3b56a9df611e4,2026-07-30,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+26ed8559ea75d0866bfddcdc266a295f6a2e41b6,2026-07-30,Add files via upload,generic upload,False,False,1
+1d28db71f2d0e67ccf3136b98766e485a679450e,2026-07-30,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e59b323bf7ab4e078ee0707073a2584c93d0a822,2026-07-29,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+9866f2833512fea8a857fd06cebb0977ff5a39d1,2026-07-29,Add files via upload,generic upload,False,False,1
+b300c78743e69b487e69e39aa1e713ff1a22e889,2026-07-29,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ac1dc49bd40cd3678561eb1fef85948855dec576,2026-07-29,Add files via upload,generic upload,False,False,2
+17f8be09f598fd2020039af1020b51196dc7f222,2026-07-29,Add files via upload,generic upload,False,False,0
+e017db9cab0e6354a921f4a88036e806d69aa44a,2026-07-29,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+a53df375e7665b19baf332a7ed8c860feb150f5c,2026-07-28,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+1ec25ede2f4f3b1012c118c82f9a16d8b015eb9a,2026-07-28,Add files via upload,generic upload,False,False,1
+68654be8f5c15ecefaa08a5b22921401ff998d63,2026-07-28,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e9375ab54758dc98f46d7967f0b764e72c86512b,2026-07-28,Add files via upload,generic upload,False,False,2
+d426f91609e8a6d9e3e4a76e301423e15347127f,2026-07-28,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+13d48dee70271113a19b87bd1a91c5467450a335,2026-07-27,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+85e829b797b2598630d1cecf9d6f93bbc71bbce4,2026-07-27,Add files via upload,generic upload,False,False,3
+e0ea60f0d8363c36f9e8ba47e4b69fd2e2d203bf,2026-07-27,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+a1d5626af727aef73531a74a2a5173e6ac8d4941,2026-07-27,Add files via upload,generic upload,False,False,1
+2e4e1c9231e529c16cce670232021cbf00086688,2026-07-27,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b236e25aa923a2035a283a07a7c992c5759c0854,2026-07-27,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+77c5c734a1212b79678ac03505371155d2c8f113,2026-07-27,Add files via upload,generic upload,False,False,2
+c37759ef41bc7457f0212147f28f47711ddf3fe6,2026-07-27,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+27ae546471f0418899b8ff27aa78665b2ee499f9,2026-07-27,Add files via upload,generic upload,False,False,3
+fd431c66d123a31b92fde50f40a1ff93074bc861,2026-07-27,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f9edbb307cc9882a39b78ce9cbeda8f907cc6345,2026-07-26,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+cc39d81bf4e8ebc32240377634ac4f40fc26e028,2026-07-25,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+eceee680881008a413909d0ecd57ec3138ccec13,2026-07-25,Add files via upload,generic upload,False,False,3
+53e4de1f29b65aa1e3dafd4d83df68bc4a6383c4,2026-07-25,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+7f89eecd6146dc55b72fb52ea1d03d7c7e930c2b,2026-07-25,Add files via upload,generic upload,False,False,1
+6260a9ae865cc2eadd5adcd6f8103d271fff41c4,2026-07-25,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e8961e3ee981b14cde3319e52b47b241c52690a7,2026-07-24,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+8e1515b476763fb46e47a2a7042b0ff1a4768794,2026-07-24,Add files via upload,generic upload,False,False,3
+341665e05fa8b4c35cb7b8a2b1b31ce6f5ee4bbb,2026-07-24,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f35df7480b277c1cb259306ef2317778e605e685,2026-07-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+858d2d70af1dab4629bafd8bf1988a1c35419353,2026-07-23,Add files via upload,generic upload,False,False,3
+dd540e027bd8f079de79ee7b8a24907ff8b1e5d6,2026-07-23,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b907b0abb5a7e071ded5304aaa65e93e1845f77c,2026-07-22,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+1ea698201d220604dced929e8a0ae5344fb8a003,2026-07-22,Add files via upload,generic upload,False,False,1
+4d4c85c28a233a9ce21df6038868019f42dfde38,2026-07-22,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f3e5459b885ed7f2b87bec01c9f61ec710a57cd1,2026-07-22,Add files via upload,generic upload,False,False,2
+77179920dbf123b5b4961a694b28a0b346fd8caa,2026-07-22,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d45aaeae5da67f40fc21873701aaa09539e5b739,2026-07-22,Add files via upload,generic upload,False,False,30
+0d8d4e9bd210405a691b4b65239a245e2f8e6065,2026-07-22,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+dfcfe8523262d375b412cb3020e20cae4d83306a,2026-07-22,Add files via upload,generic upload,False,False,1
+a4d729ececff57ec4db5aaf948eedc9193d2d950,2026-07-22,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+8d2019ddb46c1d4f506d1def6f7eab300fc68db4,2026-07-21,Delete .github/workflows/backfill-statlabels.yml,file operation,True,False,1
+f02771751909c10fb5b8e7bc43d653d56dab446d,2026-07-21,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+4a29c5609e41e2cb6803e8d54d047cd935be8266,2026-07-21,Add files via upload,generic upload,True,False,1
+891b2b07f4891a08b92a4ba0ddb0615217e2f6d7,2026-07-21,Add files via upload,generic upload,True,False,1
+8b59e7c26d5925c0f5541a2ac40d7978b8d1e445,2026-07-21,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+09a2dc62699fa7bf3777fe6e957d895efb06d882,2026-07-21,Add files via upload,generic upload,False,False,30
+aeb5aa282dbcab1d388b7a334cee16178afcc5d3,2026-07-21,Delete 2026-08-19-logic-path-0032.html,file operation,True,False,1
+e266a3be6ff7534c7cc1d77667475361410c0680,2026-07-21,Delete 2026-08-18-logic-path-0031.html,file operation,True,False,1
+b64175a182822afa7673da4f34522fd9dc744323,2026-07-21,Delete 2026-08-17-logic-path-0030.html,file operation,True,False,1
+4241e501cda3b38e289cd3864d7e21b5cc971917,2026-07-21,Delete 2026-08-16-logic-path-0029.html,file operation,True,False,1
+2b7aa5555ec93e29273886b98abd9fb583b131c8,2026-07-21,Delete 2026-08-15-logic-path-0028.html,file operation,True,False,1
+9ae1c69aa4c7aba81f2b089d06347006c3433fb4,2026-07-21,Delete 2026-08-14-logic-path-0027.html,file operation,True,False,1
+3e64cd588ec243758719242e7f0e53495ebcd7f3,2026-07-21,Delete 2026-08-13-logic-path-0026.html,file operation,True,False,1
+41ecf5b09f89439d080c4c76da463be1866bae82,2026-07-21,Delete 2026-08-12-logic-path-0025.html,file operation,True,False,1
+446d3739a15b0335b404c3f3507aa99dc35af21a,2026-07-21,Delete 2026-08-11-logic-path-0024.html,file operation,True,False,1
+dc8fa48e844f280d2f2abfd8d3531d320f07be00,2026-07-21,Delete 2026-08-10-logic-path-0023.html,file operation,True,False,1
+73ab566272191f04eaa5810a302275906e19160d,2026-07-21,Delete 2026-08-09-logic-path-0022.html,file operation,True,False,1
+cfe4af674f13e71b6b9d50d91a445d5d3912a135,2026-07-21,Delete 2026-08-08-logic-path-0021.html,file operation,True,False,1
+7ef2ee5bf0fec2efb47a0a48b0fbb44c9c6b94c1,2026-07-21,Delete 2026-08-07-logic-path-0020.html,file operation,True,False,1
+cdc12bc835f29dc13ebc38ee8c5ab425b417f561,2026-07-21,Delete 2026-08-06-logic-path-0019.html,file operation,True,False,1
+3528365fdf9d66dfc295fa7ea77195a73bf0ac2d,2026-07-21,Delete 2026-08-05-logic-path-0018.html,file operation,True,False,1
+8d9e78dba878a9457865f87a20b94270547535e6,2026-07-21,Delete 2026-08-04-logic-path-0017.html,file operation,True,False,1
+c24ad6d2cfde465494d0ce9fa9b2163f180e9b28,2026-07-21,Delete 2026-08-03-logic-path-0016.html,file operation,True,False,1
+9ecd53dfb4a0d6deaa26fdaa777a9dd0ecb716f2,2026-07-21,Delete 2026-08-02-logic-path-0015.html,file operation,True,False,1
+c6337c3e4bbb52e3cfb3fc26253cc80a9802dd86,2026-07-21,Delete 2026-08-01-logic-path-0014.html,file operation,True,False,1
+ca41ea3a960e6355f6d783bb92a06d39b90e4068,2026-07-21,Delete 2026-07-31-logic-path-0013.html,file operation,True,False,1
+08ac05c113fb983122771caf246f515ddc33eb6f,2026-07-21,Delete 2026-07-30-logic-path-0012.html,file operation,True,False,1
+34d16f3d2b5ff24e779d62bba1c8b6a0f3f58734,2026-07-21,Delete 2026-07-29-logic-path-0011.html,file operation,True,False,1
+72850efc78cfce2af93ba3e50d668a6401016172,2026-07-21,Delete 2026-07-28-logic-path-0010.html,file operation,True,False,1
+2295391c7aa2f51d4965b22c63dc773dc18c9e35,2026-07-21,Delete 2026-07-27-logic-path-0009.html,file operation,True,False,1
+4c0ae0ba52cbc387bed2dedabb772e8c62b42ebf,2026-07-21,Delete 2026-07-26-logic-path-0008.html,file operation,True,False,1
+b2b698b8c130d5fc2a8c76ba2a683bea35963f74,2026-07-21,Delete 2026-07-25-logic-path-0007.html,file operation,True,False,1
+af115ba4fb82a329a7a8ca39258214fcee62ae9b,2026-07-21,Delete 2026-07-24-logic-path-0006.html,file operation,True,False,1
+ece4d289a94964dacd0542d602c817e2901ae018,2026-07-21,Delete 2026-07-23-logic-path-0005.html,file operation,True,False,1
+c2cfc53b0777a88aa591691324dcb35cf680e761,2026-07-21,Delete 2026-07-22-logic-path-0004.html,file operation,True,False,1
+24dcb319be47a8b2a6982689379f4f3ebe6d4e51,2026-07-21,Delete 2026-07-21-logic-path-0003.html,file operation,True,False,1
+4d0e89cccc9a8eabc329bbad117178809d4599c7,2026-07-21,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+6276bfbf295462d6ee311e36e96f04f803823f0e,2026-07-20,Add files via upload,generic upload,True,False,30
+33f814d104a69d02fe600683717f0b5f9cd4fe3d,2026-07-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+743a1691c2e3dd7208c30b6aa47bfa0acabba5c8,2026-07-20,Add files via upload,generic upload,False,False,1
+0b911ecf3fd1decf4388ca85461d8ee6269656bd,2026-07-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c898c697a03e1c0a9ad0e47daaa988de58b7801d,2026-07-20,Add files via upload,generic upload,False,False,1
+e8648b518f112d89504076b1320edec1ec652baf,2026-07-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c3acf9a513a5697e1396caec44e431c5e6f6ad37,2026-07-20,Add files via upload,generic upload,False,False,1
+a35448b12302ca572699bc14c5393f85c09da421,2026-07-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ecc8ec8cae9b24ebe8f3a8c1b14567bec3dbc3db,2026-07-20,Add files via upload,generic upload,False,False,30
+5be0cfbad990e2b374f082123dad1d19990619b3,2026-07-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+e54ea4ed1a72dae2ed218bf6392689cae108d68c,2026-07-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+dcce1a8d0ad009abf42c71706c85974f7dfdcc41,2026-07-20,Add files via upload,generic upload,False,False,1
+f0c31b11fa39f766889f4a38ae4f80c4b8bba400,2026-07-20,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f12f51b55b88ccb867b20e63f55da6b9e0dc1bc1,2026-07-19,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+09f9040b10ac0eda519ac103979262542b9b4302,2026-07-19,Add files via upload,generic upload,False,False,1
+24baffd284cbd88a2ce0e3f48c96899ce2da7ca3,2026-07-19,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+ff6f12ae89cb71793ff21f8f3a8b8797e55e6f1b,2026-07-19,Add files via upload,generic upload,False,False,1
+d81b49eb86dede5fabfa9f1ae6fa82aa14285efe,2026-07-19,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+64a2c49655c8f1f0e126de06aa452e2c635c0a76,2026-07-19,Add files via upload,generic upload,False,False,1
+03d8eea88a48212851c0500229a18a44fc528850,2026-07-19,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d85dcbd0b64619eca58958b93bce305df64f9bf6,2026-07-19,Add files via upload,generic upload,False,False,1
+a741b668468718b650799b7862afb61f1b64f63d,2026-07-19,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+6e6ce5ba509b41895a7c401da8aa308c1b5f9d4e,2026-07-19,Add files via upload,generic upload,False,False,1
+105dfa1457d0ac7468f4d67c44bcb809c8a22d29,2026-07-19,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+853a8e71f9c5a87ad4a422936fe4bfcd427edb05,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+86e2dbe6378a7e2e66ef5af0fd47e663a7752320,2026-07-18,Add files via upload,generic upload,False,False,1
+b98a08fe428b247c7856711796b2055c7c84d377,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b923e7072aa86020d1d9097a8110fd5bab17420e,2026-07-18,Add files via upload,generic upload,False,False,1
+79b17f16e740eb1512c0701095d423b972f401f1,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+19d8275f53b0e492161433de64bc1657efebdac1,2026-07-18,Add files via upload,generic upload,False,False,1
+db8a7fdac9a3148d999ac5d1e9d186c32b3945eb,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+1b700c3b9dea69787235a5ad513400518a607f26,2026-07-18,Add files via upload,generic upload,False,False,1
+7ca4179a8e5e90c1fef232ce8c0bb1408db0e1f6,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+7a0428ce4c6fe51a8cadbb1ddf8e1b84fd1c1b03,2026-07-18,Add files via upload,generic upload,False,False,1
+f8c963f27e4f71f272d5bd63f56969f85e2ff198,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+7a338d37e333a6fe10fdfab0feacf859378258af,2026-07-18,Add files via upload,generic upload,True,False,1
+81871ed01b2e82b952936bd1ece1214a791f9246,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+799b7165eeddc9ac7334104f04461815279b5f7e,2026-07-18,Add files via upload,generic upload,False,False,1
+ae7e7d3ed8c34a618895ef0a582cef1b61f1b19e,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+418822053a4664b1f1a4e544bbfcb7af60437211,2026-07-18,Add files via upload,generic upload,False,False,1
+5684e51f88dc13bdc9a41f1670027fbecf610441,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+3a290bf6400581fd4d90d6f8c157b1cc9cc545d6,2026-07-18,Add files via upload,generic upload,False,False,2
+96d4db77b6c00de7e7c72a91672f5a66290fa95b,2026-07-18,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+f910858ca4c05f83fc29db073fc4ddfc81a0b71f,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+669a65f5f5643d1181c8ac5d17d565ca36719e6f,2026-07-17,Add files via upload,generic upload,False,False,1
+c942057ac604dcd21d04712e1799b9020f35cd30,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+24214a1f8c648d78d602ec0ec1682a2544f0d905,2026-07-17,Add files via upload,generic upload,True,False,1
+9eceb02891824c58cfccddf76b151313faf50f5f,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+d6fc9c522ec74d8afa6bef7a19625a482437ee3a,2026-07-17,Add files via upload,generic upload,False,False,1
+376b2ed880ad0d590a2437ac1359d8de17a02a34,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+7cb7f3557c926fb459dc05cfd477744410a06af1,2026-07-17,Add files via upload,generic upload,False,False,30
+9addca2dba798709245dc224e986e01b0e733161,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+fcb150aa8f1bf4ccdfc1cacc4a0f80624865b4c4,2026-07-17,Add files via upload,generic upload,False,False,1
+1e55e48869f8f722e02fba1535c64afc8b084587,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+0f9367a2d64f35a4fdb2a2b4da33837902d91450,2026-07-17,Add files via upload,generic upload,False,False,1
+0ec9acde5207f4a1fcd6ecb0858dd2070e635dd6,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+585392f946082e436313c0bbeeb8fbfc7ce5fc79,2026-07-17,Add files via upload,generic upload,False,False,30
+173501d3f168e9fdac0ba84ce0ce5185d05b075b,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+78aaef17e06b692b1ef9cc48b6ab201b444eaa7e,2026-07-17,Add files via upload,generic upload,False,False,1
+53c06a61f502fffdf3feb4121e49b913d6324154,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+8db4e2bc4b4210d5ad73c0f60945c6d17402128b,2026-07-17,Add files via upload,generic upload,False,False,30
+6a33819cf449cbbffd291ffd0d0d011ac86d1e96,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+8cc16d170372e25e53ce766f435f6ef30f096472,2026-07-17,Add files via upload,generic upload,True,False,1
+b52d454a89e8f7da54e79457d3708f5aa9d2c4d0,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+97c1aec80e6ec84b89b271e716bc32c4f7c5505c,2026-07-17,Add files via upload,generic upload,True,False,1
+deca792df7eb87cca0f59eb92725a56c4fac7e16,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+10efef6c309642dd187f85726ee5d0682702b68a,2026-07-17,Add files via upload,generic upload,True,False,1
+108e50d3ff8d2b20aa5638a3092e477377f42246,2026-07-17,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c48b52b00a7d0e55cdfa40c01e728a46ac1f2ec7,2026-07-17,Add files via upload,generic upload,True,False,1
+4a7aa2a044dc521cdad0bfd458d815f7de1e4fd8,2026-07-16,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+afd792dbefe079bd202eaff6c988696a5dd3a90b,2026-07-16,Add files via upload,generic upload,False,False,1
+ea34ecba7ca753505a439f4a70e5a93266195742,2026-07-16,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+762e067f1de1ad4607e892f6b704a12eaef11004,2026-07-16,Add files via upload,generic upload,False,False,1
+17e1806a0356c04b3bd6740bfd08e06ea8fd8490,2026-07-16,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c0026471a0bd85199be639acf81fc4ebb1ff87ef,2026-07-16,Add files via upload,generic upload,False,False,1
+f08ff50ce3ca0467eaa4dbdf6da5b521b0545ac2,2026-07-16,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+94990f28000f9e56b69e51f85f513bf49481e02b,2026-07-16,Add files via upload,generic upload,False,False,1
+9485777ad6b447037acb6f24b4cb02002080424a,2026-07-16,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+a13f06e595aecacab0bec1526cb644323a2dd509,2026-07-16,Add files via upload,generic upload,False,False,1
+3a759d46dd370bf4fe9a76e22c3b0750d42a8207,2026-07-16,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c396c1248bd935c9631d61b620a6658a4672e241,2026-07-16,Add files via upload,generic upload,False,False,2
+99938bcdcca8a3db6b2190f408cda8a4c09d65d3,2026-07-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+c9969e1e2f664ed9a4a23c4d806eb57f89127343,2026-07-15,Add files via upload,generic upload,False,False,1
+ed071faa65c7c11a2fd63f387262f1e63c5a0aa8,2026-07-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+20dadca529ef0002aaa7115bc91e4ebd7dabf4bc,2026-07-15,chore: backfill dn:statlabel on pre-kicker reports,described change,False,False,9
+7e8f5197ba147f9a1c1c33f46ee715b582170893,2026-07-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+75b08d593f3ea74b72bd595089dae218d4e8944f,2026-07-15,Add files via upload,generic upload,True,False,1
+eef8476057e3baaf0d9e4712b75991bfccca8a88,2026-07-15,Add files via upload,generic upload,False,False,0
+0f4b34679e542b01869c41f88235ba34fb4c12bf,2026-07-15,Rename backfill-statlabels.yml.txt to backfill-statlabels.yml,file operation,True,False,2
+87bb015396e9e1471428a851e2c6e76ab2661549,2026-07-15,Add files via upload,generic upload,True,False,1
+dafc3ad04ce6b4d61981915e3b32526bac915615,2026-07-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+2215b06ceed7e3a2b85be5fa8d623e359a519bd8,2026-07-15,Add files via upload,generic upload,True,False,1
+ec34894aa61fa4ef683d265af8ff88ba5a0b4f2d,2026-07-15,Add files via upload,generic upload,True,False,1
+747d484c3d90add1e3750d250858f01b69029ea0,2026-07-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+00be81a425bd5de2ef2e4e739d7123f7ea76fc68,2026-07-15,Add files via upload,generic upload,True,False,1
+00908018c9252566b1cba192f9404bea8461ec5b,2026-07-15,Add files via upload,generic upload,True,False,1
+d7b7585962c477ecc3904f0d780c3a9e9fabaedb,2026-07-15,Add files via upload,generic upload,True,False,1
+a8f4a35b7ec709bf7dddd02b025418a5043d6062,2026-07-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+b01e23ecb73b264f445fabbad13c5b067f78a532,2026-07-15,Add files via upload,generic upload,False,False,5
+a24d7bf6fd9b95d04567bcf4afc7597622bd530d,2026-07-15,Add files via upload,generic upload,True,False,1
+45b13dbc3b3d1a1a70e2efd4cf3f042ef8f250ba,2026-07-15,Add files via upload,generic upload,True,False,1
+4e562e6d1e37d207860c00eff8fb576982422905,2026-07-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+8cb13d856c388b42c11ec6ac59ecbdb4e35c79a1,2026-07-15,Add files via upload,generic upload,False,False,4
+436332c12c572b5e9fa70ffddc17ade280fcf04e,2026-07-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+73d2e7e3e65791d72e4c12dae329d986c949f6bf,2026-07-15,Add files via upload,generic upload,False,False,8
+0445d3110c2f247ab2864c73a6f3966824d2e8c2,2026-07-15,chore: rebuild feed.json [skip ci],generated feed,False,False,1
+a69099b1736a9c780a8e0786902f816f890dea8f,2026-07-15,Update build script path for feed.json generation,described change,True,False,1
+330e2ac9c144fce0ef8b884e65e06d0da42ca720,2026-07-15,Add files via upload,generic upload,False,False,1
+2debbb92b96345dcf3914d903fe1eff1ccfa44fe,2026-07-15,Create .gitkeep,file operation,False,False,1
+d11586ed0b69d0559430675bc9a64f65f2e5c470,2026-07-15,Delete type reports directory,file operation,True,False,2
+21b3529c6d8bb32fe8691dffdd02a1d9fb1b1ddb,2026-07-15,Rename type reports/crispr-leaves-the-lab.html to type reports/reports/2026-07-15-science-crispr-leaves-the-lab.html,file operation,True,False,2
+56f2c879d7f5d3b478ff1915607ce69cb65bcc32,2026-07-15,Add files via upload,generic upload,True,False,1
+2d69e76bb8af0c4df28f09b63db38d8ea924e98e,2026-07-15,Create .gitkeep,file operation,True,False,1
+3bffc1b190f33e369414e4f4f53e39f6ec76d5fb,2026-07-15,Add GitHub Actions workflow for building feed.json,described change,True,False,1
+2104af4e1ecb4f10d46baeae51ff54fa4377b748,2026-07-15,Add feed builder script for news articles and puzzles,described change,True,False,1
+15f6fe7e1e4ac0c4294f621361775eea2307cdcb,2026-07-15,Add files via upload,generic upload,True,False,1
+68ff8745b450541e127a8e95270c204f06874d01,2026-07-15,Initial commit,described change,True,False,1

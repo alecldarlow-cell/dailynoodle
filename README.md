@@ -38,7 +38,10 @@ node tools/add-done-state.js --check     # finished puzzles reopen as finished
 node tools/share-v2.js --check           # one-line share text everywhere
 node tools/build-feed.js                 # rebuilds feed.json locally
 node tools/tests/sw.js                   # service worker: offline, today's puzzles, push, kill switch
+node tools/tests/offline-next.js         # interrupted offline batches and dated Next-puzzle links
 node tools/tests/timing-dates.js         # start-card clocks, saved times and London completion dates
 node tools/tests/push-crypto.mjs         # push encryption and signing (toolchain/edge/board-push)
 node tools/tests/push-panel.js           # the hidden notifications test panel
 ```
+
+Testing expansion proposal and full-history inventory: [toolchain/testing-proposal.md](toolchain/testing-proposal.md). The proposal is not yet implemented.
