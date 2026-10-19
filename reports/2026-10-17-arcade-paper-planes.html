@@ -9,7 +9,7 @@
 <meta name="dn:standfirst" content="Five throws to fly from the back garden to the mountains. Fold better planes as you go.">
 <meta name="dn:topic"      content="Arcade">
 <meta name="dn:date"       content="2026-10-17">
-<meta name="dn:updated"    content="2026-10-18">
+<meta name="dn:updated"    content="2026-10-19">
 <meta name="dn:read"       content="~4 min">
 <meta name="dn:badge"      content="In development">
 <meta name="dn:thumb"      content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3Y2M0ZWYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlM2Y0ZmQiLz48L2xpbmVhckdyYWRpZW50PjxnIGlkPSJjIj48Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNyIvPjxjaXJjbGUgY3g9IjgiIGN5PSItMyIgcj0iOC41Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIwIiByPSI2LjUiLz48cmVjdCB4PSIwIiB5PSItMiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjgiLz48L2c+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI3MpIi8+PGNpcmNsZSBjeD0iOTgiIGN5PSIyMiIgcj0iMTEiIGZpbGw9IiNmZmY2Y2YiLz48dXNlIGhyZWY9IiNjIiB4PSIxNCIgeT0iMjYiIGZpbGw9IiNmZmYiLz48dXNlIGhyZWY9IiNjIiB4PSI3MCIgeT0iNDgiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44NSIvPjxwYXRoIGQ9Ik0wIDk4IFEzMCA4NiA2MiA5NCBUMTIwIDkwIFYxMjAgSDAgWiIgZmlsbD0iIzdjYzE3MyIvPjxwYXRoIGQ9Ik0wIDEwNiBRNDAgOTggODAgMTA2IFQxMjAgMTA0IFYxMjAgSDAgWiIgZmlsbD0iIzVhYTk1YSIvPjxwYXRoIGQ9Ik05MiA5MiBWNzAiIHN0cm9rZT0iIzI5MzAzZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTkyIDcwIEwxMDYgNzQgTDkyIDc4IFoiIGZpbGw9IiNmMzljMzIiIHN0cm9rZT0iIzI5MzAzZCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNNiAxMDQgUTI0IDY0IDUyIDU4IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZjZmZDYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWRhc2hhcnJheT0iNSA2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyBzdHJva2U9IiMyOTMwM2QiIHN0cm9rZS13aWR0aD0iMi40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNTAgNjIgTDkyIDM4IEw2NiA2MCBaIiBmaWxsPSIjY2ZkOGUzIi8+PHBhdGggZD0iTTQyIDU0IEw5MiAzOCBMNjYgNjAgWiIgZmlsbD0iI2ZmZiIvPjwvZz48cGF0aCBkPSJNNDQgNTUgTDkxIDM5IiBzdHJva2U9IiNiOWM0ZDIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PC9zdmc+">
@@ -455,15 +455,18 @@ const G = 9.81;
 
 /* Five folds, bought in order. cla: lift slope /rad; cd0: base drag; k: induced drag; as: stall angle (rad);
    kq: area/mass factor (higher = lighter, slower, pushed about more); pull: full-flap wing angle as a multiple of the stall angle;
-   v: top launch speed (m/s) before the Throwing arm. */
+   v: top launch speed (m/s) before the Throwing arm.
+   Calibrated Oct 2026 (balance sim): each fold, fully upgraded, flies about 15% further than the one before, on flat
+   ground (launch speed) and from height (glide) alike, and with or without flaps; a new fold un-upgraded starts below
+   the previous fold maxed and passes it at about its second upgrade level. The Record Dart is the fixed top end. */
 const FOLDS = [
-  { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 16,  cla: 3.2, cd0: 0.050, k: 0.20,  as: 0.29, kq: 0.30, pull: 1.15, v: 13.5,
+  { id: 'dart',     name: 'Classroom Dart', cost: 0,    base: 16,  cla: 3.2, cd0: 0.061, k: 0.20,  as: 0.29, kq: 0.30, pull: 1.15, v: 14.9,
     blurb: 'Fast off the hand, little lift, noses down early.' },
-  { id: 'nakamura', name: 'Nakamura Lock',  cost: 120,  base: 40,  cla: 3.1, cd0: 0.046, k: 0.17,  as: 0.33, kq: 0.31, pull: 1.05, v: 13.5,
+  { id: 'nakamura', name: 'Nakamura Lock',  cost: 120,  base: 40,  cla: 3.1, cd0: 0.050, k: 0.16,  as: 0.33, kq: 0.31, pull: 1.05, v: 15.6,
     blurb: 'Locked nose: steadier, forgiving when you pull too hard.' },
-  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.044, k: 0.12,  as: 0.30, kq: 0.40, pull: 1.12, v: 14.0,
-    blurb: 'Big wings: floats and rides thermals, but slow.' },
-  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.036, k: 0.095, as: 0.30, kq: 0.34, pull: 1.12, v: 15.5,
+  { id: 'glider',   name: 'Wide Glider',    cost: 600,  base: 110,  cla: 3.6, cd0: 0.031, k: 0.158, as: 0.30, kq: 0.40, pull: 1.12, v: 16.3,
+    blurb: 'Big wings: floats and rides thermals, but the wind pushes it about.' },
+  { id: 'rglider',  name: 'Record Glider',  cost: 1500, base: 220, cla: 3.8, cd0: 0.030, k: 0.13,  as: 0.30, kq: 0.34, pull: 1.12, v: 17.2,
     blurb: 'Efficient wings hold speed through long, clean glides.' },
   { id: 'rdart',    name: 'Record Dart',    cost: 3500, base: 420, cla: 3.4, cd0: 0.030, k: 0.12,  as: 0.29, kq: 0.27, pull: 1.18, v: 18.0,
     blurb: 'Fastest launch. Trade speed for height; ease off before the stall.' }
