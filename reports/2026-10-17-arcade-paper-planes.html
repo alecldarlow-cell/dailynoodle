@@ -67,7 +67,7 @@ a.back:active{opacity:.6}
 #tut .msg{position:absolute;left:50%;transform:translateX(-50%);top:calc(60px + var(--st));background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:8px 10px 8px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 3px 0 var(--ink);pointer-events:auto;font-size:16px;max-width:92vw}
 #hand{position:absolute;width:46px;height:46px;border-radius:50%;background:rgba(47,111,214,.25);border:3px solid var(--blue);display:none}
 /* overlays */
-.ov{position:fixed;inset:0;display:none;z-index:8;align-items:center;justify-content:center;padding:calc(10px + var(--st)) calc(10px + var(--sr)) calc(10px + var(--sb)) calc(10px + var(--sl))}
+.ov{position:fixed;inset:0;display:none;z-index:8;align-items:center;justify-content:center;padding:calc(14px + var(--st)) calc(18px + var(--sr)) calc(14px + var(--sb)) calc(18px + var(--sl))}
 .ov.on{display:flex}
 .ov.dim{background:rgba(31,41,60,.42)}
 .card{touch-action:pan-y;background-color:var(--paper);background-image:linear-gradient(90deg,transparent 30px,var(--margin) 30px,var(--margin) 32px,transparent 32px),repeating-linear-gradient(180deg,transparent 0,transparent 25px,var(--rule) 25px,var(--rule) 26px);border:2px solid var(--ink);border-radius:16px;box-shadow:0 5px 0 var(--ink);padding:12px 14px 12px 42px;max-height:100%;overflow:auto}
@@ -87,7 +87,7 @@ a.back:active{opacity:.6}
 #splash .foot{position:absolute;bottom:calc(8px + var(--sb));left:calc(8px + var(--sl))}
 #splashPlane{width:min(200px,40vmin);height:auto}
 /* end */
-.end .card{width:min(640px,100%)}
+.end .card{width:min(460px,100%)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0 8px}
 .stat{background:rgba(255,255,255,.8);border:1.5px solid #c9cfd8;border-radius:10px;padding:4px 6px;text-align:center}
 .stat b{display:block;font-size:12px;color:var(--soft);font-weight:800}
@@ -100,7 +100,7 @@ a.back:active{opacity:.6}
 .medal{width:40px;height:40px;border-radius:50%;border:3px solid #c9cfd8;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#8a93a1;background:#f4f6f9}
 .medal.b{border-color:var(--bronze);background:#f6dcc6;color:#6b3f1c}.medal.s{border-color:var(--silver);background:#eef1f5;color:#4a5462}.medal.g{border-color:var(--gold);background:#fff0bf;color:#6e5208}
 /* hangar */
-#hangar{display:none;position:fixed;inset:0;z-index:7;touch-action:pan-y;background-color:var(--desk);background-image:radial-gradient(rgba(0,0,0,.04) 1px,transparent 1px);background-size:14px 14px;flex-direction:column;padding:calc(4px + var(--st)) calc(10px + var(--sr)) calc(8px + var(--sb)) calc(10px + var(--sl));overflow:auto}
+#hangar{display:none;position:fixed;inset:0;z-index:7;touch-action:pan-y;background-color:var(--desk);background-image:radial-gradient(rgba(0,0,0,.04) 1px,transparent 1px);background-size:14px 14px;flex-direction:column;padding:calc(14px + var(--st)) calc(18px + var(--sr)) calc(14px + var(--sb)) calc(18px + var(--sl));overflow:auto;gap:2px}
 #hangar.on{display:flex}
 .htop{display:flex;align-items:center;gap:8px;min-height:44px;flex:0 0 auto}
 .htop h1{margin:0;font-size:30px;line-height:1}
@@ -182,12 +182,12 @@ a.back:active{opacity:.6}
 .landing.on .rewardGlint{animation:rewardTwinkle .9s ease-in-out 2}@keyframes rewardTwinkle{50%{transform:rotate(28deg) scale(1.35);opacity:.55}}
 .rewardBreak{font-size:12px;color:#536579;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.rewardBreak b{color:#263b50}.landingBalance{margin-top:5px;font-size:12px;font-weight:800;color:#48596c}
 .windNote{font-size:13px;text-align:center;color:var(--soft);margin:6px 0 2px}.upgradeHint{font-size:12px;text-align:center;background:#e6f0f4;border:1px solid #c8d8df;color:#2b566d;border-radius:9px;padding:5px 9px;margin:8px 0 5px}.upgradeHint.ready{background:#e5f3d7;border-color:#c0deb1;color:#26653b;font-weight:800}
-.landingActions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:6px}.landingActions .btn{min-width:190px}
-@media(min-aspect-ratio:1/1){.landing .card{width:min(600px,100%)}}
+.landingActions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:6px}.landingActions{flex-wrap:nowrap}.landingActions .btn{min-width:0;flex:1}.rdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--good);vertical-align:2px;margin-left:5px}
+@media(min-aspect-ratio:1/1){.landing .card{width:min(440px,100%)}}
 .endReward{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px 12px;border-radius:11px;background:linear-gradient(120deg,#fff0ad,#fff9df);padding:6px;margin:5px auto;border:1.5px solid #d9bc73}.endReward span{font-size:11px;font-weight:800;letter-spacing:.9px;color:#7e5a25}.endReward strong{font-size:35px;line-height:1;color:#73501f}.endReward small{font-size:11px;color:#775e39}
 #eUpgrade{margin:5px 0}.end .stats{margin:5px 0}.btn:focus-visible,a:focus-visible{outline:3px solid #286fbc;outline-offset:3px}
 @media(max-width:450px){.flightMeasure{min-width:62px;padding:2px 5px 3px}.flightMeasure.distance{min-width:100px}.flightMeasure strong{font-size:22px}.flightMeasure small{font-size:8px}.landing .card{padding:9px 9px 10px 37px}.rewardHero{margin:6px 0}.rewardHero strong{font-size:38px}.homeActions .btn{min-width:135px;padding:9px 12px}}
-@media(max-height:390px) and (min-aspect-ratio:1/1){#splashPlane{width:min(150px,28vmin)}#splash h1{font-size:42px}#splash p{margin:3px 0 5px}.homeActions{margin-top:1px}.homeFoot{margin:3px 0}.landing .card{max-width:600px}.landing h2{font-size:24px}.landing .rewardHero{margin:4px 0;padding:3px}.landing .rewardHero strong{font-size:30px}.landing .rewardIcon{font-size:26px}.landingResult strong{font-size:22px}.landing .upgradeHint{margin:4px 0}.landing .landingActions{margin-top:3px}.end .card{padding-top:8px;padding-bottom:8px}.endReward{padding:3px}.endReward strong{font-size:27px}}
+@media(max-height:390px) and (min-aspect-ratio:1/1){#splashPlane{width:min(150px,28vmin)}#splash h1{font-size:42px}#splash p{margin:3px 0 5px}.homeActions{margin-top:1px}.homeFoot{margin:3px 0}.landing .card{max-width:440px}.landing h2{font-size:24px}.landing .rewardHero{margin:4px 0;padding:3px}.landing .rewardHero strong{font-size:30px}.landing .rewardIcon{font-size:26px}.landingResult strong{font-size:22px}.landing .upgradeHint{margin:4px 0}.landing .landingActions{margin-top:3px}.end .card{padding-top:8px;padding-bottom:8px}.endReward{padding:3px}.endReward strong{font-size:27px}}
 .clipBurst{position:absolute;left:15%;top:12%;color:#d9a14e;font-size:16px;opacity:0;pointer-events:none}
 .landing.on .clipBurst{animation:clipPop .9s ease-out both}
 @keyframes clipPop{0%{transform:translate(15px,26px) scale(.45) rotate(-45deg);opacity:0}30%{opacity:1}100%{transform:translate(-18px,-14px) scale(1.3) rotate(24deg);opacity:0}}
@@ -1064,7 +1064,7 @@ function showLanding(v){
   $('lEarned').textContent='+'+(RM()?v.earned:0);$('lReward').setAttribute('aria-label',v.earned+' paperclips earned this flight');
   const breakdown=[['Distance',Math.floor(v.d/4)],['Air clips',v.pickups*3]];if(v.bonus)breakdown.push(['Place bonus',v.bonus]);
   void breakdown;
-  $('lBalance').textContent=save.clips.toLocaleString()+' clips banked';$('lHangar').textContent=nextUpgrade().affordable?'✦ Hangar · upgrade ready':'Hangar';
+  $('lBalance').textContent=save.clips.toLocaleString()+' clips banked';$('lHangar').innerHTML=nextUpgrade().affordable?'✦ Hangar<span class="rdot" aria-label="upgrade ready"></span>':'Hangar';
   $('lNext').textContent=v.next==='end'||v.next==='win'?'See run results ➤':v.clear?'Next place ➤':'Next throw ➤';
   $('landing').classList.add('on'); focusPanel('landing','lNext');
   if(!RM()&&v.earned>0){const start=performance.now(),dur=Math.min(950,480+v.earned*3);const count=now=>{
@@ -1205,7 +1205,7 @@ function showEnd(r, win) {
     ? [['Best throw',fmt(r.best)+' m'],['Personal best',fmt(save.towerBest)+' m'],['Throws',r.n],['Medal',['None','Bronze','Silver','Gold'][medalFor(r.best)]]] : [['Places',Math.min(8,r.cleared)+' / 8'],['Best throw',fmt(r.best)+' m'],['Total flown',Math.round(r.total)+' m'],['Throws',r.n]];
   $('eClips').textContent='+'+r.clips;
   $('eBalance').textContent='Total '+save.clips.toLocaleString();
-  $('eHangar').textContent=nextUpgrade().affordable?'✦ Hangar · upgrade ready':'Hangar';
+  $('eHangar').innerHTML=nextUpgrade().affordable?'✦ Hangar<span class="rdot" aria-label="upgrade ready"></span>':'Hangar';
   void st;
   const notes = [tower ? 'Best throw ' + fmt(r.best) + ' m' : (win ? 'All 8 places' : Math.min(8, r.cleared) + ' of 8 places') + ' · best throw ' + fmt(r.best) + ' m'];
   if (r.newBest) notes.push('New best throw!');
@@ -1235,7 +1235,7 @@ function foldStats(fi) {
 function renderHangar() {
   if(hangarRun){save.run=runSnap();persist();}
   $('homeBtn').textContent=hangarRun?'Continue run ➤':'⌂ Home';
-  $('hClips').textContent=save.clips.toLocaleString(); const suggestion=nextUpgrade();$('hangarGuide').textContent=suggestion.text;$('hangarGuide').classList.toggle('ready',suggestion.affordable);
+  $('hClips').textContent=save.clips.toLocaleString(); const suggestion=nextUpgrade();$('hangarGuide').textContent=suggestion.text;$('hangarGuide').classList.toggle('ready',suggestion.affordable);$('hangarGuide').style.display=suggestion.done?'none':'';
   const fi = viewFold, f = FOLDS[fi], own = save.owned[fi];
   $('fName').textContent = f.name; $('fCount').textContent = 'Fold ' + (fi + 1) + ' of 5' + (own ? (fi === save.fold ? ' · flying' : ' · owned') : '');
   $('fBlurb').textContent = f.blurb;
