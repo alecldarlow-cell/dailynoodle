@@ -85,11 +85,14 @@ function deck(t, n) {
 }
 /* ---- schedule v2 ---- */
 const V2_FROM = '2026-10-21';
+/* Alec's pick, 19 Oct 2026 (9 + 9): ranked by three independent raters' scores
+   for how often a UK player names each outline from four neighbouring options,
+   ties broken by how often players named it in the first 15 days. */
 const V2_MOVES = {
   // medium -> easy
-  'Netherlands': 1, 'Switzerland': 1, 'Austria': 1, 'Denmark': 1, 'Croatia': 1, 'Israel': 1,
+  'Denmark': 1, 'Cyprus': 1, 'Israel': 1, 'Nepal': 1, 'Austria': 1, 'Croatia': 1, 'North Korea': 1, 'Jamaica': 1, 'Taiwan': 1,
   // hard -> medium
-  'Gambia': 2, 'Azerbaijan': 2, "Côte d'Ivoire": 2, 'Sierra Leone': 2, 'Bahamas': 2, 'Belize': 2,
+  'Cabo Verde': 2, 'Gambia': 2, 'Bahamas': 2, 'Azerbaijan': 2, 'Belize': 2, 'Eritrea': 2, 'Solomon Islands': 2, 'Samoa': 2, 'El Salvador': 2,
 };
 for (const k in V2_MOVES) if (!C.some(c => c.n === k)) throw new Error('V2_MOVES: not in the atlas: ' + k);
 const V2_DI = dayIdx(V2_FROM);
