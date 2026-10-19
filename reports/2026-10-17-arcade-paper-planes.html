@@ -2199,7 +2199,7 @@ const ART = (() => {
     const up = o.up || {}, pw = up.paper || 0, crz = up.crease || 0, tr = up.trim || 0;
     const lw = Math.max(1, Math.min(1.8, L * 0.04)) * (1 + 0.14 * pw);
     const paperCol = pw ? mix(m.paper, '#ffffff', 0.12 * pw) : shade(m.paper, -0.04);
-    const TRIM = [null, '#b87333', '#8f9bab', '#e2a417', '#e2a417'];
+    const TRIM = [null, '#b06a2c', '#aab7c6', '#e2a417', '#e2a417'];
     if (!o.noShadow) { // soft drop shadow so the plane lifts off the sky
       g.fillStyle = 'rgba(20,40,70,.14)';
       for (const f of fs) { g.beginPath(); f.q.forEach((v, i) => { const sx = X + v[0] * L + L * 0.08, syy = Y - v[1] * L + L * 0.14; i ? g.lineTo(sx, syy) : g.moveTo(sx, syy); }); g.closePath(); g.fill(); }
@@ -2209,8 +2209,8 @@ const ART = (() => {
       const k = Math.max(f.c === 3 ? 0.9 : 0.78, 0.8 + 0.3 * f.lit - (f.back ? 0.06 : 0));
       g.fillStyle = k >= 1 ? shade(base, Math.min(0.5, k - 1)) : shade(base, k - 1);
       g.beginPath(); f.q.forEach((v, i) => { const sx = X + v[0] * L, syy = Y - v[1] * L; i ? g.lineTo(sx, syy) : g.moveTo(sx, syy); }); g.closePath(); g.fill();
-      if (tr && f.c === 0) { g.save(); g.clip(); g.strokeStyle = TRIM[tr]; g.lineWidth = L * (0.03 + 0.022 * tr); g.stroke();
-        if (tr === 2) { g.strokeStyle = 'rgba(235,240,246,.9)'; g.lineWidth = L * 0.012; g.stroke(); }
+      if (tr && f.c === 0) { g.save(); g.clip(); g.strokeStyle = TRIM[tr]; g.lineWidth = L * (0.04 + 0.02 * tr); g.stroke();
+        if (tr === 2) { g.strokeStyle = '#eef2f6'; g.lineWidth = L * 0.022; g.stroke(); }
         if (tr >= 3) { g.strokeStyle = tr >= 4 ? 'rgba(255,244,190,.95)' : 'rgba(255,236,170,.6)'; g.lineWidth = L * 0.014 * (tr - 2); g.stroke(); } g.restore(); }
       g.strokeStyle = 'rgba(41,48,61,.7)'; g.lineWidth = lw; g.stroke();
     }
