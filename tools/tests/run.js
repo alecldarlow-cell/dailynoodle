@@ -16,6 +16,7 @@ const F = {
   sweep: '2026-10-18-logic-sweep.html', path: '2026-10-18-logic-path-0092.html', path2: '2026-10-19-logic-path-0093.html',
   link: '2026-10-18-word-link-0071.html', tangle: '2026-10-18-word-tangle-0012.html', borders: '2026-10-18-geo-borders-0014.html',
 };
+const TODAY_JSON = require(require('path').join(__dirname, '..', '..', 'puzzles-today.json')).today;   // the date the live Next row points at
 const ONLY = process.argv[2] || '';
 let pass = 0, fail = 0;
 const ok = (c, m) => { if (c) { pass++; console.log('  ok  ', m); } else { fail++; console.log('  FAIL', m); } };
@@ -44,7 +45,9 @@ async function sheetChecks(p, ev, { type, boxId = 'winModal', ids, shareRe, endC
   ok(s.legacyShown === 0, `${type}: the old result layout is hidden (${s.legacyShown} visible)`);
   for (const [id, n, inBox] of s.ids) ok(n === 1 && inBox, `${type}: #${id} exists once, inside the box`);
   ok(shareRe.test(s.share), `${type}: share line "${s.share}"`);
-  ok(/^Next: \w+ \d+$/.test(s.next) && /^\d of 7 played today$/.test(s.nextSub) && /^\.\.\/reports\/2026-10-18-/.test(s.nextHref), `${type}: next row "${s.next}" (${s.nextSub}) → ${s.nextHref}`);
+  // The Next row reads the live puzzles-today.json, which the workflow rewrites every day, so the
+  // expected date comes from that file rather than the fixtures' fake clock (18-19 Oct 2026).
+  ok(/^Next: \w+ \d+$/.test(s.next) && /^\d of 7 played today$/.test(s.nextSub) && (s.nextHref || '').startsWith('../reports/' + TODAY_JSON + '-'), `${type}: next row "${s.next}" (${s.nextSub}) → ${s.nextHref}`);
   ok(/^A new \w+ in (\d+h )?\d+m\./.test(s.clock), `${type}: countdown "${s.clock}"`);
   ok(s.board, `${type}: "See today's board" sits in the sheet`);
   ok(s.scrollW <= s.vw, `${type}: no sideways scroll (${s.scrollW} > ${s.vw})`);

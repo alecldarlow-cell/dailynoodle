@@ -54,8 +54,8 @@
     <div class="word">Daily<b>Noodle</b></div>
   </header>
   <main class="lost">
-    <h1>That page isn't here</h1>
-    <p>The link may be mistyped, or the page may have moved. Today's news, puzzles and games are a tap away.</p>
+    <h1 id="lostH">That page isn't here</h1>
+    <p id="lostP">The link may be mistyped, or the page may have moved. Today's news, puzzles and games are a tap away.</p>
     <nav class="go" aria-label="Sections">
       <a href="/">News</a>
       <a href="/puzzles.html">Puzzles</a>
@@ -63,5 +63,28 @@
     </nav>
   </main>
 </div>
+<script>
+/* A dated piece or puzzle that isn't out yet (19 Oct 2026). The site only
+   serves a file once its London day has come and the nightly build has run,
+   which can be an hour or two after midnight, so a link to today's (or a
+   later) puzzle can land here first. Say so, rather than "isn't here". */
+(function(){try{
+  var m=location.pathname.match(/\/reports\/(\d{4})-(\d{2})-(\d{2})-[^\/]+\.html$/);if(!m)return;
+  var day=m[1]+'-'+m[2]+'-'+m[3],today;
+  try{today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}catch(e){today=new Date().toISOString().slice(0,10);}
+  if(day<today)return;
+  var h=document.getElementById('lostH'),p=document.getElementById('lostP');
+  var tt=document.title;document.title='Not out yet — The Daily Noodle';
+  if(day===today){
+    var h0=h.textContent,p0=p.textContent,t0=tt;
+    h.textContent='Nearly ready';p.textContent='Today’s set is still being published. It usually appears within a couple of hours of midnight, so try again shortly.';
+    // once today's build has run, a missing file for today really is missing
+    fetch('/puzzles-today.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
+      if(j&&j.today===today){h.textContent=h0;p.textContent=p0;document.title=t0;}
+    }).catch(function(){});
+  }
+  else{var d=new Date(day+'T12:00:00Z');h.textContent='Not out yet';p.textContent='This one comes out on '+d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'})+'.';}
+}catch(e){}})();
+</script>
 </body>
 </html>

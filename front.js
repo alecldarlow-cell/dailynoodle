@@ -4,8 +4,17 @@
    Reads feed.json (built by .github/workflows/build-feed.yml on every push and
    nightly) and renders a reverse-chronological, topic-filterable card list of
    the section's own kind: report (News), puzzle (Puzzles) or game (Games).
-   If feed.json is missing it falls back to the GitHub API folder listings and
-   labels the result provisional.
+   If feed.json can't be loaded (usually no connection) it says so and offers
+   a retry, and tries again by itself when the phone comes back online.
+   (19 Oct 2026: the old fallback that read the GitHub API was removed. The
+   workflow always deploys feed.json, and the API listed held-back files the
+   site doesn't serve, so its links led to 404s.)
+
+   Back and forward (19 Oct 2026): the chosen topic and the card at the top of
+   the screen are kept in history.state, so returning from a piece or puzzle
+   lands where you left even when the browser has dropped the page from its
+   back-forward cache. A page left open (or an installed app resumed) fetches
+   the feed again once the London day changes or it is 30 minutes old.
 
    You should never need to edit this file to publish. Upload a piece to
    /reports, /puzzles or /games and it appears on the right page.
@@ -17,23 +26,17 @@
 (function(){
   'use strict';
 
-  /* ---------- config ------------------------------------------------------
-     Only used by the fallback listing (when feed.json isn't there yet).
-     Leave blank to auto-detect from the GitHub Pages URL.                   */
-  var CONFIG = { owner:'alecldarlow-cell', repo:'dailynoodle', branch:'main' };   // set by hand: on a custom domain it can't be read from the address
-
   /* ---------- section ------------------------------------------------------
      Each page declares its desk on <html data-section="…">. The section picks
-     which kind of item from feed.json it shows and which folder the fallback
-     listing reads. One script, three pages.                                   */
+     which kind of item from feed.json it shows. One script, four pages.       */
   var SECTIONS = {
-    news:    { kind:'report', dir:'reports', noun:['piece','pieces'],
+    news:    { kind:'report', noun:['piece','pieces'],
                empty:'No pieces published yet.' },
-    puzzles: { kind:'puzzle', dir:'puzzles', noun:['puzzle','puzzles'],
+    puzzles: { kind:'puzzle', noun:['puzzle','puzzles'],
                empty:'No puzzles published yet.' },
-    games:   { kind:'game',   dir:'games',   noun:['game','games'],
+    games:   { kind:'game',   noun:['game','games'],
                empty:'No games yet — the first ones are on their way.' },
-    lab:     { kind:'*',      dir:'',        noun:['item','items'],
+    lab:     { kind:'*',      noun:['item','items'],
                empty:'Nothing in the lab right now — everything is finished.' }
   };
   var SEC = SECTIONS[document.documentElement.dataset.section] || SECTIONS.news;
@@ -47,7 +50,7 @@
   // The lab filters by desk; the desks filter by topic.
   function facet(it){ return LAB ? (KIND_LABEL[it.kind]||'') : (it.topic||''); }
 
-  var state = { items:[], kind:SEC.kind, topic:'all', q:'', provisional:false, built:'' };
+  var state = { items:[], kind:SEC.kind, topic:'all', q:'', built:'', loadedAt:0, day:'' };
 
   var $feed   = document.getElementById('feed');
   var $chips  = document.getElementById('chips');
@@ -62,81 +65,48 @@
     });
   }
 
+  // Today's date in London, YYYY-MM-DD: the site's day, whatever the phone's time zone.
+  function londonDay(){
+    try { return new Intl.DateTimeFormat('en-CA', { timeZone:'Europe/London', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date()); }
+    catch (e) { return new Date().toISOString().slice(0, 10); }
+  }
+
+  // Items carry a publication day, not a time. Labelling them in hours ("just
+  // now" all morning, "24h ago") claimed a precision they don't have, so a
+  // day-only date reads as a London calendar day: Today, Yesterday, 3d ago.
   function relTime(iso){
     if(!/^\d{4}-\d{2}-\d{2}/.test(iso||'')) return '';
-    var d = new Date(iso.length>10 ? iso : iso+'T09:00:00Z');
+    var d = new Date(iso.length>10 ? iso : iso+'T12:00:00Z');
     if(isNaN(d)) return '';
+    var fmt = { day:'numeric', month:'short', year:'numeric' };
+    if(iso.length === 10){
+      var days = Math.round((Date.parse(londonDay()+'T12:00:00Z') - d.getTime())/864e5);
+      if(days <= 0) return 'Today';
+      if(days === 1) return 'Yesterday';
+      if(days < 7)  return days+'d ago';
+      fmt.timeZone = 'UTC';   // the date as written, not shifted by the phone's zone
+      return d.toLocaleDateString('en-GB', fmt);
+    }
     var mins = Math.round((Date.now()-d.getTime())/60000);
     if(mins < 1)    return 'just now';
     if(mins < 60)   return mins+'m ago';
     if(mins < 1440) return Math.round(mins/60)+'h ago';
     if(mins < 10080)return Math.round(mins/1440)+'d ago';
-    return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-  }
-
-  function detectRepo(){
-    if(CONFIG.owner && CONFIG.repo) return CONFIG;
-    var host = location.hostname;                     // alec.github.io
-    var seg  = location.pathname.split('/').filter(Boolean);
-    if(!/\.github\.io$/i.test(host)) return null;     // custom domain: fill CONFIG in by hand
-    var owner = host.replace(/\.github\.io$/i,'');
-    var repo  = seg.length ? seg[0] : host;           // project site vs user site
-    return { owner:owner, repo:repo, branch:CONFIG.branch };
-  }
-
-  function titleCase(slug){
-    var small = {a:1,an:1,and:1,the:1,of:1,to:1,in:1,on:1,vs:1,for:1,at:1,by:1};
-    return slug.split('-').filter(Boolean).map(function(w,i){
-      return (i>0 && small[w]) ? w : w.charAt(0).toUpperCase()+w.slice(1);
-    }).join(' ');
+    return d.toLocaleDateString('en-GB', fmt);
   }
 
   /* ---------- load ---------- */
   function loadFeed(){
     return fetch('feed.json', {cache:'no-cache'})   // revalidates: a fresh copy only when it has changed
-      .then(function(r){ if(!r.ok) throw new Error('no feed'); return r.json(); })
+      .then(function(r){ if(!r.ok) throw new Error('feed.json '+r.status); return r.json(); })
       .then(function(j){
-        state.items = j.items || [];
+        if(!j || !Array.isArray(j.items)) throw new Error('feed.json has no items');
+        state.items = j.items;
         state.built = j.built || '';
+        state.loadedAt = Date.now();
+        state.day = londonDay();
         return true;
       });
-  }
-
-  // Fallback: read the folder listings straight from the GitHub API.
-  function loadFallback(){
-    var cfg = detectRepo();
-    if(!cfg) return Promise.reject(new Error('cannot detect repo'));
-    var base = 'https://api.github.com/repos/'+cfg.owner+'/'+cfg.repo+'/contents/';
-    // Puzzles also live in /reports (filenames carry the type), so the fallback
-    // reads every folder and lets the kind filter below do the sorting.
-    return Promise.all(['reports','puzzles','games'].map(function(dir){
-      return fetch(base+dir+'?ref='+cfg.branch)
-        .then(function(r){ return r.ok ? r.json() : []; })
-        .then(function(list){
-          return (Array.isArray(list)?list:[])
-            .filter(function(f){ return f.type==='file' && /\.html?$/i.test(f.name); })
-            .map(function(f){
-              var m = f.name.replace(/\.html?$/i,'').match(/^(\d{4}-\d{2}-\d{2})-([a-z0-9]+)-(.+)$/i);
-              return {
-                path: dir+'/'+f.name,
-                kind: dir==='games' ? 'game'
-                    : (dir==='puzzles' || /-(logic|crossword|word|geo)-/i.test(f.name)) ? 'puzzle' : 'report',
-                topic: m ? titleCase(m[2]) : (dir==='puzzles'?'Puzzle':'Data'),
-                headline: m ? titleCase(m[3]) : titleCase(f.name.replace(/\.html?$/i,'')),
-                standfirst: '',
-                date: m ? m[1] : '',
-                read:'', thumb:''
-              };
-            });
-        })
-        .catch(function(){ return []; });
-    })).then(function(groups){
-      state.items = groups[0].concat(groups[1], groups[2]).sort(function(a,b){
-        return (b.date||'').localeCompare(a.date||'') || a.path.localeCompare(b.path);
-      });
-      state.provisional = true;
-      return true;
-    });
   }
 
   /* ---------- render ---------- */
@@ -210,7 +180,7 @@
     // A meaningful update (dn:updated) moves the card up and is labelled as such.
     var upd = /^\d{4}-\d{2}-\d{2}$/.test(it.updated||'') && it.updated > (it.date||'');
     var when = relTime(upd ? it.updated : it.date);
-    if(upd && when) when = 'Updated ' + when;
+    if(upd && when) when = 'Updated ' + (/^(Today|Yesterday)$/.test(when) ? when.toLowerCase() : when);
     var thumb;
     if(it.thumb){
       thumb = '<img class="thumb" src="'+esc(it.thumb)+'" alt="" loading="lazy">';
@@ -262,8 +232,7 @@
     KEYS.forEach(function(k){ var s = read(k); if (s && s.done) for (var id in s.done) { var d = s.done[id] && (s.done[id].d || s.done[id].on); if (d) days[d] = 1; } });
     STREAKS.forEach(function(k){ var s = read(k); if (s && Array.isArray(s.dates)) s.dates.forEach(function(d){ days[d] = 1; }); });
     function back(d){ var x = new Date(d + 'T12:00:00Z'); x.setUTCDate(x.getUTCDate() - 1); return x.toISOString().slice(0, 10); }
-    var t; try { t = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()); }
-    catch (e) { t = new Date().toISOString().slice(0, 10); }
+    var t = londonDay();
     var d = days[t] ? t : back(t), n = 0;
     while (days[d] && n < 4000) { n++; d = back(d); }
     var el = document.getElementById('run');
@@ -272,12 +241,56 @@
     el.hidden = n < 2;
   }
 
+  /* ---------- where you were: kept in this history entry ----------
+     The card at the top of the screen (by its link) and its offset, not a
+     pixel scroll position: cards below the screen are laid out lazily
+     (content-visibility in front.css), so a raw scrollY would land a few
+     cards out on a fresh load.                                             */
+  try { if('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch(e){}
+  function controlsBottom(){ var c = document.querySelector('.controls'); return c ? Math.max(0, c.getBoundingClientRect().bottom) : 0; }
+  function anchor(){
+    var top = controlsBottom(), cards = $feed.querySelectorAll('a.card');
+    if(window.scrollY < 40 || !cards.length) return null;   // at the top: nothing to come back to
+    for(var i=0;i<cards.length;i++){
+      var r = cards[i].getBoundingClientRect();
+      if(r.bottom > top + 1) return { href: cards[i].getAttribute('href'), off: Math.round(r.top) };
+    }
+    return null;
+  }
+  function toAnchor(a){
+    if(!a || !a.href) return;
+    var cards = $feed.querySelectorAll('a.card');
+    for(var i=0;i<cards.length;i++) if(cards[i].getAttribute('href') === a.href){
+      window.scrollTo(0, window.scrollY + cards[i].getBoundingClientRect().top - a.off);
+      return;
+    }
+  }
+  function remember(){
+    try {
+      var s = {}, h = history.state, k;
+      if(h && typeof h === 'object') for(k in h) s[k] = h[k];
+      s.dnFront = { topic: state.topic, at: anchor() };
+      history.replaceState(s, '');
+    } catch(e){}
+  }
+  var saved = null;
+  try { saved = history.state && history.state.dnFront; } catch(e){}
+
   /* ---------- events ---------- */
   $chips.addEventListener('click', function(e){
     var b = e.target.closest('.chip'); if(!b || !b.dataset.topic) return;   // the Board pill is a plain link
     state.topic = b.dataset.topic;
     if(window.digi) window.digi.track('chip_click', { topic: state.topic });
     render();
+    remember();
+  });
+  // Saved as you leave: tapping a card (before the browser navigates), and
+  // whenever the page is hidden or unloaded.
+  $feed.addEventListener('click', function(e){ if(e.target.closest && e.target.closest('a.card')) remember(); }, true);
+  window.addEventListener('pagehide', remember);
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'hidden') remember();
+    else freshen();
   });
 
   // search toggle: the icon opens the field and focuses it; it closes on a
@@ -303,21 +316,49 @@
   });
 
   /* ---------- boot ---------- */
-  loadFeed()
-    .catch(function(){ return loadFallback(); })
-    .then(function(){
-      if(state.provisional){
-        $status.innerHTML = '<div class="note"><b>Provisional listing.</b> feed.json hasn\'t been '
-          + 'built yet, so headlines here are derived from filenames. They will sharpen as soon as '
-          + 'the Build feed action has run once.</div>';
-      }
+  var SKELETON = $feed.innerHTML, failed = false, loading = false;
+  function showError(){
+    failed = true;
+    $feed.innerHTML = '';
+    $count.textContent = '';
+    $status.innerHTML = '<div class="note" role="alert"><b>Couldn’t load the list.</b> '
+      + 'Check your connection and try again. '
+      + '<button type="button" class="retry" id="retry">Try again</button></div>';
+  }
+  function boot(){
+    if(loading) return; loading = true;
+    failed = false;
+    $status.innerHTML = '';
+    if(!state.items.length) $feed.innerHTML = SKELETON;
+    loadFeed().then(function(){
+      loading = false;
+      if(saved && typeof saved.topic === 'string') state.topic = saved.topic;   // renderChips falls back to all if it's gone
       render();
-    })
-    .catch(function(err){
-      $feed.innerHTML = '';
-      $status.innerHTML = '<div class="note"><b>Couldn\'t load the index.</b> '
-        + 'If this is a custom domain, set <code>CONFIG.owner</code> and <code>CONFIG.repo</code> '
-        + 'at the top of the script in index.html. ('+esc(err.message)+')</div>';
-    });
+      if(saved) toAnchor(saved.at);
+      saved = null;
+    }, function(){ loading = false; showError(); });
+  }
+  $status.addEventListener('click', function(e){ if(e.target.closest && e.target.closest('#retry')) boot(); });
+  window.addEventListener('online', function(){ if(failed) boot(); });
+
+  // A page left open, or an installed app brought back from the background,
+  // would otherwise keep yesterday's list. Fetch again once the London day has
+  // changed or the list is 30 minutes old, keeping the card you were looking at.
+  function freshen(){
+    if(failed){ boot(); return; }
+    if(loading || !state.loadedAt) return;
+    if(state.day === londonDay() && Date.now() - state.loadedAt < 30*60*1000){
+      if(SEC.kind === 'puzzle') showRun();   // a puzzle may have been finished since
+      return;
+    }
+    loading = true;
+    loadFeed().then(function(){ loading = false; var a = anchor(); render(); toAnchor(a); },
+                    function(){ loading = false; });
+  }
+  // Back to a page the browser kept whole (back-forward cache): nothing is
+  // re-run, so bring the run and the list up to date here.
+  window.addEventListener('pageshow', function(e){ if(e.persisted) freshen(); });
+
+  boot();
 
 })();

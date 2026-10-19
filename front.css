@@ -122,6 +122,12 @@
 
   /* ---------- cards ---------- */
   .feed{list-style:none}
+  /* Cards below the screen are laid out only as they come near it. Puzzles
+     lists every puzzle (500 and growing); without this, a tap on a topic
+     froze a mid-range phone for about 2 s (19 Oct 2026, measured at 6x CPU
+     slowdown: 2.4 s down to 0.8 s). The size is a placeholder until a card
+     has been drawn once; front.js restores your place by card, not pixels. */
+  .feed>li{content-visibility:auto;contain-intrinsic-size:auto 150px}
   .card{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:start;
     padding:18px 0;border-bottom:1px solid var(--hair)}
   .card.nothumb{grid-template-columns:1fr}
@@ -215,6 +221,8 @@
   .note{background:var(--paper);border:1px solid var(--hair);border-left:3px solid var(--accent);
     border-radius:4px;padding:12px 14px;font-size:13px;color:var(--muted);margin:16px 0}
   .note b{color:var(--ink)}
+  .note .retry{display:inline-block;margin-left:4px;font:600 13px/1 var(--body);color:var(--accent);
+    background:var(--paper);border:1px solid var(--accent);border-radius:999px;padding:7px 14px;cursor:pointer}
   .skel{height:96px;border-bottom:1px solid var(--hair);margin:0;
     background:linear-gradient(90deg,var(--canvas),var(--skel),var(--canvas));
     background-size:200% 100%;animation:sh 1.2s linear infinite}
