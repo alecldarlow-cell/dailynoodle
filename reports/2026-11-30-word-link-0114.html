@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0114", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of wave",          members:["HEAT","MEXICAN","TIDAL","SHOCK"]},
-    {rank:2, name:"Kinds of barrier",       members:["CRASH","SOUND","SAFETY","CRUSH"]},
-    {rank:3, name:"Sea creatures",          members:["URCHIN","ANEMONE","STARFISH","CLAM"]},
-    {rank:4, name:"Words meaning be quiet", members:["HUSH","PIPE DOWN","SHTUM","BELT UP"]}
+    {rank:1, name:"Snooker balls",       members:["RED","BLACK","BLUE","PINK"]},
+    {rank:2, name:"On a football team",  members:["STRIKER","WINGER","FULL BACK","MIDFIELDER"]},
+    {rank:3, name:"EGG ___",             members:["CUP","TIMER","BOX","WHITE"]},
+    {rank:4, name:"Quidditch positions", members:["SEEKER","KEEPER","BEATER","CHASER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SOUND", not:"Kinds of wave"},
-    {tile:"CLAM",  not:"Words meaning be quiet"},
-    {tile:"CRASH", not:"Kinds of wave"}
+    {tile:"KEEPER", not:"On a football team"},
+    {tile:"BEATER", not:"EGG ___"},
+    {tile:"WHITE",  not:"Snooker balls"}
   ]
 };
 </script>

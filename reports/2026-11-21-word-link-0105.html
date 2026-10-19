@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0105", band:"medium",
   groups:[
-    {rank:1, name:"Spiders and kin", members:["TARANTULA","SCORPION","MITE","HARVESTMAN"]},
-    {rank:2, name:"Zodiac signs",    members:["LIBRA","VIRGO","ARIES","PISCES"]},
-    {rank:3, name:"Kinds of web",    members:["WORLD WIDE","FOOD","COBWEB","SPIDERWEB"]},
-    {rank:4, name:"Ways to weave",   members:["SPIN","PLAIT","BRAID","KNIT"]}
+    {rank:1, name:"Bathroom shelf",       members:["SHAMPOO","FLANNEL","LOOFAH","TOOTHPASTE"]},
+    {rank:2, name:"On the telly",         members:["QUIZ","CARTOON","SITCOM","SOAP"]},
+    {rank:3, name:"Religious dress",      members:["CASSOCK","MITRE","WIMPLE","DOG COLLAR"]},
+    {rank:4, name:"Things you can break", members:["RECORD","NEWS","ICE","HABIT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SCORPION", not:"Zodiac signs"},
-    {tile:"SPIN",     not:"Kinds of web"},
-    {tile:"MITE",     not:"Zodiac signs"}
+    {tile:"HABIT", not:"Religious dress"},
+    {tile:"NEWS",  not:"On the telly"},
+    {tile:"SOAP",  not:"Bathroom shelf"}
   ]
 };
 </script>

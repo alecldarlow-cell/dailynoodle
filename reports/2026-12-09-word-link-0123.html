@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0123", band:"medium",
   groups:[
-    {rank:1, name:"Types of light", members:["NORTHERN","TRAFFIC","STROBE","PILOT"]},
-    {rank:2, name:"Kinds of test",  members:["BLOOD","DRIVING","ACID","LITMUS"]},
-    {rank:3, name:"TV terms",       members:["EPISODE","SERIES","REPEAT","OMNIBUS"]},
-    {rank:4, name:"Ways to guide",  members:["STEER","USHER","SHEPHERD","LEAD"]}
+    {rank:1, name:"Bars of chocolate", members:["TWIX","SNICKERS","CRUNCHIE","GALAXY"]},
+    {rank:2, name:"An attempt",        members:["STAB","BASH","SHOT","WHIRL"]},
+    {rank:3, name:"Hounds",            members:["BASSET","WHIPPET","AFGHAN","GREYHOUND"]},
+    {rank:4, name:"Famous ships",      members:["BOUNTY","BEAGLE","ENDEAVOUR","VICTORY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PILOT",   not:"TV terms"},
-    {tile:"DRIVING", not:"Ways to guide"},
-    {tile:"REPEAT",  not:"Kinds of test"}
+    {tile:"BOUNTY",    not:"Bars of chocolate"},
+    {tile:"BEAGLE",    not:"Hounds"},
+    {tile:"ENDEAVOUR", not:"An attempt"}
   ]
 };
 </script>

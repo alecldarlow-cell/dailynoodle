@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0109", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of lock",      members:["MORTICE","YALE","COMB","PAD"]},
-    {rank:2, name:"Waterway features",  members:["TOWPATH","BASIN","WHARF","WEIR"]},
-    {rank:3, name:"Hairdresser things", members:["CLIPPERS","TONGS","BACKWASH","GOWN"]},
-    {rank:4, name:"Ways to secure",     members:["BOLT","LATCH","CHAIN","SEAL"]}
+    {rank:1, name:"Places to live",        members:["BUNGALOW","COTTAGE","SEMI","MANSION"]},
+    {rank:2, name:"Little",                members:["TINY","TEENY","PETITE","MINIATURE"]},
+    {rank:3, name:"In the spice cupboard", members:["CUMIN","PAPRIKA","CHILLI","CORIANDER"]},
+    {rank:4, name:"___BREAD",              members:["SHORT","GINGER","FLAT","SWEET"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"COMB", not:"Hairdresser things"},
-    {tile:"PAD",  not:"Ways to secure"},
-    {tile:"SEAL", not:"Waterway features"}
+    {tile:"SHORT",  not:"Little"},
+    {tile:"GINGER", not:"In the spice cupboard"},
+    {tile:"FLAT",   not:"Places to live"}
   ]
 };
 </script>

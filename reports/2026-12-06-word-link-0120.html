@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0120", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of pen",      members:["FOUNTAIN","BULL","PLAY","QUILL"]},
-    {rank:2, name:"Farm enclosures",   members:["PADDOCK","STY","FOLD","CORRAL"]},
-    {rank:3, name:"Kinds of fountain", members:["DRINKING","SODA","WISHING","TREVI"]},
-    {rank:4, name:"Ways to write",     members:["SCRAWL","SCRIBBLE","INK","DRAFT"]}
+    {rank:1, name:"___ AGE",                 members:["STONE","BRONZE","ICE","SPACE"]},
+    {rank:2, name:"Parts of a car",          members:["BUMPER","WING","AERIAL","WINDSCREEN"]},
+    {rank:3, name:"Hats",                    members:["BOWLER","BOATER","STETSON","TRILBY"]},
+    {rank:4, name:"Classic Monopoly tokens", members:["BOOT","IRON","TOP HAT","THIMBLE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FOUNTAIN", not:"Kinds of fountain"},
-    {tile:"FOLD",     not:"Kinds of pen"},
-    {tile:"BULL",     not:"Farm enclosures"}
+    {tile:"IRON",    not:"___ AGE"},
+    {tile:"BOOT",    not:"Parts of a car"},
+    {tile:"TOP HAT", not:"Hats"}
   ]
 };
 </script>

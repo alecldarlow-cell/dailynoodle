@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0117", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of block",          members:["BREEZE","ROAD","MENTAL","TOWER"]},
-    {rank:2, name:"Kinds of tower",          members:["CONTROL","WATER","BELL","IVORY"]},
-    {rank:3, name:"Building materials",      members:["MORTAR","RENDER","LINTEL","JOIST"]},
-    {rank:4, name:"Ways to obstruct a view", members:["SCREEN","SHADE","VEIL","SHROUD"]}
+    {rank:1, name:"Family games",        members:["BUCKAROO","KERPLUNK","JENGA","GUESS WHO"]},
+    {rank:2, name:"Styles of dance",     members:["BALLET","SALSA","TANGO","JIVE"]},
+    {rank:3, name:"West Country cities", members:["BRISTOL","EXETER","PLYMOUTH","TRURO"]},
+    {rank:4, name:"Things you can run",  members:["BATH","ERRAND","RISK","TAP"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"TOWER",  not:"Kinds of tower"},
-    {tile:"ROAD",   not:"Building materials"},
-    {tile:"SCREEN", not:"Kinds of block"}
+    {tile:"RISK", not:"Family games"},
+    {tile:"TAP",  not:"Styles of dance"},
+    {tile:"BATH", not:"West Country cities"}
   ]
 };
 </script>

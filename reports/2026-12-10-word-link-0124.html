@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0124", band:"medium",
   groups:[
-    {rank:1, name:"Curries by heat", members:["MADRAS","VINDALOO","JALFREZI","PHAAL"]},
-    {rank:2, name:"Indian breads",   members:["NAAN","ROTI","PARATHA","PURI"]},
-    {rank:3, name:"Kinds of heat",   members:["DEAD","WHITE","QUALIFYING","BODY"]},
-    {rank:4, name:"Ways to sweat",   members:["PERSPIRE","GLOW","SWELTER","STEAM"]}
+    {rank:1, name:"Football kit",           members:["SHORTS","SOCKS","SHIN PADS","BOOTS"]},
+    {rank:2, name:"Into the recycling bin", members:["CAN","CARDBOARD","NEWSPAPER","FOIL"]},
+    {rank:3, name:"High street names",      members:["NEXT","ARGOS","GREGGS","SUPERDRUG"]},
+    {rank:4, name:"Things with a neck",     members:["BOTTLE","SHIRT","VASE","VIOLIN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MADRAS", not:"Indian breads"},
-    {tile:"BODY",   not:"Curries by heat"},
-    {tile:"STEAM",  not:"Indian breads"}
+    {tile:"SHIRT",  not:"Football kit"},
+    {tile:"BOTTLE", not:"Into the recycling bin"},
+    {tile:"BOOTS",  not:"High street names"}
   ]
 };
 </script>

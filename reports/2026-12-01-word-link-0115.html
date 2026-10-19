@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0115", band:"medium",
   groups:[
-    {rank:1, name:"Fabrics",         members:["DENIM","TWEED","LINEN","VELVET"]},
-    {rank:2, name:"Kinds of jacket", members:["DINNER","BOMBER","POTATO","LIFE"]},
-    {rank:3, name:"Kinds of dinner", members:["SCHOOL","TV","ROAST","LAST"]},
-    {rank:4, name:"Ways to wrap up", members:["MUFFLE","BUNDLE","SWADDLE","LAG"]}
+    {rank:1, name:"Social events",           members:["PROM","DISCO","RAVE","SHINDIG"]},
+    {rank:2, name:"Foot anatomy",            members:["HEEL","TOE","INSTEP","BALL"]},
+    {rank:3, name:"Fish that lie flat",      members:["PLAICE","TURBOT","HALIBUT","SOLE"]},
+    {rank:4, name:"Rearrange for an animal", members:["TOAST","SHORE","WENT","LOIN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,8 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"DINNER", not:"Kinds of dinner"},
-    {tile:"LIFE",   not:"Kinds of dinner"}
+    {tile:"SOLE", not:"Foot anatomy"},
+    {tile:"BALL", not:"Social events"}
   ]
 };
 </script>

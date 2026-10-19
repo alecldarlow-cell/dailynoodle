@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0102", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of loaf",    members:["TIN","COTTAGE","MEAT","SPLIT"]},
-    {rank:2, name:"Kinds of cottage", members:["PIE","INDUSTRY","HOSPITAL","THATCHED"]},
-    {rank:3, name:"Village features", members:["GREEN","POND","PUMP","STOCKS"]},
-    {rank:4, name:"Ways to idle",     members:["LOAF","LOUNGE","LAZE","DAWDLE"]}
+    {rank:1, name:"Baby animals",               members:["KITTEN","CYGNET","DUCKLING","CUB"]},
+    {rank:2, name:"Talk on and on",             members:["WAFFLE","BLATHER","YAK","DRONE"]},
+    {rank:3, name:"Uniformed youth groups",     members:["BROWNIE","BEAVER","SCOUT","GUIDE"]},
+    {rank:4, name:"Winnie-the-Pooh characters", members:["PIGLET","RABBIT","OWL","EEYORE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"COTTAGE", not:"Kinds of cottage"},
-    {tile:"GREEN",   not:"Kinds of loaf"},
-    {tile:"LOAF",    not:"Kinds of loaf"}
+    {tile:"PIGLET", not:"Baby animals"},
+    {tile:"RABBIT", not:"Talk on and on"},
+    {tile:"CUB",    not:"Uniformed youth groups"}
   ]
 };
 </script>

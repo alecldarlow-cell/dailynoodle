@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0127", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of hitch", members:["CLOVE","HALF","ROLLING","TIMBER"]},
-    {rank:2, name:"Kinds of clove", members:["GARLIC","SPICE","ORANGE","POMANDER"]},
-    {rank:3, name:"Wood types",     members:["TEAK","ASH","ELM","BEECH"]},
-    {rank:4, name:"Ways to tie",    members:["LASH","BIND","FASTEN","SECURE"]}
+    {rank:1, name:"Burnt for energy",                  members:["PETROL","COAL","PEAT","PARAFFIN"]},
+    {rank:2, name:"In a Punch and Judy show",          members:["CROCODILE","POLICEMAN","BABY","SAUSAGES"]},
+    {rank:3, name:"Scottish clans",                    members:["CAMPBELL","STEWART","FRASER","MACLEOD"]},
+    {rank:4, name:"Thomas the Tank Engine characters", members:["DIESEL","TOBY","GORDON","PERCY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"CLOVE",  not:"Kinds of clove"},
-    {tile:"TIMBER", not:"Wood types"},
-    {tile:"ASH",    not:"Kinds of clove"}
+    {tile:"DIESEL", not:"Burnt for energy"},
+    {tile:"TOBY",   not:"In a Punch and Judy show"},
+    {tile:"GORDON", not:"Scottish clans"}
   ]
 };
 </script>

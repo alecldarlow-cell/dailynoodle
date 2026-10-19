@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0125">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2026-12-11">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0125">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2026-12-11-word-link-0125.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0125", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of ball", members:["CRYSTAL","MOTH","ODD","BEACH"]},
-    {rank:2, name:"Moth names",    members:["CLOTHES","SILK","LUNA","CINNABAR"]},
-    {rank:3, name:"Dance events",  members:["PROM","SOCIAL","HOP","DISCO"]},
-    {rank:4, name:"Ways to roll",  members:["TRUNDLE","BOWL","SPIN","WHEEL"]}
+    {rank:1, name:"Found in a church",       members:["ALTAR","PULPIT","CRYPT","VESTRY"]},
+    {rank:2, name:"Silly person",            members:["TWIT","CLOT","NINNY","WALLY"]},
+    {rank:3, name:"Picture book favourites", members:["GRUFFALO","ELMER","MOG","SPOT"]},
+    {rank:4, name:"Put a silent K in front", members:["NIGHT","NAVE","NOW","NIT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MOTH", not:"Moth names"},
-    {tile:"HOP",  not:"Ways to roll"}
+    {tile:"NAVE",  not:"Found in a church"},
+    {tile:"NIT",   not:"Silly person"},
+    {tile:"WALLY", not:"Picture book favourites"}
   ]
 };
 </script>

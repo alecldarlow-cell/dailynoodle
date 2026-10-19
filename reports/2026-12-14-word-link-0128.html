@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0128", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of sheet",  members:["BALANCE","SPREAD","ICE","ANSWER"]},
-    {rank:2, name:"Bed linen",       members:["DUVET","VALANCE","BOLSTER","EIDERDOWN"]},
-    {rank:3, name:"Kinds of ice",    members:["BLACK","DRY","PACK","SEA"]},
-    {rank:4, name:"Ways to flatten", members:["PRESS","ROLL OUT","LEVEL","SQUASH"]}
+    {rank:1, name:"Angler's kit",        members:["REEL","MAGGOT","WADERS","TACKLE BOX"]},
+    {rank:2, name:"A period of time",    members:["STINT","STRETCH","PATCH","BOUT"]},
+    {rank:3, name:"Boxing terms",        members:["JAB","CORNER","UPPERCUT","KNOCKOUT"]},
+    {rank:4, name:"Things you can cast", members:["SPELL","VOTE","DOUBT","NET"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"ICE",     not:"Kinds of ice"},
-    {tile:"SPREAD",  not:"Bed linen"},
-    {tile:"BALANCE", not:"Ways to flatten"}
+    {tile:"NET",   not:"Angler's kit"},
+    {tile:"SPELL", not:"A period of time"},
+    {tile:"BOUT",  not:"Boxing terms"}
   ]
 };
 </script>

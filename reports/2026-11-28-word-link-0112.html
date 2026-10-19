@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0112", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of shop",      members:["BETTING","CHIP","TALK","SWEET"]},
-    {rank:2, name:"Kinds of sweet",     members:["BITTER","PEA","TOOTH","CORN"]},
-    {rank:3, name:"Barber shop things", members:["CLIPPER","POLE","CAPE","STROP"]},
-    {rank:4, name:"Ways to chat",       members:["NATTER","GOSSIP","YARN","BLATHER"]}
+    {rank:1, name:"Grown underground",  members:["CARROT","PARSNIP","TURNIP","BEETROOT"]},
+    {rank:2, name:"Walk off in a huff", members:["FLOUNCE","STOMP","STALK","SWEEP"]},
+    {rank:3, name:"In the sewing box",  members:["THREAD","THIMBLE","BUTTON","PINCUSHION"]},
+    {rank:4, name:"Things with an eye", members:["NEEDLE","POTATO","STORM","LONDON"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SWEET", not:"Kinds of sweet"},
-    {tile:"TALK",  not:"Ways to chat"},
-    {tile:"POLE",  not:"Kinds of shop"}
+    {tile:"NEEDLE", not:"In the sewing box"},
+    {tile:"POTATO", not:"Grown underground"},
+    {tile:"STORM",  not:"Walk off in a huff"}
   ]
 };
 </script>

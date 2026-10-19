@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0111", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of pack",     members:["ICE","WOLF","SIX","FLAT"]},
-    {rank:2, name:"Kinds of wolf",     members:["SEA","TIMBER","LONE","WEREWOLF"]},
-    {rank:3, name:"Rucksack contents", members:["FLASK","MAP","COMPASS","WATERPROOF"]},
-    {rank:4, name:"Ways to bundle",    members:["CRAM","STUFF","PACK IN","LOAD"]}
+    {rank:1, name:"British wild animals",  members:["FOX","BADGER","STOAT","OTTER"]},
+    {rank:2, name:"Rubbish",               members:["TRASH","REFUSE","LITTER","JUNK"]},
+    {rank:3, name:"Watercraft",            members:["PUNT","CANOE","FERRY","GONDOLA"]},
+    {rank:4, name:"Sound like body parts", members:["WASTE","HARE","KNOWS","HEAL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"WOLF", not:"Kinds of wolf"},
-    {tile:"SEA",  not:"Kinds of pack"},
-    {tile:"SIX",  not:"Rucksack contents"}
+    {tile:"HARE",  not:"British wild animals"},
+    {tile:"WASTE", not:"Rubbish"},
+    {tile:"JUNK",  not:"Watercraft"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0134", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of well", members:["OIL","WISHING","ARTESIAN","STAIR"]},
-    {rank:2, name:"Kinds of oil",  members:["OLIVE","CRUDE","SNAKE","MIDNIGHT"]},
-    {rank:3, name:"Water sources", members:["SPRING","BOREHOLE","AQUIFER","RESERVOIR"]},
-    {rank:4, name:"Ways to gush",  members:["SPOUT","SPURT","JET","SURGE"]}
+    {rank:1, name:"People on foot",           members:["RAMBLER","HIKER","STROLLER","PEDESTRIAN"]},
+    {rank:2, name:"Fish of rivers and lakes", members:["PERCH","ROACH","CARP","TROUT"]},
+    {rank:3, name:"Prime Ministers",          members:["EDEN","HEATH","ATTLEE","PEEL"]},
+    {rank:4, name:"Dad's Army characters",    members:["PIKE","WILSON","WALKER","FRAZER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"OIL",    not:"Kinds of oil"},
-    {tile:"SPRING", not:"Ways to gush"},
-    {tile:"CRUDE",  not:"Water sources"}
+    {tile:"PIKE",   not:"Fish of rivers and lakes"},
+    {tile:"WILSON", not:"Prime Ministers"},
+    {tile:"WALKER", not:"People on foot"}
   ]
 };
 </script>
