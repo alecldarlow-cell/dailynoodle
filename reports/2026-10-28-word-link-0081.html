@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0081", band:"medium",
   groups:[
-    {rank:1, name:"Farm animals' young", members:["CALF","FOAL","LAMB","PIGLET"]},
-    {rank:2, name:"Kinds of kid",        members:["BILLY","WHIZZ","SCHOOL","LATCHKEY"]},
-    {rank:3, name:"Easter things",       members:["EGG","BONNET","BUNNY","SIMNEL"]},
-    {rank:4, name:"Ways to nurture",     members:["REAR","RAISE","FOSTER","NURSE"]}
+    {rank:1, name:"Coffee orders",           members:["CORTADO","MOCHA","FLAT WHITE","MACCHIATO"]},
+    {rank:2, name:"Feeling anxious",         members:["TENSE","ON EDGE","FRAZZLED","WORRIED"]},
+    {rank:3, name:"Parts of a clock",        members:["HANDS","FACE","PENDULUM","SPRING"]},
+    {rank:4, name:"Backwards, another word", members:["DECAF","STRESSED","DIAL","DRAWER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"LAMB",  not:"Easter things"},
-    {tile:"BILLY", not:"Farm animals' young"},
-    {tile:"RAISE", not:"Kinds of kid"}
+    {tile:"DECAF",    not:"Coffee orders"},
+    {tile:"STRESSED", not:"Feeling anxious"},
+    {tile:"DIAL",     not:"Parts of a clock"}
   ]
 };
 </script>

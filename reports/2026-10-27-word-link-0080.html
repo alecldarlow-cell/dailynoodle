@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0080", band:"medium",
   groups:[
-    {rank:1, name:"Deer",          members:["ROE","FALLOW","MUNTJAC","SIKA"]},
-    {rank:2, name:"Farming words", members:["TILTH","STUBBLE","HARROW","SILAGE"]},
-    {rank:3, name:"Kinds of roe",  members:["HARD","SOFT","COD","HERRING"]},
-    {rank:4, name:"Ways to graze", members:["BROWSE","CROP","PASTURE","NIBBLE"]}
+    {rank:1, name:"Played with a pack",     members:["CRIBBAGE","CANASTA","PONTOON","GIN RUMMY"]},
+    {rank:2, name:"Wisecracks",             members:["GAG","QUIP","WITTICISM","ONE-LINER"]},
+    {rank:3, name:"At a coronation",        members:["ORB","SCEPTRE","ROBE","THRONE"]},
+    {rank:4, name:"In a Christmas cracker", members:["SNAP","JOKE","CROWN","GIFT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FALLOW", not:"Farming words"},
-    {tile:"ROE",    not:"Kinds of roe"},
-    {tile:"BROWSE", not:"Deer"}
+    {tile:"SNAP",  not:"Played with a pack"},
+    {tile:"JOKE",  not:"Wisecracks"},
+    {tile:"CROWN", not:"At a coronation"}
   ]
 };
 </script>

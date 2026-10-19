@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0076", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of tape",          members:["MASKING","RED","TICKER","GAFFER"]},
-    {rank:2, name:"Kinds of red",           members:["CHERRY","BRICK","PILLAR-BOX","RUBY"]},
-    {rank:3, name:"Athletics finish words", members:["LINE","LAP","ANCHOR","BATON"]},
-    {rank:4, name:"Ways to bind",           members:["TETHER","STRAP","TRUSS","LASH"]}
+    {rank:1, name:"Dried fruit",            members:["RAISIN","CURRANT","PRUNE","DATE"]},
+    {rank:2, name:"Take without asking",    members:["PINCH","NICK","SWIPE","NAB"]},
+    {rank:3, name:"Flowers in a border",    members:["TULIP","DAISY","LILY","PANSY"]},
+    {rank:4, name:"A colour hides in each", members:["SULTANA","STEAL","PRIMROSE","HUNDRED"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"RED",    not:"Kinds of red"},
-    {tile:"LINE",   not:"Kinds of tape"},
-    {tile:"TICKER", not:"Athletics finish words"}
+    {tile:"SULTANA",  not:"Dried fruit"},
+    {tile:"STEAL",    not:"Take without asking"},
+    {tile:"PRIMROSE", not:"Flowers in a border"}
   ]
 };
 </script>

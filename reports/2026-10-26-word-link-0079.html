@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0079", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of match",    members:["TEST","SHOUTING","BOXING","SAFETY"]},
-    {rank:2, name:"___ test",          members:["BLIND","STRESS","TASTE","MOT"]},
-    {rank:3, name:"Fire-lighting kit", members:["KINDLING","TINDER","FLINT","BELLOWS"]},
-    {rank:4, name:"Ways to pair",      members:["COUPLE","TWIN","MARRY","YOKE"]}
+    {rank:1, name:"Money around the world", members:["EURO","YEN","RAND","PESO"]},
+    {rank:2, name:"Golf words",             members:["TEE","PAR","BOGEY","BIRDIE"]},
+    {rank:3, name:"German words",           members:["JA","DANKE","BITTE","GUTEN TAG"]},
+    {rank:4, name:"Sound like numbers",     members:["WON","FORE","NEIN","ATE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"TEST",   not:"___ test"},
-    {tile:"SAFETY", not:"Fire-lighting kit"},
-    {tile:"BOXING", not:"Ways to pair"}
+    {tile:"WON",  not:"Money around the world"},
+    {tile:"FORE", not:"Golf words"},
+    {tile:"NEIN", not:"German words"}
   ]
 };
 </script>

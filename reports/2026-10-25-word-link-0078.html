@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0078", band:"medium",
   groups:[
-    {rank:1, name:"Big cat sounds",  members:["ROAR","GROWL","SNARL","PURR"]},
-    {rank:2, name:"African animals", members:["GNU","ORYX","MEERKAT","WARTHOG"]},
-    {rank:3, name:"Kinds of pride",  members:["CIVIC","LION'S","FALSE","SOURCE"]},
-    {rank:4, name:"Ways to boast",   members:["CROW","BRAG","PREEN","GLOAT"]}
+    {rank:1, name:"In the fruit bowl",       members:["APPLES","BANANAS","ORANGES","PLUMS"]},
+    {rank:2, name:"Weapons",                 members:["SWORD","AXE","BOW","DAGGER"]},
+    {rank:3, name:"Ten-pin bowling terms",   members:["STRIKE","GUTTER","ALLEY","SPLIT"]},
+    {rank:4, name:"Anagrams of one another", members:["PEARS","SPEAR","SPARE","REAPS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"ROAR", not:"Ways to boast"},
-    {tile:"CROW", not:"Big cat sounds"},
-    {tile:"PURR", not:"African animals"}
+    {tile:"PEARS", not:"In the fruit bowl"},
+    {tile:"SPEAR", not:"Weapons"},
+    {tile:"SPARE", not:"Ten-pin bowling terms"}
   ]
 };
 </script>
