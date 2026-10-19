@@ -40,20 +40,25 @@ function cascade(start,n){const seen=new Set([start]),q=[start];
     for(const j of NB[i])if(!seen.has(j)){seen.add(j);if(n[j]===0)q.push(j);}}
   return seen;}
 
-/* One step of deduction from a given view. Powers both the prover and Hint. */
+/* One step of deduction from a given view. Powers both the prover and Hint.
+   `why` (19 Oct 2026, for Hint's explanation) maps each square found to the
+   constraint that found it first: {src,fl,cells,n} for one number (src = its
+   square) or the mine count (src = -1), or {A,B,cells,n} for a two-constraint
+   (subset) step. It only records; safe, mine and usedSubset are unchanged. */
 function deduceStep(revealed,flagged,n,total,useSubset){
   const cons=[];
   for(const i of revealed){
     const hid=NB[i].filter(j=>!revealed.has(j)&&!flagged.has(j));
     const fl=NB[i].filter(j=>flagged.has(j)).length;
-    if(hid.length)cons.push({cells:new Set(hid),n:n[i]-fl});
+    if(hid.length)cons.push({cells:new Set(hid),n:n[i]-fl,src:i,fl});
   }
   const allHid=[];for(let i=0;i<CELLS;i++)if(!revealed.has(i)&&!flagged.has(i))allHid.push(i);
-  if(allHid.length)cons.push({cells:new Set(allHid),n:total-flagged.size});
-  const safe=new Set(),mine=new Set();
+  if(allHid.length)cons.push({cells:new Set(allHid),n:total-flagged.size,src:-1,fl:flagged.size});
+  const safe=new Set(),mine=new Set(),why=new Map();
+  const note=(x,c)=>{if(!why.has(x))why.set(x,c);};
   const trivial=cs=>{for(const c of cs){
-    if(c.n===0)c.cells.forEach(x=>safe.add(x));
-    else if(c.n===c.cells.size)c.cells.forEach(x=>mine.add(x));}};
+    if(c.n===0)c.cells.forEach(x=>{safe.add(x);note(x,c);});
+    else if(c.n===c.cells.size)c.cells.forEach(x=>{mine.add(x);note(x,c);});}};
   trivial(cons);
   let usedSubset=false;
   if(useSubset&&!safe.size&&!mine.size){
@@ -63,12 +68,12 @@ function deduceStep(revealed,flagged,n,total,useSubset){
       let sub=true;for(const x of A.cells)if(!B.cells.has(x)){sub=false;break;}
       if(!sub)continue;
       const diff=new Set([...B.cells].filter(x=>!A.cells.has(x)));
-      if(diff.size)derived.push({cells:diff,n:B.n-A.n});
+      if(diff.size)derived.push({cells:diff,n:B.n-A.n,A,B});
     }
     trivial(derived);
     if(safe.size||mine.size)usedSubset=true;
   }
-  return {safe:[...safe],mine:[...mine],usedSubset};
+  return {safe:[...safe],mine:[...mine],usedSubset,why};
 }
 /* GATE 1 — deduction-only prover. No guessing, ever. */
 function solveNoGuess(ms,opening,n,useSubset){
@@ -181,6 +186,7 @@ function load(pz){
   $("#winModal").classList.remove("on"); $("#grid").classList.remove("celebrate");
   $("#pid").textContent=dnLabel(P.id); $("#pband").textContent=P.band;
   buildGrid(); paint(); refreshStreakUI(); initRanked();
+  hintShown=false;
   $("#msg").textContent="Tap the highlighted cell to begin — it's proven safe.";
   scheduleFit();
 }
@@ -247,6 +253,7 @@ function paint(){
 function toggleFlag(i){
   if(!startDug)return;   // nothing else responds until the safe start is dug
   if(over||revealed.has(i)||boomed.has(i))return;
+  clearWhy();
   startTimer();
   flagged.has(i)?flagged.delete(i):flagged.add(i);
   paint(); nudge();
@@ -274,6 +281,7 @@ async function dig(i){
     paint(); checkWin(); nudge();
     return;
   }
+  clearWhy();
   startTimer();
   if(MS.has(i))return lose(i);
   for(const y of cascade(i,NUM))revealed.add(y);
@@ -293,19 +301,67 @@ async function lose(i){
 $("#modeDig").onclick=()=>{flagMode=false;paint();};
 $("#modeFlag").onclick=()=>{flagMode=true;paint();};
 /* Hint reuses the prover: it doesn't peek at the mines, it finds the next
-   step you could have found — from what's on your board right now. */
+   step you could have found — from what's on your board right now — and
+   says, in one line, the deduction that found it (19 Oct 2026). The numbers
+   that line talks about get a ring (.why) until your next move. */
+const HW=["no","one","two","three","four","five","six","seven","eight"];
+const hintSq=k=>k===1?"other hidden square is":"other hidden squares are";
+const hintAll=k=>k===1?"it":k===2?"both":"all "+HW[k];
+function hintWhy(c){
+  const num=s=>NUM[s];
+  if(!c.A){                                   // one constraint on its own
+    const H=c.cells.size;
+    if(c.src<0){                              // the mine count
+      if(c.n===0)return `All ${HW[MS.size]} mines are flagged, so every other square is safe.`;
+      return `Only ${HW[c.n]} mine${c.n>1?"s are":" is"} left and only ${HW[H]} square${H>1?"s are":" is"} still hidden, so ${H===1?"it's a mine":H===2?"both are mines":"they're all mines"}.`;
+    }
+    const N=num(c.src),F=c.fl;
+    if(c.n===0)return `This ${N} already touches ${N===1?"its flagged mine":"its "+HW[N]+" flagged mines"}, so its ${hintSq(H)} safe.`;
+    const end=H===1?"that square is a mine":H===2?"both are mines":"all "+HW[H]+" are mines";
+    if(!F)return H===1?`This ${N} has only one hidden square next to it, so that square is a mine.`
+      :`This ${N} has exactly ${HW[H]} hidden squares left, so ${end}.`;
+    return `This ${N} already has ${HW[F]} flagged mine${F>1?"s":""} and only ${HW[H]} hidden square${H>1?"s":""} left, so ${end}.`;
+  }
+  const A=c.A,B=c.B,s=A.cells.size,d=c.cells.size,k=c.n,Ra=A.n,Na=num(A.src);
+  if(B.src<0){                                // a number against the mine count
+    const T=B.n,st=A.fl?"still ":"";
+    if(k===0)return `Only ${HW[T]} mine${T>1?"s are":" is"} left, and this ${Na} ${st}needs ${hintAll(T)}, so every hidden square not touching it is safe.`;
+    const Tw=HW[T][0].toUpperCase()+HW[T].slice(1);
+    return `${Tw} mine${T>1?"s are":" is"} left and this ${Na} ${st}needs ${HW[Ra]}, so ${d===1?"the one hidden square not touching it is a mine":`the ${HW[d]} hidden squares not touching it are ${d===2?"both":"all"} mines`}.`;
+  }
+  const Nb=num(B.src),same=Na===Nb,st=(A.fl||B.fl)?"still ":"";   // two numbers: every hidden square of A also touches B
+  const open=same?`These two ${Na}s share ${HW[s]} hidden squares`:`This ${Nb} and this ${Na} share ${HW[s]} hidden squares`;
+  if(k===0){   // A touches no other hidden squares, so its mines are all in the shared ones: exactly what B needs
+    const its=`its ${A.fl?"last ":""}${Ra===1?"mine is":HW[Ra]+" mines are"} there`;
+    return same?`${open}, and one of them touches no others, so ${its}. That's all the other ${Nb} ${st}needs, so its ${hintSq(d)} safe.`
+      :`${open}, and the ${Na} touches no others, so ${its}. That's all the ${Nb} ${B.fl?"still ":""}needs, so its ${hintSq(d)} safe.`;
+  }
+  const more=k===1?"one more mine":HW[k]+" more mines", tail=d===1?"it can only be in its other square":`they can only be in its other ${HW[d]} squares`;
+  return same?`${open}. One of them ${st}needs ${more} than the other, and ${tail}.`
+    :`${open}. The ${Nb} ${st}needs ${more} than the ${Na}, and ${tail}.`;
+}
+let hintShown=false,hintT=0;
+$("#msg").setAttribute("aria-live","polite");   // so a screen reader hears Hint's line
+function clearWhy(){
+  $$("#grid .cell.why").forEach(c=>c.classList.remove("why"));
+  if(hintShown){hintShown=false;$("#msg").textContent="";scheduleFit();}
+}
 $("#hint").onclick=()=>{
   if(!over)usedHints++;
   if(over)return;
+  clearWhy();
   const d=deduceStep(revealed,flagged,NUM,MS.size,true);
   const safe=d.safe.filter(x=>!revealed.has(x)&&!flagged.has(x));
   const mine=d.mine.filter(x=>!flagged.has(x)&&!boomed.has(x));
   const pick=safe.length?safe[0]:(mine.length?mine[0]:null);
   if(pick===null){$("#msg").textContent="Nothing new is deducible from the board as it stands — check your flags.";return;}
   const cell=$(`#grid .cell[data-i="${pick}"]`);
-  cell.classList.remove("hint"); void cell.offsetWidth; cell.classList.add("hint");
-  $("#msg").innerHTML=safe.length?"This one is provably <b>safe</b>.":"This one is provably a <b>mine</b>.";
-  setTimeout(()=>cell.classList.remove("hint"),2400);
+  $$("#grid .cell.hint").forEach(x=>x.classList.remove("hint"));   // one marked square, the one the line is about
+  void cell.offsetWidth; cell.classList.add("hint");
+  const c=d.why.get(pick);
+  for(const s of (c.A?[c.A.src,c.B.src]:[c.src]))if(s>=0)$(`#grid .cell[data-i="${s}"]`).classList.add("why");
+  $("#msg").textContent=hintWhy(c); hintShown=true; scheduleFit();
+  clearTimeout(hintT); hintT=setTimeout(()=>cell.classList.remove("hint"),2400);
 };
 $("#revealAll").onclick=async()=>{
   if(ranked){await recordResult(false);$("#rank").textContent="· replay";}  // giving up is a result
@@ -506,6 +562,8 @@ function initAppMode(){
   addEventListener("resize",scheduleFit);
   addEventListener("orientationchange",scheduleFit);
   if(window.visualViewport)visualViewport.addEventListener("resize",scheduleFit);
+  /* the message under the board now wraps, so the room for the board can change without a resize */
+  if(window.ResizeObserver){const w=document.querySelector(".gridwrap");if(w)new ResizeObserver(()=>scheduleFit()).observe(w);}
   scheduleFit();
 }
 initAppMode();

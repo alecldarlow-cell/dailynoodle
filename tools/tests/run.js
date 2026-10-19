@@ -375,6 +375,43 @@ const TESTS = {
     ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'sweep: Play again closes the sheet and marks the replay');
     await ctx.close();
   },
+  /* Hint says why (19 Oct 2026): solve the 18 Oct Sweep by Hint alone, checking every line against the board */
+  async 'sweep:hint'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.sweep, { events: ev });
+    await play.start(p);
+    const P = await play.puzzle(p);
+    await tap(p, p.locator('#grid .cell').nth((P.start[0] - 1) * 6 + P.start[1] - 1)); await wait(p, 1200);
+    const quiet = () => p.evaluate(() => ({ msg: document.getElementById('msg').textContent, why: document.querySelectorAll('#grid .cell.why').length }));
+    let q = await quiet();
+    ok(q.msg === '' && q.why === 0, `sweep: nothing explains itself until Hint is pressed ("${q.msg}", ${q.why} ringed)`);
+    const look = [], cleared = [];
+    const seen = await play.sweepByHint(p, {
+      onHint: async () => look.push(await p.evaluate(() => {
+        const m = document.getElementById('msg'), mr = m.getBoundingClientRect(), g = document.getElementById('grid').getBoundingClientRect(), c = document.querySelector('.controls').getBoundingClientRect();
+        return { cut: m.scrollWidth > m.clientWidth + 1 || m.scrollHeight > m.clientHeight + 1, inView: mr.top >= 0 && mr.bottom <= innerHeight && mr.height > 0,
+          order: g.bottom <= mr.top + 1 && c.top >= mr.bottom - 1 && c.bottom <= innerHeight + 1,
+          rings: [...document.querySelectorAll('#grid .cell.why')].map(e => { const s = getComputedStyle(e); return s.outlineStyle === 'solid' && s.outlineWidth === '3px'; }),
+          live: m.getAttribute('aria-live') };
+      })),
+      afterMove: async () => { if (!(await play.boxOn(p)) && await p.evaluate(() => !document.body.classList.contains('win'))) cleared.push(await quiet()); },
+    });
+    const bad = seen.filter(s => !s.ok);
+    ok(seen.length >= 10 && !bad.length, `sweep: all ${seen.length} Hint lines match the board they describe` + bad.map(s => ` | ${s.err}: "${s.line}"`).join(''));
+    ok(seen.every(s => s.verdict === s.truth), 'sweep: every square Hint marks is what its line says (safe or a mine)');
+    ok(seen.every(s => s.marked === 1), `sweep: one square marked at a time (${seen.map(s => s.marked).join('')})`);
+    ok(seen[0].line === 'This 1 has only one hidden square next to it, so that square is a mine.', `sweep: first line "${seen[0].line}"`);
+    ok(seen.some(s => s.line === 'This 2 and this 1 share two hidden squares. The 2 needs one more mine than the 1, and it can only be in its other square.'), 'sweep: the two-square step is explained as one');
+    ok(seen.filter(s => s.kind === 'pair').length === 2 && seen.some(s => s.kind === 'pair' && s.verdict === 'safe'), `sweep: both two-number steps on this board are explained (${seen.filter(s => s.kind === 'pair').map(s => s.verdict).join(', ')})`);
+    const want = { single: 1, pair: 2, 'count-pair': 1, count: 0 };
+    ok(look.every((l, i) => l.rings.length === want[seen[i].kind] && l.rings.every(Boolean)), 'sweep: the numbers each line talks about are ringed (one, or two for a two-number step)');
+    ok(look.every(l => !l.cut && l.inView && l.order), `sweep: the line shows in full between the board and the buttons (${look.filter(l => l.cut || !l.inView || !l.order).length} not)`);
+    ok(look.every(l => l.live === 'polite'), 'sweep: a screen reader hears the line');
+    ok(cleared.length >= 10 && cleared.every(c => c.msg === '' && c.why === 0), `sweep: the line and rings go at your next move (${cleared.filter(c => c.msg || c.why).length} stayed)`);
+    const end = ends(ev)[0];
+    ok(await play.boxOn(p) && end && end.x.outcome === 'solved' && end.x.hints === seen.length, `sweep: solved by Hint alone; tracker read ${end && end.x.hints} hints of ${seen.length}`);
+    ok(!p.errs.length, 'sweep: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
   async 'finish:path'(b) {
     const ev = []; const { ctx, p } = await open(b, F.path, { events: ev });
     await play.path(p);

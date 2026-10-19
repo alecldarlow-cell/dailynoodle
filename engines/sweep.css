@@ -69,6 +69,10 @@ main{position:relative;display:flex;flex-direction:column;align-items:center;gap
    greens a run that is right; Sweep reddens a number that cannot be. */
 .cell .val.over{color:var(--bad);text-decoration:line-through;text-decoration-thickness:2px}
 .cell.hint{animation:hintpulse 1.1s ease 2}
+/* the numbers Hint's line talks about (19 Oct 2026), ringed until your next move */
+.cell.why{outline:3px solid var(--why,var(--brand));outline-offset:-3px}
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .cell.why{--why:var(--brand-deep)}}
+html.dn-house[data-theme="dark"] .cell.why{--why:var(--brand-deep)}
 @keyframes hintpulse{0%,100%{background:#DDE1EA}50%{background:var(--active)}}
 /* the start cell: proven safe, and the only live cell until it's dug. Pulses
    continuously — not a decoration to notice once, an affordance to act on. */
@@ -142,7 +146,7 @@ html.app-mode .cell .val{font-size:calc(var(--cell,60px)*.44)}
 html.app-mode .cell .glyph{width:calc(var(--cell,60px)*.44);height:calc(var(--cell,60px)*.44)}
 html.app-mode .modebox{order:2;width:100%;max-width:none;flex:0 0 auto}
 html.app-mode .rules,html.app-mode footer{display:none}
-html.app-mode .msg{order:4;min-height:0;margin:4px 0 0;font-size:12px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.app-mode .msg{order:4;min-height:0;margin:4px 0 0;font-size:12px;line-height:1.4;text-align:center;text-wrap:pretty}
 html.app-mode .controls{order:5;flex-wrap:nowrap;overflow-x:auto;gap:6px;margin:6px 0 0;padding:1px 0;
   -webkit-overflow-scrolling:touch;scrollbar-width:none}
 html.app-mode .controls::-webkit-scrollbar{display:none}
