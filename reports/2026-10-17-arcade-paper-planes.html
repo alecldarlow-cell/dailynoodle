@@ -67,6 +67,14 @@ a.back:active{opacity:.6}
 @keyframes distPass{0%{background:#c9efd5}100%{background:transparent}}
 .landing h2.stamp{animation:stamp .45s cubic-bezier(.2,1.6,.4,1) both;color:#23794a}
 @keyframes stamp{0%{transform:scale(1.8) rotate(-6deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+.landingActions .btn[hidden],.unlock[hidden]{display:none}.landingActions .btn{white-space:nowrap;padding-left:8px;padding-right:8px;font-size:15px;overflow:hidden}#lNext{flex:1.3}.landingActions .rdot{margin-left:4px}
+.landing.three .card{width:min(480px,100%);max-width:480px}
+@media(max-width:430px){.landingActions .btn{font-size:14px;padding-left:5px;padding-right:5px}}
+.unlock{display:flex;align-items:center;gap:10px;margin:6px auto 2px;max-width:330px;padding:5px 10px 5px 5px;border-radius:12px;border:2px solid var(--blue);background:linear-gradient(100deg,#eaf2ff,#fffdf6 70%);position:relative;overflow:hidden;text-align:left}
+.unlock .uArt{flex:none;width:84px;aspect-ratio:96/40;border-radius:7px;overflow:hidden;border:1.5px solid #29303d}.unlock .uArt svg{display:block;width:100%;height:100%}
+.unlock small{display:block;font:800 9.5px/1 Nunito,system-ui,sans-serif;letter-spacing:1px;color:#2f6fd6}.unlock b{display:block;font:400 22px/1.1 "Patrick Hand",cursive;color:#29303d;margin-top:2px}
+.unlock.go{animation:unlockIn .6s cubic-bezier(.2,1.5,.4,1) 1s both}.unlock.go:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.85) 50%,transparent 70%);transform:translateX(-120%);animation:shine 1s ease-out 1.6s}
+@keyframes unlockIn{0%{transform:scale(.6) rotate(-4deg);opacity:0}100%{transform:none;opacity:1}}@keyframes shine{to{transform:translateX(120%)}}
 .pourClip{position:fixed;z-index:30;width:18px;height:18px;pointer-events:none;background:no-repeat center/contain;transition:transform .45s cubic-bezier(.5,0,.75,.4),opacity .45s ease-in}
 /* toasts */
 #toasts{position:fixed;left:0;right:0;top:calc(56px + var(--st));display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:6}
@@ -495,8 +503,9 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
     <div class="lStars" id="lStars" aria-label=""></div>
     <div class="landingResult"><strong class="hand" id="lDistance">0.0 m</strong><span id="lOutcome">Landed</span></div>
     <div class="rewardHero" id="lReward"><span class="rewardIcon" aria-hidden="true"><svg viewBox="0 0 40 54" width="39" height="47" fill="none"><path d="M11 38V14a9 9 0 0 1 18 0v27a7 7 0 0 1-14 0V16" stroke="#855727" stroke-width="5" stroke-linecap="round"/><path d="M11 38V14a9 9 0 0 1 18 0v27a7 7 0 0 1-14 0V16" stroke="#e9b35c" stroke-width="1.4" stroke-linecap="round"/></svg></span><span class="clipBurst" aria-hidden="true">✦</span><span class="rewardAmount"><small>PAPERCLIPS EARNED</small><strong class="hand" id="lEarned">+0</strong></span><span class="rewardGlint" aria-hidden="true">✦</span></div>
+    <div class="unlock" id="lUnlock" hidden><span class="uArt" id="lUnlockArt"></span><span class="uTx"><small>NEW PLACE UNLOCKED</small><b id="lUnlockName"></b></span></div>
     <div class="bank" id="lBank"><div class="bankBar"><i id="lBankFill"></i></div><div class="bankTx"><span id="lBankN"></span><span class="goal" id="lBankGoal"></span></div></div>
-    <div class="landingActions"><button class="btn pri" id="lNext">Next throw ➤</button><button class="btn" id="lHangar">Hangar</button></div>
+    <div class="landingActions"><button class="btn pri" id="lNext">Next throw ➤</button><button class="btn" id="lAgain" hidden>↺ Try again</button><button class="btn" id="lHangar">Hangar</button></div>
   </div>
 </div>
 <div class="ov dim end" id="end">
@@ -984,8 +993,9 @@ function setCrossLines() {
   if (!run || !pl) { crossLines = []; return; }
   starsHeld0 = pl.n >= 1 && pl.n <= 8 ? save.stars[pl.n - 1] : 0;
   const starX = starLines(pl).map((x, i) => ({ x, kind: 'star', n: i + 1, label: '★'.repeat(i + 1) + ' new star!' }));
-  starX.forEach(l => { if (l.n <= starsHeld0 && !(l.n === 2 && run.mode === 'run')) l.kind = 'held'; });
-  if (run.mode === 'run') { starX[1].label = 'Target beaten! ★★'; starX[2].label = '★★★ · +1 throw'; crossLines = starX; }
+  const fresh = run.mode === 'run' && !run.lastRedo;
+  starX.forEach(l => { if (l.n <= starsHeld0 && !(l.n === 2 && fresh)) l.kind = 'held'; });
+  if (fresh) { starX[1].label = 'Target beaten! ★★'; starX[2].label = '★★★ · +1 throw'; crossLines = starX; }
   else if (run.mode === 'place') crossLines = starX;
   else if (run.mode === 'daily') { const b = dailyToday().best; crossLines = b > 0 ? [{ x: b, kind: 'best', label: 'Past today\'s best!' }] : []; }
   else crossLines = [];
@@ -1176,8 +1186,13 @@ function land() {
     outcome = fmt(d) + ' m';
     if (run.throws <= 0) next = 'end';
   } else {
-    const tgt = gateOf(pl);
-    if (d >= tgt) {
+    const tgt = gateOf(pl), again = run.cleared > run.place;   // this place is already cleared in this run
+    if (again) {
+      run.redoBonus = 0;
+      if (star1 > star0) { const bonus = clearBonus(pl.n) * (star1 - star0); run.clips += bonus; save.clips += bonus; run.redoBonus = bonus; outcome = 'New star · throw kept'; }
+      else { run.throws--; outcome = 'Already cleared · throw used'; }
+      next = run.throws <= 0 ? (run.place >= 7 ? 'win' : 'end') : 'choose';
+    } else if (d >= tgt) {
       const bonus = clearBonus(pl.n); run.clips += bonus; save.clips += bonus;
       run.cleared = Math.max(run.cleared, run.place + 1);
       let extra = '';
@@ -1185,10 +1200,9 @@ function land() {
       outcome = 'Cleared! ' + fmt(d) + ' m' + extra;
       buzz([30, 50, 80]);
       if (!RM()) { confetti(); confetti(); }
-      run.place++;
-      const reached = Math.min(8, run.place + 1);
-      if (reached > save.bestPlace) { save.bestPlace = reached; run.newPlace = true; }
-      if (run.place >= 8) next = 'win';
+      const reached = Math.min(8, run.place + 2);
+      if (reached > save.bestPlace) { save.bestPlace = reached; run.newPlace = true; if (run.place < 7) run.unlocked = run.place + 1; }
+      next = 'choose';
     } else {
       run.throws--;
       outcome = fmt(d) + ' m — short by ' + fmt(tgt - d) + ' m';
@@ -1196,19 +1210,27 @@ function land() {
       if (run.throws <= 0) next = 'end';
     }
   }
-  const gain = earned + (run.mode === 'run' && d >= gateOf(pl) ? clearBonus(pl.n) : 0) + (run.mode === 'place' ? run.starBonus || 0 : 0);
-  result = { d, outcome, next, star0, star1, wind: fl.windX || 0, crashed:!!fl.crashed, earned:gain, base:earned, pickups:got, bonus:gain-earned, record:prevBest>0 && d>prevBest, clear:run.mode==='run'&&d>=gateOf(pl) };
-  if(next !== 'aim') completeRun(next === 'win');
+  const firstClear = run.mode === 'run' && next === 'choose' && !(run.redoBonus !== undefined && run.lastRedo);
+  const gain = earned + (run.mode === 'run' ? (run.lastRedo ? run.redoBonus || 0 : d >= gateOf(pl) ? clearBonus(pl.n) : 0) : 0) + (run.mode === 'place' ? run.starBonus || 0 : 0);
+  result = { d, outcome, next, star0, star1, wind: fl.windX || 0, crashed:!!fl.crashed, earned:gain, base:earned, pickups:got, bonus:gain-earned, record:prevBest>0 && d>prevBest, clear:run.mode==='run'&&!run.lastRedo&&d>=gateOf(pl), again:!!run.lastRedo, unlocked:run.unlocked };
+  run.unlocked = undefined; void firstClear;
+  if(next !== 'aim' && next !== 'choose') completeRun(next === 'win');
   if (result.clear || (result.star1 || 0) > (result.star0 || 0)) sFanfare(); else sReward(gain, result.record); buzz(result.clear?40:15); showLanding(result);
   for (const m of msgs) toast(m[1], m[0]);
-  save.run = next === 'aim' ? runSnap() : null;
+  save.run = next === 'aim' ? runSnap() : next === 'choose' ? Object.assign(runSnap(), { place: Math.min(7, run.place + 1) }) : null;
   persist();
   updateHud();
 }
 function medalFor(d) { const m = TOWER.medals; return d >= m[2] ? 3 : d >= m[1] ? 2 : d >= m[0] ? 1 : 0; }
-function afterResult() {
+function afterResult(stay) {
   if (!result) return;
   const nx = result.next; result = null; $('landing').classList.remove('on');
+  if (nx === 'choose') {
+    if (stay) { run.lastRedo = true; beginAim(false); return; }
+    run.lastRedo = false;
+    if (run.place >= 7) { completeRun(true); endRun(true); return; }
+    run.place++; beginAim(true); return;
+  }
   if (nx === 'aim') beginAim(run.mode === 'run' && pl !== placeOf(run));
   else endRun(nx === 'win');
 }
@@ -1218,7 +1240,7 @@ function completeRun(win) {
   if (r.mode === 'tower') win = r.best >= TOWER.medals[0];
   if (r.mode === 'place') win = r.best >= gateOf(PLACES[r.place]);
   if (r.mode === 'daily') win = true;
-  rndEnd(win, { score: Math.round(r.mode === 'tower' ? r.best : r.total), best: Math.round(r.best), level: r.mode === 'tower' ? 9 : r.mode === 'run' ? Math.max(1, Math.min(8, r.place + (win ? 0 : 1))) : r.place + 1 });
+  rndEnd(win, { score: Math.round(r.mode === 'tower' ? r.best : r.total), best: Math.round(r.best), level: r.mode === 'tower' ? 9 : r.mode === 'run' ? Math.max(1, Math.min(8, win ? 8 : r.cleared + 1)) : r.place + 1 });
   save.runs++;
   if (r.mode === 'run' && win) save.clears++;
   r.finished = true; r.win = !!win; save.run = null; persist();
@@ -1290,14 +1312,18 @@ function showLanding(v){
     ls.innerHTML = [0, 1, 2].map(i => i < s1 ? '<b' + (i >= s0 ? ' class="new" style="animation-delay:' + (0.25 + (i - s0) * 0.22) + 's"' : '') + '>★</b>' : '☆').join('');
     if (newStars > 0 && !RM()) for (let i = 0; i < newStars; i++) setTimeout(() => { tone(988 * Math.pow(2, i * 4 / 12), .22, .08, 'triangle'); tone(1480 * Math.pow(2, i * 4 / 12), .3, .05, 'sine', .05); }, 250 + i * 220); }
   $('lDistance').textContent=fmt(v.d)+' m';$('lOutcome').textContent=v.clear?'Target beaten':v.next==='end'?'Last throw':'Plane landed';
-  $('lOutcome').textContent = v.clear ? (v.d >= starLines(pl)[2] ? '★★★ · '+(run.throws<5?'bonus throw':'throw bank full') : 'Target beaten') : run.mode==='run' ? '★★ at '+gateOf(pl)+' m · short by '+fmt(Math.max(0,gateOf(pl)-v.d))+' m' : run.mode==='daily' ? 'Best today '+fmt(dailyToday().best)+' m' : (()=>{const nx=starLines(pl).find(x=>x>Math.max(v.d,run.best));return nx?'Next star at '+nx+' m':'All three stars!';})();
+  $('lOutcome').textContent = v.again ? (v.star1 > v.star0 ? 'New star · throw kept' : 'Already cleared · throw used') : v.clear ? (v.d >= starLines(pl)[2] ? '★★★ · '+(run.throws<5?'bonus throw':'throw bank full') : 'Target beaten') : run.mode==='run' ? '★★ at '+gateOf(pl)+' m · short by '+fmt(Math.max(0,gateOf(pl)-v.d))+' m' : run.mode==='daily' ? 'Best today '+fmt(dailyToday().best)+' m' : (()=>{const nx=starLines(pl).find(x=>x>Math.max(v.d,run.best));return nx?'Next star at '+nx+' m':'All three stars!';})();
   
   
   $('lEarned').textContent='+'+(RM()?v.earned:0);$('lReward').setAttribute('aria-label',v.earned+' paperclips earned this flight');
   const breakdown=[['Distance',Math.floor(v.d/4)],['Air clips',v.pickups*3]];if(v.bonus)breakdown.push(['Place bonus',v.bonus]);
   void breakdown;
   bankShow(save.clips - v.earned, nextUpgrade().goal);$('lHangar').innerHTML=nextUpgrade().affordable?'✦ Hangar<span class="rdot" aria-label="upgrade ready"></span>':'Hangar';
-  $('lNext').textContent=v.next==='end'||v.next==='win'?(run.mode==='run'?'See run results ➤':'Finish ➤'):v.clear?'Next place ➤':'Next throw ➤';
+  $('lNext').textContent=v.next==='choose'?(run.place>=7?'Finish run ➤':'Next place ➤'):v.next==='end'||v.next==='win'?(run.mode==='run'?'See run results ➤':'Finish ➤'):'Next throw ➤';
+  $('lAgain').hidden=v.next!=='choose'; $('landing').classList.toggle('three', v.next==='choose'); $('lAgain').textContent=innerWidth<430?'↺ Again':'↺ Try again';$('lAgain').title='Fly this place again for more stars · uses a throw unless you win a new one';
+  { const u = $('lUnlock'); u.hidden = v.unlocked === undefined; u.classList.remove('go');
+    if (v.unlocked !== undefined) { $('lUnlockArt').innerHTML = placeTile(v.unlocked); $('lUnlockName').textContent = (v.unlocked + 1) + ' · ' + PLACES[v.unlocked].name;
+      if (!RM()) { void u.offsetWidth; u.classList.add('go'); setTimeout(() => { [784, 988, 1175, 1568, 1976].forEach((f, i) => tone(f, .32, .06, 'sine', i * .06)); buzz([20, 30, 20]); }, 1150); } } }
   { const h = $('lTitle'); h.classList.remove('stamp'); if ((v.clear || newStars > 0) && !RM()) { void h.offsetWidth; h.classList.add('stamp'); } }
   $('landing').classList.add('on'); focusPanel('landing','lNext');
   if(!RM()&&v.earned>0){const start=performance.now(),dur=Math.min(950,480+v.earned*3);const count=now=>{
@@ -1308,7 +1334,10 @@ function showLanding(v){
   else bankShow(save.clips, nextUpgrade().goal);
 }
 $('lNext').addEventListener('click',()=>{initAudio();if(state==='result'&&!paused){goFS();afterResult();}});
-$('lHangar').addEventListener('click',()=>{initAudio();if(state==='result'&&!paused)openHangar(result.next==='aim');});
+$('lAgain').addEventListener('click',()=>{initAudio();if(state==='result'&&!paused){goFS();afterResult(true);}});
+$('lHangar').addEventListener('click',()=>{initAudio();if(state!=='result'||paused)return;
+  if(result.next==='choose'){ if(run.place>=7){ result=null; completeRun(true); run=null; openHangar(); return; } run.lastRedo=false; run.place++; save.run=runSnap(); persist(); openHangar(true); return; }
+  openHangar(result.next==='aim');});
 
 function toast(t, cls) {
   const el = document.createElement('div'); el.className = 'toast hand' + (cls ? ' ' + cls : ''); el.textContent = t;
@@ -2392,7 +2421,7 @@ function drawMarkers() {
   if (!run) return;
   const marks = run.mode === 'tower' ? TOWER.medals.map((m, i) => [m, ['#c98450', '#a9b4c2', '#e7b53b'][i], ['Bronze', 'Silver', 'Gold'][i] + ' ' + m + ' m'])
     : run.mode === 'daily' ? (dailyToday().best > 0 ? [[dailyToday().best, '#2f6fd6', 'Today ' + fmt(dailyToday().best) + ' m']] : [])
-    : starLines(pl).map((m, i) => [m, ['#f39c32', '#f0b429', '#e8a10c'][i], '★'.repeat(i + 1) + ' ' + m + ' m', 1 + i * 0.22, i < starsHeld0 && !(i === 1 && run.mode === 'run') ? 0.5 : 1]);
+    : starLines(pl).map((m, i) => [m, ['#f39c32', '#f0b429', '#e8a10c'][i], '★'.repeat(i + 1) + ' ' + m + ' m', 1 + i * 0.22, i < starsHeld0 && !(i === 1 && run.mode === 'run' && !run.lastRedo) ? 0.5 : 1]);
   let ahead = null;
   for (const mk of marks) { const won = crossLines.some(l => l.done && Math.abs(l.x - mk[0]) < 0.01); if (mk[0] > x0 - 5 && mk[0] < x1 + 5) flag(mk[0], won ? '#2e9a5a' : mk[1], won ? '✓ ' + mk[2] : mk[2], mk[3] || 1, won ? 1 : mk[4] || 1); else if (mk[0] >= x1 + 5 && !ahead && (mk[4] || 1) === 1) ahead = mk; }
   if (false) { const tg = pl.target * 2; if (tg > x0 && tg < x1 && !starLines(pl).some(s => Math.abs(s - tg) < 4)) { const X = SX(tg), Y = SY(groundAtFull(pl, tg)); cx.strokeStyle = 'rgba(46,154,90,.7)'; cx.setLineDash([4, 5]); cx.lineWidth = 2; cx.beginPath(); cx.moveTo(X, Y); cx.lineTo(X, Y - 40); cx.stroke(); cx.setLineDash([]); cx.font = '400 14px "Patrick Hand", cursive'; const tw = cx.measureText('2× = +1 throw').width; cx.fillStyle = 'rgba(255,253,246,.85)'; rr(X - tw / 2 - 5, Y - 60, tw + 10, 18, 5); cx.fill(); cx.fillStyle = 'rgba(30,110,64,.95)'; cx.fillText('2× = +1 throw', X, Y - 46); } }
