@@ -1095,6 +1095,7 @@ function dayNum(k) { return Math.round(Date.parse((k || dayKey()) + 'T12:00:00Z'
 function dailyPlace() { const n = dayNum(); return ((n * 5 + 3) % 8 + 8) % 8; }
 function dailyToday() { const k = dayKey(); return save.daily && save.daily.day === k ? save.daily : { day: k, n: 0, best: 0 }; }
 const flyFold = () => run && run.mode === 'daily' ? DAILY_FOLD : save.fold;
+const flyUp = () => run && run.mode === 'daily' ? DAILY_UP : save.up[save.fold];
 
 function startRun(how, mode, at) {
   mode = mode || 'run';
@@ -1618,7 +1619,7 @@ function drawFoldPreview() {
   const L = Math.min(r.width * 0.26, r.height * 0.62);
   g.fillStyle = 'rgba(41,48,61,.12)'; g.beginPath(); g.ellipse(r.width * 0.5, r.height * 0.9, L * 1.1, L * 0.1, 0, 0, 7); g.fill();
   g.globalAlpha = save.owned[viewFold] ? 1 : 0.5;
-  ART.plane(g, r.width * 0.5, r.height * 0.5 + Math.sin(t * 1.6) * 3, 0.08 + Math.sin(t * 0.9) * 0.05, viewFold, L, { yaw: -0.5 + Math.sin(t * 0.5) * 0.45, tilt: 0.5, roll: Math.sin(t * 0.7) * 0.12 });
+  ART.plane(g, r.width * 0.5, r.height * 0.5 + Math.sin(t * 1.6) * 3, 0.08 + Math.sin(t * 0.9) * 0.05, viewFold, L, { yaw: -0.5 + Math.sin(t * 0.5) * 0.45, tilt: 0.5, roll: Math.sin(t * 0.7) * 0.12, up: save.owned[viewFold] ? save.up[viewFold] : null });
   g.globalAlpha = 1;
 }
 
@@ -2195,22 +2196,33 @@ const ART = (() => {
       return { q, z, lit, back, c: f.c };
     }).sort((a, b) => a.z - b.z);
     g.lineJoin = 'round';
-    const lw = Math.max(1, Math.min(1.8, L * 0.04));
+    const up = o.up || {}, pw = up.paper || 0, crz = up.crease || 0, tr = up.trim || 0;
+    const lw = Math.max(1, Math.min(1.8, L * 0.04)) * (1 + 0.14 * pw);
+    const paperCol = pw ? mix(m.paper, '#ffffff', 0.12 * pw) : shade(m.paper, -0.04);
+    const TRIM = [null, '#b87333', '#8f9bab', '#e2a417', '#e2a417'];
     if (!o.noShadow) { // soft drop shadow so the plane lifts off the sky
       g.fillStyle = 'rgba(20,40,70,.14)';
       for (const f of fs) { g.beginPath(); f.q.forEach((v, i) => { const sx = X + v[0] * L + L * 0.08, syy = Y - v[1] * L + L * 0.14; i ? g.lineTo(sx, syy) : g.moveTo(sx, syy); }); g.closePath(); g.fill(); }
     }
     for (const f of fs) {
-      const base = f.c === 0 ? m.paper : f.c === 1 ? shade(m.paper, -0.1) : f.c === 2 ? (ACC[fi] || shade(m.paper, -0.05)) : f.c === 3 ? ACC[3] : ACC[4];
+      const base = f.c === 0 ? paperCol : f.c === 1 ? shade(paperCol, -0.1) : f.c === 2 ? (ACC[fi] || shade(m.paper, -0.05)) : f.c === 3 ? ACC[3] : ACC[4];
       const k = Math.max(f.c === 3 ? 0.9 : 0.78, 0.8 + 0.3 * f.lit - (f.back ? 0.06 : 0));
       g.fillStyle = k >= 1 ? shade(base, Math.min(0.5, k - 1)) : shade(base, k - 1);
       g.beginPath(); f.q.forEach((v, i) => { const sx = X + v[0] * L, syy = Y - v[1] * L; i ? g.lineTo(sx, syy) : g.moveTo(sx, syy); }); g.closePath(); g.fill();
+      if (tr && f.c === 0) { g.save(); g.clip(); g.strokeStyle = TRIM[tr]; g.lineWidth = L * (0.03 + 0.022 * tr); g.stroke();
+        if (tr === 2) { g.strokeStyle = 'rgba(235,240,246,.9)'; g.lineWidth = L * 0.012; g.stroke(); }
+        if (tr >= 3) { g.strokeStyle = tr >= 4 ? 'rgba(255,244,190,.95)' : 'rgba(255,236,170,.6)'; g.lineWidth = L * 0.014 * (tr - 2); g.stroke(); } g.restore(); }
       g.strokeStyle = 'rgba(41,48,61,.7)'; g.lineWidth = lw; g.stroke();
     }
-    g.strokeStyle = 'rgba(41,48,61,.28)'; g.lineWidth = Math.max(0.8, lw * 0.6);
+    g.strokeStyle = 'rgba(41,48,61,' + (0.28 + 0.08 * crz).toFixed(2) + ')'; g.lineWidth = Math.max(0.8, lw * 0.6) * (1 + 0.2 * crz);
     for (const c of m.crease) { const a = T(c[0]), b = T(c[1]); g.beginPath(); g.moveTo(X + a[0] * L, Y - a[1] * L); g.lineTo(X + b[0] * L, Y - b[1] * L); g.stroke(); }
     // a glint along the leading fold
     const nose = T(m.f[0].p[0]);
+    if (pw >= 4) { // a gold paperclip on the nose
+      const nx = X + nose[0] * L, ny = Y - nose[1] * L, s = Math.max(0.5, L / 60);
+      g.save(); g.translate(nx, ny); g.rotate(-pitch + 1.2); g.scale(s, s); g.lineCap = 'round';
+      const clipPath = () => { g.beginPath(); g.moveTo(-3, 9); g.lineTo(-3, -4); g.arc(0, -4, 3, Math.PI, 0); g.lineTo(3, 7); g.arc(1.2, 7, 1.8, 0, Math.PI); g.lineTo(-0.6, -2); };
+      clipPath(); g.strokeStyle = '#8a5a14'; g.lineWidth = 3.4; g.stroke(); clipPath(); g.strokeStyle = '#f0c25a'; g.lineWidth = 1.6; g.stroke(); g.restore(); }
     if (!o.noGlint) { g.globalAlpha = 0.6; g.drawImage(glowSpr, X + nose[0] * L - L * 0.18, Y - nose[1] * L - L * 0.18, L * 0.36, L * 0.36); g.globalAlpha = 1; }
   }
   function planeShadow(g, X, gy, alt, L) {
@@ -2471,7 +2483,7 @@ function drawAim() {
     cx.fillStyle = 'rgba(255,253,246,.88)'; rr(X0 + L * 1.3 - 6, Y0 - L * 1.6 - 17, tw + 12, 23, 6); cx.fill();
     cx.fillStyle = '#29303d'; cx.fillText(txt, X0 + L * 1.3, Y0 - L * 1.6); cx.textAlign = 'center';
   }
-  ART.plane(cx, X0, Y0, ang * Math.PI / 180, flyFold(), L, { roll: 0.1 });
+  ART.plane(cx, X0, Y0, ang * Math.PI / 180, flyFold(), L, { roll: 0.1, up: flyUp() });
 }
 let hudShown = '', hudBottom = 60, hudMeasured = 0, instrumentT = 0;
 function speedScale(){return Math.ceil(P.v / 5) * 5;}
@@ -2517,7 +2529,7 @@ function render() {
     ART.planeShadow(cx, X, SY(gy), fl.y - gy, L);
     speedLines(X, Y, fl.vx, fl.vy, L);
     const roll = (fl.stall > 0 || fl.bumpT > 0) && !RM() ? Math.sin(fl.flutter) * 0.35 : (RM() ? 0 : Math.sin(timeT * 2.1) * 0.05) + (fl.hold ? -0.1 : 0.05);
-    ART.plane(cx, X, Y, fl.th, flyFold(), L, { roll, flap: fl.elev });
+    ART.plane(cx, X, Y, fl.th, flyFold(), L, { roll, flap: fl.elev, up: flyUp() });
     if (fl.loopT && fl.t - fl.loopT < 1.4 && !(fl.stall > 0 || fl.bumpT > 0)) { cx.font = '400 19px "Patrick Hand", cursive'; const lt = fl.loops <= LOOP_CAP ? 'loop! +' + LOOP_CLIPS : 'loop!', tw = cx.measureText(lt).width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 18, tw + 12, 24, 6); cx.fill(); cx.fillStyle = '#2e9a5a'; cx.fillText(lt, X, Y - L * 1.5); }
     if (fl.stall > 0 || fl.bumpT > 0) { const label=fl.bumpT>0?'bump!':'stall!'; cx.font = '400 17px "Patrick Hand", cursive'; const tw = cx.measureText(label).width; cx.fillStyle = 'rgba(255,253,246,.9)'; rr(X - tw / 2 - 6, Y - L * 1.5 - 17, tw + 12, 22, 6); cx.fill(); cx.fillStyle = '#d4553e'; cx.fillText(label, X, Y - L * 1.5); }
     const alt = fl.y - gy;
