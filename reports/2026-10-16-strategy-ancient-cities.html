@@ -9,6 +9,7 @@
 <meta name="dn:standfirst" content="Build a floating Aztec city tile by tile and beat your rivals.">
 <meta name="dn:topic"      content="Strategy">
 <meta name="dn:date"       content="2026-10-16">
+<meta name="dn:updated"    content="2026-10-19">
 <meta name="dn:read"       content="~5 min">
 <meta name="dn:badge"      content="In development">
 <meta name="dn:thumb"      content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMjAgMTIwJz48ZGVmcz48cGF0dGVybiBpZD0nbScgd2lkdGg9JzgnIGhlaWdodD0nNycgcGF0dGVyblVuaXRzPSd1c2VyU3BhY2VPblVzZSc+PHJlY3Qgd2lkdGg9JzgnIGhlaWdodD0nNycgZmlsbD0nIzhmYWU1YScvPjxyZWN0IHk9JzQuNicgd2lkdGg9JzgnIGhlaWdodD0nMS40JyBmaWxsPScjNWM0ODI0JyBvcGFjaXR5PScuNCcvPjxlbGxpcHNlIGN4PScyJyBjeT0nMi42JyByeD0nMicgcnk9JzEuMicgZmlsbD0nIzRmOGEzYycvPjxlbGxpcHNlIGN4PScyJyBjeT0nMS40JyByeD0nLjcnIHJ5PScxLjMnIGZpbGw9JyNlOWM0NDcnLz48ZWxsaXBzZSBjeD0nNicgY3k9JzIuNicgcng9JzInIHJ5PScxLjInIGZpbGw9JyM0ZjhhM2MnLz48ZWxsaXBzZSBjeD0nNicgY3k9JzEuNCcgcng9Jy43JyByeT0nMS4zJyBmaWxsPScjZTljNDQ3Jy8+PC9wYXR0ZXJuPjxwYXR0ZXJuIGlkPSdjJyB3aWR0aD0nOCcgaGVpZ2h0PSc3JyBwYXR0ZXJuVW5pdHM9J3VzZXJTcGFjZU9uVXNlJz48cmVjdCB3aWR0aD0nOCcgaGVpZ2h0PSc3JyBmaWxsPScjODJhNjU2Jy8+PHJlY3QgeT0nNC42JyB3aWR0aD0nOCcgaGVpZ2h0PScxLjQnIGZpbGw9JyM1YzQ4MjQnIG9wYWNpdHk9Jy40Jy8+PGVsbGlwc2UgY3g9JzInIGN5PScyLjYnIHJ4PScyJyByeT0nMS4yJyBmaWxsPScjNGY4YTNjJy8+PGNpcmNsZSBjeD0nMi44JyBjeT0nMycgcj0nLjknIGZpbGw9JyNjYzNkMmInLz48ZWxsaXBzZSBjeD0nNicgY3k9JzIuNicgcng9JzInIHJ5PScxLjInIGZpbGw9JyM0ZjhhM2MnLz48L3BhdHRlcm4+PGcgaWQ9J3QnPjxlbGxpcHNlIHJ4PSczJyByeT0nNCcgZmlsbD0nIzNiODI0MCcvPjxlbGxpcHNlIGN4PSctLjYnIGN5PSctMS4zJyByeD0nMS4zJyByeT0nMS44JyBmaWxsPScjNzliZDVjJy8+PC9nPjwvZGVmcz48cmVjdCB3aWR0aD0nMTIwJyBoZWlnaHQ9JzEyMCcgZmlsbD0nIzcyYzZjMicvPjxnIGZpbGw9J25vbmUnIHN0cm9rZT0nI2E5ZTBkYycgc3Ryb2tlLXdpZHRoPScxLjUnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCc+PHBhdGggZD0nTTggMTA0cTQtMyA4IDB0OCAwJy8+PHBhdGggZD0nTTMwIDExNHE0LTMgOCAwdDggMCcvPjwvZz48cGF0aCBkPSdNMCAwSDcyQzY2IDI0IDQyIDQwIDAgNDZaJyBmaWxsPScjOGM2YjNiJyB0cmFuc2Zvcm09J3RyYW5zbGF0ZSgwIDIuNSknLz48cGF0aCBkPSdNMCAwSDcyQzY2IDI0IDQyIDQwIDAgNDZaJyBmaWxsPSd1cmwoI20pJy8+PHBhdGggZD0nTTcyIDBDNjYgMjQgNDIgNDAgMCA0NicgZmlsbD0nbm9uZScgc3Ryb2tlPScjN2E1YTMyJyBzdHJva2Utd2lkdGg9JzInLz48cGF0aCBkPSdNODQgMEgxMjBWNTJDMTAyIDUyIDg2IDMyIDg0IDBaJyBmaWxsPScjOGM2YjNiJyB0cmFuc2Zvcm09J3RyYW5zbGF0ZSgwIDIuNSknLz48cGF0aCBkPSdNODQgMEgxMjBWNTJDMTAyIDUyIDg2IDMyIDg0IDBaJyBmaWxsPSd1cmwoI2MpJy8+PHBhdGggZD0nTTg0IDBDODYgMzIgMTAyIDUyIDEyMCA1MicgZmlsbD0nbm9uZScgc3Ryb2tlPScjN2E1YTMyJyBzdHJva2Utd2lkdGg9JzInLz48dXNlIGhyZWY9JyN0JyB4PSc2MycgeT0nMTknLz48dXNlIGhyZWY9JyN0JyB4PSc0OScgeT0nMzInLz48dXNlIGhyZWY9JyN0JyB4PScxOCcgeT0nNDQnLz48dXNlIGhyZWY9JyN0JyB4PSc5MCcgeT0nMjQnLz48dXNlIGhyZWY9JyN0JyB4PScxMDEnIHk9JzQxJy8+PHBhdGggZD0nTTAgNjhIMTIwJyBzdHJva2U9JyNjOWIyODUnIHN0cm9rZS13aWR0aD0nMTYnLz48cGF0aCBkPSdNMCA2OEgxMjAnIHN0cm9rZT0nI2YxZTNjMScgc3Ryb2tlLXdpZHRoPScxMicvPjxyZWN0IHg9JzYyJyB5PSc4MCcgd2lkdGg9JzQ2JyBoZWlnaHQ9JzQ2JyBmaWxsPScjMmY4ZjljJyBvcGFjaXR5PScuMjUnLz48cmVjdCB4PSc1OCcgeT0nNzYnIHdpZHRoPSc0NicgaGVpZ2h0PSc0NicgZmlsbD0nI2U5ZTJkMicvPjxyZWN0IHg9JzYyJyB5PSc4MCcgd2lkdGg9JzM4JyBoZWlnaHQ9JzM4JyBmaWxsPScjZjVmMGU2JyBzdHJva2U9JyNiNTQ2MmMnIHN0cm9rZS13aWR0aD0nLjgnLz48cGF0aCBkPSdNMTAwIDgwdjM4SDYybDMtM2gzMlY4M3onIGZpbGw9JyNkZGQzYzAnLz48cmVjdCB4PSc2NycgeT0nODUnIHdpZHRoPScyOCcgaGVpZ2h0PScyOCcgZmlsbD0nI2Y1ZjBlNicgc3Ryb2tlPScjYjU0NjJjJyBzdHJva2Utd2lkdGg9Jy44Jy8+PHJlY3QgeD0nNzUnIHk9JzEwMCcgd2lkdGg9JzUnIGhlaWdodD0nMjAnIGZpbGw9JyNlOWUwY2MnLz48cmVjdCB4PSc4MicgeT0nMTAwJyB3aWR0aD0nNScgaGVpZ2h0PScyMCcgZmlsbD0nI2U5ZTBjYycvPjxyZWN0IHg9JzgwJyB5PScxMDAnIHdpZHRoPScyJyBoZWlnaHQ9JzIwJyBmaWxsPScjYjU0NjJjJy8+PHJlY3QgeD0nNzAnIHk9Jzg4JyB3aWR0aD0nMTAnIGhlaWdodD0nMTAnIGZpbGw9JyNmN2YzZWEnLz48cmVjdCB4PSc2OScgeT0nODcnIHdpZHRoPScxMicgaGVpZ2h0PSc0JyBmaWxsPScjYjUzNjJhJy8+PHJlY3QgeD0nODInIHk9Jzg4JyB3aWR0aD0nMTAnIGhlaWdodD0nMTAnIGZpbGw9JyNmN2YzZWEnLz48cmVjdCB4PSc4MScgeT0nODcnIHdpZHRoPScxMicgaGVpZ2h0PSc0JyBmaWxsPScjM2E3NGIwJy8+PGVsbGlwc2UgY3g9JzI0JyBjeT0nOTYnIHJ4PScxMycgcnk9JzMuNCcgZmlsbD0nIzlhNWYzMicgdHJhbnNmb3JtPSdyb3RhdGUoLTE4IDI0IDk2KScvPjxlbGxpcHNlIGN4PScyNCcgY3k9Jzk1JyByeD0nMTAnIHJ5PScxLjcnIGZpbGw9JyNjOThiNTInIHRyYW5zZm9ybT0ncm90YXRlKC0xOCAyNCA5NSknLz48Y2lyY2xlIGN4PScyNycgY3k9Jzk0JyByPScyLjInIGZpbGw9JyNmMmMxNGUnLz48ZWxsaXBzZSBjeD0nMzYnIGN5PSc1Nicgcng9JzEzJyByeT0nMi42JyBmaWxsPScjMmEzYTIwJyBvcGFjaXR5PScuMycvPjxyZWN0IHg9JzI2JyB5PSc0NCcgd2lkdGg9JzIwJyBoZWlnaHQ9JzExJyBmaWxsPScjZTJkN2MyJyBzdHJva2U9JyM2YTRhMjgnIHN0cm9rZS13aWR0aD0nLjgnLz48cmVjdCB4PSczMy41JyB5PSc0OCcgd2lkdGg9JzQuNScgaGVpZ2h0PSc3JyBmaWxsPScjM2EyNDE0Jy8+PHJlY3QgeD0nMjQnIHk9JzM4JyB3aWR0aD0nMjQnIGhlaWdodD0nNycgZmlsbD0nIzljM2EyNCcvPjxyZWN0IHg9JzI0JyB5PSczNycgd2lkdGg9JzI0JyBoZWlnaHQ9JzYnIGZpbGw9JyNlNTU4M2EnLz48cmVjdCB4PScyNCcgeT0nMzcnIHdpZHRoPScyNCcgaGVpZ2h0PScxLjYnIGZpbGw9JyNmMjlhODUnLz48L3N2Zz4=">
@@ -264,13 +265,13 @@ function tuneBag(b,n){b=Object.assign({},b);const m=Object.values(b).reduce((a,v
 const WB=(b,z)=>withWards(tuneBag(b,ISLAND[z].tiles),ISLAND[z].wards);
 const LEVELS=[
  {size:SIZES[0],bag:WB(B1,SIZES[0]),goods:2,start:'market',market:false,lim:null},     // First Gardens: fixed prices
- {size:SIZES[1],bag:WB(B1,SIZES[1]),goods:2,start:'market',market:true,lim:null},      // Market Day: prices move
- {size:SIZES[2],bag:WB(B2,SIZES[2]),goods:3,start:'marketRoad',market:true,lim:null},
- {size:SIZES[3],bag:WB(B3,SIZES[3]),goods:3,start:'marketRoad',market:true,lim:null},
- {size:SIZES[4],bag:WB(B3,SIZES[4]),goods:3,start:'marketRoad',market:true,docks:.3,lim:null},
- {size:SIZES[5],bag:WB(B5,SIZES[5]),goods:3,start:'marketRoad',market:true,docks:.25,lim:null},
- {size:SIZES[6],bag:WB(B6,SIZES[6]),goods:3,start:'marketRoad',market:true,docks:.25,lim:null},
- {size:'M',pick:true,bags:{S:WB(B7,'S'),M:WB(B7,'M'),L:WB(B7,'L')},bag:WB(B7,'M'),goods:3,start:'marketRoad',market:true,docks:.25,players:3,lim:null}   // Grand Market: the player picks the island
+ {size:SIZES[1],bag:WB(B1,SIZES[1]),goods:2,start:'market',market:false,lim:null},      // Market Day: prices move
+ {size:SIZES[2],bag:WB(B2,SIZES[2]),goods:3,start:'marketRoad',market:false,lim:null},
+ {size:SIZES[3],bag:WB(B3,SIZES[3]),goods:3,start:'marketRoad',market:false,lim:null},
+ {size:SIZES[4],bag:WB(B3,SIZES[4]),goods:3,start:'marketRoad',market:false,docks:.3,lim:null},
+ {size:SIZES[5],bag:WB(B5,SIZES[5]),goods:3,start:'marketRoad',market:false,docks:.25,lim:null},
+ {size:SIZES[6],bag:WB(B6,SIZES[6]),goods:3,start:'marketRoad',market:false,docks:.25,lim:null},
+ {size:'M',pick:true,bags:{S:WB(B7,'S'),M:WB(B7,'M'),L:WB(B7,'L')},bag:WB(B7,'M'),goods:3,start:'marketRoad',market:false,docks:.25,players:3,lim:null}   // Grand Market: the player picks the island
 ];
 const DIRECTOR={on:0,win:6,lateWin:14,lateAt:.6,str:.7,close:2.2,snug:.7,hole:1.6,late:1.4,shape:1};
 const CLOSER={ward:1.3,cap:1,capsOpp:1,capsAdj:1,capGate:1,pyrRoad:.6,tee:.8,cross:.8,lake:.5,pyr:.3};
@@ -286,7 +287,7 @@ function bagSize(lv,isl){const b=bagOf(lv,isl);let n=0;for(const k in b)n+=b[k];
 /* ---- deck ---- */
 function buildDeck(lv,rnd,isl){
  const L=LEVELS[lv],deck=[],BAG=bagOf(lv,isl);
- const pick=()=>{const r=rnd();if(L.goods===2)return r<.58?'m':'c';return r<.5?'m':r<.82?'c':'j';};
+ const pick=()=>{rnd();return 'm';};   // one crop (maize) since 18 Oct 2026; the draw is kept so a seed deals the same tiles as before
  for(const t in BAG)for(let i=0;i<BAG[t];i++){
   const g=[],d=[];
   const roads=T[t].segs.some(x=>x.k==='C');
@@ -308,7 +309,7 @@ function newMatch(lv,seed,opt){
  if(opt.lead){const lead=opt.lead.map((x,i)=>({t:x.t,g:T[x.t].segs.map((sg,k)=>sg.k==='G'?(x.g&&x.g[k]||['m']):null),d:T[x.t].segs.map(()=>0)}));deck=lead.concat(deck.slice(0,Math.max(0,(opt.size||deck.length)-lead.length)));
   deck.forEach((x,i)=>{x.id=i;x.key=x.t+'|'+x.g.map(a=>a?a.join(''):'').join(',')+'|'+x.d.join('');});}
  const st={maxed:[false,false],frame:opt.frame?{x0:-Math.floor((opt.frame[0]-1)/2),y0:-Math.floor((opt.frame[1]-1)/2),w:opt.frame[0],h:opt.frame[1]}:null,island:isl,lim:opt.lim===undefined?ISLAND[isl].lim:opt.lim,lv,seed,np,deck,di:0,drng:mulberry(seed^0x2c1b3c6d),offer:[],turn:0,turnNo:0,over:false,
-  scores:new Array(np).fill(0),br:[],prices:RULES.start.slice(),act:[1,1,L.goods>2?1:0],
+  scores:new Array(np).fill(0),br:[],prices:RULES.start.slice(),act:[1,0,0],
   tiles:[],grid:new Map(),front:new Set(),par:[],F:[],pyrs:[],moves:[],discards:0,head:opt.head||0,lastSale:null};
  for(let p=0;p<np;p++)st.br.push({G:0,C:0,P:0,E:0,H:0});
  if(st.head){st.scores[0]+=st.head;st.br[0].H=st.head;}
@@ -542,11 +543,11 @@ const CITIES={
   feat:{G:'Garden',C:'Causeway',P:'Pyramid'},
   levels:[
    {name:'First Gardens',rival:'Xochitl',style:'a patient gardener',w:{G:1.15,C:.9,P:1},
-    rule:'Finish gardens to sell their crops; prices stay fixed here. A walled ward fits any space and finishes whatever it touches.'},
-   {name:'Market Day',rival:'Nochtli',style:'a market haggler',w:{G:1.15,C:.9,P:1},
-    rule:'New: the market moves. Selling a crop lowers its price and raises the others; quiet turns drift back. Time your sales.'},
+    rule:'Finish a garden to sell its maize: 3 points a crop. A walled ward fits any space and finishes whatever it touches.'},
+   {name:'Shared Gardens',rival:'Nochtli',style:'a garden poacher',w:{G:1.15,C:.9,P:1},
+    rule:'New: Nochtli builds onto your gardens. Whoever laid more of a garden takes the whole sale and the runner-up half, so lay more than him.'},
    {name:'Causeways',rival:'Ollin',style:'a road builder',w:{G:.95,C:1.25,P:1},
-    rule:'New: causeways score 1 a tile, +3 for each end at the market or a pyramid. Jade arrives, rare and dear.'},
+    rule:'New: causeways score 1 a tile, +3 for each end at the market or a pyramid.'},
    {name:'Temple Quarter',rival:'Citlali',style:'a temple keeper',w:{G:1,C:1,P:1.3},
     rule:'New: pyramids. Fill all eight spaces around one and its quarter scores 9.'},
    {name:'Canoe Docks',rival:'Yaretzi',style:'a canny trader',w:{G:1.2,C:.95,P:1},
@@ -554,8 +555,8 @@ const CITIES={
    {name:'Bridges',rival:'Cuauhtli',style:'a bold builder',w:{G:1,C:1.15,P:1.05},
     rule:'New: junctions. Every causeway ends at a plaza, so roads finish sooner.'},
    {name:'The Great City',rival:'Itzel',style:'a merchant prince',w:{G:1.05,C:1.05,P:1.05},
-    rule:'Everything at once, with the biggest bag yet. Itzel trades hard.'},
-   {name:'Grand Market',rival:'Itzel & Cuauhtli',rivals:['Itzel','Cuauhtli'],style:'three-way trading',w:{G:1.05,C:1.05,P:1.05},grand:true,
+    rule:'Everything at once, with the biggest bag yet. Itzel builds hard.'},
+   {name:'Grand Market',rival:'Itzel & Cuauhtli',rivals:['Itzel','Cuauhtli'],style:'a three-way contest',w:{G:1.05,C:1.05,P:1.05},grand:true,
     rule:'You against two rivals, on the island size you choose. Finish ahead of both.'}
   ],
   pal:{paper:'#f3ecdc',water:'#72c6c2',waterDeep:'#5fbcbc',rim:'#ead9b4',rimE:'#b99d6a',
@@ -747,7 +748,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
 const sysRM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
 const COLS=['#e5583a','#2f62d4','#8b53c6'];
-const DIFFS={calm:{n:'Calm',d:'A relaxed rival, and you start a few points ahead.'},fair:{n:'Fair',d:'A sound rival on level terms.'},sharp:{n:'Sharp',d:'Contests your gardens and times the market.'}};
+const DIFFS={calm:{n:'Calm',d:'A relaxed rival, and you start a few points ahead.'},fair:{n:'Fair',d:'A sound rival on level terms.'},sharp:{n:'Sharp',d:'Contests your gardens and blocks your best moves.'}};
 let CITY=CITIES[CITY_ORDER[0]];
 
 /* ---------- save (site contract §7) ---------- */
@@ -969,9 +970,9 @@ const TUT=[
  {t:()=>'Tap the tile (or ⟳) to turn it. Point the garden away from the market, then tap <b>✓</b> to set it. Once set, it stays.',hi:'#bOk'},
  {t:()=>`${esc(M.names[1])} takes a turn. Her houses have <b style="color:#2f62d4">blue roofs</b>; yours are <b style="color:#c65a33">terracotta</b>.`,next:'Next'},
  {t:()=>'A garden is finished when water surrounds it. Take the other garden tile and close yours off.',slot:true,cell:true},
- {t:()=>M.tut.sold||'Sold!',hi:'#mkt',next:'Next'},
+ {t:()=>M.tut.sold||'Sold!',next:'Next'},
  {t:()=>'Every garden, causeway and pyramid pays <b>whoever laid the most of its tiles</b>. The runner-up gets half, and if you’ve laid the same number, you both get it all. So building onto a rival’s garden earns you a share.',next:'Next'},
- {t:()=>`That’s the game. Sell more, and better, than ${esc(M.names[1])} before the bag runs out. Over to you!`,next:'Play on'}];
+ {t:()=>`That’s the game. Score more than ${esc(M.names[1])} before the bag runs out. Over to you!`,next:'Play on'}];
 function coach(){const c=$('coach');if(!M||!M.tut){c.hidden=true;return;}const T=TUT[M.tut.i];
  c.innerHTML=`<div class="step">Learn to play · ${M.tut.i+1} of ${TUT.length}</div><p>${T.t()}</p><div class="cb"><button class="skip" id="cSkip">Skip tutorial</button>${T.next?`<button class="nx" id="cNext">${T.next}</button>`:''}</div>`;
  c.hidden=false;$('cSkip').onclick=()=>{S.tut=2;save();goFS();startMatch(0,'new');};if($('cNext'))$('cNext').onclick=()=>{sfx('tap');tutNext();};
@@ -992,8 +993,8 @@ async function tutAfter(ev){const id=M.id;
   if(best){M.rvSlot={i:oi,p:1};refreshTray();await wait(450);if(!M||M.id!==id)return;M.rvSlot=null;const b=st.scores.slice(),e2=AC.play(st,oi,best.x,best.y,best.r);M.shown=b;sfx('rival');M.lastRv={ti:e2[0].ti,p:1};await runEvents(e2,1);}
   if(!M||M.id!==id)return;M.busy=false;tutGo(4);return;}
  if(M.tut.i===5){const cl=ev.find(e=>e.type==='close'&&e.kind==='G'),mk=ev.find(e=>e.type==='market'&&!e.drift);
-  if(cl){const g=CITY.goods,parts=cl.goods.map((n,i)=>n?`${n} ${g[i].n} at ${cl.prices[i]}`:'').filter(Boolean).join(' and ');
-   M.tut.sold=`Sold! Your ${parts} each makes <b>${cl.value}</b> points, all yours because you laid both tiles. Crop prices are shown at the top. Here they stay fixed; from Market Day they move.`;M.tut.mk=mk;}
+  if(cl){const g=CITY.goods,parts=cl.goods.map((n,i)=>n?`${n} ${g[i].n}`:'').filter(Boolean).join(' and ');
+   M.tut.sold=`Sold! Your ${parts} at ${cl.prices[0]} a crop makes <b>${cl.value}</b> points, all yours because you laid both tiles.`;M.tut.mk=mk;}
   tutGo(6);return;}
  refresh();}
 function showTutEnd(){M.reopen=()=>showTutEnd();const st=M.st,me=st.scores[0],op=st.scores[1];
@@ -1013,7 +1014,7 @@ function viewCity(on){if(!M)return;M.viewCity=on;$('tray').hidden=on;$('bRes').h
 function buildScore(){const el=$('score');el.className=M.names.length>2?'three':'';el.innerHTML=M.names.map((n,i)=>`<div class="pl p${i}" id="pl${i}" title="${esc(n)}"><i></i><b>${esc(M.names.length>2&&i>0?n.slice(0,3):n)}</b><span>0</span></div>`).join('');
  document.querySelectorAll('.mk').forEach((m,i)=>{const c=m.querySelector('canvas'),g=c.getContext('2d');g.clearRect(0,0,48,48);PAINT.good(g,AC.GOODS[i],24,24,20);m.title=CITY.goods[i].N;});}
 function refreshScores(){if(!M)return;M.names.forEach((n,i)=>{const e=$('pl'+i);if(!e)return;e.querySelector('span').textContent=M.shown[i];e.classList.toggle('on',!M.st.over&&M.st.turn===i);});}
-function refreshMarket(){if(!M)return;const fx=AC.LEVELS[M.lv].market===false;$('mkt').classList.toggle('fixed',fx);$('mkt').querySelector('.ml').textContent=fx?'Prices':'Market';document.querySelectorAll('.mk').forEach((m,i)=>{m.classList.toggle('off',!M.st.act[i]);m.querySelector('b').textContent=M.st.prices[i];});}
+function refreshMarket(){if(!M)return;const fx=AC.LEVELS[M.lv].market===false;$('mkt').classList.toggle('fixed',fx);$('mkt').querySelector('.ml').textContent=fx?'Per crop':'Market';document.querySelectorAll('.mk').forEach((m,i)=>{m.classList.toggle('off',!M.st.act[i]);m.querySelector('b').textContent=M.st.prices[i];});}
 function marketAnim(e,keep){document.querySelectorAll('.mk').forEach((m,i)=>{const d=e.after[i]-e.before[i];m.querySelector('b').textContent=e.after[i];if(!d)return;const em=m.querySelector('em');
  em.textContent=(d>0?'+':'')+d;em.className=d>0?'up':'dn';m.classList.add('flash');clearTimeout(m._t);if(!keep)m._t=setTimeout(()=>{em.className='';m.classList.remove('flash');},1400);});}
 function clearMarketMarks(){document.querySelectorAll('.mk').forEach(m=>{clearTimeout(m._t);m.querySelector('em').className='';m.classList.remove('flash');});}
@@ -1047,7 +1048,7 @@ function showInfo(ti){const st=M.st,fs=AC.tileInfo(st,ti),t=st.tiles[ti];
   let head,body,ic,bg;
   if(f.kind==='G'){const parts=f.goods.map((n,i)=>n?`${n} ${gName(i,n)}`:'').filter(Boolean).join(', '),nG=f.goods[0]+f.goods[1]+f.goods[2];
    const now=f.goods.reduce((a,n,i)=>a+n*st.prices[i],0)+(f.dock?nG:0);ic='✿';bg='#cfe8a6';
-   head=`Garden · ${f.tiles.length} tile${f.tiles.length>1?'s':''}`;body=f.closed?`Sold. Crops: ${parts}.`:`${parts}${f.dock?' · dock +1 each':''}. Sells for <b>${now}</b> at today’s prices · ${f.open} open edge${f.open===1?'':'s'}.`;}
+   head=`Garden · ${f.tiles.length} tile${f.tiles.length>1?'s':''}`;body=f.closed?`Sold. Crops: ${parts}.`:`${parts}${f.dock?' · dock +1 each':''}. Sells for <b>${now}</b> when finished · ${f.open} open edge${f.open===1?'':'s'}.`;}
   else if(f.kind==='C'){ic='═';bg='#f1e3c1';head=`Causeway · ${f.tiles.length} tile${f.tiles.length>1?'s':''}`;
    body=f.closed?'Finished and scored.':`Worth <b>${f.value}</b> when both ends finish${f.lm?` (${f.lm} landmark end${f.lm>1?'s':''})`:''} · ${f.open} open end${f.open===1?'':'s'}.`;}
   else{ic='▲';bg='#f4c6a6';head=`Pyramid quarter · ${9-f.open} of 9`;body=f.closed?'Complete and scored.':`Worth <b>9</b> once all nine spaces are filled.`;}
@@ -1170,9 +1171,7 @@ function showHelp(fromPause){const g=CITY.goods;
  openModal(`<div class="help"><h2>How to play</h2>
  <h3>Your turn</h3><p>Pick one of the three tiles in the tray. Glowing spaces show where it fits: every edge must match its neighbour — water to water, garden to garden, causeway to causeway. Tap a space, tap the tile to turn it, then tap <b>✓</b> to set it. Once it’s set, it stays.</p>
  <h3>Who scores</h3><p>Every tile you lay carries one of your houses. When a garden, causeway or pyramid quarter is finished, <b>whoever laid the most of its tiles scores it in full</b> and the runner-up scores <b>half</b>. A tie pays both in full.</p>
- <h3>Gardens and the market</h3><p>A garden is finished when water surrounds it. It sells every crop in it at today’s prices: ${g.map(x=>x.n).join(', ')}. On level 1 prices are fixed; from Market Day on they move:</p>
- <ul><li>Each crop that sells drops 1 in price (2 if four or more sell at once).</li><li>Crops that didn’t sell rise 1.</li><li>On a turn with no sale, prices drift one step back to normal (${AC.RULES.start.map((v,i)=>g[i].n+' '+v).join(', ')}).</li></ul>
- <p>Finishing a garden pays its owner — even if your rival lays the last tile. So timing matters: a rival may finish your garden while its crops are cheap.</p>
+ <h3>Gardens</h3><p>A garden is finished when water surrounds it. It sells its ${g[0].n}: ${AC.RULES.start[0]} points for each crop shown on it. Finishing a garden pays whoever laid most of it, even if a rival lays the last tile, so building onto someone else’s garden can win you its sale.</p>
  <h3>Causeways</h3><p>1 point per tile once both ends finish, plus 3 for each end at ${esc(CITY.market)} or a pyramid.</p>
  <h3>Pyramids</h3><p>A pyramid quarter is the pyramid and the eight spaces around it. It scores 9 once all nine are filled.</p>
  <h3>Island limits</h3><p>Each level is an island with room to spare: the city can grow in any direction, up to its size (Small 4×6, Medium 6×9, Large 8×12). The dashed line shows how far it can still grow. When the city reaches full width, the shore is set along both sides, and any garden or causeway touching the shore is finished. The same happens top and bottom at full height. A tile that would fit nowhere is rebuilt as a walled ward.</p>
