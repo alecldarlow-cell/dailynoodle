@@ -69,6 +69,11 @@ jobs:
       - name: Share button on news pieces
         run: node tools/news-share.js
 
+      # A way back to the site from every news piece: a "← News" link above
+      # the masthead and the masthead itself linking to News. Idempotent.
+      - name: Back-to-News link on news pieces
+        run: node tools/news-nav.js
+
       # Dark mode on every news piece (follows the phone, like the front
       # pages and puzzles): one marked block in <head>, idempotent.
       - name: News dark mode

@@ -5,7 +5,9 @@
      ========================================================================== */
   :root{
     --canvas:#FCFCFB; --paper:#FFFFFF; --ink:#15171C; --muted:#5F636B;
-    --faint:#9AA0A6; --hair:#E6E6E2;
+    /* --faint was #9AA0A6 (2.6:1 on the canvas) until 19 Oct 2026; darkened to
+       pass 4.5:1 for the dates, counts, kickers and footers it sets at 11-12px */
+    --faint:#6E737B; --hair:#E6E6E2;
     /* the one borrowed token: Digi Puzzles' marigold active cell. On News it
        appears nowhere else, so a puzzle tile is the only thing that glows. */
     --play:#FFD54A;
