@@ -569,25 +569,33 @@ const CITY_ORDER=['jade'];
 
 const PAINT=(function(){
  'use strict';
- const BASE={ // garden base shapes in a unit tile with the garden on N (and E, S...)
-  cap:{fill(c){c.moveTo(0,0);c.lineTo(1,0);c.bezierCurveTo(.86,.48,.14,.48,0,0);},inner:[[[1,0],[.86,.48],[.14,.48],[0,0]]],anchor:[.5,.17],
-   split:[[[0,0],[1,0],[1,1],[0,1]]]},
-  corner:{fill(c){c.moveTo(0,0);c.lineTo(1,0);c.lineTo(1,1);c.bezierCurveTo(.75,.62,.38,.25,0,0);},inner:[[[1,1],[.75,.62],[.38,.25],[0,0]]],anchor:[.7,.3],
-   split:[[[-.1,-.1],[1.1,-.1],[-.1,1.1]],[[1.1,-.1],[1.1,1.1],[-.1,1.1]]]},
-  band:{fill(c){c.moveTo(0,0);c.lineTo(1,0);c.bezierCurveTo(.66,.3,.66,.7,1,1);c.lineTo(0,1);c.bezierCurveTo(.34,.7,.34,.3,0,0);},
-   inner:[[[1,0],[.66,.3],[.66,.7],[1,1]],[[0,1],[.34,.7],[.34,.3],[0,0]]],anchor:[.5,.5],
-   split:[[[-.1,-.1],[1.1,-.1],[1.1,.5],[-.1,.5]],[[-.1,.5],[1.1,.5],[1.1,1.1],[-.1,1.1]]]},
-  three:{fill(c){c.moveTo(0,0);c.lineTo(1,0);c.lineTo(1,1);c.lineTo(0,1);c.bezierCurveTo(.42,.8,.42,.2,0,0);},inner:[[[0,1],[.42,.8],[.42,.2],[0,0]]],anchor:[.66,.5],
-   split:[[[-.1,-.1],[1.1,-.1],[1.1,.5],[-.1,.5]],[[-.1,.5],[1.1,.5],[1.1,1.1],[-.1,1.1]]]},
-  full:{fill(c){c.rect(0,0,1,1);},inner:[],anchor:[.5,.5],
-   split:[[[-.1,-.1],[.34,-.1],[.34,1.1],[-.1,1.1]],[[.34,-.1],[.67,-.1],[.67,1.1],[.34,1.1]],[[.67,-.1],[1.1,-.1],[1.1,1.1],[.67,1.1]]]}
+ /* Field shapes in a unit tile, drawn with the field on N (then E, S...). Every field edge covers the same stretch,
+    from D to 1-D, and its outline meets the edge square-on, so two joined tiles continue as one smooth field.
+    Corners a field turns get a small water bite, so fields on diagonal tiles never touch. */
+ const D=.14,bite=(a,b,c2,d2)=>({c:[a,b,c2,d2],tr:[],bite:true});
+ const BNE=bite([1-D,0],[1-D,D*.55],[1-D*.55,D],[1,D]),BSE=bite([1,1-D],[1-D*.55,1-D],[1-D,1-D*.55],[1-D,1]),
+       BSW=bite([D,1],[D,1-D*.55],[D*.55,1-D],[0,1-D]),BNW=bite([0,D],[D*.55,D],[D,D*.55],[D,0]);
+ const bz=(c,cv)=>c.bezierCurveTo(cv.c[1][0],cv.c[1][1],cv.c[2][0],cv.c[2][1],cv.c[3][0],cv.c[3][1]);
+ const CAP=[{c:[[1-D,0],[1-D,.22],[.7,.34],[.5,.34]],tr:[.2,.97]},{c:[[.5,.34],[.3,.34],[D,.22],[D,0]],tr:[.8]}];
+ const COR={c:[[D,0],[D,.4],[.6,1-D],[1,1-D]],tr:[.2,.5,.8]};
+ const BAND=[{c:[[1-D,0],[1-D,.25],[.68,.3],[.68,.5]],tr:[.2,.97]},{c:[[.68,.5],[.68,.7],[1-D,.75],[1-D,1]],tr:[.8]},
+             {c:[[D,1],[D,.75],[.32,.7],[.32,.5]],tr:[.2,.97]},{c:[[.32,.5],[.32,.3],[D,.25],[D,0]],tr:[.8]}];
+ const THREE=[{c:[[D,1],[D,.78],[.4,.72],[.4,.5]],tr:[.2,.97]},{c:[[.4,.5],[.4,.28],[D,.22],[D,0]],tr:[.8]}];
+ const BASE={
+  cap:{fill(c){c.moveTo(D,0);c.lineTo(1-D,0);bz(c,CAP[0]);bz(c,CAP[1]);},inner:CAP,anchor:[.5,.15]},
+  corner:{fill(c){c.moveTo(D,0);bz(c,COR);c.lineTo(1,D);c.bezierCurveTo(1-D*.55,D,1-D,D*.55,1-D,0);},inner:[COR,BNE],anchor:[.66,.34]},
+  band:{fill(c){c.moveTo(D,0);c.lineTo(1-D,0);bz(c,BAND[0]);bz(c,BAND[1]);c.lineTo(D,1);bz(c,BAND[2]);bz(c,BAND[3]);},inner:BAND,anchor:[.5,.5]},
+  three:{fill(c){c.moveTo(D,0);c.lineTo(1-D,0);bz(c,BNE);c.lineTo(1,1-D);bz(c,BSE);c.lineTo(D,1);bz(c,THREE[0]);bz(c,THREE[1]);},inner:THREE.concat([BNE,BSE]),anchor:[.68,.5]},
+  full:{fill(c){c.moveTo(D,0);c.lineTo(1-D,0);bz(c,BNE);c.lineTo(1,1-D);bz(c,BSE);c.lineTo(D,1);bz(c,BSW);c.lineTo(0,D);bz(c,BNW);},inner:[BNE,BSE,BSW,BNW],anchor:[.5,.5]}
  };
+
  function shapeOf(sides){const s=sides.slice().sort();const n=s.length;
   if(n===1)return{b:'cap',k:s[0]};if(n===4)return{b:'full',k:0};
   if(n===3){const m=[0,1,2,3].find(v=>!s.includes(v));return{b:'three',k:(m+1)%4};}
   if((s[1]-s[0])===2)return{b:'band',k:s[0]};
   const k=(s[0]===0&&s[1]===3)?3:s[0];return{b:'corner',k};}
  const rot=(x,y,k)=>{for(let i=0;i<k;i++){const t=x;x=1-y;y=t;}return[x,y];};
+ const clamp01=v=>v<0?0:v>1?1:v;
  function bez(p,t){const u=1-t;return[u*u*u*p[0][0]+3*u*u*t*p[1][0]+3*u*t*t*p[2][0]+t*t*t*p[3][0],u*u*u*p[0][1]+3*u*u*t*p[1][1]+3*u*t*t*p[2][1]+t*t*t*p[3][1]];}
  function hash(n){n=(n^61)^(n>>>16);n=n+(n<<3);n=n^(n>>>4);n=Math.imul(n,0x27d4eb2d);n=n^(n>>>15);return(n>>>0)/4294967296;}
  function rng(seed){let a=seed>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -623,21 +631,22 @@ const PAINT=(function(){
   // a lush crop island: sandy rim and trees only on the open sides, joined sides run flat to the next tile
   const sh=shapeOf(sg.s),B=BASE[sh.b];c.save();c.translate(.5,.5);c.rotate(sh.k*Math.PI/2);c.translate(-.5,-.5);
   const path=()=>{c.beginPath();B.fill(c);c.closePath();};
-  c.save();c.lineCap='round';for(const cv of B.inner){c.save();shadow(c,.025,.05,.05,'rgba(20,70,60,.45)');c.strokeStyle=SAND2;c.lineWidth=.1;c.beginPath();curve(c,cv);c.stroke();c.restore();}
-  for(const cv of B.inner){c.strokeStyle=SAND;c.lineWidth=.06;c.beginPath();curve(c,cv);c.stroke();}c.restore();
+  c.save();c.lineCap='butt';for(const cv of B.inner){c.save();shadow(c,.025,.05,.05,'rgba(20,70,60,.45)');c.strokeStyle=SAND2;c.lineWidth=.1;c.beginPath();curve(c,cv.c);c.stroke();c.restore();}
+  for(const cv of B.inner){c.strokeStyle=SAND;c.lineWidth=.06;c.beginPath();curve(c,cv.c);c.stroke();}c.restore();
   c.save();path();c.clip();c.fillStyle='#6c9a30';c.fillRect(-.2,-.2,1.4,1.4);
   const m=c.getTransform(),ang=Math.atan2(m.b,m.a);c.save();c.translate(.5,.5);c.rotate(-ang);c.translate(-.5,-.5);   // crop rows run across the screen on every tile
-  const lo=PX/(DPR||1)<72,st=lo?.2:.14,jr=rng(7+Math.round(m.e*13+m.f*7));   // soft, irregular clumps of crop; low contrast so the field reads as one lush mass
-  for(let y=-.5,row=0;y<1.5;y+=st*.62,row++)for(let x=-.5+(row%2)*st/2;x<1.5;x+=st*.8){const px=x+(jr()-.5)*st*.5,py=y+(jr()-.5)*st*.35,q=st*(.34+jr()*.14);
-   c.fillStyle='#5f8f2c';c.beginPath();c.ellipse(px+q*.1,py+q*.3,q*.95,q*.55,0,0,7);c.fill();                      // shade under the clump
+  const lo=PX/(DPR||1)<72,nc=lo?5:7,nr=lo?6:8,cw=1/nc,rh=1/nr,q0=Math.min(cw,rh)*.62;   // clumps on a grid that repeats exactly per tile, so joined fields run on without a seam
+  for(let j=-1;j<=nr;j++)for(let i=-1;i<=nc;i++){const jj=(j%nr+nr)%nr,ii=(i%nc+nc)%nc,h=hash(jj*31+ii*7+3),h2=hash(jj*17+ii*29+11);
+   const px=(i+.5+(jj%2?.5:0))*cw+(h-.5)*cw*.4,py=(j+.5)*rh+(h2-.5)*rh*.3,q=q0*(.88+h*.3);
+   c.fillStyle='#5f8f2c';c.beginPath();c.ellipse(px+q*.1,py+q*.3,q*.95,q*.55,0,0,7);c.fill();
    for(const[dx,dy,an,col]of[[-.38,.05,-.7,'#6f9f33'],[.38,.05,.7,'#6f9f33'],[-.15,-.25,-.35,'#82b33f'],[.17,-.22,.35,'#7aab3a'],[0,-.42,0,'#93c24b']]){c.fillStyle=col;c.beginPath();c.ellipse(px+dx*q,py+dy*q,q*.3,q*.62,an,0,7);c.fill();}   // a leafy clump
    c.fillStyle='rgba(255,255,255,.18)';c.beginPath();c.ellipse(px-q*.06,py-q*.6,q*.1,q*.22,0,0,7);c.fill();}
   c.restore();
-  c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=.03;for(const cv of B.inner){c.beginPath();curve(c,cv);c.stroke();}
+  c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=.03;for(const cv of B.inner){c.beginPath();curve(c,cv.c);c.stroke();}
   c.restore();
-  for(const cv of B.inner)for(const t of[.12,.5,.88]){const[x,y]=bez(cv,t+(r()-.5)*.06);tree(c,x,y,(t===.5?.055:.075)+r()*.015);}
+  for(const cv of B.inner)for(const t of cv.tr){const[x,y]=bez(cv.c,clamp01(t+(r()-.5)*.05));tree(c,x,y,(t>.3&&t<.7?.058:.072)+r()*.012);}
   const n=goods.length,[ax,ay]=B.anchor,along=sh.b==='band'||sh.b==='full';for(let i=0;i<n;i++){const o=(i-(n-1)/2)*.17;bundle(c,ax+(along?0:o),ay+(along?o:0),r);}
-  if(dock&&B.inner.length){const cv=B.inner[0],[mx,my]=bez(cv,.5);let dx=mx-ax,dy=my-ay;const l=Math.hypot(dx,dy)||1;dx/=l;dy/=l;const ex=mx+dx*.17,ey=my+dy*.17;
+  const dk=B.inner.find(v=>!v.bite);if(dock&&dk){const cv=dk.c,[mx,my]=bez(cv,.5);let dx=mx-ax,dy=my-ay;const l=Math.hypot(dx,dy)||1;dx/=l;dy/=l;const ex=mx+dx*.17,ey=my+dy*.17;
    c.save();shadow(c,.012,.02,.012,'rgba(20,70,60,.35)');c.strokeStyle='#9a6a3a';c.lineWidth=.08;c.lineCap='round';c.beginPath();c.moveTo(mx,my);c.lineTo(ex,ey);c.stroke();c.restore();
    c.strokeStyle='#c49260';c.lineWidth=.05;c.setLineDash([.018,.012]);c.beginPath();c.moveTo(mx,my);c.lineTo(ex,ey);c.stroke();c.setLineDash([]);
    canoe(c,ex-dy*.07,ey+dx*.07,Math.atan2(dy,dx));}
@@ -904,7 +913,7 @@ function drawLimit(st){const s=cam.s,[a0,b0,a1,b1]=limWin(st),[x0,y0,x1,y1]=bbox
 function drawRim(st){const s=cam.s,d=Math.max(3,s*.08);ctx.save();
  const col={W:'#3e968b',X:'#3e968b',G:'#5c8a31',C:'#b49a6b'};
  for(const t of st.tiles){if(st.grid.has(AC.K(t.x,t.y+1)))continue;const[sx,sy]=w2s(t.x,t.y);
-  ctx.fillStyle=col[t.e[2]]||col.W;ctx.fillRect(sx,sy+s,s,d);ctx.fillStyle='rgba(0,0,0,.14)';ctx.fillRect(sx,sy+s+d*.55,s,d*.45);}
+  if(t.e[2]==='G'){ctx.fillStyle=col.W;ctx.fillRect(sx,sy+s,s,d);ctx.fillStyle=col.G;ctx.fillRect(sx+s*.14,sy+s,s*.72,d);}else{ctx.fillStyle=col[t.e[2]]||col.W;ctx.fillRect(sx,sy+s,s,d);}ctx.fillStyle='rgba(0,0,0,.14)';ctx.fillRect(sx,sy+s+d*.55,s,d*.45);}
  ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=Math.max(1,s*.025);ctx.beginPath();
  for(const t of st.tiles){const[sx,sy]=w2s(t.x,t.y);if(!st.grid.has(AC.K(t.x,t.y-1))){ctx.moveTo(sx,sy+1);ctx.lineTo(sx+s,sy+1);}if(!st.grid.has(AC.K(t.x-1,t.y))){ctx.moveTo(sx+1,sy);ctx.lineTo(sx+1,sy+s);}}
  ctx.stroke();ctx.restore();}
