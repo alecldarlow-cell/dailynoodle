@@ -14,7 +14,7 @@
 --------------------------------------------------------------------------- */
 'use strict';
 const fs = require('fs'), path = require('path'), http = require('http');
-const { REPO } = require('./harness');
+const { REPO, launch } = require('./harness');
 const MIME = { html: 'text/html; charset=utf-8', js: 'text/javascript', css: 'text/css', json: 'application/json', svg: 'image/svg+xml', png: 'image/png', webmanifest: 'application/manifest+json' };
 let pass = 0, fail = 0;
 const ok = (c, m) => { c ? pass++ : fail++; console.log((c ? 'PASS ' : 'FAIL ') + m); };
@@ -29,7 +29,7 @@ const ORIGIN = `http://localhost:${srv.address().port}`;
 const KEY = 'BMr68dYPtF0NEbgWYTus3SJV29l0Jm98T4xHwAeNiEVi30NWwv2VhKDY2EfXEMS_Gqyq-3CAOMASO2IfMEipH1Q';
 
 (async () => {
-  const b = await require('playwright').chromium.launch({ channel: 'chromium', args: ['--no-sandbox'] });
+  const b = await launch();
   const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   await ctx.grantPermissions(['notifications'], { origin: ORIGIN });
   const calls = [], loaded = [];
@@ -48,8 +48,11 @@ const KEY = 'BMr68dYPtF0NEbgWYTus3SJV29l0Jm98T4xHwAeNiEVi30NWwv2VhKDY2EfXEMS_Gqy
     }
     return r.fulfill({ status: 200, contentType: 'text/css', body: '' });
   });
-  // A fake push subscription: headless Chromium has no push service.
+  // Fake permission and subscription: this checks the panel's contract;
+  // native permission prompts and notification display are device checks.
   await ctx.addInitScript(() => {
+    Object.defineProperty(Notification, 'permission', { get: () => 'granted', configurable: true });
+    Notification.requestPermission = () => Promise.resolve('granted');
     if (!self.PushManager) return;
     let cur = null;
     PushManager.prototype.getSubscription = function () { return Promise.resolve(cur); };

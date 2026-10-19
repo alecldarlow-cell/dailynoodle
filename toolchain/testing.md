@@ -116,7 +116,7 @@ Before a significant shared-UI/game release, use an available Android phone and 
 - Open in browser and installed standalone mode; navigate between News, Puzzles, board and a game; check browser bars, safe areas, rotation, zoom/large text and short-screen controls.
 - Play a representative puzzle with real touch jitter; finish, share, return with Back, reopen, go offline and reconnect. Confirm saved progress remains and yesterday is not labelled today after midnight/resume.
 - Exercise fullscreen denial/exit, native share cancellation and wake-lock pause/resume. These are platform checks, not fully modeled by a headless browser.
-- Notifications remain switched off. The worker handler, crypto and hidden test panel are automated; actual notification display is a separately requested device capability check. On a supported full Chromium, `DN_NATIVE_PUSH=1 PW_CHROMIUM=/path/to/full/chrome npm run test:offline` runs the strict native observation. If it is not run, the worker log explicitly says so.
+- Notifications remain switched off. The worker handler, crypto and hidden test panel are automated. The panel test uses the pinned browser with fake granted permission and a fake subscription; actual permission prompts and notification display are device checks. On a supported full Chromium, `DN_NATIVE_PUSH=1 PW_CHROMIUM=/path/to/full/chrome npm run test:offline` runs the strict native observation. If it is not run, the worker log explicitly says so.
 - Play for feel and fairness. Review question facts, clues and News claims against sources; schemas and solvers cannot replace editorial judgment.
 
 ## Diagnose a failure and add a regression
