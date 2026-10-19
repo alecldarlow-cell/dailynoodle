@@ -4,7 +4,7 @@
 const {spawnSync}=require('node:child_process'),fs=require('node:fs');
 const {prepare,run}=require('./prepare-site');
 function git(args,allowFailure=false){const r=spawnSync('git',args,{encoding:'utf8',stdio:['ignore','pipe','pipe']});if(r.status&&!allowFailure)throw Error(r.stderr||r.stdout);return r;}
-function day(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date());}
+const day=require('../dn-core').londonDay;
 if(process.env.GITHUB_ACTIONS!=='true')throw Error('release.js runs only in GitHub Actions; use npm test locally');
 fs.rmSync('test-results/release.json',{force:true});
 for(let attempt=1;attempt<=3;attempt++){

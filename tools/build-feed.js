@@ -53,9 +53,7 @@ const DIRS = [
 // and cannot be read out of the page source — but the file stays live at its
 // own URL. A filtered feed hides the card, not the document.
 const TZ = 'Europe/London';
-const TODAY = new Intl.DateTimeFormat('en-CA', {
-  timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'
-}).format(new Date()); // -> 'YYYY-MM-DD'
+const TODAY = require('../dn-core').londonDay(); // YYYY-MM-DD in London
 // Preview only: FEED_INCLUDE_FUTURE=1 node tools/build-feed.js
 // Never set this in the workflow, or the feed ships tomorrow's cards today.
 const INCLUDE_FUTURE = process.env.FEED_INCLUDE_FUTURE === '1';

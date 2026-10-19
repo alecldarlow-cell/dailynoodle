@@ -29,7 +29,8 @@ function savedDates() {
       const data = new Map();
       class FixedDate extends Date { constructor(...args) { super(...(args.length ? args : [instant])); } }
       const ctx = vm.createContext({ Date: FixedDate, Intl, DONE_KEY: 'save', doneShow() {}, localStorage: { getItem: k => data.get(k) || null, setItem: (k, v) => data.set(k, v) } });
-      vm.runInContext(day + '\n' + put + '\ndonePut("fixture", {s:10});', ctx);
+      ctx.window=ctx;
+      vm.runInContext(fs.readFileSync(path.join(REPO,'dn-core.js'),'utf8')+'\n'+day + '\n' + put + '\ndonePut("fixture", {s:10});', ctx);
       assert.equal(JSON.parse(data.get('save')).done.fixture.d, expected, file + ' at ' + instant);
       vm.runInContext('donePut("fixture", {s:99});', ctx);
       assert.equal(JSON.parse(data.get('save')).done.fixture.s, 10, file + ': preserve the first result');

@@ -13,6 +13,7 @@ and the rules that keep players' streaks and saved progress safe.
 | `index.html`, `puzzles.html`, `games.html`, `lab.html` | Section front pages; layout and logic shared in `front.css` / `front.js` |
 | `reports/` | Every news piece, puzzle and game, one self-describing HTML file each (`dn:*` metas) |
 | `engines/` | One shared player per puzzle type; puzzle pages in `reports/` load these |
+| `dn-core.js` | Shared London-date/save rules; edit here, then run `node tools/sync-core.js` to update bundled browser copies |
 | `feed.json` | Index of released items, built by the workflow; front pages read it |
 | `dn-track.js` | Anonymous usage events to Supabase, plus the domain-move progress import; registers `sw.js` |
 | `sw.js` | Service worker: offline copies of pages already opened and of today's puzzles (network first); shows push notifications |

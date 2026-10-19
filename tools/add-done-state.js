@@ -57,9 +57,10 @@ const LEGACY = new Set([
 ]);
 
 const helpers = key => `/* ---- ${MARK}: a finished puzzle reopens finished (${key} → done[id]) ---- */
+${fs.readFileSync(path.join(__dirname,'../dn-core.js'),'utf8').trimEnd()}
 const DONE_KEY="${key}";
-function doneGet(id){try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");return (s&&s.v===1&&s.done&&s.done[id])||null;}catch(e){return null;}}
-function donePut(id,rec){try{let s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");if(!s||s.v!==1||!s.done||typeof s.done!=="object")s={v:1,done:{}};if(s.done[id])return;rec.d=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());s.done[id]=rec;localStorage.setItem(DONE_KEY,JSON.stringify(s));}catch(e){}}
+function doneGet(id){return window.dnCore.getDone(DONE_KEY,id);}
+function donePut(id,rec){window.dnCore.putDone(DONE_KEY,id,rec);}
 let doneTried=false;`;
 
 const secs = 'Math.max(0,Math.min(359999,Math.floor(+rec.s)||0))';
@@ -300,7 +301,12 @@ function patch(html, typeName) {
     out = r.out; stages.push('done');
   }
   if (!out.includes(SHARE_MARK)) {
-    const r = applyEdits(out, SHARE[typeName]); if (!r.ok) return { ok: false, why: 'share stage: ' + r.why };
+    // Fresh patches use the shared helper; stage-1 archive pages still carry
+    // the old storage writer. Both retain the literal, exactly-once guard.
+    const sharedPut='function donePut(id,rec){window.dnCore.putDone(DONE_KEY,id,rec);}';
+    const edits=SHARE[typeName].map(edit=>edit===putTail&&out.includes(sharedPut)
+      ?[sharedPut,'function donePut(id,rec){window.dnCore.putDone(DONE_KEY,id,rec);doneShow();}']:edit);
+    const r = applyEdits(out, edits); if (!r.ok) return { ok: false, why: 'share stage: ' + r.why };
     out = r.out; stages.push('share');
   }
   return { ok: true, out, skipped: !stages.length, stages };
