@@ -2,6 +2,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { boardDb } = require('./board-db');
+const { PGlite } = require('@electric-sql/pglite');   // the admin cases build their own database
 
 // Disposable PostgreSQL (WASM), with the actual checked-in board migrations
 // (tools/tests/board-db.js, shared with browser/board.spec.js).
