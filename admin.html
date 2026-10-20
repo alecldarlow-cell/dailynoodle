@@ -1018,7 +1018,8 @@
     else {
       var top = Math.max.apply(null, days.map(function(d){ return d.v; }).concat([1])), many = days.length > 14, step = Math.ceil(days.length / 6);
       // a round axis top (1, 2, 5 × 10^k, even so the halfway line is whole) and three labelled lines
-      var mag = Math.pow(10, Math.floor(Math.log10(top))), max = [1,2,5,10].map(function(k){ return k*mag; }).filter(function(v){ return v >= top && (v % 2 === 0 || v === 1); })[0] || 10*mag;
+      var mag = Math.pow(10, Math.floor(Math.log10(top))), max = [1,2,3,4,5,6,8,10,12,15,20,25,30,40,50,60,80,100].map(function(k){ return k*mag/10; })
+        .filter(function(v){ return v >= top && v === Math.round(v) && (v % 2 === 0 || v === 1); })[0] || 10*mag;
       var grid = [0, max/2, max].filter(function(v, i){ return i !== 1 || max >= 2; }).map(function(v){
         return '<div class="grid" aria-hidden="true" style="bottom:'+Math.round(110*v/max)+'px"><span>'+v+'</span></div>'; }).join('');
       var cols = 'grid-template-columns:repeat('+days.length+',minmax(0,1fr))';
@@ -1028,7 +1029,7 @@
         return '<div class="c" data-i="'+i+'" title="'+esc(fmtDay(d.day)+': '+d.v+(d.so?' so far':''))+'">'+(MARKS[d.day] && !many ? '<span class="mk">'+esc(MARKS[d.day])+'</span>' : '')+
           (many ? '' : '<span class="v num">'+d.v+'</span>')+'<div class="b'+(d.so?' so':'')+'" style="height:'+h+'px"></div></div>';
       }).join('')+'</div></div><div class="barlab" aria-hidden="true" style="'+cols+'">'+days.map(function(d,i){
-        var show = d.so || !many || (i % step === 0 && i < days.length - Math.ceil(step / 2));
+        var show = d.so || !many || (i % step === 0 && i < days.length - step);
         var txt = d.so ? 'Today' : many ? fmtDay(d.day) : shortDay(d.day);
         return '<span'+(d.so?' class="tdy"':'')+'>'+(show?esc(txt):'')+'</span>';
       }).join('')+'</div><p class="pick" id="dailyPick" aria-live="polite"></p>';
