@@ -200,9 +200,9 @@ a.back:active{opacity:.6}
 .meter b{display:block;height:100%;width:0;background:#3199cb;border-radius:8px;transition:width .12s linear}.pitchMeter b{background:#ec9b54}
 #pauseBtn{position:fixed;bottom:calc(10px + var(--sb));left:calc(10px + var(--sl));pointer-events:auto;z-index:5;width:44px;height:44px;background:rgba(255,253,246,.84);font-size:19px;box-shadow:0 2px 8px rgba(34,53,70,.09);border:1.5px solid rgba(41,48,61,.3)}
 #pauseBtn{top:calc(9px + var(--st));right:calc(12px + var(--sr));bottom:auto;left:auto}
-#hud:not(.flying) .cockpit{margin-right:52px}
+#hud .cockpit{margin-right:52px}
 @media(max-width:420px){#hud .flightMeasure{min-width:62px;padding-left:4px;padding-right:4px}#hud .flightMeasure.distance{min-width:78px}#hud .flightMeasure strong{font-size:22px}#hud #hudDist{min-width:0}}
-#hud.flying #pauseBtn{display:none}#hud.flying .cockpit{opacity:.91}
+#hud.flying #pauseBtn{display:inline-flex}#hud.flying .cockpit{opacity:.91}
 #toasts{top:calc(74px + var(--st))}#tut .msg{font-size:15px}
 #splash{gap:2px;background:radial-gradient(circle at 80% 16%,#fffad2 0 7%,transparent 8%),linear-gradient(165deg,#bfe6ff 0%,#dff1fa 56%,#e1e8d9 100%)}
 #splashPlane{width:min(240px,38vmin);filter:drop-shadow(0 8px 12px rgba(48,88,130,.18));animation:homeFloat 4s ease-in-out infinite}
@@ -364,6 +364,11 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
 .route .stop{color:#57718b}
 .sw .k.on,.route .stop.done{background:#23794a}
 .rewardHero small{color:#7f5a18}
+/* Flight actions remain reachable on narrow and short screens. */
+#lFlights{display:block;min-height:44px;margin:0 auto}
+#eNext[hidden]{display:none}
+#splashGo{white-space:normal!important}
+#pause .card{max-height:calc(100dvh - 24px - var(--st) - var(--sb));overflow:auto}
 </style>
 <!-- og:start (tools/og-tags.js — do not edit by hand) -->
 <meta property="og:site_name" content="The Daily Noodle">
@@ -455,6 +460,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
     <div class="pgrid">
       <button class="btn pri" id="pResume">Resume</button>
       <button class="btn" id="pHangar">Hangar</button>
+      <button class="btn" id="pFlights">Choose flight</button>
     </div>
     <div class="plist">
       <button class="sw" id="pSound"><span>Sound</span><span class="k">On</span></button>
@@ -472,7 +478,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
         <li><b>Glide</b> Flaps down as it climbs, flaps up as it dives.</li>
         <li><b>Stall</b> Too slow with the nose up stalls the wing. Dive a little to get speed back.</li>
         <li><b>Loop</b> Throw steep and hold the right side. Each loop earns +8 clips, up to three a throw.</li>
-        <li><b>Places</b> Reach ★★ to clear a place and open the next. Clearing keeps your throw; ★★★ wins one back (up to five).</li>
+        <li><b>Places</b> Each flight has three throws at one place. Reach ★★ to unlock the next. Retry for ★★★, or choose another flight whenever you like.</li>
         <li><b>Clips</b> Catch them in the air, then spend them in the Hangar.</li>
         <li class="keys"><b>Keys</b> ←/→ aim · Space throws · ↑/↓ flaps · P pauses</li>
       </ul>
@@ -491,7 +497,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
 <div class="ov dim" id="confirm">
   <div class="card" style="width:min(460px,100%)">
     <h2 class="hand">Go to the hangar?</h2>
-    <p style="margin:2px 0 8px">This ends your run. The clips you've earned are kept.</p>
+    <p style="margin:2px 0 8px">This ends this flight. Your stars, unlocked places and paperclips are kept.</p>
     <div class="row"><button class="btn org" id="cGo">Go to hangar</button><button class="btn pri" id="cStay">Keep flying</button></div>
   </div>
 </div>
@@ -506,6 +512,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
     <div class="unlock" id="lUnlock" hidden><span class="uArt" id="lUnlockArt"></span><span class="uTx"><small>NEW PLACE UNLOCKED</small><b id="lUnlockName"></b></span></div>
     <div class="bank" id="lBank"><div class="bankBar"><i id="lBankFill"></i></div><div class="bankTx"><span id="lBankN"></span><span class="goal" id="lBankGoal"></span></div></div>
     <div class="landingActions"><button class="btn pri" id="lNext">Next throw ➤</button><button class="btn" id="lAgain" hidden>↺ Try again</button><button class="btn" id="lHangar">Hangar</button></div>
+    <button class="linkish" id="lFlights">Choose flight</button>
   </div>
 </div>
 <div class="ov dim end" id="end">
@@ -519,6 +526,8 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
       <button class="btn pri" id="eAgain">Fly again</button>
       <button class="btn" id="eShare">Share</button>
       <button class="btn" id="eHangar">Hangar</button>
+      <button class="btn" id="eNext" hidden>Next flight</button>
+      <button class="btn" id="eFlights">Choose flight</button>
       <a class="back" href="../games.html">← Digi Games</a>
     </div>
   </div>
@@ -839,7 +848,7 @@ const coarse = (() => { try { return matchMedia('(pointer: coarse)').matches; } 
 function defaults() {
   return { v: 1, clips: 0, owned: [true, false, false, false, false], fold: 0, up: [0, 1, 2, 3, 4].map(() => ({ paper: 0, crease: 0, trim: 0 })),
     arm: 0, magnet: 0, stars: [0, 0, 0, 0, 0, 0, 0, 0], daily: null, bestPlace: 0, bestThrow: 0, towerBest: 0, medals: 0, wr: false, runs: 0, clears: 0,
-    tut1: false, tut2: false, lessons: 0, upright: false, snd: true, rm: null, fs: coarse, haptics: true, run: null, seen: false };
+    tut1: false, tut2: false, lessons: 0, upright: false, snd: true, rm: null, fs: coarse, haptics: true, run: null, selectedPlace: 0, seen: false };
 }
 function loadSave() { try { const s = localStorage.getItem(SAVE_KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
 function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
@@ -864,15 +873,17 @@ let save = defaults();
     for (const k of ['snd','haptics']) if (typeof save[k] !== 'boolean') save[k] = true;
     if (save.rm !== null && typeof save.rm !== 'boolean') save.rm = null;
     const r = save.run;
-    if (!r || typeof r !== 'object' || r.mode !== 'run' ||
+    if (!r || typeof r !== 'object' || !['run','place'].includes(r.mode) ||
         !Number.isInteger(r.place) || r.place < 0 || r.place > 7 ||
         !Number.isInteger(r.throws) || r.throws < 1 || r.throws > (r.mode === 'tower' ? 3 : 5) ||
         !['best','total','clips','n','cleared','fold'].every(k => typeof r[k] === 'number' && Number.isFinite(r[k]) && r[k] >= 0)) save.run = null;
     if (typeof save.fs !== 'boolean') save.fs = coarse;
-    // stars: one entry per place, 0–3; older saves get a star for each place they have cleared
+    // Stars are 0–3; pre-star saves keep two stars for each cleared place.
     const had = Array.isArray(s.stars);
     save.stars = had && s.stars.length === 8 ? s.stars.map(v => clampI(v, 0, 3)) : [0, 0, 0, 0, 0, 0, 0, 0];
-    if (!had) for (let i = 0; i < 8; i++) if (i < save.bestPlace - 1 || (save.clears > 0)) save.stars[i] = Math.max(save.stars[i], 1);
+    if (!had) for (let i = 0; i < 8; i++) if (i < save.bestPlace - 1 || (save.clears > 0)) save.stars[i] = Math.max(save.stars[i], 2);
+    save.selectedPlace = clampI(save.selectedPlace, 0, 7);
+    if (!placeOpen(save.selectedPlace)) save.selectedPlace = 0;
     const dy = save.daily;
     save.daily = dy && typeof dy === 'object' && /^\d{4}-\d{2}-\d{2}$/.test(dy.day) ? { day: dy.day, n: clampI(dy.n, 0, 3), best: nonnegative(dy.best) } : null;
   }
@@ -1071,7 +1082,13 @@ function drawClipFx(dt) {
 let parts = [];
 
 function placeOf(r) { return r.mode === 'tower' ? TOWER : PLACES[Math.min(7, r.place)]; }
-function startPlace(i) { initAudio(); goFS(); lastMode = 'place'; lastPlace = i; startRun('new', 'place', i); }
+function placeOpen(i) { return Number.isInteger(i) && i >= 0 && i < 8 && (i === 0 || save.stars[i - 1] >= 2 || i < save.bestPlace); }
+function startPlace(i, how = 'new') {
+  if (!placeOpen(i)) return;
+  initAudio(); goFS(); lastMode = 'place'; lastPlace = save.selectedPlace = i;
+  save.bestPlace = Math.max(save.bestPlace, i + 1);
+  startRun(how, 'place', i);
+}
 // one delegated handler on the tile row, so redrawing the tiles can never lose it
 document.getElementById('homeRoute').addEventListener('click', e => { const b = e.target.closest('button[data-place]'); if (b && state === 'home') startPlace(+b.dataset.place); });
 function startDaily() { const d = dailyToday(); if (d.n >= 3) return; initAudio(); goFS(); lastMode = 'daily'; startRun('new', 'daily'); }
@@ -1099,7 +1116,9 @@ const flyFold = () => run && run.mode === 'daily' ? DAILY_FOLD : save.fold;
 const flyUp = () => run && run.mode === 'daily' ? DAILY_UP : save.up[save.fold];
 
 function startRun(how, mode, at) {
-  mode = mode || 'run';
+  mode = !mode || mode === 'run' ? 'place' : mode;
+  if (mode === 'place') { at = at == null ? save.selectedPlace : at; if (!placeOpen(at)) at = 0; lastPlace = save.selectedPlace = at; }
+  lastMode = mode;
   const dl = mode === 'daily' ? dailyToday() : null;
   run = { mode, place: mode === 'place' ? clampI(at, 0, 7) : mode === 'daily' ? dailyPlace() : 0, throws: mode === 'run' ? 5 : mode === 'daily' ? 3 - dl.n : 3, best: 0, total: 0, clips: 0, cleared: 0, n: 0, newBest: false, newPlace: false, wrNow: false, medal0: save.medals };
   save.run = runSnap(); save.seen = true; persist();
@@ -1108,7 +1127,7 @@ function startRun(how, mode, at) {
   hideAllOverlays(); $('hud').classList.add('on');
   beginAim(true);
 }
-function runSnap() { return run && run.mode === 'run' ? { mode: run.mode, place: run.place, throws: run.throws, best: run.best, total: run.total, clips: run.clips, cleared: run.cleared, n: run.n, fold: save.fold } : null; }
+function runSnap() { return run && !run.finished && run.mode === 'place' ? { mode: run.mode, place: run.place, throws: run.throws, best: run.best, total: run.total, clips: run.clips, cleared: run.cleared, n: run.n, fold: save.fold } : null; }
 function beginAim(intro) {
   hangarRun = false;
   pl = placeOf(run);
@@ -1123,7 +1142,7 @@ function beginAim(intro) {
   showTut();
 }
 function showIntro() {
-  if (run.mode === 'place') { $('introP').textContent = 'Place ' + (run.place + 1) + ' · 3 throws'; $('introN').textContent = pl.name; $('introT').textContent = starLines(pl).map((x, i) => '★'.repeat(i + 1) + ' ' + x + ' m').join('   '); }
+  if (run.mode === 'place') { $('introP').textContent = 'Place ' + (run.place + 1) + ' · ' + run.throws + (run.throws === 1 ? ' throw' : ' throws'); $('introN').textContent = pl.name; $('introT').textContent = starLines(pl).map((x, i) => '★'.repeat(i + 1) + ' ' + x + ' m').join('   '); }
   else if (run.mode === 'daily') { $('introP').textContent = 'Daily Flight · same plane for everyone'; $('introN').textContent = pl.name; $('introT').textContent = 'Fly as far as you can · best of 3'; }
   else if (run.mode === 'tower') { $('introP').textContent = 'Final mode'; $('introN').textContent = 'Skyscraper'; $('introT').textContent = 'Three throws · best counts'; }
   else { $('introP').textContent = 'Place ' + (run.place + 1) + ' of 8'; $('introN').textContent = pl.name; $('introT').textContent = 'Reach ★★ ' + gateOf(pl) + ' m'; }
@@ -1174,6 +1193,12 @@ function land() {
   hideTut();
   let next = 'aim', outcome = '';
   if (run.mode === 'place' || run.mode === 'daily') {
+    if (run.mode === 'place' && star1 >= 2) {
+      const reached = Math.min(8, run.place + 2);
+      const newlyOpen = run.place < 7 && star0 < 2 && save.bestPlace < reached;
+      save.bestPlace = Math.max(save.bestPlace, reached);
+      if (newlyOpen) { run.unlocked = run.place + 1; run.newPlace = true; }
+    }
     run.throws--;
     if (star1 > star0) { const bonus = clearBonus(pl.n) * (star1 - star0); run.clips += bonus; save.clips += bonus; run.starBonus = bonus; } else run.starBonus = 0;
     outcome = fmt(d) + ' m';
@@ -1240,7 +1265,7 @@ function completeRun(win) {
   if (r.mode === 'tower') win = r.best >= TOWER.medals[0];
   if (r.mode === 'place') win = r.best >= gateOf(PLACES[r.place]);
   if (r.mode === 'daily') win = true;
-  rndEnd(win, { score: Math.round(r.mode === 'tower' ? r.best : r.total), best: Math.round(r.best), level: r.mode === 'tower' ? 9 : r.mode === 'run' ? Math.max(1, Math.min(8, win ? 8 : r.cleared + 1)) : r.place + 1 });
+  rndEnd(win, { score: Math.round(r.mode === 'tower' ? r.best : r.total), best: Math.round(r.best), stars: r.mode === 'place' ? starsFor(PLACES[r.place], r.best) : 0, level: r.mode === 'tower' ? 9 : r.mode === 'run' ? Math.max(1, Math.min(8, win ? 8 : r.cleared + 1)) : r.place + 1 });
   save.runs++;
   if (r.mode === 'run' && win) save.clears++;
   r.finished = true; r.win = !!win; save.run = null; persist();
@@ -1396,9 +1421,10 @@ function hideAllOverlays() { ['splash', 'pause', 'end', 'confirm', 'resetAsk', '
 function pausePlay(settingsOnly) {
   if (!settingsOnly && !(state === 'aim' || state === 'fly' || state === 'result')) return;
   paused = !settingsOnly; aim = null; holdPtrs.clear(); keyHold = keyDown = false; setWind(0);
-  $('pTitle').textContent = settingsOnly ? 'Settings' : (resumeMenu ? 'Run in progress' : 'Paused');
+  $('pTitle').textContent = settingsOnly ? 'Settings' : (resumeMenu ? 'Flight in progress' : 'Paused');
   $('pResume').textContent = settingsOnly ? 'Close' : 'Resume';
   $('pHangar').classList.toggle('hidden', !!settingsOnly);
+  $('pFlights').classList.toggle('hidden', !!settingsOnly);
   $('pHangar').textContent = 'Hangar';   // same name as the "Go to the hangar?" step it opens, paused or resuming
   pauseMode = settingsOnly ? 'settings' : 'pause';
   $('pReset').classList.toggle('hidden', !settingsOnly);
@@ -1432,7 +1458,7 @@ $('pFS').addEventListener('click', () => { save.fs = !save.fs; persist(); if (sa
 $('pUpright').addEventListener('click', () => { save.upright = !save.upright; persist(); refreshSwitches(); updateBanner(); });
 
 /* splash */
-$('splashGo').addEventListener('click',()=>{initAudio();goFS();$('splash').classList.remove('on');lastMode='run';startRun('new','run');});
+$('splashGo').addEventListener('click',()=>{initAudio();goFS();$('splash').classList.remove('on');startPlace(save.selectedPlace);});
 $('splashHangar').addEventListener('click',()=>{initAudio();openHangar();});
 $('homeSettings').addEventListener('click',()=>{initAudio();pausePlay(true);});
 $('pReset').addEventListener('click', () => { $('resetAsk').classList.add('on'); focusPanel('resetAsk', 'rStay'); });
@@ -1447,7 +1473,7 @@ $('rGo').addEventListener('click', () => {
 });
 function refreshHomeFS(){const b=$('homeFS');b.hidden=!fsOK;b.textContent='⛶ Full screen '+(save.fs?'on':'off');b.classList.toggle('on',!!save.fs);b.setAttribute('aria-pressed',save.fs?'true':'false');}
 $('homeFS').addEventListener('click',()=>{save.fs=!save.fs;persist();if(save.fs)goFS();else exitFS();refreshHomeFS();});
-$('homeBtn').addEventListener('click',()=>{if(hangarRun)continueFromHangar();else showHome();});
+$('homeBtn').addEventListener('click',()=>showHome());
 const TILE_ICON = {
   garden: '<path d="M14 33h52" stroke="#fffdf6" stroke-width="1.6"/><g fill="#fffdf6">' + [14,22,30,38,46,54,62].map(x => '<rect x="' + x + '" y="28" width="2.6" height="9"/>').join('') + '</g><rect x="68" y="22" width="12" height="11" fill="#f1e2c6"/><path d="M66 22l8-7 8 7z" fill="#b8684e"/>',
   playground: '<path d="M22 37l6-15 6 15M44 37l6-15 6 15M28 22h22" stroke="#e8553e" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M62 25q9 3 14 12" stroke="#2f8fd6" stroke-width="2.6" fill="none" stroke-linecap="round"/>',
@@ -1467,11 +1493,12 @@ function placeTile(i) {
     + (TILE_ICON[p.id] || '') + '<rect y="36" width="96" height="4" fill="' + ground + '"/></svg>';
 }
 function renderHomeRoute(){
-  const bp=Math.min(8,save.bestPlace||0), nextI=Math.min(7,bp);
-  $('homeRoute').innerHTML=PLACES.map((pl,i)=>{const open=i<=nextI||bp>=8,s=save.stars[i],nx=i===nextI&&bp<8;
-    const body='<span class="art">'+placeTile(i)+'<span class="pn">'+(i+1)+'</span>'+(nx?'<span class="tag">Next</span>':'')+(open?'':'<span class="lk" aria-hidden="true">🔒</span>')+'</span><span class="nm">'+pl.name+'</span><span class="ps"><b>'+'★★★'.slice(0,s)+'</b>'+'★★★'.slice(0,3-s)+'</span>';
-    return open?'<button class="pcard'+(nx?' next':'')+(s===3?' full':'')+'" data-place="'+i+'" aria-label="'+pl.name+', '+s+' of 3 stars. Fly it">'+body+'</button>':'<span class="pcard lock" aria-label="'+pl.name+', not reached yet">'+body+'</span>';}).join('');
-  $('homeRouteTxt').innerHTML=bp?'<b class="tot">★ '+starTotal()+' / 24</b> · tap a place to fly it':'First stop: the back garden · reach ★★ '+gateOf(PLACES[0])+' m';
+  $('homeRoute').innerHTML=PLACES.map((pl,i)=>{const open=placeOpen(i),s=save.stars[i],nx=i===save.selectedPlace;
+    const body='<span class="art">'+placeTile(i)+'<span class="pn">'+(i+1)+'</span>'+(nx?'<span class="tag">Fly</span>':'')+(open?'':'<span class="lk" aria-hidden="true">🔒</span>')+'</span><span class="nm">'+pl.name+'</span><span class="ps"><b>'+'★★★'.slice(0,s)+'</b>'+'★★★'.slice(0,3-s)+'</span>';
+    return open?'<button class="pcard'+(nx?' next':'')+(s===3?' full':'')+'" data-place="'+i+'" aria-label="'+pl.name+', '+s+' of 3 stars. Fly it">'+body+'</button>':'<span class="pcard lock" aria-label="'+pl.name+', earn two stars at '+PLACES[i-1].name+' to unlock">'+body+'</span>';}).join('');
+  $('homeRouteTxt').innerHTML='<b class="tot">★ '+starTotal()+' / 24</b> · two stars unlock the next flight';
+  $('splashGo').textContent='✈ Fly now';
+  $('splashGo').setAttribute('aria-label','Fly '+PLACES[save.selectedPlace].name);
   { const d=dailyToday(), b=$('homeDaily'); b.innerHTML=d.n>=3?'Daily ✓<small>'+fmt(d.best)+' m · share</small>':'Daily<small>'+(d.n?(3-d.n)+' throws left':PLACES[dailyPlace()].name)+'</small>'; }
   const chips=[['✈',FOLDS[save.fold].name]];
   if(save.runs)chips.push(['📏','Best '+fmt(save.bestThrow)+' m']);
@@ -1481,7 +1508,8 @@ function renderHomeRoute(){
   $('homeReady').hidden=!ready;$('splashHangar').setAttribute('aria-label',ready?'Hangar, upgrade ready':'Hangar');
 }
 function showHome(){
-  run=null;state='home';paused=false;hideTut();hideAllOverlays();$('hud').classList.remove('on','flying');
+  rnd = { armed:false, open:false, secs:0, how:'new' };
+  run=null;save.run=null;persist();state='home';paused=false;resumeMenu=false;holdPtrs.clear();keyHold=keyDown=false;fl=null;aim=null;setWind(0);hideTut();hideAllOverlays();$('hud').classList.remove('on','flying');
   refreshHomeFS(); renderHomeRoute();
   $('splash').classList.add('on'); updateBanner(); focusPanel('splash','splashGo');
 }
@@ -1492,7 +1520,9 @@ function showEnd(r, win) {
   const tower = r.mode === 'tower';
   const solo = r.mode === 'place' || r.mode === 'daily', P8 = PLACES[Math.min(7, r.place)];
   $('eTitle').textContent = r.mode === 'daily' ? 'Daily Flight' : r.mode === 'place' ? P8.name : tower ? 'Skyscraper' : win ? 'Mountains cleared!' : 'Run over';
-  $('eAgain').textContent = r.mode === 'daily' ? 'Share' : 'Fly again';
+  $('eAgain').textContent = r.mode === 'daily' ? 'Share' : r.mode === 'place' ? 'Retry this flight' : 'Fly again';
+  $('eNext').hidden = !(r.mode === 'place' && r.place < 7 && save.stars[r.place] >= 2 && placeOpen(r.place + 1));
+  $('eNext').textContent = 'Next: ' + (PLACES[r.place + 1]?.name || 'flight');
   $('eShare').hidden = r.mode === 'daily' || !(r.best > 0);   // the daily's main button is already Share; nothing to share at 0 m
   lastEnd = { r: r, win: win };
   const dots = $('eDots'); dots.innerHTML = '';
@@ -1541,7 +1571,9 @@ function shareDaily() {
 }
 $('homeDaily').addEventListener('click', () => { const d = dailyToday(); if (d.n >= 3) shareDaily(); else startDaily(); });
 $('eHangar').addEventListener('click', () => { run = null; openHangar(); });
-let lastMode = 'run';
+for (const id of ['pFlights','lFlights','eFlights']) $(id).addEventListener('click', () => { initAudio(); showHome(); });
+$('eNext').addEventListener('click', () => { if (lastEnd && lastEnd.r.mode === 'place' && save.stars[lastEnd.r.place] >= 2) startPlace(lastEnd.r.place + 1); });
+let lastMode = 'place';
 
 /* ---------- hangar ---------- */
 let viewFold = 0;
@@ -1560,7 +1592,7 @@ function foldStats(fi) {
 }
 function renderHangar() {
   if(hangarRun){save.run=runSnap();persist();}
-  $('homeBtn').textContent=hangarRun?'Continue run ➤':'⌂ Home';
+  $('homeBtn').textContent='Choose flight';
   $('hClips').textContent=save.clips.toLocaleString(); const suggestion=nextUpgrade();$('hangarGuide').textContent=suggestion.text;$('hangarGuide').classList.toggle('ready',suggestion.affordable);$('hangarGuide').style.display=suggestion.done?'none':'';
   const fi = viewFold, f = FOLDS[fi], own = save.owned[fi];
   $('fName').textContent = f.name; $('fCount').textContent = 'Fold ' + (fi + 1) + ' of 5' + (own ? (fi === save.fold ? ' · flying' : ' · owned') : '');
@@ -1568,7 +1600,7 @@ function renderHangar() {
   $('fBars').innerHTML = foldStats(fi).map(s => '<span>' + s[0] + '</span><div class="bar"><i style="width:' + Math.round(100 * Math.max(0.05, Math.min(1, s[1]))) + '%"></i></div>').join('');
   $('fPrev').disabled = fi === 0; $('fNext').disabled = fi === 4;
   const fly = $('flyBtn');
-  if (own) { fly.textContent = hangarRun ? 'Continue run ➤' : 'Fly ➤'; fly.className = 'btn pri'; fly.disabled = false; fly.dataset.act = 'fly'; }
+  if (own) { fly.textContent = hangarRun ? 'Continue flight ➤' : 'Fly '+PLACES[save.selectedPlace].name+' ➤'; fly.className = 'btn pri'; fly.disabled = false; fly.dataset.act = 'fly'; }
   else if (save.owned[fi - 1]) { fly.innerHTML = 'Buy · ' + f.cost + ' <i class="clipI" style="background-image:url(&quot;' + CLIP_ICON + '&quot;)"></i>'; fly.className = 'btn org'; fly.disabled = save.clips < f.cost; fly.dataset.act = 'buy'; }
   else { fly.textContent = 'Buy ' + FOLDS[fi - 1].name + ' first'; fly.className = 'btn'; fly.disabled = true; fly.dataset.act = ''; }
   $('towerBtn').classList.toggle('hidden', hangarRun || !(towerUnlocked() && own));
@@ -1621,7 +1653,7 @@ $('flyBtn').addEventListener('click', () => {
     save.clips -= f.cost; save.owned[viewFold] = true; save.fold = viewFold; persist(); sBuy(); sChime(); buzz(30); renderHangar(); return;
   }
   if (act !== 'fly') return;
-  save.fold = viewFold; persist(); if(hangarRun){continueFromHangar();return;} goFS(); lastMode = 'run'; startRun('new', 'run');
+  save.fold = viewFold; persist(); if(hangarRun){continueFromHangar();return;} goFS(); startPlace(save.selectedPlace);
 });
 function continueFromHangar(){
   initAudio();save.run=runSnap();persist();goFS();hideAllOverlays();beginAim(true);
@@ -1650,7 +1682,7 @@ function drawFoldPreview() {
 let keyAngle = 25;
 function focusPanel(id, first) { const el=$(first)||$(id); if(el)el.focus({preventScroll:true}); }
 function topPanel(){return ['confirm','pause','end','landing','splash','hangar'].map($).find(el=>el.classList.contains('on'));}
-for(const [id,label] of [['pause','Settings and pause'],['confirm','Leave run'],['end','Run results'],['landing','Flight reward']]){
+for(const [id,label] of [['pause','Settings and pause'],['confirm','Leave flight'],['end','Flight results'],['landing','Flight reward']]){
   $(id).setAttribute('role','dialog');$(id).setAttribute('aria-modal','true');$(id).setAttribute('aria-label',label);
 }
 window.addEventListener('pointerdown',()=>document.documentElement.classList.remove('kbd'),true);
@@ -2630,7 +2662,10 @@ function autoHold() {
 if (window.__DGTEST === true) {
   window.__dg = {
     end: win => {
-      if (run && (state === 'aim' || state === 'fly' || state === 'result')) endRun(!!win);
+      if (run && (state === 'aim' || state === 'fly' || state === 'result')) {
+        if (win && state === 'aim' && run.mode === 'place') { rndStart(); launch({ang:0.3,pow:1,len:100}); fl.x = gateOf(pl); land(); }
+        endRun(!!win);
+      }
       else if (state === 'home' || state === 'splash' || state === 'hangar') { startRun('new', 'run'); endRun(!!win); }
     },
     state: () => ({ cross: crossLines.map(l => [l.x, l.kind, l.done]), fx: crossFx.map(c => c.label), state, paused, qual, hangarRun, wind: roll && { ...roll.wind, value: windAt(pl,roll,fl?fl.t:0), seed: roll.seed }, camera: {...cam}, speedMax: P && speedScale(), launchSpeed: P && P.v, run: run && Object.assign({}, run), save: JSON.parse(JSON.stringify(save)), fl: fl && { x: fl.x, y: fl.y, t: fl.t, done: fl.done, vx: fl.vx, vy: fl.vy, power: fl.pow0, a: fl.a, stall: fl.stall, stalls: fl.stalls || 0, th:fl.th, pitchRate:fl.pitchRate, crashed:!!fl.crashed, hold: fl.hold, clips: fl.clips, loops: fl.loops || 0 } }),
@@ -2638,6 +2673,7 @@ if (window.__DGTEST === true) {
     speed: s => { TEST.speed = s; },
     auto: on => { TEST.auto = on; },
     throwAt: (ang, pow) => { if (state !== 'aim') return false; rndStart(); launch({ ang, pow, len: 100 }); return true; },
+    landAt: d => { if (state !== 'aim') return; rndStart(); launch({ang:0.3,pow:1,len:100}); fl.x = Math.max(0,d); land(); },
     next: () => { if (state === 'result') afterResult(); },
     hangar: () => openHangar(),
     startRun: (how, mode) => startRun(how || 'new', mode || 'run'),
@@ -2653,7 +2689,10 @@ if (!save.seen) { showHome(); }
 else if (save.run && save.run.mode) {
   // a run was in progress: offer to resume it (a resumed run is a new round)
   const s = save.run;
-  run = { mode: s.mode, place: clampI(s.place, 0, 7), throws: clampI(s.throws, 1, 5), best: +s.best || 0, total: +s.total || 0, clips: +s.clips || 0, cleared: clampI(s.cleared, 0, 8), n: clampI(s.n, 0, 999), newBest: false, newPlace: false, medal0: save.medals };
+  // Retire the old journey while keeping earned progress and the reached place.
+  if (s.mode === 'run') { s.mode = 'place'; s.throws = 3; s.best = s.total = s.clips = s.n = 0; }
+  save.selectedPlace = lastPlace = s.place;
+  run = { mode: s.mode, place: clampI(s.place, 0, 7), throws: clampI(s.throws, 1, 3), best: +s.best || 0, total: +s.total || 0, clips: +s.clips || 0, cleared: clampI(s.cleared, 0, 8), n: clampI(s.n, 0, 999), newBest: false, newPlace: false, medal0: save.medals };
   if (save.owned[clampI(s.fold, 0, 4)]) save.fold = clampI(s.fold, 0, 4);
   lastMode = run.mode;
   pl = placeOf(run); roll = rollThrow(pl, 1); P = planeParams(save.fold, save.up[save.fold], save.arm);
@@ -2665,6 +2704,5 @@ requestAnimationFrame(frame);
 })();
 
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>

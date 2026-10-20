@@ -135,3 +135,69 @@ test('PLANES-SHARE-01: the end-of-run screen has Share (not on the daily), shari
  expect(shared[0]).toMatch(/^✈️ Paper Planes — (all 8 places|\d of 8 places|Skyscraper|.+ [★☆]{3}) · best throw [\d.]+ m.*\ndailynoodle\.co\.uk\/reports\/2026-10-17-arcade-paper-planes\.html$/u);
  expect(phone.errors).toEqual([]);
 });
+
+test('PLANES-FLIGHT-01: two stars unlock exactly the next flight without moving the player',async({phone})=>{
+ await game(phone,games.find(g=>g.id==='planes'));const p=phone.p;
+ await expect(p.locator('#homeRoute button')).toHaveCount(1);
+ await H.tap(p,p.locator('#splashGo'));
+ await p.evaluate(()=>window.__dg.landAt(17.9));
+ let s=await p.evaluate(()=>window.__dg.state());expect(s.run.mode).toBe('place');expect(s.run.place).toBe(0);expect(s.save.stars[0]).toBe(1);
+ await H.tap(p,p.locator('#lNext'));await p.evaluate(()=>window.__dg.landAt(18));
+ await expect(p.locator('#lUnlock')).toBeVisible();
+ await H.tap(p,p.locator('#lNext'));s=await p.evaluate(()=>window.__dg.state());
+ expect(s.run.place).toBe(0);expect(s.run.throws).toBe(1);expect(s.save.stars[0]).toBe(2);
+ await p.evaluate(()=>window.__dg.landAt(50));await H.tap(p,p.locator('#lNext'));
+ await expect(p.locator('#eAgain')).toHaveText('Retry this flight');await expect(p.locator('#eNext')).toBeVisible();
+ expect(await p.evaluate(()=>window.__gameEvents.filter(e=>e.ev==='game_end').map(e=>[e.x.win,e.x.level,e.x.stars]))).toEqual([[true,1,3]]);
+ await H.tap(p,p.locator('#eAgain'));s=await p.evaluate(()=>window.__dg.state());expect(s.run.place).toBe(0);expect(s.run.throws).toBe(3);
+ await H.tap(p,p.locator('#pauseBtn'));await H.tap(p,p.locator('#pFlights'));
+ await expect(p.locator('#homeRoute button')).toHaveCount(2);
+ await H.tap(p,p.locator('#homeRoute [data-place="1"]'));expect(await p.evaluate(()=>window.__dg.state().run.place)).toBe(1);
+ expect(phone.errors).toEqual([]);
+});
+test('PLANES-FLIGHT-02: changing flight in the air abandons once and keeps earned stars and clips',async({phone})=>{
+ await game(phone,games.find(g=>g.id==='planes'));const p=phone.p;
+ await H.tap(p,p.locator('#splashGo'));await p.evaluate(()=>window.__dg.landAt(18));
+ const bank=await p.evaluate(()=>window.__dg.state().save.clips);
+ await H.tap(p,p.locator('#lNext'));
+ // Hold simulation time so the flight cannot land during the input checks.
+ await p.clock.pauseAt(await p.evaluate(()=>new Date(Date.now()+60000)));
+ await p.evaluate(()=>window.__dg.throwAt(25,1));
+ await H.tap(p,p.locator('#pauseBtn'));await H.tap(p,p.locator('#pFlights'));
+ await H.tap(p,p.locator('#homeRoute [data-place="1"]'));await p.evaluate(()=>window.__dg.landAt(0));
+ const s=await p.evaluate(()=>window.__dg.state());expect(s.save.clips).toBeGreaterThanOrEqual(bank);expect(s.save.stars[0]).toBe(2);
+ expect(await p.evaluate(()=>window.__gameEvents.filter(e=>e.ev==='game_start').map(e=>e.x.level))).toEqual([1,2]);
+ expect(await p.evaluate(()=>window.__gameEvents.filter(e=>e.ev==='game_end'))).toHaveLength(0);
+ await H.tap(p,p.locator('#lFlights'));await H.tap(p,p.locator('#splashHangar'));await H.tap(p,p.locator('#flyBtn'));
+ expect(await p.evaluate(()=>[window.__dg.state().run.mode,window.__dg.state().run.place])).toEqual(['place',1]);
+ expect(phone.errors).toEqual([]);
+});
+test('PLANES-FLIGHT-03: a saved flight resumes at the same level and remaining throw count',async({phone})=>{
+ await game(phone,games.find(g=>g.id==='planes'));const p=phone.p;
+ await H.tap(p,p.locator('#splashGo'));await p.evaluate(()=>window.__dg.landAt(18));
+ const a=await p.evaluate(()=>window.__dg.state());await p.reload();await H.wait(p,500);
+ await expect(p.locator('#pTitle')).toHaveText('Flight in progress');await H.tap(p,p.locator('#pResume'));
+ const b=await p.evaluate(()=>window.__dg.state());expect(b.run.place).toBe(0);expect(b.run.mode).toBe('place');expect(b.run.throws).toBe(2);expect(b.run.best).toBe(18);expect(b.save.clips).toBe(a.save.clips);
+ await p.evaluate(()=>window.__dg.landAt(0));await H.tap(p,p.locator('#lNext'));await p.evaluate(()=>window.__dg.landAt(0));await H.tap(p,p.locator('#lNext'));
+ expect(await p.evaluate(()=>window.__gameEvents.filter(e=>e.ev==='game_start').map(e=>e.x.start))).toEqual(['resume']);
+ expect(await p.evaluate(()=>window.__gameEvents.filter(e=>e.ev==='game_end').map(e=>e.x.win))).toEqual([true]);
+ await H.tap(p,p.locator('#eNext'));expect(await p.evaluate(()=>window.__dg.state().run.place)).toBe(1);
+ expect(phone.errors).toEqual([]);
+});
+test('PLANES-FLIGHT-04: legacy run saves become single flights and keep existing progress',async({phone})=>{
+ await game(phone,games.find(g=>g.id==='planes'));const p=phone.p;
+ await p.evaluate(()=>window.__dg.give({seen:true,clips:1234,bestPlace:4,stars:[2,3,2,0,0,0,0,0],run:{mode:'run',place:3,throws:5,best:100,total:150,clips:42,n:6,cleared:3,fold:0}}));
+ await p.reload();await H.wait(p,500);await H.tap(p,p.locator('#pResume'));
+ const s=await p.evaluate(()=>window.__dg.state());expect(s.run.mode).toBe('place');expect(s.run.place).toBe(3);expect(s.run.throws).toBe(3);expect(s.save.clips).toBe(1234);expect(s.save.stars).toEqual([2,3,2,0,0,0,0,0]);
+ await H.tap(p,p.locator('#pauseBtn'));await H.tap(p,p.locator('#pFlights'));await expect(p.locator('#homeRoute button')).toHaveCount(4);
+ expect(phone.errors).toEqual([]);
+});
+test('PLANES-FLIGHT-05: a flight below two stars ends as a loss and offers a same-level retry',async({phone})=>{
+ await game(phone,games.find(g=>g.id==='planes'));const p=phone.p;await H.tap(p,p.locator('#splashGo'));
+ for(let n=0;n<3;n++){await p.evaluate(()=>window.__dg.landAt(10));await H.tap(p,p.locator('#lNext'));}
+ await expect(p.locator('#eNext')).toBeHidden();
+ expect(await p.evaluate(()=>window.__gameEvents.filter(e=>e.ev==='game_end').map(e=>[e.x.win,e.x.level,e.x.stars]))).toEqual([[false,1,1]]);
+ await H.tap(p,p.locator('#eAgain'));expect(await p.evaluate(()=>[window.__dg.state().run.place,window.__dg.state().run.throws])).toEqual([0,3]);
+ await p.evaluate(()=>window.__dg.landAt(0));expect(await p.evaluate(()=>window.__gameEvents.filter(e=>e.ev==='game_start').map(e=>e.x.start))).toEqual(['new','retry']);
+ expect(phone.errors).toEqual([]);
+});
