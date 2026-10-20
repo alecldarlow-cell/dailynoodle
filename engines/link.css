@@ -231,7 +231,7 @@ html.app-mode .controls{margin:12px 0 2px}
 html.app-mode .how,html.app-mode footer{display:none}
 html.app-mode .msg{min-height:18px;margin:12px 0 0;font-size:12.5px}
 html.app-mode .controls{margin:10px 0 0}
-html.app-mode button{padding:12px 18px}
+html.app-mode button:not(.tile){padding:12px 18px}
 html.app-mode button.primary{padding:12px 28px}
 @media (max-height:660px){
   html.app-mode .app{padding-top:calc(8px + var(--dn-top,env(safe-area-inset-top,0px)))}
@@ -245,3 +245,22 @@ html.app-mode button.primary{padding:12px 28px}
    lives in each puzzle page, so the elements stay in the HTML but never show.
    The footer was a build note ("SHELL vN · … code, not eye") meant for us, not players. */
 footer{display:none!important}
+
+/* Readable words at the narrowest phone width: wrap only when a whole word
+   cannot fit at the shared minimum size. Never crop it inside its tile. */
+.board.wrap-words .tile .tt{white-space:normal;overflow-wrap:anywhere;word-break:break-all;text-wrap:balance;flex:0 1 auto;max-width:100%}
+html.app-mode .controls{flex-wrap:wrap}
+html.app-mode .controls button{flex:1 1 0;min-width:0;padding:10px 8px;white-space:normal;overflow-wrap:anywhere}
+
+/* Short landscape phones: keep all four rows clear of the action buttons. */
+@media (pointer:coarse) and (hover:none) and (orientation:landscape) and (max-height:500px){
+  html.app-mode .app{max-width:900px;padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
+  html.app-mode main{display:grid;grid-template-columns:minmax(0,3fr) minmax(140px,1fr);
+    grid-template-rows:auto minmax(0,1fr) auto;gap:8px 16px;
+    grid-template-areas:"board lives" "board message" "board tools"}
+  html.app-mode .board{grid-area:board;width:100%;height:100%}
+  html.app-mode .lives{grid-area:lives;flex-direction:column;margin:0;padding:0;gap:6px}
+  html.app-mode .msg{grid-area:message;margin:0}
+  html.app-mode .controls{grid-area:tools;flex-direction:column;align-items:stretch;margin:0;width:100%}
+  html.app-mode .controls button{flex:none}
+}

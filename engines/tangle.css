@@ -206,3 +206,32 @@ details.how p{margin:0 0 12px;line-height:1.5}
 #yBtn.ylink{display:inline-flex;align-items:center;min-height:44px;margin-top:10px;padding:0;border:0;box-shadow:none;background:none;color:var(--primary);font-weight:600;font-size:15px;font-stretch:100%;justify-content:flex-start}
 :root[data-theme="dark"] #yBtn.ylink{color:#A9BBFF}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #yBtn.ylink{color:#A9BBFF}}
+
+/* The word list and clock sit beside a full, touchable board in landscape. */
+@media (orientation:landscape) and (max-height:500px){
+  #play .wrap{max-width:900px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-rows:auto 5px auto minmax(56px,1fr) auto;gap:6px 16px;
+    grid-template-areas:"top board" "bar board" "pills board" "list board" "word board"}
+  .ptop{grid-area:top;grid-template-columns:44px minmax(0,1fr) auto;gap:6px}
+  .scorebox{flex-direction:column;gap:0}
+  .scorebox span{font-size:12px;white-space:normal}
+  .pright{gap:4px}
+  #clock{min-width:64px;font-size:22px;padding:6px}
+  .timebar{grid-area:bar}
+  .pills{grid-area:pills}
+  .pill{white-space:normal}
+  #list{grid-area:list;height:100%}
+  #cur{grid-area:word}
+  #boardWrap{grid-area:board;align-self:center;min-width:0}
+  #board{width:min(100%,calc(var(--dn-vh,100dvh) - 32px - var(--dn-top,0px) - var(--dn-bot,0px)));flex:none}
+  #curWord.idle{font-size:14px;text-align:center}
+}
+/* Instructions and settings remain reachable below the start card. */
+#home{overflow-y:auto;-webkit-overflow-scrolling:touch}
+#home .wrap{height:auto;min-height:100%}
+/* Large text can wrap instead of running under the clock or off the banner. */
+.ptop{grid-template-columns:44px minmax(0,1fr) auto}
+.scorebox{flex-wrap:wrap}
+.scorebox span{white-space:normal}
+.pill{max-width:100%;white-space:normal}
+#play{overflow-y:auto;-webkit-overflow-scrolling:touch}

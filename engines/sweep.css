@@ -165,3 +165,16 @@ html.app-mode .controls .spacer{display:none}
    The footer was a build note ("SHELL vN · … code, not eye") meant for us, not players.
    Gone: Reveal all (giving up), Restart, and the Flag check toggle (it stays on). */
 #revealAll,#reset,#flagCheck,footer{display:none!important}
+
+/* Landscape: reserve one full-height column for the six-by-six board. */
+@media (pointer:coarse) and (hover:none) and (orientation:landscape) and (max-height:500px){
+  html.app-mode .app{max-width:900px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-rows:auto minmax(0,1fr) auto auto;gap:6px 16px;
+    grid-template-areas:"bar bar" "board modes" "board message" "board tools"}
+  html.app-mode .dn-bar{grid-area:bar;margin:0}
+  html.app-mode main{display:contents}
+  html.app-mode .gridwrap{grid-area:board;height:100%}
+  html.app-mode .modebox{grid-area:modes;align-self:center}
+  html.app-mode .msg{grid-area:message;margin:0}
+  html.app-mode .controls{grid-area:tools;margin:0;flex-wrap:wrap}
+}

@@ -185,3 +185,7 @@ html.fin-ready:not(.dn-fonts) .fin-box.fin-open{visibility:hidden!important}
 @media (pointer:coarse){html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}}
 :root{color-scheme:light dark}
 :root[data-theme="light"]{color-scheme:light}
+
+/* A touch can leave :hover active. The old engines' generic button:hover
+   must not turn the Share pill pale while its text stays white. */
+.fin .fin-primary:hover{background:var(--f-act);color:var(--f-onAct)}

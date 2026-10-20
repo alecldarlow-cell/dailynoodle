@@ -245,3 +245,14 @@ details.how p{margin:0 0 12px;font-size:15px;line-height:1.5;color:var(--ink2)}
 /* the home screen scrolls now it is taller */
 #home{overflow-y:auto;-webkit-overflow-scrolling:touch}
 #home .wrap{height:auto;min-height:100%}
+
+/* A recognisable country outline, with its answers alongside on short screens. */
+@media (orientation:landscape) and (max-height:500px){
+  #quiz .wrap{max-width:900px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-rows:auto minmax(0,1fr) auto;gap:10px 16px;
+    grid-template-areas:"top top" "map choices" "map actions"}
+  .qtop{grid-area:top}
+  #sheet{grid-area:map;height:100%}
+  #opts{grid-area:choices;align-self:center}
+  .qfoot{grid-area:actions}
+}

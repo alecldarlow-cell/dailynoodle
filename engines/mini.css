@@ -206,3 +206,18 @@ body.win #checkWord,body.win #checkAll,body.win #revealWord{display:none}
 html.app-mode .app{padding-bottom:calc(18px + var(--dn-bot,env(safe-area-inset-bottom,0px)))}
 html.app-mode body.win .controls button{flex:0 0 auto}
 html.app-mode .controls #fs{margin-left:auto}
+
+/* Short phones in landscape need room beside the board, rather than a grid
+   squeezed between four full-width rows. Keep the clue beside the keys. */
+@media (pointer:coarse) and (hover:none) and (orientation:landscape) and (max-height:500px){
+  html.app-mode .app{max-width:900px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);
+    grid-template-rows:auto auto minmax(44px,1fr) auto;gap:6px 12px;
+    grid-template-areas:"bar bar" "board tools" "board clue" "board keys"}
+  html.app-mode .dn-bar{grid-area:bar;margin:0}
+  html.app-mode main{grid-area:board;align-self:stretch}
+  html.app-mode .controls{grid-area:tools;margin:0}
+  html.app-mode .cluebox{grid-area:clue;margin:0;align-self:end}
+  html.app-mode .kb{grid-area:keys;margin:0}
+}
+/* Labels may wrap when the phone enlarges text; keep every action in reach. */
+html.app-mode .controls button{white-space:normal;overflow-wrap:anywhere}

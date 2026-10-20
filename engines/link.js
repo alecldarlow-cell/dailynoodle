@@ -231,7 +231,8 @@ function fitFont(force){
   const key=avail+"|"+maxLen;
   if(key===_fitKey&&!force)return;
   const room=avail-12;
-  let lo=9, hi=18, best=lo;
+  b.classList.remove("wrap-words");
+  let lo=12, hi=18, best=lo;
   for(let i=0;i<7;i++){                                // binary search to 0.07px
     const mid=(lo+hi)/2;
     b.style.setProperty("--tf",mid+"px");
@@ -239,9 +240,12 @@ function fitFont(force){
     if(fits){best=mid;lo=mid;}else{hi=mid;}
   }
   b.style.setProperty("--tf",best.toFixed(2)+"px");
+  b.classList.toggle("wrap-words",tiles.some(t=>{const sp=t.querySelector(".tt");return sp&&sp.offsetWidth>room;}));
   _fitKey=key;
 }
 addEventListener("resize",()=>{fitBoard();fitFont(true);});
+// Archivo can arrive after the first board layout; measure its real glyphs too.
+if(document.fonts){document.fonts.ready.then(()=>fitFont(true));document.fonts.addEventListener("loadingdone",()=>fitFont(true));}
 function toggle(w){
   if(over||busy)return;
   startTimer();   // also works if the start card could not load
