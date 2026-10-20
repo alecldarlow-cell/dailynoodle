@@ -17,7 +17,8 @@ const topCard=p=>p.evaluate(()=>{
  return null;
 });
 
-for(const [page,topic,nth] of [['puzzles.html','Word',14],['index.html','Science',9]])
+// Puzzles filters by type from 20 Oct 2026 (its topic pills, "Word" among them, are gone).
+for(const [page,topic,nth] of [['puzzles.html','Link',14],['index.html','Science',9]])
 test('FRONT-BACK: '+page+' keeps topic "'+topic+'" and the top card across Back with no back-forward cache',async({phone})=>{
  const {ctx,p}=phone;
  // the page from disk, as the harness serves it, plus no-store (never route.fetch: that goes to the network)

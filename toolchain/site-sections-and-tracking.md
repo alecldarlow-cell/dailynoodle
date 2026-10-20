@@ -7,6 +7,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - Shared layout lives in `front.css` and `front.js` at the repo root; each page only sets `data-section` on `<html>`.
 - A file's section comes from its `dn:kind` meta, not its folder. Everything (reports, puzzles, games) still lives in `reports/`.
 - `dn:kind` now accepts `report | puzzle | game`. Game topics: `Arcade`, `Strategy`, `Quiz`.
+- Front-page pills: News and Games filter by `dn:topic`, Puzzles by puzzle type (the feed's `type`, from each page's puzzle id; 20 Oct 2026). See SITE.md › Sections › Filter pills.
 
 ## Reader tracking
 - `dn-track.js` (repo root) records anonymous events into the `digi` Supabase project (London, eu-west-2) via one write-only function `public.log_events`.

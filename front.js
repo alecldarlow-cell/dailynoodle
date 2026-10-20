@@ -118,8 +118,9 @@
    DIGI — shared front-page script for Digi News, Digi Puzzles and Digi Games.
    --------------------------------------------------------------------------
    Reads feed.json (built by .github/workflows/build-feed.yml on every push and
-   nightly) and renders a reverse-chronological, topic-filterable card list of
-   the section's own kind: report (News), puzzle (Puzzles) or game (Games).
+   nightly) and renders a reverse-chronological, filterable card list of the
+   section's own kind: report (News), puzzle (Puzzles) or game (Games). News and
+   Games filter by topic, Puzzles by puzzle type (Mini, Doku… from 20 Oct 2026).
    If feed.json can't be loaded (usually no connection) it says so and offers
    a retry, and tries again by itself when the phone comes back online.
    (19 Oct 2026: the old fallback that read the GitHub API was removed. The
@@ -163,8 +164,30 @@
   // Which items this page lists: the lab takes every unfinished item; each
   // desk takes its own kind, minus anything still in the lab.
   function mine(it){ return LAB ? inLab(it) : (it.kind===SEC.kind && !inLab(it)); }
-  // The lab filters by desk; the desks filter by topic.
-  function facet(it){ return LAB ? (KIND_LABEL[it.kind]||'') : (it.topic||''); }
+  // Puzzles filters by puzzle type, one pill each (20 Oct 2026, Alec: topics
+  // lumped Doku, Sweep and Path under Logic), in the daily set's order (the
+  // finish sheet's, puzzles-today.json's). The type comes from feed.json, where
+  // build-feed.js reads it from each page's puzzle id; a feed cached from before
+  // then has none, so the headline's first word ("Doku 99") stands in.
+  var PUZZLE_TYPES = [['mini','Mini'],['doku','Doku'],['sweep','Sweep'],['path','Path'],
+                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon']];
+  var TYPE_LABEL = {}, TYPE_RANK = {};
+  PUZZLE_TYPES.forEach(function(t, i){ TYPE_LABEL[t[0]] = t[1]; TYPE_RANK[t[1]] = i; });
+  function puzzleType(it){
+    if(it.type) return TYPE_LABEL[it.type] || (it.type.charAt(0).toUpperCase() + it.type.slice(1));
+    var w = String(it.headline||'').split(/\s+/)[0];
+    return TYPE_RANK.hasOwnProperty(w) ? w : '';
+  }
+  // The lab filters by desk, Puzzles by type, the other desks by topic.
+  function facet(it){
+    if(LAB) return KIND_LABEL[it.kind]||'';
+    return SEC.kind==='puzzle' ? puzzleType(it) : (it.topic||'');
+  }
+  function facetOrder(a, b){
+    if(SEC.kind!=='puzzle') return a < b ? -1 : a > b ? 1 : 0;
+    var ra = TYPE_RANK.hasOwnProperty(a) ? TYPE_RANK[a] : 99, rb = TYPE_RANK.hasOwnProperty(b) ? TYPE_RANK[b] : 99;
+    return ra - rb || (a < b ? -1 : a > b ? 1 : 0);   // a type front.js doesn't know yet goes last
+  }
 
   var state = { items:[], kind:SEC.kind, topic:'all', q:'', built:'', loadedAt:0, day:'' };
 
@@ -230,7 +253,7 @@
       var t = facet(it);
       if(t && !seen[t]){ seen[t]=1; out.push(t); }
     });
-    return out.sort();
+    return out.sort(facetOrder);
   }
 
   function renderChips(){
@@ -239,7 +262,7 @@
     var html = [];
     // Puzzles only: the leaderboard link leads the row. A link, not a filter.
     if(SEC.kind==='puzzle') html.push('<a class="chip boardpill" href="board.html?from=pill">🏆 Board</a>');
-    html.push('<button class="chip" data-topic="all" aria-pressed="'+(state.topic==='all')+'">'+(LAB?'Everything':'All topics')+'</button>');
+    html.push('<button class="chip" data-topic="all" aria-pressed="'+(state.topic==='all')+'">'+(LAB?'Everything':SEC.kind==='puzzle'?'All puzzles':'All topics')+'</button>');
     list.forEach(function(t){
       html.push('<button class="chip" data-topic="'+esc(t)+'" aria-pressed="'+(state.topic===t)+'">'+esc(t)+'</button>');
     });

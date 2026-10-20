@@ -191,6 +191,22 @@ function heroStat(html) {
   };
 }
 
+// ---- puzzle type ------------------------------------------------------------
+// Which puzzle a card is, for the Puzzles desk's pills (front.js; 20 Oct 2026,
+// Alec: one pill per type instead of topics). Read from the page's own puzzle
+// id, the one its saves and the board use (DP·LEXI·0099 → doku), never from the
+// filename: three July pages (digi-path-0002, DP-SWEEP-2026-07-17,
+// digi-doku-0004) predate the naming pattern. A new type needs a line here and
+// a label in front.js's PUZZLE_TYPES, or its cards show under All puzzles only.
+const TYPE_OF_ID = { MINI: 'mini', LEXI: 'doku', SWEEP: 'sweep', PATH: 'path',
+                     LINK: 'link', TANG: 'tangle', BORD: 'borders', RECK: 'reckon' };
+function puzzleType(html, rel, warnings) {
+  const m = html.match(/\bid\s*:\s*"DP·([A-Z]+)·/) || html.match(/DP·([A-Z]+)·[0-9]/);
+  const type = m && TYPE_OF_ID[m[1]];
+  if (!type) warnings.push(`${rel} — no puzzle type (no DP· id this builder knows); the card shows under All puzzles only`);
+  return type || '';
+}
+
 // ---- puzzle grid mask -------------------------------------------------------
 // A puzzle's card tile is a preview of its own grid, read straight out of the
 // puzzle file's puzzle object — never hand-drawn, and never a spoiler: only the
@@ -335,6 +351,7 @@ for (const { dir, kind } of DIRS) {
     // Games likewise: their big numbers are scores, not measurements.
     const hs = (kindVal === 'report') ? heroStat(html) : null;
     const mask = (kindVal === 'puzzle') ? puzzleMask(html, rel, warnings) : '';
+    const ptype = (kindVal === 'puzzle') ? puzzleType(html, rel, warnings) : '';
 
     // The tile's label is a KICKER, not a caption: ~14 characters, two words.
     // The piece's own hero-stat caption is written to sit under a big number in
@@ -380,6 +397,7 @@ for (const { dir, kind } of DIRS) {
       statUnit: hs ? hs.unit : '',
       statLabel: hs ? statLabel : '',
       mask,
+      ...(ptype ? { type: ptype } : {}),
       ...(meta(head, 'dn:badge') ? { badge: meta(head, 'dn:badge').trim().slice(0, 24) } : {})
     });
   }
