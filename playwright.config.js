@@ -13,7 +13,8 @@ module.exports = defineConfig({
   retries: 0,
   forbidOnly: !!process.env.CI,
   reporter: [['list'], ['html', { open: 'never',outputFolder:group?'playwright-report/'+group:'playwright-report' }], ['json', { outputFile: output+'/playwright.json' }]],
-  use: { headless: true, locale: 'en-GB', timezoneId: 'Europe/London', trace: 'retain-on-failure', screenshot: 'only-on-failure', launchOptions: process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {} },
+  use: { headless: true, locale: 'en-GB', timezoneId: 'Europe/London', trace: 'retain-on-failure', screenshot: 'only-on-failure', // Chromium can't resolve the live database (see NO_LIVE_DB in tools/tests/harness.js); Firefox/WebKit rely on newPhone()'s rewrite.
+    launchOptions: { args: ['--host-resolver-rules=MAP *.supabase.co ~NOTFOUND'], ...(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}) } },
   projects: [{ name: 'chromium', use: { browserName: 'chromium' } },
     ...(process.env.DN_CROSS_BROWSER ? [
       { name: 'firefox', testIgnore: /visual/, use: { browserName: 'firefox', launchOptions: {} } },

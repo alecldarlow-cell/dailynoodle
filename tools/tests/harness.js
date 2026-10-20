@@ -36,8 +36,20 @@ function dailyList(day) {
   const out = JSON.stringify({ today: day, items }); DAILY.set(day, out); return out;
 }
 
+/* Test browsers must never reach the live database (20 Oct 2026). Routes catch
+   requests while a page is open, but the tracker's last keepalive request
+   (page_exit, sent as a page closes) can outlive its context's routes and went
+   to the real Supabase from every CI run between 19 and 20 Oct. Two locks:
+   Chromium can't resolve *.supabase.co at all (covers pages, workers and
+   teardown), and every page from newPhone() sends Supabase calls to
+   *.supabase.invalid, which no browser can resolve, so WebKit and Firefox are
+   covered too. Routes match both names. Regression: tools/tests/browser/isolation.spec.js. */
+const NO_LIVE_DB = '--host-resolver-rules=MAP *.supabase.co ~NOTFOUND';
+const isSupabase = host => /\.supabase\.(co|invalid)$/.test(host);
+
 async function launch() {
   const o = { args: ['--no-sandbox'] };
+  if (!process.env.DN_BROWSER || process.env.DN_BROWSER === 'chromium') o.args.push(NO_LIVE_DB);
   if (!process.env.DN_BROWSER || process.env.DN_BROWSER === 'chromium') o.executablePath = process.env.PW_CHROMIUM || await require('./chromium').executable();
   return (PW[process.env.DN_BROWSER || 'chromium']).launch(o);
 }
@@ -53,6 +65,16 @@ async function newPhone(browser, { width = 390, height = 844, scheme = 'light', 
   // dn-track.js sends nothing from a browser flagged as automated (19 Oct 2026);
   // clear the flag so the tests see the tracker as a reader's phone would.
   await ctx.addInitScript(() => { try { Object.defineProperty(Navigator.prototype, 'webdriver', { get: () => false, configurable: true }); } catch (e) {} });
+  await ctx.addInitScript(() => {
+    const fix = u => { try { const x = new URL(String(u), location.href); if (/\.supabase\.co$/.test(x.hostname)) { x.hostname = x.hostname.replace(/\.supabase\.co$/, '.supabase.invalid'); return x.href; } } catch (e) {} return u; };
+    const f = window.fetch;
+    window.fetch = function (input, init) {
+      if (typeof Request !== 'undefined' && input instanceof Request) { const u = fix(input.url); if (u !== input.url) input = new Request(u, input); }
+      else input = fix(input);
+      return f.call(this, input, init);
+    };
+    if (navigator.sendBeacon) { const sb = navigator.sendBeacon.bind(navigator); navigator.sendBeacon = (u, d) => sb(fix(u), d); }
+  });
   await ctx.route('**/*', async route => {
     const u = new URL(route.request().url());
     // fonts: honour ?display= as Google does, so font swaps show up in tests
@@ -66,7 +88,7 @@ async function newPhone(browser, { width = 390, height = 844, scheme = 'light', 
       let f = path.join(FONTS, rel); if (!fs.existsSync(f)) f = path.join(FONTS, 'node_modules', rel);   // an npm install of @fontsource puts them here
       return fs.existsSync(f) ? route.fulfill({ status: 200, contentType: 'font/woff2', body: fs.readFileSync(f) }) : route.fulfill({ status: 404 });
     }
-    if (u.host.endsWith('supabase.co')) {
+    if (isSupabase(u.hostname)) {
       if (events) { try { for (const e of JSON.parse(route.request().postData() || '{}').batch || []) events.push(e); } catch (e) {} }
       return route.fulfill({ status: 204, body: '' });
     }
