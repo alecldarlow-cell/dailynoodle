@@ -55,6 +55,11 @@
     and the data table as before. jsdom gates only saw data-dn-fit="trunc", so
     they passed it; dn-render.js now fails any label that is not a prefix of its
     full text plus an ellipsis. Pieces built before this keep the old code.
+    Also: a DN.bars value label that doesn't fit outside its bar is drawn
+    inside it in black or white to suit the bar (idealText), but it set that
+    as an SVG attribute, which the .dn-vlabel CSS fill (--ink) overrides: dark
+    text on the blue subject bar in light mode, white on pale blue in dark
+    (both ~2:1). It is now an inline style, which wins.
 
   WHAT'S NEW IN v3.3.3 (vs v3.3.2)  — BARS TOP-MARGIN FIX
     DN.bars reserved a 22px top margin only when spec.refValue was set, but the
@@ -915,7 +920,7 @@ window.DN = (function () {
         var v;
         if (mL + w + 8 + vw > W - 2 && w > vw + 12) {           // no room outside → label inside the bar
           v = svgEl("text", { x: mL + w - 6, y: y + rowH / 2 + 4, "text-anchor": "end", "class": "dn-vlabel" });
-          v.setAttribute("fill", idealText(col));
+          v.style.fill = idealText(col);   // inline style: the .dn-vlabel CSS fill would beat an attribute
         } else {
           v = svgEl("text", { x: Math.min(mL + w + 8, W - vw - 2), y: y + rowH / 2 + 4, "text-anchor": "start", "class": "dn-vlabel" });
           if (d.highlight) v.setAttribute("fill", C.subject);

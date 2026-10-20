@@ -275,8 +275,8 @@
       </ol>
     </div>
     <div class="fm"><b>Production.</b> Researched, written and checked by an AI system working to the Noodle News standards; edited and published by the Noodle News editor.</div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 17 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; uk-september-rainfall-england-dry.</span></div>
+    <div class="fm"><b>Corrections.</b> v1.1 (20 Oct 2026): on narrow phone screens a chart label lost words without showing it had been shortened (&ldquo;Southeast and England&rdquo; for &ldquo;Southeast and central south England&rdquo;); the label is reworded to fit on a phone and the chart code that dropped the words is fixed. No figures changed.</div>
+    <div><b>Figures to 17 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; uk-september-rainfall-england-dry.</span></div>
   </div>
 
 </div>
@@ -402,7 +402,7 @@ window.DN = (function () {
       var cand = cur ? cur + " " + words[i] : words[i];
       if (cur && estW(cand, px) > maxPx) {
         if (lines.length === maxLines - 1) {                 // last line: take the rest
-          lines.push(ellip(words.slice(i).join(" "), maxPx, px));
+          lines.push(ellip(cur + " " + words.slice(i).join(" "), maxPx, px));
           return { lines: lines, truncated: true };
         }
         lines.push(cur); cur = words[i];
@@ -1141,7 +1141,7 @@ DN.bars("#ex1", {
     { label: "England", value: 65, highlight: true },
     { label: "Midlands", value: 63 },
     { label: "East Anglia", value: 58 },
-    { label: "Southeast and central south England", value: 57 },
+    { label: "England SE and central south", value: 57 },
     { label: "East England and northeast", value: 43 }
   ],
   sort: "desc",

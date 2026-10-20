@@ -427,8 +427,8 @@
         <li id="s3"><span class="tier t1">T1</span>Office for National Statistics, "Labour Force Survey (LFS) QMI" and "Labour market transformation &ndash; update on progress and plans" series; Office for Statistics Regulation, "Statistics from the Labour Force Survey." ons.gov.uk; osr.statisticsauthority.gov.uk. Retrieved 23 Jul 2026.</li>
       </ol>
     </div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 24 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; uk-productivity-revisions.</span></div>
+    <div class="fm"><b>Corrections.</b> v1.1 (20 Oct 2026): on narrow phone screens a chart label lost words without showing it had been shortened (&ldquo;Response-rate suspension&rdquo; for &ldquo;Response-rate crisis, suspension&rdquo;); the label is reworded to fit on a phone and the chart code that dropped the words is fixed. No figures changed.</div>
+    <div><b>Figures to 24 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; uk-productivity-revisions.</span></div>
   </div>
 
 </div>
@@ -554,7 +554,7 @@ window.DN = (function () {
       var cand = cur ? cur + " " + words[i] : words[i];
       if (cur && estW(cand, px) > maxPx) {
         if (lines.length === maxLines - 1) {                 // last line: take the rest
-          lines.push(ellip(words.slice(i).join(" "), maxPx, px));
+          lines.push(ellip(cur + " " + words.slice(i).join(" "), maxPx, px));
           return { lines: lines, truncated: true };
         }
         lines.push(cur); cur = words[i];
@@ -1317,7 +1317,7 @@ DN.rangeStrip("#ex3", {
   ],
   events: [
     { label: "TLFS in development", start: 2020.2, end: 2026.6, category: "TLFS development" },
-    { label: "Response-rate crisis, suspension", start: 2023.3, end: 2023.8, category: "LFS quality crisis / recovery" },
+    { label: "Response crisis, suspension", start: 2023.3, end: 2023.8, category: "LFS quality crisis / recovery" },
     { label: "Recovery plan, reweighting", start: 2023.8, end: 2025.0, category: "LFS quality crisis / recovery" }
   ],
   brackets: [{ x0: 2026.0, x1: 2026.6, label: "Planned transition window" }],

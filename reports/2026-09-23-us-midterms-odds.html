@@ -346,8 +346,8 @@
 <li id="s23"><span class="tier t3">T3</span>FiveThirtyEight, final 2018 Senate, House and gubernatorial forecast. <a href="https://fivethirtyeight.com/features/our-final-forecast-in-the-senate-house-and-gubernatorial-races">fivethirtyeight.com</a></li>
 </ol>
 </div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 23 Sep 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; us-midterms-odds.</span></div>
+    <div class="fm"><b>Corrections.</b> v1.2 (20 Oct 2026): on phone screens several chart labels lost words without showing they had been shortened, which changed their meaning (for example &ldquo;Both stay 8%&rdquo; for &ldquo;Both stay Republican: market 8%&rdquo;, and &ldquo;Donald Trump, 2021 office)&rdquo; for &ldquo;Donald Trump, 2021 (after leaving office)&rdquo;); the labels are reworded to fit on a phone and the chart code that dropped the words is fixed. No figures changed.</div>
+    <div><b>Figures to 23 Sep 2026.</b> <span class="ver">Noodle News &middot; v1.2 &middot; us-midterms-odds.</span></div>
   </div>
 
 </div>
@@ -473,7 +473,7 @@ window.DN = (function () {
       var cand = cur ? cur + " " + words[i] : words[i];
       if (cur && estW(cand, px) > maxPx) {
         if (lines.length === maxLines - 1) {                 // last line: take the rest
-          lines.push(ellip(words.slice(i).join(" "), maxPx, px));
+          lines.push(ellip(cur + " " + words.slice(i).join(" "), maxPx, px));
           return { lines: lines, truncated: true };
         }
         lines.push(cur); cur = words[i];
@@ -1224,14 +1224,14 @@ DN.rangeStrip("#ex2", {
   summary: "Scenario estimates, not results. Both chambers to Democrats: model 50%, market 66%. Democratic House with Republican Senate: model 20%, market 26%. Both stay Republican: model 26%, market 8%. Democratic Senate with Republican House: model 3%, market 1.1%.",
   x: { min: 0, max: 100, fmt: function (v) { return (Math.round(v * 10) / 10) + "%"; } },
   events: [
-    { label: "Both to Democrats: model 50%",     start: 0, end: 50,  projectFrom: 0, color: DN.colors.proj },
-    { label: "Both to Democrats: market 66%",    start: 0, end: 66,  projectFrom: 0, color: DN.colors.proj },
-    { label: "Dem House, GOP Senate: model 20%", start: 0, end: 20,  projectFrom: 0, color: DN.colors.proj },
-    { label: "Dem House, GOP Senate: market 26%",start: 0, end: 26,  projectFrom: 0, color: DN.colors.proj },
-    { label: "Both stay Republican: model 26%",  start: 0, end: 26,  projectFrom: 0, color: DN.colors.proj },
-    { label: "Both stay Republican: market 8%", start: 0, end: 8,   projectFrom: 0, color: DN.colors.proj },
-    { label: "Dem Senate, GOP House: model 3%", start: 0, end: 3,   projectFrom: 0, color: DN.colors.proj },
-    { label: "Dem Senate, GOP House: market 1.1%",start: 0, end: 1.1, projectFrom: 0, color: DN.colors.proj }
+    { label: "Both Democratic: model 50%",     start: 0, end: 50,  projectFrom: 0, color: DN.colors.proj },
+    { label: "Both Democratic: market 66%",    start: 0, end: 66,  projectFrom: 0, color: DN.colors.proj },
+    { label: "Dem House only: model 20%", start: 0, end: 20,  projectFrom: 0, color: DN.colors.proj },
+    { label: "Dem House only: market 26%",start: 0, end: 26,  projectFrom: 0, color: DN.colors.proj },
+    { label: "Both Republican: model 26%",  start: 0, end: 26,  projectFrom: 0, color: DN.colors.proj },
+    { label: "Both Republican: market 8%", start: 0, end: 8,   projectFrom: 0, color: DN.colors.proj },
+    { label: "Dem Senate only: model 3%", start: 0, end: 3,   projectFrom: 0, color: DN.colors.proj },
+    { label: "Dem Senate only: market 1.1%",start: 0, end: 1.1, projectFrom: 0, color: DN.colors.proj }
   ]
 });
 
@@ -1249,7 +1249,7 @@ DN.bars("#ex3", {
     { label: "Andrew Johnson, 1868", value: 64.8 },
     { label: "Bill Clinton, 1999", value: 50.0 },
     { label: "Donald Trump, 2020", value: 48.0, highlight: true },
-    { label: "Donald Trump, 2021 (after leaving office)", value: 57.0, highlight: true }
+    { label: "Donald Trump, 2021 (out of office)", value: 57.0, highlight: true }
   ]
 });
 })();

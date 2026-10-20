@@ -238,7 +238,7 @@
     <figure class="exhibit">
       <div class="ex-head"><div class="ex-num">Exhibit 01</div><div class="ex-title">Prison population by type, England and Wales, 30 June each year</div></div>
       <div class="ex-chart"><div id="ex1"></div></div>
-      <figcaption class="ex-cap"><b>Source:</b> Ministry of Justice, Annual prison population 2026, Table 1.A.1 and 1.A.2, male and female, all ages. Recalled prisoners are shown separately from other sentenced prisoners. Years are 2015 to 2026 (&rsquo;15 is June 2015).<sup class="cite"><a href="#s1">1</a></sup></figcaption>
+      <figcaption class="ex-cap"><b>Source:</b> Ministry of Justice, Annual prison population 2026, Table 1.A.1 and 1.A.2, male and female, all ages. Recalled prisoners are shown separately from other sentenced prisoners. Years are 2015 to 2026 (15 is June 2015).<sup class="cite"><a href="#s1">1</a></sup></figcaption>
     </figure>
   </section>
 
@@ -283,8 +283,8 @@
       </ol>
     </div>
     <div class="fm"><b>Production.</b> Researched, written and checked by an AI system working to the Noodle News standards; edited and published by the Noodle News editor.</div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 16 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; prison-population-recalls-remand.</span></div>
+    <div class="fm"><b>Corrections.</b> v1.1 (20 Oct 2026): on narrow phone screens every year under Exhibit 1 was shortened to &ldquo;&rsquo;&hellip;&rdquo;; the years now read 15 to 26 (2015 to 2026). No figures changed.</div>
+    <div><b>Figures to 16 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; prison-population-recalls-remand.</span></div>
   </div>
 
 </div>
@@ -410,7 +410,7 @@ window.DN = (function () {
       var cand = cur ? cur + " " + words[i] : words[i];
       if (cur && estW(cand, px) > maxPx) {
         if (lines.length === maxLines - 1) {                 // last line: take the rest
-          lines.push(ellip(words.slice(i).join(" "), maxPx, px));
+          lines.push(ellip(cur + " " + words.slice(i).join(" "), maxPx, px));
           return { lines: lines, truncated: true };
         }
         lines.push(cur); cur = words[i];
@@ -1146,18 +1146,18 @@ DN.columns("#ex1", {
     { name: "Non-criminal", color: DN.palette[7] }
   ],
   groups: [
-    { label: "’15", values: { "Sentenced, not on recall": 66483, "Recalled": 6176, "Remand": 11785, "Non-criminal": 1749 } },
-    { label: "’16", values: { "Sentenced, not on recall": 67699, "Recalled": 6617, "Remand": 9288, "Non-criminal": 1530 } },
-    { label: "’17", values: { "Sentenced, not on recall": 68413, "Recalled": 6390, "Remand": 9638, "Non-criminal": 1422 } },
-    { label: "’18", values: { "Sentenced, not on recall": 66326, "Recalled": 6293, "Remand": 9285, "Non-criminal": 869 } },
-    { label: "’19", values: { "Sentenced, not on recall": 65363, "Recalled": 7435, "Remand": 9145, "Non-criminal": 767 } },
-    { label: "’20", values: { "Sentenced, not on recall": 58126, "Recalled": 9226, "Remand": 11388, "Non-criminal": 774 } },
-    { label: "’21", values: { "Sentenced, not on recall": 55545, "Recalled": 9092, "Remand": 12727, "Non-criminal": 960 } },
-    { label: "’22", values: { "Sentenced, not on recall": 56588, "Recalled": 9892, "Remand": 13409, "Non-criminal": 770 } },
-    { label: "’23", values: { "Sentenced, not on recall": 57870, "Recalled": 11901, "Remand": 15523, "Non-criminal": 557 } },
-    { label: "’24", values: { "Sentenced, not on recall": 58046, "Recalled": 12199, "Remand": 17070, "Non-criminal": 411 } },
-    { label: "’25", values: { "Sentenced, not on recall": 55713, "Recalled": 13538, "Remand": 17701, "Non-criminal": 382 } },
-    { label: "’26", values: { "Sentenced, not on recall": 57858, "Recalled": 12145, "Remand": 15386, "Non-criminal": 469 } }
+    { label: "15", values: { "Sentenced, not on recall": 66483, "Recalled": 6176, "Remand": 11785, "Non-criminal": 1749 } },
+    { label: "16", values: { "Sentenced, not on recall": 67699, "Recalled": 6617, "Remand": 9288, "Non-criminal": 1530 } },
+    { label: "17", values: { "Sentenced, not on recall": 68413, "Recalled": 6390, "Remand": 9638, "Non-criminal": 1422 } },
+    { label: "18", values: { "Sentenced, not on recall": 66326, "Recalled": 6293, "Remand": 9285, "Non-criminal": 869 } },
+    { label: "19", values: { "Sentenced, not on recall": 65363, "Recalled": 7435, "Remand": 9145, "Non-criminal": 767 } },
+    { label: "20", values: { "Sentenced, not on recall": 58126, "Recalled": 9226, "Remand": 11388, "Non-criminal": 774 } },
+    { label: "21", values: { "Sentenced, not on recall": 55545, "Recalled": 9092, "Remand": 12727, "Non-criminal": 960 } },
+    { label: "22", values: { "Sentenced, not on recall": 56588, "Recalled": 9892, "Remand": 13409, "Non-criminal": 770 } },
+    { label: "23", values: { "Sentenced, not on recall": 57870, "Recalled": 11901, "Remand": 15523, "Non-criminal": 557 } },
+    { label: "24", values: { "Sentenced, not on recall": 58046, "Recalled": 12199, "Remand": 17070, "Non-criminal": 411 } },
+    { label: "25", values: { "Sentenced, not on recall": 55713, "Recalled": 13538, "Remand": 17701, "Non-criminal": 382 } },
+    { label: "26", values: { "Sentenced, not on recall": 57858, "Recalled": 12145, "Remand": 15386, "Non-criminal": 469 } }
   ],
   y: { decimals: 0 },
   x: { title: "30 June of (20xx)" }

@@ -262,7 +262,7 @@
     <figure class="exhibit">
       <div class="ex-head"><div class="ex-num">Exhibit 03</div><div class="ex-title">The government&rsquo;s saving would cover free personal care but not a universal system</div></div>
       <div class="ex-chart"><div id="ex3"></div></div>
-      <figcaption class="ex-cap"><b>Source:</b> Health Foundation estimates of the extra annual cost in England, as reported by the Press Association; the universal figure is for 2036. The dashed line is the government&rsquo;s end-2030s saving in today&rsquo;s money; the years differ, so the comparison is indicative.<sup class="cite"><a href="#s3">3</a></sup></figcaption>
+      <figcaption class="ex-cap"><b>Source:</b> Health Foundation estimates of the extra annual cost in England, as reported by the Press Association; the universal figure is for 2036. The red bar is the government&rsquo;s end-2030s saving in today&rsquo;s money; the years differ, so the comparison is indicative.<sup class="cite"><a href="#s3">3</a></sup></figcaption>
     </figure>
     <p>For pensioners, nothing changes before April 2030; the triple lock stays for this parliament, as Labour&rsquo;s 2024 manifesto promised, and the full new state pension, &pound;241.30 a week, would be held at its value against earnings over time, the government says.<sup class="cite"><a href="#s4">4</a></sup><sup class="cite"><a href="#s5">5</a></sup> Ministers say the full new pension is worth roughly 30% of median earnings and the revised rule would broadly maintain that.<sup class="cite"><a href="#s6">6</a></sup> For working-age taxpayers, the question is how much of the care bill falls to them instead. Analysts quoted by the Press Association say a future government might need tax rises or cuts elsewhere to close the gap, and the government says its plan will not be funded by borrowing.<sup class="cite"><a href="#s3">3</a></sup><sup class="cite"><a href="#s6">6</a></sup></p>
   </section>
@@ -302,8 +302,8 @@
       </ol>
     </div>
     <div class="fm"><b>Production.</b> Researched, written and checked by an AI system working to the Noodle News standards; edited and published by the Noodle News editor.</div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 20 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; triple-lock-change-care-funding.</span></div>
+    <div class="fm"><b>Corrections.</b> v1.1 (20 Oct 2026): on phone screens two chart labels lost words without showing they had been shortened (&ldquo;Government, money&rdquo; for &ldquo;Government, end-2030s, today&rsquo;s money&rdquo;; &ldquo;Universal, 2036&rdquo; for &ldquo;Universal, comprehensive, by 2036&rdquo;); the labels are reworded to fit on a phone and the chart code that dropped the words is fixed. In Exhibit 3 the dashed line for the government&rsquo;s saving crossed the value labels and the &pound;18.5bn label was hard to read; the saving is now its own bar. No figures changed.</div>
+    <div><b>Figures to 20 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; triple-lock-change-care-funding.</span></div>
   </div>
 
 </div>
@@ -429,7 +429,7 @@ window.DN = (function () {
       var cand = cur ? cur + " " + words[i] : words[i];
       if (cur && estW(cand, px) > maxPx) {
         if (lines.length === maxLines - 1) {                 // last line: take the rest
-          lines.push(ellip(words.slice(i).join(" "), maxPx, px));
+          lines.push(ellip(cur + " " + words.slice(i).join(" "), maxPx, px));
           return { lines: lines, truncated: true };
         }
         lines.push(cur); cur = words[i];
@@ -1158,8 +1158,8 @@ DN.bars("#ex1", {
   summary: "The government says 15 billion pounds a year by the end of the 2030s, 11 billion in today's money. The IFS expects about 4 billion pounds a year by 2034-35 in today's money, and says it could be nothing.",
   sort: "none",
   data: [
-    { label: "Government, end-2030s, cash", value: 15 },
-    { label: "Government, end-2030s, today's money", value: 11 },
+    { label: "Govt, end-2030s, cash", value: 15 },
+    { label: "Govt, end-2030s, today's money", value: 11 },
     { label: "IFS, by 2034-35, today's money", value: 4, highlight: true }
   ],
   max: 20,
@@ -1168,20 +1168,19 @@ DN.bars("#ex1", {
   valueTitle: "Saving a year"
 });
 DN.bars("#ex3", {
-  title: "Extra annual cost of three social care options in England",
-  summary: "Health Foundation estimates: a lifetime cap about 4 billion pounds a year, free personal care about 7.5 billion, a universal comprehensive system about 18.5 billion by 2036.",
+  title: "Extra annual cost of three social care options in England, against the government's saving",
+  summary: "Health Foundation estimates: a lifetime cap about 4 billion pounds a year, free personal care about 7.5 billion, a universal comprehensive system about 18.5 billion by 2036. The government's end-2030s saving is about 11 billion pounds a year in today's money.",
   sort: "none",
   data: [
+    { label: "Government's saving, end-2030s", value: 11, color: DN.colors.neg },
     { label: "Lifetime cap (Dilnot-style)", value: 4 },
     { label: "Free personal care (Scotland-style)", value: 7.5 },
-    { label: "Universal, comprehensive, by 2036", value: 18.5, highlight: true }
+    { label: "Universal system, by 2036", value: 18.5, highlight: true }
   ],
-  max: 20,
+  max: 30,
   x: { prefix: "£", suffix: "bn" },
-  refValue: 11,
-  refLabel: "Gov. saving, today's money",
-  labelTitle: "Option",
-  valueTitle: "Extra cost a year"
+  labelTitle: "Saving or option",
+  valueTitle: "A year"
 });
 DN.bars("#ex2", {
   title: "State pension spending as a share of GDP: today and OBR long-run scenarios",

@@ -291,8 +291,8 @@
         <li id="s2"><span class="tier t1">T1</span>World Health Organization, <a href="https://www.who.int/news/item/02-10-2026-new-who-estimates-show-changing-global-health-landscape">New WHO estimates show changing global health landscape</a>, news release, 2 October 2026. Retrieved 10 Oct 2026.</li>
       </ol>
     </div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 10 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; who-causes-of-death-covid-dementia.</span></div>
+    <div class="fm"><b>Corrections.</b> v1.1 (20 Oct 2026): on phone screens a chart label lost words without showing it had been shortened (&ldquo;Up: diabetes income)&rdquo; for &ldquo;Up: diabetes (lower-middle income)&rdquo;); the label is reworded to fit on a phone and the chart code that dropped the words is fixed. No figures changed.</div>
+    <div><b>Figures to 10 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; who-causes-of-death-covid-dementia.</span></div>
   </div>
 
 </div>
@@ -418,7 +418,7 @@ window.DN = (function () {
       var cand = cur ? cur + " " + words[i] : words[i];
       if (cur && estW(cand, px) > maxPx) {
         if (lines.length === maxLines - 1) {                 // last line: take the rest
-          lines.push(ellip(words.slice(i).join(" "), maxPx, px));
+          lines.push(ellip(cur + " " + words.slice(i).join(" "), maxPx, px));
           return { lines: lines, truncated: true };
         }
         lines.push(cur); cur = words[i];
@@ -1179,7 +1179,7 @@ DN.rangeStrip("#ex3", {
   events: [
     { label: "Up: dementia (world)", start: 5, end: 19, category: "Climbed" },
     { label: "Up: dementia (high income)", start: 3, end: 7, category: "Climbed" },
-    { label: "Up: diabetes (lower-middle income)", start: 5, end: 15, category: "Climbed" },
+    { label: "Up: diabetes (lower-middle)", start: 5, end: 15, category: "Climbed" },
     { label: "Down: HIV/AIDS (world)", start: 7, end: 22, category: "Fell" },
     { label: "Down: Covid-19 (world)", start: 1, end: 14, category: "Fell" }
   ],
