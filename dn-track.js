@@ -482,7 +482,23 @@
   });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
 
-  window.digi = { track: track, flush: flush, optOut: setOptOut, isOptedOut: optedOut };
+  /* Games call digi.track('game_start'|'game_end', {...}) themselves. Their rounds are also passed on as
+     dn:game_start / dn:game_end browser events, whether or not visits are recorded, for the score share
+     (engines/game-share.js, loaded below on game pages; 20 Oct 2026). */
+  function pub(ev, props, path){
+    if (KIND === 'game' && (ev === 'game_start' || ev === 'game_end')) {
+      try { document.dispatchEvent(new CustomEvent('dn:' + ev, { detail: props || {} })); } catch (x) {}
+    }
+    track(ev, props, path);
+  }
+  if (KIND === 'game') {
+    try {
+      var gs = document.createElement('script');
+      gs.src = SELF ? SELF.replace(/dn-track\.js(\?.*)?$/, 'engines/game-share.js') : '../engines/game-share.js';
+      gs.defer = true; document.head.appendChild(gs);
+    } catch (e) {}
+  }
+  window.digi = { track: pub, flush: flush, optOut: setOptOut, isOptedOut: optedOut };
 })();
 
 /* ==========================================================================

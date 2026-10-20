@@ -82,3 +82,44 @@ test('PLANES-02: daily place, plane and wind survive a reload',async({phone})=>{
  await p.reload();await H.wait(p,1200);await H.tap(p,p.locator('#homeDaily'));await H.wait(p,200);
  const b=await p.evaluate(()=>window.__dg.state());expect(b.run.place).toBe(a.run.place);expect(b.wind).toEqual(a.wind);expect(b.launchSpeed).toBe(a.launchSpeed);
 });
+/* Score share (engines/game-share.js, 20 Oct 2026): loaded by the real tracker on game pages; the
+   tracker is kept here (not stubbed) because it is what passes game_end on as dn:game_end. */
+async function realTracker(phone,file,vp){
+ if(vp)await phone.p.setViewportSize(vp);
+ await phone.ctx.addInitScript(()=>{window.__DGTEST=true;window.__shared=[];navigator.share=d=>{window.__shared.push(d.text);return Promise.resolve();};});
+ await goto(phone,'reports/'+file);
+ await expect.poll(()=>phone.p.evaluate(()=>typeof window.__dg?.end)).toBe('function');
+ await expect.poll(()=>phone.p.evaluate(()=>!!window.dnGameShare)).toBe(true);
+}
+test('GAME-SHARE-01: a won round offers Share score with the line and short link; the next round hides it',async({phone})=>{
+ const p=phone.p;await realTracker(phone,'2026-09-26-arcade-bubble-burst.html');
+ await H.tap(p,p.locator('[data-act=lv]').first());await H.wait(p,1200);
+ await p.evaluate(()=>window.__dg.end(true));
+ const pill=p.locator('.dngs.on');await expect(pill).toBeVisible({timeout:5000});
+ await expect(p.locator('.dngs .lab')).toHaveText('Share score');
+ const box=await pill.boundingBox(),vw=await p.evaluate(()=>innerWidth),vh=await p.evaluate(()=>innerHeight);
+ expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(vw);expect(box.y+box.height).toBeLessThanOrEqual(vh);expect(box.height).toBeLessThan(70);
+ await H.tap(p,p.locator('.dngs .go'));await H.wait(p,300);
+ const shared=await p.evaluate(()=>window.__shared);
+ expect(shared).toHaveLength(1);expect(shared[0]).toMatch(/^🫧 Bubble Burst — level \d+ · [\d,]+ pts( · ⭐{1,3})?\ndailynoodle\.co\.uk\/bubble-burst$/u);
+ await p.evaluate(()=>window.digi.track('game_start',{game:'bubble-burst'}));await H.wait(p,500);
+ await expect(p.locator('.dngs.on')).toHaveCount(0);
+ expect(phone.errors).toEqual([]);
+});
+test('GAME-SHARE-02: no pill for a scoreless loss; short landscape puts it at the top; × closes it',async({phone})=>{
+ const p=phone.p;await realTracker(phone,'2026-10-17-arcade-two-dots-landscape.html',{width:780,height:360});
+ await p.evaluate(()=>window.digi.track('game_end',{game:'two-dots-landscape',win:false,level:1,score:0}));await H.wait(p,1500);
+ await expect(p.locator('.dngs.on')).toHaveCount(0);
+ await p.evaluate(()=>window.digi.track('game_end',{game:'two-dots-landscape',win:false,level:4,score:57}));
+ const pill=p.locator('.dngs.on');await expect(pill).toBeVisible({timeout:5000});
+ expect((await pill.boundingBox()).y).toBeLessThan(80);
+ expect(await p.evaluate(()=>window.dnGameShare.link)).toBe('dailynoodle.co.uk/two-dots');
+ await H.tap(p,p.locator('.dngs .x'));await H.wait(p,500);await expect(p.locator('.dngs.on')).toHaveCount(0);
+ expect(phone.errors).toEqual([]);
+});
+test('GAME-SHARE-03: Paper Planes keeps its own share; a Lab game shares its own address',async({phone})=>{
+ const p=phone.p;await realTracker(phone,'2026-10-16-strategy-ancient-cities.html').catch(()=>{});
+ expect(await p.evaluate(()=>window.dnGameShare&&window.dnGameShare.link)).toBe('dailynoodle.co.uk/reports/2026-10-16-strategy-ancient-cities.html');
+ await goto(phone,'reports/2026-10-17-arcade-paper-planes.html');await H.wait(p,1500);
+ expect(await p.evaluate(()=>!!window.dnGameShare)).toBe(false);
+});
