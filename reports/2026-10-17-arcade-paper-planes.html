@@ -9,7 +9,7 @@
 <meta name="dn:standfirst" content="Fold, throw and steer paper planes to the mountains. Three stars a place and a new Daily Flight.">
 <meta name="dn:topic"      content="Arcade">
 <meta name="dn:date"       content="2026-10-17">
-<meta name="dn:updated"    content="2026-10-19">
+<meta name="dn:updated"    content="2026-10-20">
 <meta name="dn:read"       content="~4 min">
 <meta name="dn:badge"      content="In development">
 <meta name="dn:thumb"      content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3Y2M0ZWYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlM2Y0ZmQiLz48L2xpbmVhckdyYWRpZW50PjxnIGlkPSJjIj48Y2lyY2xlIGN4PSIwIiBjeT0iMCIgcj0iNyIvPjxjaXJjbGUgY3g9IjgiIGN5PSItMyIgcj0iOC41Ii8+PGNpcmNsZSBjeD0iMTYiIGN5PSIwIiByPSI2LjUiLz48cmVjdCB4PSIwIiB5PSItMiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjgiLz48L2c+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI3MpIi8+PGNpcmNsZSBjeD0iOTgiIGN5PSIyMiIgcj0iMTEiIGZpbGw9IiNmZmY2Y2YiLz48dXNlIGhyZWY9IiNjIiB4PSIxNCIgeT0iMjYiIGZpbGw9IiNmZmYiLz48dXNlIGhyZWY9IiNjIiB4PSI3MCIgeT0iNDgiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii44NSIvPjxwYXRoIGQ9Ik0wIDk4IFEzMCA4NiA2MiA5NCBUMTIwIDkwIFYxMjAgSDAgWiIgZmlsbD0iIzdjYzE3MyIvPjxwYXRoIGQ9Ik0wIDEwNiBRNDAgOTggODAgMTA2IFQxMjAgMTA0IFYxMjAgSDAgWiIgZmlsbD0iIzVhYTk1YSIvPjxwYXRoIGQ9Ik05MiA5MiBWNzAiIHN0cm9rZT0iIzI5MzAzZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTkyIDcwIEwxMDYgNzQgTDkyIDc4IFoiIGZpbGw9IiNmMzljMzIiIHN0cm9rZT0iIzI5MzAzZCIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNNiAxMDQgUTI0IDY0IDUyIDU4IiBmaWxsPSJub25lIiBzdHJva2U9IiMyZjZmZDYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWRhc2hhcnJheT0iNSA2IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyBzdHJva2U9IiMyOTMwM2QiIHN0cm9rZS13aWR0aD0iMi40IiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNTAgNjIgTDkyIDM4IEw2NiA2MCBaIiBmaWxsPSIjY2ZkOGUzIi8+PHBhdGggZD0iTTQyIDU0IEw5MiAzOCBMNjYgNjAgWiIgZmlsbD0iI2ZmZiIvPjwvZz48cGF0aCBkPSJNNDQgNTUgTDkxIDM5IiBzdHJva2U9IiNiOWM0ZDIiIHN0cm9rZS13aWR0aD0iMS40Ii8+PC9zdmc+">
@@ -517,6 +517,7 @@ body.reduce-motion .homeSky .cl,body.reduce-motion #splashPlane .trail{animation
     <div class="row" id="eNote" style="font-size:14px;font-weight:700;color:var(--soft);justify-content:center;margin-top:4px"></div>
     <div class="row" style="margin-top:8px;justify-content:center">
       <button class="btn pri" id="eAgain">Fly again</button>
+      <button class="btn" id="eShare">Share</button>
       <button class="btn" id="eHangar">Hangar</button>
       <a class="back" href="../games.html">← Digi Games</a>
     </div>
@@ -1492,6 +1493,8 @@ function showEnd(r, win) {
   const solo = r.mode === 'place' || r.mode === 'daily', P8 = PLACES[Math.min(7, r.place)];
   $('eTitle').textContent = r.mode === 'daily' ? 'Daily Flight' : r.mode === 'place' ? P8.name : tower ? 'Skyscraper' : win ? 'Mountains cleared!' : 'Run over';
   $('eAgain').textContent = r.mode === 'daily' ? 'Share' : 'Fly again';
+  $('eShare').hidden = r.mode === 'daily' || !(r.best > 0);   // the daily's main button is already Share; nothing to share at 0 m
+  lastEnd = { r: r, win: win };
   const dots = $('eDots'); dots.innerHTML = '';
   dots.classList.toggle('hidden', tower || solo);
   if (!tower && !solo) for (let i = 0; i < 8; i++) { const d = document.createElement('i'); if (i < r.cleared) d.className = 'on'; else if (i === r.place && !win) d.className = 'cur'; dots.appendChild(d); }
@@ -1509,11 +1512,31 @@ function showEnd(r, win) {
   $('end').classList.add('on'); focusPanel('end','eAgain');
 }
 $('eAgain').addEventListener('click', () => { initAudio(); if (lastMode === 'daily') { shareDaily(); return; } goFS(); const m = lastMode; startRun('retry', m, lastPlace); });
+/* Share at the end of a run (20 Oct 2026): one line plus the game's address, for runs, single
+   places and the Skyscraper; the daily keeps shareDaily. Recorded like the site's other shares. */
+let lastEnd = null;
+const PP_URL = 'dailynoodle.co.uk/reports/2026-10-17-arcade-paper-planes.html';
+function ppTrack(ev, method) { try { window.digi && window.digi.track(ev, { method: method, type: 'game', game: 'paper-planes' }); } catch (e) {} }
+function ppShare(text) {
+  const coarse = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } })();
+  const copy = () => { ppTrack('share_click', 'copy'); try { navigator.clipboard.writeText(text).then(() => { toast('Copied, ready to paste'); ppTrack('share_done', 'copy'); }, () => {}); } catch (e) {} };
+  if (coarse && navigator.share) { try { ppTrack('share_click', 'native'); navigator.share({ text }).then(() => ppTrack('share_done', 'native'), e => { if (!e || e.name !== 'AbortError') copy(); }); return; } catch (e) {} }
+  copy();
+}
+function runShareText() {
+  const r = lastEnd.r, win = lastEnd.win, P8 = PLACES[Math.min(7, r.place)];
+  const line = r.mode === 'tower' ? 'Skyscraper · best throw ' + fmt(r.best) + ' m' + (medalFor(r.best) ? ' · ' + ['', 'Bronze', 'Silver', 'Gold'][medalFor(r.best)] : '')
+    : r.mode === 'place' ? P8.name + ' ' + starStr(save.stars[r.place]) + ' · best throw ' + fmt(r.best) + ' m'
+    : (win ? 'all 8 places' : Math.min(8, r.cleared) + ' of 8 places') + ' · best throw ' + fmt(r.best) + ' m';
+  return '✈️ Paper Planes — ' + line + '\n' + PP_URL;
+}
+$('eShare').addEventListener('click', () => { if (lastEnd) ppShare(runShareText()); });
 function shareDaily() {
   const d = dailyToday(), p = PLACES[dailyPlace()], date = new Date(d.day + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
   const text = 'Paper Planes · Daily Flight ' + date + '\n✈ ' + fmt(d.best) + ' m at the ' + p.name + '\nhttps://dailynoodle.co.uk/reports/2026-10-17-arcade-paper-planes.html';
-  const done = () => toast('Copied, ready to paste');
-  try { if (navigator.share) { navigator.share({ text }).catch(() => {}); return; } } catch (e) {}
+  const done = () => { toast('Copied, ready to paste'); ppTrack('share_done', 'copy'); };
+  try { if (navigator.share) { ppTrack('share_click', 'native'); navigator.share({ text }).then(() => ppTrack('share_done', 'native'), () => {}); return; } } catch (e) {}
+  ppTrack('share_click', 'copy');
   try { navigator.clipboard.writeText(text).then(done, () => {}); } catch (e) {}
 }
 $('homeDaily').addEventListener('click', () => { const d = dailyToday(); if (d.n >= 3) shareDaily(); else startDaily(); });

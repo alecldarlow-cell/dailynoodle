@@ -123,3 +123,15 @@ test('GAME-SHARE-03: Paper Planes keeps its own share; a Lab game shares its own
  await goto(phone,'reports/2026-10-17-arcade-paper-planes.html');await H.wait(p,1500);
  expect(await p.evaluate(()=>!!window.dnGameShare)).toBe(false);
 });
+test('PLANES-SHARE-01: the end-of-run screen has Share (not on the daily), sharing the run line and the game address',async({phone})=>{
+ const p=phone.p;await realTracker(phone,'2026-10-17-arcade-paper-planes.html').catch(()=>{});
+ await expect.poll(()=>p.evaluate(()=>typeof window.__dg?.end)).toBe('function');
+ await H.tap(p,p.locator('#splashGo'));await H.wait(p,1200);
+ await p.evaluate(()=>window.__dg.end(true));await H.wait(p,1500);
+ const share=p.locator('#eShare');await expect(share).toBeVisible();
+ await H.tap(p,share);await H.wait(p,300);
+ const shared=await p.evaluate(()=>window.__shared);
+ expect(shared).toHaveLength(1);
+ expect(shared[0]).toMatch(/^✈️ Paper Planes — (all 8 places|\d of 8 places|Skyscraper|.+ [★☆]{3}) · best throw [\d.]+ m.*\ndailynoodle\.co\.uk\/reports\/2026-10-17-arcade-paper-planes\.html$/u);
+ expect(phone.errors).toEqual([]);
+});
