@@ -44,7 +44,7 @@
  }
  function mount(){
   const panel=document.getElementById('publishing');if(!panel)return;
-  const $=id=>document.getElementById(id);let busy=false,started=false,checkedDay='';
+  const $=id=>document.getElementById(id);let busy=false,started=false,checkedDay='';let sum={};
   function card(id,tone,title,body){$(id).innerHTML='<p class="pub-state '+tone+'">'+esc(title)+'</p>'+body;}
   const text=s=>'<p class="sub">'+esc(s)+'</p>';
   const problems=d=>[d.missing.length?'Missing: '+d.missing.map(t=>NAMES[t]).join(', '):'',d.duplicate.length?'Duplicates: '+d.duplicate.map(t=>NAMES[t]).join(', '):'',d.blocked.length?'Metadata needs repair: '+d.blocked.map(t=>NAMES[t]).join(', '):''].filter(Boolean).join('. ');
@@ -55,30 +55,32 @@
      try{await request(i.path+'?publishing-check=1',{method:'HEAD'});return {...i,ok:true};}catch(e){return {...i,ok:false};}
     }));
     if(day()!==today)throw Error('The London date changed during this check. Check again.');
-    const n=results.filter(i=>i.ok).length;
+    const n=results.filter(i=>i.ok).length;sum.live={ok:n,total:TYPES.length};
     card('pubLive',n===TYPES.length?'good':'bad',n+'/'+TYPES.length+' puzzle files responding',text('Checked the daily list and each live URL for '+fmt(today)+'. This checks availability, not a full play-through.')+'<ul class="pub-items">'+results.map(i=>'<li><a href="'+esc(i.path)+'">'+NAMES[i.type]+'</a> · '+(i.ok?'Available':'Could not confirm')+'</li>').join('')+'</ul>');
-   }catch(e){card('pubLive','bad','Today’s puzzles not confirmed',text(e.message));}
+   }catch(e){sum.live={error:e.message};card('pubLive','bad','Today’s puzzles not confirmed',text(e.message));}
   }
   async function stock(today){
    try{
-    const s=await request('publishing-health.json?publishing-check=1',{},true),a=analyse(s,today);
+    const s=await request('publishing-health.json?publishing-check=1',{},true),a=analyse(s,today);sum.stock={stale:a.stale,futureDays:a.futureDays,through:a.through};
     card('pubStock',a.stale?'warn':a.futureDays>=7?'good':'warn',a.stale?'Build snapshot is out of date':a.futureDays+' complete future days on file',text((a.through?'One of each type from tomorrow through '+fmt(a.through)+'. ':'')+'First incomplete date: '+fmt(a.firstGap.date)+'. '+problems(a.firstGap))+text('Snapshot assembled '+stamp(s.builtAt)+' (London).')+'<a href="'+runLink(s.runId)+'">View this build’s release run</a>');
     $('pubDays').innerHTML='<table><caption>Next eight days of puzzle stock</caption><thead><tr><th>Date</th><th>Types</th><th>Needs attention</th></tr></thead><tbody>'+a.next.map(d=>'<tr><th scope="row">'+fmt(d.date)+'</th><td>'+d.count+'/'+TYPES.length+'</td><td>'+esc(problems(d)||'Every type on file')+'</td></tr>').join('')+'</tbody></table>';
-   }catch(e){card('pubStock','warn','Future stock not confirmed',text(e.message));$('pubDays').textContent='No inventory snapshot available.';}
+   }catch(e){sum.stock={error:e.message};card('pubStock','warn','Future stock not confirmed',text(e.message));$('pubDays').textContent='No inventory snapshot available.';}
   }
   async function releases(){
    try{
     const data=await request(API,{},true);if(!Array.isArray(data.workflow_runs)||!data.workflow_runs.length)throw Error('No release runs returned.');
     const runs=data.workflow_runs,latest=runs[0],success=runs.find(r=>r.status==='completed'&&r.conclusion==='success');
+    sum.release={success:latest.conclusion==='success',failed:latest.status==='completed'&&latest.conclusion!=='success'&&latest.conclusion!=='cancelled',lastSuccess:success?success.updated_at:null,url:runLink(latest.id)};
     const label=latest.status==='completed'?({success:'Succeeded',failure:'Failed',cancelled:'Cancelled',timed_out:'Timed out'}[latest.conclusion]||latest.conclusion||'Unknown'):({in_progress:'In progress',queued:'Queued',pending:'Waiting',waiting:'Waiting',requested:'Requested'}[latest.status]||latest.status);
     card('pubRelease',latest.conclusion==='success'?'good':latest.status==='completed'&&latest.conclusion!=='cancelled'?'bad':'warn','Latest release: '+label,'<p><a href="'+runLink(latest.id)+'">View latest release run</a></p>'+text(success?'Last successful release finished '+stamp(success.updated_at)+' (London).':'No successful release in the latest 20 runs.')+(success?'<a href="'+runLink(success.id)+'">View last successful release</a>':'')+text('A successful run includes deployment and the live health check. A failed run may fail before or after publishing; use the live URL checks alongside this status.'));
-   }catch(e){card('pubRelease','warn','GitHub status not confirmed',text('GitHub may be unavailable or its public API rate limit reached. The live URL checks are separate.')+'<a href="'+REPO+'/actions/workflows/build-feed.yml">Open releases on GitHub</a>');}
+   }catch(e){sum.release={error:e.message};card('pubRelease','warn','GitHub status not confirmed',text('GitHub may be unavailable or its public API rate limit reached. The live URL checks are separate.')+'<a href="'+REPO+'/actions/workflows/build-feed.yml">Open releases on GitHub</a>');}
   }
   async function check(){
    if(busy)return;busy=true;const today=day();checkedDay=today;$('pubCheck').disabled=true;$('pubChecked').textContent='Checking publishing…';
    for(const id of ['pubLive','pubStock','pubRelease'])card(id,'','Checking…','');$('pubDays').textContent='Loading inventory…';
+   sum={today};document.dispatchEvent(new CustomEvent('dn:publishing',{detail:{checking:true}}));
    try{await Promise.all([live(today),stock(today),releases()]);$('pubChecked').textContent='Checks finished '+stamp(new Date().toISOString())+' (London).';}
-   finally{busy=false;$('pubCheck').disabled=false;}
+   finally{busy=false;$('pubCheck').disabled=false;api.last=sum;document.dispatchEvent(new CustomEvent('dn:publishing',{detail:sum}));}
   }
   $('pubCheck').onclick=check;
   setInterval(()=>{if(started&&!document.getElementById('app').hidden&&!document.hidden&&day()!==checkedDay)check();},60000);

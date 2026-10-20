@@ -1,6 +1,6 @@
 # Publishing health in admin
 
-The Publishing section of `admin.html` checks three independent things. It starts after `admin_dashboard` confirms admin access, and has its own **Check publishing** button. Reader date and section filters do not change its dates or repeat its requests. A visible tab checks again when the London date changes; returning to the tab also checks for a date change.
+The Publishing tab of `admin.html` checks three independent things. It starts after `admin_dashboard` confirms admin access, and has its own **Check publishing** button. The reader date range does not change its dates or repeat its requests. After each check `admin-health.js` sends a `dn:publishing` event (live, stock and release results, or each one's error), which the Overview tab turns into one green, amber or red line; the page adds today's news pieces from `feed.json` itself (20 Oct 2026). A visible tab checks again when the London date changes; returning to the tab also checks for a date change.
 
 ## Today's live puzzles
 

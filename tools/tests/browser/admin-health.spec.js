@@ -27,14 +27,18 @@ test('ADMIN-PUBLISH: live files, future stock and release states remain independ
  const p=phone.p;await expect(p.locator('#pubLive')).toContainText('8/8 puzzle files responding');
  await expect(p.locator('#pubStock')).toContainText('3 complete future days');await expect(p.locator('#pubStock')).toContainText('23 Oct 2026');
  await expect(p.locator('#pubRelease')).toContainText('In progress');await expect(p.locator('#pubRelease')).toContainText('19 Oct 2026');
- await p.locator('[data-filter="puzzles"]').click();await expect(p.locator('#publishing')).toBeVisible();
- await p.getByRole('button',{name:'7 days',exact:true}).click();expect(state.calls.filter(x=>x==='GET github')).toHaveLength(1);
+ // Overview shows the checks as one line (20 Oct 2026 tabs layout); 3 days of stock is a warning.
+ await expect(p.locator('#pubLine')).toHaveClass(/warn/);await expect(p.locator('#pubLine')).toContainText('Only 3 days of puzzle stock');await expect(p.locator('#pubLine')).toContainText('8 of 8 puzzles live');
+ await p.locator('#pubLine').click();await expect(p.locator('#publishing')).toBeVisible();await expect(p.getByRole('tab',{name:'Publishing'})).toHaveAttribute('aria-selected','true');
+ await p.getByRole('button',{name:'Settings'}).click();await p.getByRole('button',{name:'7 days',exact:true}).click();await p.keyboard.press('Escape');
+ await expect(p.locator('#publishing')).toBeVisible();expect(state.calls.filter(x=>x==='GET github')).toHaveLength(1);
  await p.locator('#publishing summary').click();await expect(p.locator('#pubDays')).toContainText('Every type on file');
  expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await p.locator('#publishing').screenshot({path:'test-results/admin-publishing-phone.png'});
  await p.setViewportSize({width:1120,height:850});await p.locator('#publishing').screenshot({path:'test-results/admin-publishing-desktop.png'});
  state.phase='problem';await p.locator('#pubCheck').click();
  await expect(p.locator('#pubLive')).toContainText('7/8 puzzle files responding');await expect(p.locator('#pubStock')).toContainText('out of date');await expect(p.locator('#pubRelease')).toContainText('GitHub status not confirmed');
+ await expect(p.locator('#pubLine')).toHaveClass(/bad/);await expect(p.locator('#pubLine')).toContainText('1 of today’s puzzles not responding');
  expect(state.calls.every(c=>/^(GET|HEAD) /.test(c))).toBe(true);expect(phone.errors).toEqual([]);
 });
 for(const mode of ['signed-out','not-admin'])test('ADMIN-PUBLISH: '+mode+' does not start publishing requests',async({phone})=>{
@@ -45,6 +49,6 @@ for(const mode of ['signed-out','not-admin'])test('ADMIN-PUBLISH: '+mode+' does 
 test('ADMIN-PUBLISH: a stalled snapshot times out and can be checked again',async({phone})=>{
  await auth(phone);const state=await fixtures(phone);state.phase='hung';await goto(phone,'admin.html');
  await H.wait(phone.p,13000);await expect(phone.p.locator('#pubStock')).toContainText('Future stock not confirmed');
- await expect(phone.p.locator('#pubCheck')).toBeEnabled();state.phase='healthy';await phone.p.locator('#pubCheck').click();
+ await phone.p.getByRole('tab',{name:'Publishing'}).click();await expect(phone.p.locator('#pubCheck')).toBeEnabled();state.phase='healthy';await phone.p.locator('#pubCheck').click();
  await expect(phone.p.locator('#pubStock')).toContainText('3 complete future days');expect(phone.errors).toEqual([]);
 });
