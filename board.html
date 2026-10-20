@@ -254,7 +254,7 @@
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Start league</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.create(f.elements.lname.value.trim(), f.elements.nick.value.trim()).then(function (l) {
-      track('board_create', {}); S.created = l.code; loadBoard(); }); });
+      track('board_create', { from: S.startFrom || 'intro' }); S.startFrom = ''; S.created = l.code; loadBoard(); }); });
   }
   function codeForm() {
     $app.innerHTML =
@@ -264,7 +264,7 @@
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.join(f.elements.code.value.trim().toUpperCase(), f.elements.nick.value.trim()).then(function () {
-      track('board_join', { via: 'code' }); loadBoard(); }); });
+      track('board_join', { via: 'code' }); S.joined = NB.leagues().length; loadBoard(); }); });
   }
   function joinForm(info) {
     document.getElementById('pillbar').hidden = true;
@@ -276,7 +276,7 @@
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join league</button>' +
       (NB.inAny() ? '<button class="btn" type="button" data-go="board">Not now</button>' : '') + '</div></form>';
     form(function (f) { return NB.join(S.join, f.elements.nick.value.trim()).then(function () {
-      track('board_join', { via: 'link' }); S.join = ''; loadBoard(); }); });
+      track('board_join', { via: 'link' }); S.join = ''; S.joined = NB.leagues().length; loadBoard(); }); });
   }
   function form(submit) {
     var f = document.getElementById('f'), m = document.getElementById('m');
@@ -290,7 +290,7 @@
   $app.addEventListener('click', function (e) {
     var g = e.target.closest('[data-go]'); if (!g) return;
     var go = g.getAttribute('data-go');
-    if (go === 'start') startForm(); else if (go === 'code') codeForm();
+    if (go === 'start') { S.startFrom = g.getAttribute('data-from') || ''; if (S.startFrom) track('board_nudge', { from: S.startFrom }); startForm(); } else if (go === 'code') codeForm();
     else if (go === 'back') { NB.inAny() ? loadBoard() : intro(); } else if (go === 'board') { S.join = ''; loadBoard(); }
   });
 
@@ -359,6 +359,13 @@
       h += '<div class="bcard"><h2>' + esc(L.name) + ' is ready</h2><p>Share the link in your group chat. Anyone who taps it ' +
            'picks a nickname and joins.</p><div class="acts"><button class="btn go" data-act="invite">' + INVITE_ICON + 'Invite people</button></div></div>';
       S.created = '';
+    } else if (S.joined) {
+      /* just joined someone else's league: one nudge to start one for another group (20 Oct 2026),
+         because a league only spreads when someone other than its starter starts the next one */
+      h += '<div class="bcard"><h2>You’re in ' + esc(L.name) + '</h2><p>Your results will show here every day. ' +
+           'Got another group, like friends or work? Start a league for them too.</p>' +
+           '<div class="acts"><button class="btn alt" data-go="start" data-from="joined">Start another league</button></div></div>';
+      S.joined = 0;
     }
     var first = d.first || S.date;
     h += '<div class="daybar"><button class="daybtn" data-day="-1" aria-label="Previous day"' + (S.date <= first ? ' disabled' : '') + '>‹</button>' +
@@ -391,6 +398,8 @@
   function settings(L, d) {
     var h = '<details class="set"><summary>League settings</summary>' +
       '<div class="grp"><h3>Invite</h3><p>Code <span class="code">' + esc(L.code) + '</span> · ' + d.members + (d.members === 1 ? ' player' : ' players') + '</p></div>' +
+      '<div class="grp"><h3>Another group?</h3><p>Start a separate league for friends, work or another chat. You can be in more than one.</p>' +
+      '<div class="acts"><button class="btn" data-go="start" data-from="settings">Start another league</button></div></div>' +
       '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b></p>' +
       '<div class="acts"><button class="btn warn" data-act="leave">Leave league</button></div></div>';
     if (L.owner) {

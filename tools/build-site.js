@@ -81,6 +81,8 @@ for (const rel of held) {
 }
 // Short links (dailynoodle.co.uk/mini …) that every puzzle share ends with; see tools/short-links.js.
 require('./short-links').write(OUT);
+// sitemap.xml + robots.txt from what was actually published; see tools/sitemap.js.
+require('./sitemap').write(OUT);
 if (!fs.existsSync(path.join(OUT, 'index.html')) || !fs.existsSync(path.join(OUT, 'feed.json'))) {
   console.error('build-site: index.html or feed.json missing from the site');
   process.exit(1);
