@@ -28,7 +28,7 @@
      node tools/pinwheel-regen.js --apply PLAN.json
          stamp the authored plan into reports/, then re-parse every written file
          from disk and re-run the engine gate, the layout ban, the clue checks
-         (self-leak, cross-leak, duplicate clue text, and tools/check-mini-clues.js:
+         (self-leak, cross-leak, the same clue text on any Mini within a year, and tools/check-mini-clues.js:
          stray it/them, padding, Americanisms, same clue within a year) and a
          masked diff. og:description is kept equal to the new standfirst.
 */
@@ -313,7 +313,11 @@ function apply(planFile) {
   const before = Object.fromEntries(planned.map(p => [p.file, fs.readFileSync(path.join(REPORTS, p.file), "utf8")]));
   const files = new Set(planned.map(p => p.file));
   const others = scan(E).filter(p => !files.has(p.file));
-  const clueSeen = new Map(); for (const p of others) for (const c of p.clues) clueSeen.set(c.toLowerCase().trim(), p.file);
+  // the same clue text on any other Mini within a year (any answer) is refused; further apart is
+  // allowed, as in tools/check-mini-clues.js, so clue-bank reuse works for new grids too (20 Oct 2026)
+  const clueSeen = new Map(), near = (a, b) => Math.abs(dayNum(a) - dayNum(b)) <= 365;
+  const seen = (k, f, d) => (clueSeen.get(k) || []).find(x => x.file !== f && near(x.date, d));
+  for (const p of others) for (const c of p.clues) { const k = c.toLowerCase().trim(); clueSeen.set(k, [...(clueSeen.get(k) || []), { file: p.file, date: p.date }]); }
   const problems = [];
 
   for (const p of planned) {
@@ -336,7 +340,9 @@ function apply(planFile) {
         const c = (p.clues[w] || "").toLowerCase(), toks = c.match(/[a-z]+/g) || [];
         if (toks.some(t => t === w || (stem(w).length >= 3 && stem(t) === stem(w)))) problems.push(`${p.file}: SELF-LEAK ${w}: ${p.clues[w]}`);
         for (const x of words) if (x !== w && toks.includes(x)) problems.push(`${p.file}: CROSS-LEAK ${x} in clue for ${w}`);
-        const k = c.trim(); if (clueSeen.has(k)) problems.push(`${p.file}: duplicate clue text "${p.clues[w]}" (also ${clueSeen.get(k)})`); clueSeen.set(k, p.file);
+        const k = c.trim(), dup = seen(k, p.file, p.date);
+        if (dup) problems.push(`${p.file}: duplicate clue text "${p.clues[w]}" within a year (also ${dup.file})`);
+        clueSeen.set(k, [...(clueSeen.get(k) || []), { file: p.file, date: p.date }]);
       }
     } else {
       swap(/locked:\s*\[[\s\S]*?\]\s*\],?\s*\n/, "locked: " + JSON.stringify(p.locked).replace(/,/g, ",") + ",\n", "locked");
