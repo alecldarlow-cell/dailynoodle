@@ -2,10 +2,10 @@
 const {test:base,expect}=require('@playwright/test');
 const H=require('../harness');
 const test=base.extend({
- phone:async({browser,browserName},use,testInfo)=>{
-  // Harness respects Firefox's lack of mobile emulation and routes all traffic.
-  const old=process.env.DN_BROWSER;process.env.DN_BROWSER=browserName;
-  const ctx=await H.newPhone(browser);process.env.DN_BROWSER=old||'';
+ phone:async({browser},use,testInfo)=>{
+  // The harness reads the engine from the browser itself: an Android phone in
+  // Chromium, an iPhone in WebKit, no mobile emulation in Firefox; it routes all traffic.
+  const ctx=await H.newPhone(browser);
   const p=await ctx.newPage(),errors=[],missing=[];
   p.on('pageerror',e=>errors.push(e.message));
   p.on('response',r=>{if(r.url().startsWith('https://dailynoodle.co.uk/')&&r.status()>=400)missing.push(r.status()+' '+r.url());});

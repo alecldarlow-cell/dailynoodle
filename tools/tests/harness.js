@@ -47,20 +47,40 @@ function dailyList(day) {
 const NO_LIVE_DB = '--host-resolver-rules=MAP *.supabase.co ~NOTFOUND';
 const isSupabase = host => /\.supabase\.(co|invalid)$/.test(host);
 
-async function launch() {
-  const o = { args: ['--no-sandbox'] };
-  if (!process.env.DN_BROWSER || process.env.DN_BROWSER === 'chromium') o.args.push(NO_LIVE_DB);
-  if (!process.env.DN_BROWSER || process.env.DN_BROWSER === 'chromium') o.executablePath = process.env.PW_CHROMIUM || await require('./chromium').executable();
-  return (PW[process.env.DN_BROWSER || 'chromium']).launch(o);
+/* The engine the tests run in: DN_BROWSER (chromium | firefox | webkit), Chromium by default. */
+const ENGINE = process.env.DN_BROWSER || 'chromium';
+if (!['chromium', 'firefox', 'webkit'].includes(ENGINE)) throw new Error('DN_BROWSER must be chromium, firefox or webkit, not ' + ENGINE);
+/* The engine of a Browser, BrowserContext or Page, as Playwright reports it. */
+function engineOf(x) {
+  try { const b = x.browserType ? x : x.browser ? x.browser() : x.context().browser(); return b.browserType().name(); } catch (e) { return ENGINE; }
 }
+
+async function launch() {
+  // Chromium's command-line switches mean nothing to WebKit or Firefox (WebKit refuses them);
+  // their pages are kept off the live database by newPhone()'s *.supabase.invalid rewrite.
+  if (ENGINE !== 'chromium') return PW[ENGINE].launch({});
+  const o = { args: ['--no-sandbox'] };
+  o.args.push(NO_LIVE_DB);
+  o.executablePath = process.env.PW_CHROMIUM || await require('./chromium').executable();
+  return PW.chromium.launch(o);
+}
+
+/* The phone each engine presents as. Chromium stays the Android phone (Pixel 8) it always was;
+   WebKit is an iPhone in Safari (iPhone 14/15 size, 3x screen), the other half of the readers. */
+const PHONES = {
+  chromium: { ua: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36', dpr: 2, mobile: true },
+  firefox: { ua: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36', dpr: 2, mobile: false },   // Playwright's Firefox has no mobile emulation
+  webkit: { ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1', dpr: 3, mobile: true },
+};
 
 /* opts: width, height, scheme ('light'|'dark'), engines (folder overriding engines/*.js), events (array to collect tracker events) */
 async function newPhone(browser, { width = 390, height = 844, scheme = 'light', reduced = false, engines = null, events = null } = {}) {
+  const phone = PHONES[engineOf(browser)] || PHONES.chromium;
   const ctx = await browser.newContext({
-    viewport: { width, height }, deviceScaleFactor: 2, isMobile: process.env.DN_BROWSER !== 'firefox', hasTouch: true,
+    viewport: { width, height }, deviceScaleFactor: phone.dpr, isMobile: phone.mobile, hasTouch: true,
     colorScheme: scheme, reducedMotion: reduced ? 'reduce' : 'no-preference', locale: 'en-GB', timezoneId: 'Europe/London',
     serviceWorkers: 'block',   // sw.js has its own test (tools/tests/sw.js); here every request must go through the routes below
-    userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36',
+    userAgent: phone.ua,
   });
   // dn-track.js sends nothing from a browser flagged as automated (19 Oct 2026);
   // clear the flag so the tests see the tracker as a reader's phone would.
@@ -131,4 +151,4 @@ async function open(browser, file, { time = '2026-10-18T14:30:00+01:00', ctx = n
   return { ctx, p };
 }
 
-module.exports = { REPO, launch, newPhone, open, tap, wait, isSupabase };
+module.exports = { REPO, ENGINE, engineOf, launch, newPhone, open, tap, wait, isSupabase };
