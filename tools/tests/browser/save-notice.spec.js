@@ -1,5 +1,5 @@
 'use strict';
-const {test,expect,H,goto}=require('./support');
+const {test,expect,H,goto,fullScreenOff}=require('./support');
 const play=require('../play');
 async function block(phone,mode='all'){
  await phone.ctx.addInitScript(mode=>{
@@ -40,10 +40,10 @@ test('SAVE-NOTICE: a real result failure is quiet, retryable and clears only aft
  expect(await p.evaluate(()=>dnCore.saveIssues())).toBe(0);expect(phone.errors).toEqual([]);
 });
 
-test('SAVE-NOTICE: timed play keeps running without notices; recovery before the end stays quiet',async({phone})=>{
+test('SAVE-NOTICE: timed play keeps running without notices; recovery before the end stays quiet',async({phone},testInfo)=>{
  const {p}=phone;await block(phone);await goto(phone,'reports/2026-10-19-word-tangle-0013.html');
- // A failed settings write alone is not a failed game save.
- await p.getByRole('switch',{name:'Full screen',exact:true}).click();
+ // A failed settings write alone is not a failed game save. (WebKit has no Full screen switch: Sound is the settings write there.)
+ if(!(await fullScreenOff(p,testInfo)))await p.getByRole('switch',{name:'Sound',exact:true}).click();
  expect(await p.evaluate(()=>dnCore.saveIssues())).toBe(0);
  await p.evaluate(()=>dnCore.onSaveChange(()=>window.saveChanges++));
  await p.locator('#playCard').click();await H.wait(p,4500);
@@ -63,10 +63,10 @@ test('SAVE-NOTICE: timed play keeps running without notices; recovery before the
  expect(save.done).toBeTruthy();expect(Object.values(save.days)[0].found).toContain(word);expect(phone.errors).toEqual([]);
 });
 
-test('SAVE-NOTICE: Reckon answers continue through failed saves; one result notice retries the latest state',async({phone})=>{
+test('SAVE-NOTICE: Reckon answers continue through failed saves; one result notice retries the latest state',async({phone},testInfo)=>{
  const {p}=phone;await block(phone);await p.clock.setSystemTime(new Date('2026-10-20T12:00:00Z'));
  await goto(phone,'reports/2026-10-20-quiz-reckon-0001.html');
- await p.getByRole('switch',{name:'Full screen',exact:true}).click();
+ await fullScreenOff(p,testInfo);
  await p.getByRole('switch',{name:'Sound',exact:true}).click();
  expect(await p.evaluate(()=>dnCore.saveIssues())).toBe(0);
  await p.evaluate(()=>dnCore.onSaveChange(()=>window.saveChanges++));

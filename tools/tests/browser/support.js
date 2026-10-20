@@ -20,4 +20,13 @@ const test=base.extend({
  }
 });
 async function goto(phone,file){await phone.p.goto('https://dailynoodle.co.uk/'+file);await H.wait(phone.p,1500);}
-module.exports={test,expect,H,goto};
+/* Tangle, Borders and Reckon offer a Full screen switch only where the page can go
+   full screen. Chromium must show it (the tests turn it off so a viewport resize is a
+   rotation, not a full-screen exit). An iPhone's Safari has no page full screen, so
+   in WebKit the switch is rightly absent: note it, and carry on. */
+async function fullScreenOff(p,testInfo){
+ const sw=p.getByRole('switch',{name:'Full screen',exact:true});
+ if(H.engineOf(p)!=='chromium'&&!(await sw.count())){testInfo.annotations.push({type:'skip-check',description:H.engineOf(p)+': no Full screen switch (no page full screen on an iPhone), nothing to turn off'});return false;}
+ await sw.click();return true;
+}
+module.exports={test,expect,H,goto,fullScreenOff};
