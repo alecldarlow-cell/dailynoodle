@@ -11,8 +11,15 @@
    those days, so the tests mean the same thing whenever they run.
 --------------------------------------------------------------------------- */
 'use strict';
-const { launch, newPhone, open, tap, wait } = require('./harness');
+const { launch, newPhone, open, tap, wait, engineOf } = require('./harness');
 const play = require('./play');
+/* DN_BROWSER=webkit runs the same cases in WebKit presenting as an iPhone (see harness.js).
+   A check WebKit can't do in Playwright is skipped by name with its reason, never passed;
+   a check that fails because of a real WebKit bug in the site is listed in KNOWN with the bug. */
+let skipped = 0, known = 0;
+const skip = (m, why) => { skipped++; console.log('  skip', m, '—', why); };
+const chromiumOnly = (b, m, why) => { if (engineOf(b) === 'chromium') return false; skip(m, why); return true; };
+const KNOWN = {};   // { [engine]: { [check message prefix]: 'site bug: …' } }; empty: WebKit found none so far
 const F = {
   mini: '2026-10-18-crossword-mini-0099.html', mini2: '2026-10-19-crossword-mini-0100.html', doku: '2026-10-18-logic-doku-0097.html',
   sweep: '2026-10-18-logic-sweep.html', path: '2026-10-18-logic-path-0092.html', path2: '2026-10-19-logic-path-0093.html',
@@ -21,7 +28,12 @@ const F = {
 };
 const RECKON_DAY = '2026-10-20T14:30:00Z', RECKON_DAY2 = '2026-10-21T14:30:00Z';   // Reckon's first two days (15:30 BST)
 let pass = 0, fail = 0;
-const ok = (c, m) => { if (c) { pass++; console.log('  ok  ', m); } else { fail++; console.log('  FAIL', m); } };
+const ENGINE_NOW = process.env.DN_BROWSER || 'chromium';
+const ok = (c, m) => {
+  if (c) { pass++; console.log('  ok  ', m); return; }
+  const k = Object.entries(KNOWN[ENGINE_NOW] || {}).find(([pre]) => m.startsWith(pre));
+  if (k) { known++; console.log('  KNOWN', m, '—', k[1]); } else { fail++; console.log('  FAIL', m); }
+};
 const text = (p, sel) => p.locator(sel).first().textContent().then(t => (t || '').trim()).catch(() => '');
 const ends = ev => ev.filter(e => e.ev === 'puzzle_end');
 const honest = s => (s.verdict === 'mine') === (s.truth === 'mine');   // Hint's verdict on the square it marks matches the real board
@@ -61,11 +73,18 @@ async function sheetChecks(p, ev, { type, boxId = 'winModal', ids, shareRe, endC
   return s;
 }
 async function shareClipboard(p, ctx, type) {
-  await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'https://dailynoodle.co.uk' });
+  const engine = engineOf(p);
+  if (engine === 'chromium') await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'https://dailynoodle.co.uk' });
+  else {
+    // WebKit has a share sheet whenever it has navigator.share; this case is the no-share-sheet path, so take it away.
+    await p.evaluate(() => { try { delete Navigator.prototype.share; } catch (e) {} try { Object.defineProperty(navigator, 'share', { value: undefined, configurable: true }); } catch (e) {} });
+    await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'https://dailynoodle.co.uk' }).catch(e => console.log('  note  ', engine, 'refuses clipboard permissions:', e.message.split('\n')[0]));
+  }
   const want = await text(p, '.fin-share-text');
   await tap(p, p.locator('.fin-share-btn')); await p.waitForTimeout(200);
-  const got = await p.evaluate(() => navigator.clipboard.readText()).catch(() => '');
-  ok(got === want, `${type}: Share copies the line when there is no share sheet`);
+  const got = await p.evaluate(() => navigator.clipboard.readText()).catch(e => ({ err: String(e && e.message || e) }));
+  if (engine !== 'chromium' && got && got.err) skip(`${type}: Share copies the line when there is no share sheet`, `${engine} in Playwright won't let a page read the clipboard back (${got.err.slice(0, 80)}); the Copied label below still proves the copy succeeded`);
+  else ok(got === want, `${type}: Share copies the line when there is no share sheet`);
   ok(await text(p, '.fin-share-label') === 'Copied' && await text(p, '.fin-live') === 'Copied', `${type}: button says Copied, and so does the screen-reader line`);
   await wait(p, 2500);
   ok(await text(p, '.fin-share-label') === 'Share', `${type}: button goes back to Share`);
@@ -180,6 +199,7 @@ const TESTS = {
 
   /* every painted frame while opening puzzles in dark mode: none light, none showing the old result layout */
   async 'flash:dark'(b) {
+    if (chromiumOnly(b, 'opening Path, Tangle and Mini in dark: no light frame', 'records every painted frame with the Chromium DevTools screencast (CDP), which WebKit does not offer')) return;
     const ctx = await newPhone(b, { scheme: 'dark' });
     const { p } = await open(b, F.path, { ctx }); await play.path(p);
     await p.goto('https://dailynoodle.co.uk/reports/' + F.tangle); await wait(p, 1200); await play.tangle(p, { n: 2 });
@@ -224,6 +244,7 @@ const TESTS = {
 
   /* full-screen app: Android brings its bars back for a moment on each page load; the page must not move */
   async 'flash:flick'(b) {
+    if (chromiumOnly(b, 'Android system-bar flick moves nothing (3 pages)', 'an Android full-screen case driven by Chromium DevTools safe-area overrides (CDP); WebKit has no such override and iPhones have no flicking bar')) return;
     for (const [name, file, sel] of [['puzzles page', '../puzzles.html', '.mast'], ['mini start', F.mini, '.dn-start-title'], ['link board', F.link, '#board']]) {
       const ctx = await newPhone(b, { scheme: 'dark' }); await ctx.addInitScript(() => { window.__dnPinTest = 1; });   // as display-mode: fullscreen
       const p = await ctx.newPage(); const c = await ctx.newCDPSession(p);
@@ -616,13 +637,13 @@ async function run() {
   fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,'[]\n');
   const b = await launch();
   try{for (const name of names) {
-    const start=Date.now(),beforePass=pass,beforeFail=fail;
+    const start=Date.now(),beforePass=pass,beforeFail=fail,beforeSkip=skipped,beforeKnown=known;
     console.log(name);
     try { await TESTS[name](b); } catch (e) { fail++; console.log('  FAIL threw:', e.message.split('\n')[0]); }
-    timings.push({name,passed:pass-beforePass,failed:fail-beforeFail,seconds:+((Date.now()-start)/1000).toFixed(2)});
+    timings.push({name,passed:pass-beforePass,failed:fail-beforeFail,...(skipped>beforeSkip?{skipped:skipped-beforeSkip}:{}),...(known>beforeKnown?{known:known-beforeKnown}:{}),seconds:+((Date.now()-start)/1000).toFixed(2)});
     fs.writeFileSync(out,JSON.stringify(timings,null,2)+'\n');
   }}finally{await b.close();}
-  console.log(`\n${pass} passed, ${fail} failed`);
+  console.log(`\n${pass} passed, ${fail} failed` + (skipped ? `, ${skipped} skipped` : '') + (known ? `, ${known} known ${ENGINE_NOW} site bugs` : '') + ` (${ENGINE_NOW})`);
   process.exitCode=fail?1:0;
 }
 module.exports={TESTS};

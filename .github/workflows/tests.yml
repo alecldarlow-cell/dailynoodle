@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [firefox, webkit]
+        browser: [firefox]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -59,6 +59,49 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: browser-${{ matrix.browser }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
+  # iPhone engine (20 Oct 2026): about half the readers are on iPhones. Every daily
+  # puzzle type is played to its finish screen in WebKit presenting as an iPhone in
+  # Safari (tools/tests/harness.js), plus the source browser specs that apply to a
+  # phone. Nightly and manual runs only: never part of the release gate.
+  iphone-webkit:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      DN_BROWSER: webkit
+      DN_CROSS_BROWSER: '1'
+      DN_NIGHTLY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps webkit
+      - name: Puzzle suite in WebKit (all eight types to the finish screen)
+        env:
+          DN_TEST_GROUP: webkit-puzzles
+        run: |
+          mkdir -p test-results
+          set -o pipefail
+          node tools/tests/run.js 2>&1 | tee test-results/webkit-puzzles.log
+      - name: Source browser specs in WebKit
+        if: always()
+        env:
+          DN_TEST_GROUP: webkit-pages
+        run: >-
+          npm run test:browser -- --project=webkit
+          isolation.spec.js artifact.spec.js platform.spec.js puzzle-mobile.spec.js
+          save-history.spec.js save-notice.spec.js layout.spec.js games.spec.js
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-webkit
           path: |
             test-results/
             playwright-report/
