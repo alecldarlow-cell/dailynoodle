@@ -45,7 +45,7 @@ test('GUIDES: matching pill, history, reload and the play link remain independen
  await expect(p.locator('.guide-panel:visible')).toHaveCount(1);
  await expect(p.locator('#path')).toBeVisible();
  await expect(p.locator('#guide-pills [href="#path"]')).toHaveAttribute('aria-current','true');
- await expect(p.locator('#path .guide-play')).toHaveAttribute('href','/path?via=how-to-play');
+ await expect(p.locator('#path .guide-play')).toHaveAttribute('href',/^\/reports\/[\w.-]+logic-path[\w.-]*\.html\?via=how-to-play$/);
  await p.locator('#guide-pills [href="#tangle"]').click();
  await expect(p.locator('#tangle')).toBeVisible();
  await p.goBack();await H.wait(p,200);await expect(p.locator('#path')).toBeVisible();

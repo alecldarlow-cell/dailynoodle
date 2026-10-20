@@ -8,7 +8,7 @@ const { write } = require('../../sitemap');
 test('sitemap: lists front pages and published feed items only, never held or Lab files', () => {
   const site = fs.mkdtempSync(path.join(os.tmpdir(), 'sm-'));
   fs.mkdirSync(path.join(site, 'reports'));
-  for (const f of ['a.html', 'lab.html']) fs.writeFileSync(path.join(site, 'reports', f), 'x');
+  for (const f of ['a.html', 'lab.html', 'held.html']) fs.writeFileSync(path.join(site, 'reports', f), 'x');
   fs.writeFileSync(path.join(site, 'feed.json'), JSON.stringify({ today: '2026-10-20', items: [
     { path: 'reports/a.html', date: '2026-10-19', updated: '2026-10-20' },
     { path: 'reports/held.html', date: '2026-10-21' },                    // not in the site: held back

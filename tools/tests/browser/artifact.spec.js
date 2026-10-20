@@ -22,3 +22,29 @@ test('FRONT-01: offline feed gives a retry action and reconnect repairs it',asyn
 test('BUILD: manifest retains standalone and correct site identity',async()=>{
  const m=JSON.parse(fs.readFileSync(path.join(H.REPO,'manifest.webmanifest')));expect(m.display).toBe('standalone');expect(m.name).toMatch(/Noodle/);
 });
+
+test('SEO/FRONT: static cards and the enhanced list have identical markup',async({phone})=>{
+ test.skip(!process.env.DN_TEST_ROOT,'Published artifact is checked in the artifact group');
+ const feed=JSON.parse(fs.readFileSync(path.join(H.REPO,'feed.json'),'utf8'));
+ const items=feed.items.filter(it=>it.kind==='puzzle'&&!/^\s*in development\s*$/i.test(it.badge||''));
+ await phone.p.clock.setSystemTime(new Date(feed.today+'T12:00:00Z'));
+ await phone.ctx.route('**/front.js',r=>r.fulfill({contentType:'text/javascript',body:''}));
+ await goto(phone,'puzzles.html');
+ await expect(phone.p.locator('#feed a.card')).toHaveCount(items.length);
+ const before=await phone.p.locator('#feed > li').evaluateAll(es=>es.map(e=>e.outerHTML));
+ const links=await phone.p.locator('#feed a.card').evaluateAll(es=>es.map(e=>e.getAttribute('href')));
+ expect(links).toEqual(items.map(it=>it.path));
+ await phone.ctx.unroute('**/front.js');
+ await Promise.all([phone.p.waitForResponse('**/feed.json'),phone.p.reload()]);
+ await phone.p.waitForFunction(()=>document.getElementById('feed').innerHTML.startsWith('<li'));
+ const after=await phone.p.locator('#feed > li').evaluateAll(es=>es.map(e=>e.outerHTML));
+ expect(after).toEqual(before);expect(phone.errors).toEqual([]);
+});
+test('SEO/GUIDES: static guide buttons point directly to the published daily files',async()=>{
+ test.skip(!process.env.DN_TEST_ROOT,'Published artifact is checked in the artifact group');
+ const html=fs.readFileSync(path.join(H.REPO,'how-to-play.html'),'utf8'),list=JSON.parse(fs.readFileSync(path.join(H.REPO,'puzzles-today.json'),'utf8'));
+ for(const it of list.items){
+  expect(html).toContain('href="/'+it.path+'?via=how-to-play"');
+  expect(fs.existsSync(path.join(H.REPO,it.path)),it.path).toBe(true);
+ }
+});
