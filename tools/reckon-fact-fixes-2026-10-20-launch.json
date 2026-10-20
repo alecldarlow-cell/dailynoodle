@@ -1,0 +1,25 @@
+{
+ "_about": "Second fact check of 20 Oct 2026, at launch: the 58 facts newly scheduled for 20 Oct-25 Nov 2026 when Reckon 1 moved from 26 Oct to 20 Oct. Search only (titles, no snippets) plus the checkers own knowledge. Applied with tools/apply-ballpark-fixes.js; exclusions are in EXCLUDE in tools/build-reckon-batch.js.",
+ "fixes": {
+  "places:85": {
+   "n": "There were once nearly 60. It still has more than any other city north of the Alps."
+  },
+  "earth:68": {
+   "q": "How tall is the Old Man of Hoy, one of Britain’s tallest sea stacks, in metres?"
+  },
+  "space:72": {
+   "q": "How many hours does sunlight take to reach Pluto, on average?"
+  },
+  "animals:35": {
+   "q": "How many feathers does a tundra swan have?"
+  },
+  "build:69": {
+   "q": "How long are the Elizabeth line’s new tunnels under London in total, counting both bores, in kilometres?"
+  }
+ },
+ "excludeFromReckon": {
+  "food:74": "oldest edible honey: 3,000 years (Egyptian tombs, an unverified tale) and 5,500 years (Georgian tomb find, 2003) are both quoted, and neither was verified as edible",
+  "food:17": "UK tea per day: 100 million and 165 million cups are both quoted by the UK tea industry",
+  "food:76": "UK chocolate per person: about 8, 10 and 11 kg a year are all quoted, depending on year and survey definition"
+ }
+}

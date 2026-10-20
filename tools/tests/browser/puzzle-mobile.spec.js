@@ -7,7 +7,8 @@ const cases=[
  {type:'sweep',file:'logic-sweep',board:'#grid',targets:'#grid .cell,#modeDig,#modeFlag,#hint,#fs'},
  {type:'link',file:'word-link-0072',board:'#board',targets:'#board .tile,#shuffle,#clear,#submit'},
  {type:'tangle',file:'word-tangle-0013',board:'#board',targets:'#board .tile,#homeBtn,#fsPlay'},
- {type:'borders',file:'geo-borders-0015',board:'#qmap',targets:'#opts .opt,#pauseBtn,#hintBtn'}
+ {type:'borders',file:'geo-borders-0015',board:'#qmap',targets:'#opts .opt,#pauseBtn,#hintBtn'},
+ {type:'reckon',page:'reports/2026-10-20-quiz-reckon-0001.html',board:'#slz',targets:'#slz,#minus,#act,#plus,#pauseBtn,.navb:not([disabled])'}
 ];
 async function reachable(p,selectors){
  const problems=await p.locator(selectors).evaluateAll(elements=>elements.flatMap(e=>{
@@ -18,29 +19,41 @@ async function reachable(p,selectors){
  }));expect(problems).toEqual([]);
  expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 }
+// Reckon: the question (and after Lock in, the verdict) must be on screen, not squeezed under the bar.
+const seen=(p,sel)=>p.locator(sel).evaluate(e=>{const b=e.getBoundingClientRect();if(!b.height)return false;const at=document.elementFromPoint(b.x+Math.min(b.width/2,40),b.y+Math.min(b.height/2,10));return !!at&&(at===e||e.contains(at));});
 for(const c of cases)test('MOBILE: '+c.type+' board and controls survive small phones and rotation',async({phone})=>{
- const {p}=phone;await p.setViewportSize({width:320,height:568});await goto(phone,'reports/2026-10-19-'+c.file+'.html');
+ const {p}=phone;await p.setViewportSize({width:320,height:568});await goto(phone,c.page||'reports/2026-10-19-'+c.file+'.html');
  // Chromium cannot resize its OS window while fullscreen. Use the player's
  // real setting for this browser-window rotation check.
- if(['tangle','borders'].includes(c.type))await p.getByRole('switch',{name:'Full screen',exact:true}).click();
- const start=p.locator(['tangle','borders'].includes(c.type)?'#playCard':'#dnPlay');await start.click();
+ const own=['tangle','borders','reckon'].includes(c.type);
+ if(own)await p.getByRole('switch',{name:'Full screen',exact:true}).click();
+ const start=p.locator(own?'#playCard':'#dnPlay');await start.click();
  await H.wait(p,c.type==='tangle'?4000:500);await p.evaluate(()=>document.fonts.ready);await H.wait(p,200);
  await reachable(p,c.targets);
  // Real input before rotation: it must survive a layout change, and remain usable after it.
  if(c.type==='mini')await p.locator('#kb .key').filter({hasText:/^A$/}).click();
  if(c.type==='link')await p.locator('#board .tile').first().click();
  if(c.type==='tangle')await H.tap(p,p.locator('#board .tile').first());
- const state=c.type==='borders'?'#opts':c.board;
+ if(c.type==='reckon')await p.locator('#plus').click();
+ const state={borders:'#opts',reckon:'#mid'}[c.type]||c.board;
  const before=await p.locator(state).textContent();
  for(const [width,height] of [[780,360],[568,320],[320,568]]){
   await p.setViewportSize({width,height});await H.wait(p,400);await reachable(p,c.targets);
   expect(await p.locator(state).textContent()).toBe(before);
   const r=await p.locator(c.board).boundingBox();
-  if(c.type!=='link'){expect(r.width).toBeGreaterThanOrEqual(200);expect(r.height).toBeGreaterThanOrEqual(200);}
+  if(c.type==='reckon'){expect(r.width).toBeGreaterThanOrEqual(240);expect(await seen(p,'#q')).toBe(true);}
+  else if(c.type!=='link'){expect(r.width).toBeGreaterThanOrEqual(200);expect(r.height).toBeGreaterThanOrEqual(200);}
  }
  if(c.type==='mini'){
   expect(await p.locator('#grid .ltr').allTextContents()).toContain('A');
   await p.locator('#kb .key').filter({hasText:/^B$/}).click();expect(await p.locator('#grid .ltr').allTextContents()).toContain('B');
+ }
+ if(c.type==='reckon'){
+  await p.setViewportSize({width:780,height:360});await H.wait(p,400);await p.locator('#act').click();await H.wait(p,900);   // lock in on its side
+  for(const [width,height] of [[780,360],[568,320],[320,568]]){
+   await p.setViewportSize({width,height});await H.wait(p,400);
+   expect(await seen(p,'#q')).toBe(true);expect(await seen(p,'#fbV')).toBe(true);await reachable(p,'#act,#pauseBtn');
+  }
  }
  if(c.type==='tangle'){
   await H.tap(p,p.locator('#board .tile').nth(1));expect(await p.locator('#board .tile.on').count()).toBe(2);

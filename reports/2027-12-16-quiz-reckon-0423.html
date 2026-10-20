@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Reckon — Noodle Puzzles</title>
+<meta name="dn:headline"   content="Reckon 0423">
+<meta name="dn:standfirst" content="Ten numbers to guess, each from a different topic. The closer you get, the more you score.">
+<meta name="dn:date"       content="2027-12-16">
+<meta name="dn:kind"       content="puzzle">
+<meta name="dn:topic"      content="Quiz">
+<meta name="dn:read"       content="~2 min">
+<meta name="dn:thumb"      content="assets/reckon-thumb.svg">
+<meta name="theme-color" id="themeColor" content="#F5EFE4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16140F" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../engines/reckon.css">
+</head>
+<body>
+
+<!-- START -->
+<section id="home" class="scr scroll" aria-label="Reckon">
+ <div class="st">
+  <div class="st-top"><a class="back" href="../puzzles.html"><span aria-hidden="true">←</span> Puzzles</a><span class="st-streak" id="homeStreak"></span></div>
+  <h1 class="st-title">Reckon</h1>
+  <p class="st-date" id="dateLine"></p>
+  <section class="st-card" aria-label="Today’s ten">
+   <div class="st-art" id="homeArt" aria-hidden="true"></div>
+   <div><h2>Today’s ten</h2><p id="playStatus">Ten numbers to guess, each from a different topic. The closer you get, the more you score.</p></div>
+   <button type="button" class="pill" id="playCard">Play</button>
+  </section>
+  <div class="st3">
+   <div><b id="sStreak">0</b><span>day streak</span></div>
+   <div><b id="sBest">0</b><span>best score</span></div>
+   <div><b id="sPlayed">0</b><span>Reckons played</span></div>
+  </div>
+  <details class="how"><summary>How to play</summary>
+   <p>Drag the marker along the scale to guess, nudge it with − and +, then Lock in. Each big mark on the scale is ten times the last.</p>
+   <p>Within 15% of the answer scores 100; within 30%, 75; within 60%, 50; within three times either way, 25. Gaps are measured from the smaller number, so half the answer scores the same as double it.</p>
+   <p>Ten questions, the same for everyone, one go a day. Figures are rounded; dated ones say when they’re from.</p>
+  </details>
+  <div class="togs" id="homeTogs"></div>
+ </div>
+</section>
+
+<!-- PLAY -->
+<section id="play" class="scr gridded" aria-label="Question">
+ <div class="pw">
+  <div class="top">
+   <button type="button" class="ib" id="pauseBtn" aria-label="Pause"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="3" y="2" width="4" height="14" rx="1"/><rect x="11" y="2" width="4" height="14" rx="1"/></svg></button>
+   <span class="chip" id="pchip"></span>
+   <span class="qnav"><button type="button" class="navb" id="prevB" aria-label="Previous question">‹</button><span class="qn" id="qn">1/10</span><button type="button" class="navb" id="fwdB" aria-label="Next question">›</button></span>
+   <span class="sc" id="sc" aria-label="Points so far">0</span>
+  </div>
+  <div class="pips" id="pips" aria-label="Questions"></div>
+  <div class="mid" id="mid">
+   <div class="qcard"><span class="rvt" id="rvt" hidden>Reviewing</span><p class="q" id="q"></p></div>
+   <div class="fb" id="fb" role="status" aria-live="polite" hidden>
+    <div class="fbv"><b id="fbV"></b><span id="fbP"></span></div>
+    <div class="fbl" id="fbL"></div>
+    <p class="fbn" id="fbN"></p>
+   </div>
+   <div class="read" id="read">
+    <div class="rc g"><span class="rl"><i class="dg"></i>Your guess</span><span class="rw"><span class="rv" id="rv"></span><span class="ru" id="ru"></span></span></div>
+    <div class="rc" id="ansC" hidden><span class="rl"><i class="da"></i>Answer</span><span class="rw"><span class="rv" id="av"></span><span class="ru" id="au"></span></span></div>
+   </div>
+  </div>
+  <div class="tip" id="tip" hidden>Drag along the scale to guess. Fine-tune with − and +, then lock it in.</div>
+  <div class="slz" id="slz" role="slider" tabindex="0" aria-label="Your guess">
+   <div class="trk" id="trk"><div id="zbs"></div><div id="tks"></div><div class="pin" id="pin"></div><div class="th" id="th"></div></div>
+   <div class="labs" id="labs"></div>
+  </div>
+  <div class="ctl" id="ctl">
+   <button type="button" class="nb" id="minus" aria-label="Smaller">−</button>
+   <button type="button" class="act" id="act">Lock in</button>
+   <button type="button" class="nb" id="plus" aria-label="Bigger">+</button>
+  </div>
+ </div>
+</section>
+
+<!-- RESULT (the result box the site tracker watches: it gains "on" once, when the ten are finished) -->
+<section id="winModal" class="scr scroll modal" aria-label="Result">
+ <h2 id="winTitle">Reckoned</h2>
+ <div id="rBig"></div>
+ <b id="winTime">0:00</b>
+ <b id="rStreak">0</b>
+ <span id="rPts">0</span>
+ <span id="rBulls">0</span>
+ <span id="rZones"></span>
+</section>
+
+<!-- GATE FAILURE -->
+<section id="err" class="scr" aria-label="Puzzle unavailable">
+ <div class="st">
+  <div class="st-top"><a class="back" href="../puzzles.html"><span aria-hidden="true">←</span> Puzzles</a></div>
+  <h2 class="st-title" style="font-size:48px">This puzzle can’t be shown</h2>
+  <p class="st-date" style="font-style:normal;font-size:16px">It failed its own checks when it loaded, so it has been held back. Today’s other puzzles are on the Puzzles page.</p>
+  <p class="errlist" id="errList"></p>
+ </div>
+</section>
+
+<!-- PAUSE -->
+<div class="ov" id="pause" role="dialog" aria-modal="true" aria-label="Paused" hidden>
+ <div class="sheet">
+  <h2>Paused</h2>
+  <button type="button" class="act" id="resumeBtn">Resume</button>
+  <button type="button" class="nb wide" id="quitBtn">Back to start</button>
+  <div class="togs" id="pauseTogs"></div>
+ </div>
+</div>
+
+<script>
+/* This puzzle's data. The player is ../engines/reckon.js, shared by every Reckon. */
+window.DN_PUZZLE={id:"DP·RECK·0423",date:"2027-12-16",qs:[{"f":"food:27","k":"food","q":"How many millilitres are in a British pint?","u":"ml","a":568,"n":"An American pint is smaller, at 473 ml.","i":0,"e":1,"lo":2.237},{"f":"weather:50","k":"weather","q":"How fast can a powder snow avalanche travel, in km per hour?","u":"km/h","a":300,"n":"As fast as a high-speed train.","i":0,"e":0,"lo":0.668},{"f":"space:11","k":"space","q":"How old is the Earth, in years?","u":"years","a":4540000000,"n":"About a third of the age of the universe.","i":0,"e":0,"lo":8.872},{"f":"earth:64","k":"earth","q":"How hot is the Earth’s inner core, in °C?","u":"°C","a":5200,"n":"About as hot as the surface of the Sun.","i":0,"e":0,"lo":2.109},{"f":"sport:60","k":"sport","q":"How many seconds did Pan Zhanle take to swim his 2024 world-record 100 m freestyle?","u":"seconds","a":46.4,"n":"About two lengths of a 50 m pool.","i":0,"e":0,"lo":0.011},{"f":"body:5","k":"body","q":"How many hairs are on a typical human scalp?","u":"","a":100000,"n":"Losing 50 to 100 a day is normal.","i":1,"e":0,"lo":4.414},{"f":"everyday:43","k":"everyday","q":"What is the legal minimum tread depth for car tyres in the UK, in millimetres?","u":"mm","a":1.6,"n":"Across the central three-quarters of the tyre.","i":0,"e":0,"lo":-0.448},{"f":"places:90","k":"places","q":"How many Munros, Scottish mountains over 3,000 feet, are there?","u":"","a":282,"n":"Climbing them all is called “compleating”.","i":1,"e":0,"lo":1.623},{"f":"science:94","k":"science","q":"What is the smallest thing the naked eye can see, in micrometres?","u":"µm","a":100,"n":"About the width of a human hair.","i":0,"e":0,"lo":0.442},{"f":"britain:54","k":"britain","q":"How long is the canal network looked after by the Canal & River Trust, in kilometres?","u":"km","a":3200,"n":"About 2,000 miles, most of it built for horse-drawn boats.","i":0,"e":0,"lo":2.313}]};
+</script>
+<script src="../engines/reckon.js"></script>
+<script src="../dn-track.js" defer></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
--- Reckon on the leaderboard (20 Oct 2026). Apply before the first Reckon (26 Oct 2026) goes live.
+-- Reckon on the leaderboard (20 Oct 2026). Applied to the live database 20 Oct 2026 (migration reckon_board), before Reckon 1.
 -- Reckon is a scored round like Borders: outcome 'scored', points 0–1,000; equal scores are ranked by time.
 -- board_submit and board_day are written out in full from their live definitions (pg_get_functiondef,
 -- 20 Oct 2026), with Reckon added, so this file is also the complete current source for both: the

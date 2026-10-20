@@ -198,4 +198,17 @@ details.how p{margin:0 0 12px;font-size:15px;line-height:1.5;color:var(--ink2)}
   .read.two .rc{padding:4px 6px}.read.two .rl{font-size:11px}.read.two .rv{font-size:28px}.read.two .ru{font-size:13px}
   .labs{height:34px}.nb,.act{min-height:50px}
 }
+/* narrow phones (320px): the pack chip keeps its icon and colour; its name stays for screen readers */
+@media (max-width:359px){.chip{padding:4px}.chip span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
+/* short landscape (a phone on its side, 20 Oct 2026 mobile pass): the question, verdict and numbers on the left,
+   the scale and its buttons on the right, so nothing is squeezed out of view; the left column scrolls if text is enlarged */
+@media (orientation:landscape) and (max-height:500px){
+  .pw{max-width:900px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-rows:auto auto minmax(0,1fr) auto auto;gap:8px 20px;
+    grid-template-areas:"top top" "pips pips" "mid tip" "mid slz" "mid ctl";
+    padding:6px max(16px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+  .top{grid-area:top}.pips{grid-area:pips;margin:-4px 0}.mid{grid-area:mid}
+  .tip{grid-area:tip;align-self:end}.slz{grid-area:slz;padding-top:30px}.ctl{grid-area:ctl}
+  .qcard{margin-top:0}.read{padding-top:0}
+}
 @media (pointer:coarse){html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}}

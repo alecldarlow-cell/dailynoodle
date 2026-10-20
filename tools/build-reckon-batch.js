@@ -37,7 +37,7 @@ const args = process.argv.slice(2), has = k => args.includes(k);
 const arg = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
 
 /* ---- rules ---- */
-const LAUNCH = '2026-10-26';       // serial 0001
+const LAUNCH = '2026-10-20';       // serial 0001 (moved forward from 26 Oct by Alec, 20 Oct 2026)
 const NQ = 10, MINGAP = 100, KIND_CAP = 2, WINDOW = 6, SPAN = 2;
 const BAND = [1.15, 1.3, 1.6, 3];  // the game's scoring bands (100 / 75 / 50 / 25)
 /* Facts kept out of Reckon (they stay in Ballpark): ones whose good sources disagree by more
@@ -54,6 +54,10 @@ const EXCLUDE = {
   'britain:38': "a trick question rather than an estimate (“Lake Windermere” in everyday speech)",
   'earth:76': "Andes length: 7,000 to 8,900 km depending on the source",
   'space:93': "Andromeda 'including its faint outer halo': the halo spans millions of light years; 220,000 is the visible disc",
+  // the launch check of 20 Oct 2026 (tools/reckon-fact-fixes-2026-10-20-launch.json)
+  'food:74': "oldest edible honey: 3,000 years (Egyptian tombs, an unverified tale) and 5,500 years (a Georgian tomb, 2003) are both quoted, and neither was shown to be edible",
+  'food:17': "UK tea a day: 100 million and 165 million cups are both quoted by the UK tea industry",
+  'food:76': "UK chocolate per person: about 8, 10 and 11 kg a year are all quoted, depending on the year and the survey",
 };
 
 /* ---- the bank, by anchor ---- */

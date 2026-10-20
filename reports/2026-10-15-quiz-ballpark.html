@@ -453,7 +453,7 @@ const PACKS=[
 ['How thick is the Antarctic ice sheet on average, in metres?','m',2000,'In places it’s more than 4.7 km thick.',0],
 ['What is the area of the Amazon rainforest, in square kilometres?','km²',5500000,'Bigger than the whole European Union.',0],
 ['How tall is Mount Vesuvius, in metres?','m',1281,'It buried Pompeii in AD 79.',0],
-['How tall is the Old Man of Hoy, Britain’s tallest sea stack, in metres?','m',137,'A sandstone pillar off Orkney.',0],
+['How tall is the Old Man of Hoy, one of Britain’s tallest sea stacks, in metres?','m',137,'A sandstone pillar off Orkney.',0],
 ['How tall is Beachy Head, Britain’s highest chalk sea cliff, in metres?','m',162,'Taller than Blackpool Tower.',0],
 ['How tall are the White Cliffs of Dover at their highest, in metres?','m',110,'The first sight of England for many crossing the Channel.',1],
 ['What is the area of the Mediterranean Sea, in square kilometres?','km²',2500000,'Its only natural link to the ocean is 14 km wide, at Gibraltar.',0],
@@ -558,7 +558,7 @@ const PACKS=[
 ['How wide is Olympus Mons on Mars at its base, in kilometres?','km',600,'About as wide as England is long.',0],
 ['How long is Valles Marineris, the great canyon on Mars, in kilometres?','km',4000,'About as long as the USA is wide.',0],
 ['What percentage of the Earth’s gravity would you feel on Mars?','%',38,'Enough to jump nearly three times as high.',0],
-['How many hours does sunlight take to reach Pluto?','hours',5.5,'It takes just over 8 minutes to reach us.',0],
+['How many hours does sunlight take to reach Pluto, on average?','hours',5.5,'It takes just over 8 minutes to reach us.',0],
 ['How old is the Sun, in years?','years',4600000000,'About halfway through its life.',0],
 ['How much mass does the Sun turn into energy every second, in tonnes?','tonnes',4000000,'It has plenty left for billions of years yet.',0],
 ['How many minutes did Yuri Gagarin’s first flight into space last?','minutes',108,'One orbit of the Earth, in April 1961.',0],
@@ -672,7 +672,7 @@ const PACKS=[
 ['About how many islands make up Indonesia?','',17000,'Only about 6,000 of them have people living on them.',2],
 ['How many coral islands make up the Maldives?','',1192,'Most are less than 2 m above sea level.',2],
 ['About how many islands does Scotland have?','',790,'People live on fewer than 100 of them.',2],
-['How many medieval churches still stand within Norwich’s old city walls?','',31,'There were once 58. It still has more than any other city north of the Alps.',2],
+['How many medieval churches still stand within Norwich’s old city walls?','',31,'There were once nearly 60. It still has more than any other city north of the Alps.',2],
 ['How many round-tower churches are there in Norfolk?','',124,'About two-thirds of all the round-tower churches in England.',2],
 ['How many letters are in the full name of the Anglesey village usually shortened to Llanfairpwll?','',58,'The longest place name in Europe.',2],
 ['How many countries share a land border with China?','',14,'Tied with Russia for the most of any country.',2],
@@ -858,7 +858,7 @@ const PACKS=[
 ['How high does the Falkirk Wheel lift boats, in metres?','m',24,'The world’s only rotating boat lift.',0],
 ['How wide is the Thames Barrier across the river, in metres?','m',520,'Its ten steel gates have closed more than 200 times.',0],
 ['How long is the Seikan Tunnel in Japan, in kilometres?','km',53.9,'It links the islands of Honshu and Hokkaido under the sea.',0],
-['How long are the Elizabeth line’s new tunnels under London in total, in kilometres?','km',42,'Two 21 km bores, dug by eight boring machines.',0],
+['How long are the Elizabeth line’s new tunnels under London in total, counting both bores, in kilometres?','km',42,'Two 21 km bores, dug by eight boring machines.',0],
 ['How deep is Hampstead, the deepest station on the London Underground, in metres?','m',58.5,'Its lifts are the only way most passengers get down.',0],
 ['How fast do Eurostar trains run on High Speed 1 in Kent, in km per hour?','km/h',300,'The fastest trains in Britain.',0],
 ['How fast did Mallard go in 1938, the record for a steam train, in km per hour?','km/h',203,'126 mph, a record that still stands.',0],
@@ -925,7 +925,7 @@ const PACKS=[
 ['How long can a bowhead whale live, in years?','years',200,'Over 200 years; one was estimated at 211.',0],
 ['How fast does a mouse’s heart beat?','beats a minute',600,'About ten beats every second.',0],
 ['How much does an elephant’s brain weigh, in grams?','g',5000,'About 5 kg, the largest of any land animal.',0],
-['How many feathers does a swan have?','',25000,'About four in five of them are on the head and neck.',2],
+['How many feathers does a tundra swan have?','',25000,'About four in five of them are on the head and neck.',2],
 ['How fast can a racehorse gallop, in km per hour?','km/h',70,'About 70 km/h at full stretch.',0],
 ['How long is a newborn kangaroo, in centimetres?','cm',2,'About 2 cm, the size of a jelly bean.',0],
 ['How much does an adult pet cat typically weigh, in kilograms?','kg',4.5,'About the weight of four and a half bags of sugar.',1],
@@ -1795,9 +1795,9 @@ function renderHome(){
   renderTogs()}
 
 /* ---------- today's Reckon: the daily ten from these packs, in Noodle Puzzles ----------
-   One file per day, YYYY-MM-DD-quiz-reckon-NNNN.html, NNNN = days since 2026-10-26 (London) + 1. */
-const RECKON_FIRST='2026-10-26';
-const RECKON_LAST='2027-12-31';                     // last day of the current batch (DP·RECK·0432): bump when a new batch ships
+   One file per day, YYYY-MM-DD-quiz-reckon-NNNN.html, NNNN = days since 2026-10-20 (London) + 1. */
+const RECKON_FIRST='2026-10-20';
+const RECKON_LAST='2027-12-31';                     // last day of the current batch (DP·RECK·0438): bump when a new batch ships
 function londonToday(){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}catch(e){return new Date().toISOString().slice(0,10)}}
 function renderDaily(){
   const t=londonToday(),card=$('dailyCard');if(!card)return;

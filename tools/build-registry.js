@@ -298,7 +298,7 @@ for (const [type, rows] of Object.entries(byType)) {
   const sMax = ser.length ? ser.reduce((a, b) => Math.max(a, b)) : null;
   if (ser.length) for (let s = sMin; s <= sMax; s++) if (!serSet.has(s)) missingSer.push(s);
 
-  // a type that hasn't launched yet (first day still ahead, e.g. Reckon before 26 Oct 2026) counts its runway from its first day
+  // a type that hasn't launched yet (first day still ahead, e.g. Reckon before 20 Oct 2026) counts its runway from its first day
   let runway = 0, d = dates[0] > TODAY ? dates[0] : TODAY;
   while (set.has(d) && runway <= 2000) { runway++; d = addDay(d, 1); }
   const firstMissing = d;

@@ -17,9 +17,9 @@ const F = {
   mini: '2026-10-18-crossword-mini-0099.html', mini2: '2026-10-19-crossword-mini-0100.html', doku: '2026-10-18-logic-doku-0097.html',
   sweep: '2026-10-18-logic-sweep.html', path: '2026-10-18-logic-path-0092.html', path2: '2026-10-19-logic-path-0093.html',
   link: '2026-10-18-word-link-0071.html', tangle: '2026-10-18-word-tangle-0012.html', borders: '2026-10-18-geo-borders-0014.html',
-  reckon: '2026-10-26-quiz-reckon-0001.html', reckon2: '2026-10-27-quiz-reckon-0002.html',
+  reckon: '2026-10-20-quiz-reckon-0001.html', reckon2: '2026-10-21-quiz-reckon-0002.html',
 };
-const RECKON_DAY = '2026-10-26T14:30:00Z', RECKON_DAY2 = '2026-10-27T14:30:00Z';   // Reckon's first two days (GMT)
+const RECKON_DAY = '2026-10-20T14:30:00Z', RECKON_DAY2 = '2026-10-21T14:30:00Z';   // Reckon's first two days (15:30 BST)
 let pass = 0, fail = 0;
 const ok = (c, m) => { if (c) { pass++; console.log('  ok  ', m); } else { fail++; console.log('  FAIL', m); } };
 const text = (p, sel) => p.locator(sel).first().textContent().then(t => (t || '').trim()).catch(() => '');
@@ -306,8 +306,8 @@ const TESTS = {
     ok(await p.locator('.fin-rk button').count() === 10, 'reckon: ten questions in the recap');
     ok(await p.locator('.fin a.fin-link[href*="quiz-ballpark"]').count() === 1, 'reckon: Ballpark link in the recap');
     const save = await ls(p, 'digi-reckon-v1'), rec = save && save.done && save.done['DP·RECK·0001'];
-    ok(rec && rec.p === 800 && rec.b === 8 && rec.d === '2026-10-26' && rec.z.length === 10 && rec.g.length === 10 && !save.cur, 'reckon: first result saved with its London day; no round left open');
-    ok(save && save.streak && save.streak.n === 1 && save.streak.last === '2026-10-26', 'reckon: streak 1 for a round finished on its day');
+    ok(rec && rec.p === 800 && rec.b === 8 && rec.d === '2026-10-20' && rec.z.length === 10 && rec.g.length === 10 && !save.cur, 'reckon: first result saved with its London day; no round left open');
+    ok(save && save.streak && save.streak.n === 1 && save.streak.last === '2026-10-20', 'reckon: streak 1 for a round finished on its day');
     /* look back at a question from the recap, then come back */
     await tap(p, p.locator('.fin-rk button').nth(2)); await wait(p, 600);
     ok(await p.locator('#play').isVisible() && await text(p, '#act') === 'Back to results' && !(await p.locator('#rvt').isHidden()), 'reckon: a recap row opens that question for review');
@@ -326,7 +326,7 @@ const TESTS = {
     const ev = []; const { ctx, p } = await open(b, F.reckon, { events: ev, time: RECKON_DAY });
     const s = await p.evaluate(() => ({ title: (document.querySelector('.st-title') || {}).textContent, date: document.getElementById('dateLine').textContent,
       play: document.getElementById('playCard').textContent, font: getComputedStyle(document.body).fontFamily, scrollW: document.documentElement.scrollWidth, vw: innerWidth }));
-    ok(s.title === 'Reckon' && s.date === 'No. 1, Monday 26 October' && s.play === 'Play', `reckon: start screen ("${s.title}", "${s.date}", ${s.play})`);
+    ok(s.title === 'Reckon' && s.date === 'No. 1, Tuesday 20 October' && s.play === 'Play', `reckon: start screen ("${s.title}", "${s.date}", ${s.play})`);
     ok(/^Archivo/.test(s.font) && s.scrollW <= s.vw, 'reckon: Archivo, no sideways scroll');
     const small = await p.evaluate(() => [...document.querySelectorAll('#home button, #home summary, #home a')].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.height && r.height < 44; }).map(e => (e.id || e.className || e.tagName) + ' ' + Math.round(e.getBoundingClientRect().height)));
     ok(!small.length, 'reckon: start-screen controls are at least 44px tall ' + small.join(', '));

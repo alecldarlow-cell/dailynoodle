@@ -1,4 +1,4 @@
--- Reckon in the admin dashboard (20 Oct 2026). Apply with 2026-10-20-reckon-board.sql, before 26 Oct 2026.
+-- Reckon in the admin dashboard (20 Oct 2026). Applied to the live database 20 Oct 2026 (migration reckon_insights), after 2026-10-20-reckon-board.sql.
 -- Adds the tracker slug quiz-reckon to the puzzle-type regex and to the scored-round regex in
 -- public.admin_dashboard(date,date,boolean) and the views insights.page_loads and insights.puzzle_types,
 -- by substitution on the live definitions, asserting every old fragment is found the expected number

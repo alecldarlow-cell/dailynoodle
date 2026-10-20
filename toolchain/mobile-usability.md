@@ -14,16 +14,17 @@ Reviewed the seven current shared players in local Chromium phone emulation with
 | Tangle | Landscape hid the bottom half of the board. Small-phone start instructions/settings were below an unscrollable page. | Word list beside a full board, scrollable home, and wrapping score/banner text. Large-text play can scroll if needed. |
 | Shared results | A generic engine hover rule could make the Share background pale while leaving its text white after a tap. | Keep the contrasting primary colour when hovered or tapped. |
 | Borders | Landscape reduced the country map to 74 pixels tall. | Answers beside the map, which now has 278 pixels of height. |
+| Reckon (added at launch, 20 Oct 2026) | In short landscape the question and the verdict were squeezed out of view under the top bar; at 320px wide the pack chip's name truncated to "E..". | Question, verdict and numbers on the left, the scale and its buttons on the right (the left column scrolls if text is enlarged); below 360px wide the chip shows its icon, with the name kept for screen readers. |
 
 Measurements above use 780×360, except the explicitly noted Link case. Landscape layouts reserve the available safe-area insets. They apply only to short screens; the five grid/tile players additionally require a coarse touch pointer.
 
 ## Verification
 
-`node tools/tests/browser-run.js --project=chromium puzzle-mobile.spec.js` runs eight required regressions. Seven open at 320×568, rotate through 780×360 and 568×320, and return to portrait. Checks cover visible/hittable controls, no horizontal page overflow, board size, retained letters/selections/question choices and input after rotation. Mini and Link action labels are additionally enlarged by 50%. Link checks complete tile text and the minimum font size.
+`node tools/tests/browser-run.js --project=chromium puzzle-mobile.spec.js` runs nine required regressions. Eight open at 320×568, rotate through 780×360 and 568×320, and return to portrait. Checks cover visible/hittable controls, no horizontal page overflow, board size, retained letters/selections/question choices and input after rotation. Mini and Link action labels are additionally enlarged by 50%. Link checks complete tile text and the minimum font size.
 
-The eighth regression reopens a saved Mini result and checks that Share retains its contrasting background on hover; it fails before the shared CSS fix.
+Reckon also locks in an answer on its side and checks the question and verdict stay in view through the rotations. The ninth regression reopens a saved Mini result and checks that Share retains its contrasting background on hover; it fails before the shared CSS fix.
 
-The old versions of Mini, Doku, Path, Sweep and Link fail these new checks. Tangle and Borders use their real Full screen setting switched off for window-resize emulation; OS fullscreen cannot be resized through Playwright's window API. Existing player tests still exercise their ordinary play/finish paths.
+The old versions of Mini, Doku, Path, Sweep and Link fail these new checks. Tangle, Borders and Reckon use their real Full screen setting switched off for window-resize emulation; OS fullscreen cannot be resized through Playwright's window API. Existing player tests still exercise their ordinary play/finish paths.
 
 The one-off audit also inspected 360×640 and enlarged all interface text by 50% at 320×568. Large text may require vertical scrolling; it must not become hidden. All seven players were also played to completion at 320×568 using their real controls; result sharing and opening the next puzzle succeeded. Share sheets were captured through the test browser, without sending messages. The release suite retains existing start/finish screenshots and all seven play-to-finish regressions.
 
