@@ -1,5 +1,5 @@
 'use strict';
-const {test,expect,H,goto}=require('./support');
+const {test,expect,H,goto,fullScreenOff}=require('./support');
 const cases=[
  {type:'mini',file:'crossword-mini-0100',board:'#grid',targets:'#grid .cell:not(.block),#kb .key,.cluearrow,#checkWord,#checkAll,#revealWord,#fs'},
  {type:'doku',file:'logic-doku-0098',board:'#grid',targets:'#grid .cell,#bank .tile,#toggleHints,#fs'},
@@ -21,12 +21,12 @@ async function reachable(p,selectors){
 }
 // Reckon: the question (and after Lock in, the verdict) must be on screen, not squeezed under the bar.
 const seen=(p,sel)=>p.locator(sel).evaluate(e=>{const b=e.getBoundingClientRect();if(!b.height)return false;const at=document.elementFromPoint(b.x+Math.min(b.width/2,40),b.y+Math.min(b.height/2,10));return !!at&&(at===e||e.contains(at));});
-for(const c of cases)test('MOBILE: '+c.type+' board and controls survive small phones and rotation',async({phone})=>{
+for(const c of cases)test('MOBILE: '+c.type+' board and controls survive small phones and rotation',async({phone},testInfo)=>{
  const {p}=phone;await p.setViewportSize({width:320,height:568});await goto(phone,c.page||'reports/2026-10-19-'+c.file+'.html');
  // Chromium cannot resize its OS window while fullscreen. Use the player's
  // real setting for this browser-window rotation check.
  const own=['tangle','borders','reckon'].includes(c.type);
- if(own)await p.getByRole('switch',{name:'Full screen',exact:true}).click();
+ if(own)await fullScreenOff(p,testInfo);
  const start=p.locator(own?'#playCard':'#dnPlay');await start.click();
  await H.wait(p,c.type==='tangle'?4000:500);await p.evaluate(()=>document.fonts.ready);await H.wait(p,200);
  await reachable(p,c.targets);

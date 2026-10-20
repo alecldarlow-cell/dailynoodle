@@ -13,8 +13,8 @@ for (const f of files) {
     let r; try { r = JSON.parse(src); } catch (e) { lines.push(`(unreadable ${f})`); continue; }
     const walk = s => { for (const spec of s.specs || []) for (const t of spec.tests || []) for (const res of t.results || [])
       if (res.status !== 'passed' && res.status !== 'skipped' && res.retry === (t.results.length - 1)) {
-        const err = ((res.error && res.error.message) || res.status).replace(/\u001b\[[0-9;]*m/g, '').split('\n').filter(Boolean).slice(0, 3).join(' / ');
-        lines.push(`FAIL ${spec.file}: ${spec.title} — ${err.slice(0, 300)}`);
+        const err = ((res.error && res.error.message) || res.status).replace(/\u001b\[[0-9;]*m/g, '').split('\n').filter(Boolean).slice(0, 40).join(' / ');
+        lines.push(`FAIL ${spec.file}: ${spec.title} — ${err.slice(0, 2500)}`);
       }
       for (const c of s.suites || []) walk(c); };
     for (const s of r.suites || []) walk(s);

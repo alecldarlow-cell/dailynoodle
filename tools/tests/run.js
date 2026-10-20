@@ -19,7 +19,14 @@ const play = require('./play');
 let skipped = 0, known = 0;
 const skip = (m, why) => { skipped++; console.log('  skip', m, '—', why); };
 const chromiumOnly = (b, m, why) => { if (engineOf(b) === 'chromium') return false; skip(m, why); return true; };
-const KNOWN = {};   // { [engine]: { [check message prefix]: 'site bug: …' } }; empty: WebKit found none so far
+const KNOWN = {   // { [engine]: { [check message prefix]: 'site bug: …' } }
+  webkit: {
+    // Tangle and Borders build the line with Intl weekday+day+month; Safari's Intl writes "Sunday 18 October",
+    // Chromium "Sunday, 18 October". Cosmetic: iPhone readers see a different date line from Android readers.
+    'tangle: home date line': 'site bug (cosmetic): Tangle home date line has no comma after the weekday in Safari (engines/tangle.js longDate, Intl en-GB)',
+    'borders: home date line': 'site bug (cosmetic): Borders home date line has no comma after the weekday in Safari (engines/borders.js longDate, Intl en-GB)',
+  },
+};
 const F = {
   mini: '2026-10-18-crossword-mini-0099.html', mini2: '2026-10-19-crossword-mini-0100.html', doku: '2026-10-18-logic-doku-0097.html',
   sweep: '2026-10-18-logic-sweep.html', path: '2026-10-18-logic-path-0092.html', path2: '2026-10-19-logic-path-0093.html',
