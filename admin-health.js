@@ -4,10 +4,10 @@
  else {root.dnPublishingHealth=api;api.mount();}
 })(typeof globalThis==='object'?globalThis:this,function(){
  'use strict';
- const TYPES=['mini','doku','sweep','path','link','tangle','borders'];
- const NAMES={mini:'Mini',doku:'Doku',sweep:'Sweep',path:'Path',link:'Link',tangle:'Tangle',borders:'Borders'};
- const SLUGS={mini:'crossword-mini',doku:'logic-doku',sweep:'logic-sweep',path:'logic-path',link:'word-link',tangle:'word-tangle',borders:'geo-borders'};
- const IDS={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD'};
+ const TYPES=['mini','doku','sweep','path','link','tangle','borders','reckon'];   // Reckon from 20 Oct 2026
+ const NAMES={mini:'Mini',doku:'Doku',sweep:'Sweep',path:'Path',link:'Link',tangle:'Tangle',borders:'Borders',reckon:'Reckon'};
+ const SLUGS={mini:'crossword-mini',doku:'logic-doku',sweep:'logic-sweep',path:'logic-path',link:'word-link',tangle:'word-tangle',borders:'geo-borders',reckon:'quiz-reckon'};
+ const IDS={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK'};
  const REPO='https://github.com/alecldarlow-cell/dailynoodle';
  const API='https://api.github.com/repos/alecldarlow-cell/dailynoodle/actions/workflows/build-feed.yml/runs?per_page=20';
  const day=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
@@ -23,13 +23,13 @@
    const d=s.days[date]||{counts:{},blocked:[]};
    return {date,missing:TYPES.filter(t=>!d.counts[t]),duplicate:TYPES.filter(t=>d.counts[t]>1),blocked:TYPES.filter(t=>d.blocked.includes(t)),count:TYPES.filter(t=>d.counts[t]===1&&!d.blocked.includes(t)).length};
   };
-  let futureDays=0;while(futureDays<2000&&status(add(today,futureDays+1)).count===7)futureDays++;
+  let futureDays=0;while(futureDays<2000&&status(add(today,futureDays+1)).count===TYPES.length)futureDays++;
   const firstGap=status(add(today,futureDays+1));
   return {stale:s.today!==today,futureDays,through:futureDays?add(today,futureDays):null,firstGap,next:Array.from({length:8},(_,i)=>status(add(today,i+1)))};
  }
  function dailyList(j,today){
   if(j?.today!==today)throw Error('Daily list is out of date; expected '+today+'.');
-  if(!Array.isArray(j.items)||j.items.length!==7||new Set(j.items.map(i=>i.type)).size!==7)throw Error('Daily list must contain exactly one of each of the seven puzzle types.');
+  if(!Array.isArray(j.items)||j.items.length!==TYPES.length||new Set(j.items.map(i=>i.type)).size!==TYPES.length)throw Error('Daily list must contain exactly one of each of the '+TYPES.length+' puzzle types.');
   for(const i of j.items){
    if(!TYPES.includes(i.type)||typeof i.id!=='string'||!i.id.startsWith('DP·'+IDS[i.type]+'·')||typeof i.path!=='string'||!new RegExp('^reports/'+today+'-'+SLUGS[i.type]+'(?:-\\d+)?\\.html$').test(i.path))throw Error('Daily list contains an invalid puzzle entry.');
   }
@@ -56,14 +56,14 @@
     }));
     if(day()!==today)throw Error('The London date changed during this check. Check again.');
     const n=results.filter(i=>i.ok).length;
-    card('pubLive',n===7?'good':'bad',n+'/7 puzzle files responding',text('Checked the daily list and each live URL for '+fmt(today)+'. This checks availability, not a full play-through.')+'<ul class="pub-items">'+results.map(i=>'<li><a href="'+esc(i.path)+'">'+NAMES[i.type]+'</a> · '+(i.ok?'Available':'Could not confirm')+'</li>').join('')+'</ul>');
+    card('pubLive',n===TYPES.length?'good':'bad',n+'/'+TYPES.length+' puzzle files responding',text('Checked the daily list and each live URL for '+fmt(today)+'. This checks availability, not a full play-through.')+'<ul class="pub-items">'+results.map(i=>'<li><a href="'+esc(i.path)+'">'+NAMES[i.type]+'</a> · '+(i.ok?'Available':'Could not confirm')+'</li>').join('')+'</ul>');
    }catch(e){card('pubLive','bad','Today’s puzzles not confirmed',text(e.message));}
   }
   async function stock(today){
    try{
     const s=await request('publishing-health.json?publishing-check=1',{},true),a=analyse(s,today);
     card('pubStock',a.stale?'warn':a.futureDays>=7?'good':'warn',a.stale?'Build snapshot is out of date':a.futureDays+' complete future days on file',text((a.through?'One of each type from tomorrow through '+fmt(a.through)+'. ':'')+'First incomplete date: '+fmt(a.firstGap.date)+'. '+problems(a.firstGap))+text('Snapshot assembled '+stamp(s.builtAt)+' (London).')+'<a href="'+runLink(s.runId)+'">View this build’s release run</a>');
-    $('pubDays').innerHTML='<table><caption>Next eight days of puzzle stock</caption><thead><tr><th>Date</th><th>Types</th><th>Needs attention</th></tr></thead><tbody>'+a.next.map(d=>'<tr><th scope="row">'+fmt(d.date)+'</th><td>'+d.count+'/7</td><td>'+esc(problems(d)||'All seven on file')+'</td></tr>').join('')+'</tbody></table>';
+    $('pubDays').innerHTML='<table><caption>Next eight days of puzzle stock</caption><thead><tr><th>Date</th><th>Types</th><th>Needs attention</th></tr></thead><tbody>'+a.next.map(d=>'<tr><th scope="row">'+fmt(d.date)+'</th><td>'+d.count+'/'+TYPES.length+'</td><td>'+esc(problems(d)||'Every type on file')+'</td></tr>').join('')+'</tbody></table>';
    }catch(e){card('pubStock','warn','Future stock not confirmed',text(e.message));$('pubDays').textContent='No inventory snapshot available.';}
   }
   async function releases(){
@@ -85,5 +85,5 @@
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&started&&!document.getElementById('app').hidden&&day()!==checkedDay)check();});
   api.start=()=>{if(!started){started=true;check();}};
  }
- const api={analyse,dailyList,mount};return api;
+ const api={analyse,dailyList,mount,TYPES};return api;
 });

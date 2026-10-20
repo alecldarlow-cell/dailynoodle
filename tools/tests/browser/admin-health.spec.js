@@ -1,7 +1,7 @@
 'use strict';
 const {test,expect,H,goto}=require('./support');
 const {TYPES,addDay}=require('../../publishing-health');
-const ids={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD'};
+const ids={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK'};
 const today='2026-10-19';
 const list={today,items:Object.entries(TYPES).map(([type,slug])=>({type,id:'DP·'+ids[type]+'·0001',path:'reports/'+today+'-'+slug+'-0001.html'}))};
 const stock={version:1,today,builtAt:today+'T10:00:00Z',runId:'100',days:Object.fromEntries([1,2,3].map(n=>[addDay(today,n),{counts:Object.fromEntries(Object.keys(TYPES).map(t=>[t,1])),blocked:[]}]))};
@@ -24,17 +24,17 @@ async function fixtures(phone){
 }
 test('ADMIN-PUBLISH: live files, future stock and release states remain independent; refresh reports failures',async({phone})=>{
  await auth(phone);const state=await fixtures(phone);await phone.p.setViewportSize({width:360,height:780});await goto(phone,'admin.html');
- const p=phone.p;await expect(p.locator('#pubLive')).toContainText('7/7 puzzle files responding');
+ const p=phone.p;await expect(p.locator('#pubLive')).toContainText('8/8 puzzle files responding');
  await expect(p.locator('#pubStock')).toContainText('3 complete future days');await expect(p.locator('#pubStock')).toContainText('23 Oct 2026');
  await expect(p.locator('#pubRelease')).toContainText('In progress');await expect(p.locator('#pubRelease')).toContainText('19 Oct 2026');
  await p.locator('[data-filter="puzzles"]').click();await expect(p.locator('#publishing')).toBeVisible();
  await p.getByRole('button',{name:'7 days',exact:true}).click();expect(state.calls.filter(x=>x==='GET github')).toHaveLength(1);
- await p.locator('#publishing summary').click();await expect(p.locator('#pubDays')).toContainText('All seven on file');
+ await p.locator('#publishing summary').click();await expect(p.locator('#pubDays')).toContainText('Every type on file');
  expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await p.locator('#publishing').screenshot({path:'test-results/admin-publishing-phone.png'});
  await p.setViewportSize({width:1120,height:850});await p.locator('#publishing').screenshot({path:'test-results/admin-publishing-desktop.png'});
  state.phase='problem';await p.locator('#pubCheck').click();
- await expect(p.locator('#pubLive')).toContainText('6/7 puzzle files responding');await expect(p.locator('#pubStock')).toContainText('out of date');await expect(p.locator('#pubRelease')).toContainText('GitHub status not confirmed');
+ await expect(p.locator('#pubLive')).toContainText('7/8 puzzle files responding');await expect(p.locator('#pubStock')).toContainText('out of date');await expect(p.locator('#pubRelease')).toContainText('GitHub status not confirmed');
  expect(state.calls.every(c=>/^(GET|HEAD) /.test(c))).toBe(true);expect(phone.errors).toEqual([]);
 });
 for(const mode of ['signed-out','not-admin'])test('ADMIN-PUBLISH: '+mode+' does not start publishing requests',async({phone})=>{

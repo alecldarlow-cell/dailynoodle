@@ -1,7 +1,7 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os');
 const {snapshot,TYPES,addDay}=require('../../publishing-health'),{analyse,dailyList}=require('../../../admin-health');
-const ids={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD'};
+const ids={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK'};
 const list=day=>({today:day,items:Object.entries(TYPES).map(([type,slug])=>({type,id:'DP·'+ids[type]+'·0001',path:'reports/'+day+'-'+slug+'-0001.html'}))});
 const fixture=t=>{const root=fs.mkdtempSync(path.join(os.tmpdir(),'publishing-'));fs.mkdirSync(path.join(root,'reports'));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));return root;};
 function put(root,date,type,serial=1,metaDate=date){
@@ -28,7 +28,7 @@ test('PUBLISH: invalid metadata is blocked; snapshot exposes no future content o
  assert.doesNotMatch(JSON.stringify(s),/SECRET_ANSWER|DP·|\.html|reports\//);
 });
 test('PUBLISH: malformed stock and stale, duplicated or unsafe daily lists never pass',()=>{
- const d='2026-10-20',j=list(d);assert.equal(dailyList(j,d).length,7);
+ const d='2026-10-20',j=list(d);assert.equal(dailyList(j,d).length,Object.keys(TYPES).length);
  for(const mutate of [x=>x.today='2026-10-19',x=>x.items.pop(),x=>x.items[0].type='doku',x=>x.items[0].path='../private.html',x=>x.items[0].path='https://other.site/mini.html',x=>x.items[0].id='DP·LINK·0001']){
   const x=structuredClone(j);mutate(x);assert.throws(()=>dailyList(x,d));
  }

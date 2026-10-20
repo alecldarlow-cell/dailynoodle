@@ -4,7 +4,7 @@ The Publishing section of `admin.html` checks three independent things. It start
 
 ## Today's live puzzles
 
-The browser requests the current `puzzles-today.json`, requires exactly one correctly typed/id'd URL for each of the seven types on today's London date, then makes a network HEAD request to each URL. A missing, stale, duplicate or unsafe list is not reported as healthy. The count means **files responding**, not a full play-through. These requests do not load the tracker or submit puzzle results.
+The browser requests the current `puzzles-today.json`, requires exactly one correctly typed/id'd URL for each puzzle type on today's London date (eight with Reckon from 20 Oct 2026; the type lists are `TYPES` in `admin-health.js` and `tools/publishing-health.js`), then makes a network HEAD request to each URL. A missing, stale, duplicate or unsafe list is not reported as healthy. The count means **files responding**, not a full play-through. These requests do not load the tracker or submit puzzle results.
 
 `sw.js` bypasses cache for requests marked `publishing-check=1`, and never caches `admin-health.js` or `publishing-health.json`. A twelve-second timeout includes JSON response bodies. Requests that cannot be confirmed are shown explicitly; there is no cached green fallback. Checks and GitHub status are independent, so an API rate limit does not disguise a broken puzzle or turn a working site red by itself.
 
@@ -35,4 +35,4 @@ The page and build metadata are public static files, like the existing admin HTM
 - Unit fixtures cover consecutive stock, gaps, duplicate dates, metadata errors, London date rollover, malformed snapshots, unsafe/stale daily lists, and keeping future content out of the snapshot.
 - Browser fixtures cover healthy stock/live URLs, queued/in-progress releases alongside the last success, failed URL checks, stale stock, API rate limiting, timeout/retry, sign-out and rejected admin access. Phone and desktop panel renders were inspected.
 - Worker tests assert network-only health requests; the real worker suite retains its offline regressions.
-- Artifact checks require a current snapshot without future content. The post-deploy read-only check confirms the public admin/script, current metadata, and both GET and HEAD responses for today's seven URLs.
+- Artifact checks require a current snapshot without future content. The post-deploy read-only check confirms the public admin/script, current metadata, and both GET and HEAD responses for every one of today's puzzle URLs.
