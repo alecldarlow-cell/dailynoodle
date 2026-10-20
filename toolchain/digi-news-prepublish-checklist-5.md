@@ -91,7 +91,7 @@ The editorial pass is new in v4. It exists because every failure it catches cost
 - [ ] Colour is not the only carrier of meaning; categorical series use the CVD-safe palette plus a legend; the accent is reserved for the subject. §8
 - [ ] Images are licensed, public-domain or wire, with a credit. AI visuals are labelled as illustration. Nothing misrepresents scale, time, place or identity. §7
 - [ ] One bespoke **signature exhibit** carries the piece. §10
-- [ ] **No chart label clips off-canvas or overlaps another label** at 360px or 680px, as verified by the geometry gate. Any `data-dn-fit="trunc"` truncation is intentional, and the full text is in the data table. §8
+- [ ] **No chart label clips off-canvas or overlaps another label** at 360px or 680px, as verified by the geometry gate and by `dn-render.js` in a real browser. Any `data-dn-fit="trunc"` truncation is intentional, and the full text is in the data table. §8
 
 ## Accessibility
 - [ ] Every chart has an `aria-label`, an SVG title/desc and a visually hidden **data table**. §8
@@ -123,4 +123,4 @@ The gates check structure and geometry, not arithmetic and not judgement. Run th
 - [ ] `node dn-preflight.js piece/init.js` returns **PREFLIGHT: PASS**, before the prose is written.
 - [ ] `node dn-lint.js <final-name>.html --width 360 --date <publish-date>` returns **CLEAR**, or **PASS WITH WARNINGS** with every warning justified.
 - [ ] `node dn-probe.js <final-name>.html` returns **GATE: PASS**.
-- [ ] **Visual check named as outstanding** at delivery, with the specific exhibits and the plausible failure modes for the primitives used. A harness render is not a visual check.
+- [ ] `node dn-render.js <final-name>.html` returns **RENDER: PASS**, or **PASS WITH WARNINGS** with every warning judged, and **every sheet it lists has been looked at** (Read), with what was seen fixed or reported. No shortened label may read as a complete one. If it could not run, the **visual check is named as outstanding** at delivery, with the specific exhibits and the plausible failure modes for the primitives used. A harness (jsdom) render is not a visual check.

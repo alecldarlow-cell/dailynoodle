@@ -32,16 +32,19 @@ actually contested, and say that you did.
 
 Bootstrap in one call. The toolchain lives in the repo's `toolchain/` folder, so a
 fresh clone is all a session needs — inside the Project or out of it. The clone is
-sparse: only `toolchain/` is checked out, not the 200+ MB `reports/` back catalogue.
+sparse: only `toolchain/` and `tools/` are checked out, not the 200+ MB `reports/`
+back catalogue. The npm line adds the real browser and fonts `dn-render.js` needs.
 
 ```bash
 mkdir -p ~/b && cd ~/b \
   && git clone -q --depth 1 --filter=blob:none --sparse \
        https://github.com/alecldarlow-cell/dailynoodle.git repo \
-  && git -C repo sparse-checkout set toolchain \
+  && git -C repo sparse-checkout set toolchain tools \
   && cp repo/toolchain/dn-*.js repo/toolchain/dn-build.py repo/toolchain/DN-API.md \
        repo/toolchain/digi-news-house-template-v3-3-3.html . \
-  && npm install jsdom --silent && mkdir -p piece
+  && npm install --silent --no-audit --no-fund jsdom playwright-core@1.62.1 \
+       @sparticuz/chromium@153.0.0 @fontsource/archivo@5.3.0 @fontsource/inter@5.3.0 \
+  && mkdir -p piece
 ```
 
 Inside the Project, read the rubric, checklist and style guide from **project
@@ -133,7 +136,8 @@ alone, so there is no reason to discover them after the prose is written.
    piece/meta.json
 6  dn-build.py      assemble
 7  dn-lint.js + dn-probe.js
-8  visual check on the rendered piece
+8  dn-render.js     real-browser render at 360/680, light and dark;
+                    then Read every sheet it writes
 9  copy to outputs, present_files
 ```
 
@@ -149,24 +153,45 @@ sankey passed lint and geometry cleanly while implying a parent-child relationsh
 the data did not support — an editorial error wearing a rendering costume, caught
 only by looking at it.
 
-**And step 8 cannot be done in the sandbox.** The network allowlist blocks the
-Chromium download Playwright needs, so there is no real render available here.
-Everything the toolchain can do — including `dn-harness.js` — runs in jsdom, which
-models no font metrics, no ascent, no layout and no paint. A whole class of defect
-is therefore invisible to every check available in-session: glyphs clipping at a
-viewBox edge, dead white space between a chart and its caption, marks rendering the
-wrong colour, labels overlapping.
+**And step 8 is a real render** (since 20 Oct 2026). `node dn-render.js <file>.html`
+opens the piece in the Chromium build the site's tests pin, with its own web fonts
+(Archivo and Inter, served from pinned npm copies because the sandbox can't reach
+Google Fonts), after the site's own additions (Share buttons, back-to-News link,
+dark mode), at 360px and 680px in light and dark. It fails on what jsdom cannot
+see: labels cut off at a chart's edge or the screen's, a page wider than the phone,
+a hero figure clipped, an exhibit that didn't draw, a shortened label that lost
+words or kept nothing readable, script errors. It warns on overlapping labels,
+labels sitting outside the chart, chart text under 10.5px, text too faint for its
+background in either theme, and every shortened label. Then it writes one sheet per
+exhibit (360 light and dark side by side, 680 light below) and one of the top of the
+piece.
 
-So the honest form of step 8 is: **run the structural checks, then tell the desk
-plainly that the visual check is outstanding and what specifically to look at.**
-Do not report a harness-rendered accessibility table as a visual check — it is not
-one, and describing it as one is how three defects reached publication. Name the
-exhibits, name the failure modes worth checking, and hand it over.
+The measurements say where to look; they are not the check. **Read every sheet** and
+look for what no rule catches: a chart that implies something the data doesn't (the
+sankey above), dead white space between a chart and its caption, a legend that
+doesn't match its marks, a label stub that reads badly, a series that vanishes in
+dark mode. Fix in `piece/` and rebuild, then re-run and Read only the sheets for the
+exhibits you changed.
+
+At delivery, say what you looked at and what you found ("rendered at 360 and 680,
+light and dark; sheets for ex01–ex03 read; ex02 legend fixed"). It is a real browser,
+not a phone (no browser bars, Linux font rendering), so say "rendered check", not
+"device check". If `dn-render.js` can't run (exit 2: install or browser failure),
+fall back to the old form: tell the desk plainly that the visual check is
+outstanding and which exhibits and failure modes to look at.
+
+Never describe a jsdom render (`dn-harness.js`) as a visual check. jsdom models no
+font metrics, layout or paint; describing its output as a visual check is how three
+defects reached publication, and jsdom-only checking is how a bar label that had
+silently lost its middle words ("Government, money" for "Government, end-2030s,
+today's money") went live on 20 Oct 2026.
 
 ---
 
 ## Context hygiene during the build
 
+- **Read the render sheets once, at step 8.** Each image costs context. After a fix,
+  re-run `dn-render.js` and Read only the sheets for the exhibits you changed.
 - **Never read the assembled HTML back into context.** After `dn-build.py` runs, the
   file is touched only by scripts. Authored parts live in `piece/` and are edited
   there, then rebuilt — never patched in place in the output.
