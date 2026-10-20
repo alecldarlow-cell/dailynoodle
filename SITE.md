@@ -34,7 +34,7 @@ in `toolchain/site-sections-and-tracking.md`.
 ## Puzzle guides (20 Oct 2026)
 - `how-to-play.html` is the single guide page for all eight daily puzzles. Its hash links (`#mini`, `#doku`, `#sweep`, `#path`, `#link`, `#tangle`, `#borders`, `#reckon`) select matching pills in the same order and style as the puzzle hub. Every section is present in the HTML and readable without JavaScript.
 - On puzzle cards the category label is replaced by a muted **How to play** link, aligned bottom right. The publication date **and `dn:read` time/duration** remain. The play and guide links are siblings, never nested, so each has its own tap target. Other desks keep their categories.
-- A small link in the existing Puzzles footer also makes the guide discoverable without rendering the card list. The guide reuses `front.css`, adds `how-to-play.css` and `how-to-play.js`, and has its own canonical URL and sitemap entry. Play buttons use the existing daily shortcuts with `via=how-to-play`; saves, daily puzzle URLs and sharing shortcuts are unchanged.
+- A small link in the existing Puzzles footer also makes the guide discoverable without rendering the card list. The guide reuses `front.css`, adds `how-to-play.css` and `how-to-play.js`, and has its own canonical URL and sitemap entry. Play buttons use `via=how-to-play`; the published build points them directly to today’s files, with the existing daily shortcuts as the script’s fallback. Saves and sharing shortcuts are unchanged.
 - Tests: `tools/tests/browser/puzzle-guides.spec.js` covers date/duration preservation, card-vs-guide navigation, history and deep links, every pill, no-script rules, and phone widths in both themes. Sitemap coverage is in `tools/tests/unit/sitemap.test.js`.
 
 ## Search metadata (20 Oct 2026)

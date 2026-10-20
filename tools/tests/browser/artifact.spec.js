@@ -32,7 +32,8 @@ test('SEO/FRONT: static cards and the enhanced list have identical markup',async
  await goto(phone,'puzzles.html');
  await expect(phone.p.locator('#feed a.card')).toHaveCount(items.length);
  const before=await phone.p.locator('#feed > li').evaluateAll(es=>es.map(e=>e.outerHTML));
- for(const it of items)await expect(phone.p.locator('#feed a.card[href="'+it.path+'"]')).toHaveCount(1);
+ const links=await phone.p.locator('#feed a.card').evaluateAll(es=>es.map(e=>e.getAttribute('href')));
+ expect(links).toEqual(items.map(it=>it.path));
  await phone.ctx.unroute('**/front.js');
  await Promise.all([phone.p.waitForResponse('**/feed.json'),phone.p.reload()]);
  await phone.p.waitForFunction(()=>document.getElementById('feed').innerHTML.startsWith('<li'));
