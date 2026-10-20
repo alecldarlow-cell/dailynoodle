@@ -51,7 +51,7 @@ For Firefox/WebKit, install the appropriate Playwright browser first, set `DN_CR
 
 ## Shared calendar and saved results
 
-`dn-core.js` is the editable source for London calendar days, previous-day arithmetic, first-result storage and merging Borders/Tangle history. The seven engines, finish/start screens, front pages, board and worker use these rules. Feed/release tools require the same source directly. Storage keys, puzzle ids, record shapes and old result dates are preserved. The existing timer implementations remain covered by their regressions; this change does not replace them.
+`dn-core.js` is the editable source for London calendar days, previous-day arithmetic, first-result storage and merging Borders/Tangle/Reckon history. The eight daily engines, finish/start screens, front pages, board and worker use these rules. Feed/release tools require the same source directly. Storage keys, puzzle ids, record shapes and old result dates are preserved. The existing timer implementations remain covered by their regressions; this change does not replace them.
 
 Browser entry points contain generated copies of this small helper so an engine has its dependencies synchronously, including offline, without a new script request. Do not edit a generated `dn-core:start` block. Edit `dn-core.js`, run `node tools/sync-core.js`, and commit the source and all changed copies. `node tools/sync-core.js --check` runs in pre-publication preparation and the unit suite; stale copies fail. New done-state patches also embed this source. Previously published self-contained archive players keep their existing writers, checked by `timing-dates.js`.
 

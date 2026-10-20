@@ -28,6 +28,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - "This device: counted / excluded" at the top of the admin page adds or removes the browser you're on from `insights.excluded_readers` (`public.admin_exclude_device`). Use it on every phone, tablet or laptop you test with.
 - One-page readers (whole history at most one page load, only page_view/page_exit; mostly crawlers) are left out of every admin figure by default; the "Hiding / Including one-page readers" chip brings them back (`admin_dashboard(p_from, p_to, p_ghosts)`, 19 Oct 2026).
 - Figures come from `public.admin_dashboard(p_from, p_to)`; reporting views live in the private `insights` schema. `insights.excluded_readers` removes Alec's own test browsers from all figures.
+- Publishing section (20 Oct 2026): checks today's eight daily puzzle URLs respond, counts consecutive days of complete future stock from the last build, and shows the latest and last successful Build feed runs. Unconfirmed checks never show green. It reads no reader data. Details: `toolchain/publishing-health.md`.
 - Retention: raw events 13 months, then rolled into `public.daily_stats` by the nightly `digi-roll-up-old-events` cron job.
 - Plan doc: "Digi reader data plan" (Claude Docs).
 
