@@ -131,4 +131,4 @@ async function open(browser, file, { time = '2026-10-18T14:30:00+01:00', ctx = n
   return { ctx, p };
 }
 
-module.exports = { REPO, launch, newPhone, open, tap, wait };
+module.exports = { REPO, launch, newPhone, open, tap, wait, isSupabase };

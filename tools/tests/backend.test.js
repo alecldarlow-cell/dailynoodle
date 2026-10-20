@@ -1,25 +1,15 @@
 'use strict';
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const fs = require('node:fs'), path = require('node:path');
-const { PGlite } = require('@electric-sql/pglite');
+const { boardDb } = require('./board-db');
 
-// Disposable PostgreSQL (WASM), with the actual checked-in board migrations.
+// Disposable PostgreSQL (WASM), with the actual checked-in board migrations
+// (tools/tests/board-db.js, shared with browser/board.spec.js).
 // Only the hosting-provided auth/insights/events interfaces are stubbed.
 // No URLs, credentials, production connection or network are used.
 test('BOARD-01/02: migrations, permissions, first results, history and hide-only actions', async t => {
-  const db = new PGlite();
+  const db = await boardDb();
   t.after(() => db.close());
-  await db.exec(`
-    create role anon; create role authenticated; create role service_role;
-    create schema auth;
-    create function auth.jwt() returns jsonb language sql stable as
-      $$ select coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb $$;
-    create schema insights; create table insights.admins(email text);
-    create table public.events(anon_id uuid, event text, item_path text, props jsonb, occurred_at timestamptz default now());
-  `);
-  for (const name of ['2026-10-18-leaderboards.sql', '2026-10-18-leaderboards-hide-only.sql', '2026-10-20-reckon-board.sql'])
-    await db.exec(fs.readFileSync(path.join(__dirname, '../../toolchain/sql', name), 'utf8'));
   const owner = '00000000-0000-4000-8000-000000000001', member = '00000000-0000-4000-8000-000000000002', outsider = '00000000-0000-4000-8000-000000000003';
   const q = async (sql, params = []) => (await db.query(sql, params)).rows;
   const rpc = async (name, args) => (await q(`select public.${name}(${args.map((_, i) => '$'+(i+1)).join(',')}) as value`, args))[0].value;
