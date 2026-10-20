@@ -144,15 +144,23 @@
   .def:hover{color:var(--ink);border-color:var(--ink)}
 
   /* daily bars */
-  .bars{display:grid;gap:4px;align-items:end;height:150px;border-bottom:1px solid var(--hair)}
+  .chart{position:relative;padding-left:30px}
+  .bars{position:relative;display:grid;gap:4px;align-items:end;height:150px;border-bottom:1px solid var(--hair)}
+  .grid{position:absolute;left:-30px;right:0;border-top:1px dashed var(--hair);pointer-events:none}
+  .grid span{position:absolute;left:0;top:-8px;width:26px;text-align:right;font-size:10.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .bars .c{cursor:pointer;border-radius:4px;position:relative;z-index:1}
+  .bars .c.on .b{opacity:1;background:var(--news)}
+  .pick{margin-top:8px;font-size:13px;color:var(--muted);min-height:1.5em}
+  .pick b{color:var(--ink)}
   .bars .c{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%;min-width:0}
   .bars .v{font-size:11px;color:var(--muted)}
   .bars .mk{font-size:9.5px;font-weight:700;color:var(--news);white-space:nowrap}
   .bars .b{width:100%;max-width:34px;background:var(--ink);opacity:.85;border-radius:3px 3px 0 0;min-height:1px}
   .bars .b.so{background:none;opacity:1;border:1.5px dashed var(--faint);border-bottom:0}
-  .barlab{display:grid;gap:4px;margin-top:6px;font-size:11px;color:var(--muted);text-align:center}
+  .barlab{display:grid;gap:4px;margin:6px 0 0 30px;font-size:11px;color:var(--muted);text-align:center}
   .barlab span{white-space:nowrap;overflow:visible}
   .barlab .tdy{font-weight:700;color:var(--ink)}
+  .barlab .tdy:last-child{justify-self:end}
 
   /* worth a look */
   .sig{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:8px;background:var(--wash);font-size:13.5px;line-height:1.45;width:100%;text-align:left;border:0}
@@ -949,18 +957,32 @@
     if (S.today && S.today.daily && S.today.daily.length && S.to < today) days.push({ day: today, v: S.today.daily[0].readers || 0, so: true });
     if (!days.length) { $('#daily').innerHTML = '<p class="empty">Nothing recorded in this period.</p>'; }
     else {
-      var max = Math.max.apply(null, days.map(function(d){ return d.v; }).concat([1])), many = days.length > 14, step = Math.ceil(days.length / 6);
+      var top = Math.max.apply(null, days.map(function(d){ return d.v; }).concat([1])), many = days.length > 14, step = Math.ceil(days.length / 6);
+      // a round axis top (1, 2, 5 × 10^k, even so the halfway line is whole) and three labelled lines
+      var mag = Math.pow(10, Math.floor(Math.log10(top))), max = [1,2,5,10].map(function(k){ return k*mag; }).filter(function(v){ return v >= top && (v % 2 === 0 || v === 1); })[0] || 10*mag;
+      var grid = [0, max/2, max].filter(function(v, i){ return i !== 1 || max >= 2; }).map(function(v){
+        return '<div class="grid" aria-hidden="true" style="bottom:'+Math.round(110*v/max)+'px"><span>'+v+'</span></div>'; }).join('');
       var cols = 'grid-template-columns:repeat('+days.length+',minmax(0,1fr))';
       var label = 'Readers per day: ' + days.map(function(d){ return fmtDay(d.day)+' '+d.v+(d.so?' so far':''); }).join(', ');
-      $('#daily').innerHTML = '<div class="bars" role="img" aria-label="'+esc(label)+'" style="'+cols+'">'+days.map(function(d){
+      $('#daily').innerHTML = '<div class="chart"><div class="bars" role="img" aria-label="'+esc(label)+'" style="'+cols+'">'+grid+days.map(function(d, i){
         var h = d.so && !d.v ? 6 : Math.max(1, Math.round(110 * d.v / max));
-        return '<div class="c" title="'+esc(fmtDay(d.day)+': '+d.v+(d.so?' so far':''))+'">'+(MARKS[d.day] && !many ? '<span class="mk">'+esc(MARKS[d.day])+'</span>' : '')+
+        return '<div class="c" data-i="'+i+'" title="'+esc(fmtDay(d.day)+': '+d.v+(d.so?' so far':''))+'">'+(MARKS[d.day] && !many ? '<span class="mk">'+esc(MARKS[d.day])+'</span>' : '')+
           (many ? '' : '<span class="v num">'+d.v+'</span>')+'<div class="b'+(d.so?' so':'')+'" style="height:'+h+'px"></div></div>';
-      }).join('')+'</div><div class="barlab" aria-hidden="true" style="'+cols+'">'+days.map(function(d,i){
+      }).join('')+'</div></div><div class="barlab" aria-hidden="true" style="'+cols+'">'+days.map(function(d,i){
         var show = d.so || !many || (i % step === 0 && i < days.length - Math.ceil(step / 2));
         var txt = d.so ? 'Today' : many ? fmtDay(d.day) : shortDay(d.day);
         return '<span'+(d.so?' class="tdy"':'')+'>'+(show?esc(txt):'')+'</span>';
-      }).join('')+'</div>';
+      }).join('')+'</div><p class="pick" id="dailyPick" aria-live="polite"></p>';
+      var tot = days.filter(function(d){ return !d.so; }), pk = tot.slice().sort(function(a,b){ return b.v - a.v; })[0];
+      var summary = tot.length ? 'Peak <b>'+pk.v+'</b> on '+esc(fmtWeekday(pk.day))+' · average <b>'+(tot.reduce(function(a,d){ return a + d.v; }, 0) / tot.length).toFixed(1)+'</b> a day · tap a bar for its figure' : '';
+      $('#dailyPick').innerHTML = summary;
+      $$('#daily .c').forEach(function(c){ c.onclick = function(){
+        var d = days[+c.dataset.i], was = c.classList.contains('on');
+        $$('#daily .c.on').forEach(function(x){ x.classList.remove('on'); });
+        if (was) { $('#dailyPick').innerHTML = summary; return; }
+        c.classList.add('on');
+        $('#dailyPick').innerHTML = '<b>'+esc(fmtWeekday(d.day))+'</b>: <b>'+d.v+'</b> '+plural(d.v,'reader')+(d.so ? ' so far today' : '')+(MARKS[d.day] ? ' ('+esc(MARKS[d.day])+')' : '');
+      }; });
     }
     $('#dailySub').textContent = days.some(function(d){ return d.so; }) ? 'Today is drawn hollow until the day is over.' : 'Unique readers each day.';
 
