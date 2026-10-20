@@ -107,7 +107,7 @@
 'use strict';
 
 const OFF = false;
-const VERSION = 'nn-2';
+const VERSION = 'nn-2-health';
 const PAGES = 'nn-pages-' + VERSION;      // this site's files
 const FONTS = 'nn-fonts-' + VERSION;      // Google Fonts (stylesheets and font files)
 const MAX_ENTRIES = 400;                  // pages cache trimmed past this, oldest first
@@ -123,7 +123,7 @@ const CORE = [
   '/assets/borders-thumb.svg', '/assets/tangle-thumb.svg',
   '/engines/finish.css', '/engines/finish.js', '/engines/house.css', '/engines/house.js'
 ];
-const NEVER = /^\/(admin\.html|sw\.js)$/;
+const NEVER = /^\/(admin\.html|admin-health\.js|publishing-health\.json|sw\.js)$/;
 
 /* ---------- install / activate ---------- */
 self.addEventListener('install', e => {
@@ -159,7 +159,7 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET' || req.headers.has('range')) return;
   const url = new URL(req.url);
   if (url.host === 'fonts.googleapis.com' || url.host === 'fonts.gstatic.com') return e.respondWith(font(req));
-  if (url.origin !== self.location.origin || NEVER.test(url.pathname)) return;
+  if (url.origin !== self.location.origin || NEVER.test(url.pathname) || url.searchParams.get('publishing-check') === '1') return;
   e.respondWith(fresh(e, req, url));
   if (req.mode === 'navigate') keep(e, warmIfDue());
 });

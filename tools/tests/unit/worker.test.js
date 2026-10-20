@@ -18,3 +18,12 @@ test('PUSH-01: actual worker validates notification payload and same-origin clic
 test('PUSH-01: non-JSON payload falls back to text',async()=>{
  const w=worker();await fire(w.handlers.push,{data:{json(){throw Error('bad JSON');},text:()=> 'A test'}});assert.equal(w.calls[0].t,'The Daily Noodle');assert.equal(w.calls[0].o.body,'A test');
 });
+
+test('PUBLISH: health checks and admin metadata bypass the offline worker cache',()=>{
+ const w=worker();
+ for(const url of ['/admin-health.js','/publishing-health.json','/puzzles-today.json?publishing-check=1','/reports/today.html?publishing-check=1']){
+  let intercepted=false;
+  w.handlers.fetch({request:{method:'GET',headers:{has:()=>false},url:'https://example.test'+url},respondWith(){intercepted=true;}});
+  assert.equal(intercepted,false,url);
+ }
+});

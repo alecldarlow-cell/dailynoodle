@@ -145,6 +145,22 @@
   .dash{color:var(--faint)}
   .more{margin-top:8px}
 
+  /* publishing health */
+  .pub-grid{grid-template-columns:1fr}
+  @media(min-width:860px){.pub-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  .pub-state{font-family:var(--display);font-size:19px;font-weight:700;margin:8px 0;line-height:1.25}
+  .pub-state.good{color:var(--good)} .pub-state.warn{color:var(--warn)} .pub-state.bad{color:var(--bad)}
+  .pub-items{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:13px}
+  .pub-items a{display:inline-block;padding:3px 0}
+  #publishing .ghost{min-height:44px}
+  #publishing .sub{margin:8px 0}
+  #publishing details{margin-top:14px}
+  #publishing summary{min-height:44px;cursor:pointer;font-weight:600}
+  #pubDays table{min-width:0}
+  #pubDays th,#pubDays td{white-space:normal;min-width:0;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+  #pubDays th:first-child{width:32%}
+  #pubDays caption{text-align:left;padding:10px;font-weight:600}
+
   /* definitions */
   .defs td,.defs th{white-space:normal;text-align:left;vertical-align:top}
   .defs td:first-child{font-weight:600;min-width:150px}
@@ -202,12 +218,27 @@
         <span class="me" id="meDev" aria-live="polite"></span>
       </div>
       <nav class="jump" aria-label="Jump to">
-        <a href="#overview">Overview</a><a href="#news">News</a><a href="#puzzles">Puzzles</a>
+        <a href="#publishing">Publishing</a><a href="#overview">Overview</a><a href="#news">News</a><a href="#puzzles">Puzzles</a>
         <a href="#games">Games</a><a href="#audience">Audience</a><a href="#frontpages">Front pages</a>
         <a href="#basis">Basis of preparation</a>
       </nav>
     </div>
     <div class="status err" id="loadError" hidden></div>
+
+    <!-- PUBLISHING -->
+    <section class="block" id="publishing" data-part="all" aria-labelledby="pubTitle">
+      <div class="bh"><h2 id="pubTitle">Publishing health</h2><p>Today’s live puzzles, future stock and release status. Independent of the reader date filters.</p></div>
+      <div class="tools"><button type="button" class="ghost" id="pubCheck">Check publishing</button><span id="pubChecked" class="sub" role="status">Available after admin access is confirmed.</span></div>
+      <div class="grid pub-grid">
+        <article class="panel"><h3>Today’s puzzles</h3><div id="pubLive">Not checked yet.</div></article>
+        <article class="panel"><h3>Future puzzle stock</h3><div id="pubStock">Not checked yet.</div></article>
+        <article class="panel"><h3>Deployment</h3><div id="pubRelease">Not checked yet.</div></article>
+      </div>
+      <details><summary>Next eight days and how these checks work</summary>
+        <p class="sub">Future stock is counted at the last published build: exactly one dated file of each type, with matching date, type and puzzle ID metadata. Newer repository changes appear after a successful release. Counts do not mean that every future puzzle has been fully tested. Each release validates today and the next seven days before deployment.</p>
+        <div id="pubDays" class="tscroll">Not checked yet.</div>
+      </details>
+    </section>
 
     <!-- OVERVIEW -->
     <section class="block" id="overview">
@@ -368,6 +399,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+<script src="admin-health.js"></script>
 <script>
 (function(){
   'use strict';
@@ -555,6 +587,7 @@
         $('#updated').textContent = '';
         return;
       }
+      if(window.dnPublishingHealth)window.dnPublishingHealth.start();
       S.data = r.data;
       render();
       loadLeagues();

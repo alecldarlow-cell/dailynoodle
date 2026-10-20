@@ -17,6 +17,9 @@ function build(out=path.join(ROOT,'_site')){
    assert.equal(r.status,0,file+' failed; see test-results/build-transform.log\n'+r.stderr);
   }
   const site=path.join(tmp,'site'),feed=JSON.parse(fs.readFileSync(path.join(site,'feed.json'))),day=JSON.parse(fs.readFileSync(path.join(site,'puzzles-today.json'))).today;
+  const health=JSON.parse(fs.readFileSync(path.join(site,'publishing-health.json')));
+  assert.equal(health.version,1);assert.equal(health.today,day);assert.ok(health.days[day],'Publishing snapshot needs today’s stock');
+  assert.doesNotMatch(JSON.stringify(health),/DP·|reports\/|\.html/,'Health metadata must not expose future content');
   for(const it of feed.items){assert.ok(fs.existsSync(path.join(site,it.path)),it.path);assert.ok(it.date<=day,'Future card '+it.path);}
   for(const f of fs.readdirSync(path.join(site,'reports')))if(/^\d{4}-\d{2}-\d{2}-/.test(f))assert.ok(f.slice(0,10)<=day,'Future file leaked '+f);
   for(const file of ['tools','toolchain','package.json','package-lock.json','playwright.config.js','registry.json','published.json'])assert.ok(!fs.existsSync(path.join(site,file)),'Private tooling deployed: '+file);

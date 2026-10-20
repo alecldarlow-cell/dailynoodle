@@ -91,4 +91,7 @@ if (missing.length) {
   process.exit(1);
 }
 
+// Publish counts and dates only; future puzzle content stays in the repository.
+fs.writeFileSync(path.join(OUT,'publishing-health.json'),JSON.stringify(require('./publishing-health').snapshot(ROOT),null,1)+'\n');
+
 console.log(`build-site: ${copied} file(s) published to ${path.relative(ROOT, OUT) || OUT}, ${withheld} held back until their day`);
