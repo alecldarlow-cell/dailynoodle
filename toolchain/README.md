@@ -87,11 +87,20 @@ Copy the file into `reports/` of a clone and push to `main`; the site's
 `build-feed.yml` workflow injects the tracker line, rebuilds `feed.json`, runs
 the site's full test suite and deploys only if it passes (since 19 Oct 2026;
 `toolchain/testing.md`). That takes about 5–8 minutes, and a failure anywhere on
-the site holds the piece back too. So a push is not publication: confirm the
-piece loads at `https://dailynoodle.co.uk/reports/<file>` before reporting it
-live, and if it hasn't appeared about 20 minutes after the push, report it as
-pushed but not live, with the commit link. Never re-push, or edit tests or
-other files, to force it through.
+the site holds the piece back too. So a push is not publication. To confirm it
+went live:
+
+```bash
+git -C ~/b/repo fetch -q origin main \
+  && git -C ~/b/repo show origin/main:feed.json | grep -c "<file>"   # 1 = live
+```
+
+The workflow commits the rebuilt `feed.json` only after every test passes, and
+deploys straight after, so the piece appearing there means it is live (opening
+`https://dailynoodle.co.uk/reports/<file>` confirms it too). If it hasn't
+appeared about 20 minutes after the push, report it as pushed but not live, with
+the commit link. Never re-push, or edit tests or other files, to force it
+through.
 Push credentials are never stored in this repo — supply a token at run time
 (for example from an environment secret written to `~/.dn/token`, mode 600) and
 never echo it.

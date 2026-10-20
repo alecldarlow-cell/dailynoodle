@@ -115,7 +115,7 @@ The piece is published by uploading the file to the site repo, and the front pag
 - [ ] `dn:topic` is from the **controlled vocabulary**, tagged by what the piece is about. §13
 - [ ] The **first hero stat** is ≤8 characters after tags are stripped, uses a symbol unit only, and is a measured figure. The hero grid has exactly three tiles.
 - [ ] **`dn:statlabel`** is ≤14 characters, lower case and a noun, unless the first figure already carries its own noun.
-- [ ] **Live, not just pushed** (20 Oct 2026). The site deploys only after its test suite passes, about 5–8 minutes after the push. Confirm the piece loads at `https://dailynoodle.co.uk/reports/<file>` before reporting it published. If it hasn't appeared about 20 minutes after the push, report it as pushed but not live, with the commit link; never re-push or edit tests to force it.
+- [ ] **Live, not just pushed** (20 Oct 2026). The site deploys only after its test suite passes, about 5–8 minutes after the push. Confirm it is live before reporting it published: the file appears in `origin/main`'s `feed.json` (the workflow commits it only after the tests pass, then deploys), or the page loads at `https://dailynoodle.co.uk/reports/<file>`. Command in `toolchain/README.md` › Publishing. If it hasn't appeared about 20 minutes after the push, report it as pushed but not live, with the commit link; never re-push or edit tests to force it.
 
 ## Automated gates
 The gates check structure and geometry, not arithmetic and not judgement. Run them and read the output; do not rely on a remembered list of what they check.
