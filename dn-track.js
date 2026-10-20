@@ -252,8 +252,10 @@
     catch (e) { return ''; }
   }
   // Shared links can carry ?via=share (or any short tag); keep it tidy.
+  // From 20 Oct 2026 a link with no via but a utm_source= or ref= tag (which
+  // some directories and forums add themselves) counts the same way.
   function viaTag(){
-    try { var v = new URLSearchParams(location.search).get('via') || '';
+    try { var q = new URLSearchParams(location.search), v = q.get('via') || q.get('utm_source') || q.get('ref') || '';
           return v.toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 24); }
     catch (e) { return ''; }
   }

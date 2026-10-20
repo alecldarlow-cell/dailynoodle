@@ -235,6 +235,20 @@
   .more-btn{margin-top:8px}
   .chartbox{position:relative;height:240px}
 
+  /* sources */
+  .linkout{display:flex;gap:8px;align-items:center;margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--wash)}
+  .linkout code,.lrow code{font-size:12.5px;overflow-wrap:anywhere;flex:1;min-width:0}
+  .lrow{padding:12px 0;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:6px}
+  .lrow .top{display:flex;gap:10px;align-items:flex-start}
+  .lrow .top b{font-size:14px;flex:1;min-width:0}
+  .lrow .stats{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted)}
+  .lrow .stats b{color:var(--ink);font-size:13px}
+  .lrow.arch{opacity:.6}
+  .form{display:grid;gap:10px;margin-top:10px}
+  .form .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+  .form select{font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--hair);border-radius:8px;background:var(--canvas);color:var(--ink)}
+  .form .hint{font-size:12px;color:var(--muted)}
+
   /* leagues */
   .trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .trio > div{background:var(--paper);border:1px solid var(--hair);border-radius:10px;padding:10px 12px}
@@ -332,6 +346,7 @@
   <div id="app" hidden>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button class="tab" role="tab" type="button" data-tab="overview" id="t-overview" aria-controls="overview">Overview</button>
+      <button class="tab" role="tab" type="button" data-tab="sources" id="t-sources" aria-controls="sources">Sources</button>
       <button class="tab" role="tab" type="button" data-tab="news" id="t-news" aria-controls="news">News</button>
       <button class="tab" role="tab" type="button" data-tab="puzzles" id="t-puzzles" aria-controls="puzzles">Puzzles</button>
       <button class="tab" role="tab" type="button" data-tab="games" id="t-games" aria-controls="games">Games</button>
@@ -374,8 +389,7 @@
           </div>
           <div>
             <h3>Where readers arrive from</h3>
-            <p class="sub" id="refsLine"></p>
-            <div class="tscroll" id="refsBox"><table id="tRefs"></table></div>
+            <p class="sub">Now on its own tab. <button type="button" class="linkbtn" data-go="sources" style="min-height:0">Open Sources</button></p>
           </div>
           <div>
             <h3>Devices</h3>
@@ -398,6 +412,42 @@
           </div>
         </div>
       </details>
+    </section>
+
+    <!-- SOURCES -->
+    <section class="tabpanel" id="sources" role="tabpanel" aria-labelledby="t-sources" hidden>
+      <h1 class="sr">Sources</h1>
+      <div class="card">
+        <h2>Make a tracked link</h2>
+        <p class="sub">One link per place you post, so you can see what each post brings in. Anyone who opens it is counted against it.</p>
+        <form class="form" id="lkForm" novalidate>
+          <div><label class="lab" for="lkLabel">Where you’re posting</label><input class="field" id="lkLabel" type="text" maxlength="80" placeholder="e.g. Reddit r/crossword" style="width:100%"></div>
+          <div class="two">
+            <div><label class="lab" for="lkPage">Link to</label>
+              <select id="lkPage" style="width:100%"><option value="">Home (News)</option><option value="puzzles.html">Puzzles</option><option value="games.html">Games</option><option value="board.html">Leaderboard</option></select></div>
+            <div><label class="lab" for="lkTag">Code in the link</label><input class="field" id="lkTag" type="text" maxlength="24" autocapitalize="off" spellcheck="false" style="width:100%"></div>
+          </div>
+          <p class="hint">The code goes in the link as <code>?via=</code>: lower-case letters, numbers, - and _, up to 24.</p>
+          <button type="submit" class="primary" id="lkMake">Create link</button>
+        </form>
+        <div id="lkOut" aria-live="polite"></div>
+      </div>
+      <div class="card" style="padding-bottom:4px">
+        <h2>Your tracked links</h2>
+        <p class="sub" style="margin:2px 0 6px">All-time results for each link: new readers it brought, how many stayed, came back on a later day, and visits through it.</p>
+        <div id="links"></div>
+      </div>
+      <div class="card">
+        <h2>Where new readers first came from</h2>
+        <p class="sub">Readers whose first ever visit falls in this period, by the source of that first page.</p>
+        <div class="tscroll"><table id="tFirst"></table></div>
+      </div>
+      <div class="card">
+        <h2>All visits by source</h2>
+        <p class="sub">Visits starting in this period, new and returning readers, by how the visit began. One-page readers are left out here.</p>
+        <div class="tscroll"><table id="tVisits"></table></div>
+      </div>
+      <p class="sub">“Direct” is typed or bookmarked visits, the home-screen app, and apps such as WhatsApp that don’t say where a link came from. Anything you post without a tracked link usually ends up there.</p>
     </section>
 
     <!-- NEWS -->
@@ -641,6 +691,14 @@
       ['avgpos','Average position','Mean list position of the card when it was tapped.','Lower means it was tapped from nearer the top.'],
       ['ref','Source','Where the page load came from: a shared link tagged ?via=… (e.g. Share result), else an in-app browser that names itself (Facebook, Instagram), else the referring site.','WhatsApp and most apps send nothing, so untagged links from them appear as direct. Tags and app names recorded from 15 Oct 2026.']
     ]],
+    ['Sources', [
+      ['src','Source','How a page view arrived: a tracked link’s code (?via=, or utm_source= or ref= that some sites add), else an in-app browser that names itself (Facebook, Instagram), else the referring site, else Direct.','WhatsApp and most apps send nothing, so untagged links from them count as Direct. utm_source and ref= are read from 20 Oct 2026.'],
+      ['firstsrc','First source','The source of a reader’s first ever page view. Each reader counts once, against the source that first brought them.','A reader who clears their browser data starts again as new.'],
+      ['leftnow','Left at once','New readers whose whole history is one page with nothing done on it. These are the one-page readers hidden elsewhere; here they are counted, because a bounce from a post is part of the answer.','Includes crawlers that run the page.'],
+      ['stayed','Stayed','New readers who, on that first visit, opened a second page or did something: started a puzzle or game, scrolled an article, tapped a card or opened the board.',''],
+      ['cameback','Came back','New readers seen again on a later day, at any time up to now.','Recent readers have had less time to come back.'],
+      ['visit','Visit by source','A visit counts against the source of its first page. Returning readers coming back through a tracked link count there again.','']
+    ]],
     ['Worth a look', [
       ['signals','Worth a look','Automatic flags with fixed thresholds. Puzzle type: at least 5 starts and under 40% solved or over 40% unfinished. News: at least 3 pieces published in the period and fewer than half opened; an article with at least 5 readers and under 30% reaching 75% or over 60% bounced. Most played: the puzzle type and the game with the most players (at least 2).','Rules are fixed thresholds, not statistical tests.']
     ]]
@@ -793,7 +851,7 @@
   }
 
   /* ---------------- tabs ---------------- */
-  var TABS = ['overview','news','puzzles','games','leagues','publishing','basis'];
+  var TABS = ['overview','sources','news','puzzles','games','leagues','publishing','basis'];
   function showTab(t, opts){
     opts = opts || {};
     if (TABS.indexOf(t) < 0) t = 'overview';
@@ -895,6 +953,7 @@
       S.data = r.data || {}; S.prev = rs[1]; S.today = rs[2];
       render();
       loadLeagues();
+      loadSources(seq);
     });
   }
 
@@ -1027,17 +1086,6 @@
       {key:'came_back', label:'Came back', def:'returning', fmt:function(r){return n(r.came_back);}},
       {key:'rate', label:'Rate', sort:function(r){return share(r.came_back,r.new_readers);}, fmt:function(r){ var v=share(r.came_back,r.new_readers); return v==null?pct(v):'<span class="pill '+tone(v,30,15,true)+'">'+v+'%</span>'; }}
     ], D.cohorts || [], { sortKey:'week', sortDir:'desc' });
-    var refs = (D.referrers || []).slice(), totR = refs.reduce(function(a,r){ return a + r.readers; }, 0);
-    var direct = refs.filter(function(r){ return r.source === 'Direct or internal'; })[0];
-    var other = refs.filter(function(r){ return r.source !== 'Direct or internal'; });
-    $('#refsLine').textContent = !refs.length ? 'Nothing recorded in this period.' :
-      (direct ? direct.readers+' of '+totR+' reader counts arrived direct, or from an app that sends no referrer (WhatsApp does this).' : '') + (other.length ? ' The rest:' : '');
-    $('#refsBox').hidden = !other.length;
-    table($('#tRefs'), [
-      {key:'source', label:'Source', left:true, def:'ref'},
-      {key:'readers', label:'Readers', fmt:function(r){return n(r.readers);}},
-      {key:'page_loads', label:'Page loads', def:'loads', fmt:function(r){return n(r.page_loads);}}
-    ], other, { sortKey:'readers', limit:10 });
     var dev = (D.devices || []).slice(), order = ['phone','tablet','desktop','unknown'];
     dev.sort(function(a,b){ return order.indexOf(a.screen)-order.indexOf(b.screen); });
     $('#devLine').textContent = dev.length ? dev.map(function(d){ return d.screen.charAt(0).toUpperCase()+d.screen.slice(1)+' '+d.readers; }).join(' · ') + '. By screen width when the page opened: phone under 480px, tablet under 1024px.' : 'Nothing recorded in this period.';
@@ -1219,6 +1267,103 @@
       {key:'avg_end', label:'Avg level at end', fmt:function(r){return r.avg_end==null?pct(null):r.avg_end;}}
     ], S.data.games || [], { sortKey:'players' });
   }
+
+  /* ---------------- sources ----------------
+     admin_sources gives first-touch and visit counts by source for the range,
+     and all-time totals per ?via= tag; admin_links keeps the tracked links. */
+  var SRC = null, LINKS = [];
+  var HOSTS = { 'reddit.com':'Reddit', 'news.ycombinator.com':'Hacker News', 't.co':'X (Twitter)', 'x.com':'X (Twitter)', 'twitter.com':'X (Twitter)',
+    'facebook.com':'Facebook', 'instagram.com':'Instagram', 'linkedin.com':'LinkedIn', 'lnkd.in':'LinkedIn', 'mumsnet.com':'Mumsnet', 'producthunt.com':'Product Hunt',
+    'bsky.app':'Bluesky', 'threads.net':'Threads', 'mastodon.social':'Mastodon', 'lobste.rs':'Lobsters', 'duckduckgo.com':'DuckDuckGo', 'bing.com':'Bing',
+    'alecldarlow-cell.github.io':'Old address (github.io)', 'dailynoodle.co.uk':'The site itself' };
+  function linkByTag(t){ return LINKS.filter(function(l){ return l.tag === t; })[0]; }
+  function srcName(src){
+    if (src === 'direct') return 'Direct';
+    var k = src.slice(0, src.indexOf(':')), v = src.slice(src.indexOf(':') + 1);
+    if (k === 'via') { if (v === 'share') return 'Shared from the site'; var l = linkByTag(v); return l ? l.label : 'Tag: ' + v; }
+    if (k === 'app') return v.charAt(0).toUpperCase() + v.slice(1) + ' app';
+    if (/^google\./.test(v)) return 'Google search';
+    return HOSTS[v] || v;
+  }
+  function srcMeta(src){ return src === 'direct' ? 'no referrer' : src.indexOf('via:') === 0 ? '?via=' + src.slice(4) : src.indexOf('ref:') === 0 ? src.slice(4) : 'in-app browser'; }
+  function linkUrl(l){ return location.origin + '/' + (l.page || '') + '?via=' + l.tag; }
+  function slug(t){ return String(t||'').toLowerCase().replace(/^r\//,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,24).replace(/-+$/,''); }
+  function loadSources(seq){
+    return Promise.all([
+      sb.rpc('admin_sources', { p_from: S.from, p_to: S.to }).then(function(r){ return r && !r.error ? r.data : null; }, function(){ return null; }),
+      sb.rpc('admin_links', { p_action: 'list', p_tag: null, p_label: null, p_page: null, p_note: null }).then(function(r){ return r && !r.error ? r.data : null; }, function(){ return null; })
+    ]).then(function(rs){
+      if (seq != null && seq !== loadSeq) return;
+      SRC = rs[0] && typeof rs[0] === 'object' ? rs[0] : null;
+      LINKS = Array.isArray(rs[1]) ? rs[1] : [];
+      renderSources();
+    });
+  }
+  function copyText(t, btn){
+    var done = function(){ var o = btn.textContent; btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = o; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function(){ prompt('Copy this link', t); });
+    else prompt('Copy this link', t);
+  }
+  function renderSources(){
+    var tags = {}; ((SRC && SRC.tags) || []).forEach(function(t){ tags[t.tag] = t; });
+    var live = LINKS.filter(function(l){ return !l.archived; }), arch = LINKS.filter(function(l){ return l.archived; });
+    function row(l){
+      var t = tags[l.tag] || {};
+      return '<div class="lrow'+(l.archived?' arch':'')+'"><div class="top"><b>'+esc(l.label)+'</b>'+
+        '<button type="button" class="ghost" data-copy="'+esc(linkUrl(l))+'">Copy link</button></div>'+
+        '<code>'+esc(linkUrl(l).replace(/^https?:\/\//,''))+'</code>'+
+        '<div class="stats"><span><b>'+n(t.new_readers||0)+'</b> new '+plural(t.new_readers||0,'reader')+'</span><span><b>'+n(t.stayed||0)+'</b> stayed</span><span><b>'+n(t.came_back||0)+'</b> came back</span><span><b>'+n(t.visits||0)+'</b> '+plural(t.visits||0,'visit')+'</span></div>'+
+        '<div class="sub">Made '+esc(fmtDay(String(l.created||'').slice(0,10)))+(t.last_day ? ' · last arrival '+esc(fmtDay(t.last_day)) : ' · no arrivals yet')+
+        ' · <button type="button" class="linkbtn" style="min-height:0;font-size:12.5px" data-lk="'+(l.archived?'restore':'archive')+'" data-tag="'+esc(l.tag)+'">'+(l.archived?'Restore':'Archive')+'</button></div></div>';
+    }
+    var other = Object.keys(tags).filter(function(t){ return !linkByTag(t); });
+    $('#links').innerHTML = (live.length ? live.map(row).join('') : '<p class="empty">No tracked links yet. Make one above for each place you post.</p>') +
+      (other.length ? '<div class="lrow"><b style="font-size:14px">Other codes seen</b><div class="stats">'+other.map(function(k){ var t = tags[k]; return '<span>'+esc(k === 'share' ? 'share (Share buttons)' : k)+': <b>'+n(t.new_readers)+'</b> new, <b>'+n(t.visits)+'</b> '+plural(t.visits,'visit')+'</span>'; }).join('')+'</div></div>' : '') +
+      (arch.length ? '<details style="border-top:1px solid var(--hair)"><summary style="min-height:44px;display:flex;align-items:center;font-weight:600;cursor:pointer">Archived ('+arch.length+')</summary>'+arch.map(row).join('')+'</details>' : '');
+    if (!SRC) { $('#tFirst').innerHTML = '<tbody><tr><td class="empty">Couldn’t load sources.</td></tr></tbody>'; $('#tVisits').innerHTML = ''; return; }
+    table($('#tFirst'), [
+      {key:'src', label:'Source', left:true, def:'firstsrc', sort:function(r){ return srcName(r.src); }, fmt:function(r){ return '<span class="hl">'+esc(srcName(r.src))+'</span><span class="meta">'+esc(srcMeta(r.src))+'</span>'; }},
+      {key:'new_readers', label:'New', fmt:function(r){ return n(r.new_readers); }},
+      {key:'left', label:'Left at once', def:'leftnow', sort:function(r){ return share(r.left_at_once, r.new_readers); }, fmt:function(r){ var v = share(r.left_at_once, r.new_readers); return n(r.left_at_once)+(v!=null && r.new_readers >= 5 ? ' <span class="dash">('+v+'%)</span>' : ''); }},
+      {key:'stayed', label:'Stayed', def:'stayed', fmt:function(r){ return n(r.stayed); }},
+      {key:'came_back', label:'Came back', def:'cameback', fmt:function(r){ return n(r.came_back); }}
+    ], SRC.first || [], { sortKey:'new_readers' });
+    table($('#tVisits'), [
+      {key:'src', label:'Source', left:true, def:'visit', sort:function(r){ return srcName(r.src); }, fmt:function(r){ return '<span class="hl">'+esc(srcName(r.src))+'</span><span class="meta">'+esc(srcMeta(r.src))+'</span>'; }},
+      {key:'visits', label:'Visits', fmt:function(r){ return n(r.visits); }},
+      {key:'readers', label:'Readers', fmt:function(r){ return n(r.readers); }},
+      {key:'returning_readers', label:'Returning', def:'returning', fmt:function(r){ return n(r.returning_readers); }}
+    ], SRC.visits || [], { sortKey:'visits' });
+  }
+  var tagEdited = false;
+  $('#lkLabel').addEventListener('input', function(){ if (!tagEdited) $('#lkTag').value = slug(this.value); });
+  $('#lkTag').addEventListener('input', function(){ tagEdited = !!this.value; });
+  $('#lkForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var label = $('#lkLabel').value.trim(), tag = slug($('#lkTag').value || label), page = $('#lkPage').value, out = $('#lkOut');
+    if (!label) { out.innerHTML = '<p class="status err">Say where you’re posting, so the link has a name.</p>'; return; }
+    if (!tag) { out.innerHTML = '<p class="status err">The code needs at least one letter or number.</p>'; return; }
+    $('#lkMake').disabled = true;
+    sb.rpc('admin_links', { p_action: 'add', p_tag: tag, p_label: label, p_page: page, p_note: '' }).then(function(r){
+      $('#lkMake').disabled = false;
+      if (r.error) {
+        var m = /tag_taken/.test(r.error.message) ? 'There’s already a link with the code “'+tag+'”. Change the code.' : /tag_reserved/.test(r.error.message) ? '“'+tag+'” is used by the site itself. Pick another code.' : 'Couldn’t make the link: '+r.error.message;
+        out.innerHTML = '<p class="status err">'+esc(m)+'</p>'; return;
+      }
+      LINKS = Array.isArray(r.data) ? r.data : LINKS;
+      var url = linkUrl({ tag: tag, page: page });
+      out.innerHTML = '<div class="linkout"><code>'+esc(url)+'</code><button type="button" class="ghost" data-copy="'+esc(url)+'">Copy</button></div>';
+      $('#lkLabel').value = ''; $('#lkTag').value = ''; tagEdited = false;
+      renderSources();
+    });
+  });
+  document.addEventListener('click', function(e){
+    var c = e.target.closest('[data-copy]'); if (c) { copyText(c.dataset.copy, c); return; }
+    var a = e.target.closest('[data-lk]'); if (!a) return;
+    sb.rpc('admin_links', { p_action: a.dataset.lk, p_tag: a.dataset.tag, p_label: null, p_page: null, p_note: null }).then(function(r){
+      if (!r.error && Array.isArray(r.data)) { LINKS = r.data; renderSources(); }
+    });
+  });
 
   /* ---------------- leagues ---------------- */
   var LG = null, MG = null;
