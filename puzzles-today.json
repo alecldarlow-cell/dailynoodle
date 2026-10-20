@@ -42,6 +42,12 @@
    "id": "DP·BORD·0016",
    "name": "Borders 16",
    "path": "reports/2026-10-20-geo-borders-0016.html"
+  },
+  {
+   "type": "reckon",
+   "id": "DP·RECK·0001",
+   "name": "Reckon 1",
+   "path": "reports/2026-10-20-quiz-reckon-0001.html"
   }
  ]
 }

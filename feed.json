@@ -1,9 +1,24 @@
 {
-  "built": "2026-10-20T05:03:26.956Z",
+  "built": "2026-10-20T05:10:19.883Z",
   "today": "2026-10-20",
   "timezone": "Europe/London",
-  "count": 635,
+  "count": 636,
   "items": [
+    {
+      "path": "reports/2026-10-15-quiz-ballpark.html",
+      "kind": "game",
+      "topic": "Quiz",
+      "headline": "Ballpark",
+      "standfirst": "How good are you at guessing? Ballpark tests your guesstimates with a range of categories.",
+      "date": "2026-10-15",
+      "updated": "2026-10-20",
+      "read": "~3 min",
+      "thumb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI0Y1RUZFNCIvPjxwYXRoIGQ9Ik0wIDIwSDEyME0wIDQwSDEyME0wIDEwMEgxMjBNMjAgMFYxMjBNNDAgMFYxMjBNODAgMFYxMjBNMTAwIDBWMTIwIiBzdHJva2U9IiMxRTI0MzMiIHN0cm9rZS1vcGFjaXR5PSIuMDciIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iMjgiIHk9IjU4IiB3aWR0aD0iNzYiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjRjA4QzUwIi8+PHJlY3QgeD0iNDAiIHk9IjU4IiB3aWR0aD0iNTIiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjRjBCNDNDIi8+PHJlY3QgeD0iNTAiIHk9IjU4IiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjODZCRDRCIi8+PHJlY3QgeD0iNTgiIHk9IjU4IiB3aWR0aD0iMTYiIGhlaWdodD0iMzIiIHJ4PSI0IiBmaWxsPSIjMUU5RTZBIi8+PHJlY3QgeT0iNzAiIHdpZHRoPSIxMjAiIGhlaWdodD0iOCIgZmlsbD0iIzFFMjQzMyIvPjxwYXRoIGQ9Ik0xMCA4MnYxMk01MCA4MnYxMk05MCA4MnYxMiIgc3Ryb2tlPSIjMUUyNDMzIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNMjIgODJ2Nk0yOSA4MnY2TTM0IDgydjZNNjIgODJ2Nk02OSA4MnY2TTc0IDgydjZNMTAyIDgydjZNMTA5IDgydjZNMTE0IDgydjYiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSIxLjYiLz48cGF0aCBkPSJNNjYgMzRWNzAiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PGNpcmNsZSBjeD0iNjYiIGN5PSIyOCIgcj0iMTAiIGZpbGw9IiMxRTI0MzMiLz48Y2lyY2xlIGN4PSI2NiIgY3k9IjI4IiByPSI0IiBmaWxsPSIjRjVFRkU0Ii8+PGNpcmNsZSBjeD0iNjEiIGN5PSI3NCIgcj0iMTIiIGZpbGw9IiNFMDUzM0IiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSIzLjUiLz48L3N2Zz4=",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": ""
+    },
     {
       "path": "reports/2026-10-20-burnham-youth-jobs-neet-inactive.html",
       "kind": "report",
@@ -93,6 +108,21 @@
       "statUnit": "",
       "statLabel": "",
       "mask": ".....................o.............."
+    },
+    {
+      "path": "reports/2026-10-20-quiz-reckon-0001.html",
+      "kind": "puzzle",
+      "topic": "Quiz",
+      "headline": "Reckon 1",
+      "standfirst": "Ten numbers to guess, each from a different topic. The closer you get, the more you score.",
+      "date": "2026-10-20",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "assets/reckon-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": ""
     },
     {
       "path": "reports/2026-10-20-triple-lock-change-care-funding.html",
@@ -331,21 +361,6 @@
       "updated": "2026-10-18",
       "read": "~8 min",
       "thumb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMjAgMTIwJz48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9J2snIHgxPScwJyB5MT0nMCcgeDI9JzAnIHkyPScxJz48c3RvcCBvZmZzZXQ9JzAnIHN0b3AtY29sb3I9JyMwODE0MjEnLz48c3RvcCBvZmZzZXQ9JzEnIHN0b3AtY29sb3I9JyMxYjVhN2QnLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0ncycgeDE9JzAnIHkxPScwJyB4Mj0nMCcgeTI9JzEnPjxzdG9wIG9mZnNldD0nMCcgc3RvcC1jb2xvcj0nIzEyM2Y2MycvPjxzdG9wIG9mZnNldD0nMScgc3RvcC1jb2xvcj0nIzA4MTQyMScvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSdiJyB4MT0nMCcgeTE9JzAnIHgyPScxJyB5Mj0nMCc+PHN0b3Agb2Zmc2V0PScwJyBzdG9wLWNvbG9yPScjZmZlMDdhJyBzdG9wLW9wYWNpdHk9Jy45NScvPjxzdG9wIG9mZnNldD0nMScgc3RvcC1jb2xvcj0nI2Y2YzM0Mycgc3RvcC1vcGFjaXR5PScuMDgnLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0nZyc+PHN0b3Agb2Zmc2V0PScwJyBzdG9wLWNvbG9yPScjZmZmNmRjJy8+PHN0b3Agb2Zmc2V0PScuMycgc3RvcC1jb2xvcj0nI2Y2YzM0Mycgc3RvcC1vcGFjaXR5PScuNicvPjxzdG9wIG9mZnNldD0nMScgc3RvcC1jb2xvcj0nI2Y2YzM0Mycgc3RvcC1vcGFjaXR5PScwJy8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9JzEyMCcgaGVpZ2h0PSc3NCcgZmlsbD0ndXJsKCNrKScvPjxnIGZpbGw9JyNmNGVjZDgnPjxjaXJjbGUgY3g9JzEyJyBjeT0nMTInIHI9Jy44Jy8+PGNpcmNsZSBjeD0nNDQnIGN5PSc3JyByPScuNicvPjxjaXJjbGUgY3g9JzcwJyBjeT0nMTQnIHI9Jy43Jy8+PGNpcmNsZSBjeD0nMTA0JyBjeT0nOCcgcj0nLjgnLz48Y2lyY2xlIGN4PScxMTInIGN5PSc2Nicgcj0nLjUnLz48Y2lyY2xlIGN4PSc2MCcgY3k9JzYwJyByPScuNScvPjxjaXJjbGUgY3g9JzgnIGN5PSczNCcgcj0nLjYnLz48L2c+PHJlY3QgeT0nNzQnIHdpZHRoPScxMjAnIGhlaWdodD0nNDYnIGZpbGw9J3VybCgjcyknLz48cGF0aCBkPSdNMzQgMzBMMTIwIDZWNThaJyBmaWxsPSd1cmwoI2IpJy8+PHBhdGggZD0nTTYwIDgwSDExMk03MCA4OEgxMThNNjYgOTdIMTA2JyBzdHJva2U9JyNmNmMzNDMnIHN0cm9rZS1vcGFjaXR5PScuMjInIHN0cm9rZS13aWR0aD0nMS40JyBzdHJva2UtbGluZWNhcD0ncm91bmQnLz48cGF0aCBkPSdNNTAgMTA2SDY0TTg4IDExMkgxMDQnIHN0cm9rZT0nI2Y0ZWNkOCcgc3Ryb2tlLW9wYWNpdHk9Jy4xMicgc3Ryb2tlLXdpZHRoPScxLjInIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPjxwYXRoIGQ9J004NCA3NEgxMDRMMTAwIDc5SDg3WicgZmlsbD0nIzJhMWQxMCcvPjxwYXRoIGQ9J005MyA3NFY1NScgc3Ryb2tlPScjMmExZDEwJyBzdHJva2Utd2lkdGg9JzEuMicvPjxwYXRoIGQ9J005NCA1NkwxMDMgNzJIOTRaJyBmaWxsPScjZjRlY2Q4Jy8+PHBhdGggZD0nTTkyIDU4TDg1IDcySDkyWicgZmlsbD0nI2Y1ZjFlOCcgb3BhY2l0eT0nLjg1Jy8+PHBhdGggZD0nTTAgMTIwVjgwUTE4IDcwIDQwIDc2UTU0IDgwIDYwIDEyMFonIGZpbGw9JyMxZjRhMzQnLz48cGF0aCBkPSdNMCA4MFExOCA3MCA0MCA3NlE1MCA3OSA1NCA5MCcgZmlsbD0nbm9uZScgc3Ryb2tlPScjMmY2YjQ4JyBzdHJva2Utd2lkdGg9JzInLz48Y2lyY2xlIGN4PScyNicgY3k9JzMwJyByPScyMCcgZmlsbD0ndXJsKCNnKScvPjxwYXRoIGQ9J00xOCA3OEwyMC42IDM4SDMxLjRMMzQgNzhaJyBmaWxsPScjZjVmMWU4Jy8+PHBhdGggZD0nTTE4LjYgNjguNUwxOS4yIDU5SDMyLjhMMzMuNCA2OC41Wk0xOS45IDQ5LjVMMjAuNCA0MkgzMS42TDMyLjEgNDkuNVonIGZpbGw9JyNjODQwMmUnLz48cmVjdCB4PScxOC41JyB5PSczNS41JyB3aWR0aD0nMTUnIGhlaWdodD0nMycgcng9Jy42JyBmaWxsPScjMmIyZTMzJy8+PHJlY3QgeD0nMjEnIHk9JzI3JyB3aWR0aD0nMTAnIGhlaWdodD0nOC41JyBmaWxsPScjZmZlMDdhJy8+PHBhdGggZD0nTTIxIDI3SDMxTTI0IDI3VjM1LjVNMjggMjdWMzUuNScgc3Ryb2tlPScjMmIyZTMzJyBzdHJva2Utd2lkdGg9Jy45Jy8+PHBhdGggZD0nTTE5LjUgMjdMMjYgMjBMMzIuNSAyN1onIGZpbGw9JyNjODQwMmUnLz48cmVjdCB4PScyMy41JyB5PSc3MCcgd2lkdGg9JzUnIGhlaWdodD0nOCcgcng9JzIuNScgZmlsbD0nIzNiMmExYycvPjwvc3ZnPgo=",
-      "stat": "",
-      "statUnit": "",
-      "statLabel": "",
-      "mask": ""
-    },
-    {
-      "path": "reports/2026-10-15-quiz-ballpark.html",
-      "kind": "game",
-      "topic": "Quiz",
-      "headline": "Ballpark",
-      "standfirst": "How good are you at guessing? Ballpark tests your guesstimates with a range of categories.",
-      "date": "2026-10-15",
-      "updated": "2026-10-18",
-      "read": "~3 min",
-      "thumb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI0Y1RUZFNCIvPjxwYXRoIGQ9Ik0wIDIwSDEyME0wIDQwSDEyME0wIDEwMEgxMjBNMjAgMFYxMjBNNDAgMFYxMjBNODAgMFYxMjBNMTAwIDBWMTIwIiBzdHJva2U9IiMxRTI0MzMiIHN0cm9rZS1vcGFjaXR5PSIuMDciIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iMjgiIHk9IjU4IiB3aWR0aD0iNzYiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjRjA4QzUwIi8+PHJlY3QgeD0iNDAiIHk9IjU4IiB3aWR0aD0iNTIiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjRjBCNDNDIi8+PHJlY3QgeD0iNTAiIHk9IjU4IiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHJ4PSI1IiBmaWxsPSIjODZCRDRCIi8+PHJlY3QgeD0iNTgiIHk9IjU4IiB3aWR0aD0iMTYiIGhlaWdodD0iMzIiIHJ4PSI0IiBmaWxsPSIjMUU5RTZBIi8+PHJlY3QgeT0iNzAiIHdpZHRoPSIxMjAiIGhlaWdodD0iOCIgZmlsbD0iIzFFMjQzMyIvPjxwYXRoIGQ9Ik0xMCA4MnYxMk01MCA4MnYxMk05MCA4MnYxMiIgc3Ryb2tlPSIjMUUyNDMzIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNMjIgODJ2Nk0yOSA4MnY2TTM0IDgydjZNNjIgODJ2Nk02OSA4MnY2TTc0IDgydjZNMTAyIDgydjZNMTA5IDgydjZNMTE0IDgydjYiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSIxLjYiLz48cGF0aCBkPSJNNjYgMzRWNzAiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PGNpcmNsZSBjeD0iNjYiIGN5PSIyOCIgcj0iMTAiIGZpbGw9IiMxRTI0MzMiLz48Y2lyY2xlIGN4PSI2NiIgY3k9IjI4IiByPSI0IiBmaWxsPSIjRjVFRkU0Ii8+PGNpcmNsZSBjeD0iNjEiIGN5PSI3NCIgcj0iMTIiIGZpbGw9IiNFMDUzM0IiIHN0cm9rZT0iIzFFMjQzMyIgc3Ryb2tlLXdpZHRoPSIzLjUiLz48L3N2Zz4=",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
