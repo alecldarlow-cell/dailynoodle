@@ -7,6 +7,21 @@ const test=base.extend({
   // Chromium, an iPhone in WebKit, no mobile emulation in Firefox; it routes all traffic.
   const ctx=await H.newPhone(browser);
   const p=await ctx.newPage(),errors=[],missing=[];
+  if(H.engineOf(browser)==='webkit'){
+   // Playwright's WebKit lays out a resized viewport at once but often sends the
+   // window 'resize' event late or never (CI probe, 20 Oct 2026: none at all for
+   // Link at 780x360 in three runs). A real iPhone sends one on every rotation, and
+   // the players re-fit their boards on it. So: wait for the real event, and only
+   // if it never comes, send it, as the phone would, and record that on the test.
+   await ctx.addInitScript(()=>{window.__dnResizes=0;addEventListener('resize',()=>window.__dnResizes++,true);});
+   const set=p.setViewportSize.bind(p);
+   p.setViewportSize=async size=>{
+    const before=await p.evaluate(()=>window.__dnResizes).catch(()=>0);await set(size);
+    for(let i=0;i<20;i++){if(await p.evaluate(n=>window.__dnResizes>n,before).catch(()=>true))return;await p.waitForTimeout(50);}
+    await p.evaluate(()=>dispatchEvent(new Event('resize'))).catch(()=>{});
+    testInfo.annotations.push({type:'webkit-resize',description:`no resize event from WebKit within 1 s of ${size.width}x${size.height}; sent one as a phone rotation would`});
+   };
+  }
   p.on('pageerror',e=>errors.push(e.message));
   p.on('response',r=>{if(r.url().startsWith('https://dailynoodle.co.uk/')&&r.status()>=400)missing.push(r.status()+' '+r.url());});
   p.errs=errors;
