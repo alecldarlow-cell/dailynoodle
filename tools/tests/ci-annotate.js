@@ -13,8 +13,8 @@ for (const f of files) {
     let r; try { r = JSON.parse(src); } catch (e) { lines.push(`(unreadable ${f})`); continue; }
     const walk = s => { for (const spec of s.specs || []) for (const t of spec.tests || []) for (const res of t.results || [])
       if (res.status !== 'passed' && res.status !== 'skipped' && res.retry === (t.results.length - 1)) {
-        const err = ((res.error && res.error.message) || res.status).replace(/\u001b\[[0-9;]*m/g, '').split('\n').filter(Boolean).slice(0, 40).join(' / ');
-        lines.push(`FAIL ${spec.file}: ${spec.title} — ${err.slice(0, 2500)}`);
+        const err = ((res.error && res.error.message) || res.status).replace(/\u001b\[[0-9;]*m/g, '').replace(/\s+/g, ' ').replace(/ ?\+ ?/g, '+').replace(/Object \{/g, '{').replace(/Array \[/g, '[');
+        lines.push(`FAIL ${spec.file}: ${spec.title} — ${err.slice(0, 3600)}`);
       }
       for (const c of s.suites || []) walk(c); };
     for (const s of r.suites || []) walk(s);
@@ -29,7 +29,11 @@ for (const f of files) {
   }
 }
 const esc = s => s.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
-// GitHub keeps at most 10 annotations of a level per step: pack lines into a few.
-for (let i = 0, n = 0; i < lines.length && n < 8; i += 30, n++)
-  console.log(`::${lines.slice(i, i + 30).some(l => l.startsWith('FAIL') || / FAIL /.test(l)) ? 'error' : 'notice'} title=${title} (${n + 1})::${esc(lines.slice(i, i + 30).join('\n'))}`);
+// GitHub keeps at most 10 annotations of a level per step and ~4 KB each: each
+// Playwright failure gets its own; the short puzzle-log lines are packed together.
+const groups = []; let cur = [];
+for (const l of lines) { if (l.length > 400) { groups.push([l]); continue; } if (cur.join('\n').length + l.length > 3800) { groups.push(cur); cur = []; } cur.push(l); }
+if (cur.length) groups.push(cur);
+groups.slice(0, 18).forEach((g, n) =>
+  console.log(`::${g.some(l => l.startsWith('FAIL') || / FAIL /.test(l)) ? 'error' : 'notice'} title=${title} (${n + 1})::${esc(g.join('\n'))}`));
 if (!lines.length) console.log(`::notice title=${title}::nothing to report`);

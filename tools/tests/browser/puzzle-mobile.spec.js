@@ -15,7 +15,7 @@ async function reachable(p,selectors){
   const r=e.getBoundingClientRect();if(!r.width||!r.height||getComputedStyle(e).visibility==='hidden')return [];
   const at=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);
   const bad=r.x<-.5||r.y<-.5||r.right>innerWidth+.5||r.bottom>innerHeight+.5||r.width<24||r.height<24||!at||!(at===e||e.contains(at));
-  return bad?[{control:e.id||e.textContent,rect:{x:r.x,y:r.y,w:r.width,h:r.height},hit:!!at&&(at===e||e.contains(at))}]:[];
+  return bad?[{control:e.id||e.textContent,at:innerWidth+'x'+innerHeight,rect:{x:r.x,y:r.y,w:r.width,h:r.height},hit:!!at&&(at===e||e.contains(at))}]:[];
  }));expect(problems).toEqual([]);
  expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 }
