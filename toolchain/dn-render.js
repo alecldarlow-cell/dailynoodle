@@ -186,6 +186,19 @@ function measure(o) {
       }
       boxes.push({ el: t, ...ink });
     }
+    // Dashed reference lines (<line> with a dash pattern) running through a label. A label
+    // drawn above the line with a stroke halo (paint-order: stroke) masks it and is fine.
+    const dashed = [...svg.querySelectorAll('line')].filter(l => !hidden(l) && /\d/.test(getComputedStyle(l).strokeDasharray || l.getAttribute('stroke-dasharray') || ''));
+    for (const L of dashed) {
+      const q = L.getBoundingClientRect();
+      for (const B of boxes) {
+        const cs = getComputedStyle(B.el);
+        const haloed = /^stroke/.test(cs.paintOrder || '') && cs.stroke !== 'none' && parseFloat(cs.strokeWidth) >= 2 && (L.compareDocumentPosition(B.el) & Node.DOCUMENT_POSITION_FOLLOWING);
+        if (haloed) continue;
+        if (q.right + 0.5 > B.l + 1 && q.left - 0.5 < B.r - 1 && q.bottom > B.top + 1 && q.top < B.bot - 1)
+          warns.push(`${where}: a dashed line runs through a label: ${say(B.el)}`);
+      }
+    }
     for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
       const A = boxes[i], B = boxes[j], ix = Math.min(A.r, B.r) - Math.max(A.l, B.l), iy = Math.min(A.bot, B.bot) - Math.max(A.top, B.top);
       if (ix > 1.5 && iy > 1.5) warns.push(`${where}: labels overlap (${Math.round(ix)}×${Math.round(iy)}px): ${say(A.el)} / ${say(B.el)}`);

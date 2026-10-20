@@ -310,8 +310,8 @@
         <li id="s5"><span class="tier t3">T3</span>Reuters, &ldquo;Oil shipments rise in Hormuz although questions grow over Iran&rsquo;s transit terms&rdquo;, 19 Jun 2026, as republished by gCaptain. <a href="https://gcaptain.com/oil-shipments-rise-in-hormuz-although-questions-grow-over-irans-transit-terms/">gcaptain.com</a>. Retrieved 8 Oct 2026.</li>
       </ol>
     </div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 8 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; hormuz-shipping-transits.</span></div>
+    <div class="fm"><b>Corrections.</b> v1.1 (20 Oct 2026): on phone screens the dashed reference line in Exhibit 2 ran through the chart&rsquo;s value labels; the labels now sit on top of it. No figures changed.</div>
+    <div><b>Figures to 8 Oct 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; hormuz-shipping-transits.</span></div>
   </div>
 
 </div>
@@ -631,7 +631,7 @@ window.DN = (function () {
         }
       });
 
-      var legItems = [];
+      var legItems = [], endEls = [];   // end labels go on last, above any reference line
       series.forEach(function (s, si) {
         var col = s.color || (series.length === 1 ? C.subject : cat(si));
         legItems.push({ name: s.name || ("Series " + (si + 1)), color: col });
@@ -652,7 +652,7 @@ window.DN = (function () {
           var el = svgEl("text", { x: X(last.x) + 8, y: Y(last.y) + 4, "text-anchor": "start", "class": "dn-endlab" }); el.setAttribute("fill", col);
           el.textContent = efit;
           if (efit !== etxt) { el.setAttribute("data-dn-fit", "trunc"); var eti = svgEl("title"); eti.textContent = etxt; el.appendChild(eti); }
-          svg.appendChild(el);
+          endEls.push(el);
         }
       });
 
@@ -663,9 +663,10 @@ window.DN = (function () {
       });
       (spec.notes || []).forEach(function (nt) {
         var nx = X(nt.x), ny = Y(nt.y), dy = nt.dy == null ? -10 : nt.dy, na = nt.anchor || "middle";
-        var t = svgEl("text", { x: clampInside(nx + (nt.dx || 0), nt.text, LABEL_PX.anno, W, na), y: ny + dy, "text-anchor": na, "class": "dn-anno" }); t.textContent = nt.text; svg.appendChild(t);
-        if (nt.sub) { var t2 = svgEl("text", { x: clampInside(nx + (nt.dx || 0), nt.sub, LABEL_PX.annosub, W, na), y: ny + dy + 13, "text-anchor": na, "class": "dn-annosub" }); t2.textContent = nt.sub; svg.appendChild(t2); }
+        var t = svgEl("text", { x: clampInside(nx + (nt.dx || 0), nt.text, LABEL_PX.anno, W, na), y: ny + dy, "text-anchor": na, "class": "dn-anno" }); t.textContent = nt.text; t.style.paintOrder = "stroke"; t.style.stroke = "var(--paper)"; t.style.strokeWidth = "4px"; t.style.strokeLinejoin = "round"; svg.appendChild(t);
+        if (nt.sub) { var t2 = svgEl("text", { x: clampInside(nx + (nt.dx || 0), nt.sub, LABEL_PX.annosub, W, na), y: ny + dy + 13, "text-anchor": na, "class": "dn-annosub" }); t2.textContent = nt.sub; t2.style.paintOrder = "stroke"; t2.style.stroke = "var(--paper)"; t2.style.strokeWidth = "4px"; t2.style.strokeLinejoin = "round"; svg.appendChild(t2); }
       });
+      endEls.forEach(function (e) { e.style.paintOrder = "stroke"; e.style.stroke = "var(--paper)"; e.style.strokeWidth = "4px"; e.style.strokeLinejoin = "round"; svg.appendChild(e); });
 
       drawLegend(m.legend, legItems);
       var xset = []; series.forEach(function (s) { s.points.forEach(function (p) { if (xset.indexOf(p.x) < 0) xset.push(p.x); }); }); xset.sort(function (a, b) { return a - b; });
@@ -721,6 +722,7 @@ window.DN = (function () {
         if (refLX != null && Math.abs(lx - refLX) < refHalf + estW(tstr, LABEL_PX.ax) / 2 + 4) return;  // yields to refLabel
         var t = svgEl("text", { x: lx, y: mT - 7, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = tstr; svg.appendChild(t);
       });
+      var vlabs = [];   // value labels go on last, above any reference line
       data.forEach(function (d, i) {
         var y = mT + i * (rowH + gap), w = Math.max(Xv(d.value) - mL, 0), col = d.color || (d.highlight ? C.subject : C.muted);
         drawGutter(svg, d.label, mL - 10, y + rowH / 2, "dn-clabel", clP, labelBudget, d.highlight ? C.subject : null);
@@ -733,14 +735,21 @@ window.DN = (function () {
         } else {
           v = svgEl("text", { x: Math.min(mL + w + 8, W - vw - 2), y: y + rowH / 2 + 4, "text-anchor": "start", "class": "dn-vlabel" });
           if (d.highlight) v.setAttribute("fill", C.subject);
+          v.style.paintOrder = "stroke"; v.style.stroke = "var(--paper)"; v.style.strokeWidth = "4px"; v.style.strokeLinejoin = "round";
         }
-        v.textContent = vtext; svg.appendChild(v);
+        v.textContent = vtext; vlabs.push(v);
       });
       if (spec.refValue != null) {
         var gx = Xv(spec.refValue);
         svg.appendChild(svgEl("line", { x1: gx, y1: mT, x2: gx, y2: H - mB, stroke: spec.refColor || C.neg, "stroke-width": 1, "stroke-dasharray": "3 3" }));
         if (spec.refLabel) { var t2 = svgEl("text", { x: refLX != null ? refLX : gx, y: mT - 7, "text-anchor": "middle", "class": "dn-anno" }); t2.setAttribute("fill", spec.refColor || C.neg); t2.textContent = spec.refLabel; svg.appendChild(t2); }
       }
+      vlabs.forEach(function (v) {
+        svg.appendChild(v);
+        // outside labels (they carry the halo) get a card-coloured box too, so a reference line
+        // doesn't show between characters; getBBox needs a real browser, so jsdom skips it
+        if (v.style.stroke && v.getBBox) { try { var bb = v.getBBox(); if (bb.width) { var bgr = svgEl("rect", { x: bb.x - 3, y: bb.y + 1, width: bb.width + 6, height: Math.max(bb.height - 2, 0) }); bgr.style.fill = "var(--paper)"; svg.insertBefore(bgr, v); } } catch (e) { } }
+      });
       m.legend.style.display = "none";
       a11yTable(m.sr, spec.title || "Chart data", [spec.labelTitle || "Item", spec.valueTitle || "Value"], data.map(function (d) { return [String(d.label), fmt(d.value, spec.x || {})]; }));
     }

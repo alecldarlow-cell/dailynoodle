@@ -161,6 +161,7 @@ dark mode), at 360px and 680px in light and dark. It fails on what jsdom cannot
 see: labels cut off at a chart's edge or the screen's, a page wider than the phone,
 a hero figure clipped, an exhibit that didn't draw, a shortened label that lost
 words or kept nothing readable, script errors. It warns on overlapping labels,
+dashed reference lines running through labels,
 labels sitting outside the chart, chart text under 10.5px, text too faint for its
 background in either theme, and every shortened label. Then it writes one sheet per
 exhibit (360 light and dark side by side, 680 light below) and one of the top of the
