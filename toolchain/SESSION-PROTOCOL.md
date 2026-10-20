@@ -172,7 +172,9 @@ look for what no rule catches: a chart that implies something the data doesn't (
 sankey above), dead white space between a chart and its caption, a legend that
 doesn't match its marks, a label stub that reads badly, a series that vanishes in
 dark mode. Fix in `piece/` and rebuild, then re-run and Read only the sheets for the
-exhibits you changed.
+exhibits you changed. Symbols outside the piece's web fonts (▲ ▼ → ★) show as empty boxes in
+the sandbox render because its fallback fonts lack them; phones have them, so that is
+not a defect.
 
 At delivery, say what you looked at and what you found ("rendered at 360 and 680,
 light and dark; sheets for ex01–ex03 read; ex02 legend fixed"). It is a real browser,

@@ -224,6 +224,31 @@
   .foot .ver{font-size:11px;color:var(--faint);letter-spacing:.03em}
 
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* chart styles from house template v3.3.3, 20 Oct 2026 */
+  /* ---------- DN chart library styling (real-px responsive SVG) ---------- */
+  .dn-fig{margin:0}
+  .dn-svg{display:block;width:100%;height:auto;overflow:visible}
+  .dn-ax{font-family:var(--body);font-weight:500;fill:var(--faint);font-size:11px}
+  .dn-axlabel{font-family:var(--body);font-weight:600;fill:var(--muted);font-size:11px;letter-spacing:.02em}
+  .dn-clabel{font-family:var(--body);font-weight:600;fill:var(--ink);font-size:12px}
+  .dn-vlabel{font-family:var(--display);font-weight:700;fill:var(--ink);font-size:12.5px;font-variant-numeric:tabular-nums}
+  .dn-endlab{font-family:var(--display);font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
+  .dn-anno{font-family:var(--body);font-weight:600;fill:var(--ink);font-size:11.5px}
+  .dn-annosub{font-family:var(--body);font-weight:500;fill:var(--faint);font-size:10.5px;letter-spacing:.02em}
+  .dn-strip-name{font-family:var(--body);font-weight:600}
+  .dn-legend{display:flex;flex-wrap:wrap;gap:7px 16px;padding:10px 4px 2px;
+    font-family:var(--body);font-size:12px;color:var(--muted)}
+  .dn-key{display:inline-flex;align-items:center;gap:7px}
+  .dn-key i{width:12px;height:12px;border-radius:2px;display:inline-block;flex:0 0 auto}
+  .dn-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  /* sankey: labels keep a paper halo so they stay legible over flow ribbons */
+  .dn-nodelabel{paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+  .dn-flow{transition:fill-opacity .15s ease}
+  .dn-flow:hover{fill-opacity:.72}
+  .dn-flow{transition:none}
+  @media(prefers-reduced-motion:reduce){.dn-flow{transition:none}}
 </style>
 <!-- og:start (tools/og-tags.js — do not edit by hand) -->
 <meta property="og:site_name" content="The Daily Noodle">
@@ -448,8 +473,8 @@
         <li id="s13"><span class="tier t1">T1</span>Cheung, F. &amp; Lucas, R. (2015). &ldquo;When Does Money Matter Most? Examining the Association between Income and Life Satisfaction over the Life Course.&rdquo; <i>Psychology and Aging</i> 30(1):120&ndash;135. British Household Panel Study estimates, Table 4. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4686135/">nih.gov</a></li>
       </ol>
     </div>
-    <div class="fm"><b>Corrections.</b> v1.2 (27 Jun 2026): extended Exhibit 03 to &pound;70,000, with the &pound;50,000&ndash;&pound;70,000 segment dashed to mark extrapolation beyond well-supported income. v1.1: added Exhibit 03 (Cheung & Lucas 2015, BHPS); retirement exhibits renumbered 04&ndash;05. No earlier figures changed. v1.3 (20 Oct 2026): on phone screens the dashed reference line in Exhibit 2 ran through the chart&rsquo;s value labels; the labels now sit on top of it. No figures changed.</div>
-    <div><b>Figures to 27 Jun 2026.</b> <span class="ver">Noodle News &middot; v1.3 &middot; money &amp; happiness.</span></div>
+    <div class="fm"><b>Corrections.</b> v1.2 (27 Jun 2026): extended Exhibit 03 to &pound;70,000, with the &pound;50,000&ndash;&pound;70,000 segment dashed to mark extrapolation beyond well-supported income. v1.1: added Exhibit 03 (Cheung & Lucas 2015, BHPS); retirement exhibits renumbered 04&ndash;05. No earlier figures changed. v1.3 (20 Oct 2026): on phone screens the dashed reference line in Exhibit 2 ran through the chart&rsquo;s value labels; the labels now sit on top of it. No figures changed. v1.4 (20 Oct 2026): on phone screens long chart labels in Exhibits 2, 4 and 5 ran off the edge of the screen, and the reference-line label in Exhibit 2 sat on top of the axis numbers; the charts now use the current chart code, which wraps labels and keeps them clear. No figures changed.</div>
+    <div><b>Figures to 27 Jun 2026.</b> <span class="ver">Noodle News &middot; v1.4 &middot; money &amp; happiness.</span></div>
   </div>
 
 </div>
@@ -548,6 +573,96 @@ window.DN = (function () {
     return ts.filter(function (v, i) { return i === 0 || Math.abs(v - ts[i - 1]) > 1e-9; });
   }
 
+  /* ---- label geometry: single source of truth, shared with dn-harness ----
+     The width model (per-char advance = font-size * LABEL_EM) is identical to
+     the harness geometry probe, so a label the toolkit judges to "fit" is the
+     same label the pre-publish gate judges to be on-canvas. Font sizes here
+     mirror the .dn-* label classes in the template CSS.               */
+  var LABEL_EM = 0.52;
+  var LABEL_PX = { ax: 11, axlabel: 11, clabel: 12, vlabel: 12.5, endlab: 12, anno: 11.5, annosub: 10.5, strip: 11 };
+  function estW(str, px) { str = (str == null ? "" : String(str)); return str.length * (px || 12) * LABEL_EM; }
+  // Shorten one string to fit maxPx, appending an ellipsis. Never returns
+  // something wider than maxPx (down to a single glyph).
+  function ellip(str, maxPx, px) {
+    str = (str == null ? "" : String(str));
+    if (estW(str, px) <= maxPx) return str;
+    var s = str;
+    while (s.length > 1 && estW(s + "\u2026", px) > maxPx) s = s.slice(0, -1);
+    return s.replace(/[\s,.;:\u2013\u2014-]+$/, "") + "\u2026";
+  }
+  // Word-wrap str to at most maxLines lines, each <= maxPx. The final allowed
+  // line absorbs any remainder and is ellipsised. Returns {lines, truncated}.
+  function wrapFit(str, maxPx, px, maxLines) {
+    str = (str == null ? "" : String(str)).trim(); maxLines = maxLines || 2;
+    if (estW(str, px) <= maxPx) return { lines: [str], truncated: false };
+    var words = str.split(/\s+/), lines = [], cur = "";
+    for (var i = 0; i < words.length; i++) {
+      var cand = cur ? cur + " " + words[i] : words[i];
+      if (cur && estW(cand, px) > maxPx) {
+        if (lines.length === maxLines - 1) {                 // last line: this line's words plus the rest
+          lines.push(ellip(cur + " " + words.slice(i).join(" "), maxPx, px));
+          return { lines: lines, truncated: true };
+        }
+        lines.push(cur); cur = words[i];
+      } else cur = cand;
+    }
+    if (cur) lines.push(cur);
+    var truncated = false;
+    lines = lines.map(function (ln) { if (estW(ln, px) > maxPx) { truncated = true; return ellip(ln, maxPx, px); } return ln; });
+    return { lines: lines, truncated: truncated };
+  }
+  // Widest label width (px) across a set of values, given a formatter.
+  function widestW(vals, labelOf, px) {
+    var w = 0; for (var i = 0; i < vals.length; i++) { var lw = estW(labelOf(vals[i]), px); if (lw > w) w = lw; } return w;
+  }
+  // Drop interior ticks whose labels would collide; endpoints always kept.
+  function thinTicks(ticks, xOf, labelOf, px, minGap) {
+    if (!ticks || ticks.length <= 2) return (ticks || []).slice();
+    minGap = (minGap == null) ? 6 : minGap;
+    var keep = [ticks[0]], lastR = xOf(ticks[0]) + estW(labelOf(ticks[0]), px) / 2;
+    for (var i = 1; i < ticks.length - 1; i++) {
+      var c = xOf(ticks[i]), half = estW(labelOf(ticks[i]), px) / 2;
+      if (c - half >= lastR + minGap) { keep.push(ticks[i]); lastR = c + half; }
+    }
+    var lastT = ticks[ticks.length - 1], lL = xOf(lastT) - estW(labelOf(lastT), px) / 2;
+    while (keep.length > 1 && (xOf(keep[keep.length - 1]) + estW(labelOf(keep[keep.length - 1]), px) / 2 + minGap) > lL) keep.pop();
+    keep.push(lastT);
+    return keep;
+  }
+  // Clamp a middle-anchored tick label's x so its box stays within [0,W].
+  function clampMid(x, str, px, W) { var h = estW(str, px) / 2; return Math.min(Math.max(x, h + 1), W - h - 1); }
+  // Clamp any anchored free annotation so its box stays on-canvas (backstop —
+  // only moves when the author's placement would otherwise clip off the edge).
+  function clampInside(x, str, px, W, anchor) {
+    var w = estW(str, px);
+    if (anchor === 'end') return Math.min(Math.max(x, w + 1), W - 1);
+    if (anchor === 'middle') return clampMid(x, str, px, W);
+    return Math.min(Math.max(x, 1), W - w - 1);
+  }
+  // Nudge desired y-centres so no two are within minGap, kept within [lo,hi].
+  // Returns adjusted y for each input index (order preserved).
+  function separateY(ys, minGap, lo, hi) {
+    var idx = ys.map(function (y, i) { return { y: y, i: i }; }).sort(function (a, b) { return a.y - b.y; });
+    for (var k = 1; k < idx.length; k++) { if (idx[k].y < idx[k - 1].y + minGap) idx[k].y = idx[k - 1].y + minGap; }
+    if (idx.length && idx[idx.length - 1].y > hi) { idx[idx.length - 1].y = hi; for (var a = idx.length - 2; a >= 0; a--) { if (idx[a].y > idx[a + 1].y - minGap) idx[a].y = idx[a + 1].y - minGap; } }
+    if (idx.length && idx[0].y < lo) { idx[0].y = lo; for (var b = 1; b < idx.length; b++) { if (idx[b].y < idx[b - 1].y + minGap) idx[b].y = idx[b - 1].y + minGap; } }
+    var out = new Array(ys.length); idx.forEach(function (o) { out[o.i] = o.y; }); return out;
+  }
+  // Append a right-anchored label as one line, or as wrapped tspans, so it
+  // never overflows the left gutter. Marks truncation for the gate to see.
+  function drawGutter(svg, str, xRight, cy, cls, px, maxPx, fillCol) {
+    var fit = wrapFit(str, maxPx, px, 2);
+    var lab = svgEl("text", { x: xRight, "text-anchor": "end", "class": cls });
+    if (fillCol) lab.setAttribute("fill", fillCol);
+    if (fit.lines.length === 1) { lab.setAttribute("y", cy + 4); lab.textContent = fit.lines[0]; }
+    else {
+      var lineH = px + 3, startY = cy - (fit.lines.length - 1) * lineH / 2 + 4;
+      fit.lines.forEach(function (ln, li) { var ts = svgEl("tspan", { x: xRight, y: startY + li * lineH }); ts.textContent = ln; lab.appendChild(ts); });
+    }
+    if (fit.truncated) { lab.setAttribute("data-dn-fit", "trunc"); var ti = svgEl("title"); ti.textContent = str; lab.appendChild(ti); }
+    svg.appendChild(lab); return fit;
+  }
+
   /* ---- relative luminance → ideal overlaid text colour ---- */
   function idealText(hex) {
     var c = hex.replace("#", "");
@@ -628,7 +743,7 @@ window.DN = (function () {
       var svg = m.svg; clear(svg);
       var W = Math.max(m.host.clientWidth, 240), small = W < 460;
       var H = spec.height || Math.round(Math.min(Math.max(W * 0.6, 220), 420));
-      var mL = small ? 34 : 44, mR = spec.endLabels ? (small ? 54 : 104) : 18, mT = 18, mB = 34;
+      var mT = 18, mB = 34;
       var xs = [], ys = [];
       series.forEach(function (s) { s.points.forEach(function (p) { xs.push(p.x); ys.push(p.y); }); (s.band || []).forEach(function (b) { ys.push(b.lo); ys.push(b.hi); }); });
       (spec.refsY || []).forEach(function (r) { ys.push(r.value); });
@@ -637,6 +752,17 @@ window.DN = (function () {
       var yMax = (spec.y && spec.y.max != null) ? spec.y.max : Math.max.apply(null, ys);
       var yMinData = Math.min.apply(null, ys);
       var ns = niceScale(yzero ? 0 : yMinData, yMax, small ? 4 : 5);
+      // Left margin fits the widest y-tick label (thousands, currency, log ticks
+      // all handled) instead of a fixed 34/44 that clipped wide numbers.
+      var yLabW = widestW(ns.ticks, function (tv) { return fmt(tv, spec.y || {}); }, LABEL_PX.ax);
+      var mL = Math.min(Math.max(Math.round(yLabW) + 12, small ? 34 : 44), Math.round(W * 0.34));
+      // Right margin fits end labels; if that would eat the plot, cap it and
+      // truncate the labels to the reserved width when drawn.
+      var endTexts = series.map(function (s, si) { return s.endLabel || s.name || fmt(s.points[s.points.length - 1].y, spec.y || {}); });
+      var mR;
+      if (spec.endLabels) { mR = Math.min(Math.max(Math.round(widestW(endTexts, function (t) { return t; }, LABEL_PX.endlab)) + 12, small ? 44 : 60), Math.round(W * 0.40)); }
+      else mR = 18;
+      var endBudget = mR - 10;
       var X = lin([x0, x1], [mL, W - mR]), Y = lin([ns.min, ns.max], [H - mB, mT]);
       svg.setAttribute("viewBox", "0 0 " + W + " " + H); describe(svg, spec);
 
@@ -653,7 +779,11 @@ window.DN = (function () {
       });
       if (spec.y && spec.y.label) { var yl = svgEl("text", { x: mL - 8, y: mT - 7, "text-anchor": "start", "class": "dn-axlabel" }); yl.textContent = spec.y.label; svg.appendChild(yl); }
       var xt = (spec.x && spec.x.ticks) ? spec.x.ticks : xticks(x0, x1, small ? 3 : 5);
-      xt.forEach(function (xv) { var t = svgEl("text", { x: X(xv), y: H - mB + 20, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = (spec.x && spec.x.fmt) ? spec.x.fmt(xv) : xv; svg.appendChild(t); });
+      var xfmt = function (xv) { return (spec.x && spec.x.fmt) ? spec.x.fmt(xv) : String(xv); };
+      thinTicks(xt, X, xfmt, LABEL_PX.ax, 8).forEach(function (xv) {
+        var lx = clampMid(X(xv), xfmt(xv), LABEL_PX.ax, W);
+        var t = svgEl("text", { x: lx, y: H - mB + 20, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = xfmt(xv); svg.appendChild(t);
+      });
 
       series.forEach(function (s, si) {
         if (s.band && s.band.length > 1) {
@@ -664,7 +794,7 @@ window.DN = (function () {
         }
       });
 
-      var legItems = [];
+      var legItems = [], endEls = [];   // end labels go on last, above any reference line
       series.forEach(function (s, si) {
         var col = s.color || (series.length === 1 ? C.subject : cat(si));
         legItems.push({ name: s.name || ("Series " + (si + 1)), color: col });
@@ -680,19 +810,26 @@ window.DN = (function () {
         }
         var last = pts[pts.length - 1];
         svg.appendChild(svgEl("circle", { cx: X(last.x), cy: Y(last.y), r: 3.4, fill: col }));
-        if (spec.endLabels) { var el = svgEl("text", { x: X(last.x) + 8, y: Y(last.y) + 4, "text-anchor": "start", "class": "dn-endlab" }); el.setAttribute("fill", col); el.textContent = s.name || fmt(last.y, spec.y || {}); svg.appendChild(el); }
+        if (spec.endLabels) {
+          var etxt = endTexts[si], efit = ellip(etxt, endBudget, LABEL_PX.endlab);
+          var el = svgEl("text", { x: X(last.x) + 8, y: Y(last.y) + 4, "text-anchor": "start", "class": "dn-endlab" }); el.setAttribute("fill", col);
+          el.textContent = efit;
+          if (efit !== etxt) { el.setAttribute("data-dn-fit", "trunc"); var eti = svgEl("title"); eti.textContent = etxt; el.appendChild(eti); }
+          endEls.push(el);
+        }
       });
 
       (spec.refsY || []).forEach(function (r) {
         var gy = Y(r.value);
         svg.appendChild(svgEl("line", { x1: mL, y1: gy, x2: W - mR, y2: gy, stroke: r.color || C.subject, "stroke-width": 1, "stroke-dasharray": "3 4", "stroke-opacity": 0.85 }));
-        if (r.label) { var t = svgEl("text", { x: mL + 6, y: gy - 6, "class": "dn-anno" }); t.setAttribute("fill", r.color || C.subject); t.textContent = r.label; svg.appendChild(t); }
+        if (r.label) { var rlx = clampInside(mL + 6, r.label, LABEL_PX.anno, W, "start"); var t = svgEl("text", { x: rlx, y: gy - 6, "class": "dn-anno" }); t.setAttribute("fill", r.color || C.subject); t.textContent = r.label; svg.appendChild(t); }
       });
       (spec.notes || []).forEach(function (nt) {
-        var nx = X(nt.x), ny = Y(nt.y), dy = nt.dy == null ? -10 : nt.dy;
-        var t = svgEl("text", { x: nx + (nt.dx || 0), y: ny + dy, "text-anchor": nt.anchor || "middle", "class": "dn-anno" }); t.textContent = nt.text; svg.appendChild(t);
-        if (nt.sub) { var t2 = svgEl("text", { x: nx + (nt.dx || 0), y: ny + dy + 13, "text-anchor": nt.anchor || "middle", "class": "dn-annosub" }); t2.textContent = nt.sub; svg.appendChild(t2); }
+        var nx = X(nt.x), ny = Y(nt.y), dy = nt.dy == null ? -10 : nt.dy, na = nt.anchor || "middle";
+        var t = svgEl("text", { x: clampInside(nx + (nt.dx || 0), nt.text, LABEL_PX.anno, W, na), y: ny + dy, "text-anchor": na, "class": "dn-anno" }); t.textContent = nt.text; t.style.paintOrder = "stroke"; t.style.stroke = "var(--paper)"; t.style.strokeWidth = "4px"; t.style.strokeLinejoin = "round"; svg.appendChild(t);
+        if (nt.sub) { var t2 = svgEl("text", { x: clampInside(nx + (nt.dx || 0), nt.sub, LABEL_PX.annosub, W, na), y: ny + dy + 13, "text-anchor": na, "class": "dn-annosub" }); t2.textContent = nt.sub; t2.style.paintOrder = "stroke"; t2.style.stroke = "var(--paper)"; t2.style.strokeWidth = "4px"; t2.style.strokeLinejoin = "round"; svg.appendChild(t2); }
       });
+      endEls.forEach(function (e) { e.style.paintOrder = "stroke"; e.style.stroke = "var(--paper)"; e.style.strokeWidth = "4px"; e.style.strokeLinejoin = "round"; svg.appendChild(e); });
 
       drawLegend(m.legend, legItems);
       var xset = []; series.forEach(function (s) { s.points.forEach(function (p) { if (xset.indexOf(p.x) < 0) xset.push(p.x); }); }); xset.sort(function (a, b) { return a - b; });
@@ -718,31 +855,57 @@ window.DN = (function () {
       var svg = m.svg; clear(svg);
       var W = Math.max(m.host.clientWidth, 240), small = W < 460, n = data.length;
       var rowH = spec.rowH || (small ? 26 : 30), gap = spec.gap || 10;
-      var mT = (spec.refValue != null) ? 22 : 8, mB = 8;
+      var mT = 22, mB = 8;   // v3.3.3: always reserve the x-tick row (labels draw at mT-7)
+      // --- gutter sized to the measured labels, capped so bars stay readable;
+      //     labels that exceed the budget wrap to two lines then ellipsise. ---
+      var clP = LABEL_PX.clabel;
+      var gutterCap = Math.round(W * (small ? 0.46 : 0.42));
+      var want = widestW(data.map(function (d) { return d.label; }), function (s) { return s; }, clP) + 16;
+      var mL = Math.min(Math.max(want, 64), gutterCap);
+      var labelBudget = mL - 14;
+      var fits = data.map(function (d) { return wrapFit(d.label, labelBudget, clP, 2); });
+      var maxLines = Math.max.apply(null, fits.map(function (f) { return f.lines.length; }));
+      var lineH = clP + 3;
+      if (maxLines > 1) rowH = Math.max(rowH, lineH * maxLines + 8);
       var H = mT + mB + n * rowH + (n - 1) * gap;
-      var maxChars = Math.max.apply(null, data.map(function (d) { return String(d.label).length; }));
-      var mL = Math.min(Math.max(maxChars * (small ? 6.0 : 6.8) + 14, 64), W * 0.44);
       var mR = small ? 46 : 56;
       var max = (spec.max != null) ? spec.max : Math.max.apply(null, data.map(function (d) { return d.value; }).concat(spec.refValue != null ? [spec.refValue] : []));
       var ns = niceScale(0, max, small ? 3 : 5), iw = (W - mR) - mL;
       var Xv = function (v) { return mL + (v / ns.max) * iw; };
       svg.setAttribute("viewBox", "0 0 " + W + " " + H); describe(svg, spec);
+      // reference-line label shares the top row with x-ticks; give it priority
+      var refLX = null, refHalf = 0;
+      if (spec.refValue != null && spec.refLabel) { refLX = clampMid(Xv(spec.refValue), spec.refLabel, LABEL_PX.anno, W); refHalf = estW(spec.refLabel, LABEL_PX.anno) / 2; }
+      var xticksB = thinTicks(ns.ticks, Xv, function (tv) { return fmt(tv, spec.x || {}); }, LABEL_PX.ax, 7);
       ns.ticks.forEach(function (tv) {
         var gx = Xv(tv);
         svg.appendChild(svgEl("line", { x1: gx, y1: mT, x2: gx, y2: H - mB, stroke: tv === 0 ? C.axis : C.hair, "stroke-width": tv === 0 ? 1.2 : 1 }));
-        var t = svgEl("text", { x: gx, y: mT - 7, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = fmt(tv, spec.x || {}); svg.appendChild(t);
+        if (xticksB.indexOf(tv) < 0) return;
+        var tstr = fmt(tv, spec.x || {}), lx = clampMid(gx, tstr, LABEL_PX.ax, W);
+        if (refLX != null && Math.abs(lx - refLX) < refHalf + estW(tstr, LABEL_PX.ax) / 2 + 4) return;  // yields to refLabel
+        var t = svgEl("text", { x: lx, y: mT - 7, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = tstr; svg.appendChild(t);
       });
       var vlabs = [];   // value labels go on last, above any reference line
       data.forEach(function (d, i) {
         var y = mT + i * (rowH + gap), w = Math.max(Xv(d.value) - mL, 0), col = d.color || (d.highlight ? C.subject : C.muted);
-        var lab = svgEl("text", { x: mL - 10, y: y + rowH / 2 + 4, "text-anchor": "end", "class": "dn-clabel" }); if (d.highlight) lab.setAttribute("fill", C.subject); lab.textContent = d.label; svg.appendChild(lab);
+        drawGutter(svg, d.label, mL - 10, y + rowH / 2, "dn-clabel", clP, labelBudget, d.highlight ? C.subject : null);
         var r = svgEl("rect", { x: mL, y: y, width: w, height: rowH, fill: col, rx: 2 }); svg.appendChild(r); growBar(r, 0.05 + i * 0.05);
-        var v = svgEl("text", { x: mL + w + 8, y: y + rowH / 2 + 4, "text-anchor": "start", "class": "dn-vlabel" }); if (d.highlight) v.setAttribute("fill", C.subject); v.textContent = fmt(d.value, spec.x || {}); v.style.paintOrder = "stroke"; v.style.stroke = "var(--paper)"; v.style.strokeWidth = "4px"; v.style.strokeLinejoin = "round"; vlabs.push(v);
+        var vtext = fmt(d.value, spec.x || {}), vw = estW(vtext, LABEL_PX.vlabel);
+        var v;
+        if (mL + w + 8 + vw > W - 2 && w > vw + 12) {           // no room outside → label inside the bar
+          v = svgEl("text", { x: mL + w - 6, y: y + rowH / 2 + 4, "text-anchor": "end", "class": "dn-vlabel" });
+          v.style.fill = idealText(col);   // inline style: the .dn-vlabel CSS fill would beat an attribute
+        } else {
+          v = svgEl("text", { x: Math.min(mL + w + 8, W - vw - 2), y: y + rowH / 2 + 4, "text-anchor": "start", "class": "dn-vlabel" });
+          if (d.highlight) v.setAttribute("fill", C.subject);
+          v.style.paintOrder = "stroke"; v.style.stroke = "var(--paper)"; v.style.strokeWidth = "4px"; v.style.strokeLinejoin = "round";
+        }
+        v.textContent = vtext; vlabs.push(v);
       });
       if (spec.refValue != null) {
         var gx = Xv(spec.refValue);
         svg.appendChild(svgEl("line", { x1: gx, y1: mT, x2: gx, y2: H - mB, stroke: spec.refColor || C.neg, "stroke-width": 1, "stroke-dasharray": "3 3" }));
-        if (spec.refLabel) { var t2 = svgEl("text", { x: gx, y: mT - 7, "text-anchor": "middle", "class": "dn-anno" }); t2.setAttribute("fill", spec.refColor || C.neg); t2.textContent = spec.refLabel; svg.appendChild(t2); }
+        if (spec.refLabel) { var t2 = svgEl("text", { x: refLX != null ? refLX : gx, y: mT - 7, "text-anchor": "middle", "class": "dn-anno" }); t2.setAttribute("fill", spec.refColor || C.neg); t2.textContent = spec.refLabel; svg.appendChild(t2); }
       }
       vlabs.forEach(function (v) {
         svg.appendChild(v);
@@ -765,11 +928,13 @@ window.DN = (function () {
       var svg = m.svg; clear(svg);
       var W = Math.max(m.host.clientWidth, 240), small = W < 460;
       var H = spec.height || Math.round(Math.min(Math.max(W * 0.6, 220), 400));
-      var mL = small ? 34 : 44, mR = 14, mT = 18, mB = 40;
+      var mR = 14, mT = 18, mB = 40;
       var yMax;
       if (mode === "stacked") yMax = Math.max.apply(null, groups.map(function (g) { return series.reduce(function (s, se) { return s + (g.values[se.name] || 0); }, 0); }));
       else yMax = Math.max.apply(null, groups.map(function (g) { return Math.max.apply(null, series.map(function (se) { return g.values[se.name] || 0; })); }));
-      var ns = niceScale(0, yMax, small ? 4 : 5), iw = (W - mR) - mL, ih = (H - mB) - mT;
+      var ns = niceScale(0, yMax, small ? 4 : 5);
+      var mL = Math.min(Math.max(Math.round(widestW(ns.ticks, function (tv) { return fmt(tv, spec.y || {}); }, LABEL_PX.ax)) + 12, small ? 34 : 44), Math.round(W * 0.34));
+      var iw = (W - mR) - mL, ih = (H - mB) - mT;
       var Y = function (v) { return mT + ih - (v / ns.max) * ih; }, gw = iw / groups.length, gpad = gw * 0.2;
       svg.setAttribute("viewBox", "0 0 " + W + " " + H); describe(svg, spec);
       ns.ticks.forEach(function (tv) {
@@ -779,7 +944,10 @@ window.DN = (function () {
       });
       groups.forEach(function (g, gi) {
         var gx = mL + gi * gw + gpad / 2, innerW = gw - gpad;
-        var xl = svgEl("text", { x: mL + gi * gw + gw / 2, y: H - mB + 20, "text-anchor": "middle", "class": "dn-ax" }); xl.textContent = g.label; svg.appendChild(xl);
+        var glab = ellip(g.label, gw - 4, LABEL_PX.ax), glx = clampMid(mL + gi * gw + gw / 2, glab, LABEL_PX.ax, W);
+        var xl = svgEl("text", { x: glx, y: H - mB + 20, "text-anchor": "middle", "class": "dn-ax" }); xl.textContent = glab;
+        if (glab !== String(g.label)) { xl.setAttribute("data-dn-fit", "trunc"); var gti = svgEl("title"); gti.textContent = String(g.label); xl.appendChild(gti); }
+        svg.appendChild(xl);
         if (mode === "stacked") {
           var acc = 0;
           series.forEach(function (se, si) {
@@ -816,17 +984,24 @@ window.DN = (function () {
       var ns = niceScale(Math.min.apply(null, vals), Math.max.apply(null, vals), 5);
       var Y = function (v) { return mT + (H - mT - mB) - (v - ns.min) / (ns.max - ns.min) * (H - mT - mB); };
       svg.setAttribute("viewBox", "0 0 " + W + " " + H); describe(svg, spec);
-      var hl = svgEl("text", { x: xL, y: mT - 14, "text-anchor": "middle", "class": "dn-clabel" }); hl.textContent = spec.left || ""; svg.appendChild(hl);
-      var hr = svgEl("text", { x: xR, y: mT - 14, "text-anchor": "middle", "class": "dn-clabel" }); hr.textContent = spec.right || ""; svg.appendChild(hr);
+      var hl = svgEl("text", { x: clampMid(xL, spec.left || "", LABEL_PX.clabel, W), y: mT - 14, "text-anchor": "middle", "class": "dn-clabel" }); hl.textContent = ellip(spec.left || "", 2 * xL - 8, LABEL_PX.clabel); svg.appendChild(hl);
+      var hr = svgEl("text", { x: clampMid(xR, spec.right || "", LABEL_PX.clabel, W), y: mT - 14, "text-anchor": "middle", "class": "dn-clabel" }); hr.textContent = ellip(spec.right || "", 2 * (W - xR) - 8, LABEL_PX.clabel); svg.appendChild(hr);
       svg.appendChild(svgEl("line", { x1: xL, y1: mT, x2: xL, y2: H - mB, stroke: C.hair }));
       svg.appendChild(svgEl("line", { x1: xR, y1: mT, x2: xR, y2: H - mB, stroke: C.hair }));
-      items.forEach(function (it) {
-        var col = it.color || (it.highlight ? C.subject : C.muted), y0 = Y(it.from), y1 = Y(it.to);
+      var y0s = items.map(function (it) { return Y(it.from); });
+      var y1s = items.map(function (it) { return Y(it.to); });
+      var llY = separateY(y0s.slice(), LABEL_PX.clabel + 2, mT + 4, H - mB);
+      var rvY = separateY(y1s.slice(), LABEL_PX.vlabel + 2, mT + 4, H - mB);
+      items.forEach(function (it, i) {
+        var col = it.color || (it.highlight ? C.subject : C.muted), y0 = y0s[i], y1 = y1s[i];
         svg.appendChild(svgEl("line", { x1: xL, y1: y0, x2: xR, y2: y1, stroke: col, "stroke-width": it.highlight ? 2.4 : 1.6, "stroke-opacity": it.highlight ? 1 : 0.85 }));
         svg.appendChild(svgEl("circle", { cx: xL, cy: y0, r: 3.2, fill: col }));
         svg.appendChild(svgEl("circle", { cx: xR, cy: y1, r: 3.2, fill: col }));
-        var ll = svgEl("text", { x: xL - 10, y: y0 + 4, "text-anchor": "end", "class": "dn-clabel" }); if (it.highlight) ll.setAttribute("fill", C.subject); ll.textContent = it.label; svg.appendChild(ll);
-        var rv = svgEl("text", { x: xR + 10, y: y1 + 4, "text-anchor": "start", "class": "dn-vlabel" }); if (it.highlight) rv.setAttribute("fill", C.subject); rv.textContent = fmt(it.to, spec.y || {}); svg.appendChild(rv);
+        var llTxt = ellip(it.label, xL - 14, LABEL_PX.clabel);
+        var ll = svgEl("text", { x: xL - 10, y: llY[i] + 4, "text-anchor": "end", "class": "dn-clabel" }); if (it.highlight) ll.setAttribute("fill", C.subject); ll.textContent = llTxt;
+        if (llTxt !== String(it.label)) { ll.setAttribute("data-dn-fit", "trunc"); var lti = svgEl("title"); lti.textContent = String(it.label); ll.appendChild(lti); }
+        svg.appendChild(ll);
+        var rv = svgEl("text", { x: xR + 10, y: rvY[i] + 4, "text-anchor": "start", "class": "dn-vlabel" }); if (it.highlight) rv.setAttribute("fill", C.subject); rv.textContent = ellip(fmt(it.to, spec.y || {}), (W - xR) - 12, LABEL_PX.vlabel); svg.appendChild(rv);
       });
       m.legend.style.display = "none";
       a11yTable(m.sr, spec.title || "Chart data", ["Item", spec.left || "From", spec.right || "To"], items.map(function (it) { return [it.label, fmt(it.from, spec.y || {}), fmt(it.to, spec.y || {})]; }));
@@ -843,10 +1018,11 @@ window.DN = (function () {
       var svg = m.svg; clear(svg);
       var W = Math.max(m.host.clientWidth, 240), small = W < 460;
       var H = spec.height || Math.round(Math.min(Math.max(W * 0.66, 240), 420));
-      var mL = small ? 38 : 48, mR = 16, mT = 16, mB = 38;
+      var mR = 16, mT = 16, mB = 38;
       var xs = pts.map(function (p) { return p.x; }), ys = pts.map(function (p) { return p.y; });
       var nx = niceScale(Math.min.apply(null, xs), Math.max.apply(null, xs), small ? 4 : 6);
       var nyv = niceScale(Math.min.apply(null, ys), Math.max.apply(null, ys), small ? 4 : 5);
+      var mL = Math.min(Math.max(Math.round(widestW(nyv.ticks, function (tv) { return fmt(tv, spec.y || {}); }, LABEL_PX.ax)) + 12, small ? 38 : 48), Math.round(W * 0.34));
       var X = lin([nx.min, nx.max], [mL, W - mR]), Y = lin([nyv.min, nyv.max], [H - mB, mT]);
       svg.setAttribute("viewBox", "0 0 " + W + " " + H); describe(svg, spec);
       nyv.ticks.forEach(function (tv) {
@@ -854,7 +1030,8 @@ window.DN = (function () {
         svg.appendChild(svgEl("line", { x1: mL, y1: gy, x2: W - mR, y2: gy, stroke: C.hair }));
         var t = svgEl("text", { x: mL - 8, y: gy + 4, "text-anchor": "end", "class": "dn-ax" }); t.textContent = fmt(tv, spec.y || {}); svg.appendChild(t);
       });
-      nx.ticks.forEach(function (tv) { var t = svgEl("text", { x: X(tv), y: H - mB + 20, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = fmt(tv, spec.x || {}); svg.appendChild(t); });
+      var xfmtS = function (tv) { return fmt(tv, spec.x || {}); };
+      thinTicks(nx.ticks, X, xfmtS, LABEL_PX.ax, 8).forEach(function (tv) { var lx = clampMid(X(tv), xfmtS(tv), LABEL_PX.ax, W); var t = svgEl("text", { x: lx, y: H - mB + 20, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = xfmtS(tv); svg.appendChild(t); });
       if (spec.x && spec.x.label) { var xa = svgEl("text", { x: W - mR, y: H - 4, "text-anchor": "end", "class": "dn-axlabel" }); xa.textContent = spec.x.label; svg.appendChild(xa); }
       if (spec.y && spec.y.label) { var ya = svgEl("text", { x: mL - 8, y: mT - 5, "text-anchor": "start", "class": "dn-axlabel" }); ya.textContent = spec.y.label; svg.appendChild(ya); }
       if (spec.quadrant) {
@@ -866,7 +1043,12 @@ window.DN = (function () {
         var col = p.color || (p.group ? cat(hashIdx(p.group)) : C.subject);
         if (p.group && !groups.filter(function (g) { return g.name === p.group; }).length) groups.push({ name: p.group, color: col });
         svg.appendChild(svgEl("circle", { cx: X(p.x), cy: Y(p.y), r: p.r || 4.5, fill: col, "fill-opacity": 0.82 }));
-        if (p.label) { var t = svgEl("text", { x: X(p.x) + (p.r || 4.5) + 4, y: Y(p.y) + 4, "text-anchor": "start", "class": "dn-annosub" }); t.textContent = p.label; svg.appendChild(t); }
+        if (p.label) {
+          var plw = estW(p.label, LABEL_PX.annosub), px0 = X(p.x) + (p.r || 4.5) + 4, pl;
+          if (px0 + plw > W - 2) pl = svgEl("text", { x: X(p.x) - (p.r || 4.5) - 4, y: Y(p.y) + 4, "text-anchor": "end", "class": "dn-annosub" });
+          else pl = svgEl("text", { x: px0, y: Y(p.y) + 4, "text-anchor": "start", "class": "dn-annosub" });
+          pl.textContent = p.label; svg.appendChild(pl);
+        }
       });
       drawLegend(m.legend, groups);
       a11yTable(m.sr, spec.title || "Chart data", [(spec.x && spec.x.title) || "x", (spec.y && spec.y.title) || "y", "Label"], pts.map(function (p) { return [fmt(p.x, spec.x || {}), fmt(p.y, spec.y || {}), p.label || ""]; }));
@@ -902,10 +1084,13 @@ window.DN = (function () {
         X = function (v) { return padX + (v - x0) / (x1 - x0) * (W - 2 * padX); };
         svg.setAttribute("viewBox", "0 0 " + W + " " + H); describe(svg, spec); svg.appendChild(defs);
         svg.appendChild(svgEl("line", { x1: padX, y1: baseY, x2: W - padX, y2: baseY, stroke: C.hair }));
-        xticks(x0, x1, small ? 4 : 7).forEach(function (xv) {
+        var allXb = xticks(x0, x1, small ? 4 : 7), bfmt = function (xv) { return String(fx(xv)); };
+        var keepXb = thinTicks(allXb, X, bfmt, LABEL_PX.ax, 8);
+        allXb.forEach(function (xv) {
           var xx = X(xv);
           svg.appendChild(svgEl("line", { x1: xx, y1: baseY, x2: xx, y2: baseY + 6, stroke: C.hair }));
-          var t = svgEl("text", { x: xx, y: baseY + 22, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = fx(xv); svg.appendChild(t);
+          if (keepXb.indexOf(xv) < 0) return;
+          var t = svgEl("text", { x: clampMid(xx, bfmt(xv), LABEL_PX.ax, W), y: baseY + 22, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = fx(xv); svg.appendChild(t);
         });
         events.forEach(function (e, i) {
           var xa = X(e.start), xb = X(e.end), w = Math.max(xb - xa, 1.2), col = e.color || catColor(e.category, i);
@@ -924,28 +1109,34 @@ window.DN = (function () {
         (spec.brackets || []).forEach(function (b) {
           var bx0 = X(b.x0), bx1 = X(b.x1), by = top - 40;
           svg.appendChild(svgEl("path", { d: "M" + bx0 + " " + (by + 9) + " V" + by + " H" + bx1 + " V" + (by + 9), fill: "none", stroke: C.subject, "stroke-width": 1.2 }));
-          var t = svgEl("text", { x: (bx0 + bx1) / 2, y: by - 6, "text-anchor": "middle", "class": "dn-anno" }); t.setAttribute("fill", C.subject); t.textContent = b.label; svg.appendChild(t);
+          var t = svgEl("text", { x: clampMid((bx0 + bx1) / 2, b.label, LABEL_PX.anno, W), y: by - 6, "text-anchor": "middle", "class": "dn-anno" }); t.setAttribute("fill", C.subject); t.textContent = b.label; svg.appendChild(t);
         });
         (spec.notes || []).forEach(function (nt) {
           var nx = X(nt.x);
-          var t = svgEl("text", { x: nx, y: top - 16, "text-anchor": "middle", "class": "dn-anno" }); t.textContent = nt.text; svg.appendChild(t);
-          if (nt.sub) { var t2 = svgEl("text", { x: nx, y: top - 3, "text-anchor": "middle", "class": "dn-annosub" }); t2.textContent = nt.sub; svg.appendChild(t2); }
+          var t = svgEl("text", { x: clampMid(nx, nt.text, LABEL_PX.anno, W), y: top - 16, "text-anchor": "middle", "class": "dn-anno" }); t.textContent = nt.text; svg.appendChild(t);
+          if (nt.sub) { var t2 = svgEl("text", { x: clampMid(nx, nt.sub, LABEL_PX.annosub, W), y: top - 3, "text-anchor": "middle", "class": "dn-annosub" }); t2.textContent = nt.sub; svg.appendChild(t2); }
         });
       } else {
-        var rowH = small ? 20 : 24, gap = 6, mT = 8, mB = 30;
-        var maxChars = Math.max.apply(null, events.map(function (e) { return String(e.label).length; }));
-        var mL = Math.min(Math.max(maxChars * (small ? 5.6 : 6.6) + 12, 70), W * 0.4);
+        var rowH = small ? 20 : 24, gap = 6, mT = 8, mB = 30, clP = LABEL_PX.clabel;
+        var mL = Math.min(Math.max(Math.round(widestW(events.map(function (e) { return e.label; }), function (s) { return s; }, clP)) + 16, 70), Math.round(W * 0.42));
+        var rBudget = mL - 14;
+        var rFits = events.map(function (e) { return wrapFit(e.label, rBudget, clP, 2); });
+        var rMaxLines = Math.max.apply(null, rFits.map(function (f) { return f.lines.length; }));
+        if (rMaxLines > 1) rowH = Math.max(rowH, (clP + 3) * rMaxLines + 6);
         H = mT + mB + events.length * (rowH + gap);
         X = function (v) { return mL + (v - x0) / (x1 - x0) * ((W - 14) - mL); };
         svg.setAttribute("viewBox", "0 0 " + W + " " + H); describe(svg, spec); svg.appendChild(defs);
-        xticks(x0, x1, small ? 4 : 7).forEach(function (xv) {
+        var allXr = xticks(x0, x1, small ? 4 : 7), rfmt = function (xv) { return String(fx(xv)); };
+        var keepXr = thinTicks(allXr, X, rfmt, LABEL_PX.ax, 8);
+        allXr.forEach(function (xv) {
           var xx = X(xv);
           svg.appendChild(svgEl("line", { x1: xx, y1: mT, x2: xx, y2: H - mB, stroke: C.hair }));
-          var t = svgEl("text", { x: xx, y: H - mB + 20, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = fx(xv); svg.appendChild(t);
+          if (keepXr.indexOf(xv) < 0) return;
+          var t = svgEl("text", { x: clampMid(xx, rfmt(xv), LABEL_PX.ax, W), y: H - mB + 20, "text-anchor": "middle", "class": "dn-ax" }); t.textContent = fx(xv); svg.appendChild(t);
         });
         events.forEach(function (e, i) {
           var y = mT + i * (rowH + gap), xa = X(e.start), xb = X(e.end), w = Math.max(xb - xa, 2), col = e.color || catColor(e.category, i);
-          var lab = svgEl("text", { x: mL - 10, y: y + rowH / 2 + 4, "text-anchor": "end", "class": "dn-clabel" }); lab.textContent = e.label; svg.appendChild(lab);
+          drawGutter(svg, e.label, mL - 10, y + rowH / 2, "dn-clabel", clP, rBudget, null);
           if (e.projectFrom != null) {
             var xn = X(e.projectFrom);
             svg.appendChild(svgEl("rect", { x: xa, y: y, width: Math.max(xn - xa, 1), height: rowH, fill: col, rx: 2 }));
