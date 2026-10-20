@@ -81,6 +81,8 @@ for (const rel of held) {
 }
 // Short links (dailynoodle.co.uk/mini …) that every puzzle share ends with; see tools/short-links.js.
 require('./short-links').write(OUT);
+// Search titles, descriptions and self-canonicals; source puzzle/card data stays intact.
+require('./search-meta').write(OUT);
 // sitemap.xml + robots.txt from what was actually published; see tools/sitemap.js.
 require('./sitemap').write(OUT);
 if (!fs.existsSync(path.join(OUT, 'index.html')) || !fs.existsSync(path.join(OUT, 'feed.json'))) {
