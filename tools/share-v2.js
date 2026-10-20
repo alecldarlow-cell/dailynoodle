@@ -3,7 +3,8 @@
 
    The group compares results line by line in WhatsApp, so every type now
    shares one line in the same "emoji Name #N — result" shape Tangle already
-   uses. No link, no "made with Digi Puzzles", no separate streak line; a
+   uses. No link, no "made with Digi Puzzles", no separate streak line (the
+   finish sheet adds the short link as a second line from 20 Oct 2026); a
    streak of 2 or more is added as "· 🔥n".
 
      Mini     ✏️ Mini #100 — 1:27 · 🔥5

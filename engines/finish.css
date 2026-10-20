@@ -66,6 +66,9 @@ html.fin-shown body{overflow:hidden}
 .fin-share{margin:22px 0 0}
 .fin-share-card{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--f-paper);border-radius:16px;padding:10px 10px 10px 16px;font-size:17px;font-weight:600;line-height:1.35}
 .fin-share-text{min-width:0;-webkit-user-select:text;user-select:text}
+/* the short link that ends every share (20 Oct 2026); shown under the line so people see what they send */
+.fin-share-body{min-width:0;display:flex;flex-direction:column;gap:2px;-webkit-user-select:text;user-select:text}
+.fin-share-url{font-size:13px;font-weight:500;color:var(--f-ink2);overflow-wrap:anywhere}
 .fin-nw{white-space:nowrap}
 /* Reckon's ten squares: kept together on their own line when they fit, wrapped only on a very narrow phone */
 .fin-box[data-fin="reckon"] .fin-nw{display:inline-block;white-space:normal}

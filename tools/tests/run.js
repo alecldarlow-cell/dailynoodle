@@ -62,23 +62,29 @@ async function sheetChecks(p, ev, { type, boxId = 'winModal', ids, shareRe, endC
 }
 async function shareClipboard(p, ctx, type) {
   await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'https://dailynoodle.co.uk' });
-  const want = await text(p, '.fin-share-text');
+  const line = await text(p, '.fin-share-text'), url = 'dailynoodle.co.uk/' + type, want = line + '\n' + url;
+  ok(await text(p, '.fin-share-url') === url, `${type}: the short link shows under the line`);
   await tap(p, p.locator('.fin-share-btn')); await p.waitForTimeout(200);
   const got = await p.evaluate(() => navigator.clipboard.readText()).catch(() => '');
-  ok(got === want, `${type}: Share copies the line when there is no share sheet`);
+  ok(got === want, `${type}: Share copies the line and the short link when there is no share sheet`);
   ok(await text(p, '.fin-share-label') === 'Copied' && await text(p, '.fin-live') === 'Copied', `${type}: button says Copied, and so does the screen-reader line`);
   await wait(p, 2500);
   ok(await text(p, '.fin-share-label') === 'Share', `${type}: button goes back to Share`);
 }
 async function shareNative(browser, file, driver, type) {
-  const ctx = await newPhone(browser);
+  const events = [];
+  const ctx = await newPhone(browser, { events });
   await ctx.addInitScript(() => { window.__shared = []; navigator.share = d => { window.__shared.push(d.text); return Promise.resolve(); }; });
   const { p } = await open(browser, file, { ctx });
   await driver(p);
-  const want = await text(p, '.fin-share-text');
+  const want = await text(p, '.fin-share-text') + '\ndailynoodle.co.uk/' + type;
   await tap(p, p.locator('.fin-share-btn')); await p.waitForTimeout(200);
   const got = await p.evaluate(() => window.__shared);
-  ok(got.length === 1 && got[0] === want, `${type}: on a phone, Share opens the share sheet with the line`);
+  ok(got.length === 1 && got[0] === want, `${type}: on a phone, Share opens the share sheet with the line and the short link`);
+  await p.evaluate(() => { try { window.digi.flush(); } catch (e) {} }); await p.waitForTimeout(400);
+  const sh = events.filter(e => e.ev === 'share_click' || e.ev === 'share_done');
+  ok(sh.some(e => e.ev === 'share_click' && e.x.method === 'native' && e.x.type === type) && sh.some(e => e.ev === 'share_done' && e.x.type === type),
+    `${type}: the share is recorded (share_click and share_done)`);
   await ctx.close();
 }
 async function reopen(p, ev, type, boxId = 'winModal') {

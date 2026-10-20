@@ -16,7 +16,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - Tracker v3 (15 Oct 2026, MI audit): puzzle_start only counts a tap inside the play area (`PLAY_AREA` in dn-track.js: #grid, #board, #bank, #kb, clues, #playCard, #resumeBtn, #opts, #qmap) or typing. **A new puzzle type must put its play area in one of those ids, or add its id to `PLAY_AREA`.** A finish with no recorded start logs a flagged `late:true` start, so gaps show up in the data.
 - puzzle_end carries the result where a type has one: Tangle `score` + `words` (from #rBig, #rWords), Borders `got` / `of` + `score` (from #rBig "7 of 10", #rPts), Link `mistakes` (#pips .pip.gone), Reckon `score` + `bulls` + `zones` (from #rPts, #rBulls, #rZones: points out of 1,000, questions within 15%, and one digit per question, 0 = within 15% … 4 = a miss; 20 Oct 2026). Tangle, Borders and Reckon end as outcome `scored`, never solved/failed. **Keep those ids if the result boxes are redesigned.**
 - page_view carries `via` (from `?via=` on a link) and `app` (in-app browser name) because apps send no referrer.
-- page_view carries `inst` (1 = opened from a home-screen icon) from 18 Oct 2026. News pieces record `share_click` / `share_done` from the Share buttons (`tools/news-share.js`).
+- page_view carries `inst` (1 = opened from a home-screen icon) from 18 Oct 2026. News pieces record `share_click` / `share_done` from the Share buttons (`tools/news-share.js`). Puzzle finish sheets record the same two events from 20 Oct 2026, with props `method` and `type` (`engines/finish.js`).
 - Reporting logic for these is in `toolchain/sql/2026-10-15-mi-audit-fixes.sql` (applied to Supabase as migration `mi_audit_fixes`).
 - Games must call the tracker themselves: `window.digi&&digi.track('game_start',{game:'<slug>',...})` when a round starts and `digi.track('game_end',{game:'<slug>',win:true|false,...})` when it ends. Lighthouse Keeper already does.
 - Link previews: `tools/og-tags.js` keeps a marked `<!-- og:start … og:end -->` block of Open Graph tags in every file's `<head>`, built from its dn:* metas. Like the tracker line, it is added by the workflow: don't add it by hand, and if dn-lint flags it on a rebuilt shipped piece, strip it before the gates.
@@ -33,7 +33,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - Plan doc: "Digi reader data plan" (Claude Docs).
 
 ## Share text (digi-share-v2, 15 Oct 2026)
-- Every puzzle shares one line, "emoji Name #N — result", no link and no "made with Digi Puzzles": ✏️ Mini, 🔢 Doku, 〰️ Path, 💣/💥 Sweep, 🔗 Link (one square per guess, ❌ for a miss), 🌍 Borders, 🧶 Tangle (unchanged), 🎯 Reckon (one mark per question: 🎯 within 15%, 🟩 30%, 🟨 60%, 🟧 3×, ⬜ a miss, then points). A streak of 2+ adds "· 🔥n".
+- Every puzzle shares one line, "emoji Name #N — result", no "made with Digi Puzzles" (from 20 Oct 2026 the finish sheet adds a second line, the short link `dailynoodle.co.uk/<type>`; see SITE.md "Short links on puzzle shares"): ✏️ Mini, 🔢 Doku, 〰️ Path, 💣/💥 Sweep, 🔗 Link (one square per guess, ❌ for a miss), 🌍 Borders, 🧶 Tangle (unchanged), 🎯 Reckon (one mark per question: 🎯 within 15%, 🟩 30%, 🟨 60%, 🟧 3×, ⬜ a miss, then points). A streak of 2+ adds "· 🔥n".
 - `tools/share-v2.js` patches both share paths (result box and saved-result revisit) and runs in the build workflow, so a puzzle uploaded from an older template is patched on push. Update the templates in the Digi Puzzles project to match when convenient.
 
 ## Shared engines (15 Oct 2026)

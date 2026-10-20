@@ -225,7 +225,12 @@
 
   /* ---------- share: the same behaviour on every type ---------- */
   var coarse = (function () { try { return matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } })();
-  function shareButton(btn, live, getText, label) {
+  /* Shares end with a short link to today's puzzle of the type (dailynoodle.co.uk/mini), which the
+     site's short-link page sends on tagged ?via=share; taps are recorded as share_click / share_done
+     (props method native|copy, type). The on-screen line stays the result alone; the link sits under it. */
+  function shortLink(type) { return 'dailynoodle.co.uk/' + type; }
+  function shareButton(btn, live, getText, label, type) {
+    function log(ev, method) { try { if (window.digi && window.digi.track) window.digi.track(ev, { method: method, type: type || '' }); } catch (e) {} }
     var lab = btn.querySelector('.fin-share-label');
     var reset;
     function say(icon, text, ms) {
@@ -233,7 +238,7 @@
       clearTimeout(reset); reset = setTimeout(function () { btn.querySelector('.fin-share-icon').innerHTML = SHARE_ICON; lab.textContent = label; }, ms || 2000);
     }
     function select() {
-      try { var r = document.createRange(); r.selectNodeContents(btn.parentNode.querySelector('.fin-share-text')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {}
+      try { var r = document.createRange(); r.selectNodeContents(btn.parentNode.querySelector('.fin-share-body')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {}
       say(SHARE_ICON, 'Press and hold the line to copy', 3500);
     }
     function legacy(t) {
@@ -244,14 +249,20 @@
       } catch (e) { select(); }
     }
     function copy(t) {
-      try { navigator.clipboard.writeText(t).then(function () { say(TICK_ICON, 'Copied'); }, function () { legacy(t); }); }
+      try { navigator.clipboard.writeText(t).then(function () { say(TICK_ICON, 'Copied'); log('share_done', 'copy'); }, function () { legacy(t); }); }
       catch (e) { legacy(t); }
     }
     btn.addEventListener('click', function () {
       var t = getText();
       if (coarse && navigator.share) {
-        try { navigator.share({ text: t }).catch(function (e) { if (!e || e.name !== 'AbortError') copy(t); }); return; } catch (e) {}
+        try {
+          log('share_click', 'native');
+          navigator.share({ text: t }).then(function () { log('share_done', 'native'); },
+            function (e) { if (!e || e.name !== 'AbortError') copy(t); });
+          return;
+        } catch (e) {}
       }
+      log('share_click', 'copy');
       copy(t);
     });
   }
@@ -372,11 +383,13 @@
     var card = el('section', 'fin-share');
     var text = cfg.share.text();
     var sq = esc(text).replace(/((?:🟩|🟦|🟨|🟧|⬛|⬜|🟥|🟪|❌|🎯){2,}(?: · \d+:\d{2})?)/u, '<span class="fin-nw">$1</span>');
-    card.innerHTML = '<div class="fin-share-card"><span class="fin-share-text">' + sq + '</span>' +
+    var url = shortLink(cfg.type);
+    card.innerHTML = '<div class="fin-share-card"><span class="fin-share-body"><span class="fin-share-text">' + sq + '</span>' +
+      '<span class="fin-share-url">' + esc(url) + '</span></span>' +
       '<button type="button" class="fin-pill fin-primary fin-share-btn"><span class="fin-share-icon">' + SHARE_ICON + '</span><span class="fin-share-label">' + esc(label) + '</span></button></div>' +
       '<span class="fin-live" role="status" aria-live="polite"></span>';
     f.appendChild(card);
-    shareButton(card.querySelector('.fin-share-btn'), card.querySelector('.fin-live'), cfg.share.text, label);
+    shareButton(card.querySelector('.fin-share-btn'), card.querySelector('.fin-live'), function () { return cfg.share.text() + '\n' + url; }, label, cfg.type);
     saveNotice(f);
 
     // stats
