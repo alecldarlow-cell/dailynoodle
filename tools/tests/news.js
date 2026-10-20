@@ -33,14 +33,17 @@ const pieces = fs.readdirSync(REPORTS).filter(f => /^\d{4}-\d{2}-\d{2}-.*\.html$
 }).sort();
 
 function render(f) {
+  let retried = false;
   return new Promise(res => {
-    const c = spawn(process.execPath, [path.join(ROOT, 'toolchain/dn-render.js'), path.join(REPORTS, f), '--repo', ROOT, '--out', OUT], { cwd: ROOT });
+    const go = () => { const c = spawn(process.execPath, [path.join(ROOT, 'toolchain/dn-render.js'), path.join(REPORTS, f), '--repo', ROOT, '--out', OUT], { cwd: ROOT });
     let out = ''; c.stdout.on('data', d => out += d); c.stderr.on('data', d => out += d);
     c.on('close', code => {
       try { fs.mkdirSync(path.join(OUT, f.slice(0, -5)), { recursive: true }); fs.writeFileSync(path.join(OUT, f.slice(0, -5), 'render.txt'), out); } catch (e) {}
       const verdict = (out.match(/RENDER: [A-Z ]+/) || ['RENDER: could not run'])[0];
+      if (code === 2 && !retried) { retried = true; return go(); }   // the browser itself failed (e.g. a screenshot under load): one retry, never for a verdict
       res({ f, code, verdict, fails: out.split('\n').filter(l => /\bFAIL\b/.test(l) && !/^RENDER/.test(l)).slice(0, 6) });
-    });
+    }); };
+    go();
   });
 }
 
