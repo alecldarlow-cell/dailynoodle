@@ -10,7 +10,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 
 ## Reader tracking
 - `dn-track.js` (repo root) records anonymous events into the `digi` Supabase project (London, eu-west-2) via one write-only function `public.log_events`.
-- The nightly/push workflow `build-feed.yml` runs `tools/inject-tracker.js` first, which adds `<script src="../dn-track.js" defer></script>` before `</body>` of every file in `reports/` that lacks it. Do NOT add it by hand; do NOT remove it from live files.
+- The nightly/push workflow `build-feed.yml` (through `tools/release.js` and `tools/prepare-site.js`, before the test suite runs) runs `tools/inject-tracker.js` first, which adds `<script src="../dn-track.js" defer></script>` before `</body>` of every file in `reports/` that lacks it. Do NOT add it by hand; do NOT remove it from live files.
 - Rubric exception agreed by Alec: the tracker line is the one permitted non-self-contained dependency. It is optional at runtime. If dn-lint flags it on a rebuilt shipped piece, strip the line before the gates; the workflow re-adds it on upload.
 - Automatic: page_view, page_exit (time on page, depth), card_click, read_depth, exhibit_view (figure.exhibit), source_click, puzzle_start / puzzle_end (all puzzle types, detected from the #winModal / #modal result box and #winTitle).
 - Tracker v3 (15 Oct 2026, MI audit): puzzle_start only counts a tap inside the play area (`PLAY_AREA` in dn-track.js: #grid, #board, #bank, #kb, clues, #playCard, #resumeBtn, #opts, #qmap) or typing. **A new puzzle type must put its play area in one of those ids, or add its id to `PLAY_AREA`.** A finish with no recorded start logs a flagged `late:true` start, so gaps show up in the data.

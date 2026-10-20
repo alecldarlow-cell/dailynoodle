@@ -2,7 +2,8 @@
 /* tools/tests/link-smoke.js — play every Link in a serial range through in headless Chromium
    (added 19 Oct 2026). Each page must pass its own gate, show 16 tiles, be solvable with no
    mistakes by the harness player, and log no page errors.
-   Usage: PLAYWRIGHT_DIR=/opt/npm-tools/node_modules node tools/tests/link-smoke.js 135 174 */
+   Usage (after `npm ci --ignore-scripts`, which supplies Playwright and the pinned Chromium):
+   node tools/tests/link-smoke.js 135 174 */
 'use strict';
 const fs = require('fs'), path = require('path');
 const H = require('./harness.js'), play = require('./play.js');

@@ -84,10 +84,12 @@ Tiles: 1–10 characters, A–Z plus space, apostrophe or hyphen, UPPER CASE, 16
    `node tools/link-order.js --pool <files> --from <start> --count <n> --out final.json` (exit 0 = no
    R6 break, seams included). Re-gate final.json with `--check`.
 8. Publish. `node tools/link-reedit.js --batch final.json` (writes in place; masked diff and re-parse
-   are built in), then `node tools/og-tags.js`, then
-   `PLAYWRIGHT_DIR=/opt/npm-tools/node_modules node tools/tests/link-smoke.js <start> <end>` (all must
-   pass), then `node tools/build-registry.js --check` and compare its ERROR lines with the run before
-   your change (`git stash`): no new errors. Save final.json as `toolchain/link-batches/link-<start>-<end>.json`
+   are built in), then `node tools/og-tags.js`, then `npm ci --ignore-scripts` (once per clone: since
+   19 Oct 2026 the smoke test uses the pinned Chromium in `node_modules` and fails with "Cannot find
+   module '@sparticuz/chromium'" without it), then `node tools/tests/link-smoke.js <start> <end>` (all
+   must pass), then `node tools/build-registry.js --check` and compare its ERROR lines with the run
+   before your change (`git stash`): no new errors. Then `npm run test:content`, the release gate's
+   puzzle check for today and the next seven days; if it fails, the site can't deploy, so don't push. Save final.json as `toolchain/link-batches/link-<start>-<end>.json`
    (3-digit serials), update the ledger (status done, or partial with publishedTo), one commit
    ("Link <start>-<end>: re-edited under the new editing rules", saying what was checked), pull
    --rebase, push.

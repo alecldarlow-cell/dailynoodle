@@ -27,7 +27,8 @@ and the rules that keep players' streaks and saved progress safe.
 
 Push a file to `reports/` on `main`. The **Build feed** workflow then adds the
 tracker, patches share text, moves puzzles onto the shared engines, writes
-link-preview tags, rebuilds `feed.json`, and deploys the site: everything
+link-preview tags, rebuilds `feed.json`, runs the test suite and, only if it
+passes, deploys the site: everything
 except forward-dated files and the `tools/` and `toolchain/` folders. It also
 runs nightly so forward-dated items appear on their day. Details in `SITE.md` and
 `toolchain/site-sections-and-tracking.md`.
@@ -40,6 +41,8 @@ See [the developer testing guide](toolchain/testing.md) for focused commands,
 coverage boundaries, CI behavior and how to add a regression.
 
 ## Individual checks
+
+Each needs `npm ci --ignore-scripts` first (the browser checks use the pinned Chromium in `node_modules`).
 
 ```sh
 node tools/add-done-state.js --check     # finished puzzles reopen as finished
