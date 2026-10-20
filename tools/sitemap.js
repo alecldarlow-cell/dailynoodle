@@ -2,7 +2,8 @@
 /* sitemap.xml and robots.txt (20 Oct 2026).
 
    Written into the built site by tools/build-site.js, after the copy, so they
-   list only what is actually published: the three front pages plus every
+   list only what is actually published: the three front pages, the shared
+   how-to guide when present, and every
    feed item whose file is in the site. Forward-dated files the feed holds back
    are not in _site, so they can never be listed (answers stay hidden).
    Left out: Lab items ("In development" badge), board, admin, privacy, 404 and
@@ -25,6 +26,7 @@ function entries(site) {
   const feed = JSON.parse(fs.readFileSync(path.join(site, 'feed.json'), 'utf8'));
   const today = day(feed.today);
   const out = FRONT.map(p => ({ loc: ORIGIN + '/' + p, lastmod: today }));
+  if (fs.existsSync(path.join(site, 'how-to-play.html'))) out.push({ loc: ORIGIN + '/how-to-play.html' });
   for (const it of feed.items || []) {
     if (!it || !it.path || it.badge) continue;
     const rel = String(it.path).replace(/^\/+/, '');

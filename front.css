@@ -252,3 +252,11 @@
 
   /* phones: no page scrollbar drawn (they scroll by touch; Android flashed one as a page settled or came back) */
   @media(pointer:coarse){html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}}
+
+/* Puzzle guides: replace the category, preserving the date and duration.
+   The guide is a sibling of the play link, with its own reserved tap area. */
+.puzzle-card{position:relative}
+.puzzle-card .meta{padding-right:88px;min-height:24px;align-items:center}
+.card-guide{position:absolute;right:0;bottom:18px;min-height:24px;display:inline-flex;align-items:center;
+  padding:2px 0 2px 8px;font-size:12px;font-weight:600;line-height:1.6;color:var(--muted)}
+.card-guide:hover{text-decoration:underline;text-underline-offset:3px}
