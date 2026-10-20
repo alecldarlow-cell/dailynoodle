@@ -324,8 +324,8 @@
         <li id="s7"><span class="tier t1">T1</span>NHS England, <i>Around a million parents urged to book new 'four-in-one' NHS jab to protect young children against measles</i>, press notice, 7 July 2026. <a href="https://www.england.nhs.uk/2026/07/million-parents-book-new-four-in-one-nhs-jab-protect-children-against-measles/">england.nhs.uk</a>. Retrieved 15 Jul 2026.</li>
       </ol>
     </div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 15 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; measles-coverage-gap. Coverage statistics are provisional and subject to revision by UKHSA.</span></div>
+    <div class="fm"><b>Corrections.</b> v1.1 (20 Oct 2026): on narrow phone screens some chart labels ran off the edge of the chart; Exhibit 3’s zero line is relabelled “Zero for 12 months: elimination” (it was “Zero — the line elimination requires for 12 months”), and the quietest-week note now sits above the line instead of across it. No figures changed.</div>
+    <div><b>Figures to 15 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; measles-coverage-gap. Coverage statistics are provisional and subject to revision by UKHSA.</span></div>
   </div>
 
 </div>
@@ -1099,10 +1099,10 @@ window.DN = (function () {
     series: [{ name: "Confirmed cases per week", points: pts, color: "#1C46C2" }],
     x: { fmt: wkFmt, ticks: [0, 26, 52.2857, 78.1429, 104.4286], title: "Week of symptom onset" },
     y: { zero: true, title: "Confirmed cases", decimals: 0 },
-    refsY: [{ value: 0, label: "Zero — the line elimination requires for 12 months" }],
+    refsY: [{ value: 0, label: "Zero for 12 months: elimination" }],
     notes: [
       { x: pts[14].x, y: 106, text: "106 — peak", sub: "w/c 8 Apr 2024", dy: -14 },
-      { x: pts[85].x, y: 4,   text: "4 — quietest week", sub: "w/c 18 Aug 2025, still not zero", dy: -30 }
+      { x: pts[85].x, y: 4,   text: "4 — quietest week", sub: "w/c 18 Aug 2025, still not zero", dy: -78 }
     ]
   });
 })();

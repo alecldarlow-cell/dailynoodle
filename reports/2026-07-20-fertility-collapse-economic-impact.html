@@ -411,8 +411,8 @@
         <li id="s13"><span class="tier t2">T2</span>Melissa Kearney &amp; Phillip Levine, "The Causes and Consequences of Declining US Fertility," Aspen Economic Strategy Group, as reported by Reason, 2 May 2023, retrieved 20 Jul 2026.</li>
       </ol>
     </div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 20 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; fertility-collapse-economic-impact.</span></div>
+    <div class="fm"><b>Corrections.</b> Noodle News &middot; v1.1 (20 Oct 2026): on narrow phone screens some chart labels ran off the edge of the chart; Exhibits 2 and 3 name their single lines by their titles rather than end labels, and their notes sit clear of the lines. No figures changed.</div>
+    <div><b>Figures to 20 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; fertility-collapse-economic-impact.</span></div>
   </div>
 
 </div>
@@ -1129,7 +1129,7 @@ DN.line("#ex2", {
   summary: "World Bank measured data from 1960 to 2023, solid. Dashed segment from 2023 is the United Nations medium-scenario projection reaching the 2.1 replacement level by the late 2040s.",
   x: { fmt: yr },
   y: { suffix: "", zero: true, decimals: 1 },
-  endLabels: true,
+  endLabels: false,
   series: [
     {
       name: "Global fertility rate",
@@ -1142,7 +1142,7 @@ DN.line("#ex2", {
     }
   ],
   refsY: [{ value: 2.1, label: "Replacement level" }],
-  notes: [{ x: 2023, y: 2.2, text: "2023: last measured point", sub: "World Bank", dy: -16 }]
+  notes: [{ x: 2023, y: 2.2, text: "2023: last measured point", sub: "World Bank", dy: 24, dx: -4, anchor: "end" }]
 });
 
 /* Exhibit 03 — line: OECD old-age dependency ratio, 1980 & 2023 measured, 2060 OECD projection (dashed). */
@@ -1151,7 +1151,7 @@ DN.line("#ex3", {
   summary: "Measured at 19 in 1980 and 31 in 2023. The OECD's own projection, shown dashed, reaches 52 by 2060 absent policy change.",
   x: { fmt: yr },
   y: { suffix: "", zero: true },
-  endLabels: true,
+  endLabels: false,
   series: [
     {
       name: "Old-age dependency ratio",
@@ -1159,7 +1159,7 @@ DN.line("#ex3", {
       projectFrom: 2023
     }
   ],
-  notes: [{ x: 2023, y: 31, text: "2023: last measured point", sub: "OECD", dy: -16 }]
+  notes: [{ x: 2023, y: 31, text: "2023: last measured point", sub: "OECD", dy: -16, dx: -6, anchor: "end" }]
 });
 })();
 </script>

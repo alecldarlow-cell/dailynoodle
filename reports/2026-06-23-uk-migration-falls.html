@@ -391,8 +391,8 @@
         <li id="s9"><span class="tier t2">T2</span> Migration Observatory, University of Oxford, <em>People crossing the English Channel in small boats</em>, updated June 2026. <a href="https://migrationobservatory.ox.ac.uk/resources/briefings/people-crossing-the-english-channel-in-small-boats/" target="_blank">migrationobservatory.ox.ac.uk</a>. Retrieved 23 June 2026.</li>
       </ol>
     </div>
-    <div class="fm" style="margin-top:18px"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div class="ver">Noodle News &middot; Version 1.2 &middot; Published 23 June 2026 &middot; Figures to 23 June 2026 &middot; Validation &amp; long-run revision</div>
+    <div class="fm" style="margin-top:18px"><b>Corrections.</b> Noodle News &middot; v1.3 (20 Oct 2026): on narrow phone screens some chart labels ran off the edge of the chart; The visa-grants chart now names its lines in a key instead of at their ends, and the last chart’s “Work (incl. dependants)” is shortened to “Work + dependants”. No figures changed.</div>
+    <div class="ver">Noodle News &middot; Version 1.3 &middot; Published 23 June 2026 &middot; Figures to 23 June 2026 &middot; Validation &amp; long-run revision</div>
   </div>
 
 </div>
@@ -617,7 +617,7 @@ window.addEventListener('DOMContentLoaded',function(){
   line('#ex2',{
     title:'Visa grants by route, selected categories, 2019–2024 (thousands)',
     summary:'Health and Care Worker visas peaked at 156k in 2023 then collapsed to 23k in 2024. Student dependant visas fell 83%.',
-    endLabels:true,
+    endLabels:false,
     series:[
       {name:'Student (main)',color:'#56B4E9',points:[{x:2019,y:248},{x:2020,y:165},{x:2021,y:294},{x:2022,y:449},{x:2023,y:449},{x:2024,y:403}]},
       {name:'H&CW visa',color:'#E0312A',points:[{x:2019,y:7},{x:2020,y:5},{x:2021,y:21},{x:2022,y:77},{x:2023,y:156},{x:2024,y:23}]},
@@ -689,7 +689,7 @@ window.addEventListener('DOMContentLoaded',function(){
     sort:'none',
     data:[
       {label:'Study',value:294,highlight:false,color:'#56B4E9'},
-      {label:'Work (incl. dependants)',value:146,highlight:false,color:'#1C46C2'},
+      {label:'Work + dependants',value:146,highlight:false,color:'#1C46C2'},
       {label:'Asylum',value:88,highlight:false,color:'#E69F00'},
       {label:'Family',value:44,highlight:false,color:'#009E73'},
       {label:'Humanitarian',value:38,highlight:false,color:'#CC79A7'},

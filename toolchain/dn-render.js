@@ -159,6 +159,13 @@ function measure(o) {
     if (hidden(svg)) continue;
     const S = svg.getBoundingClientRect(); if (S.width < 2 || S.height < 2) continue;
     const clips = getComputedStyle(svg).overflow !== 'visible', where = exName(svg), boxes = [];
+    // A container above the chart that hides overflow cuts labels too (20 Oct 2026: row labels
+    // cut off on the left at 360px went unflagged because only the svg and the screen were checked).
+    let C = { left: -Infinity, right: Infinity };
+    for (let a = svg.parentElement; a && a !== document.body; a = a.parentElement) {
+      const cs = getComputedStyle(a); if (!/hidden|clip|auto|scroll/.test(cs.overflowX)) continue;
+      const q = a.getBoundingClientRect(); C = { left: Math.max(C.left, q.left), right: Math.min(C.right, q.right) };
+    }
     for (const t of svg.querySelectorAll('text')) {
       if (hidden(t) || !(t.textContent || '').trim()) continue;
       const R = t.getBoundingClientRect(); if (R.width === 0 || R.height === 0) continue;
@@ -166,6 +173,7 @@ function measure(o) {
       const ink = { l: R.left, r: R.right, top: R.top + 0.18 * R.height, bot: R.bottom - 0.18 * R.height };
       const cut = Math.max(S.left - ink.l, ink.r - S.right, S.top - ink.top, ink.bot - S.bottom);
       if (ink.r > W + 0.5 || ink.l < -0.5) fails.push(`${where}: label runs off the screen by ${Math.ceil(Math.max(ink.r - W, -ink.l))}px: ${say(t)}`);
+      else if (ink.l < C.left - 0.5 || ink.r > C.right + 0.5) fails.push(`${where}: label cut off by its container by ${Math.ceil(Math.max(C.left - ink.l, ink.r - C.right))}px: ${say(t)}`);
       else if (clips ? cut > 0.5 : cut > o.spillPx) (clips ? fails : warns).push(`${where}: label ${clips ? 'cut off' : 'sits outside the chart'} at its edge by ${Math.ceil(cut)}px: ${say(t)}`);
       const ctm = t.getScreenCTM(), px = parseFloat(getComputedStyle(t).fontSize) * (ctm ? Math.hypot(ctm.a, ctm.b) : 1);
       if (px < stat.minText) stat.minText = px;

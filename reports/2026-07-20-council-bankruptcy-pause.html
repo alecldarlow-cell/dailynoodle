@@ -406,8 +406,8 @@
         <li id="s11"><span class="tier t3">T3</span>FE Week, <em>SEND deficits to be kept off council balance sheets for two more years</em> (Feb 2026); Doncaster Free Press reporting of the DfE's 90%/£5bn announcement. Retrieved 18 Jul 2026.</li>
       </ol>
     </div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 20 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; council-bankruptcy-pause.</span></div>
+    <div class="fm"><b>Corrections.</b> Noodle News &middot; v1.1 (20 Oct 2026): on narrow phone screens some chart labels ran off the edge of the chart; Exhibit 1’s single line is named by its title rather than an end label, its two notes sit clear of the line, and the 2023 axis label, which collided with 2026, is dropped. No figures changed.</div>
+    <div><b>Figures to 20 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; council-bankruptcy-pause.</span></div>
   </div>
 
 </div>
@@ -1100,9 +1100,9 @@ var yr = function (v) { return String(Math.round(v)); };
 DN.line("#ex1", {
   title: "Cumulative section 114 notices by English councils, 1988\u20132026",
   summary: "Eighteen section 114 notices have been issued since 1988, in two clusters: six between 1988 and 2002, then eleven budget-failure notices across seven councils between 2018 and 2023, plus one narrower pension-related notice (Barnet, Jan 2025). The line has been flat since November 2023.",
-  x: { fmt: yr, ticks: [1988, 2000, 2018, 2023, 2026], title: "Year" },
+  x: { fmt: yr, ticks: [1988, 2000, 2018, 2026], title: "Year" },
   y: { zero: true, decimals: 0, title: "Cumulative notices" },
-  endLabels: true,
+  endLabels: false,
   series: [
     { name: "Section 114 notices", color: "#1C46C2", points: [
       {x:1988,y:0},{x:1988.919,y:0},{x:1988.929,y:1},{x:1989.491,y:1},{x:1989.501,y:2},
@@ -1116,8 +1116,8 @@ DN.line("#ex1", {
     ] }
   ],
   notes: [
-    { x: 2018.3, y: 8, text: "2018\u20132023 wave", sub: "11 budget-failure notices", dy: -16 },
-    { x: 2025.052, y: 18, text: "Barnet, Jan 2025", sub: "pension notice, different type", dy: 16 }
+    { x: 2018.3, y: 8, text: "2018\u20132023 wave", sub: "11 budget-failure notices", dy: -16, dx: -6, anchor: "end" },
+    { x: 2025.052, y: 18, text: "Barnet, Jan 2025", sub: "pension notice, different type", dy: -30, dx: -8, anchor: "end" }
   ]
 });
 

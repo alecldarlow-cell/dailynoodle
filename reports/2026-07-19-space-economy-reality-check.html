@@ -472,8 +472,8 @@
         <li id="s12"><span class="tier t3">T3</span> Britannica, <em>Artemis Accords</em>, updated July 2026 &mdash; cited for the summary of Russian and Chinese objections and signatory count. <a href="https://www.britannica.com/topic/Artemis-Accords" target="_blank">britannica.com</a></li>
       </ol>
     </div>
-    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
-    <div><b>Figures to 19 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.0 &middot; space-economy-reality-check.</span></div>
+    <div class="fm"><b>Corrections.</b> Noodle News &middot; v1.1 (20 Oct 2026): on narrow phone screens some chart labels ran off the edge of the chart; Exhibit 1’s notes now sit clear of the line and the axis, and the crowded 2030 axis label is dropped (the 2030 figure is in the text); Exhibit 2’s “Rest of world combined” is shortened to “Rest of world”. No figures changed.</div>
+    <div><b>Figures to 19 Jul 2026.</b> <span class="ver">Noodle News &middot; v1.1 &middot; space-economy-reality-check.</span></div>
   </div>
 
 </div>
@@ -1163,7 +1163,7 @@ window.DN = (function () {
   DN.line("#ex1", {
     title: "Cost to launch 1kg to low Earth orbit, 1960-2040",
     summary: "Measured: $87,023/kg in 1960, ~$20,000/kg by the early 1970s plateau, $3,868/kg in 2025. Projected (dashed, central case): $1,569/kg in 2030, $273/kg in 2040.",
-    x: { fmt: yr, min: 1960, max: 2040, ticks: [1960, 1972, 1989, 2025, 2030, 2040] },
+    x: { fmt: yr, min: 1960, max: 2040, ticks: [1960, 1972, 1989, 2025, 2040] },
     y: { zero: true, compact: true, prefix: "$", label: "$/kg" },
     endLabels: false,
     series: [
@@ -1181,9 +1181,9 @@ window.DN = (function () {
       }
     ],
     notes: [
-      { x: 1960, y: 87023, text: "$87,023", sub: "1960", dy: -14, anchor: "middle" },
-      { x: 2025, y: 3868, text: "$3,868", sub: "2025 (measured)", dy: -14, anchor: "end" },
-      { x: 2040, y: 273, text: "$273", sub: "2040 (projected)", dy: 16, anchor: "start" }
+      { x: 1960, y: 87023, text: "$87,023", sub: "1960", dy: 4, dx: 8, anchor: "start" },
+      { x: 2025, y: 3868, text: "$3,868", sub: "2025 (measured)", dy: -64, anchor: "end" },
+      { x: 2040, y: 273, text: "$273", sub: "2040 (projected)", dy: -40, anchor: "end" }
     ]
   });
 
@@ -1192,7 +1192,7 @@ window.DN = (function () {
     summary: "SpaceX launched approximately 80% of all payload mass sent to orbit worldwide in 2025; the rest of the industry combined accounted for about 20%.",
     data: [
       { label: "SpaceX", value: 80, highlight: true },
-      { label: "Rest of world combined", value: 20 }
+      { label: "Rest of world", value: 20 }
     ],
     sort: "none",
     x: { suffix: "%" },
