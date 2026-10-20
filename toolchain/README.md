@@ -86,7 +86,7 @@ python3 dn-build.py --piece piece && F=$(ls -t 20*.html | head -1) \
 Copy the file into `reports/` of a clone and push to `main`; the site's
 `build-feed.yml` workflow injects the tracker line, rebuilds `feed.json`, runs
 the site's full test suite and deploys only if it passes (since 19 Oct 2026;
-`toolchain/testing.md`). That takes about 5–8 minutes, and a failure anywhere on
+`toolchain/testing.md`). That usually takes under 10 minutes, and a failure anywhere on
 the site holds the piece back too. So a push is not publication. To confirm it
 went live:
 
