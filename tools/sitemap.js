@@ -25,6 +25,7 @@ function entries(site) {
   const feed = JSON.parse(fs.readFileSync(path.join(site, 'feed.json'), 'utf8'));
   const today = day(feed.today);
   const out = FRONT.map(p => ({ loc: ORIGIN + '/' + p, lastmod: today }));
+  if (fs.existsSync(path.join(site, 'how-to-play.html'))) out.push({ loc: ORIGIN + '/how-to-play.html' });
   for (const it of feed.items || []) {
     if (!it || !it.path || it.badge) continue;
     const rel = String(it.path).replace(/^\/+/, '');

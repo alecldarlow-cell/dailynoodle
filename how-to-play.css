@@ -1,0 +1,24 @@
+/* Share the puzzle hub's fonts, colours, masthead and pill geometry. */
+.guide-page .chips .chip[aria-current="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.guide-title{font:700 24px/1.25 var(--display);letter-spacing:-.02em;margin:24px 0}
+.guide-panel{padding:0 0 28px;margin:0 0 28px;border-bottom:1px solid var(--hair);scroll-margin-top:150px}
+.guide-panel[hidden]{display:none}
+.guide-heading{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
+.guide-heading h2{font:700 24px/1.25 var(--display);letter-spacing:-.02em}
+.guide-play{display:inline-flex;align-items:center;padding:7px 13px;border-radius:999px;
+  background:var(--accent);color:var(--on-accent);font-size:13px;font-weight:600}
+.guide-play:hover{text-decoration:underline;text-underline-offset:3px}
+.guide-intro{font-size:16px;color:var(--muted);margin-top:12px}
+.guide-rules{font-size:15px;padding-left:24px;margin:18px 0}
+.guide-rules li{padding-left:4px;margin:10px 0}
+.guide-panel h3{font:700 17px/1.3 var(--display);margin:22px 0 8px}
+.guide-tip{font-size:15px;color:var(--muted)}
+.guide-example{margin:22px 0}
+.guide-cells{display:grid;grid-template-columns:repeat(var(--guide-cols),minmax(0,1fr));gap:3px;
+  background:var(--tile-frame);border:3px solid var(--tile-frame);border-radius:5px;width:100%;max-width:224px}
+.guide-cells span{display:grid;place-items:center;aspect-ratio:1;background:var(--tile-cell);font-size:17px;font-weight:600}
+.guide-cells .given{background:var(--tile-lock)}
+.guide-words{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:400px}
+.guide-words span{background:var(--accent-soft);color:var(--accent);padding:10px 3px;text-align:center;border-radius:4px;font-size:12px;font-weight:600}
+.guide-example figcaption{font-size:13px;color:var(--muted);margin-top:10px;max-width:500px}
+@media(min-width:560px){.guide-title{font-size:28px}.guide-heading h2{font-size:26px}}

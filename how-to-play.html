@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-section="puzzles">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>
+/* full-screen app only: hold the top and bottom insets and the screen height steady (dn-pin, 18 Oct 2026).
+   On every page load Android briefly brings its bars back, which changed these and made the page jump.
+   A value is taken up only once it has held for 0.7 s, and remembered per orientation for the next page. */
+(function(){try{
+  if(!window.__dnPinTest&&(!window.matchMedia||!matchMedia('(display-mode: fullscreen)').matches))return;   // __dnPinTest: tools/tests
+  var r=document.documentElement,K='dn-pin',saved={},cur=null,t=0;
+  var p=document.createElement('div');
+  p.style.cssText='position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none;height:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+  r.appendChild(p);
+  try{saved=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}
+  function key(){return innerWidth>innerHeight?'l':'p';}
+  function now(){var s=getComputedStyle(p);return {t:Math.round(parseFloat(s.height)||0),b:Math.round(parseFloat(s.paddingBottom)||0),h:innerHeight,w:innerWidth};}
+  function apply(v){r.style.setProperty('--dn-top',v.t+'px');r.style.setProperty('--dn-bot',v.b+'px');r.style.setProperty('--dn-vh',v.h+'px');}
+  var s0=saved[key()];cur=(s0&&s0.w===innerWidth)?s0:now();apply(cur);
+  function check(){clearTimeout(t);t=setTimeout(function(){var v=now();
+    if(v.t!==cur.t||v.b!==cur.b||v.h!==cur.h||v.w!==cur.w){cur=v;apply(v);}
+    saved[key()]=v;try{localStorage.setItem(K,JSON.stringify(saved));}catch(e){}},700);}
+  addEventListener('resize',check);if(window.visualViewport)visualViewport.addEventListener('resize',check);check();
+  setInterval(function(){if(document.hidden)return;var v=now();if(v.t!==cur.t||v.b!==cur.b||v.h!==cur.h||v.w!==cur.w)check();},1000);   // an inset can change without a resize
+}catch(e){}})();
+</script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#FCFCFB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11131A" media="(prefers-color-scheme: dark)">
+<title>How to play our daily puzzles — The Daily Noodle</title>
+<meta name="description" content="Learn how to play Mini, Doku, Sweep, Path, Link, Tangle, Borders and Reckon. Clear rules, examples and tips for The Daily Noodle’s free daily puzzles.">
+<meta property="og:site_name" content="The Daily Noodle">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How to play — The Daily Noodle">
+<meta property="og:description" content="Rules, examples and solving tips for all eight daily puzzles.">
+<meta property="og:url" content="https://dailynoodle.co.uk/how-to-play.html">
+<link rel="canonical" href="https://dailynoodle.co.uk/how-to-play.html">
+<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="front.css">
+<link rel="stylesheet" href="how-to-play.css">
+</head>
+<body class="guide-page">
+<div class="wrap">
+  <header class="mast">
+    <div class="mono" aria-hidden="true">DP</div>
+    <div class="word">Noodle<b>Puzzles</b></div>
+    <div class="kick">The puzzle desk<span class="k2">New every morning</span></div>
+  </header>
+
+  <nav class="controls" aria-label="Sections and puzzle guides">
+    <div class="bar">
+      <div class="sections" role="group" aria-label="Sections">
+        <a class="sec news" href="index.html">News</a>
+        <a class="sec puzzles" href="puzzles.html" aria-current="page">Puzzles</a>
+        <a class="sec games" href="games.html">Games</a>
+        <a class="sec lab" href="lab.html">Lab</a>
+      </div>
+    </div>
+    <div class="chips" id="guide-pills" role="group" aria-label="Puzzle type">
+        <a class="chip" href="#mini" aria-controls="mini">Mini</a>
+        <a class="chip" href="#doku" aria-controls="doku">Doku</a>
+        <a class="chip" href="#sweep" aria-controls="sweep">Sweep</a>
+        <a class="chip" href="#path" aria-controls="path">Path</a>
+        <a class="chip" href="#link" aria-controls="link">Link</a>
+        <a class="chip" href="#tangle" aria-controls="tangle">Tangle</a>
+        <a class="chip" href="#borders" aria-controls="borders">Borders</a>
+        <a class="chip" href="#reckon" aria-controls="reckon">Reckon</a>
+    </div>
+  </nav>
+
+  <main id="guide-content">
+    <h1 class="guide-title">How to play</h1>
+    <section class="guide-panel" id="mini" aria-labelledby="mini-title">
+      <div class="guide-heading">
+        <h2 id="mini-title" tabindex="-1">Mini</h2>
+        <a class="guide-play" href="/mini?via=how-to-play">Play today’s Mini →</a>
+      </div>
+      <p class="guide-intro">A small daily crossword. Solve the clues across and down.</p>
+      <ol class="guide-rules"><li>Tap a square and type your answer to its clue. Crossing answers share letters.</li><li>Tap the clue bar to switch between across and down. The arrows step through the clues.</li><li>Check word or Check all marks wrong letters; Reveal word fills an answer. The clock stops when the grid is correct.</li></ol>
+      <figure class="guide-example"><div class="guide-cells" style="--guide-cols:3" role="img" aria-label="A smaller example: CAT, ARE and TEN work both across and down."><span>C</span><span>A</span><span>T</span><span>A</span><span>R</span><span>E</span><span>T</span><span>E</span><span>N</span></div><figcaption>A smaller example: CAT, ARE and TEN work both across and down.</figcaption></figure>
+      <h3>A useful first move</h3>
+      <p class="guide-tip">Start with a clue you know, then use its crossing letters to tackle the others.</p>
+    </section>
+
+    <section class="guide-panel" id="doku" aria-labelledby="doku-title">
+      <div class="guide-heading">
+        <h2 id="doku-title" tabindex="-1">Doku</h2>
+        <a class="guide-play" href="/doku?via=how-to-play">Play today’s Doku →</a>
+      </div>
+      <p class="guide-intro">A letter-placement puzzle: make a real word in every run across and down.</p>
+      <ol class="guide-rules"><li>Shaded letters are fixed. Fill the other squares using the letters in the bank.</li><li>Tap a bank tile, then a square to place it, or select a square and type. Tap a placed letter to return it to the bank.</li><li>Every across and down run must be a real word, using exactly the tiles provided. With Hints on, a word turns green when it matches the answer.</li></ol>
+      <figure class="guide-example"><div class="guide-cells" style="--guide-cols:3" role="img" aria-label="A smaller example: with C and R given, the bank A A E E N T T can make CAT / ARE / TEN."><span class="given">C</span><span></span><span></span><span></span><span class="given">R</span><span></span><span></span><span></span><span></span></div><figcaption>A smaller example: with C and R given, the bank A A E E N T T can make CAT / ARE / TEN.</figcaption></figure>
+      <h3>A useful first move</h3>
+      <p class="guide-tip">Look for runs with the most given letters. A letter that works across also has to fit its down word.</p>
+    </section>
+
+    <section class="guide-panel" id="sweep" aria-labelledby="sweep-title">
+      <div class="guide-heading">
+        <h2 id="sweep-title" tabindex="-1">Sweep</h2>
+        <a class="guide-play" href="/sweep?via=how-to-play">Play today’s Sweep →</a>
+      </div>
+      <p class="guide-intro">Clear thirty-six squares without opening any of the seven mines.</p>
+      <ol class="guide-rules"><li>Dig the highlighted safe square first to reveal your opening.</li><li>A number counts mines in the eight squares touching it, including diagonals. Tap to dig; use Flag mode, long-press or right-click to flag a suspected mine.</li><li>Open every safe square to win. One mine ends the game. Every grid is checked to be solvable by deduction; Hint explains a forced move.</li></ol>
+      <figure class="guide-example"><div class="guide-cells" style="--guide-cols:3" role="img" aria-label="One mine in the centre touches all eight surrounding squares."><span>1</span><span>1</span><span>1</span><span>1</span><span>*</span><span>1</span><span>1</span><span>1</span><span>1</span></div><figcaption>One mine in the centre touches all eight surrounding squares.</figcaption></figure>
+      <h3>A useful first move</h3>
+      <p class="guide-tip">If a number already touches that many flags, its other neighbours are safe. If all its remaining neighbours must be mines, flag them.</p>
+    </section>
+
+    <section class="guide-panel" id="path" aria-labelledby="path-title">
+      <div class="guide-heading">
+        <h2 id="path-title" tabindex="-1">Path</h2>
+        <a class="guide-play" href="/path?via=how-to-play">Play today’s Path →</a>
+      </div>
+      <p class="guide-intro">Connect 1 to 36 in one continuous thread, using every square.</p>
+      <ol class="guide-rules"><li>Tap the marigold 1, then an adjacent open square to place 2, and keep going in order.</li><li>Move up, down, left or right. Diagonals are not allowed, and each square is used exactly once.</li><li>Pass through every given number at the right point. Tap 1 or 36 to switch which end you are growing; Undo takes back a step and Hint shows a forced square.</li></ol>
+      <figure class="guide-example"><div class="guide-cells" style="--guide-cols:4" role="img" aria-label="A smaller completed example: follow 1 to 16 through every square, with no diagonal moves."><span>1</span><span>2</span><span>3</span><span>4</span><span>8</span><span>7</span><span>6</span><span>5</span><span>9</span><span>10</span><span>11</span><span>12</span><span>16</span><span>15</span><span>14</span><span>13</span></div><figcaption>A smaller completed example: follow 1 to 16 through every square, with no diagonal moves.</figcaption></figure>
+      <h3>A useful first move</h3>
+      <p class="guide-tip">Corners and narrow passages have fewer possible routes. Work out how the thread must enter and leave them before filling the middle.</p>
+    </section>
+
+    <section class="guide-panel" id="link" aria-labelledby="link-title">
+      <div class="guide-heading">
+        <h2 id="link-title" tabindex="-1">Link</h2>
+        <a class="guide-play" href="/link?via=how-to-play">Play today’s Link →</a>
+      </div>
+      <p class="guide-intro">Find four hidden groups of four among sixteen word tiles.</p>
+      <ol class="guide-rules"><li>Select four tiles you think belong together, then press Submit.</li><li>Every tile belongs to exactly one group, but several can suggest another connection. Three correct tiles earns a one-away message.</li><li>Four mistakes ends the puzzle. Repeating the same incorrect group costs no extra mistake. Groups run from easiest to hardest: green, blue, yellow, then black.</li></ol>
+      <figure class="guide-example"><div class="guide-words"><span>APPLE</span><span>PEAR</span><span>PLUM</span><span>FIG</span></div><figcaption>These four share a category: fruits. In the real puzzle, other tiles can make the connection less obvious.</figcaption></figure>
+      <h3>A useful first move</h3>
+      <p class="guide-tip">Try to account for all four groups before committing to an obvious set. A word may have more than one meaning.</p>
+    </section>
+
+    <section class="guide-panel" id="tangle" aria-labelledby="tangle-title">
+      <div class="guide-heading">
+        <h2 id="tangle-title" tabindex="-1">Tangle</h2>
+        <a class="guide-play" href="/tangle?via=how-to-play">Play today’s Tangle →</a>
+      </div>
+      <p class="guide-intro">Find as many common words as you can in ninety seconds.</p>
+      <ol class="guide-rules"><li>Drag through touching letters, including diagonals, to spell a word. Or tap letters in order and tap the last tile again to enter.</li><li>Words need at least three letters. Use each tile at most once per word; a QU tile counts as two letters.</li><li>A word scores its length minus two: three letters earns one point, four earns two, and so on. The board’s longest word scores double.</li></ol>
+      <figure class="guide-example"><div class="guide-cells" style="--guide-cols:2" role="img" aria-label="C → A → T makes CAT for one point. The diagonal move from A to T is allowed."><span>C</span><span>A</span><span>T</span><span>S</span></div><figcaption>C → A → T makes CAT for one point. The diagonal move from A to T is allowed.</figcaption></figure>
+      <h3>A useful first move</h3>
+      <p class="guide-tip">Look for familiar endings and revisit the same starting letter with a different route. A tile can be reused in a different word.</p>
+    </section>
+
+    <section class="guide-panel" id="borders" aria-labelledby="borders-title">
+      <div class="guide-heading">
+        <h2 id="borders-title" tabindex="-1">Borders</h2>
+        <a class="guide-play" href="/borders?via=how-to-play">Play today’s Borders →</a>
+      </div>
+      <p class="guide-intro">Identify ten country outlines, shown one at a time from easier to harder.</p>
+      <ol class="guide-rules"><li>Look at the outline, then choose the country from the four answers.</li><li>Show on map gives you a location clue, but makes that question worth half points.</li><li>Continue through all ten outlines. Your final score is out of ten.</li></ol>
+      
+      <h3>A useful first move</h3>
+      <p class="guide-tip">Check the shape’s distinctive features, such as a peninsula, a long coastline or separate islands, before choosing.</p>
+    </section>
+
+    <section class="guide-panel" id="reckon" aria-labelledby="reckon-title">
+      <div class="guide-heading">
+        <h2 id="reckon-title" tabindex="-1">Reckon</h2>
+        <a class="guide-play" href="/reckon?via=how-to-play">Play today’s Reckon →</a>
+      </div>
+      <p class="guide-intro">Estimate ten numbers from different topics. The closer you get, the more you score.</p>
+      <ol class="guide-rules"><li>Drag the marker along the scale to set a guess. Each big mark is ten times the previous one; use − and + to fine-tune it.</li><li>Press Lock in to submit your guess and see the answer. There are ten questions and a maximum of 1,000 points.</li><li>Within 15% scores 100; within 30%, 75; within 60%, 50; within three times either way, 25. Gaps are measured from the smaller number, so half the answer scores the same as double.</li></ol>
+      
+      <h3>A useful first move</h3>
+      <p class="guide-tip">Get the order of magnitude right first: is the answer nearer ten, a hundred or a thousand? Then refine the estimate. Dated figures tell you the period they refer to.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p><b>The Daily Noodle · Puzzles</b> — a fresh set every morning, the same for everyone. Each grid puzzle has
+    exactly one solution, reachable by logic alone.</p>
+    <p class="privacy"><a href="puzzles.html">← All puzzles</a></p>
+    <p class="privacy"><a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">contact@dailynoodle.co.uk</a> · <a href="admin.html" rel="nofollow">Admin</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
+  </footer>
+</div>
+<script src="how-to-play.js"></script>
+<script src="dn-track.js" defer></script>
+</body>
+</html>

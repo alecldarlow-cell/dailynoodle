@@ -330,16 +330,27 @@
     // Optional dn:badge (e.g. "In development") sits on the thumbnail.
     // In the lab every card is in development, so that badge would be noise.
     if(it.badge && !(LAB && inLab(it))) thumb = '<div class="thumbwrap">'+thumb+'<span class="badge">'+esc(it.badge)+'</span></div>';
-    return '<li data-kind="'+esc(it.kind)+'"><a class="card" href="'+esc(it.path)+'">'
+    // Sibling links: the card opens the puzzle; the guide never sits inside it.
+    var guide = '';
+    if(it.kind==='puzzle'){
+      var label = puzzleType(it);
+      PUZZLE_TYPES.forEach(function(t){ if(t[1]===label) guide=t[0]; });
+    }
+    var meta = guide
+      ? (when ? '<span class="card-date">'+esc(when)+'</span>' : '')
+        + (it.read ? (when ? '<span class="dot">·</span>' : '')+'<span class="card-time">'+esc(it.read)+'</span>' : '')
+      : '<span class="t">'+esc(it.topic)+'</span>'
+        + (when ? '<span class="dot">·</span><span>'+esc(when)+'</span>' : '')
+        + (it.read ? '<span class="dot">·</span><span>'+esc(it.read)+'</span>' : '');
+    return '<li data-kind="'+esc(it.kind)+'"'+(guide?' class="puzzle-card"':'')+'><a class="card" href="'+esc(it.path)+'">'
       + thumb
       + '<div>'
       +   '<h2 class="hl">'+esc(it.headline)+'</h2>'
       +   (it.standfirst ? '<p class="sf">'+esc(it.standfirst)+'</p>' : '')
-      +   '<p class="meta"><span class="t">'+esc(it.topic)+'</span>'
-      +     (when ? '<span class="dot">·</span><span>'+esc(when)+'</span>' : '')
-      +     (it.read ? '<span class="dot">·</span><span>'+esc(it.read)+'</span>' : '')
-      +   '</p>'
-      + '</div></a></li>';
+      +   '<p class="meta">'+meta+'</p>'
+      + '</div></a>'
+      + (guide ? '<a class="card-guide" href="how-to-play.html#'+guide+'" aria-label="How to play '+esc(TYPE_LABEL[guide])+'">How to play</a>' : '')
+      + '</li>';
   }
 
   function render(){
@@ -430,7 +441,7 @@
   });
   // Saved as you leave: tapping a card (before the browser navigates), and
   // whenever the page is hidden or unloaded.
-  $feed.addEventListener('click', function(e){ if(e.target.closest && e.target.closest('a.card')) remember(); }, true);
+  $feed.addEventListener('click', function(e){ if(e.target.closest && e.target.closest('a.card, a.card-guide')) remember(); }, true);
   window.addEventListener('pagehide', remember);
   document.addEventListener('visibilitychange', function(){
     if(document.visibilityState === 'hidden') remember();

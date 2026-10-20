@@ -21,3 +21,15 @@ test('sitemap: lists front pages and published feed items only, never held or La
   assert.doesNotMatch(xml, /held\.html|lab\.html/);
   assert.match(fs.readFileSync(path.join(site, 'robots.txt'), 'utf8'), /^Sitemap: https:\/\/dailynoodle.co.uk\/sitemap.xml$/m);
 });
+
+test('sitemap: the shared how-to page is included when it is published',()=>{
+ const site=fs.mkdtempSync(path.join(os.tmpdir(),'sm-guide-'));
+ try{
+  fs.writeFileSync(path.join(site,'feed.json'),JSON.stringify({today:'2026-10-20',items:[]}));
+  fs.writeFileSync(path.join(site,'how-to-play.html'),'<!doctype html><title>How to play</title>');
+  assert.strictEqual(write(site),4);
+  const xml=fs.readFileSync(path.join(site,'sitemap.xml'),'utf8');
+  assert.match(xml,/<loc>https:\/\/dailynoodle.co.uk\/how-to-play.html<\/loc>/);
+  assert.doesNotMatch(xml,/#mini|#path/);
+ }finally{fs.rmSync(site,{recursive:true,force:true});}
+});
