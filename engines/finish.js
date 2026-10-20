@@ -306,7 +306,7 @@
     var label = (cfg.share && cfg.share.label) || 'Share';
     var card = el('section', 'fin-share');
     var text = cfg.share.text();
-    var sq = esc(text).replace(/((?:🟩|🟦|🟨|🟧|⬛|⬜|🟥|🟪|❌)+(?: · \d+:\d{2})?)/u, '<span class="fin-nw">$1</span>');
+    var sq = esc(text).replace(/((?:🟩|🟦|🟨|🟧|⬛|⬜|🟥|🟪|❌|🎯){2,}(?: · \d+:\d{2})?)/u, '<span class="fin-nw">$1</span>');
     card.innerHTML = '<div class="fin-share-card"><span class="fin-share-text">' + sq + '</span>' +
       '<button type="button" class="fin-pill fin-primary fin-share-btn"><span class="fin-share-icon">' + SHARE_ICON + '</span><span class="fin-share-label">' + esc(label) + '</span></button></div>' +
       '<span class="fin-live" role="status" aria-live="polite"></span>';

@@ -90,7 +90,7 @@ const PUZZLE=window.DN_PUZZLE;
 const NQ=10, SPAN=2;
 const BAND=[1.15,1.3,1.6,3], PTS=[100,75,50,25,0], ZN=['Bullseye','Close','Ballpark','In range','Miss'];
 const ZC=['var(--z0)','var(--z1)','var(--z2)','var(--z3)','var(--zm)'];
-const SQ=['🟩','🟨','🟧','🟥','⬜'];
+const SQ=['🎯','🟩','🟨','🟧','⬜'];   // share: bullseye, then the game's zone colours (Alec, 20 Oct 2026)
 const MANT=[1,1.05,1.1,1.15,1.2,1.25,1.3,1.35,1.4,1.5,1.6,1.7,1.8,1.9,2,2.1,2.2,2.3,2.4,2.5,2.6,2.8,3,3.2,3.4,3.6,3.8,4,4.2,4.4,4.6,4.8,5,5.2,5.4,5.6,5.8,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75];
 /* Ballpark's twelve packs (name, short name, colour, icon). tools/build-reckon-batch.js checks this
    table against Ballpark's bank at build, so a new pack can't ship without its chip. */
@@ -378,7 +378,7 @@ function showResult(rec,fresh){
 function reviewEnd(k){if(!shown)return;VR={g:shown.g,z:shown.z};R=null;Q=k;paused=false;show('play');renderQ();}
 function backToResult(){VR=null;showResult(shown,false);}
 
-/* ---------- share: one square per question, in play order; never a question or an answer ---------- */
+/* ---------- share: one mark per question, in play order (🎯 within 15%, 🟩 30%, 🟨 60%, 🟧 3×, ⬜ miss); never a question or an answer ---------- */
 function shareText(rec){
   const n=liveStreak();
   return '🎯 Reckon #'+serial()+' — '+rec.z.map(z=>SQ[z]).join('')+' · '+rec.p+' pts'+(n>=2?' · 🔥'+n:'');

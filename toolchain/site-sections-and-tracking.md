@@ -32,7 +32,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - Plan doc: "Digi reader data plan" (Claude Docs).
 
 ## Share text (digi-share-v2, 15 Oct 2026)
-- Every puzzle shares one line, "emoji Name #N — result", no link and no "made with Digi Puzzles": ✏️ Mini, 🔢 Doku, 〰️ Path, 💣/💥 Sweep, 🔗 Link (one square per guess, ❌ for a miss), 🌍 Borders, 🧶 Tangle (unchanged), 🎯 Reckon (one square per question: 🟩 within 15%, 🟨 30%, 🟧 60%, 🟥 3×, ⬜ a miss, then points). A streak of 2+ adds "· 🔥n".
+- Every puzzle shares one line, "emoji Name #N — result", no link and no "made with Digi Puzzles": ✏️ Mini, 🔢 Doku, 〰️ Path, 💣/💥 Sweep, 🔗 Link (one square per guess, ❌ for a miss), 🌍 Borders, 🧶 Tangle (unchanged), 🎯 Reckon (one mark per question: 🎯 within 15%, 🟩 30%, 🟨 60%, 🟧 3×, ⬜ a miss, then points). A streak of 2+ adds "· 🔥n".
 - `tools/share-v2.js` patches both share paths (result box and saved-result revisit) and runs in the build workflow, so a puzzle uploaded from an older template is patched on push. Update the templates in the Digi Puzzles project to match when convenient.
 
 ## Shared engines (15 Oct 2026)

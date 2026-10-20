@@ -8,6 +8,7 @@
     "finish:link-loss": 13.47,
     "finish:mini": 9.87,
     "finish:path": 11.27,
+    "finish:reckon": 22.66,
     "finish:sweep": 7.47,
     "finish:sweep-boom": 0.93,
     "finish:tangle": 13.49,
@@ -27,6 +28,8 @@
     "house:sweep": 4.2,
     "house:tangle-borders-home": 1.31,
     "news:dark": 1.12,
+    "reckon:start-resume": 13.12,
+    "reckon:streak-and-dark": 20.32,
     "streak:doku-own": 3.66,
     "streak:overall-run": 11.75,
     "sweep:hint": 26.57

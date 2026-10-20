@@ -298,7 +298,7 @@ const TESTS = {
     const ev = []; const { ctx, p } = await open(b, F.reckon, { events: ev, time: RECKON_DAY });
     await play.reckon(p, { wrong: [2, 5] });
     await sheetChecks(p, ev, { type: 'reckon', ids: ['winTitle', 'winTime', 'rBig', 'rPts', 'rStreak', 'rBulls', 'rZones'],
-      shareRe: /^🎯 Reckon #1 — 🟩🟩⬜🟩🟩⬜🟩🟩🟩🟩 · 800 pts$/u,
+      shareRe: /^🎯 Reckon #1 — 🎯🎯⬜🎯🎯⬜🎯🎯🎯🎯 · 800 pts$/u,
       endCheck: x => ok(x && x.outcome === 'scored' && x.score === 800 && x.bulls === 8 && x.zones === '0040040000' && x.secs > 0,
         `reckon: tracker read ${x && x.score} pts, ${x && x.bulls} bullseyes, zones ${x && x.zones}, ${x && x.secs}s`) });
     ok(await text(p, '#winTitle') === 'Reckoned' && /^800\s*pts$/.test(await text(p, '#rBig')), 'reckon: Reckoned, 800 pts');
@@ -362,7 +362,7 @@ const TESTS = {
     const d2 = await open(b, F.reckon2, { ctx, time: RECKON_DAY2 });
     ok(await text(d2.p, '#homeStreak') === '1-day streak', 'reckon: the next day shows yesterday\'s streak');
     await play.reckon(d2.p, { wrong: [] });
-    ok(/^🎯 Reckon #2 — 🟩{10} · 1000 pts · 🔥2$/u.test(await text(d2.p, '.fin-share-text')), `reckon: day two shares the streak ("${await text(d2.p, '.fin-share-text')}")`);
+    ok(/^🎯 Reckon #2 — 🎯{10} · 1000 pts · 🔥2$/u.test(await text(d2.p, '.fin-share-text')), `reckon: day two shares the streak ("${await text(d2.p, '.fin-share-text')}")`);
     ok(!d1.p.errs.length && !d2.p.errs.length, 'reckon: no page errors ' + d1.p.errs.concat(d2.p.errs).join(' | '));
     await ctx.close();
   },
