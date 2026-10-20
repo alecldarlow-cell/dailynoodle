@@ -1,16 +1,30 @@
 'use strict';
-// Keep each scenario intact: some intentionally span two days/tabs/types.
-// Link's real animation waits are expensive, so group it with Mini/Doku;
-// the other four players and cross-player UI checks form the second shard.
-function shardFor(name){return /(?:^|[:-])(link|mini|doku)(?:$|[:-])/.test(name)?1:2;}
+// Whole scenarios only: some span two days/tabs/types. The committed estimates
+// make assignment reproducible; live runner speed never changes shard identity.
+const estimates=require('./fixtures/puzzle-durations.json').seconds;
+function partition(names,count){
+ if(!Number.isInteger(count)||count<1||count>8||count>names.length)throw Error('Use 1–8 nonempty puzzle shards');
+ const bins=Array.from({length:count},()=>({names:new Set(),seconds:0}));
+ const weight=name=>estimates[name]||10; // new scenarios are included automatically
+ for(const name of names.slice().sort((a,b)=>weight(b)-weight(a)||(a<b?-1:a>b?1:0))){
+  const target=bins.reduce((a,b)=>b.seconds<a.seconds?b:a);
+  target.names.add(name);target.seconds+=weight(name);
+ }
+ return bins.map(b=>names.filter(name=>b.names.has(name)));
+}
 function selection(names,args=[]){
  const flags=args.filter(a=>a.startsWith('--'));
- if(flags.length>1||flags.some(a=>!/^--shard=[12]\/2$/.test(a)))throw Error('Use --shard=1/2 or --shard=2/2');
+ if(flags.length>1||flags.some(a=>!/^--shard=\d+\/\d+$/.test(a)))throw Error('Use --shard=INDEX/TOTAL');
  const filters=args.filter(a=>!a.startsWith('--'));
  if(filters.length>1)throw Error('Use at most one puzzle-case filter');
- const shard=flags.length?Number(flags[0][8]):null;
- const picked=names.filter(name=>(!filters[0]||name.includes(filters[0]))&&(!shard||shardFor(name)===shard));
+ let chosen=names;
+ if(flags.length){
+  const [index,count]=flags[0].slice(8).split('/').map(Number);
+  if(!Number.isInteger(index)||index<1||index>count)throw Error('Shard index must be between 1 and TOTAL');
+  chosen=partition(names,count)[index-1];
+ }
+ const picked=chosen.filter(name=>!filters[0]||name.includes(filters[0]));
  if(!picked.length)throw Error('No puzzle cases selected; check the filter/shard');
  return picked;
 }
-module.exports={shardFor,selection};
+module.exports={partition,selection};

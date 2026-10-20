@@ -4,8 +4,8 @@
 
      node tools/tests/run.js                 # everything
      node tools/tests/run.js finish:tangle   # tests whose name contains the text
-     node tools/tests/run.js --shard=1/2      # Link, Mini and Doku scenarios
-     node tools/tests/run.js --shard=2/2      # other players and shared UI
+     node tools/tests/run.js --shard=1/3      # first balanced scenario group
+     node tools/tests/run.js --shard=2/3      # second group (also run 3/3)
 
    Fixtures are the 18-19 Oct 2026 puzzles, played on a fake clock set to
    those days, so the tests mean the same thing whenever they run.

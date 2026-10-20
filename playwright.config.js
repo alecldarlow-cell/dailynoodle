@@ -9,7 +9,7 @@ module.exports = defineConfig({
   timeout: 60000,
   expect: { timeout: 5000, toHaveScreenshot: { maxDiffPixelRatio: 0.002, animations: 'disabled' } },
   fullyParallel: false,
-  workers: process.env.CI ? 2 : 1,
+  workers: process.env.DN_TEST_WORKERS ? Number(process.env.DN_TEST_WORKERS) : (process.env.CI ? 2 : 1),
   retries: 0,
   forbidOnly: !!process.env.CI,
   reporter: [['list'], ['html', { open: 'never',outputFolder:group?'playwright-report/'+group:'playwright-report' }], ['json', { outputFile: output+'/playwright.json' }]],
