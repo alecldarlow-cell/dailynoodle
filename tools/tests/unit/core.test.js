@@ -3,6 +3,74 @@ const {test}=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const C=require('../../../dn-core'),{sync,bundled}=require('../../sync-core');
 const memory=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)};};
+function isolated(storage,extra={}){
+ const ctx=vm.createContext({Date,Intl,localStorage:storage,...extra});
+ vm.runInContext(fs.readFileSync(path.join(__dirname,'../../../dn-core.js'),'utf8'),ctx);
+ return ctx.dnCore;
+}
+
+test('SAVE-NOTICE: only actual progress failures notify, once per unresolved key',async()=>{
+ const storage=memory(),set=storage.setItem;let deny=true;
+ storage.setItem=(k,v)=>{if(deny)throw Error('full');set(k,v);};
+ const core=isolated(storage);let changes=0;core.onSaveChange(()=>changes++);
+ assert.equal(core.getDone('game','a'),null);assert.equal(changes,0);
+ core.saveProgress('settings',{v:1,done:{}},'a',undefined,false);
+ assert.equal(core.saveIssues(),0);
+ for(let i=0;i<4;i++)core.saveProgress('game',{v:1,done:{a:{s:i}}},'a');
+ assert.equal(core.saveIssues(),1);assert.equal(changes,1);
+ assert.equal(await core.retrySaves(),false);assert.equal(changes,1);
+ deny=false;core.saveProgress('unrelated',{v:1,done:{}},'a');
+ assert.equal(core.saveIssues(),1); // a successful unrelated write is not recovery
+ assert.equal(await core.retrySaves(),true);assert.equal(changes,2);
+ assert.equal(JSON.parse(storage.getItem('game')).done.a.s,3);
+});
+test('SAVE-NOTICE: retry retains the first result, original day and other tabs’ history',async()=>{
+ const storage=memory(),set=storage.setItem;let deny=true;
+ storage.setItem=(k,v)=>{if(deny)throw Error('full');set(k,v);};
+ let day='2026-10-19T12:00:00Z';
+ class Clock extends Date{constructor(...args){super(...(args.length?args:[day]));}}
+ const core=isolated(storage,{Date:Clock});
+ core.putDone('game','a',{s:12});const first=core.getDone('game','a');
+ assert.equal(first.d,'2026-10-19');day='2026-10-20T12:00:00Z';
+ core.putDone('game','a',{s:99});assert.equal(core.getDone('game','a').s,12);
+ core.putDone('game','b',{s:3});
+ set('game',JSON.stringify({v:1,setting:true,done:{other:{s:7}}}));deny=false;
+ assert.equal(await core.retrySaves(),true);
+ const out=JSON.parse(storage.getItem('game'));
+ assert.deepEqual(out.done,{other:{s:7},a:{s:12,d:'2026-10-19'},b:{s:3,d:'2026-10-20'}});
+ assert.equal(out.setting,true);assert.equal(core.saveIssues(),0);
+});
+test('SAVE-NOTICE: housekeeping cannot warn about already-saved progress or failed settings',()=>{
+ const storage=memory(),core=isolated(storage);
+ const current={v:1,done:{a:{s:12}},streak:{last:'2026-10-19',n:1,best:1},best:12,snd:true};
+ core.saveProgress('game',current,'a');
+ storage.setItem=()=>{throw Error('full');};
+ core.saveProgress('game',current,'a');assert.equal(core.saveIssues(),0);
+ current.snd=false;core.saveProgress('game',current,'a',undefined,false);
+ core.saveProgress('game',current,'a');assert.equal(core.saveIssues(),0);
+ // A genuinely new answer still reports failure even when settings also changed.
+ current.cur={id:'b',ans:['UK']};core.saveProgress('game',current,'b');assert.equal(core.saveIssues(),1);
+});
+test('SAVE-NOTICE: another tab’s committed results recover pending completion without another write',async()=>{
+ const storage=memory(),set=storage.setItem,core=isolated(storage);
+ storage.setItem=()=>{throw Error('full');};core.putDone('game','a',{s:12});
+ set('game',JSON.stringify({v:1,done:{a:{s:7,d:'2026-10-19'}}}));
+ assert.equal(await core.retrySaves(),true);assert.equal(core.getDone('game','a').s,7);
+});
+test('SAVE-NOTICE: streak fallback succeeds quietly; recovery must save every failed key',async()=>{
+ const storage=memory(),set=storage.setItem;let deny=false;
+ storage.setItem=(k,v)=>{if(deny)throw Error('full');set(k,v);};
+ const core=isolated(storage),external={set(){throw Error('unavailable');}};
+ const streak={last:'2026-10-19',streak:3};
+ assert.equal(await core.saveStreak('streak',streak,external),true);assert.equal(core.saveIssues(),0);
+ deny=true;core.putDone('game','a',{s:12});await core.saveStreak('streak',streak,external);
+ assert.equal(core.saveIssues(),2);
+ storage.setItem=(k,v)=>{if(k==='streak')throw Error('still full');set(k,v);};
+ assert.equal(await core.retrySaves(),false);assert.equal(core.saveIssues(),1);
+ assert.equal(core.getDone('game','a').s,12);
+ storage.setItem=set;assert.equal(await core.retrySaves(),true);
+ assert.deepEqual(JSON.parse(storage.getItem('streak')),streak);
+});
 
 test('DATE: London days cover both midnight and both DST boundaries',()=>{
  for(const [instant,day] of [

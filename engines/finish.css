@@ -57,6 +57,10 @@ html.fin-shown body{overflow:hidden}
 .fin .fin-hero-val small{font-family:var(--f-serif);font-size:30px;letter-spacing:0;color:var(--f-ink2);font-weight:400}
 .fin-note{font-size:16px;line-height:1.45;color:var(--f-ink2);margin:10px 0 0;max-width:34em}
 .fin-note strong{color:var(--f-ink);font-weight:600}
+.fin-save{margin:16px 0 0;padding:12px 16px;border:1px solid var(--f-hair);border-radius:12px;color:var(--f-ink2);font:400 14px/1.5 var(--f-sans)}
+.fin-save[hidden],.fin-save button[hidden]{display:none}
+.fin-save p{margin:0}
+.fin-save button{margin-top:8px;font-size:14px;min-height:44px}
 
 /* share: the line as it will be sent, with a compact Share pill */
 .fin-share{margin:22px 0 0}

@@ -20,19 +20,40 @@
   const d=new Date(day+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10);
  }
  const object=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
+ // Track actual game-save failures only. No storage probes, timers or global
+ // Storage patching. Pending data lives in this tab until a real write succeeds.
+ const scopes=new WeakMap(),listeners=new Set();
+ function scope(storage){
+  const owner=storage||root;
+  if(!scopes.has(owner))scopes.set(owner,{issues:new Map(),done:new Map()});
+  return scopes.get(owner);
+ }
+ function changed(storage){if(!storage)listeners.forEach(fn=>{try{fn();}catch(e){}});}
+ function failed(key,retry,storage){const issues=scope(storage).issues,was=issues.has(key);issues.set(key,retry);if(!was)changed(storage);}
+ function saved(key,storage){if(scope(storage).issues.delete(key))changed(storage);}
+ function saveIssues(){return scope().issues.size;}
+ function onSaveChange(fn){listeners.add(fn);return ()=>listeners.delete(fn);}
+ async function retrySaves(){
+  for(const retry of Array.from(scope().issues.values())){try{await retry();}catch(e){}}
+  return saveIssues()===0;
+ }
  function read(key,storage){
   try{const s=JSON.parse((storage||root.localStorage).getItem(key)||'null');return object(s)&&s.v===1?s:null;}
   catch(e){return null;}
  }
- function getDone(key,id,storage){const s=read(key,storage);return s&&object(s.done)&&s.done[id]||null;}
+ function getDone(key,id,storage){const s=read(key,storage),pending=scope(storage).done.get(key);return s&&object(s.done)&&s.done[id]||pending&&pending[id]||null;}
  function putDone(key,id,rec,storage){
+  const state=scope(storage),pending=state.done.get(key)||{};
+  const s=read(key,storage)||{v:1};if(!object(s.done))s.done={};
+  if(s.done[id]&&!Object.keys(pending).length)return s.done[id];
+  const first=s.done[id]||pending[id]||Object.assign({},rec,{d:londonDay()});
+  pending[id]=first;state.done.set(key,pending);
+  if(Object.keys(pending).every(k=>s.done[k])){state.done.delete(key);saved(key,storage);return first;}
+  s.done=Object.assign({},pending,s.done);
   try{
-   storage=storage||root.localStorage;
-   const s=read(key,storage)||{v:1};if(!object(s.done))s.done={};
-   if(s.done[id])return s.done[id];
-   const first=Object.assign({},rec,{d:londonDay()});s.done[id]=first;
-   storage.setItem(key,JSON.stringify(s));return first;
-  }catch(e){return null;}
+   (storage||root.localStorage).setItem(key,JSON.stringify(s));
+   state.done.delete(key);saved(key,storage);return first;
+  }catch(e){failed(key,()=>putDone(key,id,first,storage),storage);return null;}
  }
  function mergeStreak(a,b){
   a=object(a)?a:{};b=object(b)?b:{};
@@ -60,16 +81,37 @@
   if('best' in current||'best' in stored)merged.best=Math.max(Number(current.best)||0,Number(stored.best)||0);
   return merged;
  }
- function saveProgress(key,current,activeId,storage){
+ function same(a,b){
+  if(a===b)return true;
+  if(!a||!b||typeof a!=='object'||typeof b!=='object'||Array.isArray(a)!==Array.isArray(b))return false;
+  const keys=Object.keys(a);
+  return keys.length===Object.keys(b).length&&keys.every(k=>Object.prototype.hasOwnProperty.call(b,k)&&same(a[k],b[k]));
+ }
+ function progressOnly(s){
+  s=s||{};
+  const days=Object.fromEntries(Object.entries(s.days||{}).filter(([,d])=>d&&d.state!=='ready'));
+  return {done:s.done||{},days,cur:s.cur||null,streak:s.streak&&s.streak.last?s.streak:null,best:s.best||0};
+ }
+ function saveProgress(key,current,activeId,storage,report=true){
   // Merge even if writing fails, so the current tab retains the results it read.
+  let pending=report;
   try{
-   storage=storage||root.localStorage;
-   Object.assign(current,mergeProgress(current,read(key,storage),activeId));
-   storage.setItem(key,JSON.stringify(current));
-  }catch(e){}
+   const stored=read(key,storage);
+   Object.assign(current,mergeProgress(current,stored,activeId));
+   if(stored&&same(current,stored)){saved(key,storage);return current;}
+   // A later housekeeping/settings write must not warn about game data that
+   // is already durable. Compare data, not property order or storage capacity.
+   pending=report&&!same(progressOnly(current),progressOnly(stored));
+   (storage||root.localStorage).setItem(key,JSON.stringify(current));saved(key,storage);
+  }catch(e){if(pending||scope(storage).issues.has(key))failed(key,()=>saveProgress(key,current,activeId,storage,true),storage);}
   return current;
  }
- return {londonDay,dayBefore,getDone,putDone,mergeProgress,saveProgress};
+ async function saveStreak(key,value,external){
+  try{external=external===undefined?root.storage:external;if(external){await external.set(key,JSON.stringify(value));saved(key);return true;}}catch(e){}
+  try{root.localStorage.setItem(key,JSON.stringify(value));saved(key);return true;}
+  catch(e){failed(key,()=>saveStreak(key,value,external));return false;}
+ }
+ return {londonDay,dayBefore,getDone,putDone,mergeProgress,saveProgress,saveStreak,saveIssues,onSaveChange,retrySaves};
 });
 /* dn-core:end */
 /* ==========================================================================
