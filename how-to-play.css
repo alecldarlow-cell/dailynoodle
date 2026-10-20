@@ -22,3 +22,7 @@
 .guide-words span{background:var(--accent-soft);color:var(--accent);padding:10px 3px;text-align:center;border-radius:4px;font-size:12px;font-weight:600}
 .guide-example figcaption{font-size:13px;color:var(--muted);margin-top:10px;max-width:500px}
 @media(min-width:560px){.guide-title{font-size:28px}.guide-heading h2{font-size:26px}}
+
+/* A selected guide needs only the shared footer divider. Without scripts,
+   keep separators between the eight consecutive sections. */
+.guide-enhanced .guide-panel{border-bottom:0;padding-bottom:0;margin-bottom:0}

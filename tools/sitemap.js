@@ -2,7 +2,8 @@
 /* sitemap.xml and robots.txt (20 Oct 2026).
 
    Written into the built site by tools/build-site.js, after the copy, so they
-   list only what is actually published: the three front pages plus every
+   list only what is actually published: the three front pages, the shared
+   how-to guide when present, and every
    feed item whose file is in the site. Forward-dated files the feed holds back
    are not in _site, so they can never be listed (answers stay hidden).
    Left out: Lab items ("In development" badge), board, admin, privacy, 404 and

@@ -32,5 +32,6 @@
   });
   window.addEventListener('hashchange',function(){select(false);});
   window.addEventListener('popstate',function(){select(false);});
+  document.body.classList.add('guide-enhanced');
   select(false);
 })();

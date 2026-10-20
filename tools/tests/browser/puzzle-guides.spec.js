@@ -75,7 +75,6 @@ test('GUIDES: all pills work on phones in both themes, including direct links an
   await p.evaluate(()=>document.fonts.ready);
   const preview=await p.screenshot({fullPage:true,scale:'css'});
   await testInfo.attach('path-guide-'+scheme,{body:preview,contentType:'image/png'});
-  console.log('DN_GUIDE_PREVIEW_'+scheme+':'+preview.toString('base64'));
  }
  expect(phone.errors).toEqual([]);
 });
