@@ -73,13 +73,20 @@ test('GUIDES: all pills work on phones in both themes, including direct links an
    await expect(p.locator('#path')).toBeVisible();
   }
   await p.evaluate(()=>document.fonts.ready);
-  await testInfo.attach('path-guide-'+scheme,{body:await p.screenshot({fullPage:true}),contentType:'image/png'});
+  const preview=await p.screenshot({fullPage:true,scale:'css'});
+  await testInfo.attach('path-guide-'+scheme,{body:preview,contentType:'image/png'});
+  console.log('DN_GUIDE_PREVIEW_'+scheme+':'+preview.toString('base64'));
  }
  expect(phone.errors).toEqual([]);
 });
 test('GUIDES: readable rules and real hash links even without the guide script',async({phone})=>{
  await phone.ctx.route('**/how-to-play.js',r=>r.fulfill({status:200,contentType:'text/javascript',body:''}));
- await goto(phone,'how-to-play.html');
+ await phone.ctx.route('**/front.js',r=>r.fulfill({status:200,contentType:'text/javascript',body:''}));
+ await goto(phone,'puzzles.html');
+ await phone.p.getByRole('link',{name:'How to play',exact:true}).click();
+ await expect(phone.p).toHaveTitle('How to play our daily puzzles — The Daily Noodle');
+ await expect(phone.p.locator('meta[name="description"]')).toHaveAttribute('content',/Mini, Doku, Sweep, Path, Link, Tangle, Borders and Reckon/);
+ await expect(phone.p.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(0);
  await expect(phone.p.locator('.guide-panel:visible')).toHaveCount(8);
  await expect(phone.p.locator('link[rel="canonical"]')).toHaveAttribute('href','https://dailynoodle.co.uk/how-to-play.html');
  for(const type of types){

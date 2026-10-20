@@ -20,6 +20,6 @@ for(const c of cases)test('VIEW: '+c.id,async({phone})=>{
  await goto(phone,c.file);await p.evaluate(()=>document.fonts.ready);await H.wait(p,500);
  if(c.finish){await expect(p.locator('.fin-box.fin-open')).toBeVisible();await expect(p.locator('.fin-share-btn')).toHaveAccessibleName(/Share/);}
  expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
- if(c.id==='puzzles-390-light')console.log('DN_PUZZLE_BASELINE:'+Buffer.from(await p.screenshot()).toString('base64'));
+ if(c.id==='puzzles-390-light')console.log('DN_PUZZLE_BASELINE:'+Buffer.from(await p.screenshot({scale:'css'})).toString('base64'));
  await expect(p).toHaveScreenshot(c.id+'.png');expect(phone.errors).toEqual([]);
 });
