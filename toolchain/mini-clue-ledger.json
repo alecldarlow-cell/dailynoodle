@@ -1,0 +1,15 @@
+{
+ "_comment": "Mini clue-edit ledger (see toolchain/mini-clue-editing.md). Each scheduled run takes the first plan entry whose status is not 'done' (after 'publishedTo' if it is 'partial'), and commits this file with its batch, setting status, commits and the stats line. Ranges are Mini dates, inclusive.",
+ "done": [
+  {"range": ["2026-10-22", "2027-01-19"], "commits": ["6662b56", "5c92a84", "1f5197a", "e00d887"], "stats": "19 grids regenerated; 677 of 900 clues rewritten; checker 253 to 0; blind 93.5% to 94.5%"},
+  {"range": ["2027-01-20", "2027-04-19"], "commits": ["e32fbad", "f743746", "87d209a"], "stats": "2 grids regenerated; 378 of 880 clues changed (59 from the bank) + 20 new; checker 323 to 0; blind on changed clues 87.4% to 93.0%"}
+ ],
+ "plan": [
+  {"run": 1, "range": ["2027-04-20", "2027-07-18"], "status": "todo"},
+  {"run": 2, "range": ["2027-07-19", "2027-10-16"], "status": "todo", "note": "year-two copies start here (Mini 401, Aug 2027): expect more forced repeats"},
+  {"run": 3, "range": ["2027-10-17", "2028-01-14"], "status": "todo", "note": "Christmas and Bonfire Night grids are in range: seasonal clues are welcome on their days, never on the wrong ones"},
+  {"run": 4, "range": ["2028-01-15", "2028-04-13"], "status": "todo"},
+  {"run": 5, "range": ["2028-04-14", "2028-07-12"], "status": "todo"},
+  {"run": 6, "range": ["2028-07-13", "2028-08-14"], "status": "todo", "note": "the last 33 Minis; then report the whole Phase 3 Mini job as finished"}
+ ]
+}

@@ -22,8 +22,15 @@
         mini-reclue.js) and DIR/regen-filled.json (for pinwheel-regen.js --apply),
         then runs the clue gate over the whole range as it will stand and lists
         near-duplicate clues within the batch.
-     5. node tools/mini-reclue.js --apply DIR/edits.json, and
-        node tools/pinwheel-regen.js --apply DIR/regen-filled.json
+     5. checks on the merged batch (toolchain/mini-clue-editing.md has the prompts):
+        --show DIR FILE (an editor's changes beside the old clues, for your review),
+        --review-sheets DIR [N] (the changed clues and standfirsts, for fresh reviewers),
+        --blind DIR then --blind-score DIR (old and new wording of every changed clue,
+        shuffled, for two blind solvers; changed clues must not get harder)
+     6. node tools/pinwheel-regen.js --apply DIR/regen-filled.json, then
+        node tools/mini-reclue.js --apply DIR/edits.json, then
+        node tools/mini-clue-batch.js --smoke DIR (every page in Chromium: no errors,
+        the new clues and standfirst showing; plays three to the end)
 
    Edits format (changes only): [{ "file": "...html", "clues": { "ans": "new clue" },
      "md": ["ans"], "standfirst": "..., and .... Medium." }]  — "standfirst" only
@@ -200,9 +207,102 @@ function merge(dir, outFiles) {
   process.exit(probs.length ? 1 : 0);
 }
 
+/* ---------- --show: an editor's changes beside the old clues ------------- */
+function show(dir, outFile) {
+  const pkg = JSON.parse(fs.readFileSync(path.join(dir, "pkg.json"), "utf8"));
+  for (const o of JSON.parse(fs.readFileSync(outFile, "utf8"))) {
+    const p = pkg.find(x => x.file === o.file); if (!p) continue;
+    const ch = Object.keys(o.clues || {}), kept = (o.md || []).filter(a => !ch.includes(a));
+    console.log(`\n## ${p.id.slice(-4)} ${p.date}${p.regenerated ? " NEW" : ""} ${p.grid.join("|")} md=${(o.md || []).join(",")}` +
+      (kept.length ? ` (kept: ${kept.map(a => JSON.stringify(p.entries.find(e => e.ans === a).current)).join(", ")})` : ""));
+    for (const e of p.entries) if (ch.includes(e.ans))
+      console.log(` ${e.flags.length ? "⚑" : " "}${e.ans.toUpperCase().padEnd(5)} ${o.clues[e.ans]}${e.bank.includes(o.clues[e.ans]) ? " [bank]" : ""}${e.current ? "   ⟵ " + e.current : ""}`);
+    if (o.standfirst) console.log(`   SF: ${o.standfirst}${p.standfirst ? "   ⟵ " + p.standfirst : ""}`);
+  }
+}
+
+/* ---------- --review-sheets: changed clues for fresh reviewers ------------ */
+function reviewSheets(dir, n) {
+  const pkg = JSON.parse(fs.readFileSync(path.join(dir, "pkg.json"), "utf8"));
+  const fin = JSON.parse(fs.readFileSync(path.join(dir, "final.json"), "utf8"));
+  const size = Math.ceil(fin.length / n); let total = 0;
+  for (let k = 0; k < n; k++) {
+    let t = "";
+    for (const o of fin.slice(k * size, (k + 1) * size)) {
+      const p = pkg.find(x => x.file === o.file);
+      const ch = p.entries.filter(e => p.regenerated || o.clues[e.ans] !== e.current), sfch = p.regenerated || o.standfirst !== p.standfirst;
+      if (!ch.length && !sfch) continue;
+      t += `\n=== ${o.file}\n` + p.grid.map(r => "   " + r.split("").join(" ")).join("\n") + "\n";
+      for (const e of ch) t += `  ${e.n}${e.dir} ${e.ans.toUpperCase()}: ${o.clues[e.ans]}${(o.md || []).includes(e.ans) ? "   [misdirection/double definition]" : ""}\n`;
+      total += ch.length;
+      if (sfch) t += `  standfirst: ${o.standfirst}\n  (it quotes two of this grid's clues; all clues: ${Object.values(o.clues).join(" / ")})\n`;
+    }
+    fs.writeFileSync(path.join(dir, `review${k + 1}.txt`), t);
+  }
+  console.log(`${total} changed clue(s) in ${n} review sheet(s) in ${dir}`);
+}
+
+/* ---------- --blind / --blind-score: is the new wording any harder? ------- */
+function blind(dir) {
+  const pkg = JSON.parse(fs.readFileSync(path.join(dir, "pkg.json"), "utf8"));
+  const fin = JSON.parse(fs.readFileSync(path.join(dir, "final.json"), "utf8"));
+  const rows = [];
+  for (const o of fin) { const p = pkg.find(x => x.file === o.file); if (p.regenerated) continue;
+    for (const e of p.entries) if (o.clues[e.ans] !== e.current) rows.push({ key: o.file + "|" + e.ans, ans: e.ans, old: e.current, neu: o.clues[e.ans], md: (o.md || []).includes(e.ans) }); }
+  for (const [tag, field, seed] of [["old", "old", 11], ["new", "neu", 29]]) {
+    let s = seed; const rnd = () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648;
+    const r = rows.map(x => ({ ...x })); for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; }
+    r.forEach((x, i) => (x.q = "Q" + String(i + 1).padStart(3, "0")));
+    fs.writeFileSync(path.join(dir, `blind-${tag}-key.json`), JSON.stringify(r));
+    fs.writeFileSync(path.join(dir, `blind-${tag}.txt`), r.map(x => `${x.q} | ${x.ans.length} letters | ${x[field]}`).join("\n") + "\n");
+  }
+  console.log(`${rows.length} changed clue(s): ${dir}/blind-old.txt and blind-new.txt for two blind solvers (answers to blind-old.ans.txt and blind-new.ans.txt)`);
+}
+function blindScore(dir) {
+  const res = {};
+  for (const tag of ["old", "new"]) {
+    const key = JSON.parse(fs.readFileSync(path.join(dir, `blind-${tag}-key.json`), "utf8")), K = Object.fromEntries(key.map(r => [r.q, r])), a = {};
+    for (const l of fs.readFileSync(path.join(dir, `blind-${tag}.ans.txt`), "utf8").split("\n")) { const m = l.split("|").map(x => x.trim()); if (K[m[0]]) a[K[m[0]].key] = (m[1] || "").toLowerCase().replace(/[^a-z]/g, ""); }
+    res[tag] = { ok: key.filter(r => a[r.key] === r.ans).length, n: key.length, a };
+  }
+  const pct = r => (100 * r.ok / r.n).toFixed(1) + "%";
+  console.log(`changed clues solved from the clue alone: old ${res.old.ok}/${res.old.n} (${pct(res.old)}), new ${res.new.ok}/${res.new.n} (${pct(res.new)})`);
+  for (const r of JSON.parse(fs.readFileSync(path.join(dir, "blind-new-key.json"), "utf8")))
+    if (res.new.a[r.key] !== r.ans) console.log(`  missed: ${r.key.slice(0, 10)} ${r.ans.toUpperCase()} ${JSON.stringify(r.neu)} -> ${res.new.a[r.key] || "?"}${res.old.a[r.key] === r.ans ? "  (old wording was solved)" : ""}${r.md ? "  (misdirection)" : ""}`);
+}
+
+/* ---------- --smoke: every page in Chromium --------------------------- */
+async function smoke(dir, playList) {
+  const H = require("./tests/harness.js"), play = require("./tests/play.js");
+  const fin = JSON.parse(fs.readFileSync(path.join(dir, "final.json"), "utf8"));
+  const playSet = new Set(playList.length ? playList : [fin[0].file, fin[Math.floor(fin.length / 2)].file, fin[fin.length - 1].file]);
+  const b = await H.launch(); let bad = 0;
+  for (const o of fin) {
+    const { ctx, p } = await H.open(b, o.file, { time: o.file.slice(0, 10) + "T12:00:00+00:00" });
+    const shown = await p.evaluate(() => [...document.querySelectorAll("#across .clue span, #down .clue span")].map(e => e.textContent));
+    const want = Object.values(o.clues), miss = want.filter(c => !shown.includes(c));
+    const sf = await p.evaluate(() => [document.querySelector('meta[name="dn:standfirst"]').content, (document.querySelector('meta[property="og:description"]') || {}).content]);
+    let msg = "";
+    if (miss.length || shown.length !== want.length) msg += ` clues shown ${shown.length}/${want.length}, missing ${JSON.stringify(miss)}`;
+    if (sf[0] !== o.standfirst || sf[1] !== o.standfirst) msg += " standfirst/og:description mismatch";
+    if (playSet.has(o.file)) { await play.grid(p); if (!(await play.boxOn(p))) msg += " did not finish"; }
+    if (p.errs.length) msg += " page errors: " + p.errs.join(" | ");
+    if (msg) { bad++; console.log("FAIL " + o.file + msg); }
+    await ctx.close();
+  }
+  await b.close();
+  console.log(`${fin.length} Mini page(s) opened, ${playSet.size} played to the end, ${bad} problem(s)`);
+  process.exit(bad ? 1 : 0);
+}
+
 /* ---------- cli ------------------------------------------------------- */
 const a = process.argv.slice(2), arg = k => { const i = a.indexOf(k); return i < 0 ? undefined : a[i + 1]; };
 if (a[0] === "--prep") prep(a[1], a[2], a[3], arg("--plan"), +(arg("--sheets") || 3));
 else if (a[0] === "--validate") validate(a[1], a[2]);
 else if (a[0] === "--merge") merge(a[1], a.slice(2));
+else if (a[0] === "--show") show(a[1], a[2]);
+else if (a[0] === "--review-sheets") reviewSheets(a[1], +(a[2] || 2));
+else if (a[0] === "--blind") blind(a[1]);
+else if (a[0] === "--blind-score") blindScore(a[1]);
+else if (a[0] === "--smoke") smoke(a[1], a.slice(2));
 else { console.log(fs.readFileSync(__filename, "utf8").split("*/")[0]); process.exit(2); }
