@@ -1,5 +1,5 @@
 {
-  "built": "2026-10-20T13:03:53.425Z",
+  "built": "2026-10-20T14:07:34.574Z",
   "today": "2026-10-20",
   "timezone": "Europe/London",
   "count": 636,
@@ -63,7 +63,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........#.......#........"
+      "mask": "........#.......#........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-20-geo-borders-0016.html",
@@ -78,7 +79,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-20-logic-doku-0099.html",
@@ -93,7 +95,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##..L.###LL...L.###.L..##"
+      "mask": "##..L.###LL...L.###.L..##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-20-logic-path-0094.html",
@@ -108,7 +111,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L....LL..L.L.L..LL.....L.........."
+      "mask": "..L....LL..L.L.L..LL.....L..........",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-20-logic-sweep.html",
@@ -123,7 +127,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....................o.............."
+      "mask": ".....................o..............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-20-quiz-reckon-0001.html",
@@ -138,7 +143,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "reckon"
     },
     {
       "path": "reports/2026-10-20-triple-lock-change-care-funding.html",
@@ -168,7 +174,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-20-word-tangle-0014.html",
@@ -183,7 +190,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-16-strategy-ancient-cities.html",
@@ -229,7 +237,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-19-geo-borders-0015.html",
@@ -244,7 +253,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-19-ifs-budget-spending-pressures-headroom.html",
@@ -274,7 +284,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#L.L.###.L...L.###.L..#."
+      "mask": ".#L.L.###.L...L.###.L..#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-19-logic-path-0093.html",
@@ -289,7 +300,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....L.L......LLLL....L..L...L.L..L."
+      "mask": ".....L.L......LLLL....L..L...L.L..L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-19-logic-sweep.html",
@@ -304,7 +316,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...........................o........"
+      "mask": "...........................o........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-19-word-link-0072.html",
@@ -319,7 +332,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-19-word-tangle-0013.html",
@@ -334,7 +348,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-09-26-arcade-bubble-burst.html",
@@ -410,7 +425,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...#.......#...#...#"
+      "mask": "#...#...#.......#...#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-18-geo-borders-0014.html",
@@ -425,7 +441,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-18-health-care-visas-new-workers-fall.html",
@@ -455,7 +472,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#L..L.###.LL....###.L...#"
+      "mask": "#L..L.###.LL....###.L...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-18-logic-path-0092.html",
@@ -470,7 +488,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....LL...L...L....LL..LL.........L."
+      "mask": ".....LL...L...L....LL..LL.........L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-18-logic-sweep.html",
@@ -485,7 +504,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "......................o............."
+      "mask": "......................o.............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-18-nhs-galleri-late-stage-cancer.html",
@@ -530,7 +550,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-18-word-tangle-0012.html",
@@ -545,7 +566,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-17-crossword-mini-0098.html",
@@ -560,7 +582,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-17-geo-borders-0013.html",
@@ -575,7 +598,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-17-logic-doku-0096.html",
@@ -590,7 +614,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.#L##LLL#L.LLL#...##.#.#"
+      "mask": "#.#L##LLL#L.LLL#...##.#.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-17-logic-path-0091.html",
@@ -605,7 +630,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L...L....L.LL..L.L.LL........LL....."
+      "mask": "L...L....L.LL..L.L.LL........LL.....",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-17-logic-sweep.html",
@@ -620,7 +646,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........o..........................."
+      "mask": "........o...........................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-17-uk-electric-car-mandate-gap.html",
@@ -680,7 +707,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-17-word-tangle-0011.html",
@@ -695,7 +723,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-16-crossword-mini-0097.html",
@@ -710,7 +739,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...#.......#...#...#"
+      "mask": "#...#...#.......#...#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-16-finland-spain-unemployment-converge.html",
@@ -740,7 +770,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-16-logic-doku-0095.html",
@@ -755,7 +786,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##LLL#LL...L.L.L..L#...##"
+      "mask": "##LLL#LL...L.L.L..L#...##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-16-logic-path-0090.html",
@@ -770,7 +802,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L.L......L..L..L.....L......L...L..L"
+      "mask": "L.L......L..L..L.....L......L...L..L",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-16-logic-sweep.html",
@@ -785,7 +818,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..........................o........."
+      "mask": "..........................o.........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-16-prison-population-recalls-remand.html",
@@ -815,7 +849,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-16-word-tangle-0010.html",
@@ -830,7 +865,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-15-crossword-mini-0096.html",
@@ -845,7 +881,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-15-fao-food-price-index-september.html",
@@ -875,7 +912,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-15-logic-doku-0094.html",
@@ -890,7 +928,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "###.#....L..L......L#.###"
+      "mask": "###.#....L..L......L#.###",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-15-logic-path-0089.html",
@@ -905,7 +944,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "......L.L...L.......L.L..L.....L.LL."
+      "mask": "......L.L...L.......L.L..L.....L.LL.",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-15-logic-sweep.html",
@@ -920,7 +960,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o..............."
+      "mask": "....................o...............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-15-nhs-waits-benefits-ons.html",
@@ -965,7 +1006,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-15-word-tangle-0009.html",
@@ -980,7 +1022,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-12-strategy-archipelago.html",
@@ -1010,7 +1053,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...##....#.....#....##..."
+      "mask": "...##....#.....#....##...",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-14-england-mmr-second-dose-coverage.html",
@@ -1055,7 +1099,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-14-logic-doku-0093.html",
@@ -1070,7 +1115,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.#.#.......L.L.....#.#.#"
+      "mask": "#.#.#.......L.L.....#.#.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-14-logic-path-0088.html",
@@ -1085,7 +1131,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L..LLL...LLL.....LL.L........L...."
+      "mask": "..L..LLL...LLL.....LL.L........L....",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-14-logic-sweep.html",
@@ -1100,7 +1147,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..o................................."
+      "mask": "..o.................................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-14-uk-industry-concentration-weighted-gap.html",
@@ -1130,7 +1178,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-14-word-tangle-0008.html",
@@ -1145,7 +1194,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-13-crossword-mini-0094.html",
@@ -1160,7 +1210,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-13-england-wildfires-2026.html",
@@ -1190,7 +1241,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-13-logic-doku-0092.html",
@@ -1205,7 +1257,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L.L.L.###.L.....###.L...L"
+      "mask": "L.L.L.###.L.....###.L...L",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-13-logic-path-0087.html",
@@ -1220,7 +1273,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "LLL.....L.L.....L.....LL.L.........L"
+      "mask": "LLL.....L.L.....L.....LL.L.........L",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-13-logic-sweep.html",
@@ -1235,7 +1289,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........o..........................."
+      "mask": "........o...........................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-13-nhs-18-week-plateau.html",
@@ -1280,7 +1335,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-13-word-tangle-0007.html",
@@ -1295,7 +1351,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-12-crossword-mini-0093.html",
@@ -1310,7 +1367,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........##.....##........"
+      "mask": "........##.....##........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-12-geo-borders-0008.html",
@@ -1325,7 +1383,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-12-logic-doku-0091.html",
@@ -1340,7 +1399,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L.#L#.##..L.LL.##.#.#..."
+      "mask": ".L.#L#.##..L.LL.##.#.#...",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-12-logic-path-0086.html",
@@ -1355,7 +1415,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L.......LL...L.......LL.L.....L...L."
+      "mask": "L.......LL...L.......LL.L.....L...L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-12-logic-sweep.html",
@@ -1370,7 +1431,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............................o...."
+      "mask": "...............................o....",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-12-uk-gdp-second-in-g7-after-flat-2025.html",
@@ -1430,7 +1492,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-12-word-tangle-0006.html",
@@ -1445,7 +1508,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-11-co2-rise-slows-emissions-record.html",
@@ -1475,7 +1539,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........##.....##........"
+      "mask": "........##.....##........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-11-geo-borders-0007.html",
@@ -1490,7 +1555,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-11-logic-doku-0090.html",
@@ -1505,7 +1571,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#L..L#.##.L...L.##.#...L#"
+      "mask": "#L..L#.##.L...L.##.#...L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-11-logic-path-0085.html",
@@ -1520,7 +1587,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L......L..L...L..L...LL.LL..L....L"
+      "mask": "..L......L..L...L..L...LL.LL..L....L",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-11-logic-sweep.html",
@@ -1535,7 +1603,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............o....................."
+      "mask": "..............o.....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-11-uk-asylum-grant-rate-halves.html",
@@ -1610,7 +1679,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-11-word-tangle-0005.html",
@@ -1625,7 +1695,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-10-crossword-mini-0091.html",
@@ -1640,7 +1711,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#....#.....#....#...."
+      "mask": "....#....#.....#....#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-10-geo-borders-0006.html",
@@ -1655,7 +1727,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-10-logic-doku-0089.html",
@@ -1670,7 +1743,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L..L#.##.LL..L.##.#...L."
+      "mask": ".L..L#.##.LL..L.##.#...L.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-10-logic-path-0084.html",
@@ -1685,7 +1759,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".......LL..LL...L....L......L.L....L"
+      "mask": ".......LL..LL...L....L......L.L....L",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-10-logic-sweep.html",
@@ -1700,7 +1775,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o...................."
+      "mask": "...............o....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-10-ocean-temperature-four-record-months.html",
@@ -1760,7 +1836,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-10-word-tangle-0004.html",
@@ -1775,7 +1852,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-09-arctic-sea-ice-minimum-plateau.html",
@@ -1805,7 +1883,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...#.......#...#...#"
+      "mask": "#...#...#.......#...#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-09-geo-borders-0005.html",
@@ -1820,7 +1899,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-09-logic-doku-0088.html",
@@ -1835,7 +1915,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#L...####LLL..L.####L...#"
+      "mask": "#L...####LLL..L.####L...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-09-logic-path-0083.html",
@@ -1850,7 +1931,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L..L..L...LL...........L.L..LL...L"
+      "mask": "..L..L..L...LL...........L.L..LL...L",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-09-logic-sweep.html",
@@ -1865,7 +1947,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...................................o"
+      "mask": "...................................o",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-09-ocean-temperature-record-september-2026.html",
@@ -1925,7 +2008,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-09-word-tangle-0003.html",
@@ -1940,7 +2024,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-08-crossword-mini-0089.html",
@@ -1955,7 +2040,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-08-geo-borders-0004.html",
@@ -1970,7 +2056,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-08-hormuz-shipping-transits.html",
@@ -2015,7 +2102,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##L..##.#.L...L.#.##L..##"
+      "mask": "##L..##.#.L...L.#.##L..##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-08-logic-path-0082.html",
@@ -2030,7 +2118,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "............LL..L....LLLLL.........L"
+      "mask": "............LL..L....LLLLL.........L",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-08-logic-sweep.html",
@@ -2045,7 +2134,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".o.................................."
+      "mask": ".o..................................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-08-word-link-0061.html",
@@ -2060,7 +2150,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-08-word-tangle-0002.html",
@@ -2075,7 +2166,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-07-crossword-mini-0088.html",
@@ -2090,7 +2182,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-07-el-nino-roni-second-only-to-1997.html",
@@ -2120,7 +2213,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-07-logic-doku-0086.html",
@@ -2135,7 +2229,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#####.L.L.LL....LLLL#####"
+      "mask": "#####.L.L.LL....LLLL#####",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-07-logic-path-0081.html",
@@ -2150,7 +2245,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "......L.......LL...L.L..L...L.L....L"
+      "mask": "......L.......LL...L.L..L...L.L....L",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-07-logic-sweep.html",
@@ -2165,7 +2261,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............o....................."
+      "mask": "..............o.....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-07-word-link-0060.html",
@@ -2180,7 +2277,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-07-word-tangle-0001.html",
@@ -2195,7 +2293,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "tangle"
     },
     {
       "path": "reports/2026-10-05-quiz-borderline.html",
@@ -2225,7 +2324,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........#.......#........"
+      "mask": "........#.......#........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-06-geo-borders-0002.html",
@@ -2240,7 +2340,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-06-logic-doku-0085.html",
@@ -2255,7 +2356,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##.##.LL..LLLLLLL...##.##"
+      "mask": "##.##.LL..LLLLLLL...##.##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-06-logic-path-0080.html",
@@ -2270,7 +2372,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....LL..LL.......L.L.....L.LL......"
+      "mask": ".....LL..LL.......L.L.....L.LL......",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-06-logic-sweep.html",
@@ -2285,7 +2388,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o...................."
+      "mask": "...............o....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-06-word-link-0059.html",
@@ -2300,7 +2404,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-05-crossword-mini-0086.html",
@@ -2315,7 +2420,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...##.....##...#...."
+      "mask": "....#...##.....##...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-05-geo-borders-0001.html",
@@ -2330,7 +2436,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "borders"
     },
     {
       "path": "reports/2026-10-05-logic-doku-0084.html",
@@ -2345,7 +2452,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#..L..........L.#L..#"
+      "mask": "#...#..L..........L.#L..#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-05-logic-path-0079.html",
@@ -2360,7 +2468,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...L.L.L...L...L......L.LL.L.....L.."
+      "mask": "...L.L.L...L...L......L.LL.L.....L..",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-05-logic-sweep.html",
@@ -2375,7 +2484,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...........................o........"
+      "mask": "...........................o........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-05-word-link-0058.html",
@@ -2390,7 +2500,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-04-crossword-mini-0085.html",
@@ -2405,7 +2516,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-04-logic-doku-0083.html",
@@ -2420,7 +2532,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "####.L....L....L.....####"
+      "mask": "####.L....L....L.....####",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-04-logic-path-0078.html",
@@ -2435,7 +2548,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L....LL.L...L.....L.LLL.L..........."
+      "mask": "L....LL.L...L.....L.LLL.L...........",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-04-logic-sweep.html",
@@ -2450,7 +2564,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................................o.."
+      "mask": ".................................o..",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-04-word-link-0057.html",
@@ -2465,7 +2580,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-03-crossword-mini-0084.html",
@@ -2480,7 +2596,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........#.......#........"
+      "mask": "........#.......#........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-03-logic-doku-0082.html",
@@ -2495,7 +2612,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#LL.#L#.#.L.L...#.#.#...#"
+      "mask": "#LL.#L#.#.L.L...#.#.#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-03-logic-path-0077.html",
@@ -2510,7 +2628,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....L....LL...L.L....L...LL....LL.L."
+      "mask": "....L....LL...L.L....L...LL....LL.L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-03-logic-sweep.html",
@@ -2525,7 +2644,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..........................o........."
+      "mask": "..........................o.........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-03-word-link-0056.html",
@@ -2540,7 +2660,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-02-britain-pensions-international-comparison.html",
@@ -2570,7 +2691,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-02-logic-doku-0081.html",
@@ -2585,7 +2707,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".###L.#.#.L.L.L.#.#..###."
+      "mask": ".###L.#.#.L.L.L.#.#..###.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-02-logic-path-0076.html",
@@ -2600,7 +2723,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L......L.L.L.......L....L...L.L....L"
+      "mask": "L......L.L.L.......L....L...L.L....L",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-02-logic-sweep.html",
@@ -2615,7 +2739,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o..............."
+      "mask": "....................o...............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-02-word-link-0055.html",
@@ -2630,7 +2755,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-10-01-anaesthesia-shared-neural-changes.html",
@@ -2675,7 +2801,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...##.....##...#...."
+      "mask": "....#...##.....##...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-10-01-healthy-ageing-policy-and-tracking.html",
@@ -2705,7 +2832,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##.#..#.#.L.L.L.#L#.L#.##"
+      "mask": "##.#..#.#.L.L.L.#L#.L#.##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-10-01-logic-path-0075.html",
@@ -2720,7 +2848,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L......L.L..........L.LL.....L.L...L"
+      "mask": "L......L.L..........L.LL.....L.L...L",
+      "type": "path"
     },
     {
       "path": "reports/2026-10-01-logic-sweep.html",
@@ -2735,7 +2864,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".............o......................"
+      "mask": ".............o......................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-10-01-word-link-0054.html",
@@ -2750,7 +2880,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-30-crossword-mini-0081.html",
@@ -2765,7 +2896,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...##.....##...#...."
+      "mask": "....#...##.....##...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-30-logic-doku-0079.html",
@@ -2780,7 +2912,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#L#..#.#.L.L.L.#.#L.#.#."
+      "mask": ".#L#..#.#.L.L.L.#.#L.#.#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-30-logic-path-0074.html",
@@ -2795,7 +2928,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L........L...LL.L.LL.....L..L.LL...."
+      "mask": "L........L...LL.L.LL.....L..L.LL....",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-30-logic-sweep.html",
@@ -2810,7 +2944,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............o....................."
+      "mask": "..............o.....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-30-word-link-0053.html",
@@ -2825,7 +2960,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-29-crossword-mini-0080.html",
@@ -2840,7 +2976,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-29-innovation-inputs-outputs.html",
@@ -2870,7 +3007,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##..L.#.#.L.L...#.#.L.L##"
+      "mask": "##..L.#.#.L.L...#.#.L.L##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-29-logic-path-0073.html",
@@ -2885,7 +3023,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "......L.L......LL.L.....L...L..L..L."
+      "mask": "......L.L......LL.L.....L...L..L..L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-29-logic-sweep.html",
@@ -2900,7 +3039,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................................o.."
+      "mask": ".................................o..",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-29-word-link-0052.html",
@@ -2915,7 +3055,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-27-arcade-lantern-drift.html",
@@ -2975,7 +3116,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........##.....##........"
+      "mask": "........##.....##........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-28-fish-social-escape.html",
@@ -3005,7 +3147,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#L.L.#.#.L.L.L.#.#....#."
+      "mask": ".#L.L.#.#.L.L.L.#.#....#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-28-logic-path-0072.html",
@@ -3020,7 +3163,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...LL..LL...L.LL..L..............L.L"
+      "mask": "...LL..LL...L.LL..L..............L.L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-28-logic-sweep.html",
@@ -3035,7 +3179,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o..............."
+      "mask": "....................o...............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-28-word-link-0051.html",
@@ -3050,7 +3195,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-27-bundibugyo-passes-kivu.html",
@@ -3080,7 +3226,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-27-logic-doku-0076.html",
@@ -3095,7 +3242,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "###.#.L.LL..LLL.LLL.#.###"
+      "mask": "###.#.L.LL..LLL.LLL.#.###",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-27-logic-path-0071.html",
@@ -3110,7 +3258,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".......L.LL..L.......LLL..L........L"
+      "mask": ".......L.LL..L.......LLL..L........L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-27-logic-sweep.html",
@@ -3125,7 +3274,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............o....................."
+      "mask": "..............o.....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-27-uk-cpi-energy-august.html",
@@ -3155,7 +3305,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-26-crossword-mini-0077.html",
@@ -3170,7 +3321,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...##....#.....#....##..."
+      "mask": "...##....#.....#....##...",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-26-logic-doku-0075.html",
@@ -3185,7 +3337,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.#.#LL.LL.L.LLL.L.L#.#.#"
+      "mask": "#.#.#LL.LL.L.LLL.L.L#.#.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-26-logic-path-0070.html",
@@ -3200,7 +3353,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L.........L..L....LL..L....L...L..LL"
+      "mask": "L.........L..L....LL..L....L...L..LL",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-26-logic-sweep.html",
@@ -3215,7 +3369,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o..............."
+      "mask": "....................o...............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-26-word-link-0049.html",
@@ -3230,7 +3385,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-25-crossword-mini-0076.html",
@@ -3245,7 +3401,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........##.....##........"
+      "mask": "........##.....##........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-25-logic-doku-0074.html",
@@ -3260,7 +3417,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".###....L...L...L....###."
+      "mask": ".###....L...L...L....###.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-25-logic-path-0069.html",
@@ -3275,7 +3433,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L...LL.L.LL....L.L.......L.....L.L.."
+      "mask": "L...LL.L.LL....L.L.......L.....L.L..",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-25-logic-sweep.html",
@@ -3290,7 +3449,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................................o.."
+      "mask": ".................................o..",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-25-word-link-0048.html",
@@ -3305,7 +3465,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-24-atlantic-hurricane-season-longest-wait.html",
@@ -3335,7 +3496,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........#.......#........"
+      "mask": "........#.......#........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-24-logic-doku-0073.html",
@@ -3350,7 +3512,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.##....L..L.........##.#"
+      "mask": "#.##....L..L.........##.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-24-logic-path-0068.html",
@@ -3365,7 +3528,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "LL.L....LL......L.L..L..L.....L..L.."
+      "mask": "LL.L....LL......L.L..L..L.....L..L..",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-24-logic-sweep.html",
@@ -3380,7 +3544,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................o.................."
+      "mask": ".................o..................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-24-roman-road-network-centrality.html",
@@ -3410,7 +3575,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-23-crossword-mini-0074.html",
@@ -3425,7 +3591,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...#.......#...#...#"
+      "mask": "#...#...#.......#...#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-23-logic-doku-0072.html",
@@ -3440,7 +3607,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.L.L.#.#...L.L.#.#.L.L.#"
+      "mask": "#.L.L.#.#...L.L.#.#.L.L.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-23-logic-path-0067.html",
@@ -3455,7 +3623,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...L.L.....L.L.L.LLLL...L..........L"
+      "mask": "...L.L.....L.L.L.LLLL...L..........L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-23-logic-sweep.html",
@@ -3470,7 +3639,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o..............."
+      "mask": "....................o...............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-23-us-midterms-odds.html",
@@ -3500,7 +3670,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-22-crossword-mini-0073.html",
@@ -3515,7 +3686,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........##.....##........"
+      "mask": "........##.....##........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-22-logic-doku-0071.html",
@@ -3530,7 +3702,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L.L.L.#.#.L...L.#.#.L.L.."
+      "mask": "L.L.L.#.#.L...L.#.#.L.L..",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-22-logic-path-0066.html",
@@ -3545,7 +3718,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L.....L.L.L.L....L.....LL..L.....L"
+      "mask": "..L.....L.L.L.L....L.....LL..L.....L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-22-logic-sweep.html",
@@ -3560,7 +3734,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...........o........................"
+      "mask": "...........o........................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-22-word-link-0045.html",
@@ -3575,7 +3750,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-21-crossword-mini-0072.html",
@@ -3590,7 +3766,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-21-logic-doku-0070.html",
@@ -3605,7 +3782,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##...##...L..L...L##L.L##"
+      "mask": "##...##...L..L...L##L.L##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-21-logic-path-0065.html",
@@ -3620,7 +3798,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L..L..L.......L.L...LL...L...LL...."
+      "mask": ".L..L..L.......L.L...LL...L...LL....",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-21-logic-sweep.html",
@@ -3635,7 +3814,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................o..................."
+      "mask": "................o...................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-21-word-link-0044.html",
@@ -3650,7 +3830,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-20-crossword-mini-0071.html",
@@ -3665,7 +3846,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-20-logic-doku-0069.html",
@@ -3680,7 +3862,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "###.#.#.L..L...LL.#.#.###"
+      "mask": "###.#.#.L..L...LL.#.#.###",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-20-logic-path-0064.html",
@@ -3695,7 +3878,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L....L...L....L..LL.L....L.L........"
+      "mask": "L....L...L....L..LL.L....L.L........",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-20-logic-sweep.html",
@@ -3710,7 +3894,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o...................."
+      "mask": "...............o....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-20-word-link-0043.html",
@@ -3725,7 +3910,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-19-crossword-mini-0070.html",
@@ -3740,7 +3926,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-19-logic-doku-0068.html",
@@ -3755,7 +3942,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".##.#.#..L.L.LL.L.#.#.##."
+      "mask": ".##.#.#..L.L.LL.L.#.#.##.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-19-logic-path-0063.html",
@@ -3770,7 +3958,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...LL.LL.LLL..........L...L........L"
+      "mask": "...LL.LL.LLL..........L...L........L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-19-logic-sweep.html",
@@ -3785,7 +3974,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...................................o"
+      "mask": "...................................o",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-19-word-link-0042.html",
@@ -3800,7 +3990,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-18-crossword-mini-0069.html",
@@ -3815,7 +4006,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#....#.....#....#...."
+      "mask": "....#....#.....#....#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-18-logic-doku-0067.html",
@@ -3830,7 +4022,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#..L#.#LL.....LL..#.#...#"
+      "mask": "#..L#.#LL.....LL..#.#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-18-logic-path-0062.html",
@@ -3845,7 +4038,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L.....L..L....L..LL.LL.L.......L..L."
+      "mask": "L.....L..L....L..LL.LL.L.......L..L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-18-logic-sweep.html",
@@ -3860,7 +4054,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....................o.............."
+      "mask": ".....................o..............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-18-word-link-0041.html",
@@ -3875,7 +4070,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-17-crossword-mini-0068.html",
@@ -3890,7 +4086,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-17-logic-doku-0066.html",
@@ -3905,7 +4102,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "####..LLL.L..LL.LL...####"
+      "mask": "####..LLL.L..LL.LL...####",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-17-logic-path-0061.html",
@@ -3920,7 +4118,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L.........LL.LL.L....L.....L.LL....."
+      "mask": "L.........LL.LL.L....L.....L.LL.....",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-17-logic-sweep.html",
@@ -3935,7 +4134,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o...................."
+      "mask": "...............o....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-17-word-link-0040.html",
@@ -3950,7 +4150,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-16-crossword-mini-0067.html",
@@ -3965,7 +4166,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-16-logic-doku-0065.html",
@@ -3980,7 +4182,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".###.L..LLL.LLLL.LL..###."
+      "mask": ".###.L..LLL.LLLL.LL..###.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-16-logic-path-0060.html",
@@ -3995,7 +4198,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L.LL.........LL...L.......LL......L"
+      "mask": ".L.LL.........LL...L.......LL......L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-16-logic-sweep.html",
@@ -4010,7 +4214,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...........................o........"
+      "mask": "...........................o........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-16-word-link-0039.html",
@@ -4025,7 +4230,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-15-crossword-mini-0066.html",
@@ -4040,7 +4246,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........##.....##........"
+      "mask": "........##.....##........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-15-logic-doku-0064.html",
@@ -4055,7 +4262,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##.#...LL.........L..#.##"
+      "mask": "##.#...LL.........L..#.##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-15-logic-path-0059.html",
@@ -4070,7 +4278,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............LLL.LL.LL....L..L....."
+      "mask": "..............LLL.LL.LL....L..L.....",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-15-logic-sweep.html",
@@ -4085,7 +4294,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".............o......................"
+      "mask": ".............o......................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-15-word-link-0038.html",
@@ -4100,7 +4310,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-14-crossword-mini-0065.html",
@@ -4115,7 +4326,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...##.....##...#...."
+      "mask": "....#...##.....##...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-14-logic-doku-0063.html",
@@ -4130,7 +4342,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.#....L...L....L...#.#."
+      "mask": ".#.#....L...L....L...#.#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-14-logic-path-0058.html",
@@ -4145,7 +4358,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........L....LL......L.L...L...LL..L"
+      "mask": "........L....LL......L.L...L...LL..L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-14-logic-sweep.html",
@@ -4160,7 +4374,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....................o.............."
+      "mask": ".....................o..............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-14-word-link-0037.html",
@@ -4175,7 +4390,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-13-crossword-mini-0064.html",
@@ -4190,7 +4406,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#....#.....#....#...."
+      "mask": "....#....#.....#....#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-13-logic-doku-0062.html",
@@ -4205,7 +4422,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##....#.L..LL....L#.L..##"
+      "mask": "##....#.L..LL....L#.L..##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-13-logic-path-0057.html",
@@ -4220,7 +4438,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "LL.L.......L...LLL.LL.L............L"
+      "mask": "LL.L.......L...LLL.LL.L............L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-13-logic-sweep.html",
@@ -4235,7 +4454,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o..............."
+      "mask": "....................o...............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-13-word-link-0036.html",
@@ -4250,7 +4470,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-12-crossword-mini-0063.html",
@@ -4265,7 +4486,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-12-logic-doku-0061.html",
@@ -4280,7 +4502,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#....#.LLL..LL..L#....#."
+      "mask": ".#....#.LLL..LL..L#....#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-12-logic-path-0056.html",
@@ -4295,7 +4518,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..LL..L..L...L.....L........L...LL.L"
+      "mask": "..LL..L..L...L.....L........L...LL.L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-12-logic-sweep.html",
@@ -4310,7 +4534,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...........................o........"
+      "mask": "...........................o........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-12-word-link-0035.html",
@@ -4325,7 +4550,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-11-crossword-mini-0062.html",
@@ -4340,7 +4566,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-11-logic-doku-0060.html",
@@ -4355,7 +4582,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.L.L.#.L..LL.....#..L..#"
+      "mask": "#.L.L.#.L..LL.....#..L..#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-11-logic-path-0055.html",
@@ -4370,7 +4598,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L.L..L.............L...LL......L..LL"
+      "mask": "L.L..L.............L...LL......L..LL",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-11-logic-sweep.html",
@@ -4385,7 +4614,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o...................."
+      "mask": "...............o....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-11-word-link-0034.html",
@@ -4400,7 +4630,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-10-crossword-mini-0061.html",
@@ -4415,7 +4646,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........#.......#........"
+      "mask": "........#.......#........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-10-logic-doku-0059.html",
@@ -4430,7 +4662,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L...#L.L...L..LL#......"
+      "mask": "..L...#L.L...L..LL#......",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-10-logic-path-0054.html",
@@ -4445,7 +4678,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L.L..L..L..L....L...L.L.....L.....L"
+      "mask": ".L.L..L..L..L....L...L.L.....L.....L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-10-logic-sweep.html",
@@ -4460,7 +4694,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................o.................."
+      "mask": ".................o..................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-10-word-link-0033.html",
@@ -4475,7 +4710,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-09-crossword-mini-0060.html",
@@ -4490,7 +4726,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-09-logic-doku-0058.html",
@@ -4505,7 +4742,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "####.#L..L..L.L...L#.####"
+      "mask": "####.#L..L..L.L...L#.####",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-09-logic-path-0053.html",
@@ -4520,7 +4758,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L....L.LL...L.L.....L......L.L......"
+      "mask": "L....L.LL...L.L.....L......L.L......",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-09-logic-sweep.html",
@@ -4535,7 +4774,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...........o........................"
+      "mask": "...........o........................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-09-word-link-0032.html",
@@ -4550,7 +4790,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-08-crossword-mini-0059.html",
@@ -4565,7 +4806,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-08-logic-doku-0057.html",
@@ -4580,7 +4822,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.##.#LL..L.L...L..#.##.#"
+      "mask": "#.##.#LL..L.L...L..#.##.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-08-logic-path-0052.html",
@@ -4595,7 +4838,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........L......LL......L.L..LL..LL.."
+      "mask": "........L......LL......L.L..LL..LL..",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-08-logic-sweep.html",
@@ -4610,7 +4854,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................o.................."
+      "mask": ".................o..................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-08-word-link-0031.html",
@@ -4625,7 +4870,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-07-crossword-mini-0058.html",
@@ -4640,7 +4886,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-07-logic-doku-0056.html",
@@ -4655,7 +4902,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.##..LLLLLL.L..L.LL.##.#"
+      "mask": "#.##..LLLLLL.L..L.LL.##.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-07-logic-path-0051.html",
@@ -4670,7 +4918,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L..L........L...L....L..LL....L..L.."
+      "mask": "L..L........L...L....L..LL....L..L..",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-07-logic-sweep.html",
@@ -4685,7 +4934,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..........o........................."
+      "mask": "..........o.........................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-07-word-link-0030.html",
@@ -4700,7 +4950,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-06-crossword-mini-0057.html",
@@ -4715,7 +4966,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........##.....##........"
+      "mask": "........##.....##........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-06-logic-doku-0055.html",
@@ -4730,7 +4982,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##.#..LL.L.LLLLL.L.L.#.##"
+      "mask": "##.#..LL.L.LLLLL.L.L.#.##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-06-logic-path-0050.html",
@@ -4745,7 +4998,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L.L....LL....L.L......L.L.LL.....L."
+      "mask": ".L.L....LL....L.L......L.L.LL.....L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-06-logic-sweep.html",
@@ -4760,7 +5014,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "............o......................."
+      "mask": "............o.......................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-06-word-link-0029.html",
@@ -4775,7 +5030,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-05-crossword-mini-0056.html",
@@ -4790,7 +5046,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........#.......#........"
+      "mask": "........#.......#........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-05-logic-doku-0054.html",
@@ -4805,7 +5062,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##..L......LL..........##"
+      "mask": "##..L......LL..........##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-05-logic-path-0049.html",
@@ -4820,7 +5078,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".......L...LLL.L..L......LL..LL....L"
+      "mask": ".......L...LLL.L..L......LL..LL....L",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-05-logic-sweep.html",
@@ -4835,7 +5094,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o..............."
+      "mask": "....................o...............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-05-word-link-0028.html",
@@ -4850,7 +5110,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-04-crossword-mini-0055.html",
@@ -4865,7 +5126,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-04-logic-doku-0053.html",
@@ -4880,7 +5142,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.......L..LL.........#."
+      "mask": ".#.......L..LL.........#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-04-logic-path-0048.html",
@@ -4895,7 +5158,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....L....L.L.LLL..L...L......L....."
+      "mask": ".....L....L.L.LLL..L...L......L.....",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-04-logic-sweep.html",
@@ -4910,7 +5174,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o...................."
+      "mask": "...............o....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-04-word-link-0027.html",
@@ -4925,7 +5190,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-03-crossword-mini-0054.html",
@@ -4940,7 +5206,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-03-logic-doku-0052.html",
@@ -4955,7 +5222,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##.#.#.LL..L..L..L.#.#.##"
+      "mask": "##.#.#.LL..L..L..L.#.#.##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-03-logic-path-0047.html",
@@ -4970,7 +5238,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "LL...........LLL..L.L..L........L..."
+      "mask": "LL...........LLL..L.L..L........L...",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-03-logic-sweep.html",
@@ -4985,7 +5254,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...................o................"
+      "mask": "...................o................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-03-word-link-0026.html",
@@ -5000,7 +5270,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-02-crossword-mini-0053.html",
@@ -5015,7 +5286,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-02-logic-doku-0051.html",
@@ -5030,7 +5302,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#####..L.LL.L.......#####"
+      "mask": "#####..L.LL.L.......#####",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-02-logic-path-0046.html",
@@ -5045,7 +5318,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L...L..L.LL.LL..LL...L..L........."
+      "mask": "..L...L..L.LL.LL..LL...L..L.........",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-02-logic-sweep.html",
@@ -5060,7 +5334,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...................o................"
+      "mask": "...................o................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-02-word-link-0025.html",
@@ -5075,7 +5350,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-09-01-crossword-mini-0052.html",
@@ -5090,7 +5366,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...##....#.....#....##..."
+      "mask": "...##....#.....#....##...",
+      "type": "mini"
     },
     {
       "path": "reports/2026-09-01-logic-doku-0050.html",
@@ -5105,7 +5382,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##.##LLL.......L.L..##.##"
+      "mask": "##.##LLL.......L.L..##.##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-09-01-logic-path-0045.html",
@@ -5120,7 +5398,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...L..L..L..LL........L.L..L..L....."
+      "mask": "...L..L..L..LL........L.L..L..L.....",
+      "type": "path"
     },
     {
       "path": "reports/2026-09-01-logic-sweep.html",
@@ -5135,7 +5414,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............o....................."
+      "mask": "..............o.....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-09-01-word-link-0024.html",
@@ -5150,7 +5430,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-31-crossword-mini-0051.html",
@@ -5165,7 +5446,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........#.......#........"
+      "mask": "........#.......#........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-31-logic-doku-0049.html",
@@ -5180,7 +5462,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "###.#LLL.....L..L...#.###"
+      "mask": "###.#LLL.....L..L...#.###",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-31-logic-path-0044.html",
@@ -5195,7 +5478,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L..L.L.....LL.......L..L.L...L......"
+      "mask": "L..L.L.....LL.......L..L.L...L......",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-31-logic-sweep.html",
@@ -5210,7 +5494,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..........................o........."
+      "mask": "..........................o.........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-31-word-link-0023.html",
@@ -5225,7 +5510,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-30-crossword-mini-0050.html",
@@ -5240,7 +5526,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...##.....##...#...."
+      "mask": "....#...##.....##...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-30-logic-doku-0048.html",
@@ -5255,7 +5542,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.#.#LL...L..LL.....#.#.#"
+      "mask": "#.#.#LL...L..LL.....#.#.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-30-logic-path-0043.html",
@@ -5270,7 +5558,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L....L....L...LL.......L....L..L..L."
+      "mask": "L....L....L...LL.......L....L..L..L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-30-logic-sweep.html",
@@ -5285,7 +5574,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................................o..."
+      "mask": "................................o...",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-30-word-link-0022.html",
@@ -5300,7 +5590,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-29-crossword-mini-0049.html",
@@ -5315,7 +5606,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...##.....##...#...."
+      "mask": "....#...##.....##...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-29-logic-doku-0047.html",
@@ -5330,7 +5622,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#L..#.......LL.LL...#..L#"
+      "mask": "#L..#.......LL.LL...#..L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-29-logic-path-0042.html",
@@ -5345,7 +5638,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....L......L...L..L..L.L..L..L.L..."
+      "mask": ".....L......L...L..L..L.L..L..L.L...",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-29-logic-sweep.html",
@@ -5360,7 +5654,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................................o.."
+      "mask": ".................................o..",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-29-word-link-0021.html",
@@ -5375,7 +5670,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-28-crossword-mini-0048.html",
@@ -5390,7 +5686,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-28-logic-doku-0046.html",
@@ -5405,7 +5702,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.#.LLL.LL.L.LLLLL..#.#."
+      "mask": ".#.#.LLL.LL.L.LLLLL..#.#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-28-logic-path-0041.html",
@@ -5420,7 +5718,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....L.....L.LLL..L..L....L......L.."
+      "mask": ".....L.....L.LLL..L..L....L......L..",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-28-logic-sweep.html",
@@ -5435,7 +5734,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o...................."
+      "mask": "...............o....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-28-word-link-0020.html",
@@ -5450,7 +5750,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-27-crossword-mini-0047.html",
@@ -5465,7 +5766,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........##.....##........"
+      "mask": "........##.....##........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-27-el-nino-uk-winter-rain-wind-floods.html",
@@ -5495,7 +5797,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##LL..LL....L.LL.LL.LL.##"
+      "mask": "##LL..LL....L.LL.LL.LL.##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-27-logic-path-0040.html",
@@ -5510,7 +5813,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L...L.L.....LL.L.L......L....L...."
+      "mask": "..L...L.L.....LL.L.L......L....L....",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-27-logic-sweep.html",
@@ -5525,7 +5829,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...o................................"
+      "mask": "...o................................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-27-multivitamins-immunity-evidence.html",
@@ -5555,7 +5860,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-26-crossword-mini-0046.html",
@@ -5570,7 +5876,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........#.......#........"
+      "mask": "........#.......#........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-26-logic-doku-0044.html",
@@ -5585,7 +5892,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.........LL........LL..#"
+      "mask": "#.........LL........LL..#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-26-logic-path-0039.html",
@@ -5600,7 +5908,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "LL....L......L......LLL.L.......L..L"
+      "mask": "LL....L......L......LLL.L.......L..L",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-26-logic-sweep.html",
@@ -5615,7 +5924,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...................o................"
+      "mask": "...................o................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-26-word-link-0018.html",
@@ -5630,7 +5940,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-25-crossword-mini-0045.html",
@@ -5645,7 +5956,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........#.......#........"
+      "mask": "........#.......#........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-25-logic-doku-0043.html",
@@ -5660,7 +5972,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....L.L......L.........L"
+      "mask": ".....L.L......L.........L",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-25-logic-path-0038.html",
@@ -5675,7 +5988,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "......L.LL.L.......LL.L.LL.........."
+      "mask": "......L.LL.L.......LL.L.LL..........",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-25-logic-sweep.html",
@@ -5690,7 +6004,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............o....................."
+      "mask": "..............o.....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-25-word-link-0017.html",
@@ -5705,7 +6020,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-24-crossword-mini-0044.html",
@@ -5720,7 +6036,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-24-logic-doku-0042.html",
@@ -5735,7 +6052,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "####...LL....L..LL...####"
+      "mask": "####...LL....L..LL...####",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-24-logic-path-0037.html",
@@ -5750,7 +6068,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L.......L.L...LL....L.L......L...L.L"
+      "mask": "L.......L.L...LL....L.L......L...L.L",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-24-logic-sweep.html",
@@ -5765,7 +6084,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o..............."
+      "mask": "....................o...............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-24-word-link-0016.html",
@@ -5780,7 +6100,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-23-crossword-mini-0043.html",
@@ -5795,7 +6116,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#....#.....#....#...."
+      "mask": "....#....#.....#....#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-23-logic-doku-0041.html",
@@ -5810,7 +6132,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".###...LL.L..L..L.L..###."
+      "mask": ".###...LL.L..L..L.L..###.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-23-logic-path-0036.html",
@@ -5825,7 +6148,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L..L......L.L..LL....L.L..L........."
+      "mask": "L..L......L.L..LL....L.L..L.........",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-23-logic-sweep.html",
@@ -5840,7 +6164,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...o................................"
+      "mask": "...o................................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-23-word-link-0015.html",
@@ -5855,7 +6180,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-22-crossword-mini-0042.html",
@@ -5870,7 +6196,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........##.....##........"
+      "mask": "........##.....##........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-22-logic-doku-0040.html",
@@ -5885,7 +6212,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.##..L.LLL......L.L.##.#"
+      "mask": "#.##..L.LLL......L.L.##.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-22-logic-path-0035.html",
@@ -5900,7 +6228,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L.......L.L.....L.....LLL.LL......."
+      "mask": ".L.......L.L.....L.....LLL.LL.......",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-22-logic-sweep.html",
@@ -5915,7 +6244,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o...................."
+      "mask": "...............o....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-22-word-link-0014.html",
@@ -5930,7 +6260,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-21-crossword-mini-0041.html",
@@ -5945,7 +6276,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...#.......#...#...."
+      "mask": "....#...#.......#...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-21-logic-doku-0039.html",
@@ -5960,7 +6292,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "##.#..LL...L.L..LL...#.##"
+      "mask": "##.#..LL...L.L..LL...#.##",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-21-logic-path-0034.html",
@@ -5975,7 +6308,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L...L...L.L........L.L..L.L..L...."
+      "mask": "..L...L...L.L........L.L..L.L..L....",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-21-logic-sweep.html",
@@ -5990,7 +6324,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..........................o........."
+      "mask": "..........................o.........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-21-word-link-0013.html",
@@ -6005,7 +6340,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-20-crossword-mini-0040.html",
@@ -6020,7 +6356,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".........#.....#........."
+      "mask": ".........#.....#.........",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-20-logic-doku-0038.html",
@@ -6035,7 +6372,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.#.L...L..LL.LLL...#.#."
+      "mask": ".#.#.L...L..LL.LLL...#.#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-20-logic-path-0033.html",
@@ -6050,7 +6388,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".............LLL.LL...LLL....LL....L"
+      "mask": ".............LLL.LL...LLL....LL....L",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-20-logic-sweep.html",
@@ -6065,7 +6404,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..........................o........."
+      "mask": "..........................o.........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-20-word-link-0012.html",
@@ -6080,7 +6420,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-19-crossword-mini-0039.html",
@@ -6095,7 +6436,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...#.......#...#...#"
+      "mask": "#...#...#.......#...#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-19-logic-doku-0037.html",
@@ -6110,7 +6452,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#..LL.L....L......LL.L#."
+      "mask": ".#..LL.L....L......LL.L#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-19-logic-path-0032.html",
@@ -6125,7 +6468,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....L.L.L......L....LL.LLL...L..L..."
+      "mask": "....L.L.L......L....LL.LLL...L..L...",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-19-logic-sweep.html",
@@ -6140,7 +6484,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................o..................."
+      "mask": "................o...................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-19-word-link-0011.html",
@@ -6155,7 +6500,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-18-crossword-mini-0038.html",
@@ -6170,7 +6516,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...##.....##...#...."
+      "mask": "....#...##.....##...#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-18-logic-doku-0036.html",
@@ -6185,7 +6532,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#L.LLL.....LL.L.L.LL.L#."
+      "mask": ".#L.LLL.....LL.L.L.LL.L#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-18-logic-path-0031.html",
@@ -6200,7 +6548,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....L.L..L....LLL......L..L.L.L....."
+      "mask": "....L.L..L....LLL......L..L.L.L.....",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-18-logic-sweep.html",
@@ -6215,7 +6564,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o..............."
+      "mask": "....................o...............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-18-word-link-0010.html",
@@ -6230,7 +6580,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-17-crossword-mini-0037.html",
@@ -6245,7 +6596,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#.#...........#.#...."
+      "mask": "....#.#...........#.#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-17-logic-doku-0035.html",
@@ -6260,7 +6612,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#L....LLL.L.L..LL.LLLL..#"
+      "mask": "#L....LLL.L.L..LL.LLLL..#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-17-logic-path-0030.html",
@@ -6275,7 +6628,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L.....L.L.L....L..L......L.L..LL.."
+      "mask": "..L.....L.L.L....L..L......L.L..LL..",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-17-logic-sweep.html",
@@ -6290,7 +6644,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o...................."
+      "mask": "...............o....................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-17-word-link-0009.html",
@@ -6305,7 +6660,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-16-crossword-mini-0036.html",
@@ -6320,7 +6676,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...##....#.....#....##..."
+      "mask": "...##....#.....#....##...",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-16-logic-doku-0034.html",
@@ -6335,7 +6692,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#....L..LL...L..#...#"
+      "mask": "#...#....L..LL...L..#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-16-logic-path-0029.html",
@@ -6350,7 +6708,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...L..L.L....L.L...L...L.L.L.....L.."
+      "mask": "...L..L.L....L.L...L...L.L.L.....L..",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-16-logic-sweep.html",
@@ -6365,7 +6724,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "............o............"
+      "mask": "............o............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-16-word-link-0008.html",
@@ -6380,7 +6740,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-15-crossword-mini-0035.html",
@@ -6395,7 +6756,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.....................#."
+      "mask": ".#.....................#.",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-15-logic-doku-0033.html",
@@ -6410,7 +6772,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#....LL.........#..L#"
+      "mask": "#...#....LL.........#..L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-15-logic-path-0028.html",
@@ -6425,7 +6788,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L..L......L....LL.......LL.L.L....L."
+      "mask": "L..L......L....LL.......LL.L.L....L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-15-logic-sweep.html",
@@ -6440,7 +6804,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................o......."
+      "mask": ".................o.......",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-15-word-link-0007.html",
@@ -6455,7 +6820,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-14-crossword-mini-0034.html",
@@ -6470,7 +6836,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-14-logic-doku-0032.html",
@@ -6485,7 +6852,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#..L#.L....LL...LLL.#...#"
+      "mask": "#..L#.L....LL...LLL.#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-14-logic-path-0027.html",
@@ -6500,7 +6868,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L....L.L..L.......L.L.LL..L...L...L"
+      "mask": ".L....L.L..L.......L.L.LL..L...L...L",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-14-logic-sweep.html",
@@ -6515,7 +6884,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".............o..........."
+      "mask": ".............o...........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-14-word-link-0006.html",
@@ -6530,7 +6900,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-13-crossword-mini-0033.html",
@@ -6545,7 +6916,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...............#...."
+      "mask": "....#...............#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-13-logic-doku-0031.html",
@@ -6560,7 +6932,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#..L#..L.L.LLL.....L#...#"
+      "mask": "#..L#..L.L.LLL.....L#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-13-logic-path-0026.html",
@@ -6575,7 +6948,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L...L...L....L.....L....L......L.LL"
+      "mask": ".L...L...L....L.....L....L......L.LL",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-13-logic-sweep.html",
@@ -6590,7 +6964,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "........o................"
+      "mask": "........o................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-13-word-link-0005.html",
@@ -6605,7 +6980,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-12-crossword-mini-0032.html",
@@ -6620,7 +6996,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.......................#"
+      "mask": "#.......................#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-12-logic-doku-0030.html",
@@ -6635,7 +7012,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#LL.#.L...LLLL..L.L.#L.L#"
+      "mask": "#LL.#.L...LLLL..L.L.#L.L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-12-logic-path-0025.html",
@@ -6650,7 +7028,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L...L..L...L..L.....L..L..L......L."
+      "mask": ".L...L..L...L..L.....L..L..L......L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-12-logic-sweep.html",
@@ -6665,7 +7044,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "o........................"
+      "mask": "o........................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-12-word-link-0004.html",
@@ -6680,7 +7060,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-11-crossword-mini-0031.html",
@@ -6695,7 +7076,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.....................#."
+      "mask": ".#.....................#.",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-11-logic-doku-0029.html",
@@ -6710,7 +7092,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#L.L#.LL.L.LLLL..L..#..L#"
+      "mask": "#L.L#.LL.L.LLLL..L..#..L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-11-logic-path-0024.html",
@@ -6725,7 +7108,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L...L...LL..L.L.......LLL..L........"
+      "mask": "L...L...LL..L.L.......LLL..L........",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-11-logic-sweep.html",
@@ -6740,7 +7124,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".............o..........."
+      "mask": ".............o...........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-11-word-link-0003.html",
@@ -6755,7 +7140,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-10-crossword-mini-0030.html",
@@ -6770,7 +7156,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-10-logic-doku-0028.html",
@@ -6785,7 +7172,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.L.#L...L..L.......#...#"
+      "mask": "#.L.#L...L..L.......#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-10-logic-path-0023.html",
@@ -6800,7 +7188,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L.L...L...L.......L.L..L.L.L......"
+      "mask": "..L.L...L...L.......L.L..L.L.L......",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-10-logic-sweep.html",
@@ -6815,7 +7204,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".......o................."
+      "mask": ".......o.................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-10-never-married-cohabitation-ons-2025.html",
@@ -6845,7 +7235,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-09-crossword-mini-0029.html",
@@ -6860,7 +7251,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...............#...."
+      "mask": "....#...............#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-09-el-nino-oni-roni-index-switch.html",
@@ -6890,7 +7282,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#L..#.....L.L......L#...#"
+      "mask": "#L..#.....L.L......L#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-09-logic-path-0022.html",
@@ -6905,7 +7298,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...L..L..L.....L.L.L.......L...L..L."
+      "mask": "...L..L..L.....L.L.L.......L...L..L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-09-logic-sweep.html",
@@ -6920,7 +7314,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..........o.............."
+      "mask": "..........o..............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-09-prenatal-paracetamol-null-line.html",
@@ -6950,7 +7345,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "................"
+      "mask": "................",
+      "type": "link"
     },
     {
       "path": "reports/2026-08-08-clacton-binface-odds.html",
@@ -6980,7 +7376,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.......................#"
+      "mask": "#.......................#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-08-eclipse-path-population-totality.html",
@@ -7025,7 +7422,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#..L#L.L........L.LL#..L#"
+      "mask": "#..L#L.L........L.LL#..L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-08-logic-path-0021.html",
@@ -7040,7 +7438,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L.L..L..L.L..L...L...LL.L.L........"
+      "mask": ".L.L..L..L.L..L...L...LL.L.L........",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-08-logic-sweep.html",
@@ -7055,7 +7454,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................o......."
+      "mask": ".................o.......",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-08-uk-party-fragmentation.html",
@@ -7085,7 +7485,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.....................#."
+      "mask": ".#.....................#.",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-07-logic-doku-0025.html",
@@ -7100,7 +7501,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#....L...LL.L..L#L..#"
+      "mask": "#...#....L...LL.L..L#L..#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-07-logic-path-0020.html",
@@ -7115,7 +7517,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...L....LL.LL..........L.......LL..L"
+      "mask": "...L....LL.LL..........L.......LL..L",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-07-logic-sweep.html",
@@ -7130,7 +7533,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..o......................"
+      "mask": "..o......................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-07-trace-ghost-ancestors.html",
@@ -7175,7 +7579,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-06-logic-doku-0024.html",
@@ -7190,7 +7595,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#..LLLL.L..LLL.L#..L#"
+      "mask": "#...#..LLLL.L..LLL.L#..L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-06-logic-path-0019.html",
@@ -7205,7 +7611,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".......LLL....L..L......L.L.L.....L."
+      "mask": ".......LLL....L..L......L.L.L.....L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-06-logic-sweep.html",
@@ -7220,7 +7627,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....................o..."
+      "mask": ".....................o...",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-06-taiwan-heaven-sword-lidar-funnel.html",
@@ -7265,7 +7673,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...............#...."
+      "mask": "....#...............#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-05-logic-doku-0023.html",
@@ -7280,7 +7689,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#LL.#..L.L...LL.L..L#LL.#"
+      "mask": "#LL.#..L.L...LL.L..L#LL.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-05-logic-path-0018.html",
@@ -7295,7 +7705,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L..L...LL......L.LL.L.L.........L.."
+      "mask": ".L..L...LL......L.LL.L.L.........L..",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-05-logic-sweep.html",
@@ -7310,7 +7721,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....o..................."
+      "mask": ".....o...................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-05-ocean-oxygen-planetary-boundary.html",
@@ -7340,7 +7752,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.......................#"
+      "mask": "#.......................#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-04-eu-ai-act-enforcement-delay.html",
@@ -7370,7 +7783,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#.....LL.L......#...#"
+      "mask": "#...#.....LL.L......#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-04-logic-path-0017.html",
@@ -7385,7 +7799,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".......L.L.LL...L..L.LL......L..L..."
+      "mask": ".......L.L.LL...L..L.LL......L..L...",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-04-logic-sweep.html",
@@ -7400,7 +7815,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....o..................."
+      "mask": ".....o...................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-04-uk-economic-inactivity-reasons.html",
@@ -7430,7 +7846,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.....................#."
+      "mask": ".#.....................#.",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-03-logic-doku-0021.html",
@@ -7445,7 +7862,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...L...L....L..#...#"
+      "mask": "#...#...L...L....L..#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-03-logic-path-0016.html",
@@ -7460,7 +7878,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L.....L...L.....LL.L.L..L.....L..L."
+      "mask": ".L.....L...L.....LL.L.L..L.....L..L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-03-logic-sweep.html",
@@ -7475,7 +7894,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..o......................"
+      "mask": "..o......................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-02-crossword-mini-0022.html",
@@ -7490,7 +7910,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-02-fish-and-chips-inflation.html",
@@ -7520,7 +7941,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.L...LL...L....LLL...#."
+      "mask": ".#.L...LL...L....LLL...#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-02-logic-path-0015.html",
@@ -7535,7 +7957,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L....L.......L.LL....LL.L.L......."
+      "mask": "..L....L.......L.LL....LL.L.L.......",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-02-logic-sweep.html",
@@ -7550,7 +7973,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "o........................"
+      "mask": "o........................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-02-uk-births-ageing-tax-base.html",
@@ -7580,7 +8004,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...............#...."
+      "mask": "....#...............#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-08-01-data-centres-electricity-prices.html",
@@ -7625,7 +8050,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#.......L.LL.L.L#.LL#"
+      "mask": "#...#.......L.LL.L.L#.LL#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-08-01-logic-path-0014.html",
@@ -7640,7 +8066,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L....L.L..L....L...L....L..L..L..."
+      "mask": "..L....L.L..L....L...L....L..L..L...",
+      "type": "path"
     },
     {
       "path": "reports/2026-08-01-logic-sweep.html",
@@ -7655,7 +8082,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....................o...."
+      "mask": "....................o....",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-08-01-uk-gilt-yields-g7-spread.html",
@@ -7700,7 +8128,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.......................#"
+      "mask": "#.......................#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-31-logic-doku-0018.html",
@@ -7715,7 +8144,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#L..#..L..LLLLL.L.LL#.L.#"
+      "mask": "#L..#..L..LLLLL.L.LL#.L.#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-31-logic-path-0013.html",
@@ -7730,7 +8160,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...L...L.......L.LL....L..LL....L..."
+      "mask": "...L...L.......L.LL....L..LL....L...",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-31-logic-sweep.html",
@@ -7745,7 +8176,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "......o.................."
+      "mask": "......o..................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-30-crossword-mini-0019.html",
@@ -7760,7 +8192,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.....................#."
+      "mask": ".#.....................#.",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-30-harvard-forest-soil-carbon.html",
@@ -7790,7 +8223,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#LL.#L......L.LL.LLL#.LL#"
+      "mask": "#LL.#L......L.LL.LLL#.LL#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-30-logic-path-0012.html",
@@ -7805,7 +8239,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L.L.....L.LLL....L.L..L...L....L..."
+      "mask": ".L.L.....L.LLL....L.L..L...L....L...",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-30-logic-sweep.html",
@@ -7820,7 +8255,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............o.........."
+      "mask": "..............o..........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-30-pfas-destruction-fluorine-gap.html",
@@ -7895,7 +8331,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-29-koala-population-collapse.html",
@@ -7925,7 +8362,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#.......L..L...L#..L#"
+      "mask": "#...#.......L..L...L#..L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-29-logic-path-0011.html",
@@ -7940,7 +8378,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L...L...L....L....L.L......L..LL..L"
+      "mask": ".L...L...L....L....L.L......L..LL..L",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-29-logic-sweep.html",
@@ -7955,7 +8394,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............o.........."
+      "mask": "..............o..........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-29-stanford-appetite-peptide.html",
@@ -8015,7 +8455,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...............#...."
+      "mask": "....#...............#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-28-logic-doku-0015.html",
@@ -8030,7 +8471,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...L........L.L#...#"
+      "mask": "#...#...L........L.L#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-28-logic-path-0010.html",
@@ -8045,7 +8487,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...L..L...L.L.L..L.......L.L.....L.."
+      "mask": "...L..L...L.L.L..L.......L.L.....L..",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-28-logic-sweep.html",
@@ -8060,7 +8503,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..........o.............."
+      "mask": "..........o..............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-28-streetlight-isopod-mills.html",
@@ -8135,7 +8579,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.......................#"
+      "mask": "#.......................#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-27-logic-doku-0014.html",
@@ -8150,7 +8595,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#..L#L..L.....L..L.L#...#"
+      "mask": "#..L#L..L.....L..L.L#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-27-logic-path-0009.html",
@@ -8165,7 +8611,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...LL..L.......L..L....L..L.L..L...."
+      "mask": "...LL..L.......L..L....L..L.L..L....",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-27-logic-sweep.html",
@@ -8180,7 +8627,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..................o......"
+      "mask": "..................o......",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-27-uk-ai-avoidance.html",
@@ -8255,7 +8703,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.....................#."
+      "mask": ".#.....................#.",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-26-logic-doku-0013.html",
@@ -8270,7 +8719,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#..L#LL.L.L....L...L#...#"
+      "mask": "#..L#LL.L.L....L...L#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-26-logic-path-0008.html",
@@ -8285,7 +8735,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..L....L..L..L..L....L......L.L..L.."
+      "mask": "..L....L..L..L..L....L......L.L..L..",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-26-logic-sweep.html",
@@ -8300,7 +8751,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".................o......."
+      "mask": ".................o.......",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-26-uk-box-office-sequel-share.html",
@@ -8375,7 +8827,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-25-logic-doku-0012.html",
@@ -8390,7 +8843,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.LL#L..LL.L..L..LLL#...#"
+      "mask": "#.LL#L..LL.L..L..LLL#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-25-logic-path-0007.html",
@@ -8405,7 +8859,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....LLL......LL.L...........L..L...L"
+      "mask": "....LLL......LL.L...........L..L...L",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-25-logic-sweep.html",
@@ -8420,7 +8875,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...........o............."
+      "mask": "...........o.............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-25-profiling-works-uk.html",
@@ -8465,7 +8921,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...............#...."
+      "mask": "....#...............#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-24-debt-service-revenue-share.html",
@@ -8495,7 +8952,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.LL#LL.L.L....LL..L#.LL#"
+      "mask": "#.LL#LL.L.L....LL..L#.LL#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-24-logic-path-0006.html",
@@ -8510,7 +8968,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L.........L..LL.LLL.......L......L."
+      "mask": ".L.........L..LL.LLL.......L......L.",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-24-logic-sweep.html",
@@ -8525,7 +8984,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o........."
+      "mask": "...............o.........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-24-return-to-office-evidence.html",
@@ -8570,7 +9030,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.......................#"
+      "mask": "#.......................#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-23-logic-doku-0010.html",
@@ -8585,7 +9046,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#LL.L..........L#...#"
+      "mask": "#...#LL.L..........L#...#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-23-logic-path-0005.html",
@@ -8600,7 +9062,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".L......L.L.LL.....L...L.....L..L..."
+      "mask": ".L......L.L.LL.....L...L.....L..L...",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-23-logic-sweep.html",
@@ -8615,7 +9078,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...........o............."
+      "mask": "...........o.............",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-23-nhs-waiting-lists-decade.html",
@@ -8690,7 +9154,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.....................#."
+      "mask": ".#.....................#.",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-22-logic-doku-0009.html",
@@ -8705,7 +9170,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#......L.L...L..#..L#"
+      "mask": "#...#......L.L...L..#..L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-22-logic-path-0004.html",
@@ -8720,7 +9186,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".......L.L.LL....L..L.....L...L....L"
+      "mask": ".......L.L.LL....L..L.....L...L....L",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-22-logic-sweep.html",
@@ -8735,7 +9202,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...................o....."
+      "mask": "...................o.....",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-22-renewables-coal-crossover.html",
@@ -8795,7 +9263,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-21-food-bank-parcels-vs-need.html",
@@ -8825,7 +9294,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.L.#....LL......LL.#..L#"
+      "mask": "#.L.#....LL......LL.#..L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-21-logic-path-0003.html",
@@ -8840,7 +9310,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...L..L...L.L....L.L.L.......L..L..."
+      "mask": "...L..L...L.L....L.L.L.......L..L...",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-21-logic-sweep.html",
@@ -8855,7 +9326,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".....o..................."
+      "mask": ".....o...................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-20-council-bankruptcy-pause.html",
@@ -8885,7 +9357,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#...............#...."
+      "mask": "....#...............#....",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-20-fertility-collapse-economic-impact.html",
@@ -8930,7 +9403,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "....#L.....L.LL...L.#L.LL"
+      "mask": "....#L.....L.LL...L.#L.LL",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-20-logic-sweep.html",
@@ -8945,7 +9419,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..............o.........."
+      "mask": "..............o..........",
+      "type": "sweep"
     },
     {
       "path": "reports/digi-path-0002.html",
@@ -8960,7 +9435,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...................................."
+      "mask": "....................................",
+      "type": "path"
     },
     {
       "path": "reports/2026-07-19-atmospheric-water-generation-scale.html",
@@ -8990,7 +9466,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#.......................#"
+      "mask": "#.......................#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-19-logic-doku-0006.html",
@@ -9005,7 +9482,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#LLL#....LL..L...LL.#L.L#"
+      "mask": "#LLL#....LL..L...LL.#L.L#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-19-logic-sweep.html",
@@ -9020,7 +9498,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..o......................"
+      "mask": "..o......................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-19-space-economy-reality-check.html",
@@ -9050,7 +9529,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#.....................#."
+      "mask": ".#.....................#.",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-18-digital-nomads-population-count.html",
@@ -9095,7 +9575,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#L....LLLL..LL.L#LLL#"
+      "mask": "#...#L....LLLL..LL.L#LLL#",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-18-logic-sweep.html",
@@ -9110,7 +9591,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "...............o........."
+      "mask": "...............o.........",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-18-london-exodus-reversal.html",
@@ -9140,7 +9622,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-17-logic-doku-0004.html",
@@ -9155,7 +9638,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L...#L......LL.L..L.#.L.."
+      "mask": "L...#L......LL.L..L.#.L..",
+      "type": "doku"
     },
     {
       "path": "reports/DP-SWEEP-2026-07-17.html",
@@ -9170,7 +9654,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "..o......................"
+      "mask": "..o......................",
+      "type": "sweep"
     },
     {
       "path": "reports/2026-07-16-crossword-mini-0005.html",
@@ -9185,7 +9670,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-16-enzymatic-dna-synthesis-on-silicon.html",
@@ -9230,7 +9716,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#LL..L.L......LL..L...#."
+      "mask": ".#LL..L.L......LL..L...#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-16-primates-crystals.html",
@@ -9260,7 +9747,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "L...#L......LL.L..L.#.L.."
+      "mask": "L...#L......LL.L..L.#.L..",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-15-measles-coverage-gap.html",
@@ -9305,7 +9793,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ".#LL....L.LL......L.L..#."
+      "mask": ".#LL....L.LL......L.L..#.",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-14-medicine-crispr-leaves-the-lab.html",
@@ -9335,7 +9824,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": ""
+      "mask": "",
+      "type": "doku"
     },
     {
       "path": "reports/2026-07-12-crossword-mini-0004.html",
@@ -9350,7 +9840,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-11-crossword-mini-0003.html",
@@ -9365,7 +9856,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-10-crossword-mini-0002.html",
@@ -9380,7 +9872,8 @@
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "#...#...............#...#"
+      "mask": "#...#...............#...#",
+      "type": "mini"
     },
     {
       "path": "reports/2026-07-08-ai-pace-of-progress.html",
@@ -9519,7 +10012,7 @@
     },
     {
       "path": "reports/2026-06-22-where-do-you-sit.html",
-      "kind": "puzzle",
+      "kind": "report",
       "topic": "UK politics",
       "headline": "Where do you sit on Britain's two value scales?",
       "standfirst": "The companion to our piece on the British spectrum. Answer the same eleven statements the British Social Attitudes survey has used since 1986 — five for the economic left–right scale, six for the liberal–authoritarian scale — and we'll p…",
