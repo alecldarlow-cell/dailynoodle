@@ -24,10 +24,12 @@ function plan({nightly=false,crossBrowser=false}={}){
  const focused=[['timing-dates','timing-dates.js'],['offline-next','offline-next.js'],['worker','sw.js'],['push-crypto','push-crypto.mjs'],['push-panel','push-panel.js']]
   .map(([name,file])=>task(name,['tools/tests/'+file]));
  const cross=nightly&&crossBrowser?[task('cross-browser',['tools/tests/browser-run.js','--project=firefox','--project=webkit','artifact.spec.js','platform.spec.js'],{DN_TEST_WORKERS:'1'})]:[];
+ // News pieces rendered in a real browser (dn-render): the last 7 days at release, every piece nightly.
+ const news=task('news',['tools/tests/news.js',...(nightly?['--all','--jobs','2']:['--jobs','2'])]);
  const artifact=task('artifact',['tools/tests/browser-run.js','--project=chromium','artifact.spec.js'],{DN_TEST_ROOT:path.resolve(__dirname,'../../_site'),DN_TEST_WORKERS:'1'});
  // Long groups start first. All groups after preflight read immutable source
  // or _site; report paths are isolated by DN_TEST_GROUP in suite.js.
- const tasks=[...puzzles,...browser,focused[0],focused[2],artifact,focused[4],focused[1],focused[3],...cross];
+ const tasks=[...puzzles,...browser,news,focused[0],focused[2],artifact,focused[4],focused[1],focused[3],...cross];
  return {preflight,tasks,serial:[...preflight,...tasks]};
 }
 async function execute(run,options={}){

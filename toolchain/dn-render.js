@@ -255,7 +255,8 @@ async function sheet(browser, cells, out) {
   }
   const site = sitePage(), css = fontCss();
   fs.rmSync(outDir, { recursive: true, force: true }); fs.mkdirSync(outDir, { recursive: true });
-  const browser = await chromium.launch({ executablePath: chromiumPath(), args: ['--no-sandbox'] });
+  // Never reach the live database from a render (20 Oct 2026; see tools/tests/harness.js NO_LIVE_DB).
+  const browser = await chromium.launch({ executablePath: chromiumPath(), args: ['--no-sandbox', '--host-resolver-rules=MAP *.supabase.co ~NOTFOUND'] });
   const version = browser.version().split('.')[0];
   const fails = new Set(), warns = new Set(), lines = [], blocked = new Set();
   if (site.warn) warns.add(site.note);

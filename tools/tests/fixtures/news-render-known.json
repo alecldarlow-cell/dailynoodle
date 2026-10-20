@@ -1,0 +1,51 @@
+[
+  {
+    "file": "2026-06-21-starmer-leadership-crisis.html",
+    "sha256": "db0801acd0236f02e8db5271027dc8c43ab74308f111293d0978356c373ce588",
+    "reason": "360px: two bar labels run off the screen (ex01)",
+    "found": "2026-10-20",
+    "owner": "news desk"
+  },
+  {
+    "file": "2026-06-23-uk-migration-falls.html",
+    "sha256": "78a46bf158465ea4fad53fc38ee2555c8ca036eac151b9fd672bf2bcb77741cd",
+    "reason": "360px: three bar labels run off the screen (ex03)",
+    "found": "2026-10-20",
+    "owner": "news desk"
+  },
+  {
+    "file": "2026-06-29-burnham-platform.html",
+    "sha256": "4f4c22a6eb23de8bf60a6b6f462c16c49eea8a393f5da8e245ac93c9fc87234f",
+    "reason": "360px: five timeline labels run off the screen (ex03)",
+    "found": "2026-10-20",
+    "owner": "news desk"
+  },
+  {
+    "file": "2026-07-20-council-bankruptcy-pause.html",
+    "sha256": "e669d434dbda395bbc51999573b0e39c4120ccd3787e2d3c3be8fd05068e20ee",
+    "reason": "360px: a series label runs off the screen (ex01)",
+    "found": "2026-10-20",
+    "owner": "news desk"
+  },
+  {
+    "file": "2026-07-19-space-economy-reality-check.html",
+    "sha256": "97f5f9b07c09ad88c00e98cbe9d692d197d883ade2507f21d0ef61d709498781",
+    "reason": "360px and 680px: a projected-year label runs off the screen (ex01)",
+    "found": "2026-10-20",
+    "owner": "news desk"
+  },
+  {
+    "file": "2026-07-20-fertility-collapse-economic-impact.html",
+    "sha256": "f481a0a9f752d9f010a05f3f26d11fcf2ca6a2b5e048f1eba1e8816495cdd679",
+    "reason": "360px and 680px: series labels run off the screen (ex02, ex03)",
+    "found": "2026-10-20",
+    "owner": "news desk"
+  },
+  {
+    "file": "2026-07-23-uk-smallbiz-insolvencies.html",
+    "sha256": "a69629599114ac356dbdc3cdd39d8cbe596b15ea13329a9c6f91cb72eade232b",
+    "reason": "the render check cannot finish this page (error while drawing a sheet)",
+    "found": "2026-10-20",
+    "owner": "news desk"
+  }
+]

@@ -15,8 +15,9 @@ test('CI: build precedes the bounded pool; free slots immediately take the next 
   active--;
  });
  await tick();assert.equal(gates.size,MAX_JOBS);assert.equal(peak,MAX_JOBS);
- assert.ok(!calls.includes('timing-dates'));
- gates.get('browser-games').resolve();await tick();assert.ok(calls.includes('timing-dates'));
+ assert.ok(!calls.includes('news'));
+ gates.get('browser-games').resolve();await tick();assert.ok(calls.includes('news'));assert.ok(!calls.includes('timing-dates'));
+ gates.get('browser-pages').resolve();await tick();assert.ok(calls.includes('timing-dates'));
  for(let round=0;round<plan().tasks.length+2;round++){for(const g of gates.values())g.resolve();await tick();if(calls.length===plan().serial.length&&active===0)break;}
  await job;assert.deepEqual(calls.slice().sort(),plan().serial.map(t=>t.name).sort());
  assert.equal(peak,MAX_JOBS);
@@ -44,7 +45,7 @@ test('CI: smaller pools and serial mode retain every required check; invalid cap
  for(const jobs of [0,6,1.5,NaN])await assert.rejects(execute(async()=>{}, {jobs}),/DN_TEST_JOBS/);
 });
 test('CI: every gate and source browser spec appears once in the plan',()=>{
- const expected=['unit','backend','content','build','browser-games','browser-pages','artifact','puzzles-1','puzzles-2','puzzles-3','timing-dates','offline-next','worker','push-crypto','push-panel'].sort();
+ const expected=['unit','backend','content','build','browser-games','browser-pages','artifact','puzzles-1','puzzles-2','puzzles-3','timing-dates','offline-next','worker','push-crypto','push-panel','news'].sort();
  const p=plan();assert.deepEqual(p.serial.map(t=>t.name).sort(),expected);
  assert.deepEqual([...p.preflight,...p.tasks].map(t=>t.name).sort(),expected);
  const files=browserFiles(),flat=Object.values(files).flat();assert.ok(files.games.length&&files.pages.length);
