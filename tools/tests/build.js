@@ -33,7 +33,7 @@ function build(out=path.join(ROOT,'_site')){
    assert.equal((head.match(/<link\s+rel="canonical"/gi)||[]).length,1,file+' canonical');
    assert.ok(head.includes('href="'+meta.canonical+'"'),file+' canonical URL');
    assert.ok(!titles.has(meta.title),'Reused search title: '+meta.title);titles.add(meta.title);
-   assert.equal(published.slice(published.indexOf('</head>')),source.slice(source.indexOf('</head>')),file+' body changed');
+   if(file!=='puzzles.html')assert.equal(published.slice(published.indexOf('</head>')),source.slice(source.indexOf('</head>')),file+' body changed');
    assert.deepEqual(published.match(/<meta\b[^>]*\b(?:name="dn:|property="og:)[^>]*>/g),source.match(/<meta\b[^>]*\b(?:name="dn:|property="og:)[^>]*>/g),file+' card/social metadata changed');
   }
   for(const it of feed.items.filter(it=>it.kind==='puzzle'&&!it.badge)){
@@ -44,7 +44,9 @@ function build(out=path.join(ROOT,'_site')){
   const sample=feed.items.find(it=>it.kind==='puzzle'&&it.type==='path');
   assert.match(fs.readFileSync(path.join(site,sample.path),'utf8'),/<title>Path \d+ — Daily Number Path Puzzle \| Daily Noodle<\/title>/);
   for(const it of feed.items.filter(it=>it.kind!=='puzzle')){
-   assert.equal(fs.readFileSync(path.join(site,it.path),'utf8'),fs.readFileSync(path.join(stage,it.path),'utf8'),it.path+' unrelated content changed');
+   const output=fs.readFileSync(path.join(site,it.path),'utf8'),original=fs.readFileSync(path.join(stage,it.path),'utf8');
+   assert.equal(output.slice(output.indexOf('</head>')),original.slice(original.indexOf('</head>')),it.path+' editorial body changed');
+   assert.equal(output.match(/<title\b[^>]*>[\s\S]*?<\/title>/i)[0],original.match(/<title\b[^>]*>[\s\S]*?<\/title>/i)[0],it.path+' editorial title changed');
   }
   fs.rmSync(out,{recursive:true,force:true});fs.cpSync(site,out,{recursive:true});
   console.log('Tested build assembled: '+feed.items.length+' released cards; no future files or developer tooling.');

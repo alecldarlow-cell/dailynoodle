@@ -44,10 +44,12 @@ function attribute(tag,name){
 function updateHtml(html,meta){
  const head=html.match(/<head\b[^>]*>[\s\S]*?<\/head\s*>/i);
  if(!head)throw new Error('search-meta: page has no head');
- let content=head[0].replace(/<title\b[^>]*>[\s\S]*?<\/title\s*>/gi,'')
-  .replace(/<meta\b[^>]*>/gi,tag=>/^description$/i.test(attribute(tag,'name')||'')?'':tag)
+ let content=head[0];
+ if(meta.title!==undefined)content=content.replace(/<title\b[^>]*>[\s\S]*?<\/title\s*>/gi,'');
+ content=content
+  .replace(/<meta\b[^>]*>/gi,tag=>meta.description!==undefined&&/^description$/i.test(attribute(tag,'name')||'')?'':tag)
   .replace(/<link\b[^>]*>/gi,tag=>(attribute(tag,'rel')||'').split(/\s+/).some(rel=>/^canonical$/i.test(rel))?'':tag);
- const tags='<title>'+escapeHtml(meta.title)+'</title>\n<meta name="description" content="'+escapeHtml(meta.description)+'">\n<link rel="canonical" href="'+escapeHtml(meta.canonical)+'">';
+ const tags=(meta.title===undefined?'':'<title>'+escapeHtml(meta.title)+'</title>\n')+(meta.description===undefined?'':'<meta name="description" content="'+escapeHtml(meta.description)+'">\n')+'<link rel="canonical" href="'+escapeHtml(meta.canonical)+'">';
  // Trim only the insertion gap so a second build produces identical bytes.
  content=content.replace(/\s*<\/head\s*>$/i,'\n'+tags+'\n</head>');
  return html.slice(0,head.index)+content+html.slice(head.index+head[0].length);
@@ -59,6 +61,16 @@ function write(out){
   const target=path.join(out,file);
   if(!fs.existsSync(target))continue;
   fs.writeFileSync(target,updateHtml(fs.readFileSync(target,'utf8'),meta));count++;
+ }
+ // Preserve editorial titles/descriptions on news and games; fill absent snippets only.
+ for(const it of feed.items||[]){
+  if(it.kind==='puzzle'||it.badge||!/^reports\/[\w.-]+\.html$/.test(it.path||'')||(feed.today&&it.date>feed.today))continue;
+  const file=path.join(out,it.path);if(!fs.existsSync(file))continue;
+  const html=fs.readFileSync(file,'utf8'),head=html.match(/<head\b[^>]*>[\s\S]*?<\/head\s*>/i)?.[0]||'';
+  const hasDescription=(head.match(/<meta\b[^>]*>/gi)||[]).some(tag=>/^description$/i.test(attribute(tag,'name')||'')&&String(attribute(tag,'content')||'').trim());
+  const extra={canonical:ORIGIN+'/'+it.path};
+  if(!hasDescription)extra.description=it.standfirst||'Read '+it.headline+' at The Daily Noodle.';
+  fs.writeFileSync(file,updateHtml(html,extra));count++;
  }
  console.log('search-meta: '+count+' published pages with search titles, descriptions and canonical URLs');
  return count;

@@ -60,21 +60,24 @@ test('head metadata is escaped, unique and idempotent; page, saves and social/ca
  assert.throws(()=>updateHtml('<body>Oops</body>',meta),/no head/);
 });
 
-test('writes only published puzzle and hub files, leaving editorial and held pages alone',()=>{
+test('writes released metadata, preserving editorial titles/descriptions and holding future pages',()=>{
  const site=fs.mkdtempSync(path.join(os.tmpdir(),'search-meta-'));
  try{
   fs.mkdirSync(path.join(site,'reports'));
   const now=puzzle(),future=puzzle('path',95,'2026-10-21'),news={kind:'report',path:'reports/news.html'};
   for(const file of ['index.html','puzzles.html','games.html',now.path,future.path,news.path,'how-to-play.html'])fs.writeFileSync(path.join(site,file),html);
   fs.writeFileSync(path.join(site,'feed.json'),JSON.stringify({today:'2026-10-20',items:[now,future,news]}));
-  assert.equal(write(site),4);
+  assert.equal(write(site),5);
   const result=fs.readFileSync(path.join(site,now.path),'utf8');
   assert.match(result,/<title>Path 94 — Daily Number Path Puzzle \| Daily Noodle<\/title>/);
-  for(const file of [future.path,news.path,'how-to-play.html'])assert.equal(fs.readFileSync(path.join(site,file),'utf8'),html);
+  for(const file of [future.path,'how-to-play.html'])assert.equal(fs.readFileSync(path.join(site,file),'utf8'),html);
+  const editorial=fs.readFileSync(path.join(site,news.path),'utf8');
+  assert.ok(editorial.includes('<title>Old title</title>'));assert.ok(editorial.includes('content="Old description"'));
+  assert.match(editorial,/rel="canonical" href="https:\/\/dailynoodle.co.uk\/reports\/news.html"/);
   write(site);assert.equal(fs.readFileSync(path.join(site,now.path),'utf8'),result);
   // The already-built future file gets metadata automatically on its release day.
   fs.writeFileSync(path.join(site,'feed.json'),JSON.stringify({today:'2026-10-21',items:[now,future,news]}));
-  assert.equal(write(site),5);
+  assert.equal(write(site),6);
   assert.match(fs.readFileSync(path.join(site,future.path),'utf8'),/<title>Path 95 — Daily Number Path Puzzle \| Daily Noodle<\/title>/);
 
  }finally{fs.rmSync(site,{recursive:true,force:true});}

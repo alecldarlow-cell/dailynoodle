@@ -81,6 +81,8 @@ for (const rel of held) {
 }
 // Short links (dailynoodle.co.uk/mini …) that every puzzle share ends with; see tools/short-links.js.
 require('./short-links').write(OUT);
+// Initial HTML uses the same cards as the interactive list; no extra UI.
+require('./puzzle-discovery').write(OUT);
 // Search titles, descriptions and self-canonicals; source puzzle/card data stays intact.
 require('./search-meta').write(OUT);
 // sitemap.xml + robots.txt from what was actually published; see tools/sitemap.js.
@@ -99,5 +101,8 @@ if (missing.length) {
 
 // Publish counts and dates only; future puzzle content stays in the repository.
 fs.writeFileSync(path.join(OUT,'publishing-health.json'),JSON.stringify(require('./publishing-health').snapshot(ROOT),null,1)+'\n');
+
+// A publishing gate: inspect the exact artifact before it can be deployed.
+require('./seo-check').check(OUT);
 
 console.log(`build-site: ${copied} file(s) published to ${path.relative(ROOT, OUT) || OUT}, ${withheld} held back until their day`);
