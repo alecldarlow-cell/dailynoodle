@@ -9,7 +9,7 @@ function run(file,args=[]){
 function prepare(){
  run('sync-core.js',['--check']);
  for(const file of ['inject-tracker.js','share-v2.js'])run(file);
- for(const type of ['mini','doku','sweep','link','path','tangle','borders'])run('engine-shells.js',[type]);
+ for(const type of ['mini','doku','sweep','link','path','tangle','borders','reckon'])run('engine-shells.js',[type]);
  for(const file of ['og-tags.js','news-share.js','news-nav.js','news-dark.js','build-feed.js'])run(file);
  run('add-done-state.js',['--check']);
 }

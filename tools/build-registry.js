@@ -46,6 +46,7 @@ const TYPES = {
   "logic-sweep":    { key: "sweep",   id: "SWEEP", serial: false, topic: "Logic",     gridMask: true, gridChars: /^[.o]*$/ },
   "word-link":      { key: "link",    id: "LINK",  serial: true,  topic: "Word",      gridMask: false },
   "geo-borders":    { key: "borders", id: "BORD",  serial: true,  topic: "Geography", gridMask: false },
+  "quiz-reckon":    { key: "reckon",  id: "RECK",  serial: true,  topic: "Quiz",      gridMask: false },
   "word-tangle":    { key: "tangle",  id: "TANG",  serial: true,  topic: "Word",      gridMask: true, gridChars: /^[.]*$/ }
 };
 const PUZZLE_TOPICS = new Set(Object.values(TYPES).map(t => t.topic));
@@ -200,6 +201,8 @@ function extract(full, t) {
       ? d4Key([0, 1, 2, 3].map(r => tiles.slice(r * 4, r * 4 + 4))) : null;
   } else if (t.key === "borders") {
     rec.d4 = null;   // country sets repeat by design (shared atlas); no dedup key
+  } else if (t.key === "reckon") {
+    rec.d4 = null;   // facts repeat by design (shared Ballpark bank, 100-day gap gated by build-reckon-batch.js)
   }
   rec.n = Array.isArray(rec.grid) ? rec.grid.length : null;
   return rec;
@@ -247,7 +250,7 @@ for (const f of files.sort()) {
   else if (!rec.id.includes(`·${t.id}·`) && !rec.id.includes(`-${t.id}-`)) note("ERROR", t.key, f, `puzzle id ${rec.id} is not a DP·${t.id}· id`);
   else if (t.serial && !rec.id.endsWith(String(serial))) note("ERROR", t.key, f, `visible id ${rec.id} disagrees with filename serial ${serial}`);
   else if (!t.serial && !rec.id.endsWith(date)) note("ERROR", t.key, f, `visible id ${rec.id} disagrees with filename date ${date}`);
-  if (t.key !== "borders" && !rec.d4) note("WARN", t.key, f, "could not compute a dedup key (solution literal unreadable)");
+  if (t.key !== "borders" && t.key !== "reckon" && !rec.d4) note("WARN", t.key, f, "could not compute a dedup key (solution literal unreadable)");
   if (rec.hasGridLiteral && (t.key === "mini" || t.key === "doku") && badShape(r.grid))
     note("ERROR", t.key, f, "grid layout reads as a swastika (letters or black squares) — never ship");
   if (rec.hasGridLiteral && (t.key === "mini" || t.key === "doku") && spinning(r.grid)) {
@@ -295,7 +298,8 @@ for (const [type, rows] of Object.entries(byType)) {
   const sMax = ser.length ? ser.reduce((a, b) => Math.max(a, b)) : null;
   if (ser.length) for (let s = sMin; s <= sMax; s++) if (!serSet.has(s)) missingSer.push(s);
 
-  let runway = 0, d = TODAY;
+  // a type that hasn't launched yet (first day still ahead, e.g. Reckon before 26 Oct 2026) counts its runway from its first day
+  let runway = 0, d = dates[0] > TODAY ? dates[0] : TODAY;
   while (set.has(d) && runway <= 2000) { runway++; d = addDay(d, 1); }
   const firstMissing = d;
 

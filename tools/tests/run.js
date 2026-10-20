@@ -17,7 +17,9 @@ const F = {
   mini: '2026-10-18-crossword-mini-0099.html', mini2: '2026-10-19-crossword-mini-0100.html', doku: '2026-10-18-logic-doku-0097.html',
   sweep: '2026-10-18-logic-sweep.html', path: '2026-10-18-logic-path-0092.html', path2: '2026-10-19-logic-path-0093.html',
   link: '2026-10-18-word-link-0071.html', tangle: '2026-10-18-word-tangle-0012.html', borders: '2026-10-18-geo-borders-0014.html',
+  reckon: '2026-10-26-quiz-reckon-0001.html', reckon2: '2026-10-27-quiz-reckon-0002.html',
 };
+const RECKON_DAY = '2026-10-26T14:30:00Z', RECKON_DAY2 = '2026-10-27T14:30:00Z';   // Reckon's first two days (GMT)
 let pass = 0, fail = 0;
 const ok = (c, m) => { if (c) { pass++; console.log('  ok  ', m); } else { fail++; console.log('  FAIL', m); } };
 const text = (p, sel) => p.locator(sel).first().textContent().then(t => (t || '').trim()).catch(() => '');
@@ -50,7 +52,7 @@ async function sheetChecks(p, ev, { type, boxId = 'winModal', ids, shareRe, endC
   // The harness serves the list for the page's fake London date, just as a
   // successful daily build would. Yesterday's real file is not today's list.
   const day = await p.evaluate(() => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()));
-  ok(/^Next: \w+ \d+$/.test(s.next) && /^\d of 7 played today$/.test(s.nextSub) && (s.nextHref || '').startsWith('../reports/' + day + '-'), `${type}: next row "${s.next}" (${s.nextSub}) → ${s.nextHref}`);
+  ok(/^Next: \w+ \d+$/.test(s.next) && /^\d of [78] played today$/.test(s.nextSub) && (s.nextHref || '').startsWith('../reports/' + day + '-'), `${type}: next row "${s.next}" (${s.nextSub}) → ${s.nextHref}`);
   ok(/^A new \w+ in (\d+h )?\d+m\./.test(s.clock), `${type}: countdown "${s.clock}"`);
   ok(s.board, `${type}: "See today's board" sits in the sheet`);
   ok(s.scrollW <= s.vw, `${type}: no sideways scroll (${s.scrollW} > ${s.vw})`);
@@ -289,6 +291,79 @@ const TESTS = {
     ok(/^You found one group of four\./.test(await text(p, '.fin-note')), `link: loss note "${await text(p, '.fin-note')}"`);
     await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
     ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'link: Play again closes the sheet and marks the replay');
+    await ctx.close();
+  },
+  /* ---------- Reckon (20 Oct 2026): the daily of Ballpark ---------- */
+  async 'finish:reckon'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.reckon, { events: ev, time: RECKON_DAY });
+    await play.reckon(p, { wrong: [2, 5] });
+    await sheetChecks(p, ev, { type: 'reckon', ids: ['winTitle', 'winTime', 'rBig', 'rPts', 'rStreak', 'rBulls', 'rZones'],
+      shareRe: /^🎯 Reckon #1 — 🟩🟩⬜🟩🟩⬜🟩🟩🟩🟩 · 800 pts$/u,
+      endCheck: x => ok(x && x.outcome === 'scored' && x.score === 800 && x.bulls === 8 && x.zones === '0040040000' && x.secs > 0,
+        `reckon: tracker read ${x && x.score} pts, ${x && x.bulls} bullseyes, zones ${x && x.zones}, ${x && x.secs}s`) });
+    ok(await text(p, '#winTitle') === 'Reckoned' && /^800\s*pts$/.test(await text(p, '#rBig')), 'reckon: Reckoned, 800 pts');
+    ok(/^Eight bullseyes/.test(await text(p, '.fin-note')), `reckon: note "${await text(p, '.fin-note')}"`);
+    ok(await p.locator('.fin-rk button').count() === 10, 'reckon: ten questions in the recap');
+    ok(await p.locator('.fin a.fin-link[href*="quiz-ballpark"]').count() === 1, 'reckon: Ballpark link in the recap');
+    const save = await ls(p, 'digi-reckon-v1'), rec = save && save.done && save.done['DP·RECK·0001'];
+    ok(rec && rec.p === 800 && rec.b === 8 && rec.d === '2026-10-26' && rec.z.length === 10 && rec.g.length === 10 && !save.cur, 'reckon: first result saved with its London day; no round left open');
+    ok(save && save.streak && save.streak.n === 1 && save.streak.last === '2026-10-26', 'reckon: streak 1 for a round finished on its day');
+    /* look back at a question from the recap, then come back */
+    await tap(p, p.locator('.fin-rk button').nth(2)); await wait(p, 600);
+    ok(await p.locator('#play').isVisible() && await text(p, '#act') === 'Back to results' && !(await p.locator('#rvt').isHidden()), 'reckon: a recap row opens that question for review');
+    ok(await text(p, '#fbV') === 'Miss' && await p.locator('#slz.show').count() === 1, 'reckon: review shows the miss and the scale with its zones');
+    await tap(p, p.locator('#act')); await wait(p, 800);
+    ok(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open')), 'reckon: Back to results reopens the sheet');
+    ok(ends(ev).length === 1, 'reckon: reviewing logs no second puzzle_end');
+    await shareClipboard(p, ctx, 'reckon');
+    await reopen(p, ev, 'reckon');
+    ok(await p.evaluate(() => document.documentElement.hasAttribute('data-dn-done')), 'reckon: a reopened round is marked done, so taps are not a new start');
+    ok(!p.errs.length, 'reckon: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+    await shareNative(b, F.reckon, p2 => play.reckon(p2), 'reckon');
+  },
+  async 'reckon:start-resume'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.reckon, { events: ev, time: RECKON_DAY });
+    const s = await p.evaluate(() => ({ title: (document.querySelector('.st-title') || {}).textContent, date: document.getElementById('dateLine').textContent,
+      play: document.getElementById('playCard').textContent, font: getComputedStyle(document.body).fontFamily, scrollW: document.documentElement.scrollWidth, vw: innerWidth }));
+    ok(s.title === 'Reckon' && s.date === 'No. 1, Monday 26 October' && s.play === 'Play', `reckon: start screen ("${s.title}", "${s.date}", ${s.play})`);
+    ok(/^Archivo/.test(s.font) && s.scrollW <= s.vw, 'reckon: Archivo, no sideways scroll');
+    const small = await p.evaluate(() => [...document.querySelectorAll('#home button, #home summary, #home a')].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.height && r.height < 44; }).map(e => (e.id || e.className || e.tagName) + ' ' + Math.round(e.getBoundingClientRect().height)));
+    ok(!small.length, 'reckon: start-screen controls are at least 44px tall ' + small.join(', '));
+    await play.reckon(p, { wrong: [], stop: 3 });
+    await p.evaluate(() => { document.dispatchEvent(new Event('visibilitychange')); window.dispatchEvent(new Event('pagehide')); }); await wait(p, 600);
+    ok(ev.filter(e => e.ev === 'puzzle_start').length === 1, 'reckon: Play starts the round once');
+    const ctl = await p.evaluate(() => [...document.querySelectorAll('#play button')].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.height && getComputedStyle(e).visibility !== 'hidden' && !e.closest('.pips') && r.height < 44; }).map(e => e.id + ' ' + Math.round(e.getBoundingClientRect().height)));
+    ok(!ctl.length, 'reckon: play controls are at least 44px tall ' + ctl.join(', '));
+    await p.reload(); await wait(p, 1500);
+    ok(await text(p, '#playCard') === 'Resume' && /^Question 4 of 10, 300 points so far\.$/.test(await text(p, '#playStatus')), `reckon: reload offers Resume ("${await text(p, '#playStatus')}")`);
+    await tap(p, p.locator('#playCard')); await wait(p, 800);
+    ok(await text(p, '#qn') === '4/10' && await text(p, '#sc') === '300', 'reckon: resumes at question 4 with 300 points');
+    await tap(p, p.locator('#prevB')); await wait(p, 400);
+    ok(await text(p, '#qn') === '3/10' && await text(p, '#act') === 'Back to question 4', 'reckon: an answered question can be looked back at mid-round');
+    await tap(p, p.locator('#act')); await wait(p, 400);
+    await tap(p, p.locator('#pauseBtn')); await wait(p, 400);
+    ok(await p.locator('#pause').isVisible(), 'reckon: Pause opens');
+    await tap(p, p.locator('#quitBtn')); await wait(p, 400);
+    ok(await p.locator('#home').isVisible() && await text(p, '#playCard') === 'Resume', 'reckon: Back to start keeps the round');
+    await play.reckon(p, { wrong: [] });
+    ok(await p.evaluate(() => document.getElementById('winModal').classList.contains('on')) && /^1000\s*pts$/.test(await text(p, '#rBig')), 'reckon: the resumed round finishes, 1000 pts');
+    ok(!p.errs.length, 'reckon: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
+  async 'reckon:streak-and-dark'(b) {
+    const ctx = await newPhone(b, { scheme: 'dark' });
+    const d1 = await open(b, F.reckon, { ctx, time: RECKON_DAY });
+    const k = await d1.p.evaluate(() => ({ bg: getComputedStyle(document.body).backgroundColor, card: getComputedStyle(document.querySelector('.st-card')).backgroundColor }));
+    ok(k.bg === 'rgb(22, 20, 15)' && k.card === 'rgb(36, 33, 27)', `reckon: dark mode follows the phone (${k.bg}, card ${k.card})`);
+    await play.reckon(d1.p, { wrong: [0] });
+    ok(await d1.p.evaluate(() => getComputedStyle(document.getElementById('winModal')).backgroundColor) === 'rgb(17, 19, 26)', 'reckon: the finish sheet uses the puzzles\' shared dark');
+    await d1.p.close();
+    const d2 = await open(b, F.reckon2, { ctx, time: RECKON_DAY2 });
+    ok(await text(d2.p, '#homeStreak') === '1-day streak', 'reckon: the next day shows yesterday\'s streak');
+    await play.reckon(d2.p, { wrong: [] });
+    ok(/^🎯 Reckon #2 — 🟩{10} · 1000 pts · 🔥2$/u.test(await text(d2.p, '.fin-share-text')), `reckon: day two shares the streak ("${await text(d2.p, '.fin-share-text')}")`);
+    ok(!d1.p.errs.length && !d2.p.errs.length, 'reckon: no page errors ' + d1.p.errs.concat(d2.p.errs).join(' | '));
     await ctx.close();
   },
   async 'finish:borders'(b) {

@@ -122,10 +122,10 @@
   'use strict';
   var queued = (window.dnFinish && window.dnFinish.q) || [];
 
-  var ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders'];
+  var ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon'];
   var SAVE = { mini: 'digi-mini-v1', doku: 'digi-doku-v1', sweep: 'digi-sweep-v1', path: 'digi-path-v1',
-               link: 'digi-link-v1', tangle: 'digi-tangle-v1', borders: 'digi-borders-v1' };
-  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders' };
+               link: 'digi-link-v1', tangle: 'digi-tangle-v1', borders: 'digi-borders-v1', reckon: 'digi-reckon-v1' };
+  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon' };
   var SHARE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>';
   var TICK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   var CHEVRON = '<svg width="10" height="16" viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -306,7 +306,7 @@
     var label = (cfg.share && cfg.share.label) || 'Share';
     var card = el('section', 'fin-share');
     var text = cfg.share.text();
-    var sq = esc(text).replace(/((?:🟩|🟦|🟨|⬛|⬜|🟥|🟪|❌)+(?: · [0-9:]+)?)/u, '<span class="fin-nw">$1</span>');
+    var sq = esc(text).replace(/((?:🟩|🟦|🟨|🟧|⬛|⬜|🟥|🟪|❌)+(?: · \d+:\d{2})?)/u, '<span class="fin-nw">$1</span>');
     card.innerHTML = '<div class="fin-share-card"><span class="fin-share-text">' + sq + '</span>' +
       '<button type="button" class="fin-pill fin-primary fin-share-btn"><span class="fin-share-icon">' + SHARE_ICON + '</span><span class="fin-share-label">' + esc(label) + '</span></button></div>' +
       '<span class="fin-live" role="status" aria-live="polite"></span>';

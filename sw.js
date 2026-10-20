@@ -120,7 +120,7 @@ const CORE = [
   '/front.css', '/front.js', '/dn-track.js', '/dn-board.js',
   '/feed.json', '/puzzles-today.json', '/manifest.webmanifest',
   '/icons/favicon.svg', '/icons/favicon-32.png', '/icons/icon-192.png',
-  '/assets/borders-thumb.svg', '/assets/tangle-thumb.svg',
+  '/assets/borders-thumb.svg', '/assets/tangle-thumb.svg', '/assets/reckon-thumb.svg',
   '/engines/finish.css', '/engines/finish.js', '/engines/house.css', '/engines/house.js'
 ];
 const NEVER = /^\/(admin\.html|admin-health\.js|publishing-health\.json|sw\.js)$/;

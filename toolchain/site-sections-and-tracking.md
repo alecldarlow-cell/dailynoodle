@@ -14,7 +14,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - Rubric exception agreed by Alec: the tracker line is the one permitted non-self-contained dependency. It is optional at runtime. If dn-lint flags it on a rebuilt shipped piece, strip the line before the gates; the workflow re-adds it on upload.
 - Automatic: page_view, page_exit (time on page, depth), card_click, read_depth, exhibit_view (figure.exhibit), source_click, puzzle_start / puzzle_end (all puzzle types, detected from the #winModal / #modal result box and #winTitle).
 - Tracker v3 (15 Oct 2026, MI audit): puzzle_start only counts a tap inside the play area (`PLAY_AREA` in dn-track.js: #grid, #board, #bank, #kb, clues, #playCard, #resumeBtn, #opts, #qmap) or typing. **A new puzzle type must put its play area in one of those ids, or add its id to `PLAY_AREA`.** A finish with no recorded start logs a flagged `late:true` start, so gaps show up in the data.
-- puzzle_end carries the result where a type has one: Tangle `score` + `words` (from #rBig, #rWords), Borders `got` / `of` + `score` (from #rBig "7 of 10", #rPts), Link `mistakes` (#pips .pip.gone). Tangle and Borders end as outcome `scored`, never solved/failed. **Keep those ids if the result boxes are redesigned.**
+- puzzle_end carries the result where a type has one: Tangle `score` + `words` (from #rBig, #rWords), Borders `got` / `of` + `score` (from #rBig "7 of 10", #rPts), Link `mistakes` (#pips .pip.gone), Reckon `score` + `bulls` + `zones` (from #rPts, #rBulls, #rZones: points out of 1,000, questions within 15%, and one digit per question, 0 = within 15% … 4 = a miss; 20 Oct 2026). Tangle, Borders and Reckon end as outcome `scored`, never solved/failed. **Keep those ids if the result boxes are redesigned.**
 - page_view carries `via` (from `?via=` on a link) and `app` (in-app browser name) because apps send no referrer.
 - page_view carries `inst` (1 = opened from a home-screen icon) from 18 Oct 2026. News pieces record `share_click` / `share_done` from the Share buttons (`tools/news-share.js`).
 - Reporting logic for these is in `toolchain/sql/2026-10-15-mi-audit-fixes.sql` (applied to Supabase as migration `mi_audit_fixes`).
@@ -32,7 +32,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 - Plan doc: "Digi reader data plan" (Claude Docs).
 
 ## Share text (digi-share-v2, 15 Oct 2026)
-- Every puzzle shares one line, "emoji Name #N — result", no link and no "made with Digi Puzzles": ✏️ Mini, 🔢 Doku, 〰️ Path, 💣/💥 Sweep, 🔗 Link (one square per guess, ❌ for a miss), 🌍 Borders, 🧶 Tangle (unchanged). A streak of 2+ adds "· 🔥n".
+- Every puzzle shares one line, "emoji Name #N — result", no link and no "made with Digi Puzzles": ✏️ Mini, 🔢 Doku, 〰️ Path, 💣/💥 Sweep, 🔗 Link (one square per guess, ❌ for a miss), 🌍 Borders, 🧶 Tangle (unchanged), 🎯 Reckon (one square per question: 🟩 within 15%, 🟨 30%, 🟧 60%, 🟥 3×, ⬜ a miss, then points). A streak of 2+ adds "· 🔥n".
 - `tools/share-v2.js` patches both share paths (result box and saved-result revisit) and runs in the build workflow, so a puzzle uploaded from an older template is patched on push. Update the templates in the Digi Puzzles project to match when convenient.
 
 ## Shared engines (15 Oct 2026)
@@ -49,7 +49,7 @@ The site is now The Daily Noodle at dailynoodle.co.uk, repo alecldarlow-cell/dai
 
 ## Leaderboards (18 Oct 2026)
 - `board.html` + `dn-board.js`; database in the private `board` schema, migration `toolchain/sql/2026-10-18-leaderboards.sql`. See SITE.md for the summary.
-- Puzzle types on the board: mini, doku, path, sweep, link, tangle, borders. Ranking: solved by time (Link: fewest mistakes, then time); Tangle and Borders by score, then time. Failed or revealed are listed unranked.
+- Puzzle types on the board: mini, doku, path, sweep, link, tangle, borders, reckon (from 26 Oct 2026). Ranking: solved by time (Link: fewest mistakes, then time); Tangle, Borders and Reckon by score, then time. Failed or revealed are listed unranked.
 - Streaks on the board are per puzzle, in consecutive puzzle dates completed since joining. They can differ from a puzzle's own streak (Mini and Doku share one in the engines).
 - A player's first result per puzzle stands; replays don't resubmit.
 - History back-fill (on first joining, and again whenever the browser's saves hold more finished puzzles or it has an unread tracker id, e.g. `digi.aid.prev` from the domain-move handoff; 19 Oct 2026): the saves in digi-mini/doku/path/link/sweep-v1 (from 8 Oct 2026), digi-tangle-v1 and digi-borders-v1, mapped to files via feed.json; then the browser's own puzzle_end events (timed puzzles from late Sep; Tangle and Borders scores only from tv:3, 15 Oct). Board events add `board_backfill` {n}.

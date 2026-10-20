@@ -297,7 +297,7 @@
      Consecutive London days with at least one puzzle finished, from the
      players' own saves; the same count the finish sheet shows. */
   function showRun(){
-    var KEYS = ['digi-mini-v1','digi-doku-v1','digi-sweep-v1','digi-path-v1','digi-link-v1','digi-tangle-v1','digi-borders-v1'],
+    var KEYS = ['digi-mini-v1','digi-doku-v1','digi-sweep-v1','digi-path-v1','digi-link-v1','digi-tangle-v1','digi-borders-v1','digi-reckon-v1'],
         STREAKS = ['digi-mini-streak','digi-doku-streak','digi-link-streak','digi-sweep-streak','digi-path-streak'], days = {};
     function read(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
     KEYS.forEach(function(k){ var s = read(k); if (s && s.done) for (var id in s.done) { var d = s.done[id] && (s.done[id].d || s.done[id].on); if (d) days[d] = 1; } });

@@ -203,4 +203,24 @@ async function borders(p, { wrong = [3, 6, 8], hint = [5] } = {}) {
   await wait(p, 3000);
 }
 
-module.exports = { start, puzzle, boxOn, link, sweep, sweepHintState, sweepHintCheck, sweepProvable, sweepByHint, SWEEP_WRONG_FLAG, path, grid, tangle, borders };
+/* Reckon: Play, then for each question touch the scale at the answer (a bullseye) or at the end farthest
+   from it (a miss: at least ten times out), Lock in, Next. `wrong` lists the questions to miss; `stop`
+   ends early (to test resuming). Touches carry the same sensor jitter as tap(). */
+async function reckon(p, { wrong = [2, 5], stop = 10 } = {}) {
+  const P = await puzzle(p);
+  if (await p.locator('#home').isVisible()) { await tap(p, p.locator('#playCard')); await wait(p, 800); }
+  const from = parseInt(await p.locator('#qn').textContent(), 10) - 1;        // resuming starts where the round is
+  for (let i = from; i < Math.min(stop, P.qs.length); i++) {
+    const q = P.qs[i], at = (Math.log10(q.a) - q.lo) / 2;
+    const frac = wrong.includes(i) ? (at < 0.5 ? 1 : 0) : at;
+    const b = await p.locator('#trk').boundingBox();
+    const x = b.x + Math.max(0, Math.min(1, frac)) * b.width, y = b.y + b.height / 2;
+    await p.mouse.move(x, y); await p.mouse.down(); await p.mouse.move(x + 1.5, y - 1); await p.mouse.move(x + 1, y + 1); await p.mouse.up();
+    await wait(p, 300);
+    await tap(p, p.locator('#act')); await wait(p, 900);            // Lock in
+    await tap(p, p.locator('#act')); await wait(p, 700);            // Next, or See result after the tenth
+  }
+  await wait(p, 2500);
+}
+
+module.exports = { start, puzzle, boxOn, link, sweep, sweepHintState, sweepHintCheck, sweepProvable, sweepByHint, SWEEP_WRONG_FLAG, path, grid, tangle, borders, reckon };

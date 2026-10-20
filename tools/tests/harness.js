@@ -23,7 +23,7 @@ const FONTS = process.env.DN_FONTS || null;
 const DAILY = new Map();
 function dailyList(day) {
   if (DAILY.has(day)) return DAILY.get(day);
-  const types = { 'crossword-mini': 'mini', 'logic-doku': 'doku', 'logic-sweep': 'sweep', 'logic-path': 'path', 'word-link': 'link', 'word-tangle': 'tangle', 'geo-borders': 'borders' };
+  const types = { 'crossword-mini': 'mini', 'logic-doku': 'doku', 'logic-sweep': 'sweep', 'logic-path': 'path', 'word-link': 'link', 'word-tangle': 'tangle', 'geo-borders': 'borders', 'quiz-reckon': 'reckon' };
   const items = [];
   for (const file of fs.readdirSync(path.join(REPO, 'reports')).filter(f => f.startsWith(day + '-'))) {
     const slug = (file.match(/^\d{4}-\d{2}-\d{2}-([a-z]+-[a-z]+)(?:-\d+)?\.html$/) || [])[1], type = types[slug];

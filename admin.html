@@ -428,8 +428,8 @@
     ['started','Started','A puzzle page load where the player tapped inside the play area (grid, board, letters, clues or the Play card) or typed.','Before 15 Oct 2026 any tap counted, including the masthead or the start of a scroll. For those older loads, a start with no result and under 15 seconds on the page is not counted.'],
     ['solved','Solved','The puzzle’s result box appeared with a winning title, without “Reveal all” having been used.','Share is solved ÷ started, for types that can be solved (not Tangle or Borders).'],
     ['failed','Failed','The result box appeared with a losing title (Sweep “Boom.”, Link “So close.”).','Only some types can be failed.'],
-    ['scored','Scored','Tangle and Borders are timed rounds with a score, not puzzles that are solved or failed. Every finished round is “scored”; the Result column shows the typical score.','Scores are recorded from 15 Oct 2026; earlier rounds count as scored with no score.'],
-    ['result','Result','Typical result per type: median points and words (Tangle), median countries named out of the total and points (Borders), average mistakes used (Link, out of 4).','Medians of the rounds that recorded a result.'],
+    ['scored','Scored','Tangle, Borders and Reckon are rounds with a score, not puzzles that are solved or failed. Every finished round is “scored”; the Result column shows the typical score.','Scores are recorded from 15 Oct 2026; earlier rounds count as scored with no score.'],
+    ['result','Result','Typical result per type: median points and words (Tangle), median countries named out of the total and points (Borders), median points out of 1,000 (Reckon), average mistakes used (Link, out of 4).','Medians of the rounds that recorded a result.'],
     ['events','Events','Raw records stored in the period, of every kind.','A technical count, not a measure of use.'],
     ['revealed','Revealed','The player used “Reveal all” before the result box appeared.',''],
     ['abandoned','Abandoned','Started, but no result by the time the page was last seen.','Includes puzzles left open in a tab to finish later.'],
@@ -462,8 +462,8 @@
   var FEED = {};
   function title(path){ var f=FEED[path]; if(f) return f.headline; var m=String(path).replace(/^reports\//,'').replace(/\.html$/,'').replace(/^\d{4}-\d{2}-\d{2}-/,''); return m.replace(/-/g,' '); }
   function pubDate(path){ var f=FEED[path]; if(f&&f.date) return f.date; var m=String(path).match(/(\d{4}-\d{2}-\d{2})/); return m?m[1]:''; }
-  var TYPE_NAMES = {'crossword-mini':'Mini crossword','logic-doku':'Doku','logic-path':'Path','logic-sweep':'Sweep','word-link':'Link','geo-borders':'Borders','word-tangle':'Tangle'};
-  function ptype(path){ var m=String(path).match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|geo-borders|word-tangle)/); return m?m[1]:''; }
+  var TYPE_NAMES = {'crossword-mini':'Mini crossword','logic-doku':'Doku','logic-path':'Path','logic-sweep':'Sweep','word-link':'Link','geo-borders':'Borders','word-tangle':'Tangle','quiz-reckon':'Reckon'};
+  function ptype(path){ var m=String(path).match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|geo-borders|word-tangle|quiz-reckon)/); return m?m[1]:''; }
 
   /* ---------------- sortable tables ---------------- */
   // cols: [{key, label, def, left, fmt(row)->html, sort(row)->value}]

@@ -18,7 +18,7 @@ test('BOARD-01/02: migrations, permissions, first results, history and hide-only
     create schema insights; create table insights.admins(email text);
     create table public.events(anon_id uuid, event text, item_path text, props jsonb, occurred_at timestamptz default now());
   `);
-  for (const name of ['2026-10-18-leaderboards.sql', '2026-10-18-leaderboards-hide-only.sql'])
+  for (const name of ['2026-10-18-leaderboards.sql', '2026-10-18-leaderboards-hide-only.sql', '2026-10-20-reckon-board.sql'])
     await db.exec(fs.readFileSync(path.join(__dirname, '../../toolchain/sql', name), 'utf8'));
   const owner = '00000000-0000-4000-8000-000000000001', member = '00000000-0000-4000-8000-000000000002', outsider = '00000000-0000-4000-8000-000000000003';
   const q = async (sql, params = []) => (await db.query(sql, params)).rows;
@@ -105,5 +105,19 @@ test('BOARD-01/02: migrations, permissions, first results, history and hide-only
     await db.exec('reset role');
     assert.equal((await q('select count(*)::int n from board.results where player=$1', [member]))[0].n, 3);
     assert.equal((await q('select count(*)::int n from board.leagues where code=$1 and closed_at is not null', [code]))[0].n, 1);
+  });
+  await t.test('RECKON-BOARD: Reckon is a scored round out of 1,000, equal scores ranked by time', async () => {
+    // last, in league B, so the cases above keep their counts
+    await db.exec('set role anon');
+    await rpc('board_join', [member, b.code, 'Second']);
+    const rk = 'reports/'+day+'-quiz-reckon-0001.html';
+    await rejects(() => rpc('board_submit', [outsider, rk, 'solved', 90, 700, null]), 'bad_result');
+    await rejects(() => rpc('board_submit', [outsider, rk, 'scored', 90, 1001, null]), 'bad_result');
+    await rejects(() => rpc('board_submit', [outsider, rk, 'scored', 90, null, null]), 'bad_result');
+    assert.equal(await rpc('board_submit', [outsider, rk, 'scored', 130, 800, null]), true);
+    assert.equal(await rpc('board_submit', [member, rk, 'scored', 95, 800, null]), true);
+    const board = await rpc('board_day', [outsider, b.code, 'reckon', day]);
+    assert.deepEqual(board.ranked.map(r => [r.rank, r.nick, r.score, r.secs]), [[1, 'Second', 800, 95], [2, 'Other', 800, 130]]);
+    await rejects(() => rpc('board_day', [outsider, b.code, 'ballpark', day]), 'bad_type');
   });
 });

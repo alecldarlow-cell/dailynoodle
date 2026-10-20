@@ -217,7 +217,7 @@
     } catch (e) { return ''; }
   }
   var PATH = pathOf(location.href);
-  var PTYPE = (PATH.match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|geo-borders|word-tangle|digi-doku|digi-path)/) || [])[1] || '';
+  var PTYPE = (PATH.match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|geo-borders|word-tangle|quiz-reckon|digi-doku|digi-path)/) || [])[1] || '';
   if (PTYPE === 'digi-doku') PTYPE = 'logic-doku';
   if (PTYPE === 'digi-path') PTYPE = 'logic-path';
 
@@ -371,7 +371,7 @@
      (#playCard starts the round, #opts, #qmap). A tap anywhere else (the
      masthead, the instructions, the first touch of a scroll) is not a start. */
   var PLAY_AREA = '#grid,#board,#bank,#kb,#cluesWrap,#cluebar,#lines,#playCard,#resumeBtn,#opts,#qmap';
-  var SCORED = { 'word-tangle': 1, 'geo-borders': 1 };
+  var SCORED = { 'word-tangle': 1, 'geo-borders': 1, 'quiz-reckon': 1 };
   function num(id){
     var el = document.getElementById(id);
     var m = el && String(el.textContent).replace(/,/g, '').match(/-?\d+/);
@@ -445,6 +445,10 @@
           var big = String((document.getElementById('rBig') || {}).textContent || '').match(/(\d+)\s*of\s*(\d+)/);
           if (big) { end.got = +big[1]; end.of = +big[2]; }
           end.score = num('rPts');
+        } else if (PTYPE === 'quiz-reckon') {
+          // points out of 1,000, bullseyes, and one zone digit per question (0 = within 15% … 4 = a miss)
+          end.score = num('rPts'); end.bulls = num('rBulls');
+          end.zones = String((document.getElementById('rZones') || {}).textContent || '').replace(/[^0-4]/g, '').slice(0, 10) || null;
         } else if (PTYPE === 'word-link') {
           end.mistakes = document.querySelectorAll('#pips .pip.gone').length;
         }

@@ -1,0 +1,2050 @@
+{
+ "_about": "Ballpark facts checked for Reckon. A fact must be checked before its first appearance in Reckon: node tools/build-reckon-batch.js --facts FROM THROUGH lists them; fixes go into Ballpark with tools/apply-ballpark-fixes.js, exclusions into EXCLUDE in tools/build-reckon-batch.js. 20 Oct 2026: a random 100 plus every fact in 26 Oct to 25 Nov 2026, mostly judged from search-result titles and the checkers’ own knowledge (the search tool returned no snippets).",
+ "facts": {
+  "animals:3": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:8": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:14": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:16": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "fixed"
+  },
+  "animals:17": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:22": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:23": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:28": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:29": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:30": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "animals:31": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:32": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:33": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "animals:34": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:38": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:39": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:42": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:48": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:49": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:59": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:61": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:71": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:73": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "animals:78": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:81": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:82": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:83": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:88": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "animals:89": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:90": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:91": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:92": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:93": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "animals:94": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "animals:95": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:96": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:97": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:98": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:10": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "fixed"
+  },
+  "body:11": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:12": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:13": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:16": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:17": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:26": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:29": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:35": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:40": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:41": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:42": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "body:43": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:44": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:45": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:46": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:47": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:48": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "body:49": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:50": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:51": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:52": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "body:53": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "body:54": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:55": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:56": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:57": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "body:58": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "body:59": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:68": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:69": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:75": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:18": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:19": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:30": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:31": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "fixed"
+  },
+  "britain:32": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:33": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:34": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:35": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:36": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:37": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:38": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "britain:39": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:59": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:70": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:74": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:75": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:80": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:81": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:82": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:83": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:84": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "britain:85": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:86": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:87": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:88": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:91": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:92": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:93": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "none"
+  },
+  "britain:94": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "britain:95": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "britain:96": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:97": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:0": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:1": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:2": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:3": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:4": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:5": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:6": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:7": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:8": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:9": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:25": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:26": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:33": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:52": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:58": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:59": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "build:61": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:68": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:70": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:71": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:72": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:73": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:74": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:75": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:76": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:78": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:79": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:84": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:85": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:88": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "build:89": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:98": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "earth:8": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:9": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:10": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:13": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:18": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:19": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:51": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:52": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:53": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:54": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:55": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:56": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "earth:57": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:76": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "earth:80": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:81": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:82": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:83": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:84": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:85": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:86": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "fixed"
+  },
+  "earth:87": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:88": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:89": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:90": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:91": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:92": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:93": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:95": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:96": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:97": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:99": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:0": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:1": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:2": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:4": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:5": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:6": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:7": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:9": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:17": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:19": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:20": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:21": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:24": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:25": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:27": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:29": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:30": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:32": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:33": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:34": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:37": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:40": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:44": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:50": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:51": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:52": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:53": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:54": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:55": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:56": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "fixed"
+  },
+  "everyday:57": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:58": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:59": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:65": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "everyday:79": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "everyday:85": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:94": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "everyday:95": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:96": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "fixed"
+  },
+  "everyday:97": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:0": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:1": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:2": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:3": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:4": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:5": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:7": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:8": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "food:9": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:18": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "food:19": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:37": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:60": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "food:61": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "food:62": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:63": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:64": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "food:65": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:66": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:67": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:68": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:69": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:70": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "food:71": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "none"
+  },
+  "food:72": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:73": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:75": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:77": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:78": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "food:79": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:85": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:12": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:17": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:24": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:25": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:29": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:30": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:31": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:32": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "none"
+  },
+  "places:33": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:35": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:36": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:51": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:53": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:54": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:55": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:56": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:60": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "places:64": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:68": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:69": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "places:70": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:71": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:72": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:73": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:74": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:75": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:77": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:78": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:79": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:84": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:88": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:89": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:98": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:99": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:10": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:11": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:12": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:13": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:14": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:15": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:16": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:17": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:18": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:19": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:30": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "fixed"
+  },
+  "science:31": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "science:32": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:33": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:34": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:35": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "science:36": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "science:37": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:38": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:39": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "science:60": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:61": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:62": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:64": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:65": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:67": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:68": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "science:69": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "science:86": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:87": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:88": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:89": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:0": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:1": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:2": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:3": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:4": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:5": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:6": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:7": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:8": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:9": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:16": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:17": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:19": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:29": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:35": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:42": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "space:60": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:61": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:62": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:68": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:69": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:77": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:78": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:84": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:87": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:88": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:90": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:91": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:92": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:93": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "space:94": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:95": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:96": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:97": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:98": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:99": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:22": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:23": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:24": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:25": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:26": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:28": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:29": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:37": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:38": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:39": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:40": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:41": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:42": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:43": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:44": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:45": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:46": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:47": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:48": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:49": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:50": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:51": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:53": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:54": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:55": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "none"
+  },
+  "sport:56": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:57": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:58": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:59": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:65": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:72": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:85": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:1": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:4": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:8": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:9": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:15": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "weather:19": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:21": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:45": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:59": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "weather:60": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:62": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:64": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "weather:65": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:66": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "fixed"
+  },
+  "weather:67": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:68": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:69": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:78": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:79": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:80": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:81": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:82": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:83": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:84": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "fixed"
+  },
+  "weather:85": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:86": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:87": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "none"
+  },
+  "weather:88": {
+   "checked": "2026-10-20",
+   "verdict": "DISPUTED",
+   "action": "excluded"
+  },
+  "weather:89": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:91": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:92": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:93": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:94": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "weather:95": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:96": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "weather:97": {
+   "checked": "2026-10-20",
+   "verdict": "MINOR",
+   "action": "fixed"
+  },
+  "weather:98": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:99": {
+   "checked": "2026-10-20",
+   "verdict": "OK",
+   "action": "none"
+  }
+ }
+}

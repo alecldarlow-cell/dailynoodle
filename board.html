@@ -185,7 +185,7 @@
   function mmss(s) { if (s == null) return ''; s = Math.round(s); var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
     return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(x).padStart(2, '0'); }
   function result(t, r) {
-    if (t === 'tangle' || t === 'borders') return { big: (r.score == null ? '–' : r.score) + ' pts', small: r.secs ? mmss(r.secs) : '' };
+    if (t === 'tangle' || t === 'borders' || t === 'reckon') return { big: (r.score == null ? '–' : r.score) + ' pts', small: r.secs ? mmss(r.secs) : '' };
     if (r.outcome === 'failed') return { big: t === 'link' ? 'Out of guesses' : 'Didn’t finish', small: '' };
     if (r.outcome === 'revealed') return { big: 'Revealed', small: '' };
     var small = t === 'link' ? (r.mistakes === 1 ? '1 mistake' : (r.mistakes || 0) + ' mistakes') : '';

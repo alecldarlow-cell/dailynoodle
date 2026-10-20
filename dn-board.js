@@ -108,12 +108,13 @@
     { id: 'sweep',   tv: 'logic-sweep',    name: 'Sweep',   emoji: '💣' },
     { id: 'link',    tv: 'word-link',      name: 'Link',    emoji: '🔗' },
     { id: 'tangle',  tv: 'word-tangle',    name: 'Tangle',  emoji: '🧶' },
-    { id: 'borders', tv: 'geo-borders',    name: 'Borders', emoji: '🌍' }
+    { id: 'borders', tv: 'geo-borders',    name: 'Borders', emoji: '🌍' },
+    { id: 'reckon',  tv: 'quiz-reckon',    name: 'Reckon',  emoji: '🎯' }
   ];
   var BY_TV = {}, BY_ID = {};
   TYPES.forEach(function (t) { BY_TV[t.tv] = t; BY_ID[t.id] = t; });
   function typeOfPath(p) {
-    var m = String(p || '').match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|word-tangle|geo-borders)/);
+    var m = String(p || '').match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|word-tangle|geo-borders|quiz-reckon)/);
     return m ? BY_TV[m[1]] : null;
   }
   function dateOfPath(p) {
@@ -219,7 +220,8 @@
     { key: 'digi-link-v1',    code: 'LINK',  t: 'link',    read: function (r) { return { outcome: r.o === 'win' ? 'solved' : 'failed', secs: clock(r.t), mistakes: r.m }; } },
     { key: 'digi-sweep-v1',   code: 'SWEEP', t: 'sweep',   read: function (r) { return { outcome: r.o === 'win' ? 'solved' : r.o === 'loss' ? 'failed' : 'revealed', secs: r.s }; } },
     { key: 'digi-tangle-v1',  code: 'TANG',  t: 'tangle',  read: function (r) { return { outcome: 'scored', score: r.s }; } },
-    { key: 'digi-borders-v1', code: 'BORD',  t: 'borders', read: function (r) { return { outcome: 'scored', score: r.p, secs: r.secs }; } }
+    { key: 'digi-borders-v1', code: 'BORD',  t: 'borders', read: function (r) { return { outcome: 'scored', score: r.p, secs: r.secs }; } },
+    { key: 'digi-reckon-v1',  code: 'RECK',  t: 'reckon',  read: function (r) { return { outcome: 'scored', score: r.p, secs: r.secs }; } }
   ];
   function clock(v) {
     var m = String(v || '').match(/^(\d{1,4}):(\d{2})$/);

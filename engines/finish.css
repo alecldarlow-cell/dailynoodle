@@ -63,6 +63,8 @@ html.fin-shown body{overflow:hidden}
 .fin-share-card{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--f-paper);border-radius:16px;padding:10px 10px 10px 16px;font-size:17px;font-weight:600;line-height:1.35}
 .fin-share-text{min-width:0;-webkit-user-select:text;user-select:text}
 .fin-nw{white-space:nowrap}
+/* Reckon's ten squares: kept together on their own line when they fit, wrapped only on a very narrow phone */
+.fin-box[data-fin="reckon"] .fin-nw{display:inline-block;white-space:normal}
 .fin-pill{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:24px;border:0;font:600 16px/1 var(--f-sans);text-decoration:none;cursor:pointer;flex:none;-webkit-tap-highlight-color:transparent}
 .fin-pill svg{width:18px;height:18px;display:block}
 .fin-primary{background:var(--f-act);color:var(--f-onAct)}

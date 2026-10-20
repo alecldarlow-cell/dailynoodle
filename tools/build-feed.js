@@ -211,6 +211,13 @@ function puzzleMask(html, rel, warnings) {
   // dn:thumb every Borders file carries (one type tile, never a day's country,
   // so a card can't spoil an answer). No mask, and no warning, once the puzzle
   // object is confirmed to hold ten questions.
+  // Reckon has no grid either: ten numbers to guess. Like Borders, its card uses the fixed dn:thumb
+  // every Reckon file carries (assets/reckon-thumb.svg: the scale, never a day's numbers).
+  if (/\bwindow\.DN_PUZZLE=\{id:"DP\u00b7RECK\u00b7/.test(html)) {
+    const qs = (html.match(/"lo":/g) || []).length;
+    if (qs !== 10) warnings.push(`${rel} — Reckon puzzle parsed as ${qs} question(s), expected 10`);
+    return '';
+  }
   if (/\bconst PUZZLE=\{id:"DP\u00b7BORD\u00b7/.test(html)) {
     const qs = (html.match(/"o":\[/g) || []).length;
     if (qs !== 10) warnings.push(`${rel} — Borders puzzle parsed as ${qs} question(s), expected 10`);
@@ -289,7 +296,7 @@ for (const { dir, kind } of DIRS) {
       firstMatch(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) ||
       firstMatch(head, /<title[^>]*>([\s\S]*?)<\/title>/i).replace(/\s*[—–-]\s*(?:Digi|Noodle) News\s*$/i, '').replace(/^\s*(?:Digi|Noodle) News\s*[—–-]\s*/i, '') ||
       titleCase(fn.slug)
-    ).replace(/^(Mini|Doku|Sweep|Path|Link|Borders|Tangle)\s+0*(\d+)$/, '$1 $2');
+    ).replace(/^(Mini|Doku|Sweep|Path|Link|Borders|Tangle|Reckon)\s+0*(\d+)$/, '$1 $2');
 
     const standfirst =
       meta(head, 'dn:standfirst') ||
@@ -392,7 +399,7 @@ console.log(`feed.json written — ${items.length} item(s) live; today = ${TODAY
 // whole feed. One item per type, in the finish sheet's own order.
 {
   const TYPE_OF = { 'crossword-mini': 'mini', 'logic-doku': 'doku', 'logic-sweep': 'sweep', 'logic-path': 'path',
-                    'word-link': 'link', 'word-tangle': 'tangle', 'geo-borders': 'borders' };
+                    'word-link': 'link', 'word-tangle': 'tangle', 'geo-borders': 'borders', 'quiz-reckon': 'reckon' };
   const today = [];
   for (const it of items) {
     if (it.kind !== 'puzzle' || it.date !== TODAY) continue;
@@ -404,7 +411,7 @@ console.log(`feed.json written — ${items.length} item(s) live; today = ${TODAY
     if (!id) { warnings.push(`puzzles-today: no puzzle id in ${it.path}`); continue; }
     today.push({ type, id, name: it.headline, path: it.path });
   }
-  const ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders'];
+  const ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon'];
   today.sort((a, b) => ORDER.indexOf(a.type) - ORDER.indexOf(b.type));
   fs.writeFileSync(path.join(ROOT, 'puzzles-today.json'), JSON.stringify({ today: TODAY, items: today }, null, 1) + '\n');
   console.log(`puzzles-today.json written — ${today.length} puzzle(s) for ${TODAY}`);

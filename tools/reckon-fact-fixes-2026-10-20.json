@@ -1,0 +1,185 @@
+{
+ "_about": "Fact fixes from the Reckon fact check of 20 Oct 2026 (project doc claude/reckon-factcheck-sample.md and the first-month check). Applied to Ballpark's bank, which Reckon shares. Each entry lists only the fields that change; tools/apply-ballpark-fixes.js checks every fact's current text first.",
+ "fixes": {
+  "body:48": {
+   "q": "How many litres of fluid do the kidneys filter out of the blood in a day?"
+  },
+  "animals:94": {
+   "q": "How wide can an adult male orangutan’s arm span be, in metres?"
+  },
+  "science:30": {
+   "q": "What percentage of Dead Sea water, by weight, is dissolved salt?",
+   "u": "%",
+   "a": 34,
+   "n": "About ten times as salty as the ocean, at 3.5%."
+  },
+  "britain:31": {
+   "q": "About how many English words were first recorded in Shakespeare’s writing, according to the Oxford English Dictionary?",
+   "n": "Including “lonely”, “bedroom” and “eyeball”, though some may be older."
+  },
+  "britain:94": {
+   "q": "At spring tides, how much does the tide rise and fall at London Bridge, in metres?"
+  },
+  "food:8": {
+   "q": "By Food Standards Agency figures, how much caffeine is in a mug of tea, in milligrams?",
+   "n": "A weak brew can have about half that."
+  },
+  "weather:84": {
+   "q": "At most, how much sunlight power reaches a square metre facing the Sun on a clear day at sea level, in watts?",
+   "n": "In Britain it is nearer 800 W at midsummer noon. Solar panels turn about a fifth of it into electricity."
+  },
+  "body:58": {
+   "n": "24 separate vertebrae plus the fused sacrum and coccyx. Babies start with 33."
+  },
+  "britain:95": {
+   "q": "At its greatest, how much can the tide rise and fall in the Severn Estuary, in metres?",
+   "n": "The second-highest tidal range in the world, by most counts."
+  },
+  "science:68": {
+   "q": "How hot is the main yellow part of a candle flame, in °C?",
+   "n": "The faint blue zone near the wick is hotter, about 1,400 °C."
+  },
+  "earth:86": {
+   "q": "How long is the Great Rift Valley, from Lebanon down to Mozambique, in kilometres?"
+  },
+  "science:31": {
+   "n": "Red is the longest-wavelength colour we can see."
+  },
+  "weather:97": {
+   "q": "At its fastest, in 2012, how far did Greenland’s Jakobshavn glacier flow in a day, in metres?",
+   "a": 46,
+   "n": "About 17 km a year, among the fastest glacier flows ever measured."
+  },
+  "body:57": {
+   "n": "About 0.1 mm across: just about visible to the naked eye."
+  },
+  "food:64": {
+   "q": "Above about what temperature does the browning of toast and roast meat get going quickly, in °C?"
+  },
+  "animals:88": {
+   "q": "How far can monarch butterflies migrate, in kilometres?",
+   "a": 4500,
+   "n": "Up to about 4,800 km, from southern Canada to the forests of Mexico."
+  },
+  "food:60": {
+   "q": "About how much does a single espresso hold, in millilitres?",
+   "n": "Pushed through the coffee in about 25 seconds. The Italian standard is 25 ml."
+  },
+  "everyday:94": {
+   "q": "How much does a full-size UK wheelie bin hold, in litres?",
+   "n": "Many councils use smaller 180- or 140-litre bins."
+  },
+  "science:69": {
+   "q": "How hot is the hottest part of a Bunsen burner’s blue flame, in °C?"
+  },
+  "animals:30": {
+   "q": "Up to how long can a sperm whale hold its breath, in minutes?"
+  },
+  "earth:56": {
+   "a": 57,
+   "n": "A little taller than Nelson’s Column."
+  },
+  "weather:96": {
+   "q": "On average, how thick is Arctic sea ice in winter, in metres?",
+   "n": "Ice that survives several summers can be 3 m or more."
+  },
+  "science:39": {
+   "q": "In its 1975 form, every how many years did Moore’s law say the number of transistors on a chip would double?",
+   "n": "Moore’s first version, in 1965, said every year. It held for about 50 years."
+  },
+  "body:42": {
+   "q": "By the usual estimate, how long are all the blood vessels in an adult laid end to end, in kilometres?"
+  },
+  "everyday:56": {
+   "q": "How many small squares make up a chessboard?"
+  },
+  "food:70": {
+   "n": "An industry estimate: roughly 90 for every person."
+  },
+  "weather:94": {
+   "q": "How cold is the top of a big thundercloud over Britain, in degrees below zero?",
+   "n": "The top spreads out into an anvil of ice crystals."
+  },
+  "food:61": {
+   "q": "On average worldwide, how many litres of water, mostly rain, does it take to produce a kilogram of beef?",
+   "n": "Most of it is rain that falls on the grass and crops the cattle eat."
+  },
+  "animals:33": {
+   "n": "About ten beats every second."
+  },
+  "everyday:96": {
+   "q": "What is the traditional term of a UK mortgage, in years?",
+   "n": "Most first-time buyers now choose 30 years or more."
+  },
+  "animals:93": {
+   "n": "The longest snake in the world; most adults are 3 to 5 m."
+  },
+  "build:59": {
+   "n": "The tallest structure in the world when finished in 1884."
+  },
+  "build:88": {
+   "n": "The fastest runners race up them every year in about 10 minutes."
+  },
+  "britain:84": {
+   "n": "One of the largest monuments to a writer anywhere."
+  },
+  "food:18": {
+   "q": "Roughly how many bananas does the UK eat in a year?",
+   "n": "An often-quoted estimate; the most popular fruit in Britain."
+  },
+  "body:10": {
+   "q": "About how many cells make up the body of an average adult man?",
+   "a": 36000000000000,
+   "n": "About 36 trillion by a 2023 count; a typical woman has about 28 trillion."
+  },
+  "places:69": {
+   "q": "How many people lived in the City of Leeds council area at the 2021 census?"
+  },
+  "weather:66": {
+   "q": "What was the average sea surface temperature between 60°S and 60°N in 2024, in °C?",
+   "a": 20.9,
+   "n": "A record for a calendar year, by Copernicus figures."
+  },
+  "weather:15": {
+   "q": "What is the strongest wind gust ever recorded by a weather station, not counting tornadoes, in km per hour?"
+  },
+  "places:60": {
+   "q": "What is the area of Rutland, England’s smallest historic county, in square kilometres?"
+  },
+  "build:98": {
+   "q": "How high above the ground does the tip of Notre-Dame’s spire stand, in metres?"
+  },
+  "weather:59": {
+   "n": "But it only lasts about 12 years in the air, while carbon dioxide lingers for centuries."
+  },
+  "everyday:79": {
+   "n": "Slower than a brisk walk, which is why so many people walk up the left."
+  },
+  "space:42": {
+   "n": "About 270,000 km across, but often only about 10 m thick."
+  },
+  "animals:16": {
+   "q": "About how much does a fully grown blue whale weigh, in tonnes?",
+   "n": "The heaviest ever weighed was nearer 190 tonnes."
+  },
+  "animals:73": {
+   "q": "How long can an elephant live in the wild, in years?",
+   "n": "About as long as a person; the record in captivity is 86."
+  },
+  "everyday:65": {
+   "n": "The original 74-minute disc was sized to fit Beethoven’s Ninth, as legend has it."
+  }
+ },
+ "excludeFromReckon": {
+  "science:35": "atom vs nucleus: sources run from about 23,000x to 145,000x depending on the atom and how its size is defined",
+  "weather:88": "fresh snow: 50 to 150 kg per cubic metre depending on the snow",
+  "science:36": "atoms across a hair: depends on which hair width and atom size you take",
+  "food:78": "tomato varieties: estimates run from about 7,500 to over 15,000",
+  "body:53": "cone cells: 4.6 million (direct counts) against 6 million (older textbooks)",
+  "body:52": "rod cells: 92 million (direct counts) against 120 million (older textbooks)",
+  "weather:64": "jet stream top speed: 320, 400 and 425 km/h are all quoted",
+  "britain:38": "a trick question rather than an estimate (“Lake Windermere” in everyday speech)",
+  "earth:76": "Andes length: 7,000 to 8,900 km depending on the source",
+  "space:93": "Andromeda 'including its faint outer halo': the halo spans millions of light years; 220,000 is the visible disc"
+ }
+}

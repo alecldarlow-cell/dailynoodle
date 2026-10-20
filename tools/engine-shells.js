@@ -81,6 +81,13 @@ const TYPES = {
     data: /\nconst PUZZLE=(\{[^\n]*\});\n/,
     dataDecl: '\nconst PUZZLE=window.DN_PUZZLE;\n',
   },
+  // Reckon (20 Oct 2026) ships as thin pages from day one (tools/build-reckon-batch.js); listed so
+  // every type is checked the same way.
+  reckon: {
+    match: /^\d{4}-\d{2}-\d{2}-quiz-reckon-\d+\.html$/,
+    data: /\nconst PUZZLE=(\{[^\n]*\});\n/,
+    dataDecl: '\nconst PUZZLE=window.DN_PUZZLE;\n',
+  },
 };
 
 const STYLE = /<style>([\s\S]*?)<\/style>/;
