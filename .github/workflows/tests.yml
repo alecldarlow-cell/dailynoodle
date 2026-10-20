@@ -83,6 +83,8 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npx playwright install --with-deps webkit
+      - name: TEMP probe
+        run: node tools/tests/wk-probe.js
       - name: Puzzle suite in WebKit (all eight types to the finish screen)
         env:
           DN_TEST_GROUP: webkit-puzzles
