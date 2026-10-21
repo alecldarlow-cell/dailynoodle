@@ -98,7 +98,9 @@ A failed required step prevents Pages deployment. A failed post-deployment healt
 
 `.github/workflows/tests.yml` runs the suite on pull requests without write permissions. At 03:17 UTC it also runs the full future-content/seed/layout checks, with separate Firefox and WebKit jobs. The manual workflow dispatch runs the required suite and browser matrix. Jobs upload logs, Playwright reports, failure screenshots and traces for 14 days, including on failure. There is no automatic retry-until-green and no automatic snapshot update in CI.
 
-This does not configure branch protection in GitHub settings. If direct pushes are later replaced with a mandatory PR process, require the `Tests` check there as a separate repository setting. Main's publication workflow already gates deployment itself.
+**Site code ships through a pull request** (21 Oct 2026, Alec's call; steps in SITE.md › Site code ships through a pull request). Code changes are pushed to a branch, a pull request is opened, and Claude merges it once the `regression` check (the full `npm test` on GitHub's machines) is green; the merge then goes through the publish workflow above like any push. Puzzle and news content and the scheduled tasks still push straight to `main`. A local run remains useful for the focused tests of what changed; a full local `npm test` on a small cloud workspace needs `DN_TEST_JOBS=1` (about 40 minutes on 2 CPUs; at the default five groups browsers crash there).
+
+This is a working rule, not branch protection: GitHub still accepts direct pushes to `main`, which the content tasks rely on. Main's publication workflow gates deployment itself either way.
 
 ## Harnesses, clocks and test data
 
