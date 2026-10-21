@@ -327,6 +327,55 @@
     });
   }
 
+  /* ---------- your leagues somewhere else (21 Oct 2026) ----------
+     On an iPhone, Safari, each home-screen icon and the browser inside an app
+     (WhatsApp, Messages…) each keep their own storage, so a league joined from
+     a link tapped in WhatsApp wasn't there when the same person played in
+     Safari, and nothing of theirs reached the board after the first puzzle.
+     moveLink() packs this browser's board id, leagues and puzzle/game saves
+     into the domain-move handoff's #dnmove= fragment (never sent to a
+     server). dn-track.js unpacks it wherever the link is opened: saves merge
+     without overwriting newer progress, and the board id is adopted (or, if
+     that browser is already in a league as someone else, offered as a choice
+     here). The link is the player's key, so the page calls it personal.   */
+  var PUZZLE_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon)-(v1|streak)$/;
+  var GAME_BUDGET = 40000;   // characters of game saves; puzzle saves always go
+  function b64e(s) {
+    return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  function moveLink() {
+    var s = load(), d = {}, keys = [], spent = 0, i, k, v;
+    try { for (i = 0; i < localStorage.length; i++) keys.push(localStorage.key(i)); } catch (e) {}
+    keys.sort();
+    keys.forEach(function (k) {   // puzzles first
+      if (!PUZZLE_KEY.test(k)) return;
+      try { v = localStorage.getItem(k); } catch (e) { v = null; }
+      if (v != null) d[k] = v;
+    });
+    keys.forEach(function (k) {   // then games, while they fit
+      if (PUZZLE_KEY.test(k) || k === LS || !/^(digi|noodle)-/.test(k)) return;
+      try { v = localStorage.getItem(k); } catch (e) { v = null; }
+      if (v != null && spent + v.length <= GAME_BUDGET) { d[k] = v; spent += v.length; }
+    });
+    var aid = trackerIds()[0]; if (aid) d['digi.aid'] = aid;   // for the history copy; none if opted out
+    var b = { pid: pid(), cur: s.cur || '', leagues: (s.leagues || []).map(function (l) {
+      return { code: l.code, name: l.name, nick: l.nick, owner: !!l.owner }; }) };
+    return 'https://dailynoodle.co.uk/board.html#dnmove=' + b64e(JSON.stringify({ v: 1, d: d, b: b, h: '' }));
+  }
+  /* What dn-track.js left for this page after a link was opened. */
+  function moved() { var s = load(), m = s.moved; if (m) { delete s.moved; save(s); } return m || null; }
+  function pending() { return load().pend || null; }
+  function settlePending(take) {
+    var s = load(), p = s.pend; if (!p) return;
+    delete s.pend;
+    if (take) { s.pid = p.pid; s.leagues = p.leagues || []; s.cur = p.cur || ''; delete s.fill; delete s.filled; }
+    save(s);
+  }
+  function isIOS() {
+    var u = navigator.userAgent || '';
+    return /iPhone|iPad|iPod/.test(u) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+
   function current() { return load().cur || ''; }
   function setCurrent(code) { var s = load(); s.cur = code; save(s); }
   function lastType() { return load().ptype || ''; }
@@ -339,7 +388,8 @@
     TYPES: TYPES, BY_ID: BY_ID, typeOfPath: typeOfPath, dateOfPath: dateOfPath,
     pid: pid, leagues: leagues, inAny: inAny, refresh: refresh, create: create, join: join,
     peek: peek, backfill: backfill, backfillDue: backfillDue, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
-    lastType: lastType, setLastType: setLastType, today: today, rpc: rpc
+    lastType: lastType, setLastType: setLastType, today: today, rpc: rpc,
+    moveLink: moveLink, moved: moved, pending: pending, settlePending: settlePending, isIOS: isIOS
   };
 
   /* ---------- on a puzzle page ---------- */

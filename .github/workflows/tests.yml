@@ -97,7 +97,7 @@ jobs:
         run: >-
           npm run test:browser -- --project=webkit
           isolation.spec.js artifact.spec.js platform.spec.js puzzle-mobile.spec.js
-          save-history.spec.js save-notice.spec.js layout.spec.js games.spec.js
+          save-history.spec.js save-notice.spec.js layout.spec.js games.spec.js board-key.spec.js
       - name: Failures as annotations
         if: always()
         run: node tools/tests/ci-annotate.js WebKit test-results/webkit-puzzles.log test-results/webkit-pages/playwright.json

@@ -132,6 +132,11 @@
   .inline{display:flex;gap:8px;margin-top:6px}
   .inline input{flex:1;min-width:0;font:500 15px var(--body);padding:8px 10px;border:1px solid var(--hair);border-radius:8px}
   .loading{padding:40px 0;text-align:center;color:var(--faint);font-size:14px}
+  /* your leagues somewhere else (21 Oct 2026) */
+  .bcard p.tip{padding:10px 12px;background:var(--accent-soft);border-radius:10px;color:var(--ink);font-size:14.5px}
+  .set .grp p.fine{font-size:12.5px;color:var(--faint)}
+  .bcard p.also{margin-top:14px;text-align:center}
+  .lnk{font:600 14.5px var(--body);color:var(--accent);background:none;border:0;padding:6px 4px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   [hidden]{display:none!important}
 </style>
 </head>
@@ -172,7 +177,17 @@
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function track(e, p) { try { if (window.digi) { window.digi.track(e, p); window.digi.flush(); } } catch (x) {} }
+  /* dn-track.js loads deferred, after this script: events from the first run (board_open,
+     board_key) wait for it. Until 21 Oct 2026 they were dropped, so board_open never recorded. */
+  var early = [];
+  function track(e, p) {
+    if (!window.digi) { if (early) early.push([e, p]); return; }
+    try { window.digi.track(e, p); window.digi.flush(); } catch (x) {}
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var q = early; early = null;
+    if (window.digi) q.forEach(function (a) { track(a[0], a[1]); });
+  });
   function addDays(iso, n) { var d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
   function dayName(iso) {
     var d = new Date(iso + 'T12:00:00Z');
@@ -244,8 +259,57 @@
       '<ol class="steps"><li>Start a league and give it a name.</li><li>Share its link in your group chat.</li>' +
       '<li>Everyone’s results appear on a board for each puzzle, every day.</li></ol>' +
       '<div class="acts"><button class="btn go" data-go="start">Start a league</button>' +
-      '<button class="btn" data-go="code">Join with a code</button></div></div>';
+      '<button class="btn" data-go="code">Join with a code</button></div>' +
+      '<p class="also"><button class="lnk" type="button" data-go="paste">Already in a league on another browser or app?</button></p></div>';
   }
+  /* ---------- your leagues somewhere else (21 Oct 2026; see dn-board.js moveLink) ---------- */
+  var IOS = NB.isIOS();
+  var KEY_TEXT = 'My Daily Noodle link. Open it where I play to bring my leagues, results and streaks there. (It’s my key: not for sharing.)';
+  function keyGroup() {
+    return '<div class="grp" id="keygrp"><h3>Play somewhere else too?</h3><p>Your leagues are kept in this browser. ' +
+      (IOS ? 'On an iPhone, Safari, the home-screen app and links opened inside WhatsApp each keep their own. ' : '') +
+      'Send yourself your link and open it where you play: your leagues, results and streaks come with it.</p>' +
+      '<div class="acts"><button class="btn" data-act="key">Send me my link</button>' +
+      '<button class="btn" data-go="paste">Paste a link</button></div>' +
+      '<p class="fine">It’s your personal key, so don’t post it in a group.</p></div>';
+  }
+  function pasteForm() {
+    document.getElementById('pillbar').hidden = true;
+    $app.innerHTML =
+      '<form class="bcard" id="f"><h2>Bring your leagues here</h2>' +
+      '<p>Where you joined, open the board’s League settings and tap <b>Send me my link</b>. Open that link here, ' +
+      'or copy it and paste it below' + (IOS ? ' (the home-screen app has no address bar, so paste it here)' : '') + '.</p>' +
+      '<label class="field"><span>Your link</span><input name="key" autocomplete="off" autocapitalize="off" spellcheck="false" required></label>' +
+      '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Bring them here</button>' +
+      '<button class="btn" type="button" data-go="back">Back</button></div></form>';
+    form(function (f) {
+      var v = f.elements.key.value.replace(/\s+/g, ''), i = v.indexOf('#dnmove=');
+      if (i < 0) return Promise.reject(new Error('That doesn’t look like your link. Copy the whole link and try again.'));
+      track('board_key', { act: 'paste' });
+      location.replace('board.html?from=key' + v.slice(i));   // dn-track.js unpacks it and reloads
+      return new Promise(function () {});
+    });
+  }
+  /* this browser is in a league as someone else, and a link brought another player's leagues: ask */
+  function pendForm(p) {
+    var mine = NB.leagues();
+    function names(ls) { return ls.map(function (l) { return esc(l.name) + ' as ' + esc(l.nick); }).join(', ') || 'no leagues'; }
+    document.getElementById('pillbar').hidden = true;
+    $app.innerHTML =
+      '<div class="bcard"><h2>Which leagues should this browser use?</h2>' +
+      '<p>Here you play in ' + names(mine) + '.</p><p>Your link is for ' + names(p.leagues || []) + '.</p>' +
+      '<p>Results and streaks from the link have been added here either way.</p>' +
+      '<div class="acts"><button class="btn go" data-pend="take">Use my link</button>' +
+      '<button class="btn" data-pend="keep">Keep this one</button></div></div>';
+  }
+  $app.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pend]'); if (!b) return;
+    var take = b.getAttribute('data-pend') === 'take';
+    NB.settlePending(take); track('board_key', { act: take ? 'take' : 'keep' });
+    if (take) S.moved = { n: 1 };
+    S.filled = false; S.data = null;
+    NB.refresh().catch(function () {}).then(function () { NB.inAny() ? loadBoard() : intro(); });
+  });
   function startForm() {
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Start a league</h2>' +
@@ -272,6 +336,8 @@
       '<form class="bcard" id="f"><h2>Join ' + esc(info.name) + '</h2>' +
       '<p>' + info.members + (info.members === 1 ? ' player' : ' players') + ' so far. Pick a nickname and your ' +
       'results will appear on the league’s daily boards.</p>' +
+      (IOS ? '<p class="tip">On an iPhone, join in the place you play the puzzles. If this opened inside WhatsApp or another app, ' +
+             'open it in Safari (or your Daily Noodle home-screen app) first.</p>' : '') +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join league</button>' +
       (NB.inAny() ? '<button class="btn" type="button" data-go="board">Not now</button>' : '') + '</div></form>';
@@ -291,6 +357,7 @@
     var g = e.target.closest('[data-go]'); if (!g) return;
     var go = g.getAttribute('data-go');
     if (go === 'start') { S.startFrom = g.getAttribute('data-from') || ''; if (S.startFrom) track('board_nudge', { from: S.startFrom }); startForm(); } else if (go === 'code') codeForm();
+    else if (go === 'paste') pasteForm();
     else if (go === 'back') { NB.inAny() ? loadBoard() : intro(); } else if (go === 'board') { S.join = ''; loadBoard(); }
   });
 
@@ -364,8 +431,15 @@
          because a league only spreads when someone other than its starter starts the next one */
       h += '<div class="bcard"><h2>You’re in ' + esc(L.name) + '</h2><p>Your results will show here every day. ' +
            'Got another group, like friends or work? Start a league for them too.</p>' +
-           '<div class="acts"><button class="btn alt" data-go="start" data-from="joined">Start another league</button></div></div>';
+           (IOS ? '<p class="tip">On an iPhone, if this page opened inside WhatsApp or another app, send yourself your link ' +
+                  'and open it in Safari or the home-screen app, wherever you play, so your results reach the board.</p>' : '') +
+           '<div class="acts">' + (IOS ? '<button class="btn go" data-act="key">Send me my link</button>' : '') +
+           '<button class="btn alt" data-go="start" data-from="joined">Start another league</button></div></div>';
       S.joined = 0;
+    } else if (S.moved) {
+      h += '<div class="bcard"><h2>Your leagues are here now</h2><p>Results and streaks from your link have been added to this ' +
+           'browser, and puzzles you finish here go on the board as ' + esc(L.nick) + '.</p></div>';
+      S.moved = null;
     }
     var first = d.first || S.date;
     h += '<div class="daybar"><button class="daybtn" data-day="-1" aria-label="Previous day"' + (S.date <= first ? ' disabled' : '') + '>‹</button>' +
@@ -401,7 +475,7 @@
       '<div class="grp"><h3>Another group?</h3><p>Start a separate league for friends, work or another chat. You can be in more than one.</p>' +
       '<div class="acts"><button class="btn" data-go="start" data-from="settings">Start another league</button></div></div>' +
       '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b></p>' +
-      '<div class="acts"><button class="btn warn" data-act="leave">Leave league</button></div></div>';
+      '<div class="acts"><button class="btn warn" data-act="leave">Leave league</button></div></div>' + keyGroup();
     if (L.owner) {
       h += '<div class="grp"><h3>League name</h3><div class="inline"><input id="rn" maxlength="30" value="' + esc(L.name) + '">' +
            '<button class="btn" data-act="rename">Save</button></div></div>' +
@@ -436,6 +510,9 @@
       lines.push(L.name + ' leaderboard:');
       share(lines.join('\n'), link(L.code) + '&p=' + S.type + '&d=' + S.date, a);
       track('board_share', { type: S.type });
+    } else if (act === 'key') {
+      share(KEY_TEXT, NB.moveLink(), a);
+      track('board_key', { act: 'send' });
     } else if (act === 'invite') {
       share('Join ' + L.name + ' on Noodle Puzzles: tap the link, pick a nickname, and your results go on our daily leaderboards.', link(L.code), a);
       track('board_invite', {});
@@ -458,11 +535,15 @@
   });
 
   /* ---------- start ---------- */
+  // Opened with someone's own link: dn-track.js unpacks it and reloads this page, so don't start yet.
+  if (location.hash.indexOf('#dnmove=') === 0) return;
+  var arrived = NB.moved(); if (arrived) { S.moved = arrived; track('board_key', { act: 'open' }); }
   track('board_open', { from: S.from });
   var feed = fetch('feed.json', { cache: 'no-cache' }).then(function (r) { return r.json(); })
     .then(function (j) { S.feed = j.items || []; }, function () { S.feed = []; });
   var mine = NB.refresh().catch(function () { return NB.leagues(); });
   Promise.all([feed, mine]).then(function () {
+    var pend = NB.pending(); if (pend) return pendForm(pend);
     if (S.join) {
       var have = NB.leagues().filter(function (l) { return l.code === S.join; })[0];
       if (have) { NB.setCurrent(have.code); S.join = ''; return loadBoard(); }
