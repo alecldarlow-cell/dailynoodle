@@ -115,6 +115,35 @@
   }
   function isStreak(o){ return isObj(o) && 'last' in o && ('streak' in o || 'n' in o); }
 
+  /* A player's own link from the board page (21 Oct 2026, dn-board.js
+     moveLink) also carries b: {pid, leagues, cur}, the leaderboard id. This
+     browser takes it over if it has no leagues of its own (or is already the
+     same player); if it is in a league as someone else, the choice is left to
+     the board page (pend), never made silently. The leagues listed here are
+     only a first copy: the board page asks the server for them by id.       */
+  function adoptBoard(b){
+    if (!/^[0-9a-f-]{36}$/i.test(b.pid || '')) return;
+    var ls = (Array.isArray(b.leagues) ? b.leagues : []).filter(function(l){
+      return isObj(l) && /^[A-Z0-9]{4,12}$/.test(l.code || '');
+    }).slice(0, 10).map(function(l){
+      return { code: l.code, name: String(l.name || '').slice(0, 30), nick: String(l.nick || '').slice(0, 16), owner: !!l.owner };
+    });
+    var cur = typeof b.cur === 'string' ? b.cur : '';
+    var s = null; try { s = parse(localStorage.getItem('noodle-board-v1') || '{}'); } catch (e) {}
+    if (!isObj(s)) s = {};
+    var mine = Array.isArray(s.leagues) && s.leagues.length;
+    if (s.pid === b.pid) {
+      s.moved = { at: Date.now(), n: ls.length };
+    } else if (!s.pid || !mine) {
+      s.pid = b.pid; s.leagues = ls; s.cur = cur;
+      delete s.fill; delete s.filled; delete s.pend;   // copy this browser's history in again, as the adopted player
+      s.moved = { at: Date.now(), n: ls.length };
+    } else {
+      s.pend = { pid: b.pid, leagues: ls, cur: cur };
+    }
+    try { localStorage.setItem('noodle-board-v1', JSON.stringify(s)); } catch (e) {}
+  }
+
   try {
     if (location.hash.indexOf(TAG) !== 0) return;
     var p = parse(b64d(location.hash.slice(TAG.length)));
@@ -142,6 +171,7 @@
         }
         try { localStorage.setItem(k, val); } catch (e) {}
       }
+      if (isObj(p.b)) adoptBoard(p.b);
     }
     window.DN_MOVING = true;
     history.replaceState(null, '', location.pathname + location.search + ((p && typeof p.h === 'string') ? p.h : ''));
