@@ -123,6 +123,16 @@ test('GAME-SHARE-03: Paper Planes keeps its own share; a Lab game shares its own
  await goto(phone,'reports/2026-10-17-arcade-paper-planes.html');await H.wait(p,1500);
  expect(await p.evaluate(()=>!!window.dnGameShare)).toBe(false);
 });
+test('GAME-SHARE-04: Lighthouse Keeper shares the place the game shows: a headland, then Open sea N',async({phone})=>{
+ const p=phone.p;await realTracker(phone,'2026-09-26-arcade-lighthouse-keeper.html');
+ const l=x=>p.evaluate(x=>window.dnGameShare.line(x),x);
+ expect(await l({game:'lighthouse-keeper',win:true,level:99,stars:3})).toBe('🗼 Lighthouse Keeper — Open sea 87 · ⭐⭐⭐');
+ expect(await l({game:'lighthouse-keeper',win:true,level:7,stars:2})).toBe('🗼 Lighthouse Keeper — Cromer · ⭐⭐');
+ expect(await l({game:'lighthouse-keeper',win:true,level:12,stars:1})).toBe('🗼 Lighthouse Keeper — Lowestoft Ness · ⭐');
+ expect(await l({game:'lighthouse-keeper',win:true,level:13})).toBe('🗼 Lighthouse Keeper — Open sea 1');
+ expect(await p.evaluate(()=>window.dnGameShare.link)).toBe('dailynoodle.co.uk/lighthouse-keeper');
+ expect(phone.errors).toEqual([]);
+});
 test('PLANES-SHARE-01: the end-of-run screen has Share (not on the daily), sharing the run line and the game address',async({phone})=>{
  const p=phone.p;await realTracker(phone,'2026-10-17-arcade-paper-planes.html').catch(()=>{});
  await expect.poll(()=>p.evaluate(()=>typeof window.__dg?.end)).toBe('function');
