@@ -352,6 +352,10 @@ for (const { dir, kind } of DIRS) {
     const hs = (kindVal === 'report') ? heroStat(html) : null;
     const mask = (kindVal === 'puzzle') ? puzzleMask(html, rel, warnings) : '';
     const ptype = (kindVal === 'puzzle') ? puzzleType(html, rel, warnings) : '';
+    // The puzzle's own id (DP·MINI·0102), the key its saves use, so the
+    // Puzzles front page can mark the cards you've played (front.js
+    // showPlayed, 21 Oct 2026). No id, no mark; the card is unchanged.
+    const pid = (kindVal === 'puzzle') ? ((html.match(/\bid\s*:\s*"(DP·[A-Z]+·[0-9-]+)"/) || [])[1] || '') : '';
 
     // The tile's label is a KICKER, not a caption: ~14 characters, two words.
     // The piece's own hero-stat caption is written to sit under a big number in
@@ -398,6 +402,7 @@ for (const { dir, kind } of DIRS) {
       statLabel: hs ? statLabel : '',
       mask,
       ...(ptype ? { type: ptype } : {}),
+      ...(pid ? { id: pid } : {}),
       ...(meta(head, 'dn:badge') ? { badge: meta(head, 'dn:badge').trim().slice(0, 24) } : {})
     });
   }

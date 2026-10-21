@@ -24,6 +24,9 @@
        shimmer and warnings: tokens so dark mode can swap them */
     --on-ink:#fff; --on-accent:#fff; --skel:#F2F2EF; --bad:#B3261E;
     --tile-frame:var(--ink); --tile-cell:var(--paper); --tile-lock:var(--news-soft);
+    /* played marks on puzzle cards (21 Oct 2026): ink on the marigold dot, and
+       the "In progress" words (5.9:1 on the canvas; the marigold itself on dark) */
+    --on-play:#15171C; --started-ink:#7A5A00;
   }
   /* Dark mode (18 Oct 2026): follows the phone, like the puzzle players, so
      moving between the front pages and a puzzle doesn't flash light and dark.
@@ -37,6 +40,7 @@
     --lab:#FF7FAE;     --lab-soft:#3A1A29;
     --mono-ink:#11131A; --on-ink:#11131A; --on-accent:#0B0D12; --skel:#1F2330; --bad:#FF7A6E;
     --tile-frame:#050608; --tile-cell:#2E3344; --tile-lock:#3A4466;
+    --started-ink:#FFD54A;
     color-scheme:dark}}
   :root[data-theme="dark"]{
     --canvas:#11131A; --paper:#1B1E29; --ink:#ECEEF4; --muted:#A6ABBD; --faint:#80869A; --hair:#2E3344;
@@ -46,6 +50,7 @@
     --lab:#FF7FAE;     --lab-soft:#3A1A29;
     --mono-ink:#11131A; --on-ink:#11131A; --on-accent:#0B0D12; --skel:#1F2330; --bad:#FF7A6E;
     --tile-frame:#050608; --tile-cell:#2E3344; --tile-lock:#3A4466;
+    --started-ink:#FFD54A;
     color-scheme:dark}
   html[data-section="puzzles"]{--accent:var(--puzzles);--accent-soft:var(--puzzles-soft)}
   html[data-section="games"]{--accent:var(--games);--accent-soft:var(--games-soft)}
@@ -260,3 +265,18 @@
 .card-guide{position:absolute;right:0;bottom:18px;min-height:24px;display:inline-flex;align-items:center;
   padding:2px 0 2px 8px;font-size:12px;font-weight:600;line-height:1.6;color:var(--muted)}
 .card-guide:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* Played marks (21 Oct 2026, mock A): added by front.js showPlayed from the
+   players' own saves. A tick on the tile's top-right corner for a finished
+   puzzle, a marigold dot for a round started and not finished; the date line
+   swaps the duration for the result. Positioned on the card (li.puzzle-card),
+   so the tile markup is untouched. */
+.played-mark{position:absolute;top:11px;left:77px;z-index:1;width:26px;height:26px;box-sizing:border-box;
+  border-radius:50%;background:var(--accent);color:var(--on-accent);border:2.5px solid var(--canvas);
+  display:grid;place-content:center;pointer-events:none}
+.played-mark.started{background:var(--play);color:var(--on-play)}
+.played-mark svg{display:block}
+.card-result.done{color:var(--accent);font-weight:700}
+.card-result.lost{color:var(--muted)}   /* a lost Sweep or Link: played, not a win */
+.card-result.started{color:var(--started-ink);font-weight:700}
+@media(min-width:560px){.played-mark{left:101px}}

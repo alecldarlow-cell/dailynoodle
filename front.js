@@ -389,6 +389,7 @@
       ? v.length + ' ' + SEC.noun[v.length===1?0:1] + (state.q?' matching':'')
       : '';
     if (SEC.kind === 'puzzle') showRun();
+    showPlayed();
     $built.textContent = state.built
       ? 'Index rebuilt ' + new Date(state.built).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})
       : '';
@@ -420,6 +421,88 @@
     el.innerHTML = n < 2 ? '' : '<span aria-hidden="true">🔥</span><span><b>' + n + '-day</b> streak</span>';
     el.hidden = n < 2;
   }
+
+  /* ---------- played marks on puzzle cards (21 Oct 2026) ----------
+     Alec's call, from a player's request and mock A: a card you've finished
+     carries a tick on its tile and your result ("Solved in 1:42", "Scored
+     8/10") where its duration was; a round you've started and not finished
+     (Tangle, Borders and Reckon only: the other five keep nothing until the
+     end) carries a marigold dot and "In progress". Read-only, from the
+     players' own saves, matched by the puzzle id build-feed.js puts on each
+     card (a feed cached from before has none, so no marks). Added after the
+     cards are drawn, so the shared card markup (dnCards) and the built HTML
+     are unchanged; with no saves the page is exactly as before. Unfinished
+     Mini, Doku, Sweep, Path and Link rounds can't be shown: nothing is saved. */
+  var CHECK = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.5 8.5l3 3 6-7"/></svg>',
+      DOTS  = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 8h0M8 8h0M12 8h0"/></svg>';
+  function clock(secs){
+    secs = Math.round(Number(secs));
+    if(!isFinite(secs) || secs < 0) return '';
+    var h = Math.floor(secs/3600), m = Math.floor(secs/60)%60, s = secs%60;
+    return (h ? h + ':' + (m<10?'0':'') : '') + m + ':' + (s<10?'0':'') + s;
+  }
+  // "02:31" (Path and Link save the clock's text) → "2:31"
+  function shownClock(t){ var m = /^(\d+):(\d\d)(?::(\d\d))?$/.exec(String(t||'')); return m ? clock(m[3] ? (+m[1]*3600 + +m[2]*60 + +m[3]) : (+m[1]*60 + +m[2])) : ''; }
+  function num(x){ return typeof x === 'number' && isFinite(x); }
+  function resultText(type, r){
+    var t;
+    switch(type){
+      case 'mini': case 'doku':
+        t = clock(r.s); return t ? 'Solved in ' + t : '';
+      case 'sweep':
+        if(r.o === 'loss') return 'Hit a mine';
+        if(r.o === 'gave') return 'Gave up';
+        t = clock(r.s); return t ? 'Cleared in ' + t : '';
+      case 'path':
+        t = shownClock(r.t) || clock(r.s); return t ? 'Solved in ' + t : '';
+      case 'link':
+        if(r.o === 'loss') return 'Out of mistakes';
+        if(r.o === 'win') return num(r.m) ? (r.m === 0 ? 'Solved, no mistakes' : 'Solved, ' + r.m + ' mistake' + (r.m === 1 ? '' : 's')) : 'Solved';
+        return '';
+      case 'tangle':  return num(r.s) ? r.s + ' points' : '';
+      case 'borders': return num(r.c) ? 'Scored ' + r.c + '/10' : '';
+      case 'reckon':  return num(r.p) ? r.p + ' points' : '';
+    }
+    return '';
+  }
+  function playedState(it, saves){
+    if(!it || !it.id || !it.type) return null;
+    var key = 'digi-' + it.type + '-v1';
+    if(!(key in saves)){ try { saves[key] = JSON.parse(localStorage.getItem(key) || 'null'); } catch(e){ saves[key] = null; } }
+    var s = saves[key];
+    if(!s || typeof s !== 'object') return null;
+    var r = s.done && typeof s.done === 'object' && s.done[it.id];
+    if(r) return { done:true, lost: typeof r === 'object' && (r.o === 'loss' || r.o === 'gave'), text: (typeof r === 'object' && resultText(it.type, r)) || 'Played' };
+    var d = s.days && s.days[it.id];
+    if(it.type === 'tangle' && d && (d.state === 'playing' || d.state === 'suspended')) return { done:false };
+    if((it.type === 'borders' || it.type === 'reckon') && s.cur && s.cur.id === it.id) return { done:false };
+    return null;
+  }
+  function showPlayed(){
+    var byPath = {}, saves = {}, lis = $feed.querySelectorAll('li.puzzle-card');
+    state.items.forEach(function(it){ if(it.kind === 'puzzle') byPath[it.path] = it; });
+    for(var i = 0; i < lis.length; i++){
+      var li = lis[i], a = li.querySelector('a.card'), meta = a && a.querySelector('.meta');
+      if(!a || !meta) continue;
+      // Start from the card as drawn, so a re-check (back from a puzzle) never doubles up.
+      var old = a.querySelectorAll('.played-mark, .card-result');
+      for(var j = 0; j < old.length; j++) old[j].parentNode.removeChild(old[j]);
+      var time = meta.querySelector('.card-time');
+      if(time) time.hidden = false;
+      li.classList.remove('is-played', 'is-started');
+      var st = playedState(byPath[a.getAttribute('href')], saves);
+      if(!st) continue;
+      li.classList.add(st.done ? 'is-played' : 'is-started');
+      a.insertAdjacentHTML('afterbegin', '<span class="played-mark' + (st.done ? '' : ' started') + '" aria-hidden="true">' + (st.done ? CHECK : DOTS) + '</span>');
+      if(time) time.hidden = true;
+      // The words carry the state for screen readers, as part of the card's link.
+      var label = st.done ? st.text : 'In progress';
+      var dot = meta.querySelector('.card-date') ? '<span class="dot card-result">·</span>' : '';
+      meta.insertAdjacentHTML('beforeend', (time ? '' : dot) + '<span class="card-result ' + (st.done ? (st.lost ? 'done lost' : 'done') : 'started') + '">' + esc(label) + '</span>');
+    }
+  }
+  // A puzzle finished in another tab marks its card here too.
+  window.addEventListener('storage', function(e){ if(!e.key || /^digi-[a-z]+-v1$/.test(e.key)) showPlayed(); });
 
   /* ---------- where you were: kept in this history entry ----------
      The card at the top of the screen (by its link) and its offset, not a
@@ -529,6 +612,7 @@
     if(loading || !state.loadedAt) return;
     if(state.day === londonDay() && Date.now() - state.loadedAt < 30*60*1000){
       if(SEC.kind === 'puzzle') showRun();   // a puzzle may have been finished since
+      showPlayed();
       return;
     }
     loading = true;
