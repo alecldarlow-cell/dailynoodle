@@ -106,7 +106,7 @@ test('ECHO-11: the explored map pauses play and does not discover unseen ground 
  const a=await p.evaluate(()=>__dg.state().game);expect(a.seenExit).toBe(false);
  await H.tap(p,p.locator('#map'));await expect(p.locator('#survey')).toBeVisible();const paused=await p.evaluate(()=>__dg.state().game.elapsed);
  await p.evaluate(()=>__dg.step(10));const b=await p.evaluate(()=>__dg.state().game);expect(b.elapsed).toBe(paused);expect(b.visited).toEqual(a.visited);expect(b.seenExit).toBe(false);expect(await p.evaluate(()=>__echoEvents.filter(e=>e.ev==='game_end'))).toHaveLength(0);
- await H.tap(p,p.locator('#mapBack'));expect(await p.evaluate(()=>__dg.state().phase)).toBe('play');expect(phone.errors).toEqual([]);
+ await H.tap(p,p.locator('#mapBack'));expect(await p.evaluate(()=>__dg.state().phase)).toBe('play');await p.locator('#map').focus();await p.keyboard.press('Space');await expect(p.locator('#survey')).toBeVisible();await p.locator('#mapBack').focus();await p.keyboard.press('Space');expect(await p.evaluate(()=>__dg.state().phase)).toBe('play');expect(phone.errors).toEqual([]);
 });
 test('ECHO-12: a legacy v1 expedition resumes without losing stars, collection or position',async({phone})=>{
  await open(phone);const p=phone.p;
