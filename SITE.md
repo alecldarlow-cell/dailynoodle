@@ -146,6 +146,12 @@ in `toolchain/site-sections-and-tracking.md`.
 3. Keep localStorage keys, puzzle ids and file paths stable.
 4. Ship it through a pull request (below), not a push to `main`.
 
+## Echo Cave (Lab, 21 Oct 2026)
+- `reports/2026-10-21-arcade-echo-cave.html`: self-contained portrait exploration game, listed only in Lab through `dn:badge` "In development". Six selectable campaign caves unlock on completion; the daily layout uses a seeded London date. A round is one cave attempt, a level is its campaign cave number (daily: level 6, mode `daily`).
+- Drag to walk, tap Echo (arrows/WASD and Space on desktop). Echoes propagate through connected ground and draw creatures to their origin. Walked ground remains faintly visible. No countdown; stars reward escaping with the relic, all crystals, then all hearts.
+- Save key `digi-echo-cave-v1` holds stars, bests, daily results, settings and an unfinished expedition. Reload offers Continue expedition and opens a new tracked `resume` round; ordinary pause/resume keeps its round. Filenames, slug and save key stay stable on revision.
+- Registered in `tools/tests/browser/games.json`; `echo-cave.spec.js` exercises real objective collection, loss, echo visibility/recharge, listening creatures, saved reload, pause, connected seeded layouts and controls. Physical-phone acceptance remains outstanding while it is in Lab.
+
 ## Site code ships through a pull request (21 Oct 2026, Alec's call)
 - **What:** any change to the site's code: pages (`*.html` at the root, `board.html`, `admin.html`…), `dn-*.js`, `front.*`, `sw.js`, `engines/`, `assets/`, `tools/`, `tools/tests/`, `.github/`, `package*.json`, `SITE.md` and `toolchain/` docs. **Not** puzzle or news content: new or regenerated files in `reports/`, and the scheduled tasks (Daily news, Pinwheel clean-up, Mini clue nights, Link re-edit), keep pushing straight to `main` as before, after their own checks (`node tools/tests/content.js --all` for puzzles). A commit that mixes the two goes through a pull request.
 - **Why:** a push to `main` publishes, and one failing check holds back the whole site. A pull request is tested on GitHub's machines first (the Tests workflow's `regression` job runs the full required suite, `npm test`, on every pull request and never deploys), so a broken change stays off `main`. It is also faster than a full local run: a small cloud workspace can't run the five test groups at once (21 Oct 2026: browsers crashed on 2 CPUs), and `DN_TEST_JOBS=1` takes about 40 minutes.
