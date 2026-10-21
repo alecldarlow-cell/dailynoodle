@@ -14,6 +14,9 @@ test('ECHO-01: guided cave can be won by walking to the real relic and exit; ret
  expect(await p.evaluate(()=>__dg.state().game.gotRelic)).toBe(true);
  expect(await p.evaluate(()=>__dg.state().game.guideStep)).toBe(2);
  await p.evaluate(()=>{const g=__dg.state().game;__dg.walkRoute(__dg.route(g.exit));});
+ // Walking across the doorway must not cut a crystal hunt short.
+ expect(await p.evaluate(()=>__dg.state().game.ended)).toBe(false);
+ await H.tap(p,p.locator('#leave'));
  await expect(p.locator('#resultTitle')).toHaveText('Back to daylight.');
  expect(await p.evaluate(()=>__dg.state().save.tutorial)).toBe(true);
  expect(await p.evaluate(()=>__dg.state().save.stars[0])).toBeGreaterThanOrEqual(1);
@@ -51,7 +54,7 @@ test('ECHO-05: an unfinished expedition round-trips through reload and resumes a
  await open(phone);const p=phone.p;await H.tap(p,p.locator('#play'));await H.tap(p,p.locator('#echo'));
  await p.evaluate(()=>{const g=__dg.state().game;__dg.walkRoute(__dg.route(g.crystals[0]));__dg.damage();__dg.save();});
  const before=await p.evaluate(()=>__dg.state().game);await p.reload();await H.wait(p,500);
- await expect(p.locator('#resumeSaved')).toBeVisible();await H.tap(p,p.locator('#resumeSaved'));
+ await expect(p.locator('#play')).toBeVisible();await H.tap(p,p.locator('#play'));
  const after=await p.evaluate(()=>__dg.state());expect(after.game.p).toEqual(before.p);expect(after.game.hearts).toBe(before.hearts);expect(after.game.crystals.map(c=>c.taken)).toEqual(before.crystals.map(c=>c.taken));expect(after.game.visited).toEqual(before.visited);
  expect(await p.evaluate(()=>__echoEvents.filter(e=>e.ev==='game_start').map(e=>e.x.start))).toEqual(['resume']);expect(phone.errors).toEqual([]);
 });
@@ -87,4 +90,49 @@ test('ECHO-08: drag input moves and releases cleanly; resize keeps all controls 
  await H.tap(p,p.locator('#resume'));
  for(const size of[{width:320,height:568},{width:680,height:780},{width:780,height:360}]){await p.setViewportSize(size);await H.wait(p,250);expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);const r=await p.locator('#echo').boundingBox();expect(r.x).toBeGreaterThanOrEqual(0);expect(r.y+r.height).toBeLessThanOrEqual(size.height);expect(r.width).toBeGreaterThanOrEqual(44);}
  expect(phone.errors).toEqual([]);
+});
+
+test('ECHO-09: walking into a waiting creature costs one heart, then grants recovery time',async({phone})=>{
+ await open(phone);const p=phone.p;
+ const result=await p.evaluate(()=>{__dg.launch(1);const e=__dg.state().game.enemies[0];__dg.fixture({invul:0,enemy:{wait:10,stun:0}});__dg.walkRoute(__dg.route(e));const a=__dg.state().game;__dg.move(1,0,.05);const b=__dg.state().game;return{a,b};});
+ expect(result.a.hearts).toBe(2);expect(result.a.invul).toBeGreaterThan(0);expect(result.b.hearts).toBe(2);expect(phone.errors).toEqual([]);
+});
+test('ECHO-10: moving into a passing echo hears it once, without repeated retargeting',async({phone})=>{
+ await open(phone);const result=await phone.p.evaluate(()=>{__dg.launch(1);const g=__dg.state().game,path=__dg.route(g.relic),far=path[Math.min(10,path.length-1)],near=path[1];__dg.fixture({enemy:{...far,target:far,wait:10,stun:0}});__dg.echo();__dg.step(.6);const before=__dg.state().game.pulses[0].heard[0];__dg.fixture({enemy:{...near,target:far,wait:10}});__dg.hear();const a=__dg.state().game;__dg.fixture({enemy:{target:far}});__dg.hear();const b=__dg.state().game;return{before,a,b,far};});
+ expect(result.before).toBe(false);expect(result.a.pulses[0].heard[0]).toBe(true);expect(result.a.enemies[0].alert).toBeGreaterThan(0);expect(result.a.enemies[0].target).toEqual(result.a.start);expect(result.b.enemies[0].target).toEqual(result.far);expect(phone.errors).toEqual([]);
+});
+test('ECHO-11: the explored map pauses play and does not discover unseen ground or exit',async({phone})=>{
+ await open(phone);const p=phone.p;await H.tap(p,p.locator('#play'));
+ const a=await p.evaluate(()=>__dg.state().game);expect(a.seenExit).toBe(false);
+ await H.tap(p,p.locator('#map'));await expect(p.locator('#survey')).toBeVisible();const paused=await p.evaluate(()=>__dg.state().game.elapsed);
+ await p.evaluate(()=>__dg.step(10));const b=await p.evaluate(()=>__dg.state().game);expect(b.elapsed).toBe(paused);expect(b.visited).toEqual(a.visited);expect(b.seenExit).toBe(false);expect(await p.evaluate(()=>__echoEvents.filter(e=>e.ev==='game_end'))).toHaveLength(0);
+ await H.tap(p,p.locator('#mapBack'));expect(await p.evaluate(()=>__dg.state().phase)).toBe('play');expect(phone.errors).toEqual([]);
+});
+test('ECHO-12: a legacy v1 expedition resumes without losing stars, collection or position',async({phone})=>{
+ await open(phone);const p=phone.p;
+ const old=await p.evaluate(()=>{__dg.launch(1);const g=__dg.state().game;__dg.walkRoute(__dg.route(g.crystals[0]));__dg.save();const s=__dg.state().save;s.stars[0]=2;s.bests[0]={stars:2,score:900,secs:63,echoes:4,hearts:2};for(const k of['cooldown','invul','heard','facing','seenRelic','seenExit','seenCrystals','pulses'])delete s.current[k];for(const e of s.current.enemies)for(const k of['route','patrol','stun'])delete e[k];localStorage.setItem('digi-echo-cave-v1',JSON.stringify(s));return s;});
+ await phone.ctx.addInitScript(old=>localStorage.setItem('digi-echo-cave-v1',JSON.stringify(old)),old);await p.reload();await H.wait(p,500);await H.tap(p,p.locator('#play'));const restored=await p.evaluate(()=>__dg.state());expect(restored.save.stars[0]).toBe(2);expect(restored.save.bests[0].secs).toBe(63);expect(restored.game.p).toEqual(old.current.p);expect(restored.game.hearts).toBe(old.current.hearts);expect(restored.game.enemies).toHaveLength(old.current.enemies.length);expect(restored.game.crystals.map(c=>c.taken)).toEqual(old.current.taken);expect(phone.errors).toEqual([]);
+});
+test('ECHO-13: save round-trip retains recharge, active sound waves and creature state',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);__dg.echo();__dg.step(.6);__dg.fixture({enemy:{stun:1.1,wait:1.7,patrol:9},invul:1.4});const a=__dg.snapshot(),g=__dg.restoreData(JSON.parse(JSON.stringify(a)));return{a,b:{cooldown:g.cooldown,invul:g.invul,pulses:g.pulses.map(p=>({x:p.x,y:p.y,t:p.t,heard:p.heard})),enemies:g.enemies.map(e=>({x:e.x,y:e.y,target:e.target,alert:e.alert,wait:e.wait,stun:e.stun,patrol:e.patrol,route:e.route}))}};});
+ expect(r.b.cooldown).toBe(r.a.cooldown);expect(r.b.invul).toBe(r.a.invul);expect(r.b.pulses).toEqual(r.a.pulses);expect(r.b.enemies).toEqual(r.a.enemies);expect(phone.errors).toEqual([]);
+});
+test('ECHO-14: retrying yesterday’s daily preserves its date; a fresh daily uses the new London day',async({phone})=>{
+ await open(phone);const p=phone.p;await p.clock.setFixedTime(new Date('2026-10-25T23:59:58Z'));await H.tap(p,p.locator('#daily'));const a=await p.evaluate(()=>__dg.state().game);expect(a.date).toBe('2026-10-25');
+ await p.clock.setFixedTime(new Date('2026-10-26T00:00:03Z'));await H.tap(p,p.locator('#pause'));await H.tap(p,p.locator('#restart'));let b=await p.evaluate(()=>__dg.state().game);expect(b.date).toBe(a.date);expect(b.tiles).toEqual(a.tiles);
+ await p.evaluate(()=>__dg.end(true));await H.tap(p,p.locator('#again'));expect(await p.evaluate(()=>__dg.state().game.date)).toBe(a.date);
+ await p.evaluate(()=>__dg.end(true));await H.tap(p,p.locator('#resultHome'));await H.tap(p,p.locator('#daily'));expect(await p.evaluate(()=>__dg.state().game.date)).toBe('2026-10-26');expect(phone.errors).toEqual([]);
+});
+test('ECHO-15: a near-miss at a narrow entrance slides into it without crossing a wall',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(0);const g=__dg.state().game,f=(x,y)=>g.tiles[y*g.w+x]===1;let door=null;for(let y=1;y<g.h-1&&!door;y++)for(let x=2;x<g.w-1&&!door;x++)if(f(x,y)&&!f(x,y+1)&&!f(x,y-1)&&f(x-1,y)&&f(x-1,y+1)&&f(x-1,y-1)&&f(x+1,y))door={x,y};if(!door)return{missing:true};const start={x:door.x-.24,y:door.y+.8};__dg.fixture({p:start});__dg.move(1,0,.6);const a=__dg.state().game.p;__dg.move(0,1,3);const b=__dg.state().game.p;return{door,start,a,b,inside:f(Math.floor(b.x),Math.floor(b.y))};});
+ expect(r.missing).not.toBe(true);expect(r.a.x).toBeGreaterThan(r.door.x+.3);expect(Math.abs(r.a.y-r.door.y-.5)).toBeLessThan(.28);expect(r.inside).toBe(true);expect(phone.errors).toEqual([]);
+});
+test('ECHO-16: explored floor does not reveal a creature’s live position in darkness',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const g=__dg.state().game,e=g.enemies[0];__dg.fixture({enemy:{wait:100,stun:100}});__dg.walkRoute(__dg.route(e));__dg.walkRoute(__dg.route(g.start));return{memory:__dg.visibility(e),live:__dg.visibility(e,false)};});
+ expect(r.memory).toBeGreaterThan(0);expect(r.live).toBe(0);expect(phone.errors).toEqual([]);
+});
+test('ECHO-17: an older tab cannot erase a cave completed in another tab',async({phone})=>{
+ await open(phone);const a=phone.p;await H.tap(a,a.locator('#play'));
+ const b=await phone.ctx.newPage();await b.clock.install({time:new Date('2026-10-19T12:00:00+01:00')});await b.goto('https://dailynoodle.co.uk/'+FILE);await H.tap(b,b.locator('#play'));await b.evaluate(()=>__dg.end(true));expect(await b.evaluate(()=>__dg.state().save.stars[0])).toBeGreaterThan(0);
+ await a.evaluate(()=>__dg.save());const stars=await a.evaluate(()=>JSON.parse(localStorage.getItem('digi-echo-cave-v1')).stars[0]);expect(stars).toBeGreaterThan(0);expect(await a.evaluate(()=>__dg.state().save.stars[0])).toBe(stars);await b.close();expect(phone.errors).toEqual([]);
 });
