@@ -49,11 +49,16 @@
   function n(v) { v = Number(v); return isFinite(v) ? v : null; }
   function fmt(v) { try { return v.toLocaleString('en-GB'); } catch (e) { return String(v); } }
 
+  /* Lighthouse Keeper's headlands, in order (COAST in the game file; keep in step) */
+  var LK_COAST = ['Hunstanton', 'Holme', 'Brancaster', 'Wells', 'Blakeney Point', 'Sheringham', 'Cromer', 'Mundesley', 'Happisburgh', 'Winterton', 'Gorleston', 'Lowestoft Ness'];
   function line(x) {
     var parts = [], lv = n(x.level), sc = n(x.score), st = n(x.stars);
     if (SLUG === 'archipelago') {
       if (x.win && lv) parts.push('level ' + lv + ' won' + (n(x.turns) ? ' in ' + n(x.turns) + (n(x.turns) === 1 ? ' turn' : ' turns') : ''));
       else if (lv) parts.push('level ' + lv);
+    } else if (SLUG === 'lighthouse-keeper') {
+      // the game's own names: coast headlands 1-12, then "Open sea N" (level 99 = Open sea 87)
+      if (lv) parts.push(lv <= LK_COAST.length ? LK_COAST[lv - 1] : 'Open sea ' + (lv - LK_COAST.length));
     } else if (SLUG === 'ancient-cities') {
       if (sc !== null) parts.push(fmt(sc) + ' pts');
       if (n(x.margin) !== null) parts.push(x.win ? 'won by ' + Math.abs(n(x.margin)) : 'lost by ' + Math.abs(n(x.margin)));
