@@ -16,6 +16,7 @@ The game remains in Lab pending physical-phone acceptance.
 | Darkness | Remembered floor also makes live creatures visible at distant visited positions | Creature visibility uses current lamplight/echoes only; fixed discovered landmarks remain remembered |
 | Sound feedback | Investigation is difficult to read, and nearby warnings can point through walls | Source markers and a distinct creature alert glyph; footstep warnings follow connected passage distance |
 | Resume | Reload forgets recharge, waves and parts of creature behaviour | Optional v1 fields retain cooldown, waves/heard flags, invulnerability, routes, patrol/search/stun and discoveries |
+| Keyboard buttons | Space was intercepted by the echo shortcut even when a button was focused | Focused buttons keep native Space activation; map open/close is checked with the keyboard |
 | Returning home | A fresh-run button is more prominent than resuming | The main button resumes the unfinished expedition, otherwise continues to the latest unlocked cave |
 | Multiple tabs | An older tab can overwrite newly earned stars and records | Writes merge stars and best records against current storage; there remains one unfinished-expedition slot |
 | Daily cave | Retrying after London midnight silently generates a different cave | Retry keeps the attempt's date; choosing a fresh Daily uses the current London date |
