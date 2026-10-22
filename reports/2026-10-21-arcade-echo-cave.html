@@ -326,7 +326,7 @@ function makeTerrain(g){
  a.fillStyle='#36555b';for(let y=1;y<g.h-1;y++)for(let x=1;x<g.w-1;x++)if(!floor(g,x,y))for(const[dx,dy]of[[-1,-1],[1,-1],[-1,1],[1,1]])if(floor(g,x+dx,y)&&floor(g,x,y+dy)&&floor(g,x+dx,y+dy)){
   const cx=(x+(dx>0?1:0))*u,cy=(y+(dy>0?1:0))*u;a.beginPath();a.moveTo(cx,cy);a.lineTo(cx-dx*u*.28,cy);a.lineTo(cx,cy-dy*u*.28);a.closePath();a.fill();
  }
- const mask=document.createElement('canvas');mask.width=g.w;mask.height=g.h;const layer=document.createElement('canvas');layer.width=c.width;layer.height=c.height;return{c,mask,layer,image:mask.getContext('2d').createImageData(g.w,g.h),u,at:-Infinity};
+ const mask=document.createElement('canvas');mask.width=g.w;mask.height=g.h;return{c,mask,image:mask.getContext('2d').createImageData(g.w,g.h),u,at:-Infinity};
 }
 const echoFields=new WeakMap();
 function echoField(g,p){
@@ -343,6 +343,7 @@ function echoField(g,p){
  }echoFields.set(p,field);return field;
 }
 function drawEchoes(g){
+ if(!g.pulses.some(p=>p.t<=3.3))return; // nothing travelling: skip the ripple raster
  const u=12;if(!terrain.wave){terrain.wave=document.createElement('canvas');terrain.wave.width=g.w*u;terrain.wave.height=g.h*u;terrain.waveImage=terrain.wave.getContext('2d').createImageData(g.w*u,g.h*u);terrain.waveAt=-Infinity;}
  if(g.elapsed-terrain.waveAt>=.05||g.elapsed<terrain.waveAt){
   terrain.waveAt=g.elapsed;const data=terrain.waveImage.data;data.fill(0);
@@ -361,10 +362,13 @@ function draw(){
  const worldW=g.w*T,worldH=g.h*T;ox=worldW<=W?(W-worldW)/2:clamp(W/2-cam.x*T,W-worldW-8,8);oy=worldH<=H?(H-worldH)/2:clamp(H/2-cam.y*T,H-worldH-8,8);
  const vis=new Float32Array(g.tiles.length);for(let k=0;k<g.tiles.length;k++)if(g.tiles[k])vis[k]=visibility(g,k);
  // Cache soft lighting at 20 Hz; walking, camera and creatures still render every frame.
- if(G.elapsed-terrain.at>=.05||G.elapsed<terrain.at){terrain.at=G.elapsed;
- for(let k=0;k<g.tiles.length;k++){let v=vis[k];if(!g.tiles[k]){const x=k%g.w,y=Math.floor(k/g.w);for(const[dx,dy]of DIRS){const n=cell(g,x+dx,y+dy);if(n>=0)v=Math.max(v,vis[n]*.72);}}const j=k*4;terrain.image.data[j]=terrain.image.data[j+1]=terrain.image.data[j+2]=255;terrain.image.data[j+3]=Math.round(v*255);}
- terrain.mask.getContext('2d').putImageData(terrain.image,0,0);const layer=terrain.layer.getContext('2d');layer.globalCompositeOperation='source-over';layer.clearRect(0,0,terrain.c.width,terrain.c.height);layer.drawImage(terrain.c,0,0);layer.globalCompositeOperation='destination-in';layer.imageSmoothingEnabled=true;layer.drawImage(terrain.mask,0,0,terrain.c.width,terrain.c.height);layer.globalCompositeOperation='source-over';}
- ctx.drawImage(terrain.layer,ox,oy,worldW,worldH);drawEchoes(g);
+ // Darkness is a tiny per-tile mask in the background colour, upscaled smoothly over the
+ // cached stone. It is the same blend as masking the stone, without recompositing a
+ // full-size layer at every refresh (the main per-frame cost on large caves).
+ if(G.elapsed-terrain.at>=.05||G.elapsed<terrain.at){terrain.at=G.elapsed;const data=terrain.image.data;
+ for(let k=0;k<g.tiles.length;k++){let v=vis[k];if(!g.tiles[k]){const x=k%g.w,y=Math.floor(k/g.w);for(const[dx,dy]of DIRS){const n=cell(g,x+dx,y+dy);if(n>=0)v=Math.max(v,vis[n]*.72);}}const j=k*4;data[j]=11;data[j+1]=20;data[j+2]=27;data[j+3]=Math.round((1-v)*255);}
+ terrain.mask.getContext('2d').putImageData(terrain.image,0,0);}
+ ctx.drawImage(terrain.c,ox,oy,worldW,worldH);ctx.save();ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(terrain.mask,ox,oy,worldW,worldH);ctx.restore();drawEchoes(g);
  ctx.save();ctx.translate(ox,oy);
  const objectVisible=p=>{const k=cell(g,p.x,p.y);return k<0?0:vis[k];};
  const ev=objectVisible(g.exit);if(ev>.08||g.seenExit){ctx.save();ctx.globalAlpha=Math.max(ev,g.seenExit?.34:0);const x=g.exit.x*T,y=g.exit.y*T;ctx.strokeStyle=g.gotRelic?'#e5efd2':'#9fc3bd';ctx.lineWidth=2;ctx.fillStyle=g.gotRelic?'#95bfa544':'#58777833';ctx.beginPath();ctx.roundRect(x-T*.37,y-T*.45,T*.74,T*.9,[T*.3,T*.3,0,0]);ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(x,y+T*.17);ctx.lineTo(x,y-T*.16);ctx.moveTo(x-T*.12,y-T*.03);ctx.lineTo(x,y-T*.16);ctx.lineTo(x+T*.12,y-T*.03);ctx.stroke();ctx.restore();}
