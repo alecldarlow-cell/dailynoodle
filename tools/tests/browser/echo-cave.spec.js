@@ -173,3 +173,11 @@ test('ECHO-25: a creature wedged off-centre in a rock doorway works itself free'
  await open(phone);const r=await phone.p.evaluate(()=>{const out=[];for(const p of [{x:6.26,y:3.31},{x:7.5,y:1.5}]){__dg.launch(4);const e=G.enemies[0];G.p={...p};G.invul=99;Object.assign(e,{x:4.157193872824944,y:2.821058060653488,chase:0,alert:0,wait:0,stun:0,reaction:0,route:[],target:{...p}});const start={x:e.x,y:e.y};let solid=0;for(let i=0;i<180;i++){update(1/60);if(!canStand(G,e))solid++;}out.push({moved:Math.hypot(e.x-start.x,e.y-start.y),solid});}return out;});
  for(const x of r){expect(x.moved).toBeGreaterThan(.5);expect(x.solid).toBe(0);}expect(phone.errors).toEqual([]);
 });
+
+test('ECHO-26: Crystal Chambers has a second doorway out of its relic room; seeded placements are unchanged',async({phone})=>{
+ // Alec's call (22 Oct 2026 studio review): the relic room was a one-door dead end.
+ await open(phone);const r=await phone.p.evaluate(()=>{const g=__dg.build(4),f=(x,y)=>g.tiles[y*g.w+x]===1;return{door:f(6,4),relic:g.relic,crystals:g.crystals.map(c=>[c.x,c.y]),enemies:g.enemies.map(e=>[e.x,e.y])};});
+ expect(r.door).toBe(true);expect(r.relic).toEqual({x:6.5,y:2.5});
+ expect(r.crystals).toEqual([[14.5,18.5],[14.5,10.5],[6.5,10.5],[2.5,2.5]]);expect(r.enemies).toEqual([[14.5,2.5],[18.5,6.5]]);
+ expect(phone.errors).toEqual([]);
+});
