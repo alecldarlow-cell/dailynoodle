@@ -182,7 +182,7 @@ function showHome(){clearInput();if(G&&!G.ended)saveRun();phase='home';rnd.armed
 function unlocked(){let n=0;while(n<5&&S.stars[n]>0)n++;return n;}
 function starRow(stars){return '<span class="starrow" aria-label="'+stars+' of 3 stars">'+Array.from({length:3},(_,i)=>'<svg viewBox="0 0 24 24" aria-hidden="true"'+(i<stars?' class="earned"':'')+'><path d="M12 2l3 6.5 7 1-5 5 1.2 7-6.2-3.3L5.8 22 7 14.5l-5-5 7-1z"/></svg>').join('')+'</span>';}
 function renderHome(){
- const level=unlocked(),current=restore(S.current);$('play').innerHTML=(current?'Continue expedition':level?'Continue the journey':'Enter the cave')+' <span aria-hidden="true">↗</span>';$('otherCaves').hidden=!current;$('daily').textContent='Daily cave';
+ const level=unlocked(),current=restore(S.current);$('play').innerHTML=(current?'Continue expedition':level?'Continue the journey':'Enter the cave')+' <span aria-hidden="true">↗</span>';$('otherCaves').hidden=!current;const today=S.daily[londonDay()];$('daily').innerHTML=today?'Daily cave '+starRow(today.stars):'Daily cave';$('daily').setAttribute('aria-label',today?'Daily cave, played today: '+today.stars+' of 3 stars':'Daily cave');
  $('caves').innerHTML=CAVES.map((c,i)=>{const best=S.bests[i];return `<button class="cave" data-cave="${i}" ${i>level?'disabled':''}><span class="num">CAVE ${String(i+1).padStart(2,'0')}</span><b>${c.name}</b><span class="stars">${i>level?'Complete the previous cave':starRow(S.stars[i])}</span>${best?`<span class="record">Best ${Math.floor(best.secs/60)}:${String(best.secs%60).padStart(2,'0')} · ${best.echoes} echoes</span>`:''}</button>`;}).join('');
 }
 function launch(index=0,mode='campaign',how='new',saved=null,date=null){
