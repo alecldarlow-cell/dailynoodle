@@ -166,3 +166,10 @@ test('ECHO-24: retreating during the warning escapes the lamp and pursuit stays 
  await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0];G.p={x:e.x-1.7,y:e.y};e.wait=0;G.invul=0;let solid=0;__dg.step(.6,-1,0);const lost=!seesPlayer(e),hearts=G.hearts;const target={...e.target};G.p={...G.start};for(let i=0;i<480;i++){update(1/60);if(!canStand(G,e))solid++;}return{lost,hearts,solid,target,chase:e.chase};});
  expect(r.lost).toBe(true);expect(r.hearts).toBe(3);expect(r.solid).toBe(0);expect(r.chase).toBe(0);expect(phone.errors).toEqual([]);
 });
+
+test('ECHO-25: a creature wedged off-centre in a rock doorway works itself free',async({phone})=>{
+ // Pose found by the Oct 2026 review bots: The Crystal Chambers' relic-room doorway, where both
+ // the next route step and the move back to the cell centre were blocked, freezing the creature.
+ await open(phone);const r=await phone.p.evaluate(()=>{const out=[];for(const p of [{x:6.26,y:3.31},{x:7.5,y:1.5}]){__dg.launch(4);const e=G.enemies[0];G.p={...p};G.invul=99;Object.assign(e,{x:4.157193872824944,y:2.821058060653488,chase:0,alert:0,wait:0,stun:0,reaction:0,route:[],target:{...p}});const start={x:e.x,y:e.y};let solid=0;for(let i=0;i<180;i++){update(1/60);if(!canStand(G,e))solid++;}out.push({moved:Math.hypot(e.x-start.x,e.y-start.y),solid});}return out;});
+ for(const x of r){expect(x.moved).toBeGreaterThan(.5);expect(x.solid).toBe(0);}expect(phone.errors).toEqual([]);
+});

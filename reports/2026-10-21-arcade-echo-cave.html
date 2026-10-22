@@ -268,7 +268,14 @@ function enemyStep(e,dt){
  }
  const p=e.route[0],d=dist(e,p),amount=Math.min(d,speed*dt),next=d>.001?{x:e.x+(p.x-e.x)/d*amount,y:e.y+(p.y-e.y)/d*amount}:{...p};
  if(canStand(G,next)){e.x=next.x;e.y=next.y;if(d<=amount+.001)e.route.shift();}
- else{const centre={x:Math.floor(e.x)+.5,y:Math.floor(e.y)+.5},n=dist(e,centre);if(n>.001){const a=Math.min(n,speed*dt),q={x:e.x+(centre.x-e.x)/n*a,y:e.y+(centre.y-e.y)/n*a};if(canStand(G,q)){e.x=q.x;e.y=q.y;}}}
+ else{
+  // Blocked by a rock corner: slide along one axis towards the step, then ease back to the
+  // cell centre. If every move is blocked (an off-centre pose left by a direct chase), settle
+  // on the centre, so a creature can never freeze in a doorway.
+  const go=q=>canStand(G,q)?(e.x=q.x,e.y=q.y,true):false,a=Math.min(d,speed*dt),sx=clamp(p.x-e.x,-a,a),sy=clamp(p.y-e.y,-a,a);
+  if(Math.abs(sx)>.001&&go({x:e.x+sx,y:e.y})||Math.abs(sy)>.001&&go({x:e.x,y:e.y+sy}))return;
+  const centre={x:Math.floor(e.x)+.5,y:Math.floor(e.y)+.5},n=dist(e,centre);
+  if(n>.001){const b=Math.min(n,speed*dt);if(!go({x:e.x+(centre.x-e.x)/n*b,y:e.y+(centre.y-e.y)/n*b}))go(centre);}}
 }
 function update(dt){if(phase!=='play'||!G||G.ended)return;rndStart();rnd.secs+=dt;G.elapsed+=dt;G.cooldown=Math.max(0,G.cooldown-dt);G.invul=Math.max(0,G.invul-dt);let dx=joy.dx,dy=joy.dy;if(keys.has('ArrowLeft')||keys.has('a'))dx--;if(keys.has('ArrowRight')||keys.has('d'))dx++;if(keys.has('ArrowUp')||keys.has('w'))dy--;if(keys.has('ArrowDown')||keys.has('s'))dy++;movePlayer(dx,dy,dt);if(G.ended)return;
  for(const pulse of G.pulses){pulse.t+=dt;for(const [i,e]of G.enemies.entries()){const k=cell(G,e.x,e.y),d=pulse.dist[k];if(!pulse.heard[i]&&d>=0&&pulse.t>=d/8&&d<=18){pulse.heard[i]=true;if(e.stun>0||seesPlayer(e))continue;e.chase=0;e.reaction=0;e.target={x:Math.floor(pulse.x)+.5,y:Math.floor(pulse.y)+.5};e.route=routeTo(G,e,e.target);e.wait=0;e.alert=18;if(!G.heard){G.heard=true;notice('It heard you. Move away from your echo.',4);}}}}
