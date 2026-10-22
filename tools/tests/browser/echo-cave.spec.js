@@ -98,7 +98,7 @@ test('ECHO-09: walking into a waiting creature costs one heart, then grants reco
  expect(result.a.hearts).toBe(2);expect(result.a.invul).toBeGreaterThan(0);expect(result.b.hearts).toBe(2);expect(phone.errors).toEqual([]);
 });
 test('ECHO-10: moving into a passing echo hears it once, without repeated retargeting',async({phone})=>{
- await open(phone);const result=await phone.p.evaluate(()=>{__dg.launch(1);const g=__dg.state().game,path=__dg.route(g.relic),far=path[Math.min(10,path.length-1)],near=path[1];__dg.fixture({enemy:{...far,target:far,wait:10,stun:0}});__dg.echo();__dg.step(.6);const before=__dg.state().game.pulses[0].heard[0];__dg.fixture({enemy:{...near,target:far,wait:10}});__dg.hear();const a=__dg.state().game;__dg.fixture({enemy:{target:far}});__dg.hear();const b=__dg.state().game;return{before,a,b,far};});
+ await open(phone);const result=await phone.p.evaluate(()=>{__dg.launch(1);const g=__dg.state().game,path=__dg.route(g.relic),far=path[Math.min(10,path.length-1)],near=path[2];__dg.fixture({enemy:{...far,target:far,wait:10,stun:0}});__dg.echo();__dg.step(.6);const before=__dg.state().game.pulses[0].heard[0];__dg.fixture({enemy:{...near,target:far,wait:10}});__dg.hear();const a=__dg.state().game;__dg.fixture({enemy:{target:far}});__dg.hear();const b=__dg.state().game;return{before,a,b,far};});
  expect(result.before).toBe(false);expect(result.a.pulses[0].heard[0]).toBe(true);expect(result.a.enemies[0].alert).toBeGreaterThan(0);expect(result.a.enemies[0].target).toEqual(result.a.start);expect(result.b.enemies[0].target).toEqual(result.far);expect(phone.errors).toEqual([]);
 });
 test('ECHO-11: the explored map pauses play and does not discover unseen ground or exit',async({phone})=>{
@@ -114,7 +114,7 @@ test('ECHO-12: a legacy v1 expedition resumes without losing stars, collection o
  await phone.ctx.addInitScript(old=>localStorage.setItem('digi-echo-cave-v1',JSON.stringify(old)),old);await p.reload();await H.wait(p,500);await H.tap(p,p.locator('#play'));const restored=await p.evaluate(()=>__dg.state());expect(restored.save.stars[0]).toBe(2);expect(restored.save.bests[0].secs).toBe(63);expect(restored.game.p).toEqual(old.current.p);expect(restored.game.hearts).toBe(old.current.hearts);expect(restored.game.enemies).toHaveLength(old.current.enemies.length);expect(restored.game.crystals.map(c=>c.taken)).toEqual(old.current.taken);expect(phone.errors).toEqual([]);
 });
 test('ECHO-13: save round-trip retains recharge, active sound waves and creature state',async({phone})=>{
- await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);__dg.echo();__dg.step(.6);__dg.fixture({enemy:{stun:1.1,wait:1.7,patrol:9},invul:1.4});const a=__dg.snapshot(),g=__dg.restoreData(JSON.parse(JSON.stringify(a)));return{a,b:{cooldown:g.cooldown,invul:g.invul,pulses:g.pulses.map(p=>({x:p.x,y:p.y,t:p.t,heard:p.heard})),enemies:g.enemies.map(e=>({x:e.x,y:e.y,target:e.target,alert:e.alert,wait:e.wait,stun:e.stun,patrol:e.patrol,route:e.route}))}};});
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);__dg.echo();__dg.step(.6);__dg.fixture({enemy:{stun:1.1,wait:1.7,patrol:9,chase:2.3,reaction:.2,repath:.1},invul:1.4});const a=__dg.snapshot(),g=__dg.restoreData(JSON.parse(JSON.stringify(a)));return{a,b:{cooldown:g.cooldown,invul:g.invul,pulses:g.pulses.map(p=>({x:p.x,y:p.y,t:p.t,heard:p.heard})),enemies:g.enemies.map(e=>({x:e.x,y:e.y,target:e.target,alert:e.alert,wait:e.wait,stun:e.stun,patrol:e.patrol,chase:e.chase,reaction:e.reaction,repath:e.repath,route:e.route}))}};});
  expect(r.b.cooldown).toBe(r.a.cooldown);expect(r.b.invul).toBe(r.a.invul);expect(r.b.pulses).toEqual(r.a.pulses);expect(r.b.enemies).toEqual(r.a.enemies);expect(phone.errors).toEqual([]);
 });
 test('ECHO-14: retrying yesterday’s daily preserves its date; a fresh daily uses the new London day',async({phone})=>{
@@ -135,4 +135,34 @@ test('ECHO-17: an older tab cannot erase a cave completed in another tab',async(
  await open(phone);const a=phone.p;await H.tap(a,a.locator('#play'));
  const b=await phone.ctx.newPage();await b.clock.install({time:new Date('2026-10-19T12:00:00+01:00')});await b.goto('https://dailynoodle.co.uk/'+FILE);await H.tap(b,b.locator('#play'));await b.evaluate(()=>__dg.end(true));expect(await b.evaluate(()=>__dg.state().save.stars[0])).toBeGreaterThan(0);
  await a.evaluate(()=>__dg.save());const stars=await a.evaluate(()=>JSON.parse(localStorage.getItem('digi-echo-cave-v1')).stars[0]);expect(stars).toBeGreaterThan(0);expect(await a.evaluate(()=>__dg.state().save.stars[0])).toBe(stars);await b.close();expect(phone.errors).toEqual([]);
+});
+
+test('ECHO-18: shallow wall contact carries walking speed along rock without crossing it',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(0);let wall=null;for(let y=1;y<G.h-1&&!wall;y++)for(let x=1;x<G.w-2&&!wall;x++)if([0,1].every(i=>floor(G,x+i,y)&&!floor(G,x+i,y-1)))wall={x,y};if(!wall)return{missing:true};const start={x:wall.x+.35,y:wall.y+.231};G.p={...start};const points=[];for(let i=0;i<24;i++){movePlayer(1,-.35,1/60);points.push({...G.p});}return{start,end:G.p,points,valid:points.every(p=>canStand(G,p))};});
+ expect(r.missing).not.toBe(true);expect(r.valid).toBe(true);expect(r.end.x-r.start.x).toBeGreaterThan(.98);expect(Math.abs(r.end.y-r.start.y)).toBeLessThan(.08);expect(phone.errors).toEqual([]);
+});
+test('ECHO-19: diagonal rock cuts are passable while the solid body of the wall remains blocked',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(0);let corner=null;for(let y=1;y<G.h-1&&!corner;y++)for(let x=1;x<G.w-1&&!corner;x++)if(!floor(G,x,y)&&floor(G,x-1,y)&&floor(G,x,y-1)&&floor(G,x-1,y-1))corner={x,y};if(!corner)return{missing:true};const p={x:corner.x-.025,y:corner.y-.025};return{cut:walkable(G,corner.x+.1,corner.y+.1),solid:walkable(G,corner.x+.3,corner.y+.3),fits:canStand(G,p),oldSquareWouldBlock:!floor(G,p.x+.23,p.y+.23)};});
+ expect(r.missing).not.toBe(true);expect(r.cut).toBe(true);expect(r.solid).toBe(false);expect(r.fits).toBe(true);expect(r.oldSquareWouldBlock).toBe(true);expect(phone.errors).toEqual([]);
+});
+test('ECHO-20: entering lamplight triggers a warned chase and standing still gets caught',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0];G.p={x:e.x-1.5,y:e.y};e.wait=10;G.invul=0;const start={x:e.x,y:e.y};__dg.step(.2);const warning={reaction:e.reaction,chase:e.chase,x:e.x,y:e.y,notice:document.querySelector('#notice span').textContent};__dg.step(.9);return{start,warning,hearts:G.hearts,enemy:{...e}};});
+ expect(r.warning.chase).toBeGreaterThan(0);expect(r.warning.reaction).toBeGreaterThan(0);expect(r.warning.x).toBe(r.start.x);expect(r.warning.notice).toContain('Spotted');expect(r.hearts).toBe(2);expect(phone.errors).toEqual([]);
+});
+test('ECHO-21: rock blocks detection and a lost target is not tracked through a corner',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0];let pair=null;for(let a=0;a<G.tiles.length&&!pair;a++)if(G.tiles[a])for(let b=a+1;b<G.tiles.length&&!pair;b++)if(G.tiles[b]){const p={x:a%G.w+.5,y:Math.floor(a/G.w)+.5},q={x:b%G.w+.5,y:Math.floor(b/G.w)+.5};if(dist(p,q)<2.3&&!lineOfSight(G,p,q))pair={p,q};}G.p=pair.p;Object.assign(e,pair.q,{chase:0,alert:0,wait:10,stun:0});__dg.step(.1);const hidden=e.chase;const last={...pair.p};e.target=last;e.route=routeTo(G,e,last);e.chase=4;e.alert=18;e.wait=0;__dg.step(.2);const target={...e.target};return{hidden,last,target,player:G.p};});
+ expect(r.hidden).toBe(0);expect(r.target).toEqual(r.last);expect(phone.errors).toEqual([]);
+});
+test('ECHO-22: an echo can distract a pursuer after sight is broken, but cannot override a visible player',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0],route=__dg.route(e);const origin=route[route.length-4];G.p={...origin};__dg.echo();G.p={x:e.x-1.4,y:e.y};__dg.step(.2);const visible={chase:e.chase,target:{...e.target},p:{...G.p}};let pair=null;for(const p of G.rooms)for(const q of G.rooms)if(!pair&&dist(p,q)>3&&dist(p,q)<8&&!lineOfSight(G,p,q)&&routeTo(G,q,p).length<12)pair={p,q};G.p={...pair.p};Object.assign(e,pair.q,{chase:4,stun:0,wait:0,target:{...pair.q},route:[],alert:18});G.pulses=[];G.cooldown=0;__dg.echo();const arrival=G.pulses[0].dist[cell(G,e.x,e.y)]/8;__dg.step(arrival+.12);return{visible,chase:e.chase,target:e.target,source:pair.p};});
+ expect(r.visible.chase).toBeGreaterThan(0);expect(r.visible.target).toEqual(r.visible.p);expect(r.chase).toBe(0);expect(r.target).toEqual(r.source);expect(phone.errors).toEqual([]);
+});
+test('ECHO-23: echo ripples travel along passages, stay off rock, and offer a non-moving reduced-motion wash',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(0);__dg.echo();const p=G.pulses[0],sample=(point,t)=>{p.t=t;G.elapsed=t;terrain.waveAt=-Infinity;draw();const u=terrain.wave.width/G.w,x=Math.floor(point.x*u),y=Math.floor(point.y*u);return terrain.waveImage.data[(y*G.w*u+x)*4+3];};draw();const route=__dg.route(G.relic),near=route[1],far=route[5],rock={x:.5,y:.5};const early={near:sample(near,(p.dist[cell(G,near.x,near.y)]+.05)/8),far:sample(far,.2),rock:sample(rock,.2)};const later=sample(far,(p.dist[cell(G,far.x,far.y)]+.05)/8);S.settings.motion=true;const reduced=sample(near,1);return{early,later,reduced};});
+ expect(r.early.near).toBeGreaterThan(70);expect(r.early.far).toBe(0);expect(r.early.rock).toBe(0);expect(r.later).toBeGreaterThan(70);expect(r.reduced).toBeGreaterThan(0);expect(r.reduced).toBeLessThan(50);expect(phone.errors).toEqual([]);
+});
+
+test('ECHO-24: retreating during the warning escapes the lamp and pursuit stays out of rock',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0];G.p={x:e.x-1.7,y:e.y};e.wait=0;G.invul=0;let solid=0;__dg.step(.6,-1,0);const lost=!seesPlayer(e),hearts=G.hearts;const target={...e.target};G.p={...G.start};for(let i=0;i<480;i++){update(1/60);if(!canStand(G,e))solid++;}return{lost,hearts,solid,target,chase:e.chase};});
+ expect(r.lost).toBe(true);expect(r.hearts).toBe(3);expect(r.solid).toBe(0);expect(r.chase).toBe(0);expect(phone.errors).toEqual([]);
 });
