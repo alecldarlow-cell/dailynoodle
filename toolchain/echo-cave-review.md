@@ -56,3 +56,46 @@ Still required: a full physical-phone expedition to assess thumb steering, dayli
 readability, sound/mute, Android fullscreen transitions and the feeling of the
 exploration/creature balance. Live reporting needs a real player's round; the test
 browsers never write to the production analytics database.
+
+
+## v1.2 player-feedback revision (22 Oct 2026)
+
+- Shallow wall approaches retain walking speed, with up to 35 degrees of gentle
+  deflection. Contact resolves up to the wall rather than stopping a frame short.
+  Circular player contact and 0.28-tile diagonal cuts in exposed rock corners reduce
+  catching at bends. The cuts are both drawn and passable; solid rock stays blocked.
+  Existing cave seeds, room connectivity, filename, thumbnail and save identity stay.
+- Echoes have three distinct luminous fronts travelling through connected floor.
+  The acoustic field permits diagonal propagation in open rooms without crossing
+  blocked corners; lighting, creature hearing and ripple timing share its distances.
+  A cached raster at 12 pixels/tile draws thin crests and softer trails at 20 Hz.
+  Reduced motion substitutes a fading wash. Cached fields are held separately from
+  the save and debug state so they cannot inflate JSON snapshots.
+- Creatures detect the player inside the lamp's 2.3-tile range with clear line of
+  sight. An on-screen warning, descending sound and alert glyph precede pursuit by
+  0.42 seconds. Pursuit is 2.9 tiles/sec against the player's 2.6; patrol is 1.15 and
+  sound investigation 2.05. Lost sight retains the last seen destination, then the
+  creature searches briefly and resumes patrol. A hidden player's echo can redirect
+  pursuit; sound does not override a currently visible player. Enemies also respect
+  the rock collision shape when turning, and post-contact recovery is retained.
+- Optional pursuit/reaction/repath fields round-trip within v1 saves. Older saved
+  enemy positions that overlap a rock edge are moved to their current cell centre.
+  Completed progress and the first cave's creature-free introduction are preserved.
+
+Validation for this revision:
+
+- 24 focused browser regressions plus the shared game contract (25 total), including
+  shallow wall gliding, diagonal cuts, detection/warning/contact, blocked sight,
+  hidden-player decoys, actual retreat and creature collision, travelling ripple
+  pixels and reduced motion. Existing legacy-save, daily and lifecycle checks remain.
+- Game contract checker: 61 checks pass, zero warnings. Browser tests intercept
+  analytics; none of these runs writes to the production reporting database.
+- Two full-knowledge simulations complete all six caves and collect every crystal.
+  A fixed-route bot with frequent echoes finishes with hearts **3, 3, 3, 1, 1, 1**;
+  a quiet bot that replans around nearby creatures finishes with **3, 3, 3, 3, 3, 3**.
+  Both observe production movement, time, damage and enemy rules. No creature
+  overlaps solid rock in either run. This demonstrates counterplay, not human round
+  length or proof of human-perceived balance.
+- Rendered inspection covers travelling waves at multiple ages, chase cues and
+  phone/wide layouts. Physical-phone acceptance remains outstanding: assess wall
+  gliding and corner steering, ripple clarity, and whether chase pressure feels fair.

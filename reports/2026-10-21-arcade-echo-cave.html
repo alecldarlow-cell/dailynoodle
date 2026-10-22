@@ -32,18 +32,6 @@ button,a{touch-action:manipulation}button{font:inherit;color:inherit;cursor:poin
 .topactions{display:flex;gap:8px}.leave{position:absolute;left:50%;transform:translateX(-50%);bottom:45px;min-height:50px;min-width:190px;padding:10px 20px;background:var(--gold);color:#18282c;border:1px solid #fce0a5;border-radius:12px;font-weight:700;box-shadow:0 5px 25px #0008}.leave span{display:block;font-weight:400;font-size:11px;margin-top:3px}.starrow{display:inline-flex;gap:4px;vertical-align:middle}.starrow svg{width:15px;height:15px;stroke:var(--gold);fill:transparent;stroke-width:1.5}.starrow svg.earned{fill:var(--gold)}.resultstars .starrow{gap:10px}.resultstars .starrow svg{width:29px;height:29px}.maplegend svg{width:16px;height:18px;fill:none;stroke:var(--aqua);stroke-width:1.5}.maplegend span{display:flex;gap:3px;align-items:center}.maplegend{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin:10px 0}#mapCanvas{display:block;width:100%;height:min(52vh,430px);border:1px solid var(--edge);border-radius:14px;background:#0b141b}.record{font-size:10px;color:var(--muted);margin-top:5px;display:block}.surveyed{font-size:11px;color:var(--muted)}
 @media(max-height:620px){#mapCanvas{height:42vh}.leave{bottom:37px;min-height:46px}#survey h2{font-size:29px;margin:5px 0}#survey p{margin:6px 0}}
 </style>
-<!-- og:start (tools/og-tags.js — do not edit by hand) -->
-<meta property="og:site_name" content="The Daily Noodle">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Echo Cave">
-<meta property="og:description" content="Send an echo into the dark. Find the relic, lure listening creatures away and make it back to daylight.">
-<meta property="og:url" content="https://dailynoodle.co.uk/reports/2026-10-21-arcade-echo-cave.html">
-<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
-<meta name="twitter:card" content="summary_large_image">
-<!-- og:end -->
 </head>
 <body>
 <main id="app">
@@ -53,14 +41,14 @@ button,a{touch-action:manipulation}button{font:inherit;color:inherit;cursor:poin
  <div class="controls"><div id="walkpad" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="#73999d"><circle cx="32" cy="32" r="27" stroke-dasharray="2 6"/><circle cx="32" cy="32" r="15"/><circle id="stick" cx="32" cy="32" r="5" fill="#94d3c7" stroke="none"/><path d="M32 2v7M32 55v7M2 32h7M55 32h7"/></svg><div class="lab"><b>Drag to walk</b><br>Release to stop</div></div><button id="echo" aria-label="Send echo"><svg viewBox="0 0 40 32"><path d="M18 13a4 4 0 010 6M24 7a12 12 0 010 18M30 2a19 19 0 010 28M9 16h5"/></svg><b>ECHO</b><small id="chargeLabel">Ready</small></button><button id="skip" hidden>Skip guidance</button></div>
  <section class="screen" id="home" aria-label="Echo Cave home"><div class="sheet"><div class="brandline"><b>Daily Noodle / Lab</b><span>First expedition</span></div><h1>ECHO<br><em>CAVE</em></h1><p class="lead">See with sound.<br>But something else is listening.</p><div class="hero"><canvas id="heroCanvas" aria-hidden="true"></canvas></div><button class="primary" id="play">Enter the cave <span aria-hidden="true">↗</span></button><button class="secondary" id="otherCaves" hidden>Choose another cave</button><div class="split"><button class="secondary" id="daily">Daily cave</button><button class="secondary" id="how">How to play</button></div><p class="smallnote">No countdown. Take a breath. Find your way.</p><div class="sectionlabel">The expeditions</div><div class="caves" id="caves"></div><div class="bottomlinks"><a href="../lab.html">← Noodle Lab</a><button class="textbtn" id="homeSettings">Settings</button><a href="../games.html">← Digi Games</a></div></div></section>
  <section class="screen" id="menu" hidden aria-label="Pause menu"><div class="sheet"><div class="brandline"><b>Echo Cave</b><span>Take a breath</span></div><h2 id="menuTitle">Paused</h2><p id="menuDesc">Your expedition is waiting.</p><button class="primary" id="resume">Resume expedition</button><div class="split" id="runMenu"><button class="secondary" id="restart">Retry cave</button><button class="secondary" id="choose">Choose cave</button></div><div class="sectionlabel">Settings</div><button class="setting" id="sound" aria-label="Sound" role="switch" aria-checked="true">Sound<span>On</span></button><button class="setting" id="motion" aria-label="Reduced motion" role="switch" aria-checked="false">Reduced motion<span>Off</span></button><button class="setting" id="full" aria-label="Full screen" role="switch" aria-checked="false">Full screen<span>Off</span></button><button class="secondary" id="menuMap">Explored map</button><button class="secondary" id="menuHelp">How to play</button><div class="bottomlinks"><a href="../lab.html">← Noodle Lab</a><a href="../games.html">← Digi Games</a></div></div></section>
- <section class="screen" id="help" hidden aria-label="How to play"><div class="sheet"><button class="backbtn" id="helpBack">← Back</button><div class="eyebrow">A little light in the dark</div><h2>Listen.<br>Look. Leave.</h2><div class="helpitem"><b>1</b><p><strong>Drag to walk.</strong> Your lamp lights the ground beside you. Places you walk stay faintly outlined. Arrow keys or WASD work too.</p></div><div class="helpitem"><b>2</b><p><strong>Tap Echo to see further.</strong> Sound travels through passages, revealing the cave for a few seconds. It recharges in three seconds. Space works too.</p></div><div class="helpitem"><b>3</b><p><strong>Something is listening.</strong> Pale creatures investigate the place where you made a sound. Echo, then quietly slip away. Nearby footsteps also have a written warning.</p></div><div class="helpitem"><b>4</b><p><strong>Find the gold relic, then the exit.</strong> Tap <strong>Leave cave</strong> at the exit when you are ready. Small crystals are optional. You have three hearts and as much thinking time as you need.</p></div><div class="sectionlabel">Three reasons to return</div><p>One star: relic recovered and safely out.<br>Two stars: every crystal collected too.<br>Three stars: all of that without losing a heart.</p><p>Open the map to see your explored route and discovered landmarks. The cave pauses while you look. There is no penalty for using echoes. The daily cave is the same for everyone on the same London date.</p><button class="primary" id="helpDone">Got it</button></div></section>
+ <section class="screen" id="help" hidden aria-label="How to play"><div class="sheet"><button class="backbtn" id="helpBack">← Back</button><div class="eyebrow">A little light in the dark</div><h2>Listen.<br>Look. Leave.</h2><div class="helpitem"><b>1</b><p><strong>Drag to walk.</strong> Your lamp lights the ground beside you. Places you walk stay faintly outlined. Arrow keys or WASD work too.</p></div><div class="helpitem"><b>2</b><p><strong>Tap Echo to see further.</strong> Sound travels through passages, revealing the cave for a few seconds. It recharges in three seconds. Space works too.</p></div><div class="helpitem"><b>3</b><p><strong>Something is listening.</strong> Pale creatures investigate the place where you made a sound. Echo, then slip away. If a creature enters your lamplight with a clear view, it spots you and chases after a short warning. Turn a corner to break sight, then lure it away with another echo. Nearby footsteps also have a written warning.</p></div><div class="helpitem"><b>4</b><p><strong>Find the gold relic, then the exit.</strong> Tap <strong>Leave cave</strong> at the exit when you are ready. Small crystals are optional. You have three hearts and as much thinking time as you need.</p></div><div class="sectionlabel">Three reasons to return</div><p>One star: relic recovered and safely out.<br>Two stars: every crystal collected too.<br>Three stars: all of that without losing a heart.</p><p>Open the map to see your explored route and discovered landmarks. The cave pauses while you look. There is no penalty for using echoes. The daily cave is the same for everyone on the same London date.</p><button class="primary" id="helpDone">Got it</button></div></section>
  <section class="screen" id="survey" hidden aria-label="Explored cave map"><div class="sheet"><div class="eyebrow">Your expedition notebook</div><h2>Explored cave</h2><p id="mapDesc">Your footsteps and the landmarks you have seen.</p><canvas id="mapCanvas" aria-label="Map of walked passages and discovered landmarks"></canvas><div class="maplegend"><span><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="4" fill="#f3cb87"/></svg>You</span><span><svg viewBox="0 0 20 20"><path d="M10 2l6 8-6 8-6-8z"/></svg>Relic</span><span><svg viewBox="0 0 20 20"><path d="M10 2l5 7-2 9H7L5 9z"/></svg>Crystal</span><span><svg viewBox="0 0 20 20"><path d="M4 18V8a6 6 0 0112 0v10ZM10 14V6M7 9l3-3 3 3"/></svg>Exit</span></div><p class="smallnote">Only explored ground is drawn. Unseen passages stay secret.</p><button class="primary" id="mapBack">Back to cave</button></div></section>
  <section class="screen" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="resultTitle"><div class="dialog" id="result"></div></section>
 </main>
 <div id="storageNote" role="status" hidden>Progress couldn’t be saved on this browser.</div>
 <script>
 'use strict';
-/* Echo Cave v1.1. One expedition attempt is a round; the cave is its level. */
+/* Echo Cave v1.2. One expedition attempt is a round; the cave is its level. */
 const GAME='echo-cave',KEY='digi-echo-cave-v1';
 const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -103,7 +91,7 @@ function goFS(){if(!fsOK||!S.settings.fs||document.fullscreenElement||document.w
 function exitFS(){try{const f=document.exitFullscreen||document.webkitExitFullscreen,p=f?.call(document);p?.catch(()=>{});}catch(e){}}
 let audio=null;
 function wakeAudio(){if(!S.settings.sound)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume().catch(()=>{});}catch(e){}}
-function tone(kind){if(!S.settings.sound||!audio)return;try{const t=audio.currentTime,types={echo:[190,110,.8],crystal:[740,1050,.25],relic:[440,880,.7],hit:[100,65,.25],win:[523,1046,.8],step:[85,72,.09]},[a,b,len]=types[kind]||types.step;const o=audio.createOscillator(),g=audio.createGain();o.type=kind==='echo'?'sine':'triangle';o.frequency.setValueAtTime(a,t);o.frequency.exponentialRampToValueAtTime(b,t+len);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(kind==='step'?.016:.065,t+.025);g.gain.exponentialRampToValueAtTime(.0001,t+len);o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+len+.02);}catch(e){}}
+function tone(kind){if(!S.settings.sound||!audio)return;try{const t=audio.currentTime,types={echo:[190,110,.8],crystal:[740,1050,.25],relic:[440,880,.7],hit:[100,65,.25],win:[523,1046,.8],step:[85,72,.09],spot:[260,90,.35]},[a,b,len]=types[kind]||types.step;const o=audio.createOscillator(),g=audio.createGain();o.type=kind==='echo'?'sine':'triangle';o.frequency.setValueAtTime(a,t);o.frequency.exponentialRampToValueAtTime(b,t+len);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(kind==='step'?.016:.065,t+.025);g.gain.exponentialRampToValueAtTime(.0001,t+len);o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+len+.02);}catch(e){}}
 let rnd={armed:false,open:false,secs:0,how:'new'};
 function trk(ev,x){try{window.digi?.track?.(ev,Object.assign({game:GAME},x));}catch(e){}}
 function rndArm(how){rnd={armed:true,open:false,secs:0,how:how||'new'};}
@@ -128,7 +116,7 @@ function build(index=0,mode='campaign',date=londonDay()){
  for(let i=options.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[options[i],options[j]]=[options[j],options[i]];}
  const crystals=options.slice(0,spec.crystals).map(p=>({...p,taken:false}));
  const enemyNodes=order.map(i=>center(i,spec.cols)).filter(p=>dist(p,start)>6&&dist(p,exit)>2&&dist(p,relic)>2);
- const enemies=enemyNodes.slice(0,spec.foes).map((p,i)=>({x:p.x,y:p.y,home:{...p},target:{...p},route:[],wait:1+i*.7,alert:0,stun:0,sound:0,step:0,patrol:0}));
+ const enemies=enemyNodes.slice(0,spec.foes).map((p,i)=>({x:p.x,y:p.y,home:{...p},target:{...p},route:[],wait:1+i*.7,alert:0,stun:0,sound:0,step:0,patrol:0,chase:0,reaction:0,repath:0}));
  return{...g,index:mode==='daily'?5:index,mode,date:mode==='daily'?date:null,seed:spec.seed,name:spec.name,cols:spec.cols,rows:spec.rows,start,exit,relic,crystals,enemies,rooms:Array.from({length:n},(_,i)=>center(i,spec.cols)),p:{...start},hearts:3,gotRelic:false,visited:new Array(w*h).fill(0),echoes:0,pulses:[],cooldown:0,elapsed:0,invul:0,ended:false,guide:mode==='campaign'&&index===0&&!S.tutorial,guideStep:0,heard:false,seenRelic:false,seenExit:false,seenCrystals:new Array(crystals.length).fill(false),facing:-Math.PI/2};
 }
 function validPos(g,p){return p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&floor(g,p.x,p.y);}
@@ -143,15 +131,15 @@ function restore(a){
   g.crystals.forEach((c,i)=>c.taken=!!a.taken?.[i]);g.cooldown=number(a.cooldown,3);g.invul=a.invul===undefined?1:number(a.invul,3.2);g.heard=!!a.heard;
   g.seenRelic=!!a.seenRelic||g.gotRelic||!!g.visited[cell(g,g.relic.x,g.relic.y)];g.seenExit=!!a.seenExit||!!g.visited[cell(g,g.exit.x,g.exit.y)];g.seenCrystals=g.crystals.map((c,i)=>!!a.seenCrystals?.[i]||c.taken||!!g.visited[cell(g,c.x,c.y)]);
   g.facing=Number.isFinite(a.facing)?a.facing:-Math.PI/2;
-  if(Array.isArray(a.enemies))g.enemies.forEach((e,i)=>{const b=a.enemies[i];if(validPos(g,b)){e.x=b.x;e.y=b.y;e.target=validPos(g,b.target)?{...b.target}:{...e.home};e.alert=number(b.alert,18);e.wait=number(b.wait,10);e.stun=number(b.stun,2);e.patrol=Math.floor(number(b.patrol,1e6));e.route=Array.isArray(b.route)&&b.route.length<1000&&b.route.every(p=>validPos(g,p))?b.route.map(p=>({...p})):routeTo(g,e,e.target);}});
-  if(Array.isArray(a.pulses))g.pulses=a.pulses.slice(-4).filter(p=>validPos(g,p)&&Number.isFinite(p.t)&&p.t>=0&&p.t<7.2).map(p=>({x:p.x,y:p.y,t:p.t,dist:flood(g,p,18),heard:g.enemies.map((_,i)=>!!p.heard?.[i])}));
+  if(Array.isArray(a.enemies))g.enemies.forEach((e,i)=>{const b=a.enemies[i];if(validPos(g,b)){e.x=b.x;e.y=b.y;if(!canStand(g,e)){e.x=Math.floor(e.x)+.5;e.y=Math.floor(e.y)+.5;}e.target=validPos(g,b.target)?{...b.target}:{...e.home};e.alert=number(b.alert,18);e.wait=number(b.wait,10);e.stun=number(b.stun,2);e.patrol=Math.floor(number(b.patrol,1e6));e.chase=number(b.chase,4);e.reaction=number(b.reaction,.45);e.repath=number(b.repath,.2);e.route=Array.isArray(b.route)&&b.route.length<1000&&b.route.every(p=>validPos(g,p))?b.route.map(p=>({...p})):routeTo(g,e,e.target);}});
+  if(Array.isArray(a.pulses))g.pulses=a.pulses.slice(-4).filter(p=>validPos(g,p)&&Number.isFinite(p.t)&&p.t>=0&&p.t<7.2).map(p=>({x:p.x,y:p.y,t:p.t,dist:echoDistances(g,p),heard:g.enemies.map((_,i)=>!!p.heard?.[i])}));
   g.guide=!!a.guide&&!S.tutorial;g.guideStep=clamp(Math.floor(a.guideStep)||0,0,2);return g;
  }catch(e){return null;}
 }
 let G=null,phase='home',helpFrom='home',menuFrom='game',mapFrom='play',W=0,H=0,T=26,ox=0,oy=0,cam={x:0,y:0},last=0,saveClock=0,noticeClock=0,footClock=0,lastWarning='',keys=new Set(),joy={id:null,x:0,y:0,dx:0,dy:0};
 function snapshot(){
  if(!G||G.ended)return null;
- return{v:1,index:G.index,mode:G.mode,date:G.date,p:{...G.p},hearts:G.hearts,gotRelic:G.gotRelic,echoes:G.echoes,elapsed:G.elapsed,visited:G.visited.slice(),taken:G.crystals.map(c=>c.taken),cooldown:G.cooldown,invul:G.invul,heard:G.heard,facing:G.facing,seenRelic:G.seenRelic,seenExit:G.seenExit,seenCrystals:G.seenCrystals.slice(),pulses:G.pulses.map(p=>({x:p.x,y:p.y,t:p.t,heard:p.heard.slice()})),enemies:G.enemies.map(e=>({x:e.x,y:e.y,target:{...e.target},alert:e.alert,wait:e.wait,stun:e.stun,patrol:e.patrol,route:e.route.map(p=>({...p}))})),guide:G.guide,guideStep:G.guideStep};
+ return{v:1,index:G.index,mode:G.mode,date:G.date,p:{...G.p},hearts:G.hearts,gotRelic:G.gotRelic,echoes:G.echoes,elapsed:G.elapsed,visited:G.visited.slice(),taken:G.crystals.map(c=>c.taken),cooldown:G.cooldown,invul:G.invul,heard:G.heard,facing:G.facing,seenRelic:G.seenRelic,seenExit:G.seenExit,seenCrystals:G.seenCrystals.slice(),pulses:G.pulses.map(p=>({x:p.x,y:p.y,t:p.t,heard:p.heard.slice()})),enemies:G.enemies.map(e=>({x:e.x,y:e.y,target:{...e.target},alert:e.alert,wait:e.wait,stun:e.stun,patrol:e.patrol,chase:e.chase,reaction:e.reaction,repath:e.repath,route:e.route.map(p=>({...p}))})),guide:G.guide,guideStep:G.guideStep};
 }
 function saveRun(){S.current=snapshot();persist();}
 function showScreen(id){for(const n of ['home','menu','help','survey','modal'])$(n).hidden=n!==id;}
@@ -171,24 +159,49 @@ const heart='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17L3 10C-2
 function hud(){if(!G)return;$('caveLabel').textContent=G.mode==='daily'?'Daily cave / '+G.date:'Expedition '+String(G.index+1).padStart(2,'0')+' / 06';$('caveName').textContent=G.mode==='daily'?'The daily hollow':G.name;$('relicText').textContent=G.gotRelic?'Find the exit':'Find relic';$('relicStat').classList.toggle('has',G.gotRelic);$('crystalText').textContent=G.crystals.filter(c=>c.taken).length+' / '+G.crystals.length;$('health').innerHTML=Array.from({length:3},(_,i)=>heart.replace('<svg','<svg'+(i>=G.hearts?' class="lost"':''))).join('');$('health').setAttribute('aria-label',G.hearts+' hearts');guide();}
 function lineOfSight(g,a,b){const d=dist(a,b),n=Math.ceil(d*5);for(let i=1;i<n;i++){const f=i/n;if(!floor(g,a.x+(b.x-a.x)*f,a.y+(b.y-a.y)*f))return false;}return true;}
 function revealVisited(){if(!G)return;for(let y=Math.floor(G.p.y)-2;y<=Math.floor(G.p.y)+2;y++)for(let x=Math.floor(G.p.x)-2;x<=Math.floor(G.p.x)+2;x++){const p={x:x+.5,y:y+.5};if(floor(G,x,y)&&dist(p,G.p)<2.0&&lineOfSight(G,G.p,p))G.visited[y*G.w+x]=1;}}
-function sendEcho(){if(phase!=='play'||!G||G.ended||G.cooldown>.02)return false;wakeAudio();rndStart();G.cooldown=3;G.echoes++;G.pulses.push({x:G.p.x,y:G.p.y,t:0,dist:flood(G,G.p,18),heard:new Array(G.enemies.length).fill(false)});if(G.pulses.length>4)G.pulses.shift();tone('echo');if(G.guide&&G.guideStep===0){G.guideStep=1;guide();}saveRun();return true;}
+function echoDistances(g,p){
+ const d=new Float32Array(g.tiles.length).fill(-1),done=new Uint8Array(g.tiles.length),start=cell(g,p.x,p.y),open=[start];d[start]=0;
+ while(open.length){let best=0;for(let i=1;i<open.length;i++)if(d[open[i]]<d[open[best]])best=i;const k=open.splice(best,1)[0];if(done[k])continue;done[k]=1;const x=k%g.w,y=Math.floor(k/g.w);
+  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy||!floor(g,x+dx,y+dy)||dx&&dy&&(!floor(g,x+dx,y)||!floor(g,x,y+dy)))continue;const n=cell(g,x+dx,y+dy),v=d[k]+Math.hypot(dx,dy);if(v<=18&&(d[n]<0||v<d[n])){d[n]=v;open.push(n);}}
+ }return d;
+}
+function sendEcho(){if(phase!=='play'||!G||G.ended||G.cooldown>.02)return false;wakeAudio();rndStart();G.cooldown=3;G.echoes++;G.pulses.push({x:G.p.x,y:G.p.y,t:0,dist:echoDistances(G,G.p),heard:new Array(G.enemies.length).fill(false)});if(G.pulses.length>4)G.pulses.shift();tone('echo');if(G.guide&&G.guideStep===0){G.guideStep=1;guide();}saveRun();return true;}
 function routeTo(g,from,to){const d=flood(g,to),k=cell(g,from.x,from.y);if(k<0||d[k]<0)return[];let x=Math.floor(from.x),y=Math.floor(from.y),v=d[k],out=[];while(v>0&&out.length<1000){let found=false;for(const[dx,dy]of DIRS){const n=cell(g,x+dx,y+dy);if(n>=0&&d[n]===v-1){x+=dx;y+=dy;v--;out.push({x:x+.5,y:y+.5});found=true;break;}}if(!found)break;}return out;}
-function canStand(g,p){const r=.23;return [[-r,-r],[r,-r],[-r,r],[r,r]].every(([x,y])=>floor(g,p.x+x,p.y+y));}
+function walkable(g,x,y){
+ if(floor(g,x,y))return true;const tx=Math.floor(x),ty=Math.floor(y),fx=x-tx,fy=y-ty;
+ // Clip a small 45-degree triangle off exposed rock corners. The route grid
+ // stays unchanged, so existing seeded layouts and saved positions remain valid.
+ for(const[dx,dy]of[[-1,-1],[1,-1],[-1,1],[1,1]])if(floor(g,tx+dx,ty)&&floor(g,tx,ty+dy)&&floor(g,tx+dx,ty+dy)&&
+  (dx<0?fx:1-fx)+(dy<0?fy:1-fy)<.28)return true;return false;
+}
+function canStand(g,p){const r=.23;if(!walkable(g,p.x,p.y))return false;for(let i=0;i<16;i++){const a=i*Math.PI/8;if(!walkable(g,p.x+Math.cos(a)*r,p.y+Math.sin(a)*r))return false;}return true;}
 function movePlayer(dx,dy,dt){
  if(!G||phase!=='play'||G.ended)return;const len=Math.hypot(dx,dy);if(len<.08)return;rndStart();const scale=2.6*dt/Math.max(1,len),sx=dx*scale,sy=dy*scale,old={...G.p};
- // Slide along walls and gently centre a near-miss at a one-tile doorway.
- const axis=(amount,horizontal)=>{
-  if(!amount)return;const a=horizontal?'x':'y',b=horizontal?'y':'x',next={...G.p,[a]:G.p[a]+amount};
-  if(canStand(G,next)){G.p[a]=next[a];return;}
-  const line=Math.floor(G.p[b])+.5,off=line-G.p[b];
-  if(Math.abs(off)>.31||Math.abs(off)<.002)return;
-  const probe={...next,[b]:line},beyond={...probe,[a]:G.p[a]+Math.sign(amount)*.34};
-  if(canStand(G,probe)&&canStand(G,beyond)){
+ const next={x:G.p.x+sx,y:G.p.y+sy};
+ if(canStand(G,next)){G.p=next;}else{
+ // Find the smallest free deflection within 35 degrees. Rounded player contact
+ // and diagonal rock cuts let this carry motion around a corner without snaps.
+ let glide=null;for(let angle=5;angle<=35&&!glide;angle+=5)for(const sign of[-1,1]){
+  const a=angle*sign*Math.PI/180,c=Math.cos(a),s=Math.sin(a),p={x:G.p.x+sx*c-sy*s,y:G.p.y+sx*s+sy*c};if(canStand(G,p)){glide=p;break;}
+ }
+ if(glide)G.p=glide;else{
+ // Resolve to the wall continuously, then preserve speed along its tangent
+ // when the intended heading is within 35 degrees of that tangent.
+ const axis=(amount,horizontal,assist=true)=>{
+  if(!amount)return false;const a=horizontal?'x':'y',b=horizontal?'y':'x',next={...G.p,[a]:G.p[a]+amount};
+  if(canStand(G,next)){G.p[a]=next[a];return false;}
+  let lo=0,hi=1;for(let i=0;i<10;i++){const m=(lo+hi)/2;if(canStand(G,{...G.p,[a]:G.p[a]+amount*m}))lo=m;else hi=m;}G.p[a]+=amount*lo;
+  const line=Math.floor(G.p[b])+.5,off=line-G.p[b],probe={...G.p,[b]:line,[a]:G.p[a]+Math.sign(amount)*.34};
+  if(assist&&Math.abs(off)<.36&&Math.abs(off)>.002&&canStand(G,probe)){
    const centred={...G.p,[b]:G.p[b]+Math.sign(off)*Math.min(Math.abs(off),2.6*dt*.8)};
-   if(canStand(G,centred))G.p[b]=centred[b];const slide={...G.p,[a]:G.p[a]+amount};if(canStand(G,slide))G.p[a]=slide[a];
+   if(canStand(G,centred))G.p[b]=centred[b];
   }
+  return true;
  };
- axis(sx,true);axis(sy,false);if(dist(old,G.p)>.001)G.facing=Math.atan2(G.p.y-old.y,G.p.x-old.x);
+ const bx=axis(sx,true),by=axis(sy,false),travel=Math.hypot(sx,sy);
+ if(bx&&!by&&Math.abs(sx)<=Math.abs(sy)*.7)axis(Math.sign(sy)*(travel-Math.abs(sy)),false,false);
+ if(by&&!bx&&Math.abs(sy)<=Math.abs(sx)*.7)axis(Math.sign(sx)*(travel-Math.abs(sx)),true,false);
+ }}if(dist(old,G.p)>.001)G.facing=Math.atan2(G.p.y-old.y,G.p.x-old.x);
  revealVisited();discover();checkObjects();checkContact();
 }
 function checkContact(){if(!G||G.ended||G.invul>0)return;for(const e of G.enemies)if(e.stun<=0&&dist(G.p,e)<.62){damage();break;}}
@@ -203,20 +216,34 @@ function discover(){
  if(!G)return;const visible=p=>visibility(G,cell(G,p.x,p.y),true,false)>.22;
  if(!G.seenExit&&visible(G.exit))G.seenExit=true;if(!G.seenRelic&&visible(G.relic))G.seenRelic=true;G.crystals.forEach((c,i)=>{if(!G.seenCrystals[i]&&visible(c))G.seenCrystals[i]=true;});
 }
-function damage(){if(!G||G.ended||G.invul>0)return;G.hearts--;G.invul=3.2;tone('hit');if(G.hearts<=0){finish(false);return;}G.enemies.forEach(e=>{if(dist(G.p,e)<1.5){e.stun=1.6;e.alert=0;e.wait=0;e.target={...e.home};e.route=routeTo(G,e,e.target);}});notice('Stay quiet. You have '+G.hearts+' hearts left.',3);hud();saveRun();}
+function damage(){if(!G||G.ended||G.invul>0)return;G.hearts--;G.invul=3.2;tone('hit');if(G.hearts<=0){finish(false);return;}G.enemies.forEach(e=>{if(dist(G.p,e)<1.5){e.stun=1.6;e.alert=0;e.chase=0;e.reaction=0;e.wait=0;e.target={...e.home};e.route=routeTo(G,e,e.target);}});notice('Stay quiet. You have '+G.hearts+' hearts left.',3);hud();saveRun();}
+function seesPlayer(e){return dist(e,G.p)<2.3&&lineOfSight(G,e,G.p);}
 function enemyStep(e,dt){
- if(e.stun>0){e.stun=Math.max(0,e.stun-dt);return;}e.alert=Math.max(0,e.alert-dt);if(e.wait>0){e.wait=Math.max(0,e.wait-dt);return;}
+ if(e.stun>0){e.stun=Math.max(0,e.stun-dt);return;}
+ const sees=seesPlayer(e);e.alert=Math.max(0,e.alert-dt);e.chase=Math.max(0,(e.chase||0)-dt);e.repath=Math.max(0,(e.repath||0)-dt);
+ if(sees){
+  if(e.chase<=0){e.reaction=.42;notice('Spotted! Break away around a corner.',2);tone('spot');}
+  e.chase=4;e.alert=18;e.wait=0;e.target={...G.p};
+  if(e.repath<=0){e.route=routeTo(G,e,e.target);e.repath=.18;}
+ }
+ if(e.reaction>0){e.reaction=Math.max(0,e.reaction-dt);return;}
+ if(e.wait>0){e.wait=Math.max(0,e.wait-dt);return;}
+ const speed=e.chase>0?2.9:e.alert>0?2.05:1.15;
+ // A clear approach follows the actual player, rather than stopping at cell centres.
+ if(sees){const d=dist(e,G.p),amount=Math.min(d,speed*dt),next={x:e.x+(G.p.x-e.x)/d*amount,y:e.y+(G.p.y-e.y)/d*amount};if(d>.001&&canStand(G,next)){e.x=next.x;e.y=next.y;return;}}
  if(!e.route.length){
-  if(dist(e,e.target)<.12){
-   if(e.alert>0){e.wait=2.2;e.alert=0;return;}
-   e.wait=1.5;e.patrol++;const R=random(G.seed+e.patrol*177+Math.floor(e.home.x)*19),opts=G.rooms.filter(p=>dist(p,e.home)<9&&dist(p,e)>2);e.target={...(opts[Math.floor(R()*opts.length)]||e.home)};
+  if(dist(e,e.target)<.3||cell(G,e.x,e.y)===cell(G,e.target.x,e.target.y)){
+   if(e.alert>0){e.wait=1.1;e.alert=0;e.chase=0;return;}
+   e.wait=.65;e.patrol++;const R=random(G.seed+e.patrol*177+Math.floor(e.home.x)*19),opts=G.rooms.filter(p=>dist(p,e.home)<9&&dist(p,e)>2);e.target={...(opts[Math.floor(R()*opts.length)]||e.home)};
   }
   e.route=routeTo(G,e,e.target);if(!e.route.length)return;
  }
- const p=e.route[0],d=dist(e,p),amount=(e.alert>0?1.65:.9)*dt;if(d<=amount){e.x=p.x;e.y=p.y;e.route.shift();}else{e.x+=(p.x-e.x)/d*amount;e.y+=(p.y-e.y)/d*amount;}
+ const p=e.route[0],d=dist(e,p),amount=Math.min(d,speed*dt),next=d>.001?{x:e.x+(p.x-e.x)/d*amount,y:e.y+(p.y-e.y)/d*amount}:{...p};
+ if(canStand(G,next)){e.x=next.x;e.y=next.y;if(d<=amount+.001)e.route.shift();}
+ else{const centre={x:Math.floor(e.x)+.5,y:Math.floor(e.y)+.5},n=dist(e,centre);if(n>.001){const a=Math.min(n,speed*dt),q={x:e.x+(centre.x-e.x)/n*a,y:e.y+(centre.y-e.y)/n*a};if(canStand(G,q)){e.x=q.x;e.y=q.y;}}}
 }
 function update(dt){if(phase!=='play'||!G||G.ended)return;rndStart();rnd.secs+=dt;G.elapsed+=dt;G.cooldown=Math.max(0,G.cooldown-dt);G.invul=Math.max(0,G.invul-dt);let dx=joy.dx,dy=joy.dy;if(keys.has('ArrowLeft')||keys.has('a'))dx--;if(keys.has('ArrowRight')||keys.has('d'))dx++;if(keys.has('ArrowUp')||keys.has('w'))dy--;if(keys.has('ArrowDown')||keys.has('s'))dy++;movePlayer(dx,dy,dt);if(G.ended)return;
- for(const pulse of G.pulses){pulse.t+=dt;for(const [i,e]of G.enemies.entries()){const k=cell(G,e.x,e.y),d=pulse.dist[k];if(!pulse.heard[i]&&d>=0&&pulse.t>=d/8&&d<=18){pulse.heard[i]=true;e.target={x:Math.floor(pulse.x)+.5,y:Math.floor(pulse.y)+.5};e.route=routeTo(G,e,e.target);e.wait=0;e.alert=18;if(!G.heard){G.heard=true;notice('It heard you. Move away from your echo.',4);}}}}
+ for(const pulse of G.pulses){pulse.t+=dt;for(const [i,e]of G.enemies.entries()){const k=cell(G,e.x,e.y),d=pulse.dist[k];if(!pulse.heard[i]&&d>=0&&pulse.t>=d/8&&d<=18){pulse.heard[i]=true;if(e.stun>0||seesPlayer(e))continue;e.chase=0;e.reaction=0;e.target={x:Math.floor(pulse.x)+.5,y:Math.floor(pulse.y)+.5};e.route=routeTo(G,e,e.target);e.wait=0;e.alert=18;if(!G.heard){G.heard=true;notice('It heard you. Move away from your echo.',4);}}}}
  G.pulses=G.pulses.filter(p=>p.t<7.2);for(const e of G.enemies)enemyStep(e,dt);checkContact();discover();if(G.ended)return;
  footClock+=dt;if(footClock>.9){
   footClock=0;const distances=flood(G,G.p,5),e=G.enemies.find(e=>{const d=distances[cell(G,e.x,e.y)];return d>=0&&d<=5&&e.stun<=0;});
@@ -283,7 +310,39 @@ function makeTerrain(g){
   a.strokeStyle='#7c999166';a.lineWidth=1.6;for(const[dx,dy]of DIRS)if(!floor(g,x+dx,y+dy)){const jitter=(R()-.5)*2;a.beginPath();if(dx){a.moveTo(px+(dx>0?u-1:1),py+u*.28);a.lineTo(px+(dx>0?u-1:1)+jitter,py+u*.72);}else{a.moveTo(px+u*.28,py+(dy>0?u-1:1));a.lineTo(px+u*.72,py+(dy>0?u-1:1)+jitter);}a.stroke();}
   a.fillStyle='#9cb3a826';for(let j=0;j<3;j++){const sx=px+(R()*.6+.2)*u,sy=py+(R()*.6+.2)*u;a.beginPath();a.ellipse(sx,sy,.8+R()*1.4,.4+R()*.5,R()*Math.PI,0,Math.PI*2);a.fill();}
  }
+ // The shallow diagonal cuts match walkable(), rather than merely disguising a square collision wall.
+ a.fillStyle='#36555b';for(let y=1;y<g.h-1;y++)for(let x=1;x<g.w-1;x++)if(!floor(g,x,y))for(const[dx,dy]of[[-1,-1],[1,-1],[-1,1],[1,1]])if(floor(g,x+dx,y)&&floor(g,x,y+dy)&&floor(g,x+dx,y+dy)){
+  const cx=(x+(dx>0?1:0))*u,cy=(y+(dy>0?1:0))*u;a.beginPath();a.moveTo(cx,cy);a.lineTo(cx-dx*u*.28,cy);a.lineTo(cx,cy-dy*u*.28);a.closePath();a.fill();
+ }
  const mask=document.createElement('canvas');mask.width=g.w;mask.height=g.h;const layer=document.createElement('canvas');layer.width=c.width;layer.height=c.height;return{c,mask,layer,image:mask.getContext('2d').createImageData(g.w,g.h),u,at:-Infinity};
+}
+const echoFields=new WeakMap();
+function echoField(g,p){
+ if(echoFields.has(p))return echoFields.get(p);const u=12,field=new Float32Array(g.w*g.h*u*u).fill(-1000),width=g.w*u;
+ for(let k=0;k<g.tiles.length;k++)if(g.tiles[k]&&p.dist[k]>=0){
+  const x=k%g.w,y=Math.floor(k/g.w),d=p.dist[k];
+  const incoming=[];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy||dx&&dy&&(!floor(g,x+dx,y)||!floor(g,x,y+dy)))continue;const n=cell(g,x+dx,y+dy);if(n>=0&&p.dist[n]>=0&&p.dist[n]<d)incoming.push({dx,dy,d:p.dist[n]});}
+  const clear=lineOfSight(g,p,{x:x+.5,y:y+.5}),centreDistance=Math.hypot(x+.5-p.x,y+.5-p.y);
+  for(let j=0;j<u;j++)for(let i=0;i<u;i++){const fx=(i+.5)/u-.5,fy=(j+.5)/u-.5;let value=Infinity;
+   if(clear)value=d===0?Math.hypot(x+fx+.5-p.x,y+fy+.5-p.y):d+Math.hypot(x+fx+.5-p.x,y+fy+.5-p.y)-centreDistance;
+   else for(const n of incoming)value=Math.min(value,n.d+Math.hypot(fx-n.dx,fy-n.dy));
+   field[(y*u+j)*width+x*u+i]=Number.isFinite(value)?Math.max(0,value):d+Math.hypot(fx,fy);
+  }
+ }echoFields.set(p,field);return field;
+}
+function drawEchoes(g){
+ const u=12;if(!terrain.wave){terrain.wave=document.createElement('canvas');terrain.wave.width=g.w*u;terrain.wave.height=g.h*u;terrain.waveImage=terrain.wave.getContext('2d').createImageData(g.w*u,g.h*u);terrain.waveAt=-Infinity;}
+ if(g.elapsed-terrain.waveAt>=.05||g.elapsed<terrain.waveAt){
+  terrain.waveAt=g.elapsed;const data=terrain.waveImage.data;data.fill(0);
+  for(const p of g.pulses){if(p.t>3.3)continue;const field=echoField(g,p),radius=p.t*8;
+   for(let k=0;k<field.length;k++){const d=field[k];if(d<0||d>18)continue;let a=0;
+    if(S.settings.motion){const age=p.t-d/8;if(age>=0&&age<2.2)a=.18*(1-age/2.2);}
+    else for(let n=0;n<3;n++){const delta=Math.abs(d-(radius-n*1.35));a=Math.max(a,(Math.max(0,1-delta/.18)*.8+Math.max(0,1-delta/.48)*.25)*(.95-n*.25)*Math.min(1,(18.8-radius+n*1.35)/2));}
+    const j=k*4;if(a*255>data[j+3]){data[j]=150;data[j+1]=239;data[j+2]=224;data[j+3]=Math.round(clamp(a,0,1)*255);}
+   }
+  }terrain.wave.getContext('2d').putImageData(terrain.waveImage,0,0);
+ }
+ ctx.save();ctx.globalCompositeOperation='screen';ctx.imageSmoothingEnabled=true;ctx.drawImage(terrain.wave,ox,oy,g.w*T,g.h*T);ctx.restore();
 }
 function draw(){
  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0b141b';ctx.fillRect(0,0,W,H);if(!G)return;const g=G;if(!terrain)terrain=makeTerrain(g);
@@ -293,14 +352,14 @@ function draw(){
  if(G.elapsed-terrain.at>=.05||G.elapsed<terrain.at){terrain.at=G.elapsed;
  for(let k=0;k<g.tiles.length;k++){let v=vis[k];if(!g.tiles[k]){const x=k%g.w,y=Math.floor(k/g.w);for(const[dx,dy]of DIRS){const n=cell(g,x+dx,y+dy);if(n>=0)v=Math.max(v,vis[n]*.72);}}const j=k*4;terrain.image.data[j]=terrain.image.data[j+1]=terrain.image.data[j+2]=255;terrain.image.data[j+3]=Math.round(v*255);}
  terrain.mask.getContext('2d').putImageData(terrain.image,0,0);const layer=terrain.layer.getContext('2d');layer.globalCompositeOperation='source-over';layer.clearRect(0,0,terrain.c.width,terrain.c.height);layer.drawImage(terrain.c,0,0);layer.globalCompositeOperation='destination-in';layer.imageSmoothingEnabled=true;layer.drawImage(terrain.mask,0,0,terrain.c.width,terrain.c.height);layer.globalCompositeOperation='source-over';}
- ctx.drawImage(terrain.layer,ox,oy,worldW,worldH);
+ ctx.drawImage(terrain.layer,ox,oy,worldW,worldH);drawEchoes(g);
  ctx.save();ctx.translate(ox,oy);
  const objectVisible=p=>{const k=cell(g,p.x,p.y);return k<0?0:vis[k];};
  const ev=objectVisible(g.exit);if(ev>.08||g.seenExit){ctx.save();ctx.globalAlpha=Math.max(ev,g.seenExit?.34:0);const x=g.exit.x*T,y=g.exit.y*T;ctx.strokeStyle=g.gotRelic?'#e5efd2':'#9fc3bd';ctx.lineWidth=2;ctx.fillStyle=g.gotRelic?'#95bfa544':'#58777833';ctx.beginPath();ctx.roundRect(x-T*.37,y-T*.45,T*.74,T*.9,[T*.3,T*.3,0,0]);ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(x,y+T*.17);ctx.lineTo(x,y-T*.16);ctx.moveTo(x-T*.12,y-T*.03);ctx.lineTo(x,y-T*.16);ctx.lineTo(x+T*.12,y-T*.03);ctx.stroke();ctx.restore();}
  for(const[i,c]of g.crystals.entries())if(!c.taken){const v=objectVisible(c);if(v>.15||g.seenCrystals[i])glyph(c.x*T,c.y*T,T*.3,'crystal',Math.max(v,g.seenCrystals[i]?.26:0));}
  if(!g.gotRelic){const v=objectVisible(g.relic);if(v>.1||g.seenRelic){ctx.save();ctx.globalAlpha=v*.5;const gr=ctx.createRadialGradient(g.relic.x*T,g.relic.y*T,0,g.relic.x*T,g.relic.y*T,T);gr.addColorStop(0,'#f3cb8777');gr.addColorStop(1,'#f3cb8700');ctx.fillStyle=gr;ctx.fillRect((g.relic.x-1)*T,(g.relic.y-1)*T,T*2,T*2);ctx.restore();glyph(g.relic.x*T,g.relic.y*T,T*.45,'relic',Math.max(v,g.seenRelic?.28:0));}}
- for(const e of g.enemies){const v=visibility(g,cell(g,e.x,e.y),true,false);if(v<.09)continue;ctx.save();ctx.translate(e.x*T,e.y*T);ctx.globalAlpha=Math.min(1,v+.12);const facing=Math.atan2(e.target.y-e.y,e.target.x-e.x);ctx.rotate(facing);ctx.fillStyle=e.stun>0?'#879d9a':e.alert>0?'#d6e0d2':'#9fb4b4';ctx.strokeStyle='#d4e1d8';ctx.lineWidth=1.3;ctx.beginPath();ctx.ellipse(0,0,T*.34,T*.21,0,0,Math.PI*2);ctx.fill();ctx.beginPath();for(let i=-1;i<=1;i++){ctx.moveTo(i*T*.17,-T*.14);ctx.lineTo(i*T*.24,-T*.30);ctx.moveTo(i*T*.17,T*.14);ctx.lineTo(i*T*.24,T*.30);}ctx.moveTo(T*.25,-T*.1);ctx.lineTo(T*.47,-T*.22);ctx.moveTo(T*.25,T*.1);ctx.lineTo(T*.47,T*.22);ctx.stroke();ctx.rotate(-facing);
-  if(e.alert>0){ctx.strokeStyle='#f3cb87';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-T*.64);ctx.lineTo(0,-T*.49);ctx.stroke();ctx.fillStyle='#f3cb87';ctx.beginPath();ctx.arc(0,-T*.39,1.5,0,Math.PI*2);ctx.fill();}ctx.restore();}
+ for(const e of g.enemies){const v=visibility(g,cell(g,e.x,e.y),true,false);if(v<.09)continue;ctx.save();ctx.translate(e.x*T,e.y*T);ctx.globalAlpha=Math.min(1,v+.12);const facing=Math.atan2(e.target.y-e.y,e.target.x-e.x);ctx.rotate(facing);ctx.fillStyle=e.stun>0?'#879d9a':e.chase>0?'#f3b18b':e.alert>0?'#d6e0d2':'#9fb4b4';ctx.strokeStyle='#d4e1d8';ctx.lineWidth=1.3;ctx.beginPath();ctx.ellipse(0,0,T*.34,T*.21,0,0,Math.PI*2);ctx.fill();ctx.beginPath();for(let i=-1;i<=1;i++){ctx.moveTo(i*T*.17,-T*.14);ctx.lineTo(i*T*.24,-T*.30);ctx.moveTo(i*T*.17,T*.14);ctx.lineTo(i*T*.24,T*.30);}ctx.moveTo(T*.25,-T*.1);ctx.lineTo(T*.47,-T*.22);ctx.moveTo(T*.25,T*.1);ctx.lineTo(T*.47,T*.22);ctx.stroke();ctx.rotate(-facing);
+  if(e.chase>0){ctx.strokeStyle='#f3b18b';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-T*.2,-T*.85);ctx.lineTo(0,-T*.69);ctx.lineTo(T*.2,-T*.85);ctx.stroke();}if(e.alert>0){ctx.strokeStyle='#f3cb87';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-T*.64);ctx.lineTo(0,-T*.49);ctx.stroke();ctx.fillStyle='#f3cb87';ctx.beginPath();ctx.arc(0,-T*.39,1.5,0,Math.PI*2);ctx.fill();}ctx.restore();}
  for(const p of g.pulses)if(p.t<4.2){ctx.save();ctx.globalAlpha=(1-p.t/4.2)*.55;ctx.strokeStyle='#b7ece0';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(p.x*T,p.y*T,T*.28,0,Math.PI*2);ctx.arc(p.x*T,p.y*T,T*.48,-.8,.8);ctx.stroke();ctx.restore();}
  const px=g.p.x*T,py=g.p.y*T;ctx.save();const glow=ctx.createRadialGradient(px,py,0,px,py,T*1.3);glow.addColorStop(0,'#f3cb872e');glow.addColorStop(1,'#f3cb8700');ctx.fillStyle=glow;ctx.fillRect(px-T*1.3,py-T*1.3,T*2.6,T*2.6);ctx.translate(px,py);ctx.rotate(g.facing);ctx.fillStyle='#bba37d';ctx.beginPath();ctx.ellipse(-T*.15,0,T*.16,T*.22,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f2e9d2';ctx.strokeStyle='#0b1921';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,T*.24,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#f1c97f';ctx.beginPath();ctx.arc(T*.21,0,T*.10,0,Math.PI*2);ctx.fill();ctx.restore();ctx.restore();
  const vignette=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75);vignette.addColorStop(0,'#0b141b00');vignette.addColorStop(1,'#0b141b66');ctx.fillStyle=vignette;ctx.fillRect(0,0,W,H);
@@ -310,6 +369,5 @@ function frame(t){const dt=last?Math.min(.05,Math.max(0,(t-last)/1000)):0;last=t
 if(window.__DGTEST===true){window.__dg={end:win=>{if(G&&!G.ended){if(win){G.gotRelic=true;G.p={...G.exit};checkObjects();leaveCave();}else{G.invul=0;G.hearts=1;damage();}}},state:()=>({phase,round:{...rnd},game:G?JSON.parse(JSON.stringify(G)):null,save:JSON.parse(JSON.stringify(S))}),build,route:to=>routeTo(G,G.p,to),launch:(i,m='campaign')=>launch(i,m),step:(secs,dx=0,dy=0)=>{for(let t=0;t<secs&&phase==='play';t+=1/60){if(dx||dy)movePlayer(dx,dy,1/60);update(1/60);}draw();},echo:sendEcho,pause:()=>pauseGame(),resume:resumeGame,move:(dx,dy,secs)=>{for(let t=0;t<secs&&phase==='play';t+=1/60)movePlayer(dx,dy,1/60);draw();},walkRoute:points=>{for(const p of points){let guard=0;while(G&&!G.ended&&dist(G.p,p)>.06&&guard++<200){const d=dist(G.p,p),step=Math.min(1/60,d/2.6);movePlayer((p.x-G.p.x)/d,(p.y-G.p.y)/d,step);}}draw();},damage:()=>{G.invul=0;damage();},visibility:(p,memory=true)=>visibility(G,cell(G,p.x,p.y),true,memory),snapshot,restoreData:restore,hear:()=>update(0),leave:leaveCave,map:()=>openMap('play'),mapBack:closeMap,fixture:f=>{if(f.p&&validPos(G,f.p))G.p={...f.p};if(f.enemy&&G.enemies[0])Object.assign(G.enemies[0],f.enemy);if(f.invul!==undefined)G.invul=f.invul;discover();checkObjects();},save:saveRun,restore:()=>restore(S.current),daily:buildDate=>build(5,'daily',buildDate)};}
 renderHome();settingsUI();resize();drawHero();addEventListener('resize',()=>{resize();drawHero();if(phase==='map')drawMap();});requestAnimationFrame(frame);
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
