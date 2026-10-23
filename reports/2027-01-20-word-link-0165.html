@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0165", band:"medium",
   groups:[
-    {rank:1, name:"Guitar techniques", members:["BEND","SLIDE","HAMMER-ON","VIBRATO"]},
-    {rank:2, name:"Playground games",  members:["TAG","HOPSCOTCH","CONKERS","BULLDOG"]},
-    {rank:3, name:"Kinds of bulldog",  members:["BRITISH","FRENCH","CLIP","SPIRIT"]},
-    {rank:4, name:"Ways to curve",     members:["BOW","WARP","BUCKLE","CROOK"]}
+    {rank:1, name:"In a game of chess",             members:["CASTLE","FORK","PIN","STALEMATE"]},
+    {rank:2, name:"At an election",                 members:["BALLOT","RECOUNT","MANIFESTO","SWING"]},
+    {rank:3, name:"In the playground",              members:["SLIDE","SEESAW","SANDPIT","ZIP WIRE"]},
+    {rank:4, name:"Each sounds like a nationality", members:["CHECK","POLL","TIE","FIN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BULLDOG", not:"Kinds of bulldog"},
-    {tile:"BEND",    not:"Ways to curve"},
-    {tile:"CLIP",    not:"Guitar techniques"}
+    {tile:"CHECK", not:"In a game of chess"},
+    {tile:"POLL",  not:"At an election"},
+    {tile:"SWING", not:"In the playground"}
   ]
 };
 </script>

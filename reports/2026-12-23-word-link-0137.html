@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0137", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of bank",  members:["PIGGY","BLOOD","RIVER","BOTTLE"]},
-    {rank:2, name:"Kinds of blood", members:["BAD","BLUE","COLD","NEW"]},
-    {rank:3, name:"River features", members:["OXBOW","DELTA","WEIR","FORD"]},
-    {rank:4, name:"Ways to save",   members:["HOARD","STASH","SALT AWAY","SQUIRREL"]}
+    {rank:1, name:"Housework",        members:["HOOVER","MOP","IRON","POLISH"]},
+    {rank:2, name:"Impudence",        members:["LIP","NERVE","BRASS","NECK"]},
+    {rank:3, name:"Parts of a river", members:["BANK","SOURCE","ESTUARY","DELTA"]},
+    {rank:4, name:"___PAN",           members:["DUST","SAUCE","BED","DEAD"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BLOOD",    not:"Kinds of blood"},
-    {tile:"RIVER",    not:"River features"},
-    {tile:"SQUIRREL", not:"Kinds of bank"}
+    {tile:"DUST",  not:"Housework"},
+    {tile:"SAUCE", not:"Impudence"},
+    {tile:"BED",   not:"Parts of a river"}
   ]
 };
 </script>

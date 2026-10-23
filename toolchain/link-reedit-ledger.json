@@ -1,12 +1,77 @@
 {
  "_comment": "Link re-edit ledger (see toolchain/link-editing.md). Each scheduled run takes the first plan entry whose status is not 'done', sets status and notes when it finishes, and commits this file with its batch. 'partial' means the run published serials up to 'publishedTo'; the next run starts after that.",
- "done": [[75, 81], [82, 101], [102, 134]],
+ "done": [
+  [
+   75,
+   81
+  ],
+  [
+   82,
+   101
+  ],
+  [
+   102,
+   134
+  ],
+  [
+   135,
+   174
+  ]
+ ],
  "plan": [
-  {"run": 1, "range": [135, 174], "status": "todo", "note": "Christmas Day is 139, New Year's Day 146"},
-  {"run": 2, "range": [175, 214], "status": "todo", "note": "Shrove Tuesday 185, Valentine's Day 190, St David's Day 205, Mother's Day (UK) 211"},
-  {"run": 3, "range": [215, 249], "status": "todo", "note": "St Patrick's Day 221, Good Friday 230, Easter Sunday 232, April Fools' Day 236"},
-  {"run": 4, "range": [250, 298], "status": "todo", "note": "batch 2: keep a puzzle only if it passes every rule AND a cold solve; rewrite the rest; St George's Day 258"},
-  {"run": 5, "range": [299, 347], "status": "todo", "note": "batch 2 as run 4; Father's Day 316, midsummer 317"},
-  {"run": 6, "range": [75, 347], "status": "todo", "note": "seam check only: R6 and theme spacing across every batch boundary; fix by swapping forthcoming puzzles; then the final report"}
+  {
+   "run": 1,
+   "range": [
+    135,
+    174
+   ],
+   "status": "done",
+   "note": "Christmas Day is 139, New Year's Day 146; done 23 Oct 2026: 40 published (Christmas Day 139 Twelve Days decoys, New Year 146 CLEAN ___ / puddings, Burns Night 170 Scottish islands). 45 drafted; dropped before solving: 157 and 168 (duplicated other drafts); failed cold solve: hidden rooms (STATIC/ATTIC unseen, drop-a-letter second reading), top-row keyboard (DOOLITTLE misspelt, link unfindable), Muppets spare (BUNSEN also a Muppet); hidden birds fixed (TOWEL had no OWL, now BOWLER) and re-solved."
+  },
+  {
+   "run": 2,
+   "range": [
+    175,
+    214
+   ],
+   "status": "todo",
+   "note": "Shrove Tuesday 185, Valentine's Day 190, St David's Day 205, Mother's Day (UK) 211"
+  },
+  {
+   "run": 3,
+   "range": [
+    215,
+    249
+   ],
+   "status": "todo",
+   "note": "St Patrick's Day 221, Good Friday 230, Easter Sunday 232, April Fools' Day 236"
+  },
+  {
+   "run": 4,
+   "range": [
+    250,
+    298
+   ],
+   "status": "todo",
+   "note": "batch 2: keep a puzzle only if it passes every rule AND a cold solve; rewrite the rest; St George's Day 258"
+  },
+  {
+   "run": 5,
+   "range": [
+    299,
+    347
+   ],
+   "status": "todo",
+   "note": "batch 2 as run 4; Father's Day 316, midsummer 317"
+  },
+  {
+   "run": 6,
+   "range": [
+    75,
+    347
+   ],
+   "status": "todo",
+   "note": "seam check only: R6 and theme spacing across every batch boundary; fix by swapping forthcoming puzzles; then the final report"
+  }
  ]
 }

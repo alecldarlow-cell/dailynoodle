@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0171", band:"medium",
   groups:[
-    {rank:1, name:"Garden features",      members:["PERGOLA","ARBOUR","ROCKERY","DECKING"]},
-    {rank:2, name:"Kinds of decking",     members:["COMPOSITE","HARDWOOD","GROOVED","SMOOTH"]},
-    {rank:3, name:"Playing card actions", members:["DEAL","CUT","SHUFFLE","DECK"]},
-    {rank:4, name:"Ways to floor",        members:["FELL","DECK OUT","KNOCK DOWN","STUN"]}
+    {rank:1, name:"In the mouth",          members:["GUM","PALATE","TONSIL","TONGUE"]},
+    {rank:2, name:"Soft furnishings",      members:["CURTAIN","RUG","THROW","BLIND"]},
+    {rank:3, name:"Cold meats",            members:["HAM","SALAMI","PASTRAMI","CHORIZO"]},
+    {rank:4, name:"Things with a filling", members:["TOOTH","CUSHION","SANDWICH","DOUGHNUT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"DECKING", not:"Kinds of decking"},
-    {tile:"DECK",    not:"Ways to floor"},
-    {tile:"CUT",     not:"Garden features"}
+    {tile:"TOOTH",   not:"In the mouth"},
+    {tile:"CUSHION", not:"Soft furnishings"},
+    {tile:"TONGUE",  not:"Cold meats"}
   ]
 };
 </script>

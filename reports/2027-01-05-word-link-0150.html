@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0150", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of horse",      members:["ROCKING","DARK","CLOTHES","SEA"]},
-    {rank:2, name:"Gymnasium apparatus", members:["BEAM","BARS","RINGS","VAULT"]},
-    {rank:3, name:"Kinds of beam",       members:["LOW","ROOF","LASER","HIGH"]},
-    {rank:4, name:"Ways to prance",      members:["STRUT","SWAGGER","PARADE","MINCE"]}
+    {rank:1, name:"Deer",                          members:["STAG","HIND","BUCK","FAWN"]},
+    {rank:2, name:"Function",                      members:["PURPOSE","DUTY","JOB","TASK"]},
+    {rank:3, name:"Light browns",                  members:["TAN","TAUPE","KHAKI","CAMEL"]},
+    {rank:4, name:"Sound like things at a bakery", members:["DOE","ROLE","FLOWER","BRED"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BEAM",  not:"Kinds of beam"},
-    {tile:"VAULT", not:"Kinds of horse"},
-    {tile:"HIGH",  not:"Gymnasium apparatus"}
+    {tile:"DOE",  not:"Deer"},
+    {tile:"FAWN", not:"Light browns"},
+    {tile:"ROLE", not:"Function"}
   ]
 };
 </script>

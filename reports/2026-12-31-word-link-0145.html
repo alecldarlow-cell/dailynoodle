@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0145", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of watch",  members:["WRIST","NIGHT","STOP","POCKET"]},
-    {rank:2, name:"Kinds of pocket", members:["AIR","BACK","PATCH","DEEP"]},
-    {rank:3, name:"Sailing duties",  members:["HELM","LOOKOUT","GALLEY","RIGGING"]},
-    {rank:4, name:"Ways to observe", members:["MONITOR","VIEW","CLOCK","EYE"]}
+    {rank:1, name:"Commotion",           members:["DIN","HUBBUB","RUMPUS","UPROAR"]},
+    {rank:2, name:"Rooms in a home",     members:["DEN","PARLOUR","SNUG","STUDY"]},
+    {rank:3, name:"At an airport",       members:["HANGAR","RUNWAY","LOUNGE","CAROUSEL"]},
+    {rank:4, name:"Things with strings", members:["PUPPET","RACKET","APRON","HARP"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"POCKET", not:"Kinds of pocket"},
-    {tile:"CLOCK",  not:"Kinds of watch"},
-    {tile:"NIGHT",  not:"Sailing duties"}
+    {tile:"RACKET", not:"Commotion"},
+    {tile:"APRON",  not:"At an airport"},
+    {tile:"LOUNGE", not:"Rooms in a home"}
   ]
 };
 </script>

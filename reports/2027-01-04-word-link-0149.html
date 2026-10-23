@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0149", band:"medium",
   groups:[
-    {rank:1, name:"Parts of an egg",         members:["SHELL","YOLK","WHITE","MEMBRANE"]},
-    {rank:2, name:"Petrol stations",         members:["ESSO","TEXACO","GULF","JET"]},
-    {rank:3, name:"Shipping forecast areas", members:["DOGGER","FISHER","MALIN","BISCAY"]},
-    {rank:4, name:"Ways to whisk",           members:["BEAT","WHIP","FOLD","FROTH"]}
+    {rank:1, name:"Famous bears",             members:["SOOTY","YOGI","PUDSEY","BUNGLE"]},
+    {rank:2, name:"London railway termini",   members:["EUSTON","MARYLEBONE","ST PANCRAS","PADDINGTON"]},
+    {rank:3, name:"FULL ___",                 members:["STOP","MOON","HOUSE","MARKS"]},
+    {rank:4, name:"London Underground lines", members:["CIRCLE","VICTORIA","JUBILEE","CENTRAL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SHELL", not:"Petrol stations"},
-    {tile:"WHITE", not:"Shipping forecast areas"},
-    {tile:"JET",   not:"Ways to whisk"}
+    {tile:"CIRCLE",     not:"FULL ___"},
+    {tile:"VICTORIA",   not:"London railway termini"},
+    {tile:"PADDINGTON", not:"Famous bears"}
   ]
 };
 </script>

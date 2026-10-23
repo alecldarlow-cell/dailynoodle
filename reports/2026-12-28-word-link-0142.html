@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0142", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of paper",  members:["WALL","TRACING","CREPE","BLOTTING"]},
-    {rank:2, name:"Kinds of wall",   members:["SEA","CAVITY","GARDEN","CURTAIN"]},
-    {rank:3, name:"Newspaper words", members:["MASTHEAD","COLUMN","SPREAD","BYLINE"]},
-    {rank:4, name:"Ways to record",  members:["LOG","NOTE","JOT","MINUTE"]}
+    {rank:1, name:"Not a thing",      members:["NIL","NOUGHT","ZILCH","NOTHING"]},
+    {rank:2, name:"Hospital staff",   members:["NURSE","PORTER","SURGEON","MIDWIFE"]},
+    {rank:3, name:"___ HOUR",         members:["RUSH","ZERO","WITCHING","ELEVENTH"]},
+    {rank:4, name:"The Seven Dwarfs", members:["DOC","HAPPY","DOPEY","SNEEZY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"WALL",   not:"Kinds of wall"},
-    {tile:"COLUMN", not:"Kinds of wall"},
-    {tile:"MINUTE", not:"Newspaper words"}
+    {tile:"ZERO",  not:"Not a thing"},
+    {tile:"DOC",   not:"Hospital staff"},
+    {tile:"HAPPY", not:"___ HOUR"}
   ]
 };
 </script>

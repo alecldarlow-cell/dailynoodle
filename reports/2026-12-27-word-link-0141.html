@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0141", band:"medium",
   groups:[
-    {rank:1, name:"Tour de France things", members:["PELOTON","YELLOW","COL","DOMESTIQUE"]},
-    {rank:2, name:"Bicycle parts",         members:["DERAILLEUR","MUDGUARD","STEM","CRANK"]},
-    {rank:3, name:"Kinds of crank",        members:["HANDLE","SHAFT","OLD","CALL"]},
-    {rank:4, name:"Ways to pedal",         members:["SPIN","GRIND","MASH","CHURN"]}
+    {rank:1, name:"Tops",                    members:["SHIRT","JUMPER","TUNIC","VEST"]},
+    {rank:2, name:"Wild cats",               members:["OCELOT","PUMA","LYNX","CHEETAH"]},
+    {rank:3, name:"Extinct animals",         members:["DODO","DINOSAUR","MASTODON","GREAT AUK"]},
+    {rank:4, name:"An insect hides in each", members:["BLOUSE","PANTHER","MAMMOTH","SIGNATURE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"CRANK",  not:"Kinds of crank"},
-    {tile:"STEM",   not:"Ways to pedal"},
-    {tile:"YELLOW", not:"Kinds of crank"}
+    {tile:"BLOUSE",  not:"Tops"},
+    {tile:"PANTHER", not:"Wild cats"},
+    {tile:"MAMMOTH", not:"Extinct animals"}
   ]
 };
 </script>

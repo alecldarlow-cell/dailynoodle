@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0140", band:"medium",
   groups:[
-    {rank:1, name:"Rodents",        members:["GERBIL","HAMSTER","CHINCHILLA","CAPYBARA"]},
-    {rank:2, name:"Pet shop items", members:["CAGE","BEDDING","PELLETS","WHEEL"]},
-    {rank:3, name:"Kinds of wheel", members:["CATHERINE","SPINNING","STEERING","BIG"]},
-    {rank:4, name:"Ways to gnaw",   members:["NIBBLE","CHAMP","CHOMP","RASP"]}
+    {rank:1, name:"Cold",                 members:["FROSTY","NIPPY","BITTER","PARKY"]},
+    {rank:2, name:"Stage musicals",       members:["EVITA","WICKED","MATILDA","CHICAGO"]},
+    {rank:3, name:"US cities",            members:["DENVER","BOSTON","DALLAS","ATLANTA"]},
+    {rank:4, name:"Sound like countries", members:["CHILLY","GREASE","WHALES","CYPRESS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"WHEEL",   not:"Kinds of wheel"},
-    {tile:"BEDDING", not:"Ways to gnaw"},
-    {tile:"CAGE",    not:"Kinds of wheel"}
+    {tile:"CHILLY",  not:"Cold"},
+    {tile:"GREASE",  not:"Stage musicals"},
+    {tile:"CHICAGO", not:"US cities"}
   ]
 };
 </script>

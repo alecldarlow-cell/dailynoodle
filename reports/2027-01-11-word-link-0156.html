@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0156", band:"medium",
   groups:[
-    {rank:1, name:"String instruments",  members:["CELLO","VIOLA","HARP","LUTE"]},
-    {rank:2, name:"Girls' names of old", members:["MAUD","EDITH","AGNES","DORIS"]},
-    {rank:3, name:"Kinds of bow",        members:["LONG","RAIN","TAKE A","CROSS"]},
-    {rank:4, name:"Ways to pluck",       members:["PICK","TWANG","STRUM","TWEAK"]}
+    {rank:1, name:"TREASURE ___",                                 members:["CHEST","MAP","TROVE","ISLAND"]},
+    {rank:2, name:"Cat breeds",                                   members:["BENGAL","SIAMESE","BURMESE","RAGDOLL"]},
+    {rank:3, name:"Languages of the British Isles",               members:["WELSH","GAELIC","CORNISH","MANX"]},
+    {rank:4, name:"Lose the last letter for a people of history", members:["ROMANY","SAXONY","HUNT","ANGLER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"VIOLA", not:"Girls' names of old"},
-    {tile:"PICK",  not:"String instruments"},
-    {tile:"RAIN",  not:"Ways to pluck"}
+    {tile:"HUNT",   not:"TREASURE ___"},
+    {tile:"ROMANY", not:"Languages of the British Isles"},
+    {tile:"MANX",   not:"Cat breeds"}
   ]
 };
 </script>

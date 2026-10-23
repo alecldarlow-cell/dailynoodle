@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0135", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of star",   members:["SHOOTING","FILM","POP","NORTH"]},
-    {rank:2, name:"Kinds of pop",    members:["SODA","LOLLY","WEASEL","BUBBLEGUM"]},
-    {rank:3, name:"Astronomy words", members:["NEBULA","ECLIPSE","ORBIT","COMET"]},
-    {rank:4, name:"Ways to burst",   members:["POP OFF","SPLIT","RUPTURE","BLOW"]}
+    {rank:1, name:"Parts of the face",    members:["CHIN","BROW","CHEEK","TEMPLE"]},
+    {rank:2, name:"___MATE",              members:["CHECK","CLASS","ROOM","PLAY"]},
+    {rank:3, name:"Fabric patterns",      members:["POLKA DOT","PINSTRIPE","PAISLEY","FLORAL"]},
+    {rank:4, name:"Things with a bridge", members:["NOSE","SHIP","GLASSES","VIOLIN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"POP",      not:"Kinds of pop"},
-    {tile:"SHOOTING", not:"Ways to burst"},
-    {tile:"NORTH",    not:"Astronomy words"}
+    {tile:"NOSE",  not:"Parts of the face"},
+    {tile:"SHIP",  not:"___MATE"},
+    {tile:"CHECK", not:"Fabric patterns"}
   ]
 };
 </script>

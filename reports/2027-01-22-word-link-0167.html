@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0167", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of piano",    members:["GRAND","UPRIGHT","BABY","PLAYER"]},
-    {rank:2, name:"Kinds of player",   members:["TEAM","CD","BIT PART","RECORD"]},
-    {rank:3, name:"Baby things",       members:["RATTLE","PRAM","BIB","DUMMY"]},
-    {rank:4, name:"Ways to misbehave", members:["ACT UP","RAG","LARK","PLAY UP"]}
+    {rank:1, name:"Wild weather",                members:["GALE","BLIZZARD","DOWNPOUR","CLOUDBURST"]},
+    {rank:2, name:"Biting insects",              members:["MIDGE","GNAT","FLEA","HORSEFLY"]},
+    {rank:3, name:"In Lancashire",               members:["BLACKBURN","BURNLEY","PRESTON","CHORLEY"]},
+    {rank:4, name:"Second World War RAF planes", members:["HURRICANE","MOSQUITO","LANCASTER","SPITFIRE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PLAYER", not:"Kinds of player"},
-    {tile:"BABY",   not:"Baby things"},
-    {tile:"RATTLE", not:"Ways to misbehave"}
+    {tile:"HURRICANE", not:"Wild weather"},
+    {tile:"MOSQUITO",  not:"Biting insects"},
+    {tile:"LANCASTER", not:"In Lancashire"}
   ]
 };
 </script>

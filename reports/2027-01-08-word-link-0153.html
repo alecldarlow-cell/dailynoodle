@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0153", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of engine", members:["STEAM","SEARCH","JET","FIRE"]},
-    {rank:2, name:"Kinds of search", members:["BODY","WORD","QUEST","MANHUNT"]},
-    {rank:3, name:"Railway things",  members:["SLEEPER","SIGNAL","BUFFER","POINTS"]},
-    {rank:4, name:"Ways to hunt",    members:["TRACK","STALK","SCOUR","COMB"]}
+    {rank:1, name:"Farm machinery", members:["TRACTOR","HARROW","BALER","COMBINE"]},
+    {rank:2, name:"The gist",       members:["ESSENCE","THRUST","SUBSTANCE","MEANING"]},
+    {rank:3, name:"Fencing terms",  members:["PARRY","LUNGE","RIPOSTE","EPEE"]},
+    {rank:4, name:"SNOW___",        members:["PLOUGH","DRIFT","DON","BOARD"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SEARCH", not:"Kinds of search"},
-    {tile:"FIRE",   not:"Railway things"},
-    {tile:"COMB",   not:"Kinds of search"}
+    {tile:"PLOUGH", not:"Farm machinery"},
+    {tile:"DRIFT",  not:"The gist"},
+    {tile:"THRUST", not:"Fencing terms"}
   ]
 };
 </script>

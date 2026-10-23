@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0169", band:"medium",
   groups:[
-    {rank:1, name:"Cleaning products", members:["BLEACH","POLISH","DESCALER","SCOURER"]},
-    {rank:2, name:"Nationalities",     members:["DANISH","SWEDISH","TURKISH","FINNISH"]},
-    {rank:3, name:"Kinds of finish",   members:["PHOTO","GLOSS","STRONG","MATT"]},
-    {rank:4, name:"Ways to clean",     members:["SCOUR","BUFF","RUB","SWAB"]}
+    {rank:1, name:"Cat noises",               members:["PURR","HISS","MIAOW","YOWL"]},
+    {rank:2, name:"Sour-tasting",             members:["SHARP","ACIDIC","TANGY","VINEGARY"]},
+    {rank:3, name:"Pastry dishes",            members:["PASTY","FLAN","QUICHE","TART"]},
+    {rank:4, name:"Sound like Greek letters", members:["MEW","PIE","ROW","BEATER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"POLISH", not:"Nationalities"},
-    {tile:"BUFF",   not:"Cleaning products"},
-    {tile:"DANISH", not:"Kinds of finish"}
+    {tile:"MEW",  not:"Cat noises"},
+    {tile:"PIE",  not:"Pastry dishes"},
+    {tile:"TART", not:"Sour-tasting"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0164", band:"medium",
   groups:[
-    {rank:1, name:"Orchestral works", members:["SYMPHONY","CONCERTO","OVERTURE","SUITE"]},
-    {rank:2, name:"Hotel rooms",      members:["SINGLE","TWIN","PENTHOUSE","ANNEXE"]},
-    {rank:3, name:"Kinds of single",  members:["VINYL","MALT","PARENT","FILE"]},
-    {rank:4, name:"Ways to begin",    members:["LAUNCH","OPEN","KICK OFF","STRIKE UP"]}
+    {rank:1, name:"Important people",       members:["VIP","BIG SHOT","TOP DOG","BIG CHEESE"]},
+    {rank:2, name:"British wild flowers",   members:["BUTTERCUP","FOXGLOVE","POPPY","DAISY"]},
+    {rank:3, name:"British trees",          members:["ASH","YEW","WILLOW","BEECH"]},
+    {rank:4, name:"Watership Down rabbits", members:["HAZEL","FIVER","BIGWIG","DANDELION"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SUITE",    not:"Hotel rooms"},
-    {tile:"SINGLE",   not:"Kinds of single"},
-    {tile:"OVERTURE", not:"Ways to begin"}
+    {tile:"HAZEL",     not:"British trees"},
+    {tile:"BIGWIG",    not:"Important people"},
+    {tile:"DANDELION", not:"British wild flowers"}
   ]
 };
 </script>

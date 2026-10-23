@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0174">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2027-01-29">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0174">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-01-29-word-link-0174.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0174", band:"medium",
   groups:[
-    {rank:1, name:"Door furniture",        members:["KNOCKER","LETTERBOX","SPYHOLE","ESCUTCHEON"]},
-    {rank:2, name:"Kinds of latch",        members:["THUMB","NIGHT","GATE","SNIB"]},
-    {rank:3, name:"Farm gates and fences", members:["STILE","HURDLE","POST","RAIL"]},
-    {rank:4, name:"Ways to bar entry",     members:["BOLT UP","LOCK OUT","SEAL OFF","BLOCK"]}
+    {rank:1, name:"In the biscuit tin",  members:["RICH TEA","GINGERNUT","SHORTBREAD","FIG ROLL"]},
+    {rank:2, name:"Confront",            members:["DEFY","BRAVE","CHALLENGE","TACKLE"]},
+    {rank:3, name:"Rugby terms",         members:["SCRUM","TRY","LINEOUT","RUCK"]},
+    {rank:4, name:"Things you can pull", members:["CRACKER","FACE","MUSCLE","PINT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"GATE",  not:"Farm gates and fences"},
-    {tile:"NIGHT", not:"Door furniture"}
+    {tile:"CRACKER", not:"In the biscuit tin"},
+    {tile:"FACE",    not:"Confront"},
+    {tile:"TACKLE",  not:"Rugby terms"}
   ]
 };
 </script>

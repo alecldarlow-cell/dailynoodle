@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0151", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of spell",    members:["MAGIC","DRY","COLD","BREATHING"]},
-    {rank:2, name:"Kinds of dry",      members:["BONE","BLOW","SPIN","FREEZE"]},
-    {rank:3, name:"Weather in a week", members:["SUNNY","CLOUDY","SHOWERY","BREEZY"]},
-    {rank:4, name:"Ways to charm",     members:["BEGUILE","ENCHANT","WOO","BEWITCH"]}
+    {rank:1, name:"Parts of a bird",       members:["BEAK","TALON","CREST","FEATHER"]},
+    {rank:2, name:"On the waterways",      members:["TOWPATH","BARGE","NARROWBOAT","MOORING"]},
+    {rank:3, name:"Supports",              members:["STRUT","PILLAR","BRACKET","TRESTLE"]},
+    {rank:4, name:"Rugby union positions", members:["WING","LOCK","PROP","CENTRE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"DRY",  not:"Kinds of dry"},
-    {tile:"COLD", not:"Weather in a week"},
-    {tile:"SPIN", not:"Kinds of spell"}
+    {tile:"WING", not:"Parts of a bird"},
+    {tile:"LOCK", not:"On the waterways"},
+    {tile:"PROP", not:"Supports"}
   ]
 };
 </script>

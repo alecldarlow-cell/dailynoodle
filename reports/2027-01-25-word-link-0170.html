@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0170", band:"medium",
   groups:[
-    {rank:1, name:"Bedroom furniture",  members:["WARDROBE","OTTOMAN","TALLBOY","DIVAN"]},
-    {rank:2, name:"Turkish things",     members:["FEZ","KEBAB","DELIGHT","BAZAAR"]},
-    {rank:3, name:"Kinds of chest",     members:["TREASURE","MEDICINE","BARREL","WAR"]},
-    {rank:4, name:"Ways to store away", members:["STOW","SHELVE","POCKET","BANK"]}
+    {rank:1, name:"Hairdos",                         members:["PERM","CROP","MOHICAN","PONYTAIL"]},
+    {rank:2, name:"___ PARK",                        members:["HYDE","CAR","THEME","SAFARI"]},
+    {rank:3, name:"At a Burns supper",               members:["HAGGIS","NEEPS","TATTIES","WHISKY"]},
+    {rank:4, name:"A Scottish island hides in each", members:["MULLET","JURASSIC","WARRANT","TRIBUTE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"OTTOMAN", not:"Turkish things"},
-    {tile:"TALLBOY", not:"Kinds of chest"},
-    {tile:"BANK",    not:"Bedroom furniture"}
+    {tile:"MULLET",   not:"Hairdos"},
+    {tile:"JURASSIC", not:"___ PARK"},
+    {tile:"WHISKY",   not:"A Scottish island hides in each"}
   ]
 };
 </script>

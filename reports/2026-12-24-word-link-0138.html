@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0138", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of paint",  members:["GLOSS","EMULSION","MATT","POSTER"]},
-    {rank:2, name:"Decorating kit",  members:["ROLLER","DUSTSHEET","FILLER","MASKING"]},
-    {rank:3, name:"Kinds of roller", members:["HAIR","STEAM","HIGH","ROAD"]},
-    {rank:4, name:"Ways to smear",   members:["DAUB","SLAP ON","PLASTER","COAT"]}
+    {rank:1, name:"Tools",                members:["SPANNER","PLIERS","SAW","DRILL"]},
+    {rank:2, name:"Sayings",              members:["ADAGE","MAXIM","MOTTO","PROVERB"]},
+    {rank:3, name:"Two-wheelers",         members:["PUSHBIKE","MOPED","TANDEM","MOTORBIKE"]},
+    {rank:4, name:"A bird hides in each", members:["WRENCH","SCOOTER","LANTERN","BOWLER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"ROLLER", not:"Kinds of roller"},
-    {tile:"MATT",   not:"Ways to smear"},
-    {tile:"POSTER", not:"Decorating kit"}
+    {tile:"WRENCH",  not:"Tools"},
+    {tile:"SCOOTER", not:"Two-wheelers"},
+    {tile:"SAW",     not:"Sayings"}
   ]
 };
 </script>

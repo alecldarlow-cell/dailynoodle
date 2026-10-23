@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0147", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of race",      members:["ARMS","RAT","RELAY","DRAG"]},
-    {rank:2, name:"Kinds of rat",       members:["PACK","WATER","MOLE","BROWN"]},
-    {rank:3, name:"Motor racing words", members:["PIT LANE","CHICANE","APEX","GRID"]},
-    {rank:4, name:"Ways to hurry",      members:["BOLT","DASH","PELT","LEG"]}
+    {rank:1, name:"In street names",      members:["AVENUE","LANE","CLOSE","CRESCENT"]},
+    {rank:2, name:"Used to start a fire", members:["LIGHTER","FLINT","KINDLING","TINDER"]},
+    {rank:3, name:"Phases of the moon",   members:["NEW","FULL","GIBBOUS","WANING"]},
+    {rank:4, name:"TEST ___",             members:["MATCH","DRIVE","TUBE","CASE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"RAT",  not:"Kinds of rat"},
-    {tile:"DRAG", not:"Motor racing words"},
-    {tile:"BOLT", not:"Kinds of race"}
+    {tile:"MATCH",    not:"Used to start a fire"},
+    {tile:"DRIVE",    not:"In street names"},
+    {tile:"CRESCENT", not:"Phases of the moon"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0155", band:"medium",
   groups:[
-    {rank:1, name:"Brass instruments", members:["TUBA","CORNET","TROMBONE","EUPHONIUM"]},
-    {rank:2, name:"Ice cream shapes",  members:["WAFER","SCOOP","SUNDAE","LOLLY"]},
-    {rank:3, name:"Kinds of scoop",    members:["EXCLUSIVE","NECK","ICE","SNOW"]},
-    {rank:4, name:"Ways to blow",      members:["PUFF","EXHALE","GUST","BLAST"]}
+    {rank:1, name:"Months of the year", members:["JANUARY","MARCH","JUNE","OCTOBER"]},
+    {rank:2, name:"Astonish",           members:["STAGGER","ASTOUND","AMAZE","FLOOR"]},
+    {rank:3, name:"Parts of a room",    members:["CEILING","WALL","DOOR","WINDOW"]},
+    {rank:4, name:"Backwards, a food",  members:["STUN","MAY","KEEL","MADE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"CORNET", not:"Ice cream shapes"},
-    {tile:"SCOOP",  not:"Kinds of scoop"},
-    {tile:"BLAST",  not:"Brass instruments"}
+    {tile:"MAY",   not:"Months of the year"},
+    {tile:"STUN",  not:"Astonish"},
+    {tile:"FLOOR", not:"Parts of a room"}
   ]
 };
 </script>

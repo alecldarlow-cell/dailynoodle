@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0163", band:"medium",
   groups:[
-    {rank:1, name:"Musicals",        members:["CATS","HAIR","OLIVER","CHICAGO"]},
-    {rank:2, name:"American cities", members:["BOSTON","DENVER","PHOENIX","AUSTIN"]},
-    {rank:3, name:"Kinds of hair",   members:["HORSE","MAIDEN","ANGEL","SPLIT"]},
-    {rank:4, name:"Ways to sing",    members:["CROON","WARBLE","BELT","YODEL"]}
+    {rank:1, name:"Animal collective nouns",  members:["GAGGLE","FLOCK","SHOAL","HERD"]},
+    {rank:2, name:"Golf shots",               members:["PUTT","CHIP","PITCH","SLICE"]},
+    {rank:3, name:"Deadly sins",              members:["ENVY","WRATH","GREED","PRIDE"]},
+    {rank:4, name:"Rearrange for a composer", members:["LARGE","DRIVE","SLOTH","HANDLE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"CHICAGO", not:"American cities"},
-    {tile:"HAIR",    not:"Kinds of hair"},
-    {tile:"BELT",    not:"Musicals"}
+    {tile:"SLOTH", not:"Deadly sins"},
+    {tile:"DRIVE", not:"Golf shots"},
+    {tile:"PRIDE", not:"Animal collective nouns"}
   ]
 };
 </script>

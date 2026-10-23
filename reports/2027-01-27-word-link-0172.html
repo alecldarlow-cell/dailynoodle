@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0172", band:"medium",
   groups:[
-    {rank:1, name:"Radiator words", members:["BLEED","VALVE","THERMOSTAT","FIN"]},
-    {rank:2, name:"Kinds of bleed", members:["NOSE","BRAKE","HEART","COLOUR"]},
-    {rank:3, name:"Fish parts",     members:["GILL","SCALE","ROE","TAIL"]},
-    {rank:4, name:"Ways to drain",  members:["SIPHON","EMPTY","SAP","TAP"]}
+    {rank:1, name:"Artist's kit", members:["EASEL","PALETTE","CANVAS","SMOCK"]},
+    {rank:2, name:"Spiky plants", members:["THISTLE","GORSE","CACTUS","BRAMBLE"]},
+    {rank:3, name:"Tent parts",   members:["PEG","POLE","GUY ROPE","FLYSHEET"]},
+    {rank:4, name:"___WOOD",      members:["HOLLY","BRUSH","SANDAL","FIRE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BLEED", not:"Kinds of bleed"},
-    {tile:"FIN",   not:"Fish parts"},
-    {tile:"TAP",   not:"Radiator words"}
+    {tile:"HOLLY",  not:"Spiky plants"},
+    {tile:"BRUSH",  not:"Artist's kit"},
+    {tile:"CANVAS", not:"Tent parts"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0161", band:"medium",
   groups:[
-    {rank:1, name:"Painting media",    members:["GOUACHE","ACRYLIC","PASTEL","TEMPERA"]},
-    {rank:2, name:"Kinds of pastel",   members:["SHADE","CHALK","OIL","SOFT"]},
-    {rank:3, name:"Art gallery words", members:["CURATOR","PLINTH","VARNISH","LABEL"]},
-    {rank:4, name:"Ways to sketch",    members:["DOODLE","OUTLINE","DRAFT","ROUGH"]}
+    {rank:1, name:"Pubs",                 members:["INN","TAVERN","LOCAL","ALEHOUSE"]},
+    {rank:2, name:"Parts of the mouth",   members:["TONGUE","LIPS","PALATE","TEETH"]},
+    {rank:3, name:"___ clock",            members:["CUCKOO","BODY","CARRIAGE","WALL"]},
+    {rank:4, name:"Things you can raise", members:["BAR","ROOF","ALARM","STAKES"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PASTEL", not:"Kinds of pastel"},
-    {tile:"ROUGH",  not:"Painting media"},
-    {tile:"OIL",    not:"Painting media"}
+    {tile:"BAR",   not:"Pubs"},
+    {tile:"ROOF",  not:"Parts of the mouth"},
+    {tile:"ALARM", not:"___ clock"}
   ]
 };
 </script>
