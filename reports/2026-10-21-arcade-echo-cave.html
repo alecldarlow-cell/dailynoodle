@@ -63,7 +63,7 @@ button,a{touch-action:manipulation}button{font:inherit;color:inherit;cursor:poin
  <section class="screen" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="resultTitle"><div class="dialog" id="result"></div></section>
 </main>
 <div id="turn" role="alert"><div class="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/></svg><div><b>Turn your phone upright</b><span>Echo Cave is played in portrait. Your expedition waits for you.</span></div></div></div>
-<div id="floatStick" aria-hidden="true" hidden><svg viewBox="-60 -60 120 120"><circle class="run" r="54"/><circle class="sneak" r="30"/><circle id="knob" r="11"/></svg></div>
+<div id="floatStick" aria-hidden="true" hidden><svg viewBox="-60 -60 120 120"><circle class="run" r="50"/><circle class="sneak" r="32"/><circle id="knob" r="11"/></svg></div>
 <div id="storageNote" role="status" hidden>Progress couldn’t be saved on this browser.</div>
 <script>
 'use strict';
@@ -202,7 +202,7 @@ function restore(a){
   g.guide=!!a.guide&&!S.tutorial;g.guideStep=clamp(Math.floor(a.guideStep)||0,0,2);return g;
  }catch(e){return null;}
 }
-let G=null,phase='home',helpFrom='home',menuFrom='game',mapFrom='play',W=0,H=0,T=26,baseT=48,zoom=1,ox=0,oy=0,cam={x:0,y:0},last=0,saveClock=0,noticeClock=0,footClock=0,lastWarning='',keys=new Set(),joy={id:null,x:0,y:0,dx:0,dy:0};
+let G=null,phase='home',helpFrom='home',menuFrom='game',mapFrom='play',W=0,H=0,T=26,baseT=48,zoom=1,ox=0,oy=0,cam={x:0,y:0},lead={x:0,y:0},last=0,saveClock=0,noticeClock=0,footClock=0,lastWarning='',keys=new Set(),joy={id:null,x:0,y:0,dx:0,dy:0};
 function snapshot(){
  if(!G||G.ended)return null;
  return{v:1,lv:2,index:G.index,mode:G.mode,date:G.date,p:{...G.p},hearts:G.hearts,gotRelic:G.gotRelic,echoes:G.echoes,elapsed:G.elapsed,visited:G.visited.slice(),taken:G.crystals.map(c=>c.taken),cooldown:G.cooldown,invul:G.invul,heard:G.heard,facing:G.facing,seenRelic:G.seenRelic,seenExit:G.seenExit,seenCrystals:G.seenCrystals.slice(),pulses:G.pulses.map(p=>({x:p.x,y:p.y,t:p.t,heard:p.heard.slice()})),enemies:G.enemies.map(e=>({x:e.x,y:e.y,target:{...e.target},alert:e.alert,wait:e.wait,stun:e.stun,patrol:e.patrol,chase:e.chase,reaction:e.reaction,repath:e.repath,route:e.route.map(p=>({...p}))})),guide:G.guide,guideStep:G.guideStep};
@@ -217,7 +217,7 @@ function renderHome(){
  $('caves').innerHTML=CAVES.map((c,i)=>{const best=S.bests[i];return `<button class="cave" data-cave="${i}" ${i>level?'disabled':''}><span class="num">CAVE ${String(i+1).padStart(2,'0')}</span><b>${c.name}</b><span class="stars">${i>level?'Complete the previous cave':starRow(S.stars[i])}</span>${best?`<span class="record">Best ${Math.floor(best.secs/60)}:${String(best.secs%60).padStart(2,'0')} · ${best.echoes} echoes</span>`:''}</button>`;}).join('');
 }
 function launch(index=0,mode='campaign',how='new',saved=null,date=null){
- wakeAudio();goFS();G=saved||build(index,mode,date||londonDay());phase='play';rndArm(how);clearInput();showScreen(null);cam={...G.p};zoom=1;G.vx=G.vy=0;if(!saved)G.invul=1;noticeClock=0;lastWarning='';saveClock=0;footClock=0;last=0;$('notice').hidden=true;$('leave').hidden=true;terrain=null;fx=[];resize();revealVisited();discover();hud();guide();saveRun();
+ wakeAudio();goFS();G=saved||build(index,mode,date||londonDay());phase='play';rndArm(how);clearInput();showScreen(null);cam={...G.p};lead={x:0,y:0};zoom=1;G.vx=G.vy=0;if(!saved)G.invul=1;noticeClock=0;lastWarning='';saveClock=0;footClock=0;last=0;$('notice').hidden=true;$('leave').hidden=true;terrain=null;fx=[];resize();revealVisited();discover();hud();guide();saveRun();
 }
 function notice(text,time=3){$('notice').firstElementChild.textContent=text;$('notice').hidden=false;noticeClock=time;}
 function guide(){if(!G)return;$('skip').hidden=!G.guide;if(G.guide){const messages=['<strong>Tap Echo.</strong> See beyond your little lamplight.','<strong>Drag to walk.</strong> Find the gold diamond.','<strong>Relic found.</strong> Find the exit, then tap Leave cave.'];$('tip').innerHTML=messages[Math.min(G.guideStep,2)];}else $('tip').innerHTML=G.gotRelic&&dist(G.p,G.exit)<.85?'Tap <strong>Leave cave</strong> to finish, or keep exploring.':G.gotRelic?'<strong>Relic recovered.</strong> Find the exit. The map remembers landmarks.':(G.enemies.length?'<strong>Sneak</strong> near creatures: they hunt by sound.':'Find the <strong>gold relic</strong>. Small crystals are optional.');}
@@ -245,10 +245,12 @@ function movePlayer(dx,dy,dt){
  if(!G||phase!=='play'||G.ended)return;const len=Math.hypot(dx,dy);if(len<.08)return;rndStart();const scale=2.6*dt/Math.max(1,len),sx=dx*scale,sy=dy*scale,old={...G.p};
  const next={x:G.p.x+sx,y:G.p.y+sy};
  if(canStand(G,next)){G.p=next;}else{
- // Find the smallest free deflection within 35 degrees. Rounded player contact
- // and diagonal rock cuts let this carry motion around a corner without snaps.
- let glide=null;for(let angle=5;angle<=35&&!glide;angle+=5)for(const sign of[-1,1]){
-  const a=angle*sign*Math.PI/180,c=Math.cos(a),s=Math.sin(a),p={x:G.p.x+sx*c-sy*s,y:G.p.y+sx*s+sy*c};if(canStand(G,p)){glide=p;break;}
+ // Find the smallest free deflection. Up to 35 degrees keeps full speed; beyond, up to 75, the
+ // step shrinks with the angle. Cutting a bend early therefore turns you into the open passage
+ // (Pac-Man-style cornering) instead of jamming on the inside corner, while pushing straight
+ // into rock still stops you.
+ let glide=null;for(let angle=5;angle<=75&&!glide;angle+=5)for(const sign of[-1,1]){
+  const a=angle*sign*Math.PI/180,k=angle<=35?1:Math.cos(angle*Math.PI/180)/Math.cos(35*Math.PI/180),c=Math.cos(a)*k,s=Math.sin(a)*k,p={x:G.p.x+sx*c-sy*s,y:G.p.y+sx*s+sy*c};if(canStand(G,p)){glide=p;break;}
  }
  if(glide)G.p=glide;else{
  // Resolve to the wall continuously, then preserve speed along its tangent
@@ -335,8 +337,12 @@ function update(dt){if(phase!=='play'||!G||G.ended)return;rndStart();rnd.secs+=d
  saveClock+=dt;if(saveClock>2){saveClock=0;saveRun();}
  // Camera: close on the explorer and a little ahead of where they're heading. While an echo
  // travels it eases out to show the passages it lights, then drifts back in.
- const still=S.settings.motion,zt=!still&&G.pulses.some(p=>p.t<2.6)?.62:1;zoom+=(zt-zoom)*Math.min(1,dt*(zt<zoom?3.2:1.4));if(still)zoom=1;
- const factor=still?1:Math.min(1,dt*6);cam.x+=(G.p.x+(still?0:G.vx*.9)-cam.x)*factor;cam.y+=(G.p.y+(still?0:G.vy*.9)-cam.y)*factor;
+ // Echo zoom is gentle (to 80%) and only while standing, so walking speed on screen never changes.
+ const still=S.settings.motion,standing=G.elapsed-G.movedAt>.3,zt=!still&&standing&&G.pulses.some(p=>p.t<2.6)?.8:1;zoom+=(zt-zoom)*Math.min(1,dt*(zt<zoom?2.4:1.8));if(still)zoom=1;
+ // The lead is small and changes slowly (about a second), so quick back-and-forth barely moves the
+ // view; it settles ahead only once you've clearly committed to a direction.
+ lead.x+=((still?0:G.vx*.55)-lead.x)*Math.min(1,dt*1.1);lead.y+=((still?0:G.vy*.55)-lead.y)*Math.min(1,dt*1.1);
+ const factor=still?1:Math.min(1,dt*6);cam.x+=(G.p.x+lead.x-cam.x)*factor;cam.y+=(G.p.y+lead.y-cam.y)*factor;
 }
 function finish(win){if(!G||G.ended)return;rndStart();G.ended=true;clearInput();const found=G.crystals.filter(c=>c.taken).length,all=found===G.crystals.length,stars=win?(all?(G.hearts===3?3:2):1):0,score=win?500+found*100+G.hearts*50:found*100;
  rndEnd(win,{stars,score,echoes:G.echoes,hearts:G.hearts,crystals:found});const record={stars,score,secs:Math.round(G.elapsed),echoes:G.echoes,hearts:G.hearts};if(win){if(G.mode==='campaign'){S.stars[G.index]=Math.max(S.stars[G.index],stars);if(G.index===0)S.tutorial=true;const old=S.bests[G.index];if(!old||stars>old.stars||stars===old.stars&&record.secs<old.secs)S.bests[G.index]=record;}else{const old=S.daily[G.date];if(!old||stars>old.stars||stars===old.stars&&record.secs<old.secs)S.daily[G.date]=record;const days=Object.keys(S.daily).sort();for(const d of days.slice(0,-40))delete S.daily[d];}tone('win');}
@@ -344,7 +350,7 @@ function finish(win){if(!G||G.ended)return;rndStart();G.ended=true;clearInput();
  $('result').innerHTML=`<div class="eyebrow">${G.mode==='daily'?'Daily cave / '+G.date:'Cave '+String(G.index+1).padStart(2,'0')+' / '+G.name}</div><div class="resultart"><svg viewBox="0 0 70 70"><path d="M35 5L55 34 35 64 15 34ZM15 34h40M35 5v59"/>${win?'<path d="M9 16L4 12M61 16l5-4M10 52l-5 4M60 52l5 4"/>':''}</svg></div><h2 id="resultTitle">${win?'Back to daylight.':'The cave keeps its secrets.'}</h2><div class="resultstars" aria-label="${stars} stars">${starRow(stars)}</div><p>${win?(stars===3?'Every crystal. Every heart. A perfect expedition.':!all?'Relic safe. There are still crystals waiting in the dark.':'Every crystal recovered. Return with all three hearts for a perfect expedition.'):'Your best results are safe. Sneak past the creatures, or echo to draw them off, then slip away quietly.'}</p><div class="resultgrid"><div><b>${found}/${G.crystals.length}</b><span>Crystals</span></div><div><b>${G.echoes}</b><span>Echoes</span></div><div><b>${time}</b><span>Time</span></div></div><button class="primary" id="again">${win&&stars===3?'Explore again':'Retry this cave'}</button>${win&&G.mode==='campaign'&&G.index<5?'<button class="secondary" id="next">Next expedition ↗</button>':''}<button class="secondary" id="resultHome">Choose cave</button><div class="resultlinks"><a href="../lab.html">← Noodle Lab</a><a href="../games.html">← Digi Games</a></div>`;
  $('again').onclick=()=>launch(G.index,G.mode,'retry',null,G.date);if($('next'))$('next').onclick=()=>launch(G.index+1,'campaign','new');$('resultHome').onclick=showHome;
 }
-function clearInput(){keys.clear();joy={id:null,x:0,y:0,dx:0,dy:0};$('floatStick').hidden=true;$('stick').setAttribute('cx','32');$('stick').setAttribute('cy','32');}
+function clearInput(){keys.clear();joy={id:null,x:0,y:0,dx:0,dy:0,run:false};$('floatStick').hidden=true;$('stick').setAttribute('cx','32');$('stick').setAttribute('cy','32');}
 function settingsUI(){for(const[id,v]of[['sound',S.settings.sound],['motion',S.settings.motion],['vib',S.settings.vib],['full',S.settings.fs]]){$(id).setAttribute('aria-checked',String(v));$(id).querySelector('span').textContent=v?'On':'Off';}$('full').hidden=!fsOK;$('vib').hidden=!vibOK;}
 function pauseGame(from='game'){if(phase==='result')return;clearInput();menuFrom=from;phase='paused';if(G&&!G.ended)saveRun();showScreen('menu');$('menuTitle').textContent=from==='home'?'Settings':'Paused';$('menuDesc').textContent=from==='home'?'Make yourself at home in the dark.':'Your expedition is waiting. Take as long as you need.';$('resume').textContent=from==='home'?'Back to caves':'Resume expedition';$('runMenu').hidden=from==='home';$('menuMap').hidden=from==='home';settingsUI();}
 function resumeGame(){wakeAudio();goFS();if(menuFrom==='home'){showHome();return;}phase='play';showScreen(null);clearInput();last=0;}
@@ -352,11 +358,17 @@ function openHelp(from){helpFrom=from;if(phase==='play'){clearInput();saveRun();
 function closeHelp(){if(helpFrom==='menu'){phase='paused';showScreen('menu');}else showHome();}
 $('play').onclick=()=>{const a=restore(S.current);if(a)launch(a.index,a.mode,'resume',a);else launch(unlocked());};$('otherCaves').onclick=()=>$('caves').scrollIntoView({block:'start',behavior:'auto'});$('daily').onclick=()=>launch(5,'daily');$('caves').onclick=e=>{const b=e.target.closest('[data-cave]');if(b&&!b.disabled)launch(Number(b.dataset.cave));};$('pause').onclick=()=>{if(phase==='play')pauseGame();};$('homeSettings').onclick=()=>pauseGame('home');$('resume').onclick=resumeGame;$('restart').onclick=()=>launch(G.index,G.mode,'retry',null,G.date);$('choose').onclick=showHome;$('how').onclick=()=>openHelp('home');$('menuHelp').onclick=()=>openHelp('menu');$('helpBack').onclick=closeHelp;$('helpDone').onclick=closeHelp;
 $('vib').onclick=()=>{S.settings.vib=!S.settings.vib;settingsUI();persist();buzz(20);};$('sound').onclick=()=>{S.settings.sound=!S.settings.sound;if(S.settings.sound)wakeAudio();settingsUI();persist();};$('motion').onclick=()=>{S.settings.motion=!S.settings.motion;settingsUI();persist();drawHero();};$('full').onclick=()=>{S.settings.fs=!S.settings.fs;if(S.settings.fs)goFS();else exitFS();settingsUI();persist();};$('map').onclick=()=>openMap('play');$('menuMap').onclick=()=>openMap('menu');$('mapBack').onclick=closeMap;$('skip').onclick=()=>{G.guide=false;S.tutorial=true;guide();saveRun();};
-function down(e){if(phase!=='play'||joy.id!==null||e.button>0)return;e.preventDefault();wakeAudio();joy={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0};const fs=$('floatStick');fs.style.left=e.clientX+'px';fs.style.top=e.clientY+'px';fs.classList.remove('running');$('knob').setAttribute('cx',0);$('knob').setAttribute('cy',0);fs.hidden=false;try{e.currentTarget.setPointerCapture(e.pointerId);}catch(e){}}
-function drag(e){if(e.pointerId!==joy.id)return;const x=e.clientX-joy.x,y=e.clientY-joy.y,d=Math.hypot(x,y);
- // Inside the inner ring you sneak (silent, up to 55% speed); past it you run (heard).
- const f=d<6?0:d<=30?.3+.25*(d-6)/24:Math.min(1,.55+.45*(d-30)/14);if(!f){joy.dx=joy.dy=0;}else{joy.dx=x/d*f;joy.dy=y/d*f;}
- const kd=Math.min(d,54),kx=d?x/d*kd:0,ky=d?y/d*kd:0;$('knob').setAttribute('cx',kx);$('knob').setAttribute('cy',ky);$('floatStick').classList.toggle('running',f>.67);$('stick').setAttribute('cx',32+joy.dx*12);$('stick').setAttribute('cy',32+joy.dy*12);}
+function down(e){if(phase!=='play'||joy.id!==null||e.button>0)return;e.preventDefault();wakeAudio();joy={id:e.pointerId,x:e.clientX,y:e.clientY,dx:0,dy:0,run:false};const fs=$('floatStick');fs.style.left=e.clientX+'px';fs.style.top=e.clientY+'px';fs.classList.remove('running');$('knob').setAttribute('cx',0);$('knob').setAttribute('cy',0);fs.hidden=false;try{e.currentTarget.setPointerCapture(e.pointerId);}catch(e){}}
+const STICK_SNEAK=32,STICK_FULL=50;
+function drag(e){if(e.pointerId!==joy.id)return;let x=e.clientX-joy.x,y=e.clientY-joy.y,d=Math.hypot(x,y);
+ // The base follows the thumb: pulled past the outer ring, it slides along behind, so the stick
+ // stays under the thumb and a reversal never needs more than a ring's width of travel.
+ if(d>STICK_FULL){const k=(d-STICK_FULL)/d;joy.x+=x*k;joy.y+=y*k;x=e.clientX-joy.x;y=e.clientY-joy.y;d=STICK_FULL;const fs=$('floatStick');fs.style.left=joy.x+'px';fs.style.top=joy.y+'px';}
+ // Inside the inner ring you sneak (silent, up to 55% speed). Past it you run (heard), up to full
+ // speed at the outer ring. A few pixels of hysteresis stop a resting thumb flickering between them.
+ if(joy.run?d<STICK_SNEAK-3:d>STICK_SNEAK+2)joy.run=!joy.run;
+ const f=d<6?0:joy.run?.7+.3*clamp((d-STICK_SNEAK)/(STICK_FULL-STICK_SNEAK),0,1):.3+.25*clamp((d-6)/(STICK_SNEAK-6),0,1);if(!f){joy.dx=joy.dy=0;}else{joy.dx=x/d*f;joy.dy=y/d*f;}
+ const kx=d?x:0,ky=d?y:0;$('knob').setAttribute('cx',kx);$('knob').setAttribute('cy',ky);$('floatStick').classList.toggle('running',joy.run&&f>0);$('stick').setAttribute('cx',32+joy.dx*12);$('stick').setAttribute('cy',32+joy.dy*12);}
 function up(e){if(e.pointerId===joy.id){joy.id=null;joy.dx=joy.dy=0;$('floatStick').hidden=true;$('stick').setAttribute('cx','32');$('stick').setAttribute('cy','32');}}
 // Echo and Leave cave answer the press itself. Phones send no click for a tap made while another
 // finger is down, so a click-only button ignored Echo while the other thumb was walking.
