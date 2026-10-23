@@ -181,3 +181,26 @@ test('ECHO-26: Crystal Chambers has a second doorway out of its relic room; seed
  expect(r.crystals).toEqual([[14.5,18.5],[14.5,10.5],[6.5,10.5],[2.5,2.5]]);expect(r.enemies).toEqual([[14.5,2.5],[18.5,6.5]]);
  expect(phone.errors).toEqual([]);
 });
+
+test('ECHO-27: Echo and Leave cave work with a second thumb while the first is walking',async({phone})=>{
+ // Phones send no click for a tap made while another finger is down (found 23 Oct 2026).
+ await open(phone);const p=phone.p;await p.evaluate(()=>{__dg.launch(2);});
+ const cdp=await p.context().newCDPSession(p),touch=(type,pts)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:pts.map(([x,y,id])=>({x,y,id}))});
+ const pad=await p.locator('#walkpad').boundingBox(),wx=pad.x+40,wy=pad.y+pad.height/2,eb=await p.locator('#echo').boundingBox(),ex=eb.x+eb.width/2,ey=eb.y+eb.height/2;
+ await touch('touchStart',[[wx,wy,1]]);for(let i=1;i<=5;i++){await touch('touchMove',[[wx,wy-i*9,1]]);await p.waitForTimeout(16);}
+ await touch('touchStart',[[wx,wy-45,1],[ex,ey,2]]);await p.waitForTimeout(40);await touch('touchEnd',[[ex,ey,2]]);await p.waitForTimeout(80);
+ expect(await p.evaluate(()=>__dg.state().game.echoes)).toBe(1);
+ expect(await p.evaluate(()=>joy.id!==null)).toBe(true);
+ // At the exit with the relic, Leave cave also answers a second thumb.
+ // The walking thumb stays down but returns to the centre of its stick.
+ await touch('touchMove',[[wx,wy,1]]);await p.waitForTimeout(120);
+ await p.evaluate(()=>{G.gotRelic=true;G.p={...G.exit};checkObjects();});await expect(p.locator('#leave')).toBeVisible();
+ const lb=await p.locator('#leave').boundingBox(),lx=lb.x+lb.width/2,ly=lb.y+lb.height/2;
+ await touch('touchStart',[[wx,wy,1],[lx,ly,3]]);await p.waitForTimeout(40);await touch('touchEnd',[[lx,ly,3]]);
+ await expect(p.locator('#resultTitle')).toHaveText('Back to daylight.');await touch('touchEnd',[[wx,wy,1]]);
+ // A single tap still sends exactly one echo, and the keyboard still works.
+ await p.evaluate(()=>__dg.launch(2));await p.waitForTimeout(50);await touch('touchStart',[[ex,ey,4]]);await touch('touchEnd',[[ex,ey,4]]);await p.waitForTimeout(80);
+ expect(await p.evaluate(()=>__dg.state().game.echoes)).toBe(1);
+ await p.evaluate(()=>{G.cooldown=0;});await p.locator('#echo').focus();await p.keyboard.press('Enter');
+ expect(await p.evaluate(()=>__dg.state().game.echoes)).toBe(2);expect(phone.errors).toEqual([]);
+});
