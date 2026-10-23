@@ -1,53 +1,14 @@
 [
   {
     "level": "ERROR",
-    "type": "doku",
-    "file": "2026-07-13-logic-doku-0001.html",
-    "msg": "no readable `grid` array literal — feed tile will fall back to the Play glyph",
-    "sha256": "3724c7c52cdd8491cf5a13c96a227c97d9d0323c804644b5e991b6c2b637c61f",
-    "reason": "Existing July/August archive defect recorded in the 19 October review; preserve published URLs pending repair.",
-    "owner": "Daily Noodle maintainers",
-    "reviewBy": "2026-11-19"
-  },
-  {
-    "level": "ERROR",
-    "type": "doku",
-    "file": "2026-07-14-logic-doku-0002.html",
-    "msg": "no readable puzzle id",
-    "sha256": "90848f06652ce90426065fcdd1b06819e8ab9d362dfce49fd7b298b0b42eafdb",
-    "reason": "Existing July/August archive defect recorded in the 19 October review; preserve published URLs pending repair.",
-    "owner": "Daily Noodle maintainers",
-    "reviewBy": "2026-11-19"
-  },
-  {
-    "level": "ERROR",
-    "type": "?",
-    "file": "DP-SWEEP-2026-07-17.html",
-    "msg": "puzzle file does not match YYYY-MM-DD-<type-slug>[-NNNN].html — invisible to the registry",
-    "sha256": "ba991962a255a3797e30efd266ce5e5fc587d5df3ad24ee51ae133f502ca8cce",
-    "reason": "Existing July/August archive defect recorded in the 19 October review; preserve published URLs pending repair.",
-    "owner": "Daily Noodle maintainers",
-    "reviewBy": "2026-11-19"
-  },
-  {
-    "level": "ERROR",
     "type": "?",
     "file": "digi-doku-0004.html",
     "msg": "puzzle file does not match YYYY-MM-DD-<type-slug>[-NNNN].html — invisible to the registry",
     "sha256": "2ca740509776377f596db5f2c01fa926caefaccb731922cce6f0e296f0992c27",
-    "reason": "Existing July/August archive defect recorded in the 19 October review; preserve published URLs pending repair.",
-    "owner": "Daily Noodle maintainers",
-    "reviewBy": "2026-11-19"
-  },
-  {
-    "level": "ERROR",
-    "type": "?",
-    "file": "digi-path-0002.html",
-    "msg": "puzzle file does not match YYYY-MM-DD-<type-slug>[-NNNN].html — invisible to the registry",
-    "sha256": "07f8454ec7c44b5b1822934acb8784513b5eeb1d161a9e0c4892276f4d626bdd",
-    "reason": "Existing July/August archive defect recorded in the 19 October review; preserve published URLs pending repair.",
-    "owner": "Daily Noodle maintainers",
-    "reviewBy": "2026-11-19"
+    "permanent": true,
+    "reason": "Pre-pattern copy of Doku 0004 (same id DP·LEXI·0004 and grid as 2026-07-17-logic-doku-0004.html), dated 2026-07-16. Its URL is kept for old links and saves, so it is never renamed or removed; listing it in the registry would only report a duplicate and a shared date.",
+    "decidedOn": "2026-10-23",
+    "owner": "Daily Noodle maintainers"
   },
   {
     "level": "ERROR",
@@ -55,9 +16,10 @@
     "file": "2026-08-14-logic-doku-0032.html",
     "msg": "duplicate puzzle (D4/canonical key) with 2026-08-13-logic-doku-0031.html",
     "sha256": "57e9fc9fda2b672654c9e34576b4f48e0b8eeb74abd5e3afffaac394b1055953",
-    "reason": "Existing July/August archive defect recorded in the 19 October review; preserve published URLs pending repair.",
-    "owner": "Daily Noodle maintainers",
-    "reviewBy": "2026-11-19"
+    "permanent": true,
+    "reason": "Published Doku 0032 repeats Doku 0031 (same grid under rotation/mirror). Both days are played history with their own ids, saves and results, so neither can be changed.",
+    "decidedOn": "2026-10-23",
+    "owner": "Daily Noodle maintainers"
   },
   {
     "level": "ERROR",
@@ -65,9 +27,10 @@
     "file": "-",
     "msg": "3 missing day(s); first is 2026-07-13",
     "sha256": null,
-    "reason": "Existing July/August archive defect recorded in the 19 October review; preserve published URLs pending repair.",
-    "owner": "Daily Noodle maintainers",
-    "reviewBy": "2026-11-19"
+    "permanent": true,
+    "reason": "No Mini was published on 2026-07-13, 07-14 or 07-15 (between Mini 0004 on 07-12 and Mini 0005 on 07-16); days that were never published cannot be added after the fact without inventing history.",
+    "decidedOn": "2026-10-23",
+    "owner": "Daily Noodle maintainers"
   },
   {
     "level": "ERROR",
@@ -75,8 +38,9 @@
     "file": "-",
     "msg": "1 missing day(s); first is 2026-07-15",
     "sha256": null,
-    "reason": "Existing July/August archive defect recorded in the 19 October review; preserve published URLs pending repair.",
-    "owner": "Daily Noodle maintainers",
-    "reviewBy": "2026-11-19"
+    "permanent": true,
+    "reason": "No Doku was published on 2026-07-15; a day that was never published cannot be added after the fact without inventing history.",
+    "decidedOn": "2026-10-23",
+    "owner": "Daily Noodle maintainers"
   }
 ]

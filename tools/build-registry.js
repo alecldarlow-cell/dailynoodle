@@ -10,6 +10,7 @@
    v2.1: spinning ("pinwheel") 5x5 layouts are refused alongside the swastika
    screen — see the visual screen below.
    (18 Oct 2026: copied into the repo from project knowledge, unchanged.)
+   (23 Oct 2026: explicit LEGACY file map; ids written with \\u00b7 escapes read.)
 
    Usage (from the repo root):
      node tools/build-registry.js                 # write registry.json + published.json, print report
@@ -51,6 +52,17 @@ const TYPES = {
 };
 const PUZZLE_TOPICS = new Set(Object.values(TYPES).map(t => t.topic));
 const FNAME = new RegExp(`^(\\d{4}-\\d{2}-\\d{2})-(${Object.keys(TYPES).join("|")})(?:-(\\d{4}))?\\.html$`);
+/* Legacy files (23 Oct 2026): July pages published before the naming pattern.
+   Their URLs are shared and saved, so they are never renamed; this explicit
+   map (file -> type slug, date, serial) lets the registry see them. Each date
+   must still match the page's own dn:date. digi-doku-0004.html is deliberately
+   absent: it is a pre-pattern copy of 2026-07-17-logic-doku-0004.html (same id
+   and grid), so listing it would only report a duplicate (accepted history in
+   tools/tests/fixtures/registry-debt.json).                                */
+const LEGACY = {
+  "DP-SWEEP-2026-07-17.html": { slug: "logic-sweep", date: "2026-07-17", serial: null },
+  "digi-path-0002.html":      { slug: "logic-path",  date: "2026-07-20", serial: "0002" }
+};
 const REPEAT_LADDER = { 3: 30, 4: 60, 5: 75 };   // Mini answer reuse, days, by answer length
 
 const problems = [];
@@ -172,7 +184,8 @@ function extract(full, t) {
   const foot = full.match(/<footer[^>]*>([\s\S]*?)<\/footer>/);
   rec.shell = foot ? ((foot[1].match(/SHELL[^·]*/i) || ["(no shell label)"])[0].replace(/SHELL\s*[—-]\s*/i, "SHELL ").trim()) : "(no footer)";
   rec.thin = /<script\s+src="\.\.\/engines\//.test(full);
-  rec.pid = (src.match(/\bid\s*:\s*"(DP[·\-][A-Z]+[·\-][0-9\-]+)"/) || [, null])[1];
+  /* the id may write its middle dots as the JS escape \u00b7 (Doku 0002); same string at runtime */
+  rec.pid = ((src.match(/\bid\s*:\s*"(DP(?:[·\-]|\\u00b7)[A-Z]+(?:[·\-]|\\u00b7)[0-9\-]+)"/) || [, null])[1] || "").replace(/\\u00b7/g, "·") || null;
   rec.band = scalar(src, "band");
   rec.grid = literal(src, "grid");
 
@@ -214,7 +227,8 @@ const files = fs.readdirSync(SCAN).filter(f => f.endsWith(".html"));
 const records = [];
 
 for (const f of files.sort()) {
-  const m = FNAME.exec(f);
+  const L = LEGACY[f];
+  const m = FNAME.exec(f) || (L && [f, L.date, L.slug, L.serial]);
   if (!m) {
     const src = fs.readFileSync(path.join(SCAN, f), "utf8");
     if (meta(src, "dn:kind") === "puzzle") {
