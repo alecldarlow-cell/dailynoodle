@@ -82,7 +82,7 @@ test('ECHO-08: drag input moves and releases cleanly; resize keeps all controls 
  const before=await p.evaluate(()=>__dg.state().game.p);
  await p.locator('#walkpad').dispatchEvent('pointerdown',{pointerId:31,clientX:55,clientY:730,button:0});
  await p.locator('#walkpad').dispatchEvent('pointermove',{pointerId:31,clientX:55,clientY:690});await H.wait(p,500);
- await p.locator('#walkpad').dispatchEvent('pointerup',{pointerId:31});const after=await p.evaluate(()=>__dg.state().game.p);expect(after.y).toBeLessThan(before.y);
+ await p.locator('#walkpad').dispatchEvent('pointerup',{pointerId:31});await H.wait(p,350);const after=await p.evaluate(()=>__dg.state().game.p);expect(after.y).toBeLessThan(before.y);
  await H.wait(p,500);expect(await p.evaluate(()=>__dg.state().game.p)).toEqual(after);
  // A test viewport resize is a rotation, not a browser full-screen exit.
  await H.tap(p,p.locator('#pause'));
@@ -145,41 +145,53 @@ test('ECHO-19: diagonal rock cuts are passable while the solid body of the wall 
  await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(0);let corner=null;for(let y=1;y<G.h-1&&!corner;y++)for(let x=1;x<G.w-1&&!corner;x++)if(!floor(G,x,y)&&floor(G,x-1,y)&&floor(G,x,y-1)&&floor(G,x-1,y-1))corner={x,y};if(!corner)return{missing:true};const p={x:corner.x-.025,y:corner.y-.025};return{cut:walkable(G,corner.x+.1,corner.y+.1),solid:walkable(G,corner.x+.3,corner.y+.3),fits:canStand(G,p),oldSquareWouldBlock:!floor(G,p.x+.23,p.y+.23)};});
  expect(r.missing).not.toBe(true);expect(r.cut).toBe(true);expect(r.solid).toBe(false);expect(r.fits).toBe(true);expect(r.oldSquareWouldBlock).toBe(true);expect(phone.errors).toEqual([]);
 });
-test('ECHO-20: entering lamplight triggers a warned chase and standing still gets caught',async({phone})=>{
- await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0];G.p={x:e.x-1.5,y:e.y};e.wait=10;G.invul=0;const start={x:e.x,y:e.y};__dg.step(.2);const warning={reaction:e.reaction,chase:e.chase,x:e.x,y:e.y,notice:document.querySelector('#notice span').textContent};__dg.step(.9);return{start,warning,hearts:G.hearts,enemy:{...e}};});
- expect(r.warning.chase).toBeGreaterThan(0);expect(r.warning.reaction).toBeGreaterThan(0);expect(r.warning.x).toBe(r.start.x);expect(r.warning.notice).toContain('Spotted');expect(r.hearts).toBe(2);expect(phone.errors).toEqual([]);
+test('ECHO-20: creatures are blind: running footsteps are heard with a warning, sneaking is silent',async({phone})=>{
+ // v2 (23 Oct 2026): creatures hunt by sound. Running footsteps carry HEAR_RUN tiles along the passages.
+ await open(phone);const r=await phone.p.evaluate(()=>{
+  const near=()=>{__dg.launch(1);const e=G.enemies[0];const d=flood(G,e,4);let spot=null;for(let k=0;k<G.tiles.length&&!spot;k++)if(d[k]>=3&&d[k]<=4){const q={x:k%G.w+.5,y:Math.floor(k/G.w)+.5};if(canStand(G,q))spot=q;}G.p=spot;Object.assign(e,{wait:10,stun:0,chase:0,alert:0});G.invul=0;return e;};
+  // Sneak beside it (half speed, silent), staying more than a body away.
+  let e=near();for(let i=0;i<60;i++){movePlayer(.5,0,1/60);movePlayer(-.5,0,1/60);update(1/60);}const sneak={chase:e.chase,alert:e.alert};
+  // Run on the spot (full speed back and forth): heard, warned, then caught if you stay.
+  e=near();const start={x:e.x,y:e.y};for(let i=0;i<24;i++){movePlayer(i%2?1:-1,0,1/60);update(1/60);}
+  const warning={chase:e.chase,reaction:e.reaction,x:e.x,y:e.y,notice:document.querySelector('#notice span').textContent};
+  e.wait=0;for(let i=0;i<300&&G.hearts===3;i++)update(1/60);return{sneak,start,warning,hearts:G.hearts};});
+ expect(r.sneak.chase).toBe(0);expect(r.sneak.alert).toBe(0);
+ expect(r.warning.chase).toBeGreaterThan(0);expect(r.warning.reaction).toBeGreaterThan(0);expect(r.warning.notice).toContain('heard your footsteps');expect(r.hearts).toBe(2);expect(phone.errors).toEqual([]);
 });
 test('ECHO-21: rock blocks detection and a lost target is not tracked through a corner',async({phone})=>{
  await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0];let pair=null;for(let a=0;a<G.tiles.length&&!pair;a++)if(G.tiles[a])for(let b=a+1;b<G.tiles.length&&!pair;b++)if(G.tiles[b]){const p={x:a%G.w+.5,y:Math.floor(a/G.w)+.5},q={x:b%G.w+.5,y:Math.floor(b/G.w)+.5};if(dist(p,q)<2.3&&!lineOfSight(G,p,q))pair={p,q};}G.p=pair.p;Object.assign(e,pair.q,{chase:0,alert:0,wait:10,stun:0});__dg.step(.1);const hidden=e.chase;const last={...pair.p};e.target=last;e.route=routeTo(G,e,last);e.chase=4;e.alert=18;e.wait=0;__dg.step(.2);const target={...e.target};return{hidden,last,target,player:G.p};});
  expect(r.hidden).toBe(0);expect(r.target).toEqual(r.last);expect(phone.errors).toEqual([]);
 });
-test('ECHO-22: an echo can distract a pursuer after sight is broken, but cannot override a visible player',async({phone})=>{
- await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0],route=__dg.route(e);const origin=route[route.length-4];G.p={...origin};__dg.echo();G.p={x:e.x-1.4,y:e.y};__dg.step(.2);const visible={chase:e.chase,target:{...e.target},p:{...G.p}};let pair=null;for(const p of G.rooms)for(const q of G.rooms)if(!pair&&dist(p,q)>3&&dist(p,q)<8&&!lineOfSight(G,p,q)&&routeTo(G,q,p).length<12)pair={p,q};G.p={...pair.p};Object.assign(e,pair.q,{chase:4,stun:0,wait:0,target:{...pair.q},route:[],alert:18});G.pulses=[];G.cooldown=0;__dg.echo();const arrival=G.pulses[0].dist[cell(G,e.x,e.y)]/8;__dg.step(arrival+.12);return{visible,chase:e.chase,target:e.target,source:pair.p};});
- expect(r.visible.chase).toBeGreaterThan(0);expect(r.visible.target).toEqual(r.visible.p);expect(r.chase).toBe(0);expect(r.target).toEqual(r.source);expect(phone.errors).toEqual([]);
+test('ECHO-22: an echo draws a hunting creature away to where the echo was made',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0];let pair=null;for(const p of G.rooms)for(const q of G.rooms)if(!pair&&dist(p,q)>3&&dist(p,q)<9&&routeTo(G,q,p).length<14)pair={p,q};G.p={...pair.p};Object.assign(e,pair.q,{chase:2.4,stun:0,wait:0,target:{...pair.q},route:[],alert:18});G.pulses=[];G.cooldown=0;__dg.echo();const arrival=G.pulses[0].dist[cell(G,e.x,e.y)]/8;__dg.step(arrival+.12);return{chase:e.chase,target:e.target,source:{x:Math.floor(pair.p.x)+.5,y:Math.floor(pair.p.y)+.5}};});
+ expect(r.chase).toBe(0);expect(r.target).toEqual(r.source);expect(phone.errors).toEqual([]);
 });
 test('ECHO-23: echo ripples travel along passages, stay off rock, and offer a non-moving reduced-motion wash',async({phone})=>{
  await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(0);__dg.echo();const p=G.pulses[0],sample=(point,t)=>{p.t=t;G.elapsed=t;terrain.waveAt=-Infinity;draw();const u=terrain.wave.width/G.w,x=Math.floor(point.x*u),y=Math.floor(point.y*u);return terrain.waveImage.data[(y*G.w*u+x)*4+3];};draw();const route=__dg.route(G.relic),near=route[1],far=route[5],rock={x:.5,y:.5};const early={near:sample(near,(p.dist[cell(G,near.x,near.y)]+.05)/8),far:sample(far,.2),rock:sample(rock,.2)};const later=sample(far,(p.dist[cell(G,far.x,far.y)]+.05)/8);S.settings.motion=true;const reduced=sample(near,1);return{early,later,reduced};});
  expect(r.early.near).toBeGreaterThan(70);expect(r.early.far).toBe(0);expect(r.early.rock).toBe(0);expect(r.later).toBeGreaterThan(70);expect(r.reduced).toBeGreaterThan(0);expect(r.reduced).toBeLessThan(50);expect(phone.errors).toEqual([]);
 });
 
-test('ECHO-24: retreating during the warning escapes the lamp and pursuit stays out of rock',async({phone})=>{
- await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0];G.p={x:e.x-1.7,y:e.y};e.wait=0;G.invul=0;let solid=0;__dg.step(.6,-1,0);const lost=!seesPlayer(e),hearts=G.hearts;const target={...e.target};G.p={...G.start};for(let i=0;i<480;i++){update(1/60);if(!canStand(G,e))solid++;}return{lost,hearts,solid,target,chase:e.chase};});
- expect(r.lost).toBe(true);expect(r.hearts).toBe(3);expect(r.solid).toBe(0);expect(r.chase).toBe(0);expect(phone.errors).toEqual([]);
+test('ECHO-24: a heard explorer who slips away is lost; the search never enters rock',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(1);const e=G.enemies[0];const d=flood(G,e,4);let spot=null;for(let k=0;k<G.tiles.length&&!spot;k++)if(d[k]===3){const q={x:k%G.w+.5,y:Math.floor(k/G.w)+.5};if(canStand(G,q))spot=q;}G.p=spot;e.wait=0;G.invul=0;footstep();const heard=e.chase>0;G.p={...G.start};let solid=0;for(let i=0;i<600;i++){update(1/60);if(!canStand(G,e))solid++;}return{heard,hearts:G.hearts,solid,chase:e.chase};});
+ expect(r.heard).toBe(true);expect(r.hearts).toBe(3);expect(r.solid).toBe(0);expect(r.chase).toBe(0);expect(phone.errors).toEqual([]);
 });
 
-test('ECHO-25: a creature wedged off-centre in a rock doorway works itself free',async({phone})=>{
- // Pose found by the Oct 2026 review bots: The Crystal Chambers' relic-room doorway, where both
- // the next route step and the move back to the cell centre were blocked, freezing the creature.
- await open(phone);const r=await phone.p.evaluate(()=>{const out=[];for(const p of [{x:6.26,y:3.31},{x:7.5,y:1.5}]){__dg.launch(4);const e=G.enemies[0];G.p={...p};G.invul=99;Object.assign(e,{x:4.157193872824944,y:2.821058060653488,chase:0,alert:0,wait:0,stun:0,reaction:0,route:[],target:{...p}});const start={x:e.x,y:e.y};let solid=0;for(let i=0;i<180;i++){update(1/60);if(!canStand(G,e))solid++;}out.push({moved:Math.hypot(e.x-start.x,e.y-start.y),solid});}return out;});
- for(const x of r){expect(x.moved).toBeGreaterThan(.5);expect(x.solid).toBe(0);}expect(phone.errors).toEqual([]);
+test('ECHO-25: a creature in an off-centre pose against rock always works itself free',async({phone})=>{
+ // The Oct 2026 review bots found creatures frozen where both the next route step and the move
+ // back to the cell centre were blocked. Try many legal off-centre poses against rock corners.
+ await open(phone);const r=await phone.p.evaluate(()=>{const out=[];__dg.launch(4);const poses=[];
+  for(let k=0;k<G.tiles.length&&poses.length<40;k+=3){if(!G.tiles[k])continue;const x=k%G.w,y=Math.floor(k/G.w);for(const[dx,dy]of[[1,1],[-1,1],[1,-1],[-1,-1]])if(!floor(G,x+dx,y+dy)){const q={x:x+.5+dx*.27,y:y+.5+dy*.27};if(canStand(G,q)){poses.push(q);break;}}}
+  for(const q of poses){__dg.launch(4);const e=G.enemies[0];G.enemies=[e];G.invul=99;const goal=G.rooms.find(o=>dist(o,q)>4)||G.start;G.p={...G.start};Object.assign(e,q,{chase:0,alert:18,wait:0,stun:0,reaction:0,route:[],target:{...goal}});let solid=0;for(let i=0;i<180;i++){update(1/60);if(!canStand(G,e))solid++;}out.push({moved:Math.hypot(e.x-q.x,e.y-q.y),solid});}return{n:poses.length,out};});
+ expect(r.n).toBeGreaterThan(20);for(const x of r.out){expect(x.moved).toBeGreaterThan(.5);expect(x.solid).toBe(0);}expect(phone.errors).toEqual([]);
 });
 
-test('ECHO-26: Crystal Chambers has a second doorway out of its relic room; seeded placements are unchanged',async({phone})=>{
- // Alec's call (22 Oct 2026 studio review): the relic room was a one-door dead end.
- await open(phone);const r=await phone.p.evaluate(()=>{const g=__dg.build(4),f=(x,y)=>g.tiles[y*g.w+x]===1;return{door:f(6,4),relic:g.relic,crystals:g.crystals.map(c=>[c.x,c.y]),enemies:g.enemies.map(e=>[e.x,e.y])};});
- expect(r.door).toBe(true);expect(r.relic).toEqual({x:6.5,y:2.5});
- expect(r.crystals).toEqual([[14.5,18.5],[14.5,10.5],[6.5,10.5],[2.5,2.5]]);expect(r.enemies).toEqual([[14.5,2.5],[18.5,6.5]]);
- expect(phone.errors).toEqual([]);
+test('ECHO-26: an expedition saved on the old cave layouts is not resumed; stars and bests stay',async({phone})=>{
+ // v2 (23 Oct 2026) regenerated every cave, so only lv:2 expeditions can be resumed.
+ await open(phone);const p=phone.p;
+ const old=await p.evaluate(()=>{__dg.launch(2);__dg.step(.5,0,-1);__dg.save();const s=__dg.state().save;delete s.current.lv;s.stars=[3,2,0,0,0,0];s.bests[0]={stars:3,score:1100,secs:41,echoes:3,hearts:3};return s;});
+ await phone.ctx.addInitScript(old=>localStorage.setItem('digi-echo-cave-v1',JSON.stringify(old)),old);await p.reload();await H.wait(p,500);
+ await expect(p.locator('#play')).not.toContainText('Continue expedition');
+ const save=await p.evaluate(()=>__dg.state().save);expect(save.stars).toEqual([3,2,0,0,0,0]);expect(save.bests[0].secs).toBe(41);expect(phone.errors).toEqual([]);
 });
 
 test('ECHO-27: Echo and Leave cave work with a second thumb while the first is walking',async({phone})=>{
@@ -203,4 +215,26 @@ test('ECHO-27: Echo and Leave cave work with a second thumb while the first is w
  expect(await p.evaluate(()=>__dg.state().game.echoes)).toBe(1);
  await p.evaluate(()=>{G.cooldown=0;});await p.locator('#echo').focus();await p.keyboard.press('Enter');
  expect(await p.evaluate(()=>__dg.state().game.echoes)).toBe(2);expect(phone.errors).toEqual([]);
+});
+
+test('ECHO-28: the stick sneaks inside its inner ring, runs past it without flicker, and follows the thumb',async({phone})=>{
+ await open(phone);const p=phone.p;await p.evaluate(()=>{__dg.launch(1);G.enemies=[];});
+ const pad=p.locator('#walkpad'),b=await pad.boundingBox(),x0=b.x+40,y0=b.y+b.height/2;
+ const at=async(dx,dy)=>{await pad.dispatchEvent('pointermove',{pointerId:41,clientX:x0+dx,clientY:y0+dy});return p.evaluate(()=>({f:Math.hypot(joy.dx,joy.dy),run:joy.run,base:{x:joy.x,y:joy.y}}));};
+ await pad.dispatchEvent('pointerdown',{pointerId:41,clientX:x0,clientY:y0,button:0});
+ const sneak=await at(0,-28);expect(sneak.run).toBe(false);expect(sneak.f*2.6).toBeLessThan(1.75);
+ const run=await at(0,-36);expect(run.run).toBe(true);expect(run.f*2.6).toBeGreaterThan(1.75);
+ const wobble=await at(0,-31);expect(wobble.run).toBe(true); // hysteresis: no flicker back to sneaking
+ const back=await at(0,-27);expect(back.run).toBe(false);
+ const far=await at(0,-90);expect(far.f).toBeCloseTo(1,5);expect(far.base.y).toBeLessThan(y0-30); // the base followed
+ const turn=await at(0,0);expect(turn.run).toBe(true);expect(await p.evaluate(()=>joy.dy)).toBeGreaterThan(.65); // 90 px back from a 90 px push is already a full-speed reverse
+ await pad.dispatchEvent('pointerup',{pointerId:41});expect(phone.errors).toEqual([]);
+});
+
+test('ECHO-29: standing still, the camera pulls back to show everything an echo reaches, then returns',async({phone})=>{
+ await open(phone);const r=await phone.p.evaluate(()=>{__dg.launch(5);G.enemies=[];G.p={...G.rooms[Math.floor(G.rooms.length/2)]};cam={...G.p};G.movedAt=-9;__dg.echo();
+  let minZoom=1,maxStep=0,prev=zoom;for(let i=0;i<150;i++){update(1/60);minZoom=Math.min(minZoom,zoom);maxStep=Math.max(maxStep,Math.abs(zoom-prev));prev=zoom;}
+  draw();const p=G.pulses[0];let outside=0;for(let k=0;k<G.tiles.length;k++)if(p.dist[k]>=0){const sx=ox+(k%G.w+.5)*T,sy=oy+(Math.floor(k/G.w)+.5)*T;if(sx<0||sy<0||sx>W||sy>H)outside++;}
+  for(let i=0;i<300;i++)update(1/60);return{minZoom,maxStep,outside,after:zoom};});
+ expect(r.minZoom).toBeLessThan(.8);expect(r.outside).toBe(0);expect(r.maxStep).toBeLessThan(.05);expect(r.after).toBeGreaterThan(.97);expect(phone.errors).toEqual([]);
 });

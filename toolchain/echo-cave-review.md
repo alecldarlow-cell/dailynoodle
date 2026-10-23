@@ -99,3 +99,36 @@ Validation for this revision:
 - Rendered inspection covers travelling waves at multiple ages, chase cues and
   phone/wide layouts. Physical-phone acceptance remains outstanding: assess wall
   gliding and corner steering, ripple clarity, and whether chase pressure feels fair.
+
+
+## v2 (23 Oct 2026): camera, controls, organic caves, blind creatures
+
+Alec chose these after the studio review, then played a preview page and refined them.
+
+- **Caves.** Organic layouts grown from the same seeded room graph: irregular chambers,
+  winding tunnels (about 20% two wide), occasional mid-tunnel caverns, then a fill-only
+  smoothing pass, so every room stays connected. ECHO-07 still checks the six campaign
+  caves and 100 dailies. Old unfinished expeditions are not resumed (`lv:2`); stars and
+  bests stay.
+- **Creatures.** Blind. Running footsteps are heard 5 tiles along the passages, sneaking is
+  silent unless almost touching, and echoes still act as decoys.
+- **Bots, 30 rounds per cave and daily.** Win rates on caves 4–6 and the daily:
+  - always running: 50–67%
+  - sneaking near known creatures: 87–100%
+  - careful sneaker: 100%, mostly 3 stars
+
+  No errors and no frozen creatures. Rounds are longer than v1 (bot medians 15–80 s).
+- **Controls (researched against virtual-joystick and camera practice, then measured with
+  real touch events):**
+  - Echo previously ignored a second-thumb tap while walking, because phones send no click
+    then. It now acts on the press; fixed on main first, in ECHO-27.
+  - The stick base follows the thumb, and the rings match the sneak/run thresholds with
+    hysteresis.
+  - The lead is small and slow, so a reversal's screen swing drops from 56 px to 26 px.
+  - Cornering assist: with hard corner-cutting steering, the explorer was slowed in 3–16%
+    of frames, with stalls; now in 0.4–1.1%, with none.
+  - While standing, the echo view frames the whole reach (largest zoom step between frames
+    1.4%).
+- **Still to judge on a phone:** creature pressure (probably too gentle for a careful sneaker),
+  round length against the card's "~1 min", and whether the square-tile cave edges read as
+  smooth enough up close.
