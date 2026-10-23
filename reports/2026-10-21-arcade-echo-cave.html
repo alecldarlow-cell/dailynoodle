@@ -337,12 +337,26 @@ function update(dt){if(phase!=='play'||!G||G.ended)return;rndStart();rnd.secs+=d
  saveClock+=dt;if(saveClock>2){saveClock=0;saveRun();}
  // Camera: close on the explorer and a little ahead of where they're heading. While an echo
  // travels it eases out to show the passages it lights, then drifts back in.
- // Echo zoom is gentle (to 80%) and only while standing, so walking speed on screen never changes.
- const still=S.settings.motion,standing=G.elapsed-G.movedAt>.3,zt=!still&&standing&&G.pulses.some(p=>p.t<2.6)?.8:1;zoom+=(zt-zoom)*Math.min(1,dt*(zt<zoom?2.4:1.8));if(still)zoom=1;
+ // Echo view (while standing): the camera pulls back with the ripple until everything it reaches
+ // is on screen, holds while it glows, then eases back in. Walking returns to the close view, so
+ // walking speed on screen never changes.
+ const still=S.settings.motion,standing=G.elapsed-G.movedAt>.3,view=!still&&standing?echoView():null,zt=view?view.z:1;
+ zoom+=(zt-zoom)*Math.min(1,dt*(zt<zoom?3.2:1.5));if(still)zoom=1;
  // The lead is small and changes slowly (about a second), so quick back-and-forth barely moves the
  // view; it settles ahead only once you've clearly committed to a direction.
  lead.x+=((still?0:G.vx*.55)-lead.x)*Math.min(1,dt*1.1);lead.y+=((still?0:G.vy*.55)-lead.y)*Math.min(1,dt*1.1);
- const factor=still?1:Math.min(1,dt*6);cam.x+=(G.p.x+lead.x-cam.x)*factor;cam.y+=(G.p.y+lead.y-cam.y)*factor;
+ const factor=still?1:Math.min(1,dt*(view?3:6)),tx=view?view.x:G.p.x+lead.x,ty=view?view.y:G.p.y+lead.y;cam.x+=(tx-cam.x)*factor;cam.y+=(ty-cam.y)*factor;
+}
+const echoCells=new WeakMap();
+function echoView(){
+ // The newest echo still travelling or glowing: frame every tile its wave has reached so far
+ // (plus the explorer), growing with the ripple so the zoom-out is continuous.
+ let p=null;for(const q of G.pulses)if(q.t<4&&(!p||q.t<p.t))p=q;if(!p)return null;
+ if(!echoCells.has(p)){const list=[];for(let k=0;k<G.tiles.length;k++)if(p.dist[k]>=0)list.push([k%G.w+.5,Math.floor(k/G.w)+.5,p.dist[k]]);echoCells.set(p,list);}
+ const r=Math.min(18,p.t*8+3.5);/* a little ahead of the wave, so the camera never trails it */let x0=G.p.x,x1=G.p.x,y0=G.p.y,y1=G.p.y;
+ for(const[x,y,d]of echoCells.get(p))if(d<=r){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+ const bw=x1-x0+2.4,bh=y1-y0+2.4,z=clamp(Math.min((W-16)/(bw*baseT),(H-16)/(bh*baseT)),.3,1);
+ return{x:(x0+x1)/2,y:(y0+y1)/2,z};
 }
 function finish(win){if(!G||G.ended)return;rndStart();G.ended=true;clearInput();const found=G.crystals.filter(c=>c.taken).length,all=found===G.crystals.length,stars=win?(all?(G.hearts===3?3:2):1):0,score=win?500+found*100+G.hearts*50:found*100;
  rndEnd(win,{stars,score,echoes:G.echoes,hearts:G.hearts,crystals:found});const record={stars,score,secs:Math.round(G.elapsed),echoes:G.echoes,hearts:G.hearts};if(win){if(G.mode==='campaign'){S.stars[G.index]=Math.max(S.stars[G.index],stars);if(G.index===0)S.tutorial=true;const old=S.bests[G.index];if(!old||stars>old.stars||stars===old.stars&&record.secs<old.secs)S.bests[G.index]=record;}else{const old=S.daily[G.date];if(!old||stars>old.stars||stars===old.stars&&record.secs<old.secs)S.daily[G.date]=record;const days=Object.keys(S.daily).sort();for(const d of days.slice(0,-40))delete S.daily[d];}tone('win');}
