@@ -3,6 +3,35 @@ const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),cryp
 const assert=require('node:assert/strict'),{spawnSync}=require('node:child_process'),vm=require('node:vm');
 const {read}=require('./read-puzzle');
 const ROOT=path.resolve(__dirname,'../..');
+/* Registry debt (tools/tests/fixtures/registry-debt.json). Each ERROR must match
+   an entry by exact type, file and message, and its file by sha256 where given.
+   An entry is either dated (reviewBy: fails once the London date passes it) or
+   accepted history ("permanent": true with reason, decidedOn and owner, and no
+   reviewBy). Every entry must still match a current error. */
+const same=(a,b)=>['type','file','msg'].every(k=>a[k]===b[k]);
+function checkDebtEntry(d){
+  const at='Registry debt entry '+d.type+' '+d.file+': ';
+  for(const k of ['type','file','msg'])assert.ok(typeof d[k]==='string'&&d[k],at+'needs '+k);
+  if(d.permanent!==undefined)assert.equal(d.permanent,true,at+'"permanent" must be true or absent');
+  if(d.permanent){
+    assert.ok(typeof d.reason==='string'&&d.reason.trim(),at+'a permanent entry needs a reason');
+    assert.ok(typeof d.owner==='string'&&d.owner.trim(),at+'a permanent entry needs an owner');
+    assert.match(String(d.decidedOn),/^\d{4}-\d{2}-\d{2}$/,at+'a permanent entry needs decidedOn (YYYY-MM-DD)');
+    assert.ok(!('reviewBy' in d),at+'a permanent entry has no reviewBy');
+  }else assert.match(String(d.reviewBy),/^\d{4}-\d{2}-\d{2}$/,at+'needs reviewBy (YYYY-MM-DD) or "permanent": true');
+}
+function checkDebt(errors,debt,{today,hashOf}){
+  for(const d of debt)checkDebtEntry(d);
+  for(const e of errors){
+    const known=debt.find(d=>same(d,e));
+    assert.ok(known,'New registry error: '+JSON.stringify(e));
+    if(!known.permanent)assert.ok(today<=known.reviewBy,'Registry debt review overdue: '+known.file);
+    if(known.sha256)assert.equal(hashOf(e.file),known.sha256,'Changed legacy file must be re-reviewed: '+e.file);
+  }
+  for(const d of debt)assert.ok(errors.some(e=>same(e,d)),'Remove resolved registry exception: '+d.file);
+}
+module.exports={checkDebt,checkDebtEntry};
+if(require.main===module){
 const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date());
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'noodle-content-'));
 try {
@@ -13,14 +42,9 @@ try {
   if(!fs.existsSync(report)) throw new Error('Registry failed to produce its report: '+result.stderr);
   const data=JSON.parse(fs.readFileSync(report)),debt=require('./fixtures/registry-debt.json');
   const errors=data.problems.filter(p=>p.level==='ERROR');
-  for(const e of errors){
-    const known=debt.find(d=>['type','file','msg'].every(k=>d[k]===e[k]));
-    assert.ok(known,'New registry error: '+JSON.stringify(e));
-    assert.ok(today<=known.reviewBy,'Registry debt review overdue: '+known.file);
-    if(known.sha256)assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT,'reports',e.file))).digest('hex'),known.sha256,'Changed legacy file must be re-reviewed: '+e.file);
-  }
-  for(const d of debt)assert.ok(errors.some(e=>['type','file','msg'].every(k=>e[k]===d[k])),'Remove resolved registry exception: '+d.file);
-  console.log('Registry: no new errors; '+errors.length+' exact, dated archive exceptions (see test-results/registry.log).');
+  checkDebt(errors,debt,{today,hashOf:f=>crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT,'reports',f))).digest('hex')});
+  const perm=debt.filter(d=>d.permanent).length;
+  console.log('Registry: no new errors; '+errors.length+' exact archive exceptions ('+perm+' accepted history, '+(debt.length-perm)+' dated; see test-results/registry.log).');
   const {G:link}=require('../build-link-batch'),{G:pg,grade}=require('../build-path-batch'),sweep=require('../build-sweep-batch');
   const {broadAlts}=require('../doku-broad-check'),reckon=require('../build-reckon-batch');
   const gates={};
@@ -57,3 +81,4 @@ try {
   assert.ok(checked>=7,'No current puzzle fixtures checked');
   console.log('Content: '+checked+' current/forthcoming puzzles re-read from disk and validated'+(all?' (full future batch)':' (eight-day release window)')+'.');
 }finally{fs.rmSync(temp,{recursive:true,force:true});}
+}
