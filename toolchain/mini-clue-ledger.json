@@ -6,7 +6,7 @@
  ],
  "plan": [
   {"run": 1, "range": ["2027-04-20", "2027-07-18"], "status": "done", "commits": ["aa7ac51", "the commit that adds this entry"], "stats": "5 grids regenerated (50 new clues); 302 of 850 clues changed (266 flagged, 36 other; 39 from the bank incl. new grids); checker 266 to 0; blind on changed clues 87.4% to 95.0%"},
-  {"run": 2, "range": ["2027-07-19", "2027-10-16"], "status": "todo", "note": "year-two copies start here (Mini 401, Aug 2027): expect more forced repeats"},
+  {"run": 2, "range": ["2027-07-19", "2027-10-16"], "status": "done", "commits": ["71e89d1", "the commit that adds this entry"], "stats": "9 grids regenerated (90 new clues); 295 of 810 clues changed (245 flagged, 50 other; 18 from the bank incl. new grids); checker 245 to 0; blind on changed clues 91.9% to 98.3%", "note": "year-two copies start here (Mini 401, Aug 2027). Held for Alec: 0391 and 0400 carry band hard; their clues were made plain and standfirsts now end Medium, band left as is. 0401 lost its year-two note in the standfirst (format rule)."},
   {"run": 3, "range": ["2027-10-17", "2028-01-14"], "status": "todo", "note": "Christmas and Bonfire Night grids are in range: seasonal clues are welcome on their days, never on the wrong ones"},
   {"run": 4, "range": ["2028-01-15", "2028-04-13"], "status": "todo"},
   {"run": 5, "range": ["2028-04-14", "2028-07-12"], "status": "todo"},
