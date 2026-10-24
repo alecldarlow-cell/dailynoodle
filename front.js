@@ -203,7 +203,7 @@
     } else if(it.stat){
       thumb = statTile(it);
     } else {
-      thumb = '<div class="thumb glyph" aria-hidden="true">'+(it.kind==='report'?'Chart':'Play')+'</div>';
+      thumb = '<div class="thumb glyph" aria-hidden="true">'+(it.format==='briefing'?'Brief':it.kind==='report'?'Chart':'Play')+'</div>';
     }
     // Optional dn:badge (e.g. "In development") sits on the thumbnail.
     // In the lab every card is in development, so that badge would be noise.
@@ -365,10 +365,34 @@
     $chips.hidden = list.length < 2 && SEC.kind!=='puzzle';   // a lone chip filters nothing (the Board pill keeps Puzzles' row)
   }
 
+  /* ---------- the daily briefing (News, 24 Oct 2026) ----------
+     The newest briefing from today or yesterday leads the News list, its
+     stories as links into it. Under "All topics" the list itself is the full
+     pieces; past briefings are under the Briefing chip.                     */
+  function isBrief(it){ return it.format === 'briefing'; }
+  function leadBrief(){
+    if(SEC.kind !== 'report' || LAB || state.topic !== 'all' || state.q) return null;
+    var today = londonDay(), y = window.dnCore.dayBefore(today);
+    for(var i=0;i<state.items.length;i++){ var it = state.items[i];
+      if(isBrief(it) && mine(it) && (it.date === today || it.date === y) && (it.stories||[]).length) return it; }
+    return null;
+  }
+  function briefBlock(it){
+    var today = londonDay(), d = new Date(it.date + 'T12:00:00Z');
+    var when = d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short', timeZone:'UTC' });
+    return '<li class="brief"><a class="brief-top" href="'+esc(it.path)+'"><span class="brief-k">'+(it.date === today ? 'Today’s briefing' : 'Yesterday’s briefing')+'</span>'
+      + '<span class="brief-d">'+esc(when)+(it.read ? ' · '+esc(it.read) : '')+'</span></a><ol class="brief-list">'
+      + it.stories.map(function(st){
+          return '<li><a href="'+esc(it.path)+'#'+esc(st.id)+'">'+(st.t ? '<span class="brief-t">'+esc(st.t)+'</span>' : '')+esc(st.h)+'</a></li>';
+        }).join('')
+      + '</ol><a class="brief-all" href="'+esc(it.path)+'">Read the briefing →</a></li>';
+  }
+
   function visible(){
     var q = state.q.trim().toLowerCase();
     return state.items.filter(function(it){
       if(!mine(it)) return false;
+      if(isBrief(it) && state.topic === 'all' && !q) return false;   // briefings: the lead block, or the Briefing chip
       if(state.topic!=='all' && facet(it)!==state.topic) return false;
       if(q && (it.headline+' '+it.standfirst+' '+it.topic).toLowerCase().indexOf(q)===-1) return false;
       return true;
@@ -380,11 +404,11 @@
 
   function render(){
     renderChips();
-    var v = visible();
-    $feed.innerHTML = v.length
+    var v = visible(), lead = leadBrief();
+    $feed.innerHTML = (lead ? briefBlock(lead) : '') + (v.length
       ? v.map(card).join('')
       : '<li class="empty">'+esc(state.items.some(mine)
-          ? 'Nothing matches that filter yet.' : SEC.empty)+'</li>';
+          ? 'Nothing matches that filter yet.' : SEC.empty)+'</li>');
     $count.textContent = v.length
       ? v.length + ' ' + SEC.noun[v.length===1?0:1] + (state.q?' matching':'')
       : '';
@@ -549,7 +573,7 @@
   });
   // Saved as you leave: tapping a card (before the browser navigates), and
   // whenever the page is hidden or unloaded.
-  $feed.addEventListener('click', function(e){ if(e.target.closest && e.target.closest('a.card, a.card-guide')) remember(); }, true);
+  $feed.addEventListener('click', function(e){ if(e.target.closest && e.target.closest('a.card, a.card-guide, .brief a')) remember(); }, true);
   window.addEventListener('pagehide', remember);
   document.addEventListener('visibilitychange', function(){
     if(document.visibilityState === 'hidden') remember();

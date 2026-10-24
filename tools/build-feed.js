@@ -124,7 +124,7 @@ function mtimeDate(p) {
 // The front-page chips are only useful if one beat has exactly one label.
 // Canonical list; anything not in it is kept verbatim and reported, so a
 // genuinely new beat is never silently mangled into the wrong bucket.
-const TOPICS = ['UK politics', 'Economy', 'Immigration', 'AI', 'Science', 'Medicine', 'Society', 'World', 'Logic', 'Crossword', 'Word', 'Arcade', 'Strategy', 'Quiz', 'Geography'];
+const TOPICS = ['UK politics', 'Economy', 'Immigration', 'AI', 'Science', 'Medicine', 'Society', 'World', 'Briefing', 'Logic', 'Crossword', 'Word', 'Arcade', 'Strategy', 'Quiz', 'Geography'];
 const TOPIC_ALIASES = {
   'politics': 'UK politics', 'westminster': 'UK politics', 'uk politics': 'UK politics',
   'economics': 'Economy', 'economy': 'Economy', 'money': 'Economy', 'business': 'Economy',
@@ -133,7 +133,7 @@ const TOPIC_ALIASES = {
   'artificial intelligence': 'AI', 'technology': 'AI', 'tech': 'AI', 'ai': 'AI',
   'science': 'Science', 'physics': 'Science', 'energy': 'Science',
   'medicine': 'Medicine', 'health': 'Medicine',
-  'society': 'Society', 'world': 'World',
+  'society': 'Society', 'world': 'World', 'briefing': 'Briefing',
   // The three puzzle beats. They're real chips, not strays — without them every
   // puzzle logs a vocabulary warning on every build, which buries the notes
   // that actually need reading.
@@ -356,6 +356,12 @@ for (const { dir, kind } of DIRS) {
     // Puzzles front page can mark the cards you've played (front.js
     // showPlayed, 21 Oct 2026). No id, no mark; the card is unchanged.
     const pid = (kindVal === 'puzzle') ? ((html.match(/\bid\s*:\s*"(DP·[A-Z]+·[0-9-]+)"/) || [])[1] || '') : '';
+    // The daily news briefing (toolchain/dn-briefing.js, 24 Oct 2026): its stories' headlines and anchors,
+    // for the News front page's lead block (front.js). Five at most.
+    const format = (kindVal === 'report' && meta(head, 'dn:format') === 'briefing') ? 'briefing' : '';
+    const brief = format ? [...html.matchAll(/<section class="section bi" id="([a-z0-9-]+)"[^>]*>[\s\S]*?<h2>([\s\S]*?)<\/h2>/g)]
+      .slice(0, 5).map(m => ({ id: m[1], h: stripTags(m[2]), t: stripTags((m[0].match(/<div class="eyebrow">([\s\S]*?)<\/div>/) || ["", ""])[1]).replace(/^\d+\s*·\s*/, '').trim() })) : [];
+    if (format && brief.length < 3) warnings.push(`${rel} — a briefing with ${brief.length} stories`);
 
     // The tile's label is a KICKER, not a caption: ~14 characters, two words.
     // The piece's own hero-stat caption is written to sit under a big number in
@@ -403,6 +409,7 @@ for (const { dir, kind } of DIRS) {
       mask,
       ...(ptype ? { type: ptype } : {}),
       ...(pid ? { id: pid } : {}),
+      ...(format ? { format, stories: brief } : {}),
       ...(meta(head, 'dn:badge') ? { badge: meta(head, 'dn:badge').trim().slice(0, 24) } : {})
     });
   }

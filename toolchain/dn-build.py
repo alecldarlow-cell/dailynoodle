@@ -35,7 +35,7 @@ import argparse, io, json, os, re, sys
 
 REQUIRED_META = ["headline", "standfirst", "topic", "date", "kind", "read", "slug", "version"]
 OPTIONAL_META = {"statlabel": "", "subarea": "", "kicker": "ANALYSIS", "built": "",
-                 "corrections": []}
+                 "corrections": [], "story": "", "followup": ""}
 
 # Rubric §12/§14: every report carries this line, identical on every piece.
 # Generated here so it cannot be forgotten; skipped if footer.html already has it.
@@ -145,6 +145,11 @@ def build(args):
     meta["corrections"] = corr
     if meta["statlabel"] and (len(meta["statlabel"]) > 14 or meta["statlabel"] != meta["statlabel"].lower()):
         die('meta.statlabel "%s" must be <=14 chars and lower case' % meta["statlabel"])
+    # 24 Oct 2026: the running story this piece belongs to (dn-briefing.js check-deep blocks repeats)
+    if meta["story"] and not re.match(r"^[a-z0-9]+(-[a-z0-9]+){0,7}$", meta["story"]):
+        die('meta.story "%s" must be a slug: a-z, 0-9 and hyphens' % meta["story"])
+    if meta["followup"] and not re.match(r"^reports/\d{4}-\d{2}-\d{2}-[a-z0-9-]+\.html$", meta["followup"]):
+        die('meta.followup "%s" must be the earlier piece\'s path, reports/YYYY-MM-DD-slug.html' % meta["followup"])
 
     y, mo, d = (int(x) for x in meta["date"].split("-"))
     human = "%d %s %d" % (d, MONTHS[mo - 1], y)          # 30 Jul 2026
@@ -170,6 +175,8 @@ def build(args):
         '<meta name="dn:headline"   content="%s">' % esc_attr(meta["headline"]),
         '<meta name="dn:standfirst" content="%s">' % esc_attr(meta["standfirst"]),
         '<meta name="dn:topic"      content="%s">' % esc_attr(meta["topic"]),
+    ] + (['<meta name="dn:story"      content="%s">' % meta["story"]] if meta["story"] else []) + (
+         ['<meta name="dn:followup"   content="%s">' % meta["followup"]] if meta["followup"] else []) + [
         '<meta name="dn:date"       content="%s">' % meta["date"],
         '<meta name="dn:kind"       content="%s">' % meta["kind"],
         '<meta name="dn:read"       content="%s">' % esc_attr(meta["read"]),

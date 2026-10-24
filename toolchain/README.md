@@ -21,9 +21,11 @@ and 15 seconds.
 | `dn-probe.js` | Geometry gate on the assembled file at 360px and 680px | Build step 7 |
 | `dn-render.js` | Real-browser render check (20 Oct 2026): the assembled piece in the site's pinned Chromium with its own fonts and the site's additions (Share, back-to-News, dark mode), at 360px and 680px, light and dark. Fails on clipped or lost-word labels, sideways scroll, undrawn exhibits, script errors; warns on overlaps, dashed reference lines through labels, small or faint text, shortened labels; writes one screenshot sheet per exhibit to `render/<slug>/` to look at | Build step 8 |
 | `dn-harness.js` | jsdom loader with the toolkit's polyfills. Required by the three gates; also usable for bespoke checks (`loadPiece()` → `charts()` / `render(w)` / `errors`; always `close()`) | Library |
+| `dn-briefing.js` | The desk plan, the daily briefing builder and the deep-piece repeat/cap gate (24 Oct 2026; `news-desk-v6.md`). Run from the full clone, since it reads `reports/` | Every nightly run |
 | `dn-redate.js` | Moves an already-shipped piece to a new date; refuses on date-dependent content | Redates only |
 | `DN-API.md` | Chart toolkit reference: primitives, spec fields, label budgets, silent failures, markup contracts. Replaces reading the template | Read once per build |
 | `SESSION-PROTOCOL.md` | Build order, context discipline, bootstrap, the two dates, redating | Read first |
+| `news-desk-v6.md` | **What the desk publishes** (24 Oct 2026): one briefing a night, 2–3 deep pieces a week, story slugs and the repeat block, plain English | Read first, every run |
 | `digi-news-standards-rubric-v5.md` | Binding editorial standards: news value, source tiers, going to the data, assumption firewall, caveat test, news spine, context floor, accessibility floor, length tiers, footer, disclosure, continuity, fairness | §0–§0a, §1d, §4b and §6–§6b at the editorial gate (step 0); the rest only on a contested call |
 | `digi-news-prepublish-checklist-5.md` | Pre-publish checklist in two passes, mapped to rubric sections | Pass 1 at the spine checkpoint; pass 2 at the gate step |
 | `digi-news-style-guide-v2.md` | Headlines, standfirsts, the first two paragraphs, number ration, register | Build step 5, before the headline |
@@ -67,7 +69,9 @@ All commands run from `~/b`. Pipe gate output through `tail`.
    ```json
    { "headline": "…", "standfirst": "…", "topic": "Science", "date": "YYYY-MM-DD",
      "kind": "report", "read": "~4 min", "slug": "topic-slug", "version": "v1.0",
-     "statlabel": "optional, <=14 chars", "built": "optional, data-currency date" }
+     "statlabel": "optional, <=14 chars", "built": "optional, data-currency date",
+     "story": "running-story-slug (required from 25 Oct 2026; see news-desk-v6.md)",
+     "followup": "optional: reports/<earlier piece>.html, only for a follow-up on a new event" }
    ```
 6. **Assemble** — `python3 dn-build.py --piece piece` → writes `YYYY-MM-DD-slug.html`.
    Never patch the output; edit `piece/` and rebuild.

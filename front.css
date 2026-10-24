@@ -142,6 +142,21 @@
      slowdown: 2.4 s down to 0.8 s). The size is a placeholder until a card
      has been drawn once; front.js restores your place by card, not pixels. */
   .feed>li{content-visibility:auto;contain-intrinsic-size:auto 150px}
+  /* the daily briefing at the top of News (24 Oct 2026) */
+  .feed>li.brief{content-visibility:visible;margin:14px 0 6px;padding:16px 16px 14px;background:var(--paper);
+    border:1px solid var(--hair);border-left:4px solid var(--accent);border-radius:10px}
+  .brief-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;color:inherit;text-decoration:none}
+  .brief-k{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.01em;color:var(--ink)}
+  .brief-d{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .brief-list{list-style:none;margin-top:8px;counter-reset:b}
+  .brief-list li{counter-increment:b;border-top:1px solid var(--hair)}
+  .brief-list li:first-child{border-top:0}
+  .brief-list a{display:grid;grid-template-columns:22px 1fr;column-gap:6px;padding:9px 0;color:var(--ink);text-decoration:none;
+    font-weight:600;font-size:15.5px;line-height:1.35}
+  .brief-list a::before{content:counter(b);grid-row:1 / span 2;font-family:var(--display);font-weight:800;color:var(--accent)}
+  .brief-t{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .brief-all{display:inline-block;margin-top:6px;font-weight:700;font-size:14px;color:var(--accent);text-decoration:none}
+  .brief a:hover .brief-k,.brief-list a:hover{text-decoration:underline}
   .card{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:start;
     padding:18px 0;border-bottom:1px solid var(--hair)}
   .card.nothumb{grid-template-columns:1fr}

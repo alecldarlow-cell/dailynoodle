@@ -86,7 +86,7 @@
     } else if(it.stat){
       thumb = statTile(it);
     } else {
-      thumb = '<div class="thumb glyph" aria-hidden="true">'+(it.kind==='report'?'Chart':'Play')+'</div>';
+      thumb = '<div class="thumb glyph" aria-hidden="true">'+(it.format==='briefing'?'Brief':it.kind==='report'?'Chart':'Play')+'</div>';
     }
     // Optional dn:badge (e.g. "In development") sits on the thumbnail.
     // In the lab every card is in development, so that badge would be noise.
