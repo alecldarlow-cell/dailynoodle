@@ -22,6 +22,12 @@ function build(out=path.join(ROOT,'_site')){
   assert.doesNotMatch(JSON.stringify(health),/DP·|reports\/|\.html/,'Health metadata must not expose future content');
   for(const it of feed.items){assert.ok(fs.existsSync(path.join(site,it.path)),it.path);assert.ok(it.date<=day,'Future card '+it.path);}
   for(const f of fs.readdirSync(path.join(site,'reports')))if(/^\d{4}-\d{2}-\d{2}-/.test(f))assert.ok(f.slice(0,10)<=day,'Future file leaked '+f);
+  // App data (tools/puzzle-json.js): one JSON per released puzzle page with a data object, none for held files.
+  const lite=JSON.parse(fs.readFileSync(path.join(site,'feed-lite.json'))),puzzles=feed.items.filter(it=>it.kind==='puzzle'&&it.type);
+  assert.deepEqual(lite.items.map(it=>it.path),puzzles.map(it=>it.path),'feed-lite.json lists every released puzzle card');
+  assert.ok(lite.items.filter(it=>it.json).length>=puzzles.length-60,'Most puzzle cards have app data');
+  for(const it of lite.items)if(it.json){const j=JSON.parse(fs.readFileSync(path.join(site,it.json)));assert.equal(j.path,it.path,it.json);assert.equal(j.type,it.type,it.json);assert.ok(j.data&&j.data.id===j.id,it.json);}
+  for(const f of fs.readdirSync(path.join(site,'reports')))if(f.endsWith('.json'))assert.ok(fs.existsSync(path.join(site,'reports',f.replace(/\.json$/,'.html'))),'Orphan app data '+f);
   for(const file of ['tools','toolchain','package.json','package-lock.json','playwright.config.js','registry.json','published.json'])assert.ok(!fs.existsSync(path.join(site,file)),'Private tooling deployed: '+file);
   // Inspect every emitted search tag and prove metadata never changes playable content.
   const searchPages=require('../search-meta').entries(feed),titles=new Set();

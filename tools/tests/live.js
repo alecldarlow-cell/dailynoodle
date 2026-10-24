@@ -23,4 +23,8 @@ function searchTags(html,meta,canonical){
  console.log('LIVE publishing snapshot OK');
  for(const it of list.items){assert.match(it.path,/^reports\/[\w.-]+\.html$/);const r=await fetch(base+'/'+it.path,{signal:AbortSignal.timeout(20000)});assert.equal(r.status,200,it.path);searchTags(await r.text(),puzzleMeta({kind:'puzzle',type:it.type,headline:it.name,date:list.today}),base+'/'+it.path);const head=await fetch(base+'/'+it.path+'?publishing-check=1',{method:'HEAD',signal:AbortSignal.timeout(20000),cache:'no-store'});assert.equal(head.status,200,it.path+' HEAD availability');}
  console.log('LIVE current daily list and all '+list.items.length+' puzzle URLs OK');
+ // App data (tools/puzzle-json.js): today's eight puzzles as JSON, and the archive list.
+ const lite=await fetch(base+'/feed-lite.json',{signal:AbortSignal.timeout(20000),cache:'no-cache'}).then(r=>{assert.equal(r.status,200,'feed-lite.json');return r.json();});
+ for(const it of list.items){assert.ok(lite.items.some(x=>x.path===it.path),'feed-lite lists '+it.path);const j=await fetch(base+'/'+it.path.replace(/\.html$/,'.json'),{signal:AbortSignal.timeout(20000),cache:'no-cache'}).then(r=>{assert.equal(r.status,200,it.path+' app data');return r.json();});assert.equal(j.id,it.id,it.path+' app data id');assert.equal(j.data.id,it.id,it.path+' app data object');}
+ console.log('LIVE app data for today and feed-lite.json OK');
 })().catch(e=>{console.error(e);process.exitCode=1;});

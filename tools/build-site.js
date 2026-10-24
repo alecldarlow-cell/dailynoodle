@@ -85,6 +85,8 @@ require('./short-links').write(OUT);
 require('./puzzle-discovery').write(OUT);
 // Search titles, descriptions and self-canonicals; source puzzle/card data stays intact.
 require('./search-meta').write(OUT);
+// Puzzle data for the app (reports/<page>.json, feed-lite.json) from released pages only; see tools/puzzle-json.js.
+require('./puzzle-json').write(OUT);
 // sitemap.xml + robots.txt from what was actually published; see tools/sitemap.js.
 require('./sitemap').write(OUT);
 if (!fs.existsSync(path.join(OUT, 'index.html')) || !fs.existsSync(path.join(OUT, 'feed.json'))) {
