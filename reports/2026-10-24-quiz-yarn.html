@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Yarn</title>
+<meta name="dn:kind"       content="game">
+<meta name="dn:headline"   content="Yarn">
+<meta name="dn:standfirst" content="The daily Tangle without the wait: 360 boards, three stars each, and a scarf to knit as you win.">
+<meta name="dn:topic"      content="Quiz">
+<meta name="dn:date"       content="2026-10-24">
+<meta name="dn:read"       content="~3 min">
+<meta name="dn:badge"      content="In development">
+<meta name="dn:thumb"      content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI0Y1RUZFNiIvPjxnIGZpbGw9IiNGRkZERjkiIHN0cm9rZT0iIzJBMjExOCIgc3Ryb2tlLXdpZHRoPSIxLjgiPjxyZWN0IHg9IjU4IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9IjU4IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIgZmlsbD0iI0VDRTNENiIgc3Ryb2tlPSIjQjlBQTk2Ii8+PC9nPjxwYXRoIGQ9Ik01OCA2MkM2MiA0NiA2NiAyNiA3MCAyMlM5NiAyMCA5OCAyMiA5OCA0NiA5OCA1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQzA1MzJBIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iODQiIHI9IjI5IiBmaWxsPSIjQzA1MzJBIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEUzQTFDIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNMTYgNzRjMTQgNiAzNCA0IDUwLTEwIi8+PHBhdGggZD0iTTE0IDg4YzE4IDQgMzgtMiA1NC0xOCIvPjxwYXRoIGQ9Ik0yMCAxMDJjMTYgMCAzNC04IDQ2LTI0Ii8+PHBhdGggZD0iTTMwIDU5Yy02IDE0LTYgMzQgNCA1MiIvPjxwYXRoIGQ9Ik00NiA1NmMtOCAxNi04IDM4IDIgNTYiLz48L2c+PGNpcmNsZSBjeD0iMzEiIGN5PSI3MSIgcj0iNSIgZmlsbD0iI0U1ODI2MCIgb3BhY2l0eT0iLjciLz48L3N2Zz4=">
+<meta name="theme-color" content="#F5EFE6" id="themeColor">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Yarn — the game of the daily Tangle puzzle. Same board, same scoring; levels, stars and a scarf. */
+:root{
+  --bg:#F5EFE6; --ink:#2A2118; --ink2:#6B5F52; --paper:#FFFDF9; --line:#E2D7C8; --edge:#2A2118; --soft:#ECE3D6;
+  --primary:#A63D40; --onPrimary:#FFFFFF; --ok:#3F8F5A; --okT:#DCEFE1; --gold:#E3A920; --goldT:#FBEFC8; --goldInk:#4D3800;
+  --sk:#B08A52; --onSk:#FFFFFF; --skT:color-mix(in srgb,var(--sk) 22%,var(--paper));
+  --serif:"Instrument Serif","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:Archivo,"Helvetica Neue",Arial,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#17130F; --ink:#F1E9DE; --ink2:#B5A897; --paper:#221C16; --line:#3A3129; --edge:#5A4E42; --soft:#2E261F;
+  --primary:#D0605F; --onPrimary:#FFFFFF; --ok:#5DBB7F; --okT:#1D3A27; --gold:#F0BF3C; --goldT:#3D3112; --goldInk:#FFE08A;
+  --onSk:#17130F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17130F; --ink:#F1E9DE; --ink2:#B5A897; --paper:#221C16; --line:#3A3129; --edge:#5A4E42; --soft:#2E261F;
+  --primary:#D0605F; --onPrimary:#FFFFFF; --ok:#5DBB7F; --okT:#1D3A27; --gold:#F0BF3C; --goldT:#3D3112; --goldInk:#FFE08A;
+  --onSk:#17130F; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);font-size:16px;line-height:1.4;-webkit-tap-highlight-color:transparent;overflow:hidden;-webkit-touch-callout:none;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sk);outline-offset:2px}
+.screen{position:fixed;inset:0;height:100dvh;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+.screen.vis{display:block}
+.wrap{max-width:560px;min-height:100%;margin:0 auto;padding:6px 16px 20px;display:flex;flex-direction:column;gap:12px}
+.top{display:flex;justify-content:space-between;align-items:center;min-height:44px}
+.back{display:inline-flex;align-items:center;min-height:44px;font-size:15px;text-decoration:none;color:var(--ink2);background:none;border:0;padding:0;cursor:pointer}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:10px 16px;border-radius:26px;
+  background:var(--paper);border:1.5px solid var(--edge);cursor:pointer;font-weight:600;font-size:17px;text-decoration:none;transition:transform .08s,background .2s}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--primary);color:var(--onPrimary);border-color:var(--primary)}
+.btn.quiet{border-color:var(--line);color:var(--ink2);font-weight:500}
+.iconbtn{width:44px;height:44px;border-radius:22px;border:1.5px solid var(--edge);background:var(--paper);display:grid;place-items:center;cursor:pointer;padding:0;flex:none}
+.iconbtn svg{width:18px;height:18px}
+.fsbtn .fs-out{display:none}
+.fsbtn[aria-pressed="true"] .fs-in{display:none}
+.fsbtn[aria-pressed="true"] .fs-out{display:inline}
+.small{font-size:14px;color:var(--ink2);margin:0}
+
+/* home */
+.title{font-family:var(--serif);font-weight:400;font-size:clamp(60px,19vw,88px);line-height:.85;margin:0;letter-spacing:-.01em}
+.tag{margin:6px 0 0;font-family:var(--serif);font-style:italic;font-size:19px;color:var(--ink2)}
+#scarfBox{margin:4px 0 0}
+#scarf{display:block;width:100%;height:76px}
+#scarfNote{font-size:13px;color:var(--ink2);margin:2px 0 0}
+#hPlay{display:flex;align-items:center;gap:16px;width:100%;padding:18px 18px;text-align:left;cursor:pointer;border:0;border-radius:18px;background:var(--paper);margin-top:4px}
+#hPlay:active{filter:brightness(.97)}
+#hPlay .ball{flex:none;width:64px;height:64px}
+#hPlay .txt{flex:1;min-width:0}
+#hPlay b{display:block;font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.02}
+#hPlay small{display:block;margin-top:4px;font-size:15px;color:var(--ink2)}
+#hPlay .go{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;padding:0 22px;border-radius:24px;background:var(--primary);color:var(--onPrimary);font-weight:600}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile2{display:flex;flex-direction:column;justify-content:center;min-height:72px;padding:10px 14px;border-radius:14px;background:var(--paper);border:0;text-align:left;cursor:pointer;text-decoration:none;color:var(--ink)}
+.tile2 b{font-weight:600;font-size:16px}
+.tile2 small{font-size:13px;color:var(--ink2);line-height:1.3;margin-top:2px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats div{display:flex;flex-direction:column;padding:10px 0 10px 14px;border-left:1px solid var(--line)}
+.stats div:first-child{border-left:0;padding-left:0}
+.stats b{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.stats span{font-size:13px;color:var(--ink2)}
+details.how{border-bottom:1px solid var(--line);font-size:15px;color:var(--ink2)}
+details.how summary{cursor:pointer;min-height:52px;display:flex;align-items:center;justify-content:space-between;color:var(--ink);font-weight:600;list-style:none}
+details.how summary::-webkit-details-marker{display:none}
+details.how summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);transform:rotate(45deg) translateY(-3px)}
+details.how[open] summary::after{transform:rotate(-135deg) translateY(-1px)}
+details.how p{margin:0 0 12px;line-height:1.5}
+.toggles{display:flex;flex-wrap:wrap;gap:4px 18px}
+.tog{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0;border:0;background:none;cursor:pointer;font-size:14px;font-weight:500;color:var(--ink2)}
+.tog::before{content:"";width:30px;height:18px;border-radius:9px;background:var(--line)}
+.tog[aria-checked="true"]::before{background:var(--primary)}
+.tog::after{content:"";position:absolute;left:2px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:7px;background:#fff;transition:left .15s}
+.tog[aria-checked="true"]::after{left:14px}
+
+/* levels */
+.skein{border-top:1px solid var(--line);padding-top:12px}
+.skein h2{display:flex;align-items:center;gap:10px;margin:0 0 10px;font-family:var(--serif);font-weight:400;font-size:28px;line-height:1}
+.skein h2 svg{width:30px;height:30px;flex:none}
+.skein h2 span{margin-left:auto;font-family:var(--sans);font-size:14px;color:var(--ink2)}
+.lvgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.lv{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:58px;border-radius:12px;border:1.5px solid var(--line);background:var(--paper);cursor:pointer;padding:4px 0}
+.lv b{font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.lv i{font-style:normal;font-size:11px;letter-spacing:1px;color:var(--gold);min-height:14px}
+.lv i .off{color:var(--line)}
+.lv.next{border-color:var(--sk);box-shadow:inset 0 0 0 1.5px var(--sk)}
+.lv[disabled]{opacity:.45;cursor:default}
+.more{margin-top:10px}
+
+/* play */
+#play .wrap{gap:8px;height:100%;min-height:0;padding-bottom:max(14px,env(safe-area-inset-bottom,0px))}
+#play{overflow:hidden}
+.ptop{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:12px;min-height:52px}
+.scorebox{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;min-width:0}
+#score{font-family:var(--serif);font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.scorebox span{font-size:14px;color:var(--ink2)}
+.pright{display:flex;align-items:center;gap:8px}
+#clock{min-width:80px;text-align:center;font-weight:700;font-size:24px;font-variant-numeric:tabular-nums;padding:6px 10px;border-radius:22px;border:1.5px solid var(--edge);background:var(--paper)}
+#clock.low{background:var(--primary);border-color:var(--primary);color:var(--onPrimary)}
+.timebar{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.timebar i{display:block;height:100%;width:100%;background:var(--ink2);transform-origin:left;transition:transform .2s linear}
+/* star bar: score against the level's three targets */
+#starbar{position:relative;height:40px;margin:2px 10px 0 4px}
+#starbar .rail{position:absolute;left:0;right:0;top:12px;height:8px;border-radius:4px;background:var(--soft)}
+#starbar .fill{position:absolute;left:0;top:12px;height:8px;border-radius:4px;background:var(--sk);width:0;transition:width .3s}
+#starbar .mk{position:absolute;top:2px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:600;color:var(--ink2);line-height:1}
+#starbar .mk em{font-style:normal;font-size:16px;color:var(--line);text-shadow:0 0 0 transparent}
+#starbar .mk.got em{color:var(--gold)}
+#starbar .mk span{margin-top:11px;font-variant-numeric:tabular-nums}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pill{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-radius:15px;border:1.25px solid var(--ink2);font-size:13px;color:var(--ink2)}
+#starPill.got{border-color:var(--gold);background:var(--goldT);color:var(--goldInk)}
+#list{flex:1;min-height:56px;overflow-y:auto;-webkit-overflow-scrolling:touch;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 0}
+.grp{margin:0 0 8px}
+.grp h3{display:flex;justify-content:space-between;margin:0 0 4px;font-size:13px;font-weight:600;color:var(--ink2)}
+.ws{display:flex;flex-wrap:wrap;gap:5px}
+.w{display:inline-block;padding:3px 8px;border-radius:5px;background:var(--paper);border:1px solid var(--line);font-size:15px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.w.star{background:var(--goldT);border-color:var(--gold)}
+.w.bon{border-style:dashed}
+.w.miss{background:transparent;color:var(--ink2);font-weight:500;border-style:dotted}
+.w.new{animation:land .7s ease-out}
+.w.flash{animation:flash .9s}
+@keyframes land{0%{transform:translateY(14px) scale(.6);opacity:0;background:var(--okT)}60%{transform:scale(1.12);opacity:1;background:var(--okT)}100%{transform:none}}
+@keyframes flash{0%,100%{background:var(--paper)}30%{background:var(--goldT)}}
+.empty{font-size:14px;color:var(--ink2);margin:4px 0}
+#cur{position:relative;min-height:40px;display:flex;align-items:center;justify-content:center}
+#curWord{font-family:var(--serif);font-size:30px;line-height:1;letter-spacing:.06em;text-transform:uppercase;min-height:30px}
+#curWord.idle{font-family:var(--sans);font-size:14px;letter-spacing:0;text-transform:none;color:var(--ink2)}
+#toast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);background:var(--ink);color:var(--bg);border-radius:18px;padding:7px 14px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;white-space:nowrap}
+#toast.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#toast.good{background:var(--ok);color:#fff}
+#toast.gold{background:var(--gold);color:var(--goldInk)}
+#toast.star{background:var(--sk);color:var(--onSk)}
+#boardWrap{position:relative;display:flex;justify-content:center}
+#board{position:relative;width:min(100%,400px,max(280px,52dvh));aspect-ratio:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;touch-action:none}
+.tile{position:relative;display:grid;place-items:center;border-radius:12px;background:var(--paper);border:1.5px solid var(--edge);box-shadow:0 3px 0 var(--edge);
+  font-weight:700;font-size:clamp(26px,8.6vw,38px);font-stretch:95%;cursor:pointer;transition:background .12s,transform .12s,box-shadow .12s;z-index:1}
+.tile.qu{font-size:clamp(22px,7vw,31px)}
+.tile.on{background:var(--skT);border-color:var(--sk);box-shadow:0 1px 0 var(--sk);transform:translateY(2px)}
+.tile.last{background:var(--sk);color:var(--onSk)}
+.tile.good{background:var(--okT);border-color:var(--ok);box-shadow:0 1px 0 var(--ok)}
+.tile.bonus{background:var(--goldT);border-color:var(--gold);box-shadow:0 1px 0 var(--gold)}
+.tile.meh{background:var(--soft)}
+#board.hide .tile{color:transparent}
+#pathSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}
+#pathSvg polyline{fill:none;stroke:var(--sk);stroke-width:10;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+#count{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;pointer-events:none;display:flex;align-items:center;justify-content:center;min-width:128px;height:128px;padding:0 22px;border-radius:64px;background:var(--paper);border:2px solid var(--edge);box-shadow:0 5px 0 var(--edge);font-family:var(--serif);font-size:76px;line-height:1;font-variant-numeric:tabular-nums}
+#count.word{font-family:var(--sans);font-weight:700;font-size:30px}
+.locked #board{pointer-events:none}
+
+/* pause sheet */
+#pauseSheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center;background:rgba(20,14,8,.45)}
+#pauseSheet .sheet{width:100%;max-width:560px;max-height:100%;overflow-y:auto;background:var(--bg);border-radius:20px 20px 0 0;padding:18px 18px max(18px,env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px}
+#pauseSheet h2{margin:0;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1}
+#pauseSheet .sub{margin:0 0 4px;color:var(--ink2);font-size:15px}
+.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* result */
+.kick{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink2);margin:4px 0 0}
+.big{font-family:var(--serif);font-weight:400;font-size:clamp(64px,22vw,100px);line-height:.9;margin:0;font-variant-numeric:tabular-nums}
+.big small{font-size:.38em;margin-left:6px;color:var(--ink2)}
+#rStars{display:flex;gap:6px;font-size:40px;line-height:1;color:var(--line)}
+#rStars span.got{color:var(--gold)}
+#rStars span.pop{animation:pop .5s ease-out both}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.25);opacity:1}100%{transform:none}}
+.verdict{font-size:18px;margin:0}
+.sub{margin:0;color:var(--ink2)}
+#rList .grp h3 span:last-child{font-variant-numeric:tabular-nums}
+details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600}
+.bonlist{font-size:14px;color:var(--ink2);text-transform:uppercase;letter-spacing:.03em;line-height:1.7;word-spacing:.35em;margin:0 0 8px}
+.legend{font-size:13px;color:var(--ink2);margin:0}
+
+.rm *,.rm *::before,.rm *::after{transition:none!important;animation:none!important}
+@media (max-height:640px){#play .wrap{gap:6px} #curWord{font-size:26px} #score{font-size:34px}}
+/* short landscape: list and clock beside a full, touchable board */
+@media (orientation:landscape) and (max-height:500px){
+  #play .wrap{max-width:900px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-rows:auto 4px auto auto minmax(40px,1fr) auto;gap:4px 16px;
+    grid-template-areas:"top board" "bar board" "stars board" "pills board" "list board" "word board"}
+  .ptop{grid-area:top;gap:6px} .timebar{grid-area:bar} #starbar{grid-area:stars} .pills{grid-area:pills;margin:0} #list{grid-area:list} #cur{grid-area:word}
+  #score{font-size:30px} #clock{min-width:64px;font-size:20px}
+  #boardWrap{grid-area:board;align-self:center;min-width:0}
+  #board{width:min(100%,calc(100dvh - 28px))}
+  #home .wrap,#levels .wrap,#result .wrap{max-width:760px}
+  #pauseSheet{align-items:center} #pauseSheet .sheet{border-radius:20px;max-width:640px}
+}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<section id="home" class="screen vis" aria-label="Yarn">
+ <div class="wrap">
+  <div class="top"><a class="back" href="../games.html">← Games</a><button class="iconbtn fsbtn" id="fsHome" aria-label="Full screen" aria-pressed="false" hidden><svg viewBox="0 0 18 18" aria-hidden="true"><path class="fs-in" d="M2.5 7V2.5H7M11 2.5h4.5V7M15.5 11v4.5H11M7 15.5H2.5V11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path class="fs-out" d="M7 2.5V7H2.5M15.5 7H11V2.5M11 15.5V11h4.5M2.5 11H7v4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  <div>
+   <h1 class="title">Yarn</h1>
+   <p class="tag">Trace words, earn stars, knit a scarf.</p>
+  </div>
+  <div id="scarfBox"><svg id="scarf" aria-hidden="true"></svg><p id="scarfNote"></p></div>
+  <button id="hPlay" type="button"><svg class="ball" viewBox="0 0 64 64" aria-hidden="true" id="hBall"></svg>
+   <span class="txt"><b id="hHead">Level 1</b><small id="hStatus"></small><span class="go" id="hGo">Play</span></span></button>
+  <div class="row2">
+   <button class="tile2" id="hLevels" type="button"><b>Levels</b><small id="hLvNote">Six skeins, then odds and ends</small></button>
+   <a class="tile2" id="dailyCard" href="../puzzles.html"><b id="dailyTitle">Today’s Tangle</b><small id="dailyStatus">The daily board, the same for everyone</small></a>
+  </div>
+  <div class="stats"><div><b id="sStars">0</b><span>stars</span></div><div><b id="sBest">0</b><span>best score</span></div><div><b id="sWords">0</b><span>words found</span></div></div>
+  <details class="how">
+   <summary>How to play</summary>
+   <p>Each level is one board and two minutes. Drag through touching letters, across, up, down or diagonally, to spell a word, or tap letters one by one and tap the last one again to enter. Each tile is used once per word; QU counts as two letters.</p>
+   <p>A word scores its length minus two: 1 point for three letters, 2 for four, 3 for five. The board’s longest word scores double.</p>
+   <p>The bar above the board shows the level’s three star scores. One star clears the level, knits a stripe into your scarf and opens the next. Replay any level for more stars.</p>
+   <p>Words you find here and in the daily Tangle all count towards your words found.</p>
+  </details>
+  <div class="toggles" id="homeToggles"></div>
+ </div>
+</section>
+
+<!-- LEVELS -->
+<section id="levels" class="screen" aria-label="Levels">
+ <div class="wrap">
+  <div class="top"><button class="back" id="lvBack" type="button">← Yarn</button><span class="small" id="lvStars"></span></div>
+  <div id="lvList"></div>
+ </div>
+</section>
+
+<!-- PLAY -->
+<section id="play" class="screen" aria-label="Board">
+ <div class="wrap">
+  <div class="ptop">
+   <button class="iconbtn" id="pauseBtn" aria-label="Pause"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M6 4v10M12 4v10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+   <div class="scorebox"><b id="score">0</b><span>pts · <span id="nWords">0 words</span></span></div>
+   <div class="pright"><span id="clock">2:00</span></div>
+  </div>
+  <div class="timebar" aria-hidden="true"><i id="timeFill"></i></div>
+  <div id="starbar" aria-label="Star scores"><div class="rail"></div><div class="fill" id="sbFill"></div></div>
+  <div class="pills"><span class="pill" id="lvPill"></span><span class="pill" id="starPill"></span></div>
+  <div id="list" aria-live="polite"></div>
+  <div id="cur"><span id="curWord" class="idle"></span><span id="toast" role="status"></span></div>
+  <div id="boardWrap"><div id="board" aria-label="Letter grid"><svg id="pathSvg" aria-hidden="true"><polyline id="pathLine" points=""/></svg></div><div id="count" hidden aria-live="assertive"></div></div>
+ </div>
+</section>
+
+<!-- PAUSE -->
+<div id="pauseSheet" hidden role="dialog" aria-modal="true" aria-labelledby="pTitle">
+ <div class="sheet">
+  <h2 id="pTitle">Paused</h2>
+  <p class="sub" id="pSub"></p>
+  <button class="btn primary" id="pResume" type="button">Resume</button>
+  <div class="btnrow"><button class="btn" id="pRestart" type="button">Restart level</button><button class="btn" id="pLevels" type="button">Levels</button></div>
+  <div class="toggles" id="pauseToggles"></div>
+  <a class="back" href="../games.html">← Games</a>
+ </div>
+</div>
+
+<!-- RESULT -->
+<section id="result" class="screen" aria-label="Result">
+ <div class="wrap">
+  <div class="top"><a class="back" href="../games.html">← Games</a><button class="back" id="rHome" type="button">Yarn home</button></div>
+  <p class="kick" id="rKick"></p>
+  <h2 class="big" id="rBig"></h2>
+  <div id="rStars" aria-hidden="true"><span>★</span><span>★</span><span>★</span></div>
+  <p class="verdict" id="rVerdict"></p>
+  <p class="sub" id="rStar"></p>
+  <div class="btnrow"><button class="btn primary" id="rNext" type="button">Next level</button><button class="btn" id="rRetry" type="button">Try again</button></div>
+  <button class="btn quiet" id="rLevels" type="button">Levels</button>
+  <p class="legend">Every common word on this board. Dotted ones you missed; the gold one is the longest.</p>
+  <div id="rList"></div>
+  <details class="bon"><summary id="bonSum"></summary><p class="bonlist" id="bonList"></p></details>
+ </div>
+</section>
+
+<script>
+'use strict';
+/* ===================== data =====================
+   Word list: every word in the main and rarer lists of the daily Tangle boards (680 boards to Aug 2028),
+   minus the house blocklist, prefix-packed (digit = letters shared with the word before).
+   Levels: 4x4 boards (q = the Qu tile) with their longest word, made for Yarn: no board or longest
+   word repeats a daily Tangle. 60 in six skeins, then 300 odds and ends. */
+const DICT={"M":"0abide2le2ove2road2sent3tract2undance1ccent6s4pt6ed4ss6ed3ompany6lish4rd4unt7ed7ing7s3ustomed2e2he2id4s2ne2re4s2t3ed3ing4on4vate8d5e5ity3or3s2ute1dapt5er5ing2d3s2jacent3ust6ment2mire4t5s5ted6ing2olescent3pt5ed5ing3rable4e2s2ult2visory1erial1fford6able6ed2raid2ter5math1gain5st2e3d3ing3ncy4t5s3s2ile2o3ny2ree5ing1ha1id3e4d4s2m3ed3ing3s2r3borne3ed3ing3port7s3s2sle1kin1larm5ing3s2beit2e3rt5s2gae2ias3en5s3gn3ke3ve2l3eged4viate4y3iance8s4ed3oy3y2one4g3ud2so2tar3er3o4gether1mbition2end2id3no2mo2p3le2used5ment1nalyst7s2cestral3hor3ient2d2gel4r3les3ry2imal6s5ted4e2noy3ual6ly2swer6ed6s2t3hem3i3s2y3time1part2e3s3x2p3alling4rent8ly3ear6s3laud6se4y3rove7d3s2t1qua1rcade3h4es4ive7s2e3a4s3na2gue5d4ing4ment2ise5s4ing2m3ed3ies3s3y2ose2range7d4y3ive6s3ogant4w5s2son2t3ery3icle7s4st6s3s1scent2h3es3ore2ide2k3ed3ing3s2pect3ire2sembly4rt6ed4t3ign3ume4re2teroid3ronaut1thletic8s2om4ic4s3p2tach4in3end3ire3orney1uction2dio4t2nt2ra2sterity2thentic4or6ed3o4graph4mated5otive2xiliary1vail2enue2id2oid1wait5ed3ke5ning3rd4e5ness3y2e2ful1xe3s2le1ye0babe3y2ck4ground4s5tage2d3ge5r3ly2g3s2il3t2ke4d2lance7d7s3d3e3l2n3d4s3k3s3ter2r3e3k3n3on3s2sal3e4s3h3ket6s2t3ch3h4room8s4s3on3s3ter6ies4le2y1each4on3d3m4s3ns3r3st5s3t4en4s2d3s2e3f3n3p3r4s3s2fore2g3an3in5s3un2haviour2ing2lieving3l4e4s4y3t4s2nd3ign3t2rries3th2side3t2t3a3s3ter4ing1ias2ble2d3der4ing3s2g2ke2lingual3l4ion4s2n3d3ge4o3s2rch3d4s3th5day8s5s2t3e4s3ing3s3ten5r6ness1lade3h3me5s3ze2eak3nd5er3ss3w2oc3g3nd5e3w2ue4print4s3nt3r3sh1oard5ing3st3t4s2dy2gus2il4er4ing2ld3t2nd4s3e4s3g3us2o3n3st5er3t4s4y2re4d3ing3n4e3ough2ss2t3h3s2unce3t2w3el3l4s3s2x3er2y3s1race5s3g3in3ke4ing3nch6es4d3ss3t3ve5s4o2eak5ing4st4th3d3ed5s3w2ibe3de3ght6er7st3ng5ing4k2oad5band3ke5n3om3w4n5s4se5ing2unch3sh3tal6ity4e1ucket6s4s2ddy3s2g3s2ild5er7s5ing4t2ll4s4y2n3dle2reau3ial3n4t3st5ing3y2s3h3t4ed2t3cher3ter2y1ye0cache2d2fe4teria2ges2ke4s2lculate9d3f3l4ed5r4s3m2me4o4ra6s3p4s2n3al5s3did3e3not3oe3s3t2p3acity3e3ital7s3s2r3d4inal8s4s3e4er4ful7ly4s3go3ing3pet3riage4y5ing3s3t4s3ve2se4s3h3ino3t4e4ing4s2t3ch3egory4r3s2use3tion2ve1ease2dar2lestial3l4ar4s2ment2nsorship4us3t4re4s4uries2real4bral3tain1hain5s4r5s3lk3mp5ion3nce4ge6s4t5s3os3p4lain4ter7s3r4ge4m5ing4t5s3se5d4ing3t2eap4t5s3ck5ing3f4s3mical3rish3ss4t3w2ic4k5s3ef5s3ld5hood4l5ing5y3n4a3p2ocolate3ice4r3p3rd5s3w1ider2gar2nema2rca2tation8s3e4d4s3ies4ng3y2vil1lad3im5ed3n4s3p3rity3sh4s3w2ean5ed5ing4r5ance3rk2ient3ng4ic6s3p4s2one5s3se5d5r3th3ud3wn2ub3e4s1oach3l3rse3st5er3t4ed4s2conut2de4d4s3ing2il3n4s2ld3league5ct7ing4ision3onial4ur6ful3ts2ma3b4ine7d7s4o3e4dy4s4t3fort7ing3ic5s4ng3mand4ence6t7ary7s5rce4unal3pany5rable6e4elling5te6itor4lain8ed8s8t9s5ete8d7ion4rehend3rade7s2n3cept7ion5rn6t4luding4rete3do4uct7s3e3fident3gress3s4ider4ole4tant4ul6t7ant3tain7er9s7s4empt5st5xt4inue8s4ract8ed5ol7led3vert7ed7s4ince2ol4ed5r4ing3p2p3e3ing3per3s3y4right2ral3d3e4s3n4er6s3poral4s3rect7ly5lated4upt7ion2smetic4ic3t4s2uch3gh3ld3ncil7lor7s4t5ed6r7s6ss5ing5s5y3p3rage7ous4t5s3sin2ve4r5ed5t2w3s1rab3ck5er7s3nk3sh5es3te3wl5ing2eam4te6s3dible5t3ed3w4s2ib3ed4s3nge3ses4p3teria4ic6al8ly2op4s3wd4n5ed5s2uel3sh4t2y3stal7s1ub3e4s3s2e3s2lt4ivate9d4ure2p3s2re4d3iosity3l4s3rencies6t7s3se5d3tain7s3ve5s2stom6er2t3e3s1ycle0dad3s2ft2gger2ily3ry2m3e3p3s2nce5r5s3ger2red3ing3k4ness3n3t4s2sh2ta3e4d4s3ing2y3s1ead3l4er4ing4s4t3n3r2bate3it3ris3t4s3ut2cay3ent4ption3k3lare7s4ine6ing3or3reasing2dicate2ed4s3p3r2feat6ing4nd6ant6s3iciency6t7s4ne5ing2ity2lay3ight7ed7ful4ver2mand3o4n5s4s2n3ial4es4m3se3t4al4ist3y2part6ing3end3ict6ing7on6s3osit7ion7s4t3th2rivative2scend7ing6t4ribe8d3erving3ign6er4re3k3pite3sert3tiny4roy7s2tail6ed6ing3er2velop7ing7s3ice4ls3oid4te2w1ialog6ue3ry2ce3tate2d2e3d3s3t4ary4s2g3it2luted2m3e4nsion9s2n3e4r3g3ing3ner6s3osaur8s2p3loma7t8s2re4ct6ed6ive3t4y2sable7d4ppear9s3c4lose8d7ure4o5unt5ver8ed4reet6te7ion4s3h3k3rupt7ive3tant4inct8ly4ribute2va3e4r5s6e6ion5t3ing3orce1oc3k3s3tor4rine2es2g3s2ing2ll3phin7s2main3e2n3ate6d5ion8s3e3or5s2om3r4s2ping2rm3sal2se4s2ts2uble4t3gh2ve2wn2zen5s1raft5s3g3in5s3ma3w4n2ead5ful4m3ss3w2ied3ll5s3p2one5s3p4ping4s3ve3wn2um4s2y3er1ual2b2ck3t2de4s2e3l3t2g2ll3y2o2ring2sk3t2ties1ye3d2ing2namic7s0each2ger3le2r3liest3n4ing7s4s3s3th2se3ier3t4ern3y2t3en4r3ing3s1cho2lipse2onomic1dge4d4s2ible3t4ed4ing5on4or4s2ucate1fficacy1gg3s2o1ight5y2ther1lbow5s2der5ly5s4st2ect5ion5ric8al3gant3vation6or2ite5s2k2se2ves1mail2inent3rates2otion2pire5ical3ty2ulate1nact2courage3ryption2d3eavour4d3ing6s3orse3s3ure5ing2emy3rgy2forcing2gine2joy5ing2larged2sure2ter5s5tain3husiast3ire4ty3ries4y2voy3y1pic1qual5ity5ly5s4tion3ip1ra3se5d2ect2osion2uption1scape3ort2say2tate3imation1ther3ic5s3nic1uro4s1vasion2en4t5s3r2il2olution1xact3m4ining4ple7s2cept6ion4rpt7s3hange8s2hibit7s2ile3st3t4s2plain7s3o4rt6ed4sure2tra5ct7s1ye3d3s0facade3e4d4s3ial4ng3t4ion4s2de3ing2il4s3nt3r2ke2lcon3l3se2me2n3s2r3e4s3m2st4er4ing2t3e3s2una2vour6ed6ite1ear4ed4s3sible4t3t4ure7d2d2e3d4s3l3s3t2ll4ow6s7hip3t2minine2nce2rry2st4ival8s2tal3ch3us2ud2w3er1iance2bre2eld3ry2fth2g3s2le4d4s3l4ed5r4s3m4ed4maker9s4s3ter6ing4h2n3al5ist5s4nce7s3d4s3e4d4r4s5t3ger6s3ish6ed4te2r3e4d4s3ing3m4s2sh4es3t4s2t3s3ting7s2ve2x1lag3ir3nk3p3re3sh5ing3t4s3w2ea3d3e4t3sh3w2ies3p4ping3rt2op3w4s2u3ent3te2y3er5s1oam2cal3us2e3s2g2il2ld4ing4s3low6ed7r2nd3t2od3l4ed4s3t4ing2r3ce4ing3d3e4ign4st3ge4ive7n4ot3k3m4at6ion9s4ed4idable5ng4s4ula7s3t4h4ified4y3um5s2ul3nd4tain3r4teen2x1racture3me3ud2eak3e4d4ing4zing3quent3sh5man2ied4nd4s2og4s3m3nt1uel4s2ll4y2n3ction8al3d3gi3nier2r3y2se4d3s2ture6s0gag2in4ed4ing4s2l3a3leries2me4r3ing3ma2ng4s2p3s2rden3lic3ment2s3es3p2te3her2ve2ze1ear4s2ek2l2m3s2nder3eral7ly4s3ie4us3re5s3tle6man3us2sture7s2t3s1hetto2ost5s1iant5s2ft4s2g3s2mme2n2rl4friend4s2ve4away4n4s1lad3morous5ur3nce2ee2itch2obal3ry3ve3w2ue4d3ten1oal4s3t4s2d3s2es2ing2ld4en3f2ne3g2o3d3fy3se2rge2sh2t2wn1rab4s3ce3d4e4ing4uate8s7ing3ft3il4n5s3m4s3nd4t5s3pe4h5s3sp3ve5yard2eat5er3ed4n4t3w3y2id3ef3ll3m3n3p4s3t2oom3und6ed3ve3w4n4s4th1uarantee2est2idance4e3lt3se2m2ru2t3s2y1ym0habit5s2ck4er2d2il4ed3r4ed4s4y2lf3l3o3t2nd3g4s2ppen6ing6s4ier2rd4er4ship3e3m3p3sh2s3h3sle2t3ch3e4d4ful4rs4s3h3ing3red3s2ul4ed3nt2ve4n2wk2ze1ead3l3p3r4d4s4t5s3t4er4s3ven6ly2ck2ed3l4s2ir4s2ld3lo3m4et3p4er4s2mp2n3ce2r3b4s3d3e4in3o4ine3s2sitant2y1iatus2d3e4s2gh4s4way7s2ke2larious3l4s2m2nd3t4s2p3s2re4d4s2s2t3ch3s3ter2ve1oax2g2ld3e4s3y2me4page4s2nest4y3orary4ur6s2odie3p4s2p3e4d4less4s3ing3ping2rse5s2se3t4el4ing2t3el3ter2und3r4ly4s3se5s4ing2w1ub3s2e2g3e3s2h2m3an5ities3id4lity2nt4ed2rt4s2sh2t1ygiene2pe4d4r0ice3d2ing2on4s2y1dea4l4s3ntify2le2ol4s1gnore6d6s1ll3usion5trate1mage3m2mature2pact3ending3ort6ance6ed4se3ress1nception3h4es3ident3lusion7ve3ome4rrect3rease8d8s5dible9y2deed4x3icate8s5es4rect3oor3uce2equality2fant3o4rm3rared2ject2k2land3et2mate2n3ate3er2put2sane3ect5urity4rt3ide6r4ght7s4st6ence3omnia3pire7d7s3tall7ing5nce8s6t3ulation5t4re2tact3end5se5t4r5im6or8s5n6et3o2vading3ent6or8y4rse4st3ite6d1on3s1ron4y2relevant1sland6ers6s3e4s1tem4s2s3elf0jade2il2m3s2r3s2w3s2ys1et3s1ob3s2in4s4t2ke4s2urney7s2y1udiciary2icy2nk2st4ice7s0kangaroo2rma1een2pt2rnel2y3s1id3s2lometres2n3d4a3g4s2ss2t3e3s1nee4s3w2ife3ghts3t4ting2ock5ing3t4s3w0lab3el3s2ce3k4s2d3en3s3y2g3oon2id2ke4s2ma3e3p4s2nd4ing4lord8s4s3e4s2p3s4e2rge2ser5s3t4ing4ly4s2te4ly4r4st4x2ugh5s3nch6ed2va3ender3ish2w3ful3n3s2x2y3er5s3ing3s2zy1ead4ing4s3f4s3gue3k4ing4s3ned4ing3p3rn5ers5s5t3se5d5s4h4ing4t3ve4ing2cture7r7s2d3ge5r2e2ft2g3al3ion4t3s2mon2nd4er6s4ing3s4es2ss4er4on3t2t3s3ter2vel4r1iable3r4s2beration5ties3rarian2ck2d2e3d3s3u2fe3t4ed4s2ght5er5s2ke4lihood4s3ing2mb3e3it5s3p2ne4d4n4r4s3ing3k4s2on4s2p3s2st4ed5n6s4s2t3re3ter4le2ve4d4ly4r4s5tock3ing1oad4ing3f3n4s2bby5ing2cal5ity5s4te6d5ing6on3k4ing4s2ft2g3ic4n3os3s2ne4ly3g4time2op3se3t4ing2rd3e2se4r4s3ing3s3t2t3ion3s3us2ud4er3nge2ve4d4r3ing2w3er3s2yal1uck3rative2nar4tic3ch3g4s2re2sh1ying2ric5al0macro2d3e3ness2gazine3ic3nesium2id3l3n4s2jor5ity2ke4rs4s2le4s3l4s3t2ma2n3date7d3go3ia4fest3ly3or3power3s3tra3y2p3le3s2rble3e3gin6s3k4ed5t6ed3t4in2ss3t4er6ed2t3ch3e4s3hs3ing3s3t4e3ure2x2y3be3or5s2ze1eadow3l4s3n4ing7s4s4t3sure7s3t4s2chanic8s2dal3ia5n4c4ocre4tation2et4s2lt4ing4s2mbrane3e4s3o4ry2n3ace3tal4ion7s4or3u4s2rcy3e4ly3ge5d4ing3it5s3ry2sh3s4age6ing4ing4y2t3al3eor4r5s3re5s4ic4o1ice2d3night3st2ke2ld3e4s2mic2nd4ed4s3e4d4r5s4s3i4ng4stry3or5ity3t3us2sery3leading3s4ed4ing3t2x3ed1ob2ck2de4l5ling4m4rn4s5t3ified3ule6s2ist2le2ment2ney3itor7ing3o3th5s3ument2od3n3se2ral5e3e3tal4gage2sque3t2tel3h3if4on6s4ve3or5cycle5s5way3to2uld3nt3se3th5s2ve4s3ie5s4ng1uch2g2le2m2nicipal2st4er2te4d1yriad2steries4ic2th4ology4s0nail4ed4s3ve2me4d4s3ing2p2sal3ty2tion6al6s4ve3ural5e2usea3tical2val3igate3y2y1ear4by3t4ly2cessary6ity3k4s2ed4ing4s4y2ighbour3ther2on2rd3ve2st4s2t3s2ural3tral7ity2ver2w3comer8s3er3ly3s2xt3us1ice4ly4r4st3he3k4el2ece2ght5mare9s5s2ne4ty3th1obility2d3e4s2ise5s4y2ne3profit2odle3n2pe2r3m4al4s3th2se4s3talgia2t3ch3e4d4s3ice6d6s5ing4fy4ng4on6s2un2vel3ice2w1ull2mb4er6ed2n3s2rse5ry2t3rient8s3s1ylon0oak3s2sis2th3s1bey2ject6ion7ve1ccasion3ur2ean5s2topus1dd3s1ff3s2ten1il3s1kay1ld3er4st1mega2itted1nce2e3s2ions2line3y2set2to1ops1pen4er4ly4s3ra5te7s6ion7ve9s2pose5ing2t3ed3ic5al5s4mal4on6s1ral3nge2bit2deal4r2gan5ise7m5s2igin6al6s2phan1ther5s1uch2ght2nce2r3s2t3er3fit3ing3let6s4ine7s3s4ide1val3rian2en3r4due4s5eas5ized4throw1we3d3s2ing2l3s2n3ed4r5s3ing3s1yster0paced3k3t2d3dy3s2ge2id3n4s4t3r4ed4ing4s2lace3e3m4s3s2nda3el3s3ts2pa4l3er2r3ade4meter9s3don3ent3k3t4ed4icle8s6ular5es5tion4s4y2ss4ed3t4a4e2tch3ent6s3h4s3ient7s4o3riot4on6age6s2use2ved4ment3ing2w3n3s2y3s1ea3ce5ful8ly4h3k4s3nut3r3s2dal2er4s2n3al3ding3insula3s4ion7s2p2r3fect7ion3il4od3ks3mit3petual3son6a7l8ly4uade8d2st4s2t3er3ite5ion3rol3s2w1hase5s2one5s3to2rase6s2ysicist6s1ianist4o2cnic3ture7s2e3ce3r4cing4s3s2g3s2le4d3grimage3l4ar4ow6s3ot2nch3e4s3g3k3ned3s3t2pe3ing2racy4te2ston2t3ch5ing3s3y1lace5d5s4ing3in5s3n4e5s4k4ner7s4s4t5s3que3stic3te5s4form3y4s2ea4s5e5ure8s3nty2ot4s2ug4s3m3ral3s1od3s2em4s3t4ic4ry4s2int5er5ing5s3sed4on2ke4r3ing2lar3ice4tics3l4en2nd4s3y2ol4s3r2p3s3ulation2rch3es3k3t4al4rait6y7ed4s2se4d4s3h3ing4tion6ve8ly3sible3t4ed5r4s2t3ato6es3s2uch3r4ed2wer5ful5s1ractice6se7ing3ise5ing3nk3y4ed5r2each6ing3cious5se3dict7ing7s3mise7s3p4are7d3sent7ing7s4ided7nt4s5ing3tend7ing3vent7ion7s3y2ice5d5s3de3est6s3maries4e5r3nce6s7s5iple4t5ing5s3or5ity3sm4on6s3vilege2o3bably3ceed5ss7or4laimed3f4ession4ile7s5t4ound8ly3ject7ed7s3m4ise7s4o5te6ing3ne3p4er4ose7d6ing4s3s4e4per3tect7ing8ve7or7s5in7s5st7s3ud5ly3ve5d5n5s4ide7r8s4oking1seudo1ub3lish7er9s2ll4s3p3se2n3t2p2rchase8d3e4ly3ge3pose7ly7s3se2sh2t3s0quad3ke3lified5ty3rtz3si2een3ries4y3st5ion8s3ue2ick5est3et3t4e4ting2ota5tion4e5d5s4ing0race4d4r4s3ial4ng4st3k2dar3ial5nt4cal7s4o2ft2ge3ing2id4ed4s3l4s3n4ing4s4y3se5d5s4ing2lly2mp2n3ch3g4e5d5s3k4ing4s3som3t2p3id5s3per2re2sh2t3e4d4s3ified4ng4o5s3s2ve4n5s2w2y3s1each5ing4t3d4iness6g7s4s4y3l4ise6m6tic4ly3p3r3son6ably2bel3irth3uild7ing6t2call6ed3eipt5ving4nt4ption6or4ss6ion3ipe5ient9s3laim3oncile4rd2d3undant2ef3l2f3lect7ion3s3usal2gain4rd6ing6s3ion6al6s4stry3ulate2hab3earsal9s2ign5s2ject6ion2late6d6s4x4y3evant3iable5nt4cs4ed5f5s4gious3y4ing2main3ind3ote2nal3der4ition3ew3ovated3t4al4ed4ing4s2p3air6ed6s4y3eat3lace7s6ing4ica7te5es4y5ing3ort3s3utable2quest7s4ire7s2scue3et3ide6ncy7t5ue4gn4n4st6ing3ort3pect7ful7ing7s4ond7ing6se3t4ed4ing4ore6ing4rict8ed4s3ume6s2tail6er8s5n6s3ention3hink3ina4re3urn6ed2veal6s4rsal3ision3oked4lt5ution1hino1ib3s2ce3h4es6t2d3den3e4r5s4s3ge3ing2ff3t2g3ged3ht5s3id2m2ng4ing4s3k3se2ot4s2pe3ped2se4n4s3ing3k4ing4y2te4s3ual2val5s3er1oad4s3m3r3st2be3ot5s2ck4et6s4s2de4o3s2e2gue2le4s3l4ed4s2man2of4s3m4mate4s3t4ed4ing4s2pe4s2se4s3ter2t3ate5ing6on3or3ten2uge4h5ly3nd5ed3te5r5s4ine2vers2w3s2yal5s5ties6y1ub3bed4ing2de2e2g2in4ed4ing4s2le4d4r4s3ing2m2n3ner3s2ral2sh3t1ye0sack4ed2d3dle2fe4r4st2ga3e2id3l4ed4or6s4s3nt5s2ke2lad3e4s3on4on3sa3t4s4y2me2nd4s4wich8es3e3k2pphire2t3ire2uce2ve4s3ing2w2y3s1cale5d4p3m3n4dal3r4ce4e5s4f4let4s2ene5s4ic4t2holar7ly4ol6ing2ientist2ore5d5s3uting2rap5e3eam4en6ing6play6s7hot4w3ipt6ed6s3ub2ulpture3m1ea3l4s3m3rch6ing3s3t4ed4s2cond3ret6s3t4ion4or3ure5ity2dan3iment2e3d4s3ing3k4ing3m4ing7ly4s3n3s2ize5d2lect6ion3f4ie3l4er4ing4s2mi4nar7s2nate5or3d4ing4s3ior3se4ible5ng5tive4or6y3t4iment2quel2ries3mon3pent3um3ve4ing2t3s3ting4le3up2ven2w3age3er3ing1hack3de5s3ke3le4l3m4e3pe5d5s3re4k4p3ve2e3ar3d4s3ep4r4t5s3lf2ift5ing5s3n4e5s4y3p4s3re4t5s2ock5ing3e4s3ot5s3p4ping4s3re5s4t5er5s3t3uld6er4t3w4case4er4n4s2rine2ut4s2y1ibling7s2ck2de4d4s3ing2ege3rra2gh4t5s3n4al4s2lent3k3ly3ver2mulate2n3ce5re3g4er6s4le6s4s3k4s3ners3s2p2r3e4n5s2s3ter2t3com3e4s3s3ting3uation9s2x3th2ze4d4s1kate4ing2etch6es2i3es3ing3n4s3p3rt2y1lab3ck3in3m3ng3p3sh3te5d3yer2eep3nder3pt2ice5d5s4k3d4e5s3ght6est3m3p2ope5s3t4s3w4ed5r4ing2y1mall3rt5er2ear3ll5ing2ile5s3th2ooth1nack3il3p3tch2eak5ing5y2iper2oop3w4y1oak4ing3p3ring2ber2ccer3ial3k4et4s2da2fa3t4er4ware2il4s2lar3d3e3id3o2me2n3g4writer3ic3s2on4er2re3row4y3t4ed4ing4s2ught3l4s3nd5ed3p3r3th2y1pa3ce5d5s4ing3n3re5d4k5ling3tial3wned2eak5ing5s4r3c4s3ed5y3ll5ing3nd5ing4t2ice5s4y3es3ke5s3ll3n4al4e4s3ral4it3t4e2lit2oil5er7s3ke3nge4sor3rt5ing3t4s4ted2ray3ee3ing6s2un3r4s2y3ing1quare4t3irrel1tack5s3ge5d5s3in5s4rcase3ke5s3le4l5s3mp3nce4d5point3r4e5d4s4t5ed5s3sh3t4e4ic5ng5on7s4s4ue5re3y4s2eadily4k4l4m3el4p4r3m4s3p4s3reo4ile3w2ill3mulate3ng4t3r4red2ock5ing8s3ke3le5n3ne5s3ol3p4ped4s3re5d5s4ies5ng4m4y3ve2rain5t4nd6s4p5s4tegy4w4y3eak5m6ing4et6s4ngth8en4tch7ed8s3icken5t4de4fe4ke5ing4ng6ent4p5e4ve3oll4ng6er2uck3d4ent4io4y3mble7d3nned4t2yle1ub3mit6ted3s4tance5rate3urb6an2cceed7ing3h2dden2ed2ffer6ed6s2ing3t4case4e5d5s4s2ltan2m3med3s2n3rise3s4et4hine2p3er5b5ior5visor3ply4ort7ing5se7d8ly2re3f3ge3prising2spend7ed1wan3p3y2ear5ing4t3ep5ing4t3ll2im4mer5ing3ne4g5s3pe2ollen3re4n2ung1ymphony2nc3tax4hetic2stem6atic6ic0tab3le5t3oo3s2co4s3tic2g3s2il4or6ed4s2ke4s3ing2le4nt6ed4s3k3l4er4y2me2n3dem3g4o3k4s2p3e4d4s3ped4ing3s2r3get2sk3te5d5s4y2vern2x3ation3es3i4ng4s1ea3ch5er7s5ing3m4ed4s4work3r4ing4s3se5r4ing2chno2e3n4s3th2ll4s2mp4er4o4ting2n3ant3d4er4s3nis3or3s4e4ion3t4h4s3ure2quila2rm4ed4s3rain4ific6ying2st4ed4imony5ng4s2xt1han4k5ing3t2e3atrical3e3ft3ir5s3m4e3n3ory3re3sis3y2ick3ef3gh5s3n4g5s4k5ers4ner3rd4teen3s2orn4ough8ly3se3u2reat4e4shold3ift4ll6ed4ving3oat4ne4w2ug3nder3s2y1ick4et2dal3es3y2e3d3r3s2ger5s2le4s3l3t2me4d4ly4r4s2n3der3y2p3ped4ing3s2re4d4s2tle5d5s1oast2day2e3s2gether2ilet2ken2ld3l2m3b2n3e4d4s3gue3nes3s3y2o3l4s3th2p3ic5al5s3ped3s2r3ch3e3n3pedo3que3rent3so2ss2tal5s2uch5es5ing3gh5er6st3r4ed4ing5sm4s2w3ard3el4r5s3n4s2xins2y3s1race5d5s4ing4k5s4t5or3de5mark5r5s4ition9s3gic3il5er5s4n5er4t5or5s3m3nce4s5mit3p4s3uma3vel6ler3y2ead4son4t5ed5s3e4s3k3nch4d5ing5s2ial5s3bal4e5s4une5te3ck3ed4s3m3o3p4le4s2oll5ey3op5s3pical3uble7d6ing4t2uce4k3e3ly3nk5s3st3th2y3ing1ub3e4s2ck2g2ition2mble2na3e4d4s3ing3nel2rbine3f3n4ed4s3tle6s2tor5ial1weet5ing2ice3light3n4s3st5ing5s2o1ying2pe4s3ical2res0ugh1ltimate3ra1nable2bearable2cle2der5age5cover5go7ing5went6orld3o2easy2fit2ified3on3que6ly3t4e5d4s4y3verse2lock2real4st2safe2til3o1pdating2on2per2rising2s3et5ting3ide3tream1rban2ge4d3ing2ine1sage2e3d3r4s3s2her2ing1tter0vaccine7s2in2le3id3ve2n3s2riable4es3y2se3t2ult1ector2gan2il3n4s2ndor3om3t3ue5s2rb4al6ly3ge3se5s4ion3y2st2t3o3s1ia3ble2bes2ce2deo5s2ew2gorous2le2ne4s3yl2olin2ral3gin3tual7ly5e6s3us2sion4t5s2tal1ocal5ist5s4tional2ice5s3d2latile2mit2te4d4r4s2w3s1ulnerable0wage4r3on2it4ed5r4s3ved2ke4s3ing2les3k3l2nd3t4ed4s2r3den3m4er3n4ed4s3p3rant7ed7s3s3y2s3h4ed3te5d4ing2ter5ing2ve4d3ing2x2y3s1eak4en4ness3r4ing4s3ve2b2e3d4s3k3ping2igh5ed5t3r4d2ll2nt2re2st2t1hack3le3t2eat3n2ile3p3te2o3a3le5some3m3se2y1ide4r3th2fe2g2ld3l4s2n3d4ing4s4y3e4s3g4ed5r4s3ner3s2pe4d4s3ing2re4d4less4s3ing2se4r3h4ed2t3h4draw8al3ness7ing1oke2man2n3der3t2o3d4land3l2rd3e3k4s5hop8s3ld5wide3m3n3ries4y3se4t3th2und2ven2w1rap4ping4s3th2estle7r2ist3te5r6s2ong3te0yacht2rd3n1ea3h3r4s3st2ll4ing4ow4s2n2p2s2t1ield1oga2u3r4s3th5s1um2p0zero1inc2p1one4s2o3m","B":"0aah3ed3ing3s2lii5s2rgh1ba3ck3ft3lone3s4e4h3te5d5s2b3a4s3e3s2eam3d3le3t4s2hor2late6d4ut6s4ze3er3y2ode3rting2ri4s3upt2s3ents2ulic3se3t2y3sm1cari2cede3rue6d3ustom2ed4ia3r4b4s3s3tal4ic5fy4one4um6s4yl2h3ene6s4s3ier4ng3oo3y2idly3ng4i2kee5s2me2ned2onite3rn5s2red3id3onym4ter2tin5al5ia5on5s4ves2uate3lei3ter5s2yl4s1dage3ption2der5s3le2enine3pt2ieu3os3t4s2man3en3in2nate2o3pts3red5r5s4n5s3wn2roit2ust2yta2ze4s1ecia4um2des3ile2gis2olian3n4s2rials4e5s3o4be6s4naut4se3y2ther1far2eard2fable3iche2ire2oot3re3ul2resh3it5s2t3ers1ga3r3s3te2ee3ism2ger5s3ie5s3ro5s2ha4s2io4s3st3ta5s2let5s2ma2nate5ic3osia2og3n4e4ic5es5se4s3ra5s2ue1hem2old3y1ider5s3s2glet6s3ret2l3ed4ron3ing3s2mless2n2oli2rgun3ily4ngs3men3t4ime4s3y2t3ch3s1jar1kee4s3ne5s1lack3e3r4y3te2b3a4s3edo3ino4te3s2cove2der3rin6s2ee3gar3ph5s3s3vin3xin6s2ga4l3id4n3or2ibi5s3dade3enor3ght6ed6s4ns3ped3ya2kene2lay5s3ee5s4ge6r4ys3ot3ure2ms2oe4s3ft3ha3in5s3o4f3w2p3ine5ism3s2t3ars3ers3os3s2u3del3m4s1mah3in3si4s5ed3tol2ber3it3le5s3o4s2en4ity4t5ia5s3rce5ing2i3ce3de3e4s3go3ne5s3s4s3ty2ma3eter3onal6te2nio5n6s5s2ok3ral4ous3ur2pere6s3lest3oul3s2rita6s2u3s4e5s1na3dem3goge3rch3s2cients3on2e3le5s3nt3rgy4oid3urin3w2gers3le3ora6s3st2il4e4s3ma5s5te6o4us3on5s3se4ole2kh4s2na4l4s3ul5i2oa4s3de4ic3int6er3le3my3n4ym2sate2ta4cid4e4s3e4d4ing4s3her3iar6s4c5s4ng4s3ler4ia3re4um3sy2vil5s1orist6s3ta5l4ic1ped3rcu6s4ies4y3xes2his2ian3cal3ece3ng3sh2lite2noea2oria4t2pa4l3el4nd2ron5ed2se4s3is2ter5al4st1quas1rable3k4s2b3s3utus2c3ades4num3ed3hil5ng4on3ing3s3tic2deb4nt2eal3ca5s3nas3ola3s3te5s2gent3il4nine3ol4n4t5s3uer2ia4s3d3el5s3ght3l4s3ose3sen4ta2k3s2met5s3ing6s3let6s2nica2oid5s3ma3use2pent2rant4s5es3is3oyo2sine4s2tel5s3icular4er5st4ly3less3sy3y2um2vo4s2yl4s1sci3ot3us2dic2eity3ptic2hen3lar3y2inine2kari6s3er5s2p3en5s4r5s6e3ic3s2sai4y3ent6er3oil4rt2ter5n5s3ir3ral4oid3ute2under1te2ilt2lantes4s2man2oll3mise7r6t7s4y3nal4e5d5r6s5s4ic5es4y3pic2ria5l4p2tache4r3ic4red6s5ing3orn6s3une6d1udial4le4ted2gend4r5s3ht5s3ite3ment7s2k3s2ld3ic3os2ntie6s4s2ral4r4s3ei4lia3ist3ochs2tomat7e7s4s2xeses3in1vails3st2e3ns3r4s5e4t5ed5s3s2ian4ry3din3on2o3cet6s3s3w1waken6s5s4ing3sh2ed3igh3less3s2ing2l3s2n3ed3ing3s2ry1xed3l4s2il4s3ng3om5s3s4es2on1yah4s2es2in4s1zan4s2ine2o3ic3te4ic0baa3ed3s2ba3el3u2ch3illi3ker4set7s3on3terin2de2el4s2ffle6d2gnio3uio6s2h3t4s2iler4ie4or4s3rn3ter4ing4s2ker4s2l3as3dly3ed4r4s3ing3ker3ler4on4y3s3ti5s2m2nal3c3dit6o3e4s3gle3i4a3ns3t4s2p3s2rb4ed5l5t4ie6s4s3d4e3ed4r4s5t3ic4ng3ks3m4en4y3net3ong3re5s3ye4on2sely4r4st3her3il3k3s3t2te4d4s3he5s4os3ing3ons3t4en6s4ier4s2ud3xite2wl2ying3ou5s3s1eaded3gle3k3my3n4ed4ing4o5s3rable4d3u4t5s2bop2ck4s2dew3ight4m3ouin3post3sit3uin2ech3fs3ps3ry3t4ling4s2fit5s3og2gad4t3et5s3ird3ot3s3uine4m2ige2lated4ud4y3ch3dam6s3ga5s3ie5d5s3led4ied3ting2ma2n3der4s3ison7s3ne5s4y3s3to4s2ret5s3g4s3k4s3lin3m3ry5ing3tha6s5s3yl2san3et5s3ot3ts2taine4ke4s3el3h3ide3ta5s2vel3y2wail2y3s1hai3ng3van1ib2ce4p5s4s2dden4y3e4s4t3ing2eld3r4s2ght5s3ot3s2le3ge3lon4y2mah5s3etal2nal4te3der6s6y4i5s4le6s4s3e4s3ged5r4hi4le3ned3t4s2o3gen6s3me3s3ta5s4ech4in2pod5s2rched6s3die5ng3l4ing4s3r2s3e4ct6s4s3k3on3tre6s5o2ter5s3t4ern4ing4s2z1lab4s3g3hs3in3re5d5s3se3t4e4s2ear4t3b4s3d3nde6rs6s5s4nies3st2in4g4i3p4s3ster2oat5er3b4s3ndes5s3t2ued4r4st4t3ing3nted3rt5s1oa3r4t3s4ted6r3ted5l5r4men2ck2d3e4ga4s3ing3s2er2g3an3ie3s2ho4s2ilings4s3ng2la4s3dly3e4ro4s4te3l3o3ter2ma2nce5s3ed3iest4to6s3y2oed3ger3ing3ng4s3r4s3s3ted4h2p3s2ra4k4s3er5s4s3ide6s3nite3sht3t4s2sh3k3on3quet2tch3el5s3net3t4s2ugh3le5s3ncer3rg5s3se5d4ing3ts2wels3line3se2xed2yar3la3o1raai3ced5r4h4t5s3d4s3e4s3gs3id4l5le5s4ny4se3ked3n4t5s3sh5y4ier3ts4ty3ved3w3y4er4ing4s2eam4ths3de5s3e4s3i4s3nt3ws2iar3bed5r5s3e4ry3g4hts4s3ll5s3m3ne5d5s3o4che7s4ny4s3s4es4k3t4ches4s2o3ch4k3er3gue3il5ed5ing5s3mal6s3nc5o3oms3s4e5s3th3ws2r2uin4t3mal3net4t3sque3t4es1ub3o3s2ck4er2d3der4ing4ying2gle2hl3r2lge3la2mmer2nco3d4led4s3g3s3t4ed5r4s2oy2r3an3bs3et5s5te7s3g4ee4le4s3in3ka4e5s4ing3l4ed4s4y3ns3p4ed4s3s3ton6s2sied3s3ts2tch3ene4o5s3ler3s3te5d5s4ies3ut1yes2line2re4s2te4s0cab3al3er3s2cao3k3ti2de4nt4s4t5s3i4s3re5s3s2eca2fard3es3f4s2ge4d4r4y3ing2hier3oot2in4s3rd4n2ked4y3ier5st4ng3y2lash3ces3ico4ph3ker3la4ers4ous4us3mer3oric4tte3x2m3el3o4s3po3s2nape6s3can3ed4r5s4s3ing3ny3oer5s4la4n3so5s4t3ted5r6s4le4o5s4s4us4y2per4s3ful6s3ias3let6s3o4n5s4s4te3ris3stan3tor2rat5s3b4s3ditis3een6s4r5s4t3hop3ies4na6s4ole4tas3k3l4ing3nal4et4ies4otite3ol4m4tid7s3p4el5ts4i4s3rel4ion3se5s3te5r5s4ing4on3ves2sa3ed4fy4in4rn3hes3k4s3ter5s4or3uist2talo3e4na4red5s4s3ion3ling3nap6s4ip3tail4ish4y2ul4s2va3ed4r3ie4l4ng2w3ing3s2y3s1eases2cal2dars3e4d4r5s4s3i4ng4s2iba3l4s2leb5s4ry4sta3la5e5rs4o3t4s2nse5d5r6s5s4ing4or6s3tal4ime6o4o5s4ra4um2orl2p3s2rci4us3eals4sin4us3ia5s4c4se3met3o4s3t4es4ify4s3use2ss4ion4pit3ta4ode2tane6s1ha3at3d4s3eta6e3fe5d5r5s4f5er5s5y3i4se3let4kier6ng5s3m3pe4s3rd4e5s4ing5ot4s4y3ser4m4se6d4te6r3teau7x4s3unt6s3w2eder6s3er3la3rt4ub3sts3tah3vy3ws3z2i3a3ca5s4o5s3de5d5r6s5s3lde4iast4li3mb5s4e5d5s3ne5s4g4o5s4s3rk5s4p4r5s3s3t4in4on4s3ve5s2oc3icer3la4ent4i5ne7s4la4o5s3mp3n3ral6e4dal6te4e5a3u4gh2ufa3g3m3nder4ter3rn3te5s1iao2cero2ders2gars2lia5ry2nch5es3der6ed6s6y3e4ast4s2on4s2pher2re4s3que6s3ri4ose3soid2s3sy3t4s2tify3ole3ral4ic5n6e2vet1lade3imer3m3ng4k3ps3ries5no5on4o5s4y3sp4tic3ve5r4i3wed3y2eat5s4ve3ek3f4s4t3m3pe3vis3w4s2iche3me3nch4e5s4gy3ts2od4dish4s3g3mb4p3nal4ed4k4us3p4s3sure3t4s3ut2ued3ing3ng1oact5ion5s3ls4y3sted5s3tee4i5s3uthor3x4ed2b3le3nut6s3s2ca3hlea3o2d3a4s3dle3ein6e4r5s3ger3on3s2ed4s3nuri3rce6r2g3nise3on3s2ho4s3une2if3gn5s3led4s3nage4ed5r6s4sure3r4s3tal4ion2king2l3a4s3die4s3e4s4us4y5s3ic4es3leen5t4ie5ns4ude7r4y3on3s3t4er3ure6s3y2mae4s4te3be5d4i4os4s3er5s3fiest5t6s4orts3ma4ie3p4el4leat8s5ot4o4s2nceit4h5a5s4ur3dole5r3ed4s4y5s3fide3ga4er3ic3k4s3n4ate4ed4ive4s3sol6s4ults3te5s4o5s4ra3ure2o3ed4e5s3ls4th3m4b5s4s3ps3s3t4s2pal4y3ed4r5s4s3ier6s3ping3ra3se2quet2r3acle4ls3beil5l3date4ed5r4ite4s3ed4r3f3ia4ng3k3m4s3nea5d5l5t6t7i4ice6he4s4u5te7d3ody3pora4smen3ral4ects5late4ie3s4air7s4e5s2s3ec4t5s3h4es3ier5s6t4gn6s4ne6s3s4et3ta5l3y2t3e4s3h4s3inga3s3ta4er4on2ucal3gar4hed3lter3ps3rter3th4ure2ven4rts4s4t5ed5s4y3in5s2wed4r3ing3l3man4en2x3es2y3er4st2z3e3ing1raal3g4s3ic3ke5s3m4p3ne5d5s4ks3ses4s3tes3w4ly4s3yon3ze5s4ies2eak5s4se6d6s5ing3d4ibly4o5s4s3e4ds4ing4l5s4s3me3nel6s3ole5ise8d3pe5s4t3ss4t5s3tic3wing4man2ibbed4s3er5s3mp3ne5d5s4ges4ose3pes3sped4ta2oc4het4s3ft3ne5s4ies4y3on5er7s5s3re3ton3up4se3w4ed4s3ze2u3d3et5s3s4e5s4her6s2yer3pt5s1ubage6s3ed4r2d3s2ed3sta2ing3sse2ke4s2lch3et5s4x3l4et6s4s4y3pa3ts2neal2r3acies4gh4tion6ve3ch3d4le6s4y3er4s4t5s3ia5l4e5s4ng4o5s3ler3s4t3t4er2sec3k3p4ed4s3s4ed2tch3er4st3ie5s4n5ise5s4s3ler5t1wm3s1yan2cler6s2der2ma4r2nic2st4s2ton0dab3bed3s2ce4s2da3o2ff4s3ter2g3s2h3l4s3s2imon3ries3s4es4y2k3s2l3asi3e4s3ly3s2man4r3es3mar4ing3pish4s3son2n3g4s3io5s3k4est3s2p3per3s2re4r4s3g3ic3ned5r4ing7s4s3ter6s2shed5r5s2ter5s3ive3o4s3um5s2ub4e5d4ing3nt2vit5s2w3n4s3s1eacon6s3den5r3ns3rer4s4y2b3ag4r5k4ter3its3s3tor3us2caf4l5s4nal5e5t4re6s4ys3eit6s3ile6s4mal3laim3oy5s3ries4y2dans2eding3jay3m3ps2f3ier5s4le3og4rce3rag3t2gas2ice5d5s3fic5es4orm4y3gn3l4s3sm4t5ic3ties2late6d3e4d4s3ft3i4ct6s4s3l4s3ta5s4s3ve5r2mark3e4nt4s3ist6ed4t3y2nar5i5s3e4s3ier6s3ote5ing3s4er3ted4il5ne6g4s3ude6s5ing2poning4rt4se3side2raign7s5l4nge3ide5ing4ving3ma5l4is3ris4y3v2salt3cale4ry3irer3mid3pot2tach4in3ent6s4rs4st3inue3our2uce5s2viant4l4sor3oir4ur2wan3ier3y2y3s1hal4s3rma4na2obi3le3ti1iacid3l4s3per6s3ster2b3ble3s2cast3ed4r5s4s4y3ing3ot5s3ta5tes4ion2di3o3st2eing3sel3ted5r6s4ing2gger6s3ht5ed3lot3s2late6d5ion5or3l4s4y3ute6r5ing2mer4s3ness3s2nar3ed4ric5o6s5s4s3ge5d5s4ier4le4o5es4s4us4y3k3ned3s3t2ode5s3ptre2pole6s3per3s2reful4r4st3ge3ham3k3ties2s3cern4loser4oed5s5vert3eur3hed3mal5y3part3robe3til6s4ort2t3her3s4y3ties4o4y3z4es2van4s3ed4s3ine6d6r7s3ot2wan2zen5s1oable2b3bin6g4y3ra4o2cent3ile2do2e3r4s2ff4s2ge4s3ie5s3ma2ily3ngs3t4ed4s2l3ce3e4d4s3ing3ling3man3our3s3t4s2m3ed4s3ing5o3s2na4s4tive3ee5s3ga5s4le3na3s2olie3mer6s4s4y3na3rmen2p3a3ed4r5s4y3ped3s2r3ies3k3mie4s3p4s3s4a5d4er3ty3y2s3a3ed3h3ing3s4er3t2t3age4rd3e4d4r5s4s3h3ing2ubter3ce4he3la3r4a5s3se5r2ves2w3er5y3ie3ner2x2yen3ley2ze4r5s4s3ing1rab4bet3ff5s3gs3iner7s3ke5s3m4s3pe5d5r5s3t3wee4l3y2ear5y3ck3e4d4ing4s3g3idl3nch3y4s2ier4s3ly3ps2ogue3id5s4t5s3ll3ning3ol4p3ss3ver2ub4bed3pe3se5s2yad3ers3s1uad2bs2cal4t3e4s3ts2d3ing3s2eller5o4s3nde3s3ts2h2lce5t3ia3ler4s3se2ma3b4er2n3ce5s3e4s3g4s3ite3ned5r4ies4ock3s3t4ing4s2omo5s3s2p3e4r5s4s3s2ress3o3ra5s2sted4men2x1waal2elt1yad4ic2eing6s3r4s3s2namo3e4s0eagre5s2red3ing6s3l4s3ner6s5st3ring3then5s5y2sed4l5s4s3ing2ters5y3ings2u3s3x2ve4s1bb3ed3s2on4y1chidna4nate5i3oic5ng3t2lair6s4t2ru2topia2u1daphic2dies3o3y4ing2ger5s3ier4ly4ness5g3y2h3s2ict5s3fy2uce5s4t1ejit2k2l3s2rily1ff3s2t3s1gad4s2est5a2ger5s2os2ress4t1ide4r5s3ola5on4s2na1ject5ion1ke3s2ing1lan3pid3te5d5r5s4ing5on5ve2d3s2ector5ro3gancy4it4y3mi3von2f3in2icit6s3de5d5s3sion3xir2ks2l3s2m3s2oign3pe5d4ing2ude5d5r4ing3sion3te5d5s2ver2ytra1mbay3oli3us2end3ry3tic6s2f3s2ir4ate4s3t4s2mer5s4t5s2o3s3te5r5s4ing5ve2pale6s3iric3tier4or2s2u3s1namel6s3te5s2cage6d6s4se6s3hant5se3ode4re6d3rust4ypt7s2dear3ive6s3most3ogen4rsor8s4w5er3rin3ue5d5s3wise2ema2g3inery4rt3lut3obe3s2isle6s2lace6d4rge3ist2nead3ui2ol4s3sis3w2quire2rage6s3ich3obe6d6s4l5s4ot2s3ign4le3oul3ue5d5s2tail6s4ses5is3era5on3hetic4ral3ice6r7s6s4tle7s3oil4mb4pic4zoa3rain5p6s2vied5r6s5s4ron7ed3oi5s2wind3rap6s1olian4th2n3s2sin5s1pact5s3rch6s6y2hod5s4r5s2ical4s3dote3taph4ome3zoa2ode5s3s4es1quate6s5or3ine6s4ps1ras4es4ing2e3cts3psin2g3o4t3s2ingo6es6s3stic2k3s2m3ine2ne2ode5d5s3sive2r3and5t4ta6s3ed3ing3s2st2uct5s3pt5s2yngo1scarp3har6s3ribe7d3udo2ker2parto3ial4ed3rit3y2quire2sayed3e2ter5s3op5s3ray1ta3lon6s3s2ch4ed5r6s5s4ing2h3nics3os3s3yne2iolate2na4s2ude5s3i4s1ugenic2reka1vade5r2e3ns3rt3s2ict5ed5or5s3ls3te2oke5d5r1we3r4s3s1xacter5ion5s3lt5s2cepts3ite6r6s5on2eat3c3s2hort2ine2on2pat5s3iate3os2tant3ine3ol5s2udate4e3lt5ed1yas4es2eing3r4s2ot4s2ra4s3e4s0fab3le2cer5s4t5ed3ia5ls2d3dy3o3s2ecal3na5s3rie6s2h3s2in4er5st4ts3rer2ker2ller6s3ser4ie2ne4s3g4o5s4s3ned3on3tasm2quir2rad5s3ce4i4y3d4ed5l4ing3ed4r5s3ina5g3l4s3mable3o2sces4ia5ne7s3h4ing3ten4s2ted4s3ing3so2ugh3n4s3ve2va4s3e4s2wn2y3s1eal3rer3ts2cit3k3und2dora3s2ign5er3nt5ed5s3stier2lid3la4oe4y3ts2me4s2n3cer3d4s3nec6s5l4ier4y3s2ral3e4s3ia5l5s4ne3mi3n4s4y3ries3ula6s2scue3s3tal4er4s2ta3cher3e4d4s3id4ng2u3s2y2z1iacre3nces3t4s2b3res3ula6e6r2che3o3us2d3s2e3nd2fths2la4r3er4t3lies4y3my3o4s3s2nesse3ial6s4ng4s3k4ed3ned4y3o4s3s2orin2rer5s3ings3med4ing3n3s3th5s2sc3hed5r2tly2ver5s4s2xate6d1lail3k4e3m3n4ks4nel4s3ps3res3tus2eas3ction3ecy4r5s4s4ts3y4s2ied4r3ng4t5ier5s3ps3rts5y3t4e4s2oc3e4s3g4s3ps3ra4et6s3ss5y3wed2ub3e4s3ng3or3ter4ier5ng1oal4ing4s3ming2b3s2gs2hn4s2iled4ist4s3n4ing4s3st5ed2ldable3ia4c4e4o4um2ndle5y3ts2otings4s4y2p3s2ray3cer3dable4ed4s3epaw4ran4s3ger4o3int3ked4ing3te5s4ies5s4s2ster2u3led5r5st4ing4s3nt3rb2yer1raena3g4s3il4se3mer3nc3p4s3t4er4s3ught3y2ees5t3ity3sco3t4s2iar3g4s3ll5s3ngy3se5e5s3t4s2o3e4s3lic3nd4s4ted3re3sh3th5y3w4n5ed4s2ug4al2y1ug2hrer2lled5r6s4s2me3iest3y2ndi3est3go5id3ner2ran5s3ies3l4s3s3ze4y2sain3ee5s3sed2ton1yrd0gab3bro4y3ion6s3s3y2d3s2ga3e4s3s2iety3ly3ner6s4ly3t4ed5r4s2lah5s4s3e4re6s4s3l4ed5on4op4s3op3s2m3b4rel4s3ers3ic4er4n5e5s3mer4on3p3s3y2n3der6s3ger6s3net3oid3tries5y2pe4s3per2r3b4o4s3ish3net6s3ret3s3ter6s4h2sbag3kin3per6s3ser4ier4y2t3eau4d4r5s4s3hers3ing3or3s2ud4ier4s3nt3r4s3ss2vel2wk3p2y3er4st3s1ean4s3ring2e3d3ing3ks3s2lato3d4s3id3led3s3t4s2mma5te3ot5s2n3ders3e4ra4t5s3ial4c4es4i4p3oa5s4me3ro5s3s3t4es4ile4led6r6s7t4s3u2ode5s3id2rah5s3ent6s3m4s2sso3t4s2tter6s2um2yser1hat4s2ee4s2oul5s2yll1iaour2b3s2d3dier4y3s2e3d3s2fting2ld4s3et3l4ed4ie4s3t4s2mel5s3let3p2nger6s3k4s3ned4y3s4eng2p3on3ped3s2rd4ing3ly3n4ed4s3o4s3t4ed4h4s2st2t3e4s3s3tern2vens4r5s1lace5ed3de3ir5s3m4s3nced4d4s3re5s4ing4y3ze2eam4n5er5s3de3et3n4oid4s3y4s2ia4din4s3b3de5s3m4s3nt5ed5s2oam4t5s3b4in4s3m4s3p3ws2uier3m3on3t4e1narl3sh3t4s3w4ed5r6s4s2ome5s3ses2u3s1oa3d4ed4s3s3tee2b3o3s3y2dlier2er4s3y2fer2itre2lem5s3fs2nad3er3if5s4on2ober3ey3f4ier5ly4s3g3ier3n4s3p3sy2pher2ral3ier4ng3p3se3y2s3pel2th4s2uache7s3ra4d5e3t2wned4ing4s1raben3ced4ing3dating4er4in4s4us3n4ary4ge6s4ita4s4tee5or3phed4pa3ss3te5d5r6s5s4in6s5s3ved5n5s4ies3y2eave6s3e4ing4s3ige6s3yest4s2ide5d5s4ing4lock4s3efs3ft3g4s3me3ns3ot5s3pe5d5r5s3skin4on4t3th4s3vet2oan5s4t3g3in5s3k3oms3sz3t4s3wer4l2ub3dge3el3m4e3nt5ed1uaco3n4o4s3r4s2ck2ib3der4on6s3le3nea2la4s3l4et4s4y3p2ms2nter2rge3n4ey6s4s3us2sh3t2tsier4y3ta5e4er4le4y2v3s2yot1ybe4s2rate3e3i3o4n5s4s5e0haaf4s3r2bile2cek5s2de4s3ing3ron2e3d3ing3m4in3res3s2ft4s2g3s2ik4u3ls3rdo4net2j3i2ke2le4d4r4s5t3fwit3ite3ls3m4s3on4s3ting4s3ve2m3e4s3s2nce5s3gar4ed5r6s3k3sel4om2ole2p3less2rass3dy3ed4m5s4s3ing3k4ed5n3l4s3ming4s3ped5r4s4y3ried3slet3t4s2slet3p4s3sled3t4e5n5s4ily4y2ter3ter2uls3nch4ts2vens4r5ed4s2w3ed3s4e5r2y3ed3loft7s3mow3s2zel4r4s3ier5st4ng1eady3ler6s4s3ps3rse4ted5h5y3th5er5s3ve2ctic4or2der5s2eding4s2ft4s2gira2ist2licon4x3ler6s3ms3ot5age5s2m3s2nbit3ge3na4ery3ries4y3s3t4ing4s2p3atic3cat2rbal4y3ds3eon4tic7s5o3iot3l4s3m4s3n4ia6l4s3on5s3tz2st4s2tero6s3h4s3man2w3ed4r3ing3n3s2x3er5s4s1iatal2c3k4s2ded4r5s2e3d3ing3mal3s2ked4r5s4s2la3lier4y3t4s2n3der4s3ge5d5s4ing3ny3s3ter6s2pper4o2rer5s2ss4ed3t2ther2ved4s3ing2ya1mm1oagie3r4d5s4s5e4y3xed2b3o3s2ck4ing4s3us2d3men3s2ed3ing3r4s2gan5s3nut3s2iden3st5er5s2ke4s3i4ng2lder3ed4y3ier4ng3ler3m4s3p4en3s3t4s2mer5s4y3ier2n3e4d4r5s4s4ys3g4i3ied4ng3k4s3s2o3ch3d4ed4s4y3ey3f4ed5r3n4ing4s3ped5r3s3t4ed5r4ing4s3ver2pper3s2ra4h5s4l4s3de5d5s3me3n4ed3sed2sed4s3ier4ng3ta5s4s2tness3s3tie6s2ugh3nder3ri5s3sel2ve4r5ed5s2wl4s3s2y3s1ued3s2ger2la4s3l4ed5r2ms2n3ch3g3s3ter4s2rds3l4ed4s3st5s2sk4er6s4ie6r6s5ng4y2ts1wan2yl1ydra5s4o2ena3tal2la4s2men5s2oid2peron4s3ha3o4s2son5s0iamb4s2tric1bex4es2id3s1cemen3s2hnite2ier4st3ly3ness4gs2ky2tus1deate6d3m3nt5ic3s2iom5s4t5s2led4r5s4s3i4ng3y2s2yll1ff2s1gloo2nite6d6r5ron1hram5s1lea4c4l3us3x2ia4c3um2k3s2ls1mago3ms3ret6s2bue5d5s2ide3ne2mesh2p3art4sse3ede5ing4l4nd3i4s5h3oser7s3rest4ov6s3s1nane5r5st4ity3pt3rch2being3orn2case6s3ense4pt6s3ise6d4te6d6r7s6s3omer4rrupt3udes4lt4r4s5e6d2dene5t3ict4e5s4te3ole3rawn3uces4lt2edible3pt5ly3rrant4t5ly2fare6s3ect6s4r5s4st3ill3late7r4ict7er4ow3old3ra2gate6s5her8s3est6a3le5s3ot5s3rate7s2hale4ul6s3uman2ia3on5s2jects2ked3le3s3y2laid4y3ets3ier6s4ne3y2mesh3ost2nit3s2ocula2quest2road6s3ush2s3aner6st3eam4rts4t5s3iders6s3ole3pan3tar6s4ep4il3ula6r4res2teger7s4l4nts4rs3i4ma4ne6s4s3one6d6r7s6s4rt6s3repid4o5s3uit3wine2ure5d5s4ing4n5s2veigh4rt6s3itee2wrap6s1odate3ic4ne2lite6s2nic4se6d6s3one6s2ta4s1pomoea1rade3te2e3ful3nic6s2io3s4es2k3ed3s2oned5r6s4ies5ng4like4s1satin2h2lander3et5s2m3s2obar3pod6s2sei3uance6t2tle5s1talic2ch4ed5s4ier5ng4y1vied4s2ory2y1wi1xia2tle5s0jab2cal2ded2g2kes2lap2mpan2ne2pe4d4r4s2rl2to4s2unt2y1ean2ep4s3r4s2fe2ll2mmies2nny2rid3ry2ss4ie4y3t4s2tted4on4y1ig2ko2lt4s2nni2ving1oe3s3y2g2iner4ter5ure2l2nes2ss2t3a3s2ule2ying1udo2g3a4l3s2nta2s2t3e0kab2di4s2ed2i3ak5s3f3l4s3n4s2ki2le3i4s2me4s3i2na4s3ga5s2olin3n4s2ph2rat3mic3t2t3s2va2yo1ea3s2ef3l4s3ning4s2f3s2g3s2lim3p4ie3t4s2n3af3do3o3s3te2p3i4s3s2rb3f3n4e5ls5s3sey2t3ch5es3o2x1han4s3t4s1iang5s2be2ef4s3r4s2f3s2ln4s3o4metre4s3t4ed2na4s5e3e3gly3in5s3k3o4s2ondo2p3pa3s2sh3t4s2ted4s3h3ing3ting4le6r2va4s1lick1nack5s3p4s3r4s3ve3wel2ead3ed4l5s3lt2ifed3ght3sh2oll5s3ut2ur1oa3n4s3s2b2el4s2hl2i3ne5s3s2la4s3o2p2r3a3s2s3es1raken2is4es2one5r3on5i1udu2na1yat0labium3ra4et2c3ed4r5s4s3hes3ier4ng3ker5y3onic3tic4one3y2ddie3e4d4s3ing3le5r2gan5s3er5s3ger3oons3s2h3s2ic3n3r4d4s4y3ty2ker3ier3y2m3b3ed4nt4r4s5t3ina5g3med3pion3s2nai5s4te3ce5d5s5t6s3der6s3g3k4est3ner6s3ose2pa3el3ful3in5s3pet4ing7s3ses4ing2r3ch3d4er4on6s4s3es3ges4o5s3i4at4ne4s3k4ed3ney4ie3s2se4d4s3h4ed5r4ing3ing3s4i4o2t3ch3ed4en4nt3h4e4i5ng5s4s4y3i4no4sh3ke3ria5ne3s3te5n5s2ud4er6s4s3nder7s3rel2v3as3e4d4r5s4s3s2wns2yin3men3up2zar3e4s3ier5s1ea3ch5ing3den4sman3fage4ier4y3kier3l3n4er6s5st4s3per4s4t3rner3s4er6s4hed3ven5r6s2ch4ed4ing3tion4or2ech3k4s3r4s4y3s3t4s2fts2gals4to3es3gier3ions2hr2i3s2k3s2man3ma3ony3ur2nds3es3is4ty3o4s3t4en4ic5l4o2one5s2prose3ta4in6s4on6s2sion3sen4o5r2tch3down3he3out3up2u3cite2v3a4nt4tor3ied5r6s5s4n5s4s4ty3y2wis2x3is2y3s1iana3rd5s2bel4r3ido3ra5e2ce3hen4i5s3it3ks2dar3o4s3s2eder3f4er5st3ge3n4s3rne6s2fer5s3ter2gan5s4te3er5s3hted6st3nin5te3roin3ula6e2ken5s3ings2lac5s3o4s3t4s3y2med4n4s4y5s3n4er6s4s3o4s3ped4s3y2nage3den3eal4olate4rs3g4o5es4s4ua6e6l3ier4n5s3ker6s3n4et6s4s3o4cut4s3t4el5r6s4ier4y3y2oness4ise7d2poma3py2quate2ra3e2sle3p4er4ing3tee6s5l5r2tas3chi3e3he5r5st4o5ed3res2ven5s4st3ings3re1lano5s1oach3fing4s3m4ier3ner3th5e2b3ar4te3bing3e4d4s3o3s2ch4ia4s3i3o4s3us2de4n5s4s3ge5r6s5s2ess2fted4ing4s4y2gan5s3e4s3ger6s4ier4y3ia4er5st4on3o4n3y2in4s3ter2ment2nelier4r5s3ge2o3fa3m4s3n4ie4s4y3s4es3ted5r4s2p3e4d4r5s4s3ing3ped3s2quat2ran3ded4s3gnon3ica4s5es3n2sel3ings3sy2ta4s3i4c3sa3ta4o2uche3dest3gh5s3is3p4e3r4ed4ing4s4y3se5s4ier5ng4y3t3vre2wed4rs3ing3ly3ness2x1ube4d4s3ing3ra2ce4nt4rne7s4s3id3ks3re2dic3o4s2es3tic2ff4ed2g3e4r3s2lu4s2nacy4te5ion3ched3e4s3ge5r6s5s4i5s2pin5e3us2r3ed4s3id4ng3k3s2sted4ra6te5e2te4al4s3hern3ing4st2x3e4s1wei4s1ye2rate3e4s3ist2se4d4s3in5e5g3sa0maas2c3e4d4s3h3ron6s5s3s2dly3s3uro2enad2fia2g3e4s3i3ma3nesia4um3s2idan4s3gre3ler6s3m4ed4s3ze2ker3o2lar3m4s3oti3ted6s4s4y2m3ey3s2na4t3e4d4ge4s3ge5r6s4le3ias4c4oc4tou3se5s3ta5s4el6s4ic4le6s3ure2ples3per2r3a4bou4s3c4el4s3es3ge3ia4na6s3l3que6e3red4ies5ng3s4h3ten4s2sa4s3er5s3h4ed5r5s3que3sed4ing3ted2tatu3ed4r4y5s3in5s3res4ic3ted5s4ins4oid4s3urer3zah2ul3n2ven2w2xed4s3i4ng2yest3o2zy1ead3gre6r3lie4y3nest4ie4ly3sly3tmen4us4y2dianly4co4i3lar2ed3k2g3a3s2h2iny2l3d3ic3oid4n3s2m3ento3os3s2nd4ing4s3e4s3ial2ou2rcer3es3ges3ino2sa4s3ic3ne3on5s2ta3e4d4ors4s3hs3ic5s4er6s4ng4s3tle2w3ed3l4ed4ing4s3s1ho3s1iaow2c3a3k4s3ro3s2dden6s3ge5s5t3i4s2en4s2g3s2kes3vos2ler5s3fs3ia3l3o4s3t4er4s2m3e4d4r5s4s3ing2n3a4s3ce5d5r6s5s3der6s3gle6d6s4y3im5a4on4s3k4e5s3ored3ster7s3tage4ed5r6s4s4y3utia3x4es2oses2r3e4d4s3in5g3k3s3th3y2sdo3e4r4s3hit3lead7s5d3o4s3send3ted5r4ier4s4y2te4s3is3re5d5s3t4en6ed4s1neme1oa3n4s3s3t4ed4s2bs2cha2d3al3ems3i3s2g3s2i3l4s3re5s2ke4s2l3a4r4s3es3ine3l3s3ten5r3y2menta7ry2nad4s5es3de5s3ger4o3ist3ocle4tint3te5ro5s4y2o3ch5es3ed3la4i3ng4ie4s3r4ed4s3s3t4ing4s2p3e4r4s4y3ier4ng4sh3ped5r3s3y2ra4s3een4l5s4s3ion3n4s3on5s4se3ph3se5l3t4s3ula6s2sh4pit3s4y2t3e4ls4s4t5s3hs4y3ored3s3te5s4le6s4oes2ue4s3lds5y4t3ses4ier5ng4se4y3thy4on2w3er3ing3n2xa3ie1ucor3ro2d3cat3ra2fti2gs2ll4a5h6s5s4s2ms2nch3g3tin2on4s2re4d4s3ine5g3re2s3e4d4r4s4tte3h4er3ing3o3s4ed5l3tee6s4h4s2t3ate6d3er4s5t3i4late4ng3s3t4s1wa1yrica2thos0naan4s2b3bed4ing3s2cho5s3re2da4s3ir2e3vi2ff4est2g3ger6s3s2h2iad5s3f4s3ler3ra5s3ver2ker2mer5s2na4s3ce5s2os2pa4s3e4ry4s3less3pa4e5r5s4ing4y3s2rc4o5s4s3d4s3es3ial4s3k4ing3rate7d7s3y2sals3ion3tier2tal5ity4nt3ch3es3ron6s3ter2ught3tch2var5s3e4l4s3ies2w2ys1eap4s3rer4ing4s3ten5r4h2b3s3ula6e6r5ise2ctar2e3p4s2gus2igh2llies4y2matic2ocon3lith2per2ral5s3dish4s4y3eid6s3itic3val4ier5ng4y2ss3ted5r4le6d6r6s2tball3her3ted4ier5ng4le6s4y2ume3ron3ter2vi3us2wel3ness3sy3t4on4s1goma2wee1ib3ble3s2cad3eties5y3hes3ker4s3tate2de4s3i3us2eces3llo2fty2gh4er5st2l2m3bly3rod3s2nes3ths2p3a4s3ped5r2sei3i3us2t3id3rate7s4e4ic4o5s5us3s3ty3wit2val2x3es1obble4y3ly2ck4ed4ing4s3tule5rn2dal3i3s3ule4s2el4s3tic2g3gin3s2il4s3r4s3sier2lo2ma4d5s4s3en2ncom3et5s3g4s3zero2ok2ri4a5s4s4te3land2sed3h4ed5r5s3ier5st4ly4ng3tril3y2ta4te6s3ched3um2ugat4ht6s3ns3rish3s2va3ices2wt4s1th1ub3bin4y3ile3s2clei2dge3ie5s2ggar2ke4s2lls2men2rsed5r6s2s2tlet3ria3ted1ymph0oaf3ish3s2ken2r3ed3ing3s2ses3t4s2t3en4r5s3hs3meal1beah3li3se5ly2i3s3t4s2jet2late2oe4s3ist2tect4st3use1ccluding2eanic2h3e3one3re5a3s2ker2rea2tad4l4n5e6s5s5t6s3et5s3onary3roi2ular4i1dder2e3a3on5s3s3um2yl4s3ssey1ecus2rsted2strin2uvre1fay4s2t1gam4s2ee4s2ham2ive5s2le4d4r5s4s2re4s1hm3ic3s2o2s1idia2k3s2lcan6s4up6s3ed4r5s3ier4ng3men3skin3y2nk4s1ka3s3ys2e3s2ra4s1lde4n3ie3ness3y2e3ate3ic4n5s3o3um2id3o4s2la4s3ie2ogy1masa4um2en4s4ta5um3r4s2it4s4ting2nibus2s1nager6s2eiric3ness3sie2ion2screen3ets3ide2tic2us2yx1of2h3ed3ing3s2lite6s2tid5s2ze3ing1pah4s3l4ine4s3que6r2code2e3d3rant5s3s2iate6s3ne5d5s4g2s2tima5e6s4ng3s2us1ra3cle6s3lly4s3ng5s5y3te5d5s4ing5on7s4or2b3iter7s5ing5s3s2c3a4s3ein3s2dain3eals3ines3o2e3ad5s3s2gana2iel5s4nt3gami5n6s3ole6s3son2le4s3op2nate3ery3is5es2pine2ris5es2t3hotic3s2yx2zo1scine6s3ula6nt2ier5s2mic2prey2sein2tia3ler3omies1talgia2ic3ose3tis2olith2tar5s3er5s3o4s1ud3s2ens2phe2sel5s3t4er4s2ta4ge3cast3do3ed3go3hit3ings3last4ier3man3post3ran4e4ode3ta3wore1va3ls3ries4y3te4ion2ens3rdo6g5rew4rode4sea5ide4t2ine2um1wlet3ish2t1xalis2en1yer4s3z0paan4s2ce4s4y3ha3ier4fy4ng3tion4s3y2dre5s2ean5s3lla3on2ged4r2h3s2il4s3ned3rings3sa5no7s5s4e2l3ed4ly4o4r4s5t3ier4ng6s4sh3l4et4ia5ng4or4s4y3my3p3sy3ter3y2mper6o2n3das4er3e4er4s3g3ino4r3ko3ne5d3sy3t4ed4ie5ng4o5s4ry2p3ain4s3ery3illa4st3s2ra4ble4foil4gon4ng6s4s3ch3d4s3e4d4r5s4s4tic4u5s3ies4ng6s3ks3ol4tic3r4ed4ies4s3s4e5c6s5d5r6s5s4ing4on3tied5ng4on3ve4is2s3cal3e4s3h4a4ed5s4m3se5l3til4s4y2t3e4n5s4r5s4s3hic6s4os3in5a6s5s4os3ly3ois3roon7s3s4ies4y3ten5r6s4ie6s5ng2uper3ses2van5s3e4r5s4s3id4ngs4s2wed3l3ned4s2x2yed4r5s3ola4r4ut1eaces3g4s3hen6s3king4y3l4s3n4s3rl4s4t3t4y2ba2c3an3cant3k3s3ten4ic5n5se2dicel7s2eing3l4s3n4s3p4bo3ring3wit2g3s2in4ed4s2kan3e2lage6s3f3ite3oria3t4ing4s2nally3d4ed4s3ile3man3na5e4ed4i5es5s4y3t4ane2on4age4ies4s4y2ps4in3tic5de2rch3du3e4s3fecta3i4ls4nea4que4s3k4ed4ing3lite3m4ed4ing4s3p4end4lex4s3ron3sonae6s3t4ain4er4ly3use6r7s2s3eta4wa3o4s3ter4le4o4y2tal3ers3it3rel3ter4ing5sh4y2ws1haeton3ge5s3lli3ser6s4or6s3t2enol3on5s3w2i3al5s3s4h5er7s2o3ned5y6s4ic4y3oey2rased2ut4s2woah2yla4e3sic5o1ianos3stre2c3a4dor3e3nics3ot3rite3s2dgin2ecing3d3ing3rogi3t4a5s4s4y2ka4s3e4d4r5s4s2lea4i4us3grim3ing3y2n3ata6s3cer6s3ed4ry4ta4y3fish3ged5r4s3ite3ko5s4s3na5e5s4ulae4y3on5s3ta5s4o5s4s2on4s2p3ed3it5s3s2que5s5t6s4ing2rana6s3n4s3og5i2s3h4ed5s3mire3o4s3te5s2ta4s3h4os3ied5s3man4en3on5s3saw3ta5s2x1lacate7d4er6s5t3ice4d4nt6s4t5s3ner6s4ks4tar3sh5y4m5ic3t4en4s4y5s2easer7s4t5s3be3na3ura6e6l5on2iant3ca5e5te3ed4r5s4s3nth2oce3d4s3p3ver3y2uck5s3gin6s3ses4h2y3ing1oaceous4h5es2ck4s3o2dgier3ite2e3sy3tess2gge3ies3y2i3nte3se5s2ked4rs4s4y5s3ier4ly3y2lacre3der3e4cat7s4d4r5s4s3ing4s4tic5y3o3y4p4s2m3ace6s4de3e4s3mel6s3p3s2nder3e4s3g4ed5e3ied5s3s3tes4ine2och3d4s3h4s3ns2pe4s3lin2rcine3e4d3ing4sm3ker4ies4y3tals4ed5nd5r4ing4rays2ser5s4ur3ho3it5ed5s3s4e4ie3tie4men3y2tboy3ion3men3ted4o5s4y2uches3f3lt3nd3rer4s3t4ed4s2w3s2x3es1raelect4tor3m4s3na5s4ce6s4g5s4ks3se5s3t4e5d5r6s5s4ing4s4tle3u4s3wn5s3ys2ecis6ing3en5ing5s3latic4im3mie6s3paid5y4end4s3sa4e5s5t6s4ide4ort4sie5or4to3tor3v4e5d3x4es3ys2icey3ded3ed4s5tly3g4s3m4ero6s5s4o4p5s3nk3on5s4ress5s3se5d5s4ing4sy3vet6s4ies7t5ty3zing2oa4s3b4s3claim4tor3d4s3em5s3fane7r4ess4s3g4s3le5s3motive4s3nate7d4g4to3pel6s5nd4men3ser4it4pers4tyle4y3tea6n6s3w4l4s2ude5s3ne5r5s2y3ing1seud2i3s2oas2st1tisan2osis1uce2d3s2eblo2g3s2ja4s2l3a4s3e4r5s4s3i4s3ler3pit3s4ar4es4ing2ma3ice2ng3iness3ner5t3s3ts3y2pa4e4l4te3s2rdah3ee4r4st3ine4tan3l4in4s3r3sed5s2s3her6s4ier4y2tt4ee6s4i4o4s4y3z1ya3s2e3s2lon4ri2oid3ses2re4s3one2x0qua3ck3ds3g4s3i4l4nt4s3ked5s4ing3le4m5s3ngo4t5ed5s3rk4t5o6s5s3sar4h4s3tre3y4s2bit5s2ean5s3ens3ried5st4n5s3sts3uing2icken3d3eten6r5s5us3ll4t5er5ing3n4ce4one7s4s4t5e6s5s3p4s3re5s4k4t5s3ts4ter2o3d4s3in5s4t5s0rabbet3id2ceme4rs3iest4ly3ks3on5s3y2d3ials5n4i3on3s2ff4le6d4s3ts2g3a4s3ed4s3ga4ed3i4s3lan6s3man3s3tag4op2h2iled5r4ing3ned4ier4out3ser4in6gs6s3ta5s2j2ke4d4r5s4s3i4ng4s5h2le4s3lier5ne2m3en5ta3ie3med5r4ing3ose3ps3s2nce5d5s4hes5o4id3d4an6s4s4y3ee5s3ger4y3soms3ted5r6s4ing4s2pier6s4ne3ped5l5n4ing4ort3s3t4or2red4s5t3ing2scal3e4d4s3her5s6t3ing3p4ing4s4y3ter6s2ta4l5s4n5s4s3chet3el5s4r5s3h4e4s3ifies4on6s3line3oon3ted5r6s4ier5ng4le4oon4rap4y2unch2vage6d3ed4l5in5ler4ned4r4s3in5e5g6s5s4oli4sh2wer3ness2yless3on2ze4e4s3ing1ealer5st4ia5st4s3m4ing4s3per4s3ring4m4s3ta5s3ve5d5s4ing2bar4to3id4nd3oant4il3us4t5s2c3ant3ce3ept3ital7s5e6d6r6s3k3lad4ine7d3oil6ed5n6ed6s4n5s3tal6ly4i5fy4o5r5s4us3ur4se4t5s2dan5s3d4en6s4ing5sh4s3e4d4s3fin6s3id4ng3o4es4ne4und3raft4ew4oot3s3top3ux3wing2echo3d4ing5t6s4s4y3fs3k4s3ls3quip3st5s2fection3ile5m6s4ne4re4t5s4x3ried3t2g3ains4l5e6d4tta4ve3go3ive6n3o4s3rading3s2hang3ear6s5t2ifies4y5ing3n4ed4ing4s4vent3ve5d5s4ing2label4ter4ys3ent3ic5t4ne6d4sh5t4t4ve6d6s3lie6s3uct6s2m3and4p3ise6s5s4t5s3ora4ter3s2name3d4ers4ing4s3in5s3net3ovate4wn3voi6s2org2paid4ve3ent6s3ine6d6r3licas5er7s3o4s5e6d5it3p4s3rise4o5s5ve3ublish4te2quite2ran3ead6s3un2sale4t3cind4ore3eal5t5u6s4ct6ing4da4ll4nd5t6ing6s4ts4w5n3h4ip4ot5w6n3ided4gns4le4ned5s4t5s4ze6s3ole4w5s3pite3tate4er4ful4ive7ly4rain5ing4yle2t3ablo4ils3ch5ed6s3e4s5t6s3icle4e5d5s4tle7s3old4ol4rt6s3rain5l4ies4o5act5d5s4y5ing3s3ting3use3ying2unite3se5d5s4ing2v3el5s4rs4t5s3ile6d6s4sal3oke6r3s3ue2wed5s3ind6s4re6d3ork4und4ve6n3rap1hea4s3me3tor2inal4os2o3s3tic2yta1ia3l4s4to3nt3s3ta5s2bald3bed2ced4r4s3ing5s3k4s3tal4us2dding4le3ent3ges4y3s2el4s2fe4ly4r4st3fs3led5r6ies3ted4s2gger3hter6st5o6s5y3s2le4d4s3ing3l4e5d5s5t4s2me4s3ing3less3s3y2nd4s3ged5nt5r6s5tte4ster3ks3sed5r5s2oted5r2p3ely4n5s4r4st3oste3per3s2ser5s3hi5s3ible4ngs3otto3que3tra2tard2vage3e4d4n4rs4s4t5s3ing2yal5s1oach5es3die6s3med5r6s4s3n4s3red4s3sts2b3alo6s3ed4s3in5g5s3le3otise3s2c3het3s2d3ent2es2ger5s2il4ed4ing4s4y2mcom3eo5s3p4ish4s2nde5l4o2o3d3fed5r4ie6s3k4ing3med4ie6s7t4y3s4e5s4ing4t5er5s3ter6s4sy2ped4r5s3ier5st4ng3y2que2rt4ed4s2sier4ly4n5ed5s5y3y2ta4s4tes3e3i4ni4s3l4s3ors3s3ted5r6s4ing2uble3e4s3ged3lade3nce4dly3p4s3se5r5s4ing4t3t4ed4s3x2ve4d4r4s3ing2wan3dy3ed4l4r5s3ing1ube4l4ola4s3s3y2che5s3k4s3tion2der4st2ed3s2ff4ed2gs2ing2mal5s3en3ina3s2ndle3e4s3g4s3ic3nel4ier4y3t4ime4s4y2pee2se4s3her6s5s4y3k3ts2t3h3s3ty1ya3s0saag2bin3le5s3ot5s3ra4e5s2c3culate3ker3ra4ing3s2ddo3hu5s3iron2eta2fes2g3er4s3gy3o3s2hib2iga3ler3n4s3th2ker5s4s3i4s2l3ade4mi3icin4ent4na5e6s4va6te3let4y3mi3ol3pa3s3tant4ed4ier5re4us3via6s2mba3iel6s3osa3p2nded5r6s4ing4lot4y3er4st3g4ria3ies3s4a4ei2p3ient3ling3ota4ur3per6s4ier5ng3s2ran3d4s3ge3i4n5s3os3sen3tor2sh3in2tanic4y3e4d4m4s3i4n5g5y4s3nav3ori3yr2uced5s3ger6s3na3rel6s4ies3te5ed5ing5s2vant4te6s3er5s3iour2wed4r5s3ing3m3n3s2x2yer5s1cab3d4s3g4s3lar4er4ier4y3ms3nt3pe3rab6s4cer4p3t4s4ty2end5ed5ing5s4ted5s2hmo3oolie3tum3wa5s2illa3on2lera2old5ed5s3ne5s3ot5ing5s3p3rch4n5ed3t4er4s3ur4t5s3w2rag5s4m4pie4wl6y3eak4e5d5s3ibe4m4p5s3od3um5s2uba3d4i4o3ll4pt3nge6d3p4s3rf3t4a5ge4e5s4s1ealant4er3ms4y3nce3r4ing4s3sick3ter6s3ware5y2bum2c3ant3co3ern6s3h3s3ts3und6ine4rer2date6r3er5s3ge5s4y3ition3um5s2eding4y3l4ing4s3mly3p4ing4s3r4s2gno5s3ue5d2ine5d5r5s4ing3se5d5r4in4m3tan3zes2lah5s3kie6s3syn3tzer2matic3ipro4s2n3ary3der6s3e3ile4ti3na4et6s4it3or5a5es5s3s4ei3te4ient2pal3ia3oy5s3t4a4et4ic4s2quela6s5nt4in6ed2r3ai5s3e4r4st3f4s3ge3iate4ema4f5s4n5e5s3osa4us4w5s3pigo3rate3s3ums3vo5s2stet2th3ose3t4er4ler6s4s2vens4r3ika2wan5s3ed4rs3n3s2xily3t4an6t4on4s1habby3d4ing4s3h4s3ko5s3lt4y3nk4ny3per3rd5s4er3ven5s3w3y4s2eaf4th4ve3en4ring5s3ila3ll5ac5er5y3nd3rif4pa3w4ing4n4s2h2ied4s3ksa3ll3m4s3ner6s4ny4s4ty3pmen4per3res4k5s4r3v4a5s4e5s4s2mo2oal4t5s3d3eing4r3gun3ne3o4l4s3ppe6r3ran4ed4ing4n4ties3te5s4ten3uty2red4w5d5s3ift4ll4nes3oom2tum2ufti3l3n4s4t3sh2wa4s2yer4st1ib3s2c3ks3s2deway3le5d5s2eges3nna3rran3ve5d5s2ft4ed5r4ing4s2ghed5r3il3nee5r6s5t6s4or6s2ka4s3e4s2lage3d3eni4sia3kie6r4s3l4ier4s3o4s3t4ed4ier4s3va5s2ma4r5s4s3ian3mer3p4er2ne4s4w5ed5s3ge5d5s3h4s3ned5r3ter6s3uate4s2pping3s2rdar3ed4nic4s3ing3rah4ee3s2skin2tar5s3ed3ing3ter3uate7s4la6e4s2zing1ka3ld3t4s2ean3et3g4s3in3p4s2id3er5s3m4p3nt3ps3s3t4e5s4s4tle3ve5s2ol3sh2ua4s2ying1labs3ke5s4ing3nder7s4t3ps3shed3t4er5s5y4ing4s4y3ver6s4ish3w3yed2eave3d4s3ek4t5y3w4s2icer4ing3der3ghts3me4s3ng5s4k3ppy3ver2ob3e4s3g4ger7s3op3p4ed4s3sh3th5s4ter5ing3ws2ub3e4d4s3ff5ed3g4s3ice4ng3m3ng3r4p5s4s2yer4st1malt5o6s5s3rm4ted5y2elt5er5ing5s3w4s2ite5s2og3lt3och3te2ug3tch1nacked3g4gy4s3ils3ke5d5s3pper3re5d5s4f4ing4l3th5s2eck3er5s2ide5r3fter3p4e5d5s4s3t4ch4s3vel2ob3g4s3od4k4t5ier3re5r5s4t5er5s3t4s3ut3ws2ub3g4s1oakings4s3ps4y3r4ed4s3ve5s2b3a3ers3s2ca4ge6s3king2dalite4s3den6ly2far4s3ta4est4y2ggier4y2h3s2igne6e3lage4ed3ree6s2ke2l3a4n5o4tia3di4o3ed4s3icit4der4ng3s2m3a4s3s2nar5s4ta6s3de5s3e4s3ly3net6s4ies4y2ok3nest3t4ier4y2p3or5s3ped3s2ra4s3b4ed5t3dino3ely4r4s5t3i3n4ed4ing4s3rel4ily3ter6s4ie3us2t3s2u3gh3nder3ped4s4y3ring5sh4s3s4ing3tane4er6s2w3er3ing3n3s1pacey3de3hi5s3ll3m3ng5ed4k4ned6r3r4er5s4ge6d4id5ng4s5e3s3t4e4s3vin3wn5er3y4s2ears3ctre3d3edo3lt5er3os3w4ed4s2ica4ed3ed4l4r5s3ked4y3le4t3m3nel5s5t4ner4ose4y3re5d5s4t3tal4ed4ing4s3v2lat4y3enic3ice6r4ne5t2oils3ndee3or5s3re5s4ing4ted2rag4in6s4t5s3ees3ig5s4nt4t5e5s5z3og5s4ut3ue5s3y2ud3e4d4s3rt5s3ta1quats3eak3ire4t1ri3s1sh1tab4s3cker4te3g4s3id5er4ner4r3ler5s4ing4ling3men4ina3nces5h4e5s4g4k3pes4h3rer6s5s4k4ry3ter4in6s3unch3ve5s4ing3yer2ead4ks4ms5y3ed4rs3in5s3la5e3mma5ed3nch4o5s4t5s3pmom3ric4n5s5um4oid5l3t4s5on3via3ws2ich3es3lbite4e5s4ly4t3m4s4uli3ngo5s5y4ted6r7s5s3pe5s3rk4s3thy2oa4s4t5s3b4s3cky3ep3gie3ic5s3ker4ing3ma4p3nier4y3oge4ls4p3pe3rk3up5s4r5s4sh4t5er5s3w4s2rainer5ts4th6s5i5us4vaig4ys3ee4p4w5ing5s3ia5e4ck4dent4gil4ne5ger3obe4de4p4ve4w4y5ed5s3ut2ub4s3cco3dly4s3ll3n4g4ner4s4ts3pa5s4e5s2y3mie6s1uable2btend2crase4e4ose3tion2daria3d4s3or5s3s2e3de3r3s3t4y2int5s3tor2lci3k3len6er3tans2mma5e5s3o2ndae6s4er6ing6s3g3n4ed4ier4s3tan3wise2periors5s3ine3ra3s2ra4h4l4s3d4s3er4st4ty3fed5r4ie3lier2s3hi2tler3ra3tee3ure1velte1wag4e4ged4s3in3le3ns3rt3t2ede3eny4ps3rve2ig4ged4s3ll3nes4ge6s5le4ish3ped3rl3sh5ed6r2oop3t4s2um1yce4e5s4s2lph2ne3od3th2ringe0tabla3ooed5s4r2ce4s4t3h4e3it3k4er5t6s4s4y3t4ile5on2d3s2e3l3nia3s2fia2gine3line2hina6s5i3r4s2iga5s3led4ing4le3n4s4t5s3pan6s2jine2ker3in5gs5s2la4s3c3er5s3i4on3ker4ie6r3lied6r5sh5th3on5s3us2m3ale3ed4r5s4s5t3ing4s3my3p4er3s2na4s3gi5s4le4os4s4y3h3king3ned5r6s5st4ic5e3s4y3ti4o2pas3er5s4ta3ing4r5s4s3per5t2rdier5ly3e4d4s3ge3ing3n4s3o4s4t3p4an4on4s3red4ied5ng4y3s4al6s4i5a5er4us3tan5r4ed5r4ing4ly4y3weed2ser5ed5s3king3s4e5l5t3ter6s2t3ami3er5s3s2u3nt5er5s3pe3s3t4en6s5r2w3ny3s2xa3er3on2yra5s1eak4s3l4s3rable4ed5r6s4y3s4el6s5s3t4s2ch4ie4nic7s4s4y2d3ium3s2ed3ing3m4s3nsy4y3s2gmen2lae4mon3co3ega4ran4thon4x3fer6s3ia4c3ly3net3son2mping4s4t5s2nace6s3ch5es3ders4ing4on3et5s3ge5s3ne5r6s4ies4o5s3on5ed6r5s4rs3pin6s3rec6s3sed5r5s6t4ile5ng5ty4or6s3ted5r6s4hs4ing3ues4ity4res4to2pid2rce5l5s5t3edo6s3ga5l4um3mor3n4ion4s3ra4et4ify5ne7s4y3se5ly5r3tian2sla5s3sera3ta5s4er5s4ier5s4on4y2tanic5us5y3h4er4s3ra5d1haler4i3ne5s3r3w4ed2eca5e3fts3gn5s3ine6s4sm5t3nar4ce3refor3ta4ic3w4s4y2iamine3ll3ne4gy4ker4ly4ned4s3ol5s4nic3ther2ole5s4os3ria4ned4p5s2reap6s4es4node4sh3ice4fts3oaty4e5s3u4m2ud3ya2yme1iara5s2bia2c3al5s3ker4le4s3s2de4d3ied5r4ng2epin3rce6l4ed4s2ff2g3on3ress3s2ki4s2l3de5s3ed4r5s3ing6s3led5r4ing4s3s3ted5r6s4h4s2meout4rs3orous4thy3ps2ncal6s4t5s3e4a5s4d4id6s4s3g4e5d5s4le6r6s4s3horn3ier5st3kle3ned5r6s4ie4y3pot3s4el3t4ed5r6s4ing4s4ype7s3ware2pcat6s3per3sier4y3toe2ring2sane6s2tan5ia5s3ch3fer3he5d5s3i4an4s3re5s2x1oad4s4y3sted6r7s5s5y2csin2d3dle3s3y2ea4s3cap6s3d3ing3nail3rag6s3y2ff4s3t4s3u2g3a4s3s2il4e5d5r4s2kay5s3e4d4s3ing2la4n5s4r5s4s3e3led4s3u4ene4s2mbed4s3e4s3pion7s3s2nal3er5s4tic3g4a4ed3ic5s4er5st4ng3ne3sil3us2onie6s3t4ed4hy4ing4s2paz3e4d4e4r5s4s3hi3i4ng3oi4s3per2que5s2ra4h4s3ero6s3i4i3ment3oid6al4se3pid3quey3r4ents4s3s4e5s3t4e5s4s3us2sa3h4es2t3e4d4m5s4r4s3ing3s2ucan4he3ghen5s3pee3rer3sle3t4er4s2wage3ed3hee3ing3nee4ie4y3s2xin2yed3ing1racts3d4itor3gi3iled3mp5s4s3pes3ss3umas3vail7s4e5s3wl3ys2eads3ble6d5y3ed4ing4n4top3f4oil3ks3pan3ss4tle3t4s3ws3y4s2iacid4d5ic5s3ce4ot3dent3er5s3fid3g3ke3ll5ed5ing5s3mer6s4s3ne5s4ket3ode4let4s3pe4let5y4od5s3ste3te5r4on6s3une3vet2oat5ed5s3d4den3g4s3ika6s3lled6ys3mp5e3na5s3oped3pe4ic5sm3t4h4s4yl3unce4pe6r3ve5r3w4ed5l4s3y2uces3ed4r4s5t3g4s3ing4sm3ll2yma3out3psin3st5s1sar4s2otsi1uba4l3by3ed4r5s3ing3s3ule2cks2fa3t4er6s4y2gs2i3s2lip3le2m3bled3id3s2n3able4s3er5s3ic5ate5le5s4ngs3nies3s2rban4o3een3fs3ncoat4ip3ps2sche3h3k2t3ee3ors3s3u4s2x3es1wain3ng3s2eak3e4d4n5s3rk4p2ig4s3lit4l3ne5d5s4ge6d4ned3rl5s3t4s3xt2ofer6s3nk3s1yg3s2ke2pal3o4s2rant3e3o4s0udder2o3n3s1gali1hlan5s1kase5s1lcer5s2ema2lage2na4e4r2ster2terior3ima1mami2ber3les2iak2p3s1napt3rm4y2bar3elt6s3id3lest2cial4ni3lad4es3oil4ol4rk4uth3rate3tion3ut2did4es4ne6s3oing4ne3yed4ing2ease3qual2fits2hewn3ip2i3fic3ons3s4ex4on3tes2lade4sh4y5s3it3oad2peg4n3in5s2read4el3ipe3oll4ot2say3ent4t5s3hod3top3worn2teach3ie5d5s3old3rod2wed3ise3on4rn1pas2bear3uild6t2do4s2end2hill2rear6s3ise6s5ings3ose3ush2sets3old2time3own1ralite2chin2ea4se6s3do5s3ide2ger3h2ial5s3c3nal6s5te2n3s2opod2sine2us1sages3nce6s2hers1te3ri5ne3s2ile1vea0vac3s2dose2gal3i2il4ed4s3ner3r4s2lence4s4t5s3iant4ne6s4se3se5s2mp4s2ne4s3g4s3tage2pe4d4s3id2r3a4s3ia5s4ole3let3ve2s3a3es3ter2t3ic3s3ted3u4s2ults3nt2v1eal2ep4s3r4s2g2iled4s3ned4ule4y2la4r4te3d4s3oce4ur2na4e4l5ly4tion3d4ing4s4ue3ery3in5s4re4son3ted4ing4ose4re4s2rily4sm6o5t4te3min3sa4ed4ing4o4t5s3t4s4u5s2spid3ta5l5s4s2toer5s2x3es1ial4s3nd3tica4or6s2be3rio2car3ed4roy4s3ing3tor2de4tte2e3d3s2gil2ler4st3la4i2m3en2na4s3ery3ic3o3tner3yls2ol4a4s2per2re4lay7s4o5s4s3ga4ins3ile4on6s3tu2sa3cid3e4d4s3ing3or5ed5s3ta2ta4e4ls3riol3ta2ve2z1log4s1ocation2gue2ided3la4e2le3t3ution2tive2uge2wed4r1room0wack4e4y2d3e4r4s3i4ng4s3s2fer5s3t4ed4s2g3ed4rs3ged3s2hine2if3l4s3n4s3tron3ve5s4ing2ken5ing5s2le3ing3lop6s2me4s2n3ds3e4d4s3ing3ly3ner2rd4ing3e4s3ped5r4ing4s3ring3sle3t4s4y2shes4in4y3p3t4es2t3ery3s3t4le4s2velet4s3y2w3s1eakens3l4d4s3n4ed5r6s4ing4s3rable3sel6s2bbed3er5s2d3gie6s3s2eding4y3ing3n4s4y3p4s3r3st2ft4s2irs2ka4s2ld3lie3t4er6s4s2n3d4ed4ing4s3s2pt2rsh3t2skit3ter2ther3ly3ness3s3ter4ing1ham3p4s2eal3e4n5s3lp5s3nas4s3t4s2idah6s3n4e5s4ge6r6s4s3ps3rl3t4en6s4ier6s4s2oles3mp4so3op5ed6r3p4s3so2up4s2ys1iden5ed6r5s3get2geon3ged4le6r7s3ht3let3s2lco3dest3e4d4s3ing3let6s3t4s3y2mp2nce4h3der3ed3gers3ier3less3o4s3y3ze2per2rer3ra3y2sed4n5t4s5t3her3ing3p4s3t4ed4ing4s2te4d4s3hal4e5d5s3ing3ling3s3ting2ve4d3ing2z1oad2dge2e3s2ful2k3s2ld4s3f4s2manly2nga3k4s3ted2odman3ed4r5s3f4er4s3ing3ls3s2rded4y3ming4s4y3s4en6s5r3t2t3s3ting2ve2wed1raith3sse2en4ch4s3st5ed5s2ight3ng3t4s2oth2y1urst2ss0xanthate1enia2rosis1is0yaar2h3oo2k3s2m3en5s3s2ng3k3qui2p3on3per3s2rder3e4r3ns3row2utia2w3ed3l3n3p4ed5r6s3s2y1eahs3n4s3rn3s2bo2ch2gg4s2ld3lows3p2ns3ta5s2ow2ps2r2ses3sed4ir3ter2ti4s2w3s1ikes2n2p3e3s1lem4s1ob3s2d3el3le3s2gh3i4s2ke4d3ing2mp2n3der3i4s2of2re2use3then2w3l1ucca2le2ps2rt4s1wis0zany2p2rf4s1eal2d3oary3s2e3s2roed2st4ful4s2ta4s1ibet5s2g2lla2ne3g4er4y2ps2t3s1oa2oid5s3ms3n4s3s2ril2ster"};
+const LEVELS=[{"t":"gkwaosnrgleaeuts","s":"wrestle"},
+{"t":"ydtiaposehiedler","s":"deposit"},
+{"t":"euatlirchtoeaacn","s":"concert"},
+{"t":"oahlltsaarigtoln","s":"rotating"},
+{"t":"ngslhuhstgrtaena","s":"strength"},
+{"t":"lgkeavpreeihfnst","s":"festival"},
+{"t":"reotevdcstofornw","s":"covered"},
+{"t":"ghupscrethasiueu","s":"purchase"},
+{"t":"eosesldeciiinert","s":"disclose"},
+{"t":"awndayieetssshjt","s":"destiny"},
+{"t":"daeseurlptsteern","s":"persuade"},
+{"t":"latcenroggeinder","s":"enlarged"},
+{"t":"otooamravpetoler","s":"operate"},
+{"t":"yetenanurarolthn","s":"natural"},
+{"t":"dmnitoastnutdaee","s":"instant"},
+{"t":"trsgcaahaitedidp","s":"dictate"},
+{"t":"ncdratsalioeanfo","s":"national"},
+{"t":"oiyccdnteisileta","s":"distinct"},
+{"t":"lepeherprtarxeep","s":"prepare"},
+{"t":"eptaerpdeaiptoot","s":"patriot"},
+{"t":"mapieinuleonctid","s":"election"},
+{"t":"tioasepamnrpdtrr","s":"apparent"},
+{"t":"clrloezgnttresaw","s":"contest"},
+{"t":"sslesepctobrhsas","s":"hopeless"},
+{"t":"epastergaadaiuel","s":"graduate"},
+{"t":"evpyiaephtoewpar","s":"operative"},
+{"t":"liataeerrbamiike","s":"retailer"},
+{"t":"ldpprprsieoocftm","s":"promote"},
+{"t":"mehhoagilhnilost","s":"hosting"},
+{"t":"noluirtrgdopaoer","s":"torpedo"},
+{"t":"ibaoyruszeeafipl","s":"pleasure"},
+{"t":"dopgaendrohimuci","s":"comrade"},
+{"t":"reniaotaonrjpctu","s":"container"},
+{"t":"ieffgoranmtpektr","s":"foreign"},
+{"t":"ruoznedsriwcvemo","s":"newcomer"},
+{"t":"eroscvicpadaneei","s":"discover"},
+{"t":"ktviieqtpritosea","s":"positive"},
+{"t":"rosoocntarosltcp","s":"sponsor"},
+{"t":"ejttgnamaroungtr","s":"mortgage"},
+{"t":"stoendrglnetuusu","s":"undergo"},
+{"t":"etlecaemnoucitha","s":"caution"},
+{"t":"teocreentnussted","s":"student"},
+{"t":"redneaelkhbambca","s":"blender"},
+{"t":"agckiladmeewdmes","s":"claimed"},
+{"t":"elptaohobrunalte","s":"neutral"},
+{"t":"dimwicenenasrvoi","s":"dimension"},
+{"t":"dnsriouabdoncsen","s":"dinosaur"},
+{"t":"yewttlefainytgqi","s":"tweeting"},
+{"t":"ttopnalicmodeisd","s":"diplomat"},
+{"t":"taneleasumniymeu","s":"emulate"},
+{"t":"gpsanirikwhtrein","s":"praising"},
+{"t":"znaciehetomtcpni","s":"contempt"},
+{"t":"onremrehiettwgod","s":"together"},
+{"t":"scoeiauretntigui","s":"scouting"},
+{"t":"inaactinepsnoeln","s":"instance"},
+{"t":"tulsimialdtppetg","s":"simulate"},
+{"t":"aabldrxeoeolpnbe","s":"adorable"},
+{"t":"noutparcoaterame","s":"parameter"},
+{"t":"etdrehirwwsaiorw","s":"withdraw"},
+{"t":"iwtscsstgonecuve","s":"countess"},
+{"t":"leansgpiiionkjtg","s":"leaning"},
+{"t":"itgptoraennrevip","s":"inventor"},
+{"t":"ighhlsetrurasrwc","s":"lighter"},
+{"t":"opurktpomedoansv","s":"purpose"},
+{"t":"wncernilroatinpr","s":"particle"},
+{"t":"emttaneidegocedn","s":"mention"},
+{"t":"eecwlyehldosreum","s":"elderly"},
+{"t":"teeohuetoyrnejea","s":"journey"},
+{"t":"gireralntiyteeiv","s":"trailer"},
+{"t":"idsoaseeblvomipm","s":"disable"},
+{"t":"ecrlngeetatunsyr","s":"elegant"},
+{"t":"cruirpseeroautps","s":"prosper"},
+{"t":"ngeonipnhetacawl","s":"teaching"},
+{"t":"itlaitaghspiitsn","s":"against"},
+{"t":"spespafetielalec","s":"spatial"},
+{"t":"saeetaondeasirnf","s":"eastern"},
+{"t":"crnaondefwedensy","s":"crowned"},
+{"t":"apetiaepancmllao","s":"compete"},
+{"t":"eiesohtgwureipla","s":"gesture"},
+{"t":"rrnhregetercaasn","s":"greater"},
+{"t":"aeidefsadalbuehi","s":"disabled"},
+{"t":"destesopdaupntsp","s":"supposed"},
+{"t":"ipraiiteiuphbeac","s":"chapter"},
+{"t":"pireinghncasnrrp","s":"spacing"},
+{"t":"vsnlrmcpeaiitind","s":"indicate"},
+{"t":"edskiirgfneaauam","s":"unified"},
+{"t":"xerpnetpdsaprpst","s":"pretend"},
+{"t":"rsposdnsoheiorim","s":"respond"},
+{"t":"rtizlebmusearcit","s":"ultimate"},
+{"t":"uieplberhtidyewa","s":"rebuilt"},
+{"t":"igsnedoectetiwmn","s":"noticed"},
+{"t":"ntupatsntnuacowg","s":"constant"},
+{"t":"rtfddopslaeruaio","s":"airport"},
+{"t":"hhhoeotdrirpdevo","s":"provider"},
+{"t":"cbnohnsieetccile","s":"selection"},
+{"t":"tczectlereltdibi","s":"credible"},
+{"t":"pwceatanefneriav","s":"finance"},
+{"t":"fanrisrilatchcif","s":"critical"},
+{"t":"oadlmeaihsnfhhgy","s":"dealing"},
+{"t":"gidonasheiulrpee","s":"uprising"},
+{"t":"aarutrclneocptls","s":"current"},
+{"t":"ruretggneafaremt","s":"feature"},
+{"t":"tidteamrargiynai","s":"dietary"},
+{"t":"uthymrhgeanirnfr","s":"nightmare"},
+{"t":"yentrtarhttdtysi","s":"distant"},
+{"t":"koassceppndueawr","s":"spawned"},
+{"t":"gecybtaiarhtnile","s":"athletic"},
+{"t":"olsramtnleitldta","s":"omitted"},
+{"t":"enrnafsudtigpoon","s":"adopting"},
+{"t":"tsnwgilgidojpawt","s":"loading"},
+{"t":"iunuoesaeaplceip","s":"applause"},
+{"t":"tvnooeiavltrrufm","s":"evolution"},
+{"t":"otdytolrlsngowin","s":"slowing"},
+{"t":"enmceaiirctriele","s":"electric"},
+{"t":"nitdawaelfkssaet","s":"awaited"},
+{"t":"hihaslkmceailned","s":"cleaned"},
+{"t":"ictplnsepepyrote","s":"protest"},
+{"t":"trmparoneywitgne","s":"portray"},
+{"t":"ectcanisafouctot","s":"faction"},
+{"t":"iekrtoogragessem","s":"message"},
+{"t":"ogeonynalaimessb","s":"leasing"},
+{"t":"tpibusulrchaoore","s":"publisher"},
+{"t":"stnahrficoepktel","s":"stretch"},
+{"t":"stofignlewaiojdn","s":"landing"},
+{"t":"agerrentmgntdapt","s":"garment"},
+{"t":"datndnenuasehmhe","s":"mandate"},
+{"t":"irtbhlahoopmceti","s":"optimal"},
+{"t":"ielsridpnroiansm","s":"spoiler"},
+{"t":"striheoeucesuruo","s":"stories"},
+{"t":"aiprvlseglpteoec","s":"respect"},
+{"t":"glruramosiehmctg","s":"glamour"},
+{"t":"onrkpipetecedaui","s":"reception"},
+{"t":"nloacrecfrakeoht","s":"cracker"},
+{"t":"tkwgseacoahrymoe","s":"teacher"},
+{"t":"figdsnofislrblme","s":"smelling"},
+{"t":"aiksdsdthanwdcia","s":"sandwich"},
+{"t":"urtsecouglbstdag","s":"trouble"},
+{"t":"dsarewtontgyoter","s":"destroy"},
+{"t":"hnhaleresirnrtct","s":"restrict"},
+{"t":"potshrusowpnltde","s":"suspend"},
+{"t":"pouhrtgiuofnbdti","s":"borough"},
+{"t":"kiroffaevtudnsio","s":"outside"},
+{"t":"embwhreiiohgneti","s":"heroine"},
+{"t":"dpwafeirsevigrni","s":"inverse"},
+{"t":"ciddltraenooyrgl","s":"article"},
+{"t":"yelbrfmmoatuetts","s":"stumble"},
+{"t":"sonchgigutpdsiap","s":"tapping"},
+{"t":"slryfsrtaoalgyip","s":"royalty"},
+{"t":"tsnroitgnsmelait","s":"lasting"},
+{"t":"susnceepclfssaip","s":"eclipse"},
+{"t":"anapblsdsanoncsc","s":"scandal"},
+{"t":"tthnpcseimetirei","s":"richest"},
+{"t":"xucagnthrsiiigll","s":"chilling"},
+{"t":"rpllagdntnietodl","s":"lending"},
+{"t":"anggkisoscedhort","s":"shocking"},
+{"t":"preiowrsgaocswea","s":"worries"},
+{"t":"zesvdottniuamehe","s":"station"},
+{"t":"rsldupiitaeixdre","s":"disrupt"},
+{"t":"feslcaeeinryurct","s":"increase"},
+{"t":"erdcldafifeabuta","s":"builder"},
+{"t":"inomtordrohcepeo","s":"monitor"},
+{"t":"ieninrttiuihfsgu","s":"nutrient"},
+{"t":"aedichsdbhoicert","s":"cherish"},
+{"t":"ltiokdaiireugnvc","s":"reading"},
+{"t":"nrnreogitcleeoos","s":"cooling"},
+{"t":"eafttderwisbpiqb","s":"treated"},
+{"t":"idrtamatdgitoede","s":"admitted"},
+{"t":"trmwvcoalatngjin","s":"contain"},
+{"t":"htfudurenensehwe","s":"thunder"},
+{"t":"iocertncmofaetbl","s":"emotion"},
+{"t":"ntecripcalmscote","s":"complaint"},
+{"t":"nlxeakatdmuselpr","s":"example"},
+{"t":"cpenrotiqaecrwgo","s":"protein"},
+{"t":"poritetnenirriol","s":"interior"},
+{"t":"etptdeouadhorygu","s":"adopted"},
+{"t":"hsitrsdytuenngnp","s":"stunned"},
+{"t":"ofhsteiissidcrev","s":"diverse"},
+{"t":"ecergimcpenoitlo","s":"recipient"},
+{"t":"dipbamlaraoaoupg","s":"diploma"},
+{"t":"ngmtraiurnmrtefu","s":"terrain"},
+{"t":"oierntifamokayra","s":"formation"},
+{"t":"insctagrrkdteash","s":"skating"},
+{"t":"ndegalyamtosomoc","s":"command"},
+{"t":"epoadptsesocliad","s":"stopped"},
+{"t":"tgcllsoweeitprmi","s":"premise"},
+{"t":"aloeinsrfdgslogh","s":"folding"},
+{"t":"fhtdresofotpstob","s":"booster"},
+{"t":"momecmpynialernm","s":"complain"},
+{"t":"diyitnererlaolti","s":"trolley"},
+{"t":"conrigattthclget","s":"contract"},
+{"t":"eityvrpiaeaulcyu","s":"clarity"},
+{"t":"gigiaedmurnecoeo","s":"courage"},
+{"t":"pauieovtdnofgimr","s":"forming"},
+{"t":"hecpdceintusrisb","s":"succeed"},
+{"t":"doefisurmcaasnly","s":"refusal"},
+{"t":"enapotcfimnesufc","s":"function"},
+{"t":"othlugoatihtoero","s":"tougher"},
+{"t":"mnfnasoiaostlice","s":"section"},
+{"t":"edrygaapielttbll","s":"alleged"},
+{"t":"alseariueypnueht","s":"realise"},
+{"t":"tramyepyfrptectm","s":"perfect"},
+{"t":"trigahnhcoecpgra","s":"reaching"},
+{"t":"vdameeialpdnotio","s":"develop"},
+{"t":"bbieaiddtnlwcagi","s":"bidding"},
+{"t":"nohedntrnihnsleu","s":"neither"},
+{"t":"iaosprioocedsaec","s":"proceed"},
+{"t":"eygtlaeofikibrgn","s":"leaking"},
+{"t":"raavnelvtibhiexi","s":"exhibit"},
+{"t":"ctiuratvreaabnhd","s":"activate"},
+{"t":"ltdrtlsaxnenttim","s":"seminar"},
+{"t":"nranatlafysenttv","s":"analyst"},
+{"t":"nmcolteonelrnsef","s":"reflect"},
+{"t":"tlnruhinteaebepr","s":"thinner"},
+{"t":"eeassetninnnrdin","s":"intense"},
+{"t":"oudrlieflauisnnn","s":"funnier"},
+{"t":"tanrpitpacartldh","s":"capital"},
+{"t":"tyirhpitdseeetdf","s":"despite"},
+{"t":"ulohterapakpdaky","s":"adapter"},
+{"t":"icetoeudponcdcti","s":"conduct"},
+{"t":"oaretivlzieagmnt","s":"relevant"},
+{"t":"tlanasupcrynnlep","s":"crystal"},
+{"t":"ephrraeeaoinvccd","s":"vaccine"},
+{"t":"obeutrysaicyehve","s":"archive"},
+{"t":"topwisngcaipihsf","s":"chasing"},
+{"t":"eelewameotiqnene","s":"eminent"},
+{"t":"skpeiafmonotsgln","s":"soaking"},
+{"t":"lotricautslpfaud","s":"plastic"},
+{"t":"aieiiresntmpgbro","s":"sporting"},
+{"t":"tierlaehezsatvdr","s":"rehearsal"},
+{"t":"wgergsalrcoatihi","s":"scholar"},
+{"t":"argrbneiphtnboif","s":"pointer"},
+{"t":"rplpehiccstaaiar","s":"replica"},
+{"t":"wssyiliidnettbgt","s":"betting"},
+{"t":"bbnareeigplticou","s":"outline"},
+{"t":"xelgchenwvapnria","s":"exchange"},
+{"t":"feecutnsibtpihir","s":"tribute"},
+{"t":"mmsaudsyopesrcal","s":"process"},
+{"t":"uotsneysmiemicws","s":"systemic"},
+{"t":"dargkinbytuaiyty","s":"braking"},
+{"t":"aerapowecnoceern","s":"concern"},
+{"t":"carttexovoimdckn","s":"extract"},
+{"t":"jteeretwaenylagy","s":"general"},
+{"t":"nypunodgkeencsik","s":"seeking"},
+{"t":"wrreclarueiorldt","s":"declare"},
+{"t":"gemitaatolynrqsi","s":"anytime"},
+{"t":"mrtinpaeewszafui","s":"parties"},
+{"t":"zgcuihpweiairlnt","s":"reliant"},
+{"t":"aposproeinsnecyu","s":"propose"},
+{"t":"sdndoeirdupmnadl","s":"sounded"},
+{"t":"ostdpytapilekeca","s":"typical"},
+{"t":"coscpmduyaotnelv","s":"company"},
+{"t":"lreedlabynbpigod","s":"relying"},
+{"t":"anaetshgoinckcqn","s":"stocking"},
+{"t":"rsbeciehadtetnte","s":"describe"},
+{"t":"nsaeblleruictsna","s":"alliance"},
+{"t":"rilftuaemorarfho","s":"formula"},
+{"t":"rtneoeorfohpimcb","s":"comfort"},
+{"t":"eeoryidtedaeconi","s":"donated"},
+{"t":"senentgsaoqoorls","s":"senator"},
+{"t":"ueccdivrhlaogaei","s":"divorce"},
+{"t":"icgssnounsatehsc","s":"sensing"},
+{"t":"wrtttioaecshruei","s":"shorter"},
+{"t":"ialatpusephzgsow","s":"suppose"},
+{"t":"ouibillotontdrce","s":"billion"},
+{"t":"riyeumtdtcethsap","s":"security"},
+{"t":"crhnettiduamstce","s":"certain"},
+{"t":"mauxesdrgoerdlft","s":"measure"},
+{"t":"rbtsghtagnercjdd","s":"started"},
+{"t":"ntaboinonmpdeiwe","s":"donation"},
+{"t":"rmsimialneenonry","s":"realism"},
+{"t":"ndarphepkeomrarc","s":"compare"},
+{"t":"soteltomdsroagni","s":"storing"},
+{"t":"tlirnyihoontiste","s":"tension"},
+{"t":"htcnpoiirmdtaany","s":"dynamic"},
+{"t":"rldflndikelmrams","s":"filmmaker"},
+{"t":"eniauteooupvreaf","s":"routine"},
+{"t":"vganeasftrttumri","s":"stature"},
+{"t":"insdrdeigrtidmra","s":"insider"},
+{"t":"aberluasidicpewr","s":"rebuild"},
+{"t":"eccauewrrdilevoi","s":"overdue"},
+{"t":"tleanronayirebta","s":"trainer"},
+{"t":"netcthgsnativkno","s":"knights"},
+{"t":"webfalsecuntrbir","s":"tribune"},
+{"t":"ssisroflpotlbica","s":"topical"},
+{"t":"uopafndiotatrpip","s":"profound"},
+{"t":"wclcatcwnrochuye","s":"account"},
+{"t":"stgeerouaferrorr","s":"restore"},
+{"t":"dydiecrtrevstams","s":"smarter"},
+{"t":"inolrdgcalaieasv","s":"leading"},
+{"t":"pnkrerceexrasppt","s":"excerpt"},
+{"t":"tltnsopeertncrhg","s":"serpent"},
+{"t":"tdmaoleanenceoil","s":"decline"},
+{"t":"htrtanunersryehl","s":"nursery"},
+{"t":"sdyoepoattasdgon","s":"spotted"},
+{"t":"ertdnorptomalweo","s":"torrent"},
+{"t":"tukthrcetgaceuni","s":"tracing"},
+{"t":"defrnrytntisefsn","s":"dentist"},
+{"t":"tbetaaitnsdphtar","s":"radiant"},
+{"t":"olanspaitixnolle","s":"explain"},
+{"t":"iaepdilrleeiesfl","s":"replies"},
+{"t":"tislstnekgvaarip","s":"pianist"},
+{"t":"ueafpvriiuaepcti","s":"picture"},
+{"t":"cinupagrlindtols","s":"placing"},
+{"t":"doterwoiornassrg","s":"rooting"},
+{"t":"rcadeorimpleccet","s":"complete"},
+{"t":"srietpecaifgetes","s":"receipt"},
+{"t":"libbnprugstgyels","s":"rubbing"},
+{"t":"rapaniiidnmrngec","s":"pairing"},
+{"t":"lninwertppoccsje","s":"project"},
+{"t":"etivfoegairdtini","s":"forgive"},
+{"t":"irratdrinselehph","s":"stirred"},
+{"t":"fnlsnorpontectph","s":"control"},
+{"t":"reoeteursomroais","s":"tourism"},
+{"t":"piiharsyaegedwnt","s":"present"},
+{"t":"oefogrrepnickita","s":"forcing"},
+{"t":"gcbjoehactsiopuf","s":"octopus"},
+{"t":"tmsreedodonpvnei","s":"endorse"},
+{"t":"msnplahdnilfedro","s":"landlord"},
+{"t":"patigcweeynoitaf","s":"patient"},
+{"t":"nanonestrbeeeriu","s":"berries"},
+{"t":"curcratteppdalau","s":"applaud"},
+{"t":"lsorysnyaeastghe","s":"sensory"},
+{"t":"ottuynuodearcden","s":"rounded"},
+{"t":"tathncleeatlrfuo","s":"careful"},
+{"t":"dtdndoielhlpdups","s":"dolphin"},
+{"t":"ewoilonstiistutp","s":"tuition"},
+{"t":"irioydrsaeuatced","s":"educate"},
+{"t":"nppsweldekapecer","s":"replace"},
+{"t":"tcpaterteorltlfi","s":"protect"},
+{"t":"vtcniydulireseea","s":"residue"},
+{"t":"saayhssedaespnmo","s":"madness"},
+{"t":"tpeosncnpooaiuch","s":"concept"},
+{"t":"inreditpllmaiett","s":"interim"},
+{"t":"eleuprtssnasonln","s":"personal"},
+{"t":"oitiroceamarguht","s":"tractor"},
+{"t":"insvtipelgrlbrna","s":"inspire"},
+{"t":"nhtntpoeuraecori","s":"corrupt"},
+{"t":"obolhcgesnieeprf","s":"freeing"},
+{"t":"cdoeictamoegbino","s":"combine"},
+{"t":"gdsevnclrainrmik","s":"raining"},
+{"t":"ptetoowshrnosksf","s":"workshop"},
+{"t":"ptugedamnitnirgi","s":"editing"},
+{"t":"svsreasfogitpnat","s":"stating"},
+{"t":"catrtimkcedirpea","s":"predict"},
+{"t":"oialcctptewoynih","s":"optical"},
+{"t":"theojcumiuafntsi","s":"justice"},
+{"t":"oynorsnmioadhtie","s":"edition"},
+{"t":"spponurntetmrhxy","s":"support"},
+{"t":"nseligbadanleenl","s":"needing"},
+{"t":"owoutacnsatergpd","s":"counted"},
+{"t":"taeedsvntaoueish","s":"evasion"},
+{"t":"wrbcagwcsniiutdh","s":"wasting"},
+{"t":"sitermadtncsrolo","s":"located"},
+{"t":"adlrteiylchnaspy","s":"lyrical"},
+{"t":"tahlpinreegktwka","s":"weeping"},
+{"t":"sdnreseenolrmtgn","s":"slender"},
+{"t":"tigeaotacnuigenu","s":"continue"},
+{"t":"defhnnelctiaardn","s":"cardinal"},
+{"t":"arahpecuprvywaot","s":"approve"},
+{"t":"iuetrlsesasgcsth","s":"scarlet"}];
+const SKEINS=[
+  {name:'Oatmeal', c:['#B08A52','#D2AE78'], t:[12,25,38]},
+  {name:'Heather', c:['#8A63AE','#B595D6'], t:[14,27,40]},
+  {name:'Moss',    c:['#5E7F2E','#93B85A'], t:[16,29,42]},
+  {name:'Rust',    c:['#C0532A','#E58260'], t:[17,31,44]},
+  {name:'Denim',   c:['#3A659B','#7FA6D8'], t:[18,33,46]},
+  {name:'Midnight',c:['#2C3270','#8E97E0'], t:[20,35,48]}
+];
+const ODDS={name:'Odds and ends', t:[20,35,48]};
+const CAP=[.16,.30,.42];                       // star scores never above these shares of the board's points
+const ROUND=120, MINLEN=3, N=4;
+
+/* ---------- Noodle site tracking (site contract §5) ---------- */
+const GAME='yarn';
+let rnd={armed:false,open:false,secs:0,how:'new',lv:1};
+function trk(ev,x){try{if(window.digi&&window.digi.track)window.digi.track(ev,Object.assign({game:GAME},x));}catch(e){}}
+function rndArm(how,lv){rnd={armed:true,open:false,secs:0,how:how||'new',lv};}
+function rndStart(){if(!rnd.armed||rnd.open)return;rnd.armed=false;rnd.open=true;
+  trk('game_start',{level:rnd.lv,start:rnd.how,mode:rnd.lv>60?'odds':'skein'});}
+function rndEnd(win,x){if(!rnd.open)rndStart();if(!rnd.open)return;rnd.open=false;
+  trk('game_end',Object.assign({win:!!win,level:rnd.lv,secs:Math.round(rnd.secs),mode:rnd.lv>60?'odds':'skein'},x));}
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const plural=(n,a,b)=>n+' '+(n===1?a:b);
+const num=n=>['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen'][n]||String(n);
+const fmt=n=>{try{return n.toLocaleString('en-GB')}catch(e){return String(n)}};
+function mmss(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+const NB=(()=>{const a=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++){const s=[];for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
+  const r2=r+dr,c2=c+dc;if((dr||dc)&&r2>=0&&r2<N&&c2>=0&&c2<N)s.push(r2*N+c2);}a.push(s);}return a;})();
+
+/* ---------- word list ---------- */
+function unpack(s){const r=[];let prev='';const re=/(\d)([a-z]*)/g;let m;while((m=re.exec(s))){const w=prev.slice(0,+m[1])+m[2];r.push(w);prev=w;}return r;}
+const MAINW=unpack(DICT.M), BONW=unpack(DICT.B);
+const MAINSET=new Set(MAINW);
+const TRIE=(()=>{const root={};for(const w of MAINW.concat(BONW)){let n=root;for(const ch of w)n=n[ch]||(n[ch]={});n.$=w;}return root;})();
+function solve(low){const out=new Set();
+  const go=(i,node,used)=>{let n=node;for(const ch of low[i]){n=n[ch];if(!n)return;}if(n.$&&n.$.length>=MINLEN)out.add(n.$);for(const j of NB[i])if(!(used>>j&1))go(j,n,used|1<<j);};
+  for(let i=0;i<N*N;i++)go(i,TRIE,1<<i);return [...out];}
+
+/* ---------- levels ---------- */
+const MAXLV=LEVELS.length;
+const skeinOf=n=>n<=60?SKEINS[Math.floor((n-1)/10)]:ODDS;
+const colourOf=n=>{const k=n<=60?Math.floor((n-1)/10):(n*5)%6;return SKEINS[k].c;};
+const dark=()=>{try{const t=document.documentElement.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}catch(e){return false}};
+const sk=n=>colourOf(n)[dark()?1:0];
+const cache={};
+function level(n){
+  if(cache[n])return cache[n];
+  const L=LEVELS[n-1],tiles=L.t.split('').map(c=>c==='q'?'qu':c),star=L.s;
+  const words=solve(tiles),main=words.filter(w=>MAINSET.has(w)).sort(),bonus=words.filter(w=>!MAINSET.has(w)).sort();
+  const pts=w=>(w.length-2)*(w===star?2:1);
+  const total=main.reduce((a,w)=>a+pts(w),0);
+  const S=skeinOf(n),targets=S.t.map((v,i)=>Math.max(1,Math.min(v,Math.floor(CAP[i]*total))));
+  return cache[n]={n,tiles,star,main,bonus,MAIN:new Set(main),ALL:new Set(words),total,targets,skein:S,pts};
+}
+function where(n){if(n>60)return ODDS.name;const S=skeinOf(n);return S.name+' '+((n-1)%10+1)+' of 10';}
+
+/* ---------- save ---------- */
+const KEY='digi-yarn-v1';
+const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
+function defaults(){return {v:1,lv:{},cur:null,words:[],best:0,snd:true,vib:true,rm:null,fs:coarse};}
+let save=defaults();
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.v===1)save=Object.assign(defaults(),s);}catch(e){}
+if(!save.lv||typeof save.lv!=='object')save.lv={};
+if(!Array.isArray(save.words))save.words=[];
+let WORDS=new Set(save.words);
+function persist(){try{save.words=[...WORDS];localStorage.setItem(KEY,JSON.stringify(save));}catch(e){}}
+const starsOf=n=>(save.lv[n]&&save.lv[n].s)||0;
+const cleared=n=>starsOf(n)>0;
+function nextLevel(){let n=1;while(n<MAXLV&&cleared(n))n++;return n;}
+const unlocked=n=>n===1||cleared(n-1)||cleared(n);
+function totalStars(){let t=0;for(const k in save.lv)t+=save.lv[k].s||0;return t;}
+
+/* ---------- settings: sound, vibration, motion, full screen ---------- */
+const sysRM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
+const reduced=()=>save.rm===null?sysRM:!!save.rm;
+function applyRM(){document.body.classList.toggle('rm',reduced());}
+const appFS=(()=>{try{return matchMedia('(display-mode: fullscreen)').matches}catch(e){return false}})();
+const fsOK=!appFS&&(()=>{try{return !!(document.fullscreenEnabled||document.webkitFullscreenEnabled)}catch(e){return false}})();
+const isFS=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+let fsAt=-1e9;
+function goFS(){if(!fsOK||!save.fs||isFS())return;try{const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;if(!rq)return;
+ const lock=()=>{try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock('portrait').catch(()=>{});}catch(e){}};
+ fsAt=performance.now();const p=rq.call(el,{navigationUI:'hide'});if(p&&p.then)p.then(lock,()=>{});else lock();}catch(e){}}
+function exitFS(){try{if(!isFS())return;const x=document.exitFullscreen||document.webkitExitFullscreen;const p=x&&x.call(document);if(p&&p.catch)p.catch(()=>{});}catch(e){}}
+function paintFS(){const b=$('fsHome');b.hidden=!fsOK;b.setAttribute('aria-pressed',String(isFS()));b.setAttribute('aria-label',isFS()?'Leave full screen':'Full screen');}
+const canVib=(()=>{try{return typeof navigator.vibrate==='function'}catch(e){return false}})();
+function buzz(p){if(!save.vib||!canVib)return;try{navigator.vibrate(p);}catch(e){}}
+let actx=null;
+function audio(){if(!save.snd)return null;try{if(!actx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;actx=new A();}
+  if(actx.state==='suspended')actx.resume().catch(()=>{});return actx;}catch(e){return null}}
+function tone(f,t,dur,type,g){const a=audio();if(!a)return;try{const o=a.createOscillator(),v=a.createGain(),t0=a.currentTime+t;
+  o.type=type||'sine';o.frequency.setValueAtTime(f,t0);v.gain.setValueAtTime(0.0001,t0);v.gain.exponentialRampToValueAtTime(g||0.18,t0+0.012);
+  v.gain.exponentialRampToValueAtTime(0.0001,t0+dur);o.connect(v).connect(a.destination);o.start(t0);o.stop(t0+dur+0.05);}catch(e){}}
+const sfx={
+  step(k){tone(392*Math.pow(2,Math.min(k,12)/12),0,.08,'sine',.05);},
+  word(n){tone(523*Math.pow(2,Math.min(n,8)/12),0,.3,'triangle',.14);tone(784*Math.pow(2,Math.min(n,8)/12),.08,.42,'triangle',.12);},
+  meh(){tone(220,0,.14,'sine',.06);},
+  tick(){tone(880,0,.05,'square',.03);},
+  star(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.08,.5,'triangle',.11));},
+  target(){[659,880,1175].forEach((f,i)=>tone(f,i*.07,.35,'sine',.1));},
+  done(){[784,659,523,392].forEach((f,i)=>tone(f,i*.12,.5,'triangle',.12));}
+};
+function toggles(host){
+  host.innerHTML='';
+  const items=[['Sound',()=>save.snd,v=>{save.snd=v;if(v)audio();}]];
+  if(canVib)items.push(['Vibration',()=>save.vib,v=>{save.vib=v;if(v)buzz(15);}]);
+  items.push(['Reduced motion',()=>reduced(),v=>{save.rm=v;applyRM();}]);
+  if(fsOK)items.push(['Full screen',()=>!!save.fs,v=>{save.fs=v;if(v)goFS();else exitFS();setTimeout(paintFS,300);}]);
+  for(const [label,get,set] of items){const b=document.createElement('button');b.type='button';b.className='tog';b.setAttribute('role','switch');
+    b.textContent=label;b.setAttribute('aria-checked',String(get()));
+    b.addEventListener('click',()=>{set(!get());b.setAttribute('aria-checked',String(get()));persist();});host.appendChild(b);}
+}
+
+/* ---------- the daily Tangle, in Noodle Puzzles ----------
+   One file per day, YYYY-MM-DD-word-tangle-NNNN.html, NNNN = days since 2026-10-07 (London) + 1. */
+const TANGLE_FIRST='2026-10-07';
+const TANGLE_LAST='2028-08-16';                     // last day of the current batch (DP·TANG·0680): bump when a new batch ships
+function londonDay(){try{const p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).forEach(x=>{p[x.type]=x.value;});return p.year+'-'+p.month+'-'+p.day;}catch(e){return new Date().toISOString().slice(0,10);}}
+function tangleSave(){try{const s=JSON.parse(localStorage.getItem('digi-tangle-v1')||'null');return s&&typeof s==='object'?s:null;}catch(e){return null}}
+function paintDaily(){
+  const t=londonDay(),card=$('dailyCard');
+  if(t<TANGLE_FIRST||t>TANGLE_LAST){card.href='../puzzles.html';$('dailyTitle').textContent='Tangle';$('dailyStatus').textContent='The daily board, in Noodle Puzzles';return;}
+  const n=String(Math.round((Date.parse(t+'T12:00:00Z')-Date.parse(TANGLE_FIRST+'T12:00:00Z'))/864e5)+1).padStart(4,'0');
+  card.href=t+'-word-tangle-'+n+'.html';$('dailyTitle').textContent='Today’s Tangle';
+  const s=tangleSave(),id='DP·TANG·'+n,d=s&&s.days&&s.days[id],done=s&&s.done&&s.done[id];
+  $('dailyStatus').textContent=done?'Played today: '+plural(done.s||0,'point','points'):(d&&d.state==='playing')?'Round paused: tap to finish it':'90 seconds, the same board for everyone';
+}
+/* words found: Yarn's own, plus every word found in a daily Tangle on this phone */
+function wordsFound(){const all=new Set(WORDS);const s=tangleSave();
+  if(s&&s.days&&typeof s.days==='object')for(const k in s.days){const d=s.days[k];if(d&&Array.isArray(d.found))d.found.forEach(w=>{if(typeof w==='string')all.add(w);});}
+  return all.size;}
+
+/* ---------- art: yarn balls and the scarf ---------- */
+function ballSVG(col,size){
+  return `<circle cx="32" cy="32" r="27" fill="${col}"/><g fill="none" stroke="rgba(0,0,0,.28)" stroke-width="2.4" stroke-linecap="round">`+
+   `<path d="M8 24c12 6 32 5 46-8"/><path d="M6 36c16 4 36-2 50-18"/><path d="M12 50c14 0 32-8 42-22"/><path d="M22 7c-6 14-6 34 4 52"/><path d="M38 6c-8 16-8 38 2 54"/></g>`+
+   `<circle cx="23" cy="21" r="4.5" fill="#fff" opacity=".28"/>`;
+}
+function paintScarf(){
+  const svg=$('scarf'),W=Math.max(240,Math.round(svg.getBoundingClientRect().width||320)),H=76;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const rows=[];for(let n=1;n<=MAXLV;n++)if(cleared(n))rows.push(n);
+  const fr=14,x0=fr,avail=W-2*fr,y0=12,h=46;
+  let s=`<defs><pattern id="knit" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 1l4 5 4-5" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="1.4"/></pattern></defs>`;
+  if(!rows.length){
+    s+=`<line x1="${x0}" y1="${y0+h/2}" x2="${W-fr}" y2="${y0+h/2}" stroke="var(--line)" stroke-width="2" stroke-dasharray="3 6" stroke-linecap="round"/>`;
+    s+=`<g transform="translate(${x0-6},${y0+h/2-12}) scale(.38)">${ballSVG(sk(1))}</g>`;
+    $('scarfNote').textContent='Clear a level to knit the first stripe of your scarf.';
+  }else{
+    const w=Math.max(2,Math.min(16,avail/rows.length)),len=w*rows.length;
+    rows.forEach((n,i)=>{const st=starsOf(n),c=sk(n);s+=`<rect x="${(x0+i*w).toFixed(2)}" y="${y0}" width="${(w+.6).toFixed(2)}" height="${h}" fill="${c}"/>`;
+      if(st===3&&w>=6)s+=`<rect x="${(x0+i*w+w/2-1.2).toFixed(2)}" y="${y0}" width="2.4" height="${h}" fill="var(--gold)" opacity=".9"/>`;});
+    s+=`<rect x="${x0}" y="${y0}" width="${len.toFixed(2)}" height="${h}" fill="url(#knit)"/>`;
+    // fringe at both ends
+    for(const [xa,dir] of [[x0,-1],[x0+len,1]])for(let k=0;k<6;k++){const y=y0+4+k*(h-8)/5,c=sk(dir<0?rows[0]:rows[rows.length-1]);
+      s+=`<line x1="${xa.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(xa+dir*(fr-3)).toFixed(1)}" y2="${(y+(k%2?2:-2)).toFixed(1)}" stroke="${c}" stroke-width="2.4" stroke-linecap="round"/>`;}
+    const three=rows.filter(n=>starsOf(n)===3).length;
+    $('scarfNote').textContent=plural(rows.length,'stripe','stripes')+' knitted'+(three?', '+three+' with a gold thread for three stars':'')+'.';
+  }
+  svg.innerHTML=s;
+}
+
+/* ---------- screens ---------- */
+let view='home';
+function show(id){view=id;for(const s of document.querySelectorAll('.screen'))s.classList.toggle('vis',s.id===id);
+  if(id==='play')requestAnimationFrame(measure);else{const el=$(id);if(el)el.scrollTop=0;}}
+function setSkein(n){document.documentElement.style.setProperty('--sk',sk(n));}
+function starsTxt(n){const s=starsOf(n);return '★'.repeat(s)+'<span class="off">'+'★'.repeat(3-s)+'</span>';}
+
+function renderHome(){
+  closePause();show('home');
+  const cur=save.cur&&LEVELS[save.cur.n-1]?save.cur:null;
+  const n=cur?cur.n:nextLevel(),L=level(n);
+  setSkein(n);
+  $('hBall').innerHTML=ballSVG(sk(n));
+  $('hHead').textContent='Level '+n;
+  if(cur){$('hStatus').textContent=`${where(n)}. Round paused: ${mmss(cur.left)} left, ${plural(cur.score,'point','points')}.`;$('hGo').textContent='Resume';}
+  else if(cleared(n)){$('hStatus').textContent=`${where(n)}. Every level is cleared: replay for more stars.`;$('hGo').textContent='Play';}
+  else{$('hStatus').textContent=`${where(n)}. Stars at ${L.targets.join(', ')} points.`;$('hGo').textContent=n===1&&!Object.keys(save.lv).length?'Start':'Play';}
+  const ts=totalStars(),cl=Object.keys(save.lv).filter(k=>cleared(+k)).length;
+  $('hLvNote').textContent=cl?`${cl} cleared, ${plural(ts,'star','stars')}`:'Six skeins, then odds and ends';
+  $('sStars').textContent=fmt(ts);$('sBest').textContent=fmt(save.best||0);$('sWords').textContent=fmt(wordsFound());
+  paintDaily();paintScarf();toggles($('homeToggles'));paintFS();
+}
+function renderLevels(){
+  closePause();show('levels');
+  const nx=nextLevel(),host=$('lvList');let h='';
+  const ts=totalStars();$('lvStars').textContent=plural(ts,'star','stars');
+  SKEINS.forEach((S,k)=>{
+    let got=0;for(let n=k*10+1;n<=k*10+10;n++)got+=starsOf(n);
+    h+=`<div class="skein"><h2><svg viewBox="0 0 64 64" aria-hidden="true">${ballSVG(S.c[dark()?1:0])}</svg>${S.name}<span>${got} of 30 ★</span></h2><div class="lvgrid">`;
+    for(let n=k*10+1;n<=k*10+10;n++)h+=lvBtn(n,nx);
+    h+='</div></div>';
+  });
+  const odds=nx>60||cleared(60);
+  h+=`<div class="skein"><h2><svg viewBox="0 0 64 64" aria-hidden="true">${ballSVG(sk(61))}</svg>${ODDS.name}<span>${odds?'':'after Midnight'}</span></h2>`;
+  if(odds){const hi=Math.min(MAXLV,Math.max(70,Math.ceil((nx+1)/10)*10));h+='<div class="lvgrid">';for(let n=61;n<=hi;n++)h+=lvBtn(n,nx);h+='</div>';
+    if(hi<MAXLV)h+=`<p class="small more">${MAXLV-hi} more boards to come as you clear these.</p>`;}
+  else h+=`<p class="small">${MAXLV-60} more boards open once the Midnight skein is cleared.</p>`;
+  h+='</div>';
+  host.innerHTML=h;
+  const nb=host.querySelector('.lv.next');if(nb)try{nb.scrollIntoView({block:'center'});}catch(e){}
+}
+function lvBtn(n,nx){const ok=unlocked(n);
+  return `<button type="button" class="lv${n===nx?' next':''}" data-lv="${n}" ${ok?'':'disabled'} aria-label="Level ${n}${ok?', '+starsOf(n)+' stars':', locked'}"><b>${n}</b><i>${ok?starsTxt(n):''}</i></button>`;}
+
+/* ---------- the board ---------- */
+let L=null, R=null, low=[], tiles=[], paused=false, counting=false, cdT=0, last=0;
+function buildBoard(){
+  const b=$('board');b.querySelectorAll('.tile').forEach(t=>t.remove());tiles=[];
+  L.tiles.forEach((t,i)=>{const d=document.createElement('div');d.className='tile'+(t==='qu'?' qu':'');d.textContent=t==='qu'?'Qu':t.toUpperCase();
+    d.setAttribute('role','button');d.setAttribute('aria-label',t==='qu'?'Q U':t.toUpperCase());d.dataset.i=i;b.appendChild(d);tiles.push(d);});
+}
+let rects=[], boardRect=null;
+function measure(){if(!tiles.length)return;boardRect=$('board').getBoundingClientRect();rects=tiles.map(t=>t.getBoundingClientRect());drawPath(null);}
+function centre(i){const r=rects[i];return [r.left+r.width/2-boardRect.left,r.top+r.height/2-boardRect.top];}
+function hit(x,y,inner){for(let i=0;i<rects.length;i++){const r=rects[i],m=inner?0.15:0;
+  if(x>=r.left+r.width*m&&x<=r.right-r.width*m&&y>=r.top+r.height*m&&y<=r.bottom-r.height*m)return i;}return -1;}
+let path=[], drag=null, kb='';
+const live=()=>view==='play'&&R&&R.state==='playing'&&!paused&&!counting;
+function findPath(w){const go=(i,pos,used)=>{const t=low[i];if(!w.startsWith(t,pos))return null;const p2=pos+t.length;
+    if(p2===w.length)return[i];for(const j of NB[i])if(!(used>>j&1)){const r=go(j,p2,used|1<<j);if(r)return[i].concat(r);}return null;};
+  for(let i=0;i<N*N;i++){const r=go(i,0,1<<i);if(r)return r;}return null;}
+function typeKey(ch){let next=kb+ch;if(ch==='q'&&low.includes('qu'))next+='u';const p=findPath(next);
+  if(!p){toast('No path for '+next.toUpperCase());return;}kb=next;path=p;paint();sfx.step(path.length);}
+const wordOf=p=>p.map(i=>low[i]).join('');
+function paint(){
+  tiles.forEach((t,i)=>{t.classList.toggle('on',path.includes(i));t.classList.toggle('last',path.length>0&&path[path.length-1]===i);});
+  const w=wordOf(path),cw=$('curWord');
+  if(w){cw.classList.remove('idle');cw.textContent=w;}
+  else{cw.classList.add('idle');cw.textContent=live()?(coarse?'Drag across letters, or tap them':'Drag, tap, or type a word'):'';}
+  drawPath(null);
+}
+function drawPath(pt){
+  if(!boardRect||!path.length){$('pathLine').setAttribute('points','');return;}
+  const pts=path.map(centre);if(pt)pts.push([pt[0]-boardRect.left,pt[1]-boardRect.top]);
+  $('pathLine').setAttribute('points',pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '));
+}
+function canAdd(i){return i>=0&&!path.includes(i)&&(path.length===0||NB[path[path.length-1]].includes(i));}
+function add(i){if(!path.length){tiles.forEach(t=>t.classList.remove('good','bonus','meh'));$('toast').className='';}path.push(i);sfx.step(path.length);if(!reduced())buzz(8);}
+function onDown(e){
+  if(!live()||(e.button!=null&&e.button>0)||drag)return;
+  measure();const i=hit(e.clientX,e.clientY,false);if(i<0)return;
+  e.preventDefault();try{$('board').setPointerCapture(e.pointerId);}catch(x){}
+  kb='';drag={id:e.pointerId,start:i,moved:false,lx:e.clientX,ly:e.clientY};
+}
+function step(x,y){
+  const i=hit(x,y,true);
+  if(!drag.moved){if(i<0||i===drag.start)return;if(!(path.length&&path[path.length-1]===drag.start)){path=[];add(drag.start);}drag.moved=true;}
+  if(i>=0){if(path.length>=2&&path[path.length-2]===i){path.pop();paint();}else if(canAdd(i)){add(i);paint();}}
+}
+function onMove(e){
+  if(!drag||e.pointerId!==drag.id)return;
+  const pts=(e.getCoalescedEvents&&e.getCoalescedEvents().length)?e.getCoalescedEvents():[e];
+  const unit=rects.length?rects[0].width/6:10;
+  for(const q of pts){const dx=q.clientX-drag.lx,dy=q.clientY-drag.ly,n=Math.max(1,Math.ceil(Math.hypot(dx,dy)/unit));
+    for(let k=1;k<=n;k++)step(drag.lx+dx*k/n,drag.ly+dy*k/n);drag.lx=q.clientX;drag.ly=q.clientY;}
+  drawPath([e.clientX,e.clientY]);
+}
+function onUp(e){
+  if(!drag||e.pointerId!==drag.id)return;
+  const d=drag;drag=null;try{$('board').releasePointerCapture(e.pointerId);}catch(x){}
+  if(!live()){path=[];paint();return;}
+  if(d.moved){const p=path.slice();path=[];paint();if(p.length>1)submit(p);else drawPath(null);return;}
+  tap(d.start);
+}
+function onCancel(e){if(drag&&e.pointerId===drag.id){drag=null;path=[];paint();}}
+function tap(i){
+  kb='';
+  if(path.length&&path[path.length-1]===i){const p=path.slice();path=[];paint();submit(p);return;}
+  const k=path.indexOf(i);if(k>=0){path=path.slice(0,k+1);paint();return;}
+  if(canAdd(i)){add(i);paint();return;}
+  path=[];add(i);paint();
+}
+let toastT=0;
+function toast(msg,kind){const t=$('toast');t.textContent=msg;t.className='on'+(kind?' '+kind:'');clearTimeout(toastT);toastT=setTimeout(()=>{t.className='';},1100);}
+function flashTiles(p,cls){p.forEach(i=>tiles[i].classList.add(cls));setTimeout(()=>p.forEach(i=>tiles[i].classList.remove(cls)),reduced()?250:420);}
+function starCount(score){return L.targets.filter(t=>score>=t).length;}
+function addWord(w){
+  const before=starCount(R.score),g=L.pts(w);
+  R.found.push(w);R.score+=g;WORDS.add(w);
+  return {g,up:starCount(R.score)>before};
+}
+function submit(p){
+  if(!R||R.state!=='playing')return {r:'locked'};
+  const w=wordOf(p);
+  if(w.length<MINLEN){toast('Too short');sfx.meh();flashTiles(p,'meh');return {r:'short',w};}
+  if(R.found.includes(w)){toast('Already found');flashTiles(p,'meh');
+    const c=document.querySelector('#list .w[data-w="'+w+'"]');if(c){c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash');try{c.scrollIntoView({block:'nearest'});}catch(x){}}
+    return {r:'dup',w};}
+  if(!L.ALL.has(w)){toast('Not in Yarn’s word list');sfx.meh();flashTiles(p,'meh');return {r:'none',w};}
+  const {g,up}=addWord(w);
+  flashTiles(p,L.MAIN.has(w)?'good':'bonus');
+  renderList(w);renderScore();saveCur();
+  if(w===L.star){toast('Longest word! +'+g,'gold');sfx.star();buzz([30,40,30]);}
+  else if(up){const s=starCount(R.score);toast('★'.repeat(s)+'  +'+g+' '+w.toUpperCase(),'star');sfx.target();buzz([20,30,20]);}
+  else{toast('+'+g+' '+w.toUpperCase(),'good');sfx.word(w.length);buzz(18);}
+  return {r:L.MAIN.has(w)?'main':'bonus',w,pts:g};
+}
+function groups(words){const g={};for(const w of words)(g[w.length]||(g[w.length]=[])).push(w);return g;}
+function renderList(fresh){
+  const host=$('list');
+  if(!R.found.length){host.innerHTML=`<p class="empty">${plural(L.main.length,'common word','common words')} on this board, and some rarer ones.</p>`;return;}
+  let h='';const gm=groups(L.main),gf=groups(R.found);
+  const lens=[...new Set(Object.keys(gm).concat(Object.keys(gf)).map(Number))].sort((a,b)=>b-a);
+  for(const n of lens){const found=(gf[n]||[]).slice().sort(),common=(gm[n]||[]).length,got=(gm[n]||[]).filter(w=>R.found.includes(w)).length;
+    if(!found.length)continue;
+    h+=`<div class="grp"><h3><span>${n} letters · ${plural(n-2,'pt','pts')} each</span><span>${common?got+' of '+common:''}</span></h3><div class="ws">`;
+    for(const w of found)h+=`<span class="w${w===L.star?' star':''}${L.MAIN.has(w)?'':' bon'}${w===fresh?' new':''}" data-w="${w}">${esc(w)}</span>`;
+    h+='</div></div>';}
+  host.innerHTML=h;
+  if(fresh){const c=host.querySelector('.w.new');if(c)try{c.scrollIntoView({block:'nearest',behavior:reduced()?'auto':'smooth'});}catch(x){}}
+}
+function buildStarbar(){
+  const sb=$('starbar');sb.querySelectorAll('.mk').forEach(m=>m.remove());
+  const top=Math.max(L.targets[2]*1.12,L.targets[2]+4);sb.dataset.top=top;
+  L.targets.forEach((t,i)=>{const m=document.createElement('div');m.className='mk';m.style.left=(100*t/top).toFixed(1)+'%';
+    m.innerHTML=`<em>${'★'.repeat(i+1)}</em><span>${t}</span>`;sb.appendChild(m);});
+  sb.setAttribute('aria-label',`Star scores: ${L.targets.join(', ')} points`);
+}
+function renderClock(){const left=Math.max(0,R?R.left:ROUND),c=$('clock');c.textContent=mmss(Math.ceil(left-1e-9));
+  c.classList.toggle('low',left<=10&&R&&R.state==='playing');$('timeFill').style.transform='scaleX('+(left/ROUND)+')';}
+function renderScore(){
+  $('score').textContent=R.score;$('nWords').textContent=plural(R.found.length,'word','words');
+  const top=+$('starbar').dataset.top||1;$('sbFill').style.width=Math.min(100,100*R.score/top).toFixed(1)+'%';
+  $('starbar').querySelectorAll('.mk').forEach((m,i)=>m.classList.toggle('got',R.score>=L.targets[i]));
+  const got=R.found.includes(L.star);
+  $('starPill').textContent=got?'★ '+L.star.toUpperCase()+' +'+L.pts(L.star):'Longest word: '+num(L.star.length)+' letters, double points';
+  $('starPill').classList.toggle('got',got);
+  renderClock();
+}
+
+/* ---------- the round ----------
+   A round is one attempt at one level: from the Play tap to time running out. Restarting, choosing
+   another level or leaving mid-round sends nothing (abandoned). A round paused and then reloaded
+   comes back as a new round (start: resume). */
+function saveCur(){if(R&&R.state==='playing'){save.cur={n:L.n,found:R.found.slice(),score:R.score,left:Math.max(0,Math.round(R.left*10)/10)};}persist();}
+function startLevel(n,how){
+  if(!LEVELS[n-1]||!unlocked(n))return;
+  closePause();stopCount();
+  L=level(n);setSkein(n);low=L.tiles.slice();
+  const cur=save.cur&&save.cur.n===n&&how==='resume'?save.cur:null;
+  R={state:'playing',found:cur?cur.found.filter(w=>L.ALL.has(w)):[],score:0,left:cur?Math.min(ROUND,Math.max(1,cur.left)):ROUND};
+  R.score=R.found.reduce((a,w)=>a+L.pts(w),0);
+  save.cur=null;saveCur();
+  rndArm(how||'new',n);rndStart();                   // the Play tap is the round's first input
+  buildBoard();buildStarbar();
+  $('lvPill').textContent=n<=60?L.skein.name+' · level '+n:'Odds and ends · level '+n;
+  path=[];kb='';show('play');$('play').classList.remove('locked');
+  renderList();renderScore();paused=false;paint();last=performance.now();
+  requestAnimationFrame(()=>{measure();countIn();});
+}
+function resumeRound(){                             // back to a round paused in this page load
+  if(!R||R.state!=='playing'){startLevel(nextLevel(),'new');return;}
+  show('play');closePause();paused=false;requestAnimationFrame(()=>{measure();countIn();});
+}
+function setPaused(on){
+  paused=on;
+  if(on){stopCount();if(drag)drag=null;path=[];kb='';paint();saveCur();}
+  $('board').classList.toggle('hide',on);
+}
+function openPause(){
+  if(view!=='play'||!R||R.state!=='playing')return;
+  setPaused(true);
+  $('pSub').textContent=`Level ${L.n}: ${mmss(R.left)} left, ${plural(R.score,'point','points')}.`;
+  toggles($('pauseToggles'));$('pauseSheet').hidden=false;
+  try{$('pResume').focus({preventScroll:true});}catch(e){}
+}
+function closePause(){$('pauseSheet').hidden=true;}
+function stopCount(){clearTimeout(cdT);if(!counting)return;counting=false;const c=$('count');c.hidden=true;c.textContent='';}
+function countIn(){
+  stopCount();counting=true;
+  const c=$('count'),b=$('board');
+  b.classList.add('hide');c.className='';c.textContent='';c.hidden=false;
+  if(drag)drag=null;path=[];kb='';paint();
+  const beats=['3','2','1'],fresh=performance.now()-fsAt<1500;
+  if(fresh)beats.unshift('Ready');
+  const step=()=>{
+    if(!counting)return;
+    if(!beats.length){counting=false;paused=false;c.hidden=true;c.textContent='';b.classList.remove('hide');last=performance.now();measure();paint();return;}
+    const s=beats.shift();c.textContent=s;c.className=s.length>1?'word':'';if(s.length===1)sfx.tick();
+    cdT=setTimeout(step,reduced()?600:850);
+  };
+  if(fresh&&!isFS()){const t0=performance.now();const wait=()=>{if(!counting)return;if(isFS()||performance.now()-t0>1000)step();else cdT=setTimeout(wait,50);};wait();}
+  else step();
+}
+function tick(){
+  const now=performance.now(),dt=Math.min(1,Math.max(0,(now-last)/1000));last=now;
+  if(!live()||document.hidden)return;
+  rnd.secs+=dt;
+  const before=Math.ceil(R.left);R.left=Math.max(0,R.left-dt);const after=Math.ceil(R.left);
+  if(after!==before){renderClock();if(after<=5&&after>0)sfx.tick();if(after%5===0)saveCur();}
+  if(R.left<=0)endRound();
+}
+function endRound(){
+  if(!R||R.state!=='playing')return;
+  R.state='done';R.left=0;stopCount();closePause();paused=false;
+  if(drag)drag=null;path=[];kb='';paint();renderClock();
+  $('play').classList.add('locked');$('board').classList.remove('hide');
+  const n=L.n,stars=starCount(R.score),prev=save.lv[n]||{s:0,b:0},first=!cleared(n)&&stars>0;
+  save.lv[n]={s:Math.max(prev.s||0,stars),b:Math.max(prev.b||0,R.score)};
+  if(!save.lv[n].s&&!save.lv[n].b)delete save.lv[n];
+  save.best=Math.max(save.best||0,R.score);save.cur=null;persist();
+  rndEnd(stars>0,{score:R.score,stars,words:R.found.length});
+  sfx.done();buzz(stars?[40,60,40]:60);
+  const res={n,score:R.score,stars,prevStars:prev.s||0,prevBest:prev.b||0,found:R.found.slice(),first};
+  setTimeout(()=>showResult(res),reduced()?100:650);
+}
+function showResult(r){
+  show('result');
+  $('rKick').textContent='Level '+r.n+' · '+where(r.n);
+  $('rBig').innerHTML=r.score+'<small>'+(r.score===1?'point':'points')+'</small>';
+  const st=$('rStars').children;for(let i=0;i<3;i++){st[i].className=i<r.stars?'got':'';if(i<r.stars&&!reduced()){st[i].classList.add('pop');st[i].style.animationDelay=(.15+i*.22)+'s';}}
+  const T=L.targets;let v;
+  if(!r.stars)v=`${T[0]} points clears this level. You were ${T[0]-r.score} short.`;
+  else if(r.stars===3)v=r.prevStars===3?'Three stars again.':'Three stars!';
+  else v=(r.stars===1?'Cleared with one star.':'Two stars.')+` ${T[r.stars]} points for ${r.stars===1?'two':'three'}.`;
+  if(r.first&&r.n<MAXLV)v+=' A new stripe for your scarf.';
+  if(r.score>r.prevBest&&r.prevBest>0)v+=` A new best here, up from ${r.prevBest}.`;
+  $('rVerdict').textContent=v;
+  const sw=L.star.toUpperCase();
+  $('rStar').textContent=r.found.includes(L.star)?`You found the longest word, ${sw}, for ${L.pts(L.star)} points.`:`The longest word was ${sw}, worth ${L.pts(L.star)} points.`;
+  const canNext=cleared(r.n)&&r.n<MAXLV;
+  $('rNext').hidden=!canNext;$('rRetry').textContent=r.stars?'Play again':'Try again';
+  $('rRetry').className='btn'+(canNext?'':' primary');
+  $('rRetry').parentNode.style.gridTemplateColumns=canNext?'1fr 1fr':'1fr';
+  const g=groups(L.main);let h='';
+  for(const n of Object.keys(g).map(Number).sort((a,b)=>b-a)){
+    h+=`<div class="grp"><h3><span>${n} letters</span><span>${g[n].filter(w=>r.found.includes(w)).length}/${g[n].length}</span></h3><div class="ws">`;
+    for(const w of g[n].slice().sort())h+=`<span class="w${w===L.star?' star':''}${r.found.includes(w)?'':' miss'}">${esc(w)}</span>`;
+    h+='</div></div>';}
+  $('rList').innerHTML=h;
+  const bf=r.found.filter(w=>!L.MAIN.has(w));
+  $('bonSum').textContent=`Rarer words: you found ${bf.length} of ${L.bonus.length}`;
+  $('bonList').textContent=L.bonus.map(w=>r.found.includes(w)?w+' ✓':w).join('  ');
+  if(r.stars)setTimeout(()=>{if(r.stars===3)sfx.star();},reduced()?0:700);
+}
+
+/* ---------- boot ---------- */
+(function boot(){
+  applyRM();
+  try{const bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();if(bg)$('themeColor').setAttribute('content',bg);}catch(e){}
+  const b=$('board');
+  b.addEventListener('pointerdown',onDown);b.addEventListener('pointermove',onMove);
+  b.addEventListener('pointerup',onUp);b.addEventListener('pointercancel',onCancel);b.addEventListener('lostpointercapture',e=>{if(drag&&e.pointerId===drag.id)onUp(e);});
+  b.addEventListener('contextmenu',e=>e.preventDefault());
+  const go=fn=>()=>{goFS();audio();fn();};
+  $('hPlay').addEventListener('click',go(()=>{
+    if(R&&R.state==='playing'&&save.cur&&save.cur.n===L.n){resumeRound();return;}
+    if(save.cur&&LEVELS[save.cur.n-1]){startLevel(save.cur.n,'resume');return;}
+    startLevel(nextLevel(),'new');}));
+  $('hLevels').addEventListener('click',renderLevels);
+  $('lvBack').addEventListener('click',renderHome);
+  $('lvList').addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.lv');if(!t||t.disabled)return;goFS();audio();
+    const n=+t.dataset.lv;
+    if(R&&R.state==='playing'&&L&&L.n===n){resumeRound();return;}
+    startLevel(n,save.cur&&save.cur.n===n?'resume':'new');});
+  $('pauseBtn').addEventListener('click',openPause);
+  $('pResume').addEventListener('click',go(()=>{closePause();resumeRound();}));
+  $('pRestart').addEventListener('click',go(()=>{const n=L.n;save.cur=null;R=null;startLevel(n,'retry');}));
+  $('pLevels').addEventListener('click',()=>{renderLevels();});
+  $('pauseSheet').addEventListener('click',e=>{if(e.target===$('pauseSheet')){closePause();resumeRound();}});
+  $('rNext').addEventListener('click',go(()=>startLevel(L.n+1,'new')));
+  $('rRetry').addEventListener('click',go(()=>startLevel(L.n,'retry')));
+  $('rLevels').addEventListener('click',renderLevels);
+  $('rHome').addEventListener('click',renderHome);
+  $('fsHome').addEventListener('click',()=>{if(isFS()){save.fs=false;exitFS();}else{save.fs=true;goFS();}persist();setTimeout(()=>{paintFS();toggles($('homeToggles'));},300);});
+  const onFS=()=>{paintFS();remeasure();};
+  document.addEventListener('fullscreenchange',onFS);document.addEventListener('webkitfullscreenchange',onFS);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){if(!$('pauseSheet').hidden){closePause();resumeRound();}else if(view==='play'&&path.length){kb='';path=[];paint();}else if(live())openPause();return;}
+    if(!live()||e.metaKey||e.ctrlKey||e.altKey||drag)return;
+    if(e.key==='Enter'&&path.length){e.preventDefault();const p=path.slice();kb='';path=[];paint();submit(p);}
+    else if(e.key==='Backspace'){e.preventDefault();if(!kb)kb=wordOf(path);kb=kb.endsWith('qu')&&low.includes('qu')?kb.slice(0,-2):kb.slice(0,-1);path=kb?(findPath(kb)||[]):[];if(!path.length)kb='';paint();}
+    else if(/^[a-z]$/i.test(e.key)){e.preventDefault();if(!kb&&path.length)kb=wordOf(path);typeKey(e.key.toLowerCase());}
+  });
+  // hidden: pause (the letters hide, so the board can't be studied off the clock)
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){if(view==='play'&&R&&R.state==='playing'&&$('pauseSheet').hidden)openPause();saveCur();}else last=performance.now();});
+  window.addEventListener('pagehide',saveCur);
+  let rsT=0;function remeasure(){clearTimeout(rsT);rsT=setTimeout(()=>{measure();if(view==='home')paintScarf();},80);}
+  window.addEventListener('resize',remeasure);window.addEventListener('orientationchange',remeasure);
+  if(window.visualViewport)visualViewport.addEventListener('resize',remeasure);
+  try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(view==='home')renderHome();else if(L)setSkein(L.n);});}catch(e){}
+  window.addEventListener('storage',e=>{if(view==='home'&&(e.key==='digi-tangle-v1'||e.key===KEY))renderHome();});
+  last=performance.now();setInterval(tick,100);
+  renderHome();
+  if(window.__DGTEST===true)window.__dg={
+    /* finish the current round through the real end path: a win scores the level's first star with real board words */
+    end(win){
+      if(R&&R.state==='done')return;                 // a finished round is never ended twice
+      if(!R)startLevel(save.cur?save.cur.n:nextLevel(),save.cur?'resume':'new');
+      if(!R||R.state!=='playing')return;
+      stopCount();paused=false;
+      if(win){for(const w of L.main.slice().sort((a,b)=>b.length-a.length))if(R.score<L.targets[0]&&!R.found.includes(w))addWord(w);}
+      else{R.found=[];R.score=0;}
+      R.left=0;endRound();
+    },
+    state:()=>({view,L:L&&{n:L.n,targets:L.targets,star:L.star,main:L.main.length,total:L.total},R,save,paused,counting,rnd}),
+    submitWord:w=>{const p=findPath(w);return p?submit(p):{r:'nopath'};},
+    pathOf:w=>findPath(w),
+    level:n=>{const x=level(n);return {targets:x.targets,total:x.total,main:x.main,bonus:x.bonus,star:x.star,tiles:x.tiles};},
+    give:s=>{save=Object.assign(defaults(),s);WORDS=new Set(save.words);persist();renderHome();}
+  };
+})();
+</script>
+</body>
+</html>
