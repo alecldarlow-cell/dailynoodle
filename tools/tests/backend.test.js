@@ -114,6 +114,98 @@ test('BOARD-01/02: migrations, permissions, first results, history and hide-only
   });
 });
 
+// BOARD-PIN / BOARD-ALL (24 Oct 2026): rejoining from another browser with a PIN, the owner's
+// "Let back in", the attempt limits, and the all-puzzles table's points.
+test('BOARD-PIN-01..04 and BOARD-ALL-01: PIN rejoin, lockout, owner let-back, and the all-puzzles table', async t => {
+  const db = await boardDb({ today: '2026-10-21' });   // a Wednesday: its week is Mon 19 to Sun 25 Oct
+  t.after(() => db.close());
+  const [ada, bob, cy] = ['00000000-0000-4000-8000-0000000000a1', '00000000-0000-4000-8000-0000000000b2', '00000000-0000-4000-8000-0000000000c3'];
+  const q = async (sql, params = []) => (await db.query(sql, params)).rows;
+  const rpc = async (name, args) => (await q(`select public.${name}(${args.map((_, i) => '$'+(i+1)).join(',')}) as value`, args))[0].value;
+  const rejects = (fn, message) => assert.rejects(fn, new RegExp(message));
+  await db.exec('set role anon');
+  const { code } = await rpc('board_create', [ada, 'Family', 'Ada']);
+  await rpc('board_join', [bob, code, 'Bob']);
+  await rpc('board_join', [cy, code, 'Cy']);
+
+  await t.test('BOARD-PIN-01: a PIN is set by its holder only, stored hashed, and shown as a flag', async () => {
+    await rejects(() => rpc('board_pin_set', ['00000000-0000-4000-8000-0000000000ff', '1234']), 'not_member');
+    await rejects(() => rpc('board_pin_set', [bob, '12a4']), 'bad_pin_format');
+    await rejects(() => rpc('board_pin_set', [bob, '12345']), 'bad_pin_format');
+    assert.equal((await rpc('board_mine', [bob]))[0].pin, false);
+    assert.equal(await rpc('board_pin_set', [bob, '2468']), true);
+    assert.equal((await rpc('board_mine', [bob]))[0].pin, true);
+    await db.exec('reset role');
+    const row = (await q('select * from board.pins where player=$1', [bob]))[0];
+    assert.ok(row && !JSON.stringify(row).includes('2468'), 'the PIN is not stored as typed');
+    await db.exec('set role anon');
+    await rejects(() => q('select * from board.pins'), 'permission denied');
+    assert.deepEqual((await rpc('board_peek', [code])).players, ['Ada', 'Bob', 'Cy']);
+  });
+
+  await t.test('BOARD-PIN-02: the right nickname and PIN hand this browser the player; wrong ones do not', async () => {
+    const ok = await rpc('board_claim', [code.toLowerCase(), ' bob ', '2468']);
+    assert.deepEqual(ok, { ok: true, player: bob, code, name: 'Family', nick: 'Bob', needs_pin: false });
+    assert.deepEqual(await rpc('board_claim', [code, 'Bob', '1111']), { ok: false, error: 'bad_pin' });
+    assert.deepEqual(await rpc('board_claim', [code, 'Nobody', '2468']), { ok: false, error: 'no_player' });
+    assert.deepEqual(await rpc('board_claim', [code, 'Cy', '2468']), { ok: false, error: 'no_pin' });
+    await rejects(() => rpc('board_claim', ['ZZZZZZZZ', 'Bob', '2468']), 'no_league');
+  });
+
+  await t.test('BOARD-PIN-03: five wrong PINs lock the player for an hour, even with the right one', async () => {
+    for (let i = 0; i < 4; i++) assert.equal((await rpc('board_claim', [code, 'Bob', '0000'])).error, 'bad_pin');   // 5th wrong in all
+    assert.equal((await rpc('board_claim', [code, 'Bob', '2468'])).error, 'pin_locked');
+    await db.exec('reset role');
+    await q("update board.pins set locked_until = now() - interval '1 minute' where player=$1", [bob]);
+    await q('delete from board.attempts');   // the per-address limit is checked separately below
+    await db.exec('set role anon');
+    assert.equal((await rpc('board_claim', [code, 'Bob', '2468'])).ok, true);
+    // the per-address limit (10 an hour) stops guessing across players too
+    for (let i = 0; i < 9; i++) await rpc('board_claim', [code, 'Cy', '0000']);
+    await rejects(() => rpc('board_claim', [code, 'Bob', '2468']), 'busy');
+    await db.exec('reset role'); await q('delete from board.attempts'); await db.exec('set role anon');
+  });
+
+  await t.test('BOARD-PIN-04: only the owner lets someone back in; it works once, without a PIN, and asks for a new one', async () => {
+    assert.equal(await rpc('board_let_back', [ada, code, 'Cy']), true);
+    await rejects(() => rpc('board_let_back', [bob, code, 'Cy']), 'not_owner');
+    assert.equal(await rpc('board_let_back', [ada, code, 'Nobody']), false);
+    const back = await rpc('board_claim', [code, 'cy', '']);
+    assert.equal(back.ok, true); assert.equal(back.player, cy); assert.equal(back.needs_pin, true);
+    assert.equal((await rpc('board_claim', [code, 'Cy', ''])).error, 'no_pin', 'the window closes after one use');
+    await db.exec('reset role'); await q('delete from board.attempts'); await db.exec('set role anon');
+  });
+
+  await t.test('BOARD-ALL-01: points per puzzle (1 for completing + 1 per worse completed result), day and week', async () => {
+    const f = (d, t) => `reports/2026-10-${d}-${t}.html`;
+    // Mon 19: Mini, Ada 50s, Bob 70s, Cy failed
+    await rpc('board_submit', [ada, f(19, 'crossword-mini-0100'), 'solved', 50, null, null]);
+    await rpc('board_submit', [bob, f(19, 'crossword-mini-0100'), 'solved', 70, null, null]);
+    await rpc('board_submit', [cy, f(19, 'crossword-mini-0100'), 'failed', 20, null, null]);
+    // Wed 21: Tangle Bob 300 > Ada 200 = Cy 200 (Cy faster: ranked ahead, as on board_day); Link Ada 0 mistakes 90s, Cy 0 mistakes 60s
+    await rpc('board_submit', [bob, f(21, 'word-tangle-0050'), 'scored', 80, 300, null]);
+    await rpc('board_submit', [ada, f(21, 'word-tangle-0050'), 'scored', 90, 200, null]);
+    await rpc('board_submit', [cy, f(21, 'word-tangle-0050'), 'scored', 60, 200, null]);
+    await rpc('board_submit', [ada, f(21, 'word-link-0060'), 'solved', 90, null, 0]);
+    await rpc('board_submit', [cy, f(21, 'word-link-0060'), 'solved', 60, null, 0]);
+    // last week (Sun 18) does not count in this week
+    await rpc('board_submit', [ada, f(18, 'crossword-mini-0099'), 'solved', 10, null, null]);
+    const all = await rpc('board_overall', [ada, code, '2026-10-21']);
+    assert.equal(all.week_from, '2026-10-19'); assert.equal(all.week_to, '2026-10-25');
+    const pick = rows => rows.map(r => [r.rank, r.nick, r.points, r.played, r.completed]);
+    // day: Tangle Bob 3, Cy 2, Ada 1; Link Cy 2, Ada 1
+    assert.deepEqual(pick(all.day), [[1, 'Cy', 4, 2, 2], [2, 'Bob', 3, 1, 1], [3, 'Ada', 2, 2, 2]]);
+    // week adds Monday's Mini: Ada 2, Bob 1, Cy 0 (played, failed)
+    // all on 4 points: more completed puzzles ranks first, then equal
+    assert.deepEqual(pick(all.week), [[1, 'Ada', 4, 3, 3], [2, 'Bob', 4, 2, 2], [2, 'Cy', 4, 3, 2]]);
+    assert.deepEqual(all.not_yet, []);
+    const mon = await rpc('board_overall', [bob, code, '2026-10-19']);
+    assert.deepEqual(pick(mon.day), [[1, 'Ada', 2, 1, 1], [2, 'Bob', 1, 1, 1], [3, 'Cy', 0, 1, 0]]);
+    assert.deepEqual(pick(mon.week), pick(mon.day), 'a Monday’s week holds only that day so far');
+    await rejects(() => rpc('board_overall', ['00000000-0000-4000-8000-0000000000ff', code, '2026-10-21']), 'not_member');
+  });
+});
+
 // ADMIN-01..04: the admin reporting, on the exact live definitions
 // (toolchain/sql/2026-10-20-admin-live-definitions.sql: a record of what is
 // deployed, read with pg_get_functiondef / pg_get_viewdef on 20 Oct 2026).

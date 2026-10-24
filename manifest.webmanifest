@@ -3,7 +3,7 @@
   "name": "The Daily Noodle",
   "short_name": "Daily Noodle",
   "description": "News, daily puzzles and games. Fresh every morning.",
-  "start_url": "./",
+  "start_url": "puzzles.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#FCFCFB",

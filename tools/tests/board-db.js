@@ -20,7 +20,8 @@
 const fs = require('node:fs'), path = require('node:path');
 const { PGlite } = require('@electric-sql/pglite');
 
-const MIGRATIONS = ['2026-10-18-leaderboards.sql', '2026-10-18-leaderboards-hide-only.sql', '2026-10-20-reckon-board.sql'];
+const MIGRATIONS = ['2026-10-18-leaderboards.sql', '2026-10-18-leaderboards-hide-only.sql', '2026-10-20-reckon-board.sql',
+                    '2026-10-24-board-pins-and-overall.sql'];
 const HOSTING = `
   create role anon; create role authenticated; create role service_role;
   create schema auth;
