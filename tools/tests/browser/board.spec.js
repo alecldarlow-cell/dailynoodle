@@ -159,6 +159,8 @@ test.describe('BOARD-E2E', () => {
       await go(B, invite.pathname.slice(1) + invite.search);
       await B.p.fill('input[name="nick"]', 'Bea');
       await H.tap(B.p, B.p.locator('#f .btn.go'));
+      await expect(B.p.locator('.daybar')).toHaveCount(1);
+      await go(B, `board.html?p=mini&d=${DAY}`);   // a board opened with no puzzle shows All puzzles since 24 Oct 2026
       await expect(B.p.locator('ol.rows li.row')).toHaveCount(2);
       expect(await rows(B.p)).toEqual(want);
       await go(A, `board.html?p=mini&d=${DAY}`);

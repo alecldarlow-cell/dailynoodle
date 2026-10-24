@@ -195,7 +195,12 @@
     not_owner: 'Only the league’s owner can do that.',
     busy: 'Lots of new leagues right now — please try again later.',
     paused: 'New leagues are paused for now — please try again later.',
-    already_member: 'You’re already in that league.'
+    already_member: 'You’re already in that league.',
+    bad_pin_format: 'PINs are 4 numbers.',
+    bad_pin: 'That PIN doesn’t match. Check the nickname and try again.',
+    pin_locked: 'Too many wrong PINs. Try again in an hour, or ask the league’s owner to tap “Let back in” next to your name.',
+    no_pin: 'There’s no PIN for that nickname yet. Ask the league’s owner to tap “Let back in” next to your name, then try again here.',
+    no_player: 'Nobody in that league has that nickname.'
   };
   function rpc(fn, args) {
     return fetch(API + fn, {
@@ -218,7 +223,7 @@
   function refresh() {   // the server's view of this browser's leagues
     return rpc('board_mine', { p_player: pid() }).then(function (list) {
       setLeagues((list || []).map(function (l) {
-        return { code: l.code, name: l.name, nick: l.nickname, owner: !!l.owner, members: l.members };
+        return { code: l.code, name: l.name, nick: l.nickname, owner: !!l.owner, members: l.members, pin: !!l.pin };
       }));
       return leagues();
     });
@@ -238,7 +243,38 @@
   function day(code, type, date) {
     return rpc('board_day', { p_player: pid(), p_code: code, p_type: type, p_date: date });
   }
-  function owner(action, code, extra) {   // rename | new_code | remove | close
+  function overall(code, date) {   // all eight puzzles: the day and its Monday-to-Sunday week
+    return rpc('board_overall', { p_player: pid(), p_code: code, p_date: date });
+  }
+  /* ---------- PINs (24 Oct 2026) ----------
+     A player sets a 4-digit PIN; in any other browser or app they open the
+     league's invite link (or type its code), pick their nickname and enter the
+     PIN, and the server hands that browser their board id. Five wrong PINs
+     lock the nickname for an hour; the owner can "Let back in" (once, within
+     24 hours, no PIN), after which the player sets a new PIN. Results the new
+     browser remembers are then copied in as that player (backfill).        */
+  function hasPin() { return leagues().some(function (l) { return l.pin; }); }
+  function setPin(pin) {
+    return rpc('board_pin_set', { p_player: pid(), p_pin: pin }).then(refresh);
+  }
+  function claim(code, nick, pin) {
+    return rpc('board_claim', { p_code: code, p_nick: nick, p_pin: pin }).then(function (r) {
+      if (!r || !r.ok) {
+        var code2 = (r && r.error) || 'error';
+        var err = new Error(MESSAGES[code2] || 'Something went wrong. Please try again.'); err.code = code2; throw err;
+      }
+      var s = load(), mine = s.pid;
+      var me = { code: r.code, name: r.name, nick: r.nick, owner: false };
+      if (!inAny() || mine === r.player) {
+        s.pid = r.player; s.cur = r.code; s.leagues = [me]; delete s.fill; delete s.filled; delete s.pend; save(s);
+        return refresh().then(function () { setCurrent(r.code); return { nick: r.nick, needsPin: !!r.needs_pin }; });
+      }
+      // this browser already plays in a league as someone else: ask, as for a personal link
+      s.pend = { pid: r.player, leagues: [me], cur: r.code }; save(s);
+      return { nick: r.nick, needsPin: !!r.needs_pin, pending: true };
+    });
+  }
+  function owner(action, code, extra) {   // rename | new_code | remove | close | let_back
     var args = { p_player: pid(), p_code: code };
     for (var k in extra || {}) args[k] = extra[k];
     return rpc('board_' + action, args);
@@ -387,7 +423,7 @@
   window.noodleBoard = {
     TYPES: TYPES, BY_ID: BY_ID, typeOfPath: typeOfPath, dateOfPath: dateOfPath,
     pid: pid, leagues: leagues, inAny: inAny, refresh: refresh, create: create, join: join,
-    peek: peek, backfill: backfill, backfillDue: backfillDue, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
+    peek: peek, overall: overall, hasPin: hasPin, setPin: setPin, claim: claim, backfill: backfill, backfillDue: backfillDue, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
     lastType: lastType, setLastType: setLastType, today: today, rpc: rpc,
     moveLink: moveLink, moved: moved, pending: pending, settlePending: settlePending, isIOS: isIOS
   };

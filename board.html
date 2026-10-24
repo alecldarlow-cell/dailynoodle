@@ -137,6 +137,11 @@
   .set .grp p.fine{font-size:12.5px;color:var(--faint)}
   .bcard p.also{margin-top:14px;text-align:center}
   .lnk{font:600 14.5px var(--body);color:var(--accent);background:none;border:0;padding:6px 4px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .plist button.ok{color:var(--accent)}
+  .field select{width:100%;font:500 16px var(--body);padding:10px 12px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);color:var(--ink)}
+  .bnote{margin-top:6px;font-size:14.5px;color:var(--muted)}
+  .bnote.how{margin-top:14px;font-size:13px;color:var(--faint)}
+  .set .grp p.fine,.grp p.fine{font-size:12.5px;color:var(--faint);margin-top:6px}
   [hidden]{display:none!important}
 </style>
 </head>
@@ -167,7 +172,7 @@
   var $app = document.getElementById('app'), $pills = document.getElementById('pills');
   var Q = new URLSearchParams(location.search);
   var S = {
-    type: NB.BY_ID[Q.get('p')] ? Q.get('p') : (NB.lastType() || 'mini'),
+    type: (NB.BY_ID[Q.get('p')] || Q.get('p') === 'all') ? Q.get('p') : (NB.lastType() || 'all'),
     date: /^\d{4}-\d{2}-\d{2}$/.test(Q.get('d') || '') ? Q.get('d') : NB.today(),
     join: (Q.get('join') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12),
     from: Q.get('from') || (Q.get('join') ? 'join' : 'direct'),
@@ -226,8 +231,9 @@
   }
 
   /* ---------- puzzle pills ---------- */
+  var PILLS = [{ id: 'all', emoji: '🏆', name: 'All puzzles' }].concat(TYPES);   // All: the 24 Oct 2026 table across the eight
   function renderPills() {
-    $pills.innerHTML = TYPES.map(function (t) {
+    $pills.innerHTML = PILLS.map(function (t) {
       return '<button class="chip" type="button" data-p="' + t.id + '" aria-pressed="' + (t.id === S.type) + '">' +
         t.emoji + ' ' + t.name + '</button>';
     }).join('');
@@ -260,7 +266,7 @@
       '<li>Everyone’s results appear on a board for each puzzle, every day.</li></ol>' +
       '<div class="acts"><button class="btn go" data-go="start">Start a league</button>' +
       '<button class="btn" data-go="code">Join with a code</button></div>' +
-      '<p class="also"><button class="lnk" type="button" data-go="paste">Already in a league on another browser or app?</button></p></div>';
+      '<p class="also"><button class="lnk" type="button" data-go="claim">Already in a league on another browser or app?</button></p></div>';
   }
   /* ---------- your leagues somewhere else (21 Oct 2026; see dn-board.js moveLink) ---------- */
   var IOS = NB.isIOS();
@@ -268,10 +274,66 @@
   function keyGroup() {
     return '<div class="grp" id="keygrp"><h3>Play somewhere else too?</h3><p>Your leagues are kept in this browser. ' +
       (IOS ? 'On an iPhone, Safari, the home-screen app and links opened inside WhatsApp each keep their own. ' : '') +
-      'Send yourself your link and open it where you play: your leagues, results and streaks come with it.</p>' +
+      'Where else you play, open the league’s invite link, tap <b>Already in this league?</b>, pick your nickname and enter your PIN.</p>' +
+      '<p class="fine">Or send yourself your personal link, which also brings your streaks. It’s your key, so don’t post it in a group.</p>' +
       '<div class="acts"><button class="btn" data-act="key">Send me my link</button>' +
-      '<button class="btn" data-go="paste">Paste a link</button></div>' +
-      '<p class="fine">It’s your personal key, so don’t post it in a group.</p></div>';
+      '<button class="btn" data-go="paste">Paste a link</button></div></div>';
+  }
+  /* ---------- PINs (24 Oct 2026; see dn-board.js claim) ---------- */
+  var PIN_FIELD = function (label, hint) {
+    return '<label class="field"><span>' + label + '</span><input name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" ' +
+      'autocomplete="off" placeholder="4 numbers"><small>' + hint + '</small></label>';
+  };
+  var PIN_HINT = 'Lets you join as yourself from another phone or app later. Optional, and you can set it later.';
+  function pinOk(v) { return /^[0-9]{4}$/.test(v); }
+  function afterJoinPin(f) {   // the optional PIN on the start and join forms; a failure here never undoes the join
+    var v = (f.elements.pin && f.elements.pin.value || '').trim();
+    if (!v) return Promise.resolve();
+    if (!pinOk(v)) return Promise.resolve();
+    return NB.setPin(v).then(function () { track('board_pin', { act: 'set', from: 'join' }); }, function () {});
+  }
+  function pinLater() { try { return localStorage.getItem('noodle-board-pinlater') === NB.today(); } catch (e) { return false; } }
+  function claimForm(info) {
+    document.getElementById('pillbar').hidden = true;
+    var known = !!(info && info.code);
+    var names = known && info.players && info.players.length;
+    $app.innerHTML =
+      '<form class="bcard" id="f"><h2>' + (known ? 'Already in ' + esc(info.name) + '?' : 'Already in a league?') + '</h2>' +
+      '<p>Play as yourself in this browser too: ' + (known ? 'pick' : 'enter the league’s code and') + ' your nickname, and the PIN you set.</p>' +
+      (known ? '' : '<label class="field"><span>League code</span><input name="code" maxlength="12" autocapitalize="characters" required></label>') +
+      (names ? '<label class="field"><span>Your nickname</span><select name="nick" required><option value="">Choose…</option>' +
+                 info.players.map(function (n) { return '<option>' + esc(n) + '</option>'; }).join('') + '</select></label>'
+             : '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>') +
+      '<label class="field"><span>Your PIN</span><input name="pin" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4 numbers">' +
+      '<small>No PIN, or forgotten it? Ask the league’s owner to tap “Let back in” next to your name, then leave this blank.</small></label>' +
+      '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Play as me here</button>' +
+      '<button class="btn" type="button" data-go="' + (known ? 'joinback' : 'back') + '">Back</button></div>' +
+      '<p class="also"><button class="lnk" type="button" data-go="paste">Have a personal link instead?</button></p></form>';
+    form(function (f) {
+      var code = known ? info.code : f.elements.code.value.trim().toUpperCase();
+      return NB.claim(code, f.elements.nick.value.trim(), f.elements.pin.value.trim()).then(function (r) {
+        track('board_pin', { act: 'claim' });
+        S.join = ''; S.filled = false; S.data = null;
+        if (r.pending) { S.needPin = r.needsPin; return pendForm(NB.pending()); }
+        if (r.needsPin) return pinForm(true);
+        S.claimed = r.nick; loadBoard();
+      });
+    });
+  }
+  function pinForm(fresh) {
+    document.getElementById('pillbar').hidden = true;
+    $app.innerHTML =
+      '<form class="bcard" id="f"><h2>' + (fresh ? 'Set a new PIN' : 'Set your PIN') + '</h2>' +
+      '<p>' + (fresh ? 'You’re back in. Choose a new PIN so you can do this yourself next time.'
+                     : 'Then you can join as yourself from another phone or app.') + '</p>' +
+      '<label class="field"><span>PIN</span><input name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required placeholder="4 numbers"></label>' +
+      '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Save PIN</button>' +
+      (fresh ? '' : '<button class="btn" type="button" data-go="back">Back</button>') + '</div></form>';
+    form(function (f) {
+      var v = f.elements.pin.value.trim();
+      if (!pinOk(v)) return Promise.reject(new Error('PINs are 4 numbers.'));
+      return NB.setPin(v).then(function () { track('board_pin', { act: fresh ? 'reset' : 'set', from: 'form' }); S.pinSaved = true; loadBoard(); });
+    });
   }
   function pasteForm() {
     document.getElementById('pillbar').hidden = true;
@@ -308,27 +370,31 @@
     NB.settlePending(take); track('board_key', { act: take ? 'take' : 'keep' });
     if (take) S.moved = { n: 1 };
     S.filled = false; S.data = null;
-    NB.refresh().catch(function () {}).then(function () { NB.inAny() ? loadBoard() : intro(); });
+    var fresh = take && S.needPin; S.needPin = false;
+    NB.refresh().catch(function () {}).then(function () { fresh ? pinForm(true) : NB.inAny() ? loadBoard() : intro(); });
   });
   function startForm() {
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Start a league</h2>' +
       '<label class="field"><span>League name</span><input name="lname" maxlength="30" placeholder="e.g. Noodle family" required></label>' +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" placeholder="e.g. Alec" required><small>What everyone in the league sees.</small></label>' +
+      PIN_FIELD('PIN', PIN_HINT) +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Start league</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.create(f.elements.lname.value.trim(), f.elements.nick.value.trim()).then(function (l) {
-      track('board_create', { from: S.startFrom || 'intro' }); S.startFrom = ''; S.created = l.code; loadBoard(); }); });
+      track('board_create', { from: S.startFrom || 'intro' }); S.startFrom = ''; S.created = l.code;
+      return afterJoinPin(f).then(loadBoard); }); });
   }
   function codeForm() {
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Join a league</h2><p>Ask someone in the league for its link or 8-letter code.</p>' +
       '<label class="field"><span>League code</span><input name="code" maxlength="12" autocapitalize="characters" required></label>' +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
+      PIN_FIELD('PIN', PIN_HINT) +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.join(f.elements.code.value.trim().toUpperCase(), f.elements.nick.value.trim()).then(function () {
-      track('board_join', { via: 'code' }); S.joined = NB.leagues().length; loadBoard(); }); });
+      track('board_join', { via: 'code' }); S.joined = NB.leagues().length; return afterJoinPin(f).then(loadBoard); }); });
   }
   function joinForm(info) {
     document.getElementById('pillbar').hidden = true;
@@ -337,12 +403,18 @@
       '<p>' + info.members + (info.members === 1 ? ' player' : ' players') + ' so far. Pick a nickname and your ' +
       'results will appear on the league’s daily boards.</p>' +
       (IOS ? '<p class="tip">On an iPhone, join in the place you play the puzzles. If this opened inside WhatsApp or another app, ' +
-             'open it in Safari (or your Daily Noodle home-screen app) first.</p>' : '') +
+             'open it in Safari (or your Daily Noodle home-screen app) first. Set a PIN and you can join as yourself anywhere else too.</p>' : '') +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
+      PIN_FIELD('PIN', PIN_HINT) +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join league</button>' +
-      (NB.inAny() ? '<button class="btn" type="button" data-go="board">Not now</button>' : '') + '</div></form>';
+      (NB.inAny() ? '<button class="btn" type="button" data-go="board">Not now</button>' : '') + '</div>' +
+      (info.members ? '<p class="also"><button class="lnk" type="button" data-go="claimjoin">Already in ' + esc(info.name) + '? Pick your name</button></p>' : '') +
+      '</form>';
+    S.peeked = info;
     form(function (f) { return NB.join(S.join, f.elements.nick.value.trim()).then(function () {
-      track('board_join', { via: 'link' }); S.join = ''; S.joined = NB.leagues().length; loadBoard(); }); });
+      track('board_join', { via: 'link' }); S.join = ''; S.joined = NB.leagues().length; return afterJoinPin(f).then(loadBoard); }, function (err) {
+        if (err.code === 'nick_taken') err.message += ' If that’s you, tap “Already in ' + info.name + '?” below.';
+        throw err; }); });
   }
   function form(submit) {
     var f = document.getElementById('f'), m = document.getElementById('m');
@@ -358,6 +430,11 @@
     var go = g.getAttribute('data-go');
     if (go === 'start') { S.startFrom = g.getAttribute('data-from') || ''; if (S.startFrom) track('board_nudge', { from: S.startFrom }); startForm(); } else if (go === 'code') codeForm();
     else if (go === 'paste') pasteForm();
+    else if (go === 'claim') claimForm(null);
+    else if (go === 'claimjoin') claimForm({ code: S.join, name: S.peeked.name, players: S.peeked.players || [] });
+    else if (go === 'joinback') joinForm(S.peeked);
+    else if (go === 'pin') pinForm(false);
+    else if (go === 'pinlater') { try { localStorage.setItem('noodle-board-pinlater', NB.today()); } catch (x) {} var c = g.closest('.bcard'); if (c) c.remove(); }
     else if (go === 'back') { NB.inAny() ? loadBoard() : intro(); } else if (go === 'board') { S.join = ''; loadBoard(); }
   });
 
@@ -407,9 +484,9 @@
     NB.setCurrent(L.code); renderPills(); renderLeague(L); syncUrl();
     if (!S.data || S.data.code !== L.code || S.data.type !== S.type || S.data.date !== S.date) $app.innerHTML = '<p class="loading">Loading…</p>';
     var want = [L.code, S.type, S.date].join('|');
-    NB.day(L.code, S.type, S.date).then(function (d) {
+    (S.type === 'all' ? NB.overall(L.code, S.date) : NB.day(L.code, S.type, S.date)).then(function (d) {
       if (want !== [cur().code, S.type, S.date].join('|')) return;
-      d.code = L.code; d.type = S.type; d.date = S.date; S.data = d; renderBoard(L, d);
+      d.code = L.code; d.type = S.type; d.date = S.date; S.data = d; S.type === 'all' ? renderOverall(L, d) : renderBoard(L, d);
     }).catch(function (err) {
       if (err.code === 'not_member' || err.code === 'no_league') { NB.refresh().then(loadBoard, loadBoard); return; }
       $app.innerHTML = '<p class="nobody">Couldn’t load the board. ' + esc(err.message) + '</p>';
@@ -418,9 +495,7 @@
   // Person-with-plus, drawn in the button's text colour.
   var INVITE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
     '<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.1-6.5 7-6.5s7 2.5 7 6.5"/><path d="M19 8v6M16 11h6"/></svg>';
-  function renderBoard(L, d) {
-    var T = NB.BY_ID[S.type], ls = NB.leagues(), it = puzzleItem(S.type, S.date);
-    var played = d.ranked.concat(d.unranked).some(function (r) { return r.me; });
+  function topCard(L) {
     var h = '';
     if (S.created === L.code) {
       h += '<div class="bcard"><h2>' + esc(L.name) + ' is ready</h2><p>Share the link in your group chat. Anyone who taps it ' +
@@ -440,12 +515,33 @@
       h += '<div class="bcard"><h2>Your leagues are here now</h2><p>Results and streaks from your link have been added to this ' +
            'browser, and puzzles you finish here go on the board as ' + esc(L.nick) + '.</p></div>';
       S.moved = null;
+    } else if (S.claimed) {
+      h += '<div class="bcard"><h2>You’re playing as ' + esc(S.claimed) + ' here too</h2><p>Puzzles you finish in this browser now go ' +
+           'on your league’s boards, and the ones you’d already finished here have been added.</p></div>';
+      S.claimed = '';
+    } else if (S.pinSaved) {
+      h += '<div class="bcard"><h2>PIN saved</h2><p>To play as yourself in another browser or app, open the league’s invite link there ' +
+           'and tap <b>Already in this league?</b></p></div>';
+      S.pinSaved = false;
+    } else if (!NB.hasPin() && !pinLater()) {
+      h += '<div class="bcard"><h2>Set a PIN</h2><p>Then you can join as yourself from another phone or app' +
+           (IOS ? ', like Safari and the home-screen app on an iPhone, which each keep their own leagues' : '') + '.</p>' +
+           '<div class="acts"><button class="btn go" data-go="pin">Set a PIN</button><button class="btn" data-go="pinlater">Later</button></div></div>';
     }
-    var first = d.first || S.date;
-    h += '<div class="daybar"><button class="daybtn" data-day="-1" aria-label="Previous day"' + (S.date <= first ? ' disabled' : '') + '>‹</button>' +
-         '<label class="daylabel">' + esc(dayName(S.date)) + '<small>' + esc(T.emoji + ' ' + (it ? it.headline : T.name) + ' · ' + longDay(S.date)) + '</small>' +
+    return h;
+  }
+  function dayBar(label, first) {
+    return '<div class="daybar"><button class="daybtn" data-day="-1" aria-label="Previous day"' + (S.date <= first ? ' disabled' : '') + '>‹</button>' +
+         '<label class="daylabel">' + esc(dayName(S.date)) + '<small>' + esc(label) + '</small>' +
          '<input type="date" id="pick" value="' + S.date + '" min="' + first + '" max="' + NB.today() + '" aria-label="Pick a day"></label>' +
          '<button class="daybtn" data-day="1" aria-label="Next day"' + (S.date >= NB.today() ? ' disabled' : '') + '>›</button></div>';
+  }
+  function renderBoard(L, d) {
+    var T = NB.BY_ID[S.type], it = puzzleItem(S.type, S.date);
+    var played = d.ranked.concat(d.unranked).some(function (r) { return r.me; });
+    var h = topCard(L);
+    var first = d.first || S.date;
+    h += dayBar(T.emoji + ' ' + (it ? it.headline : T.name) + ' · ' + longDay(S.date), first);
     if (!played && it) h += '<div class="play"><span>You haven’t played this one yet.</span><a href="' + esc(it.path) + '">Play ' + esc(it.headline) + ' →</a></div>';
     if (!d.ranked.length && !d.unranked.length) {
       h += '<p class="nobody">Nobody in ' + esc(L.name) + ' has played ' + esc(T.name) + ' ' + (S.date === NB.today() ? 'yet today' : 'on this day') + '.</p>';
@@ -457,6 +553,39 @@
       return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
     h += '<div class="acts main">' + (d.ranked.length ? '<button class="btn go" data-act="share">Share leaderboard</button>' : '') +
          '<button class="btn ' + (d.ranked.length ? 'alt' : 'go') + '" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
+    h += settings(L, d);
+    $app.innerHTML = h;
+  }
+  /* ---------- all eight puzzles (24 Oct 2026): the day and its Monday-to-Sunday week ---------- */
+  function pts(n) { return n + (n === 1 ? ' pt' : ' pts'); }
+  function allRow(r, of) {
+    return '<li class="row' + (r.me ? ' me' : '') + '"><span class="rk' + (MEDAL[r.rank] ? ' medal' : '') + '">' + (MEDAL[r.rank] || r.rank) + '</span>' +
+      '<span class="who">' + esc(r.nick) + (r.me ? '<span class="you">you</span>' : '') + '</span>' +
+      '<span class="res">' + pts(r.points) + '<small>' + r.completed + ' of ' + of + ' done' + '</small></span></li>';
+  }
+  function weekLabel(d) {
+    var f = new Date(d.week_from + 'T12:00:00Z'), t = new Date(d.week_to + 'T12:00:00Z');
+    var o = { day: 'numeric', month: 'short', timeZone: 'UTC' };
+    return f.toLocaleDateString('en-GB', o) + ' – ' + t.toLocaleDateString('en-GB', o);
+  }
+  function weekDays(d) {   // puzzles so far this week: 8 a day, up to the chosen day
+    var n = Math.round((new Date(S.date + 'T12:00:00Z') - new Date(d.week_from + 'T12:00:00Z')) / 864e5) + 1;
+    return 8 * Math.max(1, Math.min(7, n));
+  }
+  function renderOverall(L, d) {
+    var h = topCard(L);
+    h += dayBar('🏆 All eight puzzles · ' + longDay(S.date), d.first || S.date);
+    if (!d.day.length) h += '<p class="nobody">Nobody in ' + esc(L.name) + ' has played ' + (S.date === NB.today() ? 'yet today' : 'on this day') + '.</p>';
+    else h += '<ol class="rows">' + d.day.map(function (r) { return allRow(r, 8); }).join('') + '</ol>';
+    if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
+      return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
+    h += '<p class="sub">This week · ' + esc(weekLabel(d)) + '</p>';
+    if (!d.week.length) h += '<p class="bnote">No results yet this week.</p>';
+    else h += '<ol class="rows">' + d.week.map(function (r) { return allRow(r, weekDays(d)); }).join('') + '</ol>';
+    h += '<p class="bnote how">Each puzzle you finish scores 1 point, plus 1 for every player whose result on it was worse. ' +
+         'Equal points: more puzzles finished goes first.</p>';
+    h += '<div class="acts main">' + (d.day.length ? '<button class="btn go" data-act="shareall">Share leaderboard</button>' : '') +
+         '<button class="btn ' + (d.day.length ? 'alt' : 'go') + '" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
     h += settings(L, d);
     $app.innerHTML = h;
   }
@@ -474,14 +603,17 @@
       '<div class="grp"><h3>Invite</h3><p>Code <span class="code">' + esc(L.code) + '</span> · ' + d.members + (d.members === 1 ? ' player' : ' players') + '</p></div>' +
       '<div class="grp"><h3>Another group?</h3><p>Start a separate league for friends, work or another chat. You can be in more than one.</p>' +
       '<div class="acts"><button class="btn" data-go="start" data-from="settings">Start another league</button></div></div>' +
-      '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b></p>' +
-      '<div class="acts"><button class="btn warn" data-act="leave">Leave league</button></div></div>' + keyGroup();
+      '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b> · PIN ' + (NB.hasPin() ? 'set' : 'not set') + '</p>' +
+      '<div class="acts"><button class="btn" data-go="pin">' + (NB.hasPin() ? 'Change PIN' : 'Set a PIN') + '</button>' +
+      '<button class="btn warn" data-act="leave">Leave league</button></div></div>' + keyGroup();
     if (L.owner) {
       h += '<div class="grp"><h3>League name</h3><div class="inline"><input id="rn" maxlength="30" value="' + esc(L.name) + '">' +
            '<button class="btn" data-act="rename">Save</button></div></div>' +
            '<div class="grp"><h3>Players</h3><ul class="plist">' + (d.players || []).map(function (p) {
              return '<li><span>' + esc(p) + (p === L.nick ? ' (you)' : '') + '</span>' +
-               (p === L.nick ? '' : '<button data-act="remove" data-nick="' + esc(p) + '">Remove</button>') + '</li>'; }).join('') + '</ul></div>' +
+               (p === L.nick ? '' : '<span><button class="ok" data-act="letback" data-nick="' + esc(p) + '">Let back in</button>' +
+                 '<button data-act="remove" data-nick="' + esc(p) + '">Remove</button></span>') + '</li>'; }).join('') + '</ul>' +
+             '<p class="fine">Let back in: for a day, that player can join as themselves from another phone or app without their PIN, then sets a new one.</p></div>' +
            '<div class="grp"><h3>Join code</h3><p>A new code stops the old link and code working; everyone already in stays in.</p>' +
            '<div class="acts"><button class="btn" data-act="newcode">New join code</button></div></div>' +
            '<div class="grp"><h3>Close league</h3><p>Takes the league off everyone’s boards.</p>' +
@@ -510,6 +642,19 @@
       lines.push(L.name + ' leaderboard:');
       share(lines.join('\n'), link(L.code) + '&p=' + S.type + '&d=' + S.date, a);
       track('board_share', { type: S.type });
+    } else if (act === 'shareall') {
+      var D2 = S.data, ln = ['🏆 All puzzles · ' + longDay(S.date)];
+      D2.day.slice(0, 5).forEach(function (r) { ln.push((MEDAL[r.rank] || r.rank + '.') + ' ' + r.nick + ' ' + pts(r.points) + ' (' + r.completed + '/8)'); });
+      if (D2.day.length > 5) ln.push('+' + (D2.day.length - 5) + ' more');
+      ln.push(L.name + ' leaderboard:');
+      share(ln.join('\n'), link(L.code) + '&p=all&d=' + S.date, a);
+      track('board_share', { type: 'all' });
+    } else if (act === 'letback') {
+      var w2 = a.getAttribute('data-nick');
+      NB.owner('let_back', L.code, { p_nick: w2 }).then(function (ok) {
+        if (sm) { sm.className = 'msg ok'; sm.textContent = ok ? w2 + ' can join from another phone or app without a PIN for the next day: ask them to open the league link and tap “Already in this league?”.' : 'Couldn’t find ' + w2 + '.'; }
+        track('board_pin', { act: 'letback' });
+      }, fail);
     } else if (act === 'key') {
       share(KEY_TEXT, NB.moveLink(), a);
       track('board_key', { act: 'send' });

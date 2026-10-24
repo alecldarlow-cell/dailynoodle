@@ -166,8 +166,10 @@ test.describe('BOARD-KEY', () => {
       await join(W, invite, 'Jake');
       const key = await myLink(W), jake = await boardPid(W);
 
-      // The home-screen app: no address bar, so the link is pasted on the intro screen.
+      // The home-screen app: no address bar, so the link is pasted. Since 24 Oct 2026 the intro's
+      // "Already in a league?" opens the PIN form, which offers the personal link as the second way.
       await go(A, 'board.html');
+      await H.tap(A.p, A.p.locator('[data-go="claim"]'));
       await H.tap(A.p, A.p.locator('[data-go="paste"]'));
       await A.p.fill('input[name="key"]', 'not my link');
       await H.tap(A.p, A.p.locator('#f .btn.go'));
@@ -210,6 +212,90 @@ test.describe('BOARD-KEY', () => {
       }
     } finally {
       for (const P of [O, W, A, T]) await P.ctx.close();
+    }
+  });
+
+  // BOARD-PIN-E2E (24 Oct 2026): the iPhone case without a personal link. Jake joins from WhatsApp's
+  // browser and sets a PIN; in Safari he opens the same invite, picks his name and enters the PIN, and
+  // the Mini he finishes there reaches the board as Jake. Then the owner's "Let back in" for Kim, who
+  // never set a PIN, and the All puzzles table.
+  test('BOARD-PIN-E2E-01: rejoin with nickname and PIN, owner let-back, and the All puzzles table', async ({ browser }) => {
+    test.setTimeout(120000);
+    const O = await phone(browser, db, 'owner'), W = await phone(browser, db, 'whatsapp', { ios: true }),
+          S = await phone(browser, db, 'safari', { ios: true }), K = await phone(browser, db, 'kim'), K2 = await phone(browser, db, 'kim2');
+    try {
+      await go(O, 'board.html');
+      await H.tap(O.p, O.p.locator('[data-go="start"]'));
+      await O.p.fill('input[name="lname"]', 'Family');
+      await O.p.fill('input[name="nick"]', 'Alec');
+      await O.p.fill('input[name="pin"]', '1357');
+      await H.tap(O.p, O.p.locator('#f .btn.go'));
+      await expect(O.p.locator('.bcard h2').first()).toHaveText('Family is ready');
+      await H.tap(O.p, O.p.locator('.bcard [data-act="invite"]'));
+      const invite = new URL((await O.p.evaluate(() => window.__shared))[0].url);
+
+      // Jake joins in WhatsApp's browser with a PIN; Kim joins without one.
+      await go(W, invite.pathname.slice(1) + invite.search);
+      await W.p.fill('input[name="nick"]', 'Jake');
+      await W.p.fill('input[name="pin"]', '2468');
+      await H.tap(W.p, W.p.locator('#f .btn.go'));
+      await expect(W.p.locator('.daybar')).toHaveCount(1);
+      const jake = await boardPid(W);
+      await join(K, invite, 'Kim');
+      await expect(K.p.locator('.bcard h2', { hasText: 'Set a PIN' })).toHaveCount(0);   // the "You're in" card comes first
+      await go(K, 'board.html');
+      await expect(K.p.locator('.bcard h2', { hasText: 'Set a PIN' })).toHaveCount(1);
+
+      // Safari: same invite, "Already in Family?", a wrong PIN, then the right one.
+      await go(S, invite.pathname.slice(1) + invite.search);
+      await H.tap(S.p, S.p.locator('[data-go="claimjoin"]'));
+      await S.p.selectOption('select[name="nick"]', 'Jake');
+      await S.p.fill('input[name="pin"]', '1111');
+      await H.tap(S.p, S.p.locator('#f .btn.go'));
+      await expect(S.p.locator('#m')).toContainText('doesn’t match');
+      await S.p.fill('input[name="pin"]', '2468');
+      await H.tap(S.p, S.p.locator('#f .btn.go'));
+      await expect(S.p.locator('.bcard h2').first()).toHaveText('You’re playing as Jake here too');
+      expect(await boardPid(S)).toBe(jake);
+      await solveMini(S, MINI18);
+      await expect.poll(() => submits(S).length).toBe(1);
+      expect(submits(S)[0].body).toBe(true);
+      expect((await q(db, 'select count(*)::int n from board.results where player=$1', [jake]))[0].n).toBe(1);
+
+      // Kim has no PIN: refused until Alec lets her back in, then she sets a new one.
+      await go(K2, invite.pathname.slice(1) + invite.search);
+      await H.tap(K2.p, K2.p.locator('[data-go="claimjoin"]'));
+      await K2.p.selectOption('select[name="nick"]', 'Kim');
+      await H.tap(K2.p, K2.p.locator('#f .btn.go'));
+      await expect(K2.p.locator('#m')).toContainText('Let back in');
+      await go(O, `board.html?p=mini&d=${DAY}`);
+      await O.p.locator('details.set summary').click();
+      await H.tap(O.p, O.p.locator('[data-act="letback"][data-nick="Kim"]'));
+      await expect(O.p.locator('#sm')).toContainText('Kim can join');
+      await H.tap(K2.p, K2.p.locator('#f .btn.go'));
+      await expect(K2.p.locator('.bcard h2')).toHaveText('Set a new PIN');
+      await K2.p.fill('input[name="pin"]', '8642');
+      await H.tap(K2.p, K2.p.locator('#f .btn.go'));
+      await expect(K2.p.locator('.bcard h2').first()).toHaveText('PIN saved');
+      expect(await boardPid(K2)).toBe(await boardPid(K));
+
+      // The All puzzles table: Jake's Mini is today's only result.
+      await go(O, `board.html?p=all&d=${DAY}`);
+      await expect(O.p.locator('ol.rows').first().locator('li.row')).toHaveCount(1);
+      await expect(O.p.locator('ol.rows').first()).toContainText('Jake');
+      await expect(O.p.locator('ol.rows').first()).toContainText('1 pt');
+      await expect(O.p.locator('.notyet')).toHaveText('Alec (you), Kim');
+      await H.tap(O.p, O.p.locator('[data-act="shareall"]'));
+      const sh = (await O.p.evaluate(() => window.__shared)).pop();
+      expect(sh.text).toContain('🥇 Jake 1 pt (1/8)');
+      expect(sh.url).toContain('&p=all&d=' + DAY);
+
+      for (const P of [O, W, S, K, K2]) {
+        expect(P.hosts.filter(h => !h.endsWith('.supabase.invalid')), P.name + ': calls to a live Supabase name').toEqual([]);
+        expect(P.p.errs, P.name + ': page errors').toEqual([]);
+      }
+    } finally {
+      for (const P of [O, W, S, K, K2]) await P.ctx.close();
     }
   });
 });

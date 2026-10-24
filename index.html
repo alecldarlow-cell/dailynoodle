@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <script>
+/* Players start on Puzzles (24 Oct 2026, Alec's call after the site review: the regulars opened this page
+   184 times in four weeks and read 3 articles). The bare address "/" goes to puzzles.html for the installed
+   app and for any browser that has played (a puzzle, game or league save); everyone else, search engines
+   included, still gets this page. /index.html (the News tab, "← News" in pieces) always stays here. */
+(function(){try{
+  if(location.pathname!=='/')return;
+  var app=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true,played=false;
+  if(!app){for(var i=0;i<localStorage.length;i++){if(/^(digi-[a-z0-9-]+-v1|noodle-board-v1)$/.test(localStorage.key(i)||'')){played=true;break;}}}
+  if(app||played)location.replace('/puzzles.html'+location.search+location.hash);
+}catch(e){}})();
+</script>
+<script>
 /* full-screen app only: hold the top and bottom insets and the screen height steady (dn-pin, 18 Oct 2026).
    On every page load Android briefly brings its bars back, which changed these and made the page jump.
    A value is taken up only once it has held for 0.7 s, and remembered per orientation for the next page. */
@@ -67,9 +79,9 @@
   <nav class="controls" aria-label="Sections and filters">
     <div class="bar">
       <div class="sections" role="group" aria-label="Sections">
-        <a class="sec news" href="index.html" aria-current="page">News</a>
         <a class="sec puzzles" href="puzzles.html">Puzzles</a>
         <a class="sec games" href="games.html">Games</a>
+        <a class="sec news" href="index.html" aria-current="page">News</a>
         <a class="sec lab" href="lab.html">Lab</a>
       </div>
       <button class="sbtn" id="sbtn" type="button" hidden aria-label="Search" aria-expanded="false" aria-controls="searchrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
