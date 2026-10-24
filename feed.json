@@ -1,5 +1,5 @@
 {
-  "built": "2026-10-24T13:03:40.704Z",
+  "built": "2026-10-24T14:44:51.285Z",
   "today": "2026-10-24",
   "timezone": "Europe/London",
   "count": 678,
@@ -129,13 +129,12 @@
       "standfirst": "The daily Tangle without the wait: 360 boards, three stars each, and a scarf to knit as you win.",
       "date": "2026-10-24",
       "updated": "",
-      "read": "~3 min",
+      "read": "~2 min",
       "thumb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI0Y1RUZFNiIvPjxnIGZpbGw9IiNGRkZERjkiIHN0cm9rZT0iIzJBMjExOCIgc3Ryb2tlLXdpZHRoPSIxLjgiPjxyZWN0IHg9IjU4IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9IjU4IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIgZmlsbD0iI0VDRTNENiIgc3Ryb2tlPSIjQjlBQTk2Ii8+PC9nPjxwYXRoIGQ9Ik01OCA2MkM2MiA0NiA2NiAyNiA3MCAyMlM5NiAyMCA5OCAyMiA5OCA0NiA5OCA1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQzA1MzJBIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iODQiIHI9IjI5IiBmaWxsPSIjQzA1MzJBIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEUzQTFDIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNMTYgNzRjMTQgNiAzNCA0IDUwLTEwIi8+PHBhdGggZD0iTTE0IDg4YzE4IDQgMzgtMiA1NC0xOCIvPjxwYXRoIGQ9Ik0yMCAxMDJjMTYgMCAzNC04IDQ2LTI0Ii8+PHBhdGggZD0iTTMwIDU5Yy02IDE0LTYgMzQgNCA1MiIvPjxwYXRoIGQ9Ik00NiA1NmMtOCAxNi04IDM4IDIgNTYiLz48L2c+PGNpcmNsZSBjeD0iMzEiIGN5PSI3MSIgcj0iNSIgZmlsbD0iI0U1ODI2MCIgb3BhY2l0eT0iLjciLz48L3N2Zz4=",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
-      "mask": "",
-      "badge": "In development"
+      "mask": ""
     },
     {
       "path": "reports/2026-10-24-retail-sales-september-confidence-budget.html",
