@@ -446,11 +446,11 @@ function awayCard(n,hrs,boats,help){awayOpen=true;const h=hrs>=1?hrs.toFixed(1)+
 function applySnap(o){Object.assign(st,{night:o.night,phase:'day',t:o.t,dayLen:o.dayLen,carried:o.carried,fish:o.fish,hp:Math.max(1,Math.min(st.maxHp,o.hp))});
  for(const [id,lv,pd,sp] of o.pads){const p=pads.find(q=>q.id===id);if(p){p.level=lv;p.paid=pd;if(sp)p.spec=sp;}}
  for(const [x,y,c] of o.chests)if(walkable(x,y))st.chests.push({x,y,coins:c,open:false,t:0});
- for(const [x,y] of o.coins)if(walkable(x,y))dropCoin(x,y);
+ for(const [x,y,v] of o.coins)if(walkable(x,y))dropCoin(x,y,null,0,v||1);
  for(const [x,y,pd] of o.crates)if(walkable(x,y))st.crates.push({x,y,pad:pd,age:1});
  if(walkable(o.k[0],o.k[1])){st.keeper.x=o.k[0];st.keeper.y=o.k[1];}if(o.tf)st.tutF=o.tf;st.gain=o.g||0;st.shield=o.sh||0;st.masonN=o.mn||0;st.taken=o.tk||0;}
 function snapState(){const n=st.phase==='night';return{L:st.L,night:n?st.night-1:st.night,t:n?CFG.day-10:st.t,dayLen:n?CFG.day:st.dayLen,carried:st.carried,fish:st.fish,hp:st.hp,
-  pads:pads.map(p=>[p.id,p.level,p.paid,p.spec||null]),chests:st.chests.filter(c=>!c.open).map(c=>[c.x,c.y,c.coins]),coins:st.coins.map(c=>[c.x,c.y]),crates:st.crates.map(c=>[c.x,c.y,c.pad]),k:[st.keeper.x,st.keeper.y],tf:st.tutF,g:st.gain||0,sh:st.shield||0,mn:st.masonN||0,tk:st.taken||0};}
+  pads:pads.map(p=>[p.id,p.level,p.paid,p.spec||null]),chests:st.chests.filter(c=>!c.open).map(c=>[c.x,c.y,c.coins]),coins:st.coins.map(c=>c.v>1?[c.x,c.y,c.v]:[c.x,c.y]),crates:st.crates.map(c=>[c.x,c.y,c.pad]),k:[st.keeper.x,st.keeper.y],tf:st.tutF,g:st.gain||0,sh:st.shield||0,mn:st.masonN||0,tk:st.taken||0};}
 function retryNight(cp){newIsland(true,cp);st.t=Math.max(0,st.dayLen-8);st.cp=cp;toast('Night '+NN()+' again','Your buildings are as you left them. Dark falls in 8 seconds, so spend any coins now.');}
 function saveRun(){if(SIM||!st||st.over)return;try{localStorage.setItem(RUNKEY,JSON.stringify(snapState()))}catch(e){}}
 function clearRun(){if(SIM)return;try{localStorage.removeItem(RUNKEY)}catch(e){}}
@@ -743,7 +743,7 @@ function update(dt){
      part({kind:'mflash',x:mx,y:my,a:p.ang,r:1,max:0.11});part({kind:'flash',x:mx,y:my,r:5,max:0.08});for(let i=0;i<5;i++)part({kind:'smoke',x:mx+Math.cos(p.ang)*4,y:my+Math.sin(p.ang)*4,vx:Math.cos(p.ang)*(26+i*6)+Math.random()*14-7,vy:Math.sin(p.ang)*(26+i*6)-6+Math.random()*8,r:4+Math.random()*3.5,max:0.8+Math.random()*0.5});
      play('boom');}}}}
  // coins
- for(const c of st.coins){c.age+=dt;const d=Math.hypot(k.x-c.x,k.y-c.y);if(d<60&&c.age>0.45){c.x+=(k.x-c.x)/d*300*dt;c.y+=(k.y-c.y)/d*300*dt;}if(d<12&&c.age>0.45){c.dead=true;st.carried++;coinSfx();st.fx.push({kind:'wal',x:c.x,y:c.y-4,t:0});}}
+ for(const c of st.coins){c.age+=dt;const d=Math.hypot(k.x-c.x,k.y-c.y);if(d<60&&c.age>0.45){c.x+=(k.x-c.x)/d*300*dt;c.y+=(k.y-c.y)/d*300*dt;}if(d<12&&c.age>0.45){c.dead=true;st.carried+=c.v||1;coinSfx();st.fx.push({kind:'wal',x:c.x,y:c.y-4,t:0});}}
  st.coins=st.coins.filter(c=>!c.dead);
  // night
  for(const m of st.merchants){if(m.state==='lost')continue;m.t+=dt;if(m.state==='gone'){m.h=-Math.PI/2;m.y-=30*dt;}}
@@ -784,7 +784,7 @@ function update(dt){
     /* beyond the beam's reach (e.g. after a resize or a resumed save): sail in on its own, and the dark doesn't count yet */
     if(!m.beam&&Math.hypot(m.x-G.ox,m.y-G.oy)>450){m.x+=dx/d*24*dt;m.y+=dy/d*24*dt;}
     else if(m.beam){m.x+=dx/d*34*dt;m.y+=dy/d*34*dt;m.lost=Math.max(0,m.lost-dt*0.5);}else{const cv=m.conv?1:0;m.lost+=dt*(cv?0.5:1);m.x+=dx/d*(cv?14:3)*dt;m.y+=dy/d*(cv?14:3)*dt;}
-    if(d<8){m.state='safe';m.t=0;st.tutF.merchant=true;const n=Math.round(10*Math.sqrt(st.L)*(curMap().mer||1)*(st.twist==='convoy'?2:1));for(let i=0;i<n;i++){const cx=Math.max(20,Math.min(380,m.tx+Math.random()*30-15));dropCoin(cx,coastY(cx)+16+Math.random()*8);}meta.stats.saved++;play('win');toast('Merchant home safe','It paid '+n+' coins. They are on the beach by the jetty.');}
+    if(d<8){m.state='safe';m.t=0;st.tutF.merchant=true;const n=Math.round(10*Math.sqrt(st.L)*(curMap().mer||1)*(st.twist==='convoy'?2:1));for(const v of bundle(n)){const cx=Math.max(20,Math.min(380,m.tx+Math.random()*30-15));dropCoin(cx,coastY(cx)+16+Math.random()*8,null,0,v);}meta.stats.saved++;play('win');toast('Merchant home safe','It paid '+n+' coins. They are on the beach by the jetty.');}
     else if(m.lost>14){m.state='gone';m.t=0;st.tutF.merchant=true;meta.stats.turned++;toast('The merchant turned back','It gave up after too long in the dark. Flick the beam back to it every few seconds.');}
     /* never sail over the headland: slide along the shore instead */
     if(m.state==='lost'){const cy=coastY(m.x)-16;if(m.y>cy&&Math.abs(m.tx-m.x)>20)m.y=Math.max(cy,Math.min(m.y,m.ty));}}}
@@ -830,7 +830,7 @@ function updateHelpers(dt){const k=st.keeper,day=st.phase==='day';
     if(d.tgt){d.tgt.o.claim=true;d.state='fetch';}else d.state=d.load?'return':'idle';}
    if(d.tgt&&moveTo(d,d.tgt.o,v,dt)){const o=d.tgt.o;d.tgt=null;
     if(o.coin===undefined&&st.chests.includes(o)){o.claim=false;openChest(o);}
-    else{o.dead=true;st.coins=st.coins.filter(c=>c!==o);d.load++;if(d.load>=cap)d.state='return';}}
+    else{o.dead=true;st.coins=st.coins.filter(c=>c!==o);d.load+=o.v||1;if(d.load>=cap)d.state='return';}}
    if(d.state==='idle'&&!d.tgt){
     if(day&&!k.inTower){moveTo(d,{x:k.x+30*(k.f||1),y:k.y+10},v*0.6,dt);d.dig+=dt;
      if(d.dig>=DIG_T){d.dig=0;const n=dogDig(dp.level);d.load+=n;d.digT=0.6;for(let i=0;i<6;i++)part({kind:'dirt',x:d.x+Math.random()*8-4,y:d.y,vx:Math.random()*50-25,vy:-30-Math.random()*30,r:1.8,max:0.5});num(d.x,d.y-24,'dug +'+n,'#f6c343');d.state='return';}}
@@ -840,7 +840,7 @@ function updateHelpers(dt){const k=st.keeper,day=st.phase==='day';
  const cp=pads.find(p=>p.id==='cart');
  if(cp&&cp.level>0){const c=st.cart||(st.cart={x:cp.x,y:cp.y-6,state:'idle',load:0,f:1});const v=cartSpd(cp.level)*(cp.spec==='quick'?1.4:1),cap=cartCap(cp.level)+(cp.spec==='quick'?2:0),mk=market(),works=day||cp.spec==='porter';
   if(!works&&c.state!=='sell'){if(c.tgt){c.tgt.claim=false;c.tgt=null;}if(c.load)c.state='sell';else moveTo(c,{x:cp.x,y:cp.y-6},v,dt);}
-  else if(c.state==='sell'){if(moveTo(c,{x:mk.x+26,y:mk.y+6},v,dt)){const pr=priceL(mk.level)*c.load;for(let i=0;i<pr;i++){const a=Math.random()*6.28;dropCoin(mk.x+Math.cos(a)*(12+Math.random()*14),mk.y+14+Math.sin(a)*8);}if(c.load)play('sell');c.load=0;c.state='idle';}}
+  else if(c.state==='sell'){if(moveTo(c,{x:mk.x+26,y:mk.y+6},v,dt)){const pr=priceL(mk.level)*c.load;for(const v of bundle(pr)){const a=Math.random()*6.28;dropCoin(mk.x+Math.cos(a)*(12+Math.random()*14),mk.y+14+Math.sin(a)*8,null,0,v);}if(c.load)play('sell');c.load=0;c.state='idle';}}
   else{if(!c.tgt||!st.crates.includes(c.tgt)){c.tgt=null;let bd=1e9;for(const cr of st.crates){if(cr.claim)continue;const dd=Math.hypot(cr.x-c.x,cr.y-c.y);if(dd<bd){bd=dd;c.tgt=cr;}}if(c.tgt)c.tgt.claim=true;else if(c.load)c.state='sell';}
    if(c.tgt&&moveTo(c,c.tgt,v,dt)){st.crates=st.crates.filter(x=>x!==c.tgt);c.tgt=null;c.load++;play('thud');if(c.load>=cap)c.state='sell';}
    if(!c.tgt&&!c.load&&c.state==='idle')moveTo(c,{x:cp.x,y:cp.y-6},v,dt);}}}
@@ -870,9 +870,16 @@ function sinkShip(e){meta.stats.sunk++;st.wrecks.push({x:e.x,y:e.y,h:e.h,d:e.d,t
  for(let i=0;i<e.d.coins;i++){const cx=Math.max(20,Math.min(380,e.x+Math.random()*30-15));dropCoin(cx,coastY(cx)+14+Math.random()*8);}}
 /* coins pop out with a small hop and a wobble that settles flat; from = where they fly out of (a chest), delay staggers a burst */
 function openChest(c){if(c.open)return;c.open=true;c.t=0;play('chest');c.lidT=0;
- for(let i=0;i<c.coins;i++){const a=Math.random()*6.28,r=14+Math.random()*16;dropCoin(c.x+Math.cos(a)*r,c.y+6+Math.sin(a)*r*0.7,{x:c.x,y:c.y-8},0.12+i*0.03);}
+ bundle(c.coins).forEach((v,i)=>{const a=Math.random()*6.28,r=14+Math.random()*16;dropCoin(c.x+Math.cos(a)*r,c.y+6+Math.sin(a)*r*0.7,{x:c.x,y:c.y-8},0.12+i*0.03,v);});
  st.fx.push({kind:'ring',x:c.x,y:c.y,t:0});}
-function dropCoin(x,y,from,delay){st.coins.push({x,y,age:-(delay||0),ph:Math.random()*6,fx:from?from.x:x,fy:from?from.y:y});}
+/* every coin on the ground has a value (v). Large payouts, which reach hundreds of coins in the open sea, are bundled into at most
+   COIN_CAP stacks (taller stacks are worth more) so the beach stays readable and the frame doesn't spend itself on coin gradients.
+   A hard ceiling on loose coins merges any further drops into stacks that are already there */
+const COIN_CAP=14,COIN_MAX=180;
+function bundle(n){n=Math.max(0,Math.round(n));if(n<=COIN_CAP)return new Array(n).fill(1);const k=COIN_CAP,b=Math.floor(n/k),x=n%k;return Array.from({length:k},(_,i)=>b+(i<x?1:0));}
+function dropCoin(x,y,from,delay,v){v=Math.max(1,Math.round(v||1));
+ if(st.coins.length>=COIN_MAX){let b=null,bd=1e9;for(const c of st.coins){if(c.age<0.45)continue;const d=Math.hypot(c.x-x,c.y-y);if(d<bd){bd=d;b=c;}}if(b){b.v=(b.v||1)+v;return;}}
+ st.coins.push({x,y,v,age:-(delay||0),ph:Math.random()*6,fx:from?from.x:x,fy:from?from.y:y});}
 /* the keeper appears on a spot (dawn by the tower, a resumed save): don't let it start taking coins until he steps off */
 function lockUnderKeeper(){const k=st.keeper;for(const p of pads){const pp=padPos(p);if(Math.abs(k.x-pp.x)<pp.s/2+6&&Math.abs(k.y-pp.y)<pp.s/2+6){p.lock=true;p.dwell=0;}}}
 function dawn(){st.phase='day';st.t=0;st.masonN=0;st.dayLen=CFG.day*sea().day;if(tutOn()){meta.tutDone=true;saveMeta();toast('You are the keeper now','Fish and build by day, light the lamp at night. The button at the top right pauses.');}st.keeper.inTower=false;st.keeper.x=G.lx;st.keeper.y=G.ly+24;dial=null;aimId=null;lockUnderKeeper();
@@ -933,6 +940,19 @@ function drawSea(){if(seaDirty)buildSea();ctx.fillStyle=seaG;ctx.fillRect(-10,-1
    ctx.closePath();}
   ctx.fillStyle=`rgba(${L.c},${L.a})`;ctx.fill();}
  if(st.dk<0.8){const a=0.8*(1-st.dk);for(const g of GL){const q=(clock*0.45+g.ph)%5.5;if(q<0.3)sparkle(g.x,g.y,2.2*Math.sin(q/0.3*Math.PI)*a);}}}
+/* night: the moon is off the top of the view, so what shows is its light on the water. A pale glow where it lands, a broken path of
+   shimmer running down the swell towards the headland, and the stars as faint pinpricks on the dark sea (the GL points already laid
+   out on the water). All of it fades in with the dark and keeps off the beam, which stays the brightest thing on the sea */
+const MOON={x:112,y:66,path:Array.from({length:46},(_,i)=>({u:i/46,o:(((i*7919)%97)/97-0.5),w:((i*131)%7)+2.5}))};
+function drawMoonlight(){const k=st.dk;if(k<0.04)return;const a=k*(st.phase==='night'?1:0.8);
+ ctx.save();ctx.globalCompositeOperation='lighter';
+ const mg=ctx.createRadialGradient(MOON.x,MOON.y,0,MOON.x,MOON.y,140);mg.addColorStop(0,`rgba(220,236,255,${0.30*a})`);mg.addColorStop(0.3,`rgba(196,220,248,${0.12*a})`);mg.addColorStop(1,'rgba(196,220,248,0)');
+ ctx.fillStyle=mg;ctx.fillRect(MOON.x-140,MOON.y-140,280,280);
+ const seaTop=Math.min(G.band,coastY(MOON.x))-24,len=seaTop-MOON.y;ctx.lineCap='round';
+ for(const s of MOON.path){const y=MOON.y+22+s.u*len;if(y>seaTop)break;const tw=meta.rm?0.6:0.5+0.5*Math.sin(clock*1.7+s.u*19+s.o*6);const al=a*(0.12+0.20*tw)*(1-s.u*0.7);if(al<0.01)continue;
+  const w=s.w*(1+0.9*s.u),x=MOON.x+s.o*(26+80*s.u)+(meta.rm?0:Math.sin(clock*0.6+s.u*9)*3);ctx.strokeStyle=`rgba(222,236,255,${al})`;ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(x-w,y);ctx.lineTo(x+w,y);ctx.stroke();}
+ if(st.phase==='night'){ctx.fillStyle='#eef4ff';for(let i=0;i<GL.length;i+=2){const g=GL[i];if(g.y>G.band-30||Math.hypot(g.x-MOON.x,g.y-MOON.y)<60)continue;const tw=meta.rm?0.5:0.5+0.5*Math.sin(clock*1.1+g.ph*3);const al=a*0.28*tw*tw;if(al<0.02)continue;ctx.globalAlpha=al;ctx.fillRect(g.x,g.y,1.3,1.3);}ctx.globalAlpha=1;}
+ ctx.restore();}
 function drawFoam(){const w=Math.sin(clock*1.3),w2=Math.sin(clock*1.3-0.9);ctx.lineJoin='round';
  coastLine(ctx,-5-3*w);ctx.strokeStyle=`rgba(255,255,255,${0.17+0.07*w})`;ctx.lineWidth=12;ctx.stroke();
  if(st.dk<0.5){coastLine(ctx,-11-3.5*w2);ctx.setLineDash([3,13,8,19,5,23]);ctx.lineDashOffset=clock*3;ctx.strokeStyle=`rgba(255,255,255,${0.22+0.1*w2})`;ctx.lineWidth=1.6;ctx.stroke();ctx.setLineDash([]);}
@@ -1065,7 +1085,7 @@ function sparkle(x,y,r){if(r<=0.3)return;ctx.fillStyle='rgba(255,251,228,.95)';c
 /* fresh coins fly out, hop and wobble, then lie flat and still */
 function drawGroundCoin(c){if(c.age<0)return;const u=Math.min(1,c.age/0.4),e=1-(1-u)*(1-u),x=c.fx+(c.x-c.fx)*(c.age<0.45?e:1),y=c.fy+(c.y-c.fy)*(c.age<0.45?e:1);
  const z=c.age<0.4?Math.sin(u*Math.PI)*(c.fx!==c.x?14:9):c.age<0.6?Math.sin((c.age-0.4)/0.2*Math.PI)*2:0,ry=c.age<0.7&&!meta.rm?0.42+0.5*Math.abs(Math.sin(c.age*20+c.ph))*(1-c.age/0.7):0.42;
- coinG(x,y,4.6,z,ry,true);if(c.age>0.7&&!meta.rm){const g=(clock*0.55+c.ph)%4.5;if(g<0.35)sparkle(x+1.8,y-1.6,3*Math.sin(g/0.35*Math.PI));}}
+ const n=c.v>=6?3:c.v>1?2:1;for(let i=0;i<n;i++)coinG(x,y-i*2.3,4.6,z,ry,i===0);if(c.age>0.7&&!meta.rm){const g=(clock*0.55+c.ph)%4.5;if(g<0.35)sparkle(x+1.8,y-1.6-(n-1)*2.3,3*Math.sin(g/0.35*Math.PI));}}
 /* wooden chest with iron bands, a lid and a lock. The lid swings open and the coins burst out */
 function drawChest(c){const x=c.x,y=c.y,o=c.open?Math.min(1,c.t/0.3):0,O='#2a1d10';ctx.globalAlpha=c.open?Math.max(0,1-Math.max(0,c.t-1.2)/1.3):1;
  ctx.fillStyle='rgba(20,10,0,.22)';ctx.beginPath();ctx.ellipse(x+1,y+7,14,3.6,0,0,7);ctx.fill();ctx.lineWidth=1;ctx.strokeStyle=O;
@@ -1378,7 +1398,7 @@ function draw(){
   ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(fog,0,0,cv.width,cv.height);applyCam(ctx,K,ox,oy);
   if(st.phase==='night'){const h=beamHalf();ctx.globalCompositeOperation='lighter';const rg=ctx.createRadialGradient(G.ox,G.oy,0,G.ox,G.oy,470);
    rg.addColorStop(0,`rgba(255,226,140,${0.35*st.dk})`);rg.addColorStop(1,'rgba(255,226,140,0)');ctx.fillStyle=rg;ctx.beginPath();ctx.moveTo(G.ox,G.oy);ctx.arc(G.ox,G.oy,470,st.aim-h,st.aim+h);ctx.closePath();ctx.fill();ctx.globalCompositeOperation='source-over';}}
- drawGlints();
+ drawMoonlight();drawGlints();
  // everything in combat sits above the night so it is always seen
  for(const w of st.wrecks)drawWreck(w);
  for(const e of st.enemies)if(e.lit)drawShip(e);
