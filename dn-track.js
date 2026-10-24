@@ -298,6 +298,8 @@
   }
   // Opened from a home-screen icon (the app manifest asks for fullscreen; iOS
   // reports standalone). Added 18 Oct 2026: page views before then have no inst.
+  // inst 2 (25 Oct 2026): the page is running inside the Daily Noodle app's WebView,
+  // which sets window.__DN_APP = 2 before the page loads (app repo, WP4).
   function installed(){
     try {
       var mm = window.matchMedia;
@@ -307,7 +309,7 @@
   }
   if (!BOT && !optedOut()) ids();   // sets isNew before the first event
   var pvProps = { topic: meta('dn:topic'), kind: KIND, new: isNew,
-                  ref: refDomain(), screen: band(window.innerWidth), inst: installed() ? 1 : 0, tv: 3 };
+                  ref: refDomain(), screen: band(window.innerWidth), inst: window.__DN_APP === 2 ? 2 : installed() ? 1 : 0, tv: 3 };
   var VIA = viaTag(), APP = inApp();
   if (VIA) pvProps.via = VIA;
   if (APP) pvProps.app = APP;

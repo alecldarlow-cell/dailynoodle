@@ -432,6 +432,22 @@ const TESTS = {
     await ctx.close();
     await shareNative(b, F.mini, p2 => play.grid(p2), 'mini');
   },
+  async 'track:app-inst'(b) {
+    /* Inside the Daily Noodle app's WebView (window.__DN_APP = 2 before load) page views carry inst 2 (25 Oct 2026) */
+    const ev = [], ctx = await newPhone(b, { events: ev });
+    await ctx.addInitScript(() => { window.__DN_APP = 2; });
+    const { p } = await open(b, F.mini, { ctx, events: ev });
+    await play.grid(p);
+    const pv = ev.find(e => e.ev === 'page_view');
+    ok(pv && pv.x && pv.x.inst === 2, `track: an app page view carries inst 2 (got ${pv && pv.x && pv.x.inst})`);
+    ok(ends(ev).length === 1, 'track: the app play still logs its puzzle_end');
+    await ctx.close();
+    const ev2 = []; const r2 = await open(b, F.mini, { events: ev2 });
+    await play.grid(r2.p);
+    const pv2 = ev2.find(e => e.ev === 'page_view');
+    ok(pv2 && pv2.x && pv2.x.inst === 0, `track: a browser page view still carries inst 0 (got ${pv2 && pv2.x && pv2.x.inst})`);
+    await r2.ctx.close();
+  },
   async 'doku:full-wrong'(b) {
     /* a full grid that isn't today's answer says so (19 Oct 2026); sending a letter back clears it */
     const { ctx, p } = await open(b, F.doku);
