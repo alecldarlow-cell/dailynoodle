@@ -47,6 +47,7 @@ try {
   console.log('Registry: no new errors; '+errors.length+' exact archive exceptions ('+perm+' accepted history, '+(debt.length-perm)+' dated; see test-results/registry.log).');
   const {G:link}=require('../build-link-batch'),{G:pg,grade}=require('../build-path-batch'),sweep=require('../build-sweep-batch');
   const {broadAlts}=require('../doku-broad-check'),reckon=require('../build-reckon-batch');
+  const veto=require('../word-veto'),banned=new Set([...veto.BLOCKED,...veto.SENSITIVE,...veto.VETO]);
   const gates={};
   for(const type of ['mini','doku']) {
     const src=fs.readFileSync(path.join(ROOT,'engines',type+'.js'),'utf8');
@@ -69,7 +70,9 @@ try {
       const grid=p.grid.map(r=>r.map(c=>String(c).toLowerCase()));
       const slots=gates.mini.findSlots(grid);gate=slots&&gates.mini.validate(grid,slots,p.band);
       assert.ok(p.clues&&Object.keys(p.clues).length,'Missing clues '+file);
-    }else if(file.includes('logic-doku')){gate=gates.doku.validateLexi(p);assert.equal(broadAlts(p),0,'Unintended second Doku answer: '+file);}
+    }else if(file.includes('logic-doku')){gate=gates.doku.validateLexi(p);assert.equal(broadAlts(p),0,'Unintended second Doku answer: '+file);
+      // 24 Oct 2026: no blocked or vetoed word in any run (tools/word-veto.js); earlier Dokus were never screened
+      if(day>='2026-10-27'){const bad=gates.doku.findSlots(p.grid.map(r=>r.map(c=>String(c).toLowerCase()))).map(s=>s.cells.map(([r,c])=>String(p.grid[r][c]).toLowerCase()).join('')).filter(w=>banned.has(w));assert.ok(!bad.length,'Doku holds vetoed words ('+bad.join(', ')+'): '+file);}}
     else if(file.includes('logic-path')){gate=pg.validatePath(p);if(day>='2026-11-01')assert.deepEqual(grade(p).breaks,[],'Path quality '+file);}
     else if(file.includes('logic-sweep')){const r=sweep.evalPuzzle(p.mines,p.start);gate=r.v;if(day>='2026-11-01')assert.ok(r.fl.pass,'Sweep difficulty floor '+file);}
     else if(file.includes('word-link'))gate=link.validateLink(p);
