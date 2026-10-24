@@ -137,7 +137,7 @@ canvas{display:block;width:100%;height:100%;touch-action:none}
   <div id="flash" role="status" aria-live="polite"></div>
   <button id="menu" type="button" aria-label="Pause (or press Esc)"><i aria-hidden="true"></i><i aria-hidden="true"></i></button>
   <div id="toast"><h2></h2><p></p></div>
-  <div id="tip">Drag anywhere to walk</div>
+  <div id="tip">Tap or drag to walk</div>
   <div id="tut" hidden><span class="tn" id="tutN"></span><span class="h" id="tutH"></span><button type="button" id="tutSkip">Skip</button></div>
   <div id="info" hidden></div>
   <div id="sign" hidden role="status" aria-live="polite"><b id="signH"></b><span id="signP"></span></div>
@@ -394,7 +394,7 @@ let st;
 const tutOn=()=>!SIM&&!meta.tutDone&&st&&st.L===1&&st.night<=1&&!st.over;
 function tutSteps(){const j=pads.find(p=>p.id==='jetty1'),c=pads.find(p=>p.id==='canL'),mk=market(),k=st.keeper,near=a=>{let b=null,bd=1e9;for(const o of a){const d=Math.hypot(o.x-k.x,o.y-k.y);if(d<bd){bd=d;b=o;}}return b;};
  return [
- {h:'Walk onto a chest: its coins pay for buildings',done:()=>st.tutF.chest,tgt:()=>near(st.chests.filter(c=>!c.open))},
+ {h:'Tap or drag to walk onto a chest: its coins pay for buildings',done:()=>st.tutF.chest,tgt:()=>near(st.chests.filter(c=>!c.open))},
  {h:'Stand still on the boat spot to build a fishing boat',done:()=>j.level>0,tgt:()=>padPos(j)},
  {h:st.crates.length?'Pick up the crate of fish your boat landed':'Your boat is out fishing…',done:()=>st.tutF.crate,tgt:()=>st.crates.length?near(st.crates):null},
  {h:'Sell the fish at the market stall for coins',done:()=>st.tutF.sold,tgt:()=>({x:mk.x,y:mk.y-8})},
@@ -430,10 +430,8 @@ function newIsland(fresh,snap){
  if(!resumed){const M=mapOf(L);washChests(Math.max(1,CFG.chests0+(M.chD||0)),Math.round((CFG.chestCoins+(L-1)*1.0)*(M.chC||1)));}
  if(awayHrs>=0.05&&!SIM){const boats=pads.filter(p=>p.type==='jetty'&&p.level>0).reduce((a,p)=>a+p.level,0),help=pads.filter(p=>(p.type==='dog'||p.type==='cart')&&p.level>0).length;
   const rate=(8+10*boats+6*help)*(1+0.15*meta.up.net);pendingBonus=Math.floor(awayHrs*rate);if(pendingBonus>0)awayCard(pendingBonus,awayHrs,boats,help);awayHrs=0;}
- const away='';
- if(resumed==='retry'){}
- else if(resumed)toast('Welcome back',away||'Picking up where you left off');
- else{toast(hName(L),(L<=FINALE?'Headland '+L+' of '+FINALE+'. ':'')+beachOf(L).tip);if(twistOf(L))toast('Sea twist: '+TWISTS[twistOf(L)].name,TWISTS[twistOf(L)].d);if(mapOf(L).here)toast('This beach',mapOf(L).here);if(mapOf(L).trade)toast('Trade here',mapOf(L).trade);
+ if(resumed===true)toast('Welcome back','Picking up where you left off');   // a night retry says its own piece in retryNight
+ else if(!resumed){toast(hName(L),(L<=FINALE?'Headland '+L+' of '+FINALE+'. ':'')+beachOf(L).tip);if(twistOf(L))toast('Sea twist: '+TWISTS[twistOf(L)].name,TWISTS[twistOf(L)].d);if(mapOf(L).here)toast('This beach',mapOf(L).here);if(mapOf(L).trade)toast('Trade here',mapOf(L).trade);
   if(L===1&&!meta.tutDone)msgClear();}
  if(st.assist>0)toast('Calmer seas','After '+meta.streakN+' tries here, ships are '+Math.round(st.assist*100)+'% weaker so you can get past this headland.');
  pendingBonus=0;lockUnderKeeper();if(!awayOpen)$('modal').hidden=true;
@@ -515,10 +513,11 @@ function setAim(p){st.aim=Math.atan2(p.y-G.oy,p.x-G.ox);clampAim();st.aimed=true
    otherwise the clamp flings the beam to the east and a low west harbour can never be lit */
 const clampAim=()=>{let a=st.aim;while(a>Math.PI/2+0.4)a-=Math.PI*2;while(a<-Math.PI*1.5-0.4)a+=Math.PI*2;st.aim=Math.max(-Math.PI-0.9,Math.min(0.9,a));};
 let dial=null;
-/* quick tap (<200ms, <10px, no joystick/beam drag, only finger down) = pause, or dismiss the current sign */
+/* quick tap (<200ms, <10px, no joystick/beam drag, only finger down): by day the keeper walks to the spot; at night it only dismisses
+   the current sign. A tap never pauses: the pause button is always on screen (and Esc or P on a keyboard) */
 const TAP_MS=200,TAP_PX=10;let taps={},downN=0;
 cv.addEventListener('pointerdown',e=>{audioInit();if(!$('modal').hidden)return;rndStart();downN++;const p=toWorld(e),q=toScr(e);
- taps[e.pointerId]={t0:performance.now(),cx:e.clientX,cy:e.clientY,moved:0,aim0:st.aim,aimed0:st.aimed,solo:downN===1&&!joy&&!dial&&aimId===null};
+ taps[e.pointerId]={t0:performance.now(),cx:e.clientX,cy:e.clientY,wx:p.x,wy:p.y,moved:0,aim0:st.aim,aimed0:st.aimed,solo:downN===1&&!joy&&!dial&&aimId===null};
  if(st.phase==='night'){if(dial)return;if(p.y<G.cy-G.ry*0.2&&inSea(p)){aimId=e.pointerId;setAim(p);}else{dial={id:e.pointerId,x0:q.x,a0:st.aim};}}
  else if(!joy){joy={id:e.pointerId,ox:q.x,oy:q.y,x:q.x,y:q.y,sx:q.x,sy:q.y,t0:performance.now(),moved:0};st.keeper.goal=null;}
  try{cv.setPointerCapture(e.pointerId)}catch(_){}});
@@ -530,8 +529,10 @@ cv.addEventListener('pointermove',e=>{const q=toScr(e),tp=taps[e.pointerId];if(t
 const up=e=>{const tp=taps[e.pointerId],seaTap=aimId===e.pointerId;delete taps[e.pointerId];downN=Math.max(0,downN-1);
  const isTap=tp&&e.type==='pointerup'&&tp.solo&&performance.now()-tp.t0<TAP_MS&&tp.moved<TAP_PX;
  if(joy&&joy.id===e.pointerId)joy=null;if(dial&&dial.id===e.pointerId)dial=null;if(aimId===e.pointerId)aimId=null;
- /* at night a tap on the sea points the beam there (it never pauses); the pause button is always on screen */
- if(isTap&&!st.over){if(st.phase==='night'&&seaTap){if(signCur)signDismiss('tap');return;}if(st.phase==='night'){st.aim=tp.aim0;st.aimed=tp.aimed0;}if(signCur)signDismiss('tap');else openMenu('tap');}};
+ /* at night a tap on the sea points the beam there; a tap elsewhere leaves the beam where it was. By day a tap sends the keeper walking to the spot */
+ if(isTap&&!st.over){if(signCur)signDismiss('tap');
+  if(st.phase==='night'){if(!seaTap){st.aim=tp.aim0;st.aimed=tp.aimed0;}return;}
+  if(!st.keeper.inTower&&walkable(tp.wx,tp.wy))st.keeper.goal={x:tp.wx,y:tp.wy,t:0};}};
 cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
 addEventListener('keydown',e=>{const kk=e.key.toLowerCase();if((kk==='escape'||kk==='p')&&$('modal').hidden){openMenu('key');return;}keys[kk]=true;audioInit();});addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
 const earlyBonus=()=>Math.floor(Math.max(0,st.dayLen-st.t-3)/7);
@@ -572,7 +573,7 @@ function openMenu(via){if(!st||st.over||!$('modal').hidden||awayOpen)return;joy=
   ${nav('vO','Settings',`Sound ${meta.muted?'off':'on'} · music ${meta.music?'on':'off'} · beam ${spd[meta.sens]||'Normal'}`.replace(/beam (\w)/,(m,c)=>'beam '+c.toLowerCase()))}
   ${nav('vE','Sea state',sea().name)}
   ${nav('vP','Progress and resets',st.L===1?'Replay the guided start, restart or reset':'Restart this headland or reset everything')}
-  <a class="link home" href="../games.html">&larr; Digi Games</a>`;
+  <a class="link home" href="../games.html">&larr; Noodle Games</a>`;
   $('res').addEventListener('click',close);
   $('vC').addEventListener('click',()=>showChart(root));$('vS').addEventListener('click',()=>showStyle(root));$('vL').addEventListener('click',()=>showLog(root));
   $('vO').addEventListener('click',settings);$('vE').addEventListener('click',seaPage);$('vP').addEventListener('click',progress);};
@@ -635,7 +636,7 @@ function msgUpdate(dt){if(SIM)return;const el=$('toast'),night=!!(st&&st.phase==
  else{msgGap-=dt;if(msgGap<=0&&msgQ.length){msgCur=msgQ.shift();msgT=0;el.querySelector('h2').textContent=msgCur.h;el.querySelector('p').textContent=msgCur.p;el.classList.toggle('banner',!!(st&&st.phase==='night'));el.style.opacity=1;}}}
 
 /* ---------- nights: each one adds a new threat ---------- */
-function startNight(){if(st.night===NN()-1)st.cp=snapState();st.night++;if(st.night===1)rndStart();st.phase='night';st.t=0;st.warned=false;st.keeper.inTower=true;joy=null;
+function startNight(){if(st.night===NN()-1)st.cp=snapState();st.night++;if(st.night===1)rndStart();st.phase='night';st.t=0;st.warned=false;st.keeper.inTower=true;st.keeper.goal=null;joy=null;
  const n=st.night,L=st.L,N=NN(),last=n===N;
  /* nn: how hard this night is on the old three-night curve. Extra nights fill in the curve, and the last night of a 5-night beach goes one step past it */
  const nn=n<=1?1:1+(n-1)*((N-3)*0.5+2)/(N-1);
@@ -672,8 +673,8 @@ function spawn(type){
  if(type==='boss')sign('boss',on,'The ghost galleon','A huge, slow ship that hits the tower hard. Hold the beam on it: it burns, slows down and takes 50% more cannon damage.');}
 function harbourPoint(){const j=pads.find(p=>p.type==='jetty'&&p.level>0);if(j){const tip=jettyTip(j),s=jettySide(j);return{x:tip.x+s*26,y:tip.y-6};}return{x:70,y:coastY(70)-24};}
 function spawnMerchant(){const hp=harbourPoint();const x=hp.x<200?250+Math.random()*90:60+Math.random()*90;
- /* spawn inside the beam's reach (470), whatever the screen height: on tall screens y:22 was out of reach */
- const mdx=x-G.ox,y=Math.max(22,G.oy-Math.sqrt(Math.max(0,430*430-mdx*mdx)));
+ /* spawn inside the beam's reach (470) whatever the screen height, and below the top bar (pause button, status line) */
+ const mdx=x-G.ox,y=Math.max(60,G.oy-Math.sqrt(Math.max(0,430*430-mdx*mdx)));
  st.merchants.push({x,y,tx:hp.x,ty:hp.y,lost:0,state:'lost',h:Math.PI/2,t:0,beam:false,conv:st.twist==='convoy'});
  const m=st.merchants[st.merchants.length-1];if(!sign('merchant',()=>m.state==='lost'?m:null,'A merchant ship is lost','It only sails home while it is in your beam. Guide it to the green ring for a pile of coins.'))toast('Merchant lost','Keep the beam on it to bring it home.');}
 function spawnKraken(){const cans=pads.filter(p=>p.type==='cannon'&&p.level>0&&!p.grabbed);const tgt=cans.length?cans[Math.floor(Math.random()*cans.length)]:null;
@@ -890,7 +891,7 @@ function cleared(){st.over=true;const frac=st.hp/st.maxHp,stars=starsFor();
  harbour(fin?'The whole coast is lit':`${hName(done)} is safe`,stars,fin?`Every lighthouse from Hunstanton to Lowestoft Ness is lit. The gold paint and the keeper's crown are yours.`:'',`Sail to ${hName(meta.island)}`,null,meta.island,st.gain||0);}
 function lose(){st.over=true;const survived=st.night-1;let stars=0;if(survived>=2&&meta.lossL!==st.L){stars=1;meta.lossL=st.L;}meta.stars+=stars;meta.earned+=stars*sea().starX;meta.stats.lostN[Math.min(2,st.night-1)]++;if(meta.streakL===st.L)meta.streakN++;else{meta.streakL=st.L;meta.streakN=1;}saveMeta();clearRun();play('lose');lastResult={win:false,L:st.L,stars,night:st.night};rndEnd(false,{stars,night:st.night});
  const cp=st.night===NN()?st.cp:null;
- harbour('The light went out',stars,`You held ${survived} of ${NN()} nights.${stars?' That earns a star.':''} The sea will be a little calmer next try.`,`Restart ${hName(st.L)}`,cp?()=>retryNight(cp):null,0,st.gain||0);}
+ harbour('The light went out',stars,`You held ${survived} of ${NN()} nights.${stars?' That earns a star.':''}${meta.streakN>=2?' The sea will be a little calmer next try.':''}`,`Restart ${hName(st.L)}`,cp?()=>retryNight(cp):null,0,st.gain||0);}
 /* levels 1-5 cost 1-5 stars; the deep-water levels 6-10 cost 3, 3, 4, 4, 5 */
 const upCost=k=>meta.up[k]<5?1+meta.up[k]:3+Math.floor((meta.up[k]-5)/2);
 function buy(k){if(upShown(k)&&meta.up[k]<upMax()&&meta.stars>=upCost(k)){meta.stars-=upCost(k);meta.up[k]++;saveMeta();return true;}return false;}
@@ -901,7 +902,7 @@ function harbour(title,stars,text,next,retry,nextL,coins){if(SIM)return;
  const beach=`<div class="beach"><div class="k">${win?'Next':'This headland'} · ${bL<=FINALE?'headland '+bL+' of '+FINALE:'open sea'}</div><h3>${hName(bL)}</h3><p class="fl">${bi.fl}</p>${win?`<p class="nw">New here: <i>${bi.nw}</i></p>`:''}${twistOf(bL)?`<p class="tp" style="margin:0 0 6px"><b>Sea twist: ${TWISTS[twistOf(bL)].name}.</b> ${TWISTS[twistOf(bL)].d}</p>`:''}${mapOf(bL).here?`<p class="tp" style="margin:0 0 6px"><b>This beach:</b> ${mapOf(bL).here}</p>`:''}${mapOf(bL).trade?`<p class="tp" style="margin:0 0 6px"><b>Trade:</b> ${mapOf(bL).trade}</p>`:''}<p class="tp"><b>Tip:</b> ${bi.tip}</p></div>`;
  const render=()=>{$('card').innerHTML=`<h2>${title}</h2><div class="results">${starRow}${coinRow}</div>${text?`<p>${text}</p>`:''}${beach}`+
   (retry?`<button class="btn primary" id="retry">Retry the last night with your base</button><button class="btn" id="go" style="justify-content:center">${next}</button>`:`<button class="btn primary" id="go">${next}</button>`)+
-  `<button class="btn nav" id="hb"><span>Harbour<small>Spend stars on upgrades · coast chart</small></span><span class="price">★ ${meta.stars}</span></button><a class="link home" href="../games.html">&larr; Digi Games</a>`;
+  `<button class="btn nav" id="hb"><span>Harbour<small>Spend stars on upgrades · coast chart</small></span><span class="price">★ ${meta.stars}</span></button><a class="link home" href="../games.html">&larr; Noodle Games</a>`;
   $('go').addEventListener('click',()=>newIsland(true));if(retry)$('retry').addEventListener('click',retry);$('hb').addEventListener('click',shop);};
  const shop=()=>{const mxL=upMax(),deepNote=(meta.finale||meta.island>FINALE)?(meta.island>=DEEP?`<p class="note" style="text-align:left">Deep water: every upgrade now goes to level 10.</p>`:`<p class="note" style="text-align:left">Reach ${hName(DEEP)} to take every upgrade on to level 10.</p>`):'';
   $('card').innerHTML=pageHead('Harbour')+`<p style="text-align:left">Stars buy upgrades that last for every headland. You have <span class="star">★ ${meta.stars}</span>.</p>`+
@@ -1473,7 +1474,7 @@ function hud(dt){const left=threatsLeft(),night=st.phase==='night';
  {const tc=tutCur(),el=$('tut');stage.classList.toggle('tutOn',!!tc);el.hidden=!tc;if(tc){const tx=`Step ${tc.i+1} of ${tc.n}`;if($('tutN').textContent!==tx)$('tutN').textContent=tx;if($('tutH').textContent!==tc.h)$('tutH').textContent=tc.h;}
   if(tc&&tc.i===5){bellEl.style.boxShadow=meta.rm?'0 0 0 4px #fff':`0 0 0 ${3+2*Math.sin(clock*6)|0}px #fff, 0 3px 0 #a67c14`;}else bellEl.style.boxShadow='';}
  const tip=$('tip');let t='';
- if(!html&&!st.over&&!msgCur){if(st.phase==='day'&&st.L===1&&pads[0].level===0)t=st.chests.some(c=>!c.open)?'Drag anywhere to walk · follow the arrow':'Stand still on the boat spot to build it';
+ if(!html&&!st.over&&!msgCur){if(st.phase==='day'&&st.L===1&&pads[0].level===0)t=st.chests.some(c=>!c.open)?'Tap or drag to walk · follow the arrow':'Stand still on the boat spot to build it';
   else if(st.fish>0&&st.phase==='day'&&Math.hypot(st.keeper.x-market().x,st.keeper.y-market().y)>60)t='Fish only pays once sold: take your crates to the market';
   }
  tip.textContent=t;tip.style.opacity=t?1:0;}
@@ -1490,6 +1491,5 @@ addEventListener('resize',()=>{resize();turnCheck();});
 resize();newIsland(false);turnCheck();requestAnimationFrame(frame);
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
