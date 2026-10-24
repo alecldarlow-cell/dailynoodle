@@ -14,7 +14,7 @@ const live=p=>expect.poll(()=>p.evaluate(()=>{const s=__dg.state();return !!s.R&
 
 test('YARN-01: a word entered by tapping scores; one star clears the level and opens the next',async({phone})=>{
  await open(phone);const p=phone.p;
- await expect(p.locator('#hStatus')).toContainText('Stars at 12, 25, 38 points');
+ await expect(p.locator('#hStatus')).toContainText('Stars at 14, 29, 42 points');
  await H.tap(p,p.locator('#hPlay'));await live(p);
  const w=await p.evaluate(()=>__dg.level(1).main.find(x=>x.length===4));
  const path=await p.evaluate(w=>__dg.pathOf(w),w);
@@ -34,7 +34,7 @@ test('YARN-02: a loss opens nothing; restart is a new round and a reload resumes
  await open(phone);const p=phone.p;
  await H.tap(p,p.locator('#hPlay'));await live(p);
  await p.evaluate(()=>__dg.end(false));await expect(p.locator('#result')).toBeVisible();
- await expect(p.locator('#rNext')).toBeHidden();await expect(p.locator('#rVerdict')).toContainText('12 points clears this level');
+ await expect(p.locator('#rNext')).toBeHidden();await expect(p.locator('#rVerdict')).toContainText('14 points clears this level');
  expect(await p.evaluate(()=>__dg.state().save.lv[1])).toBeUndefined();
  await H.tap(p,p.locator('#rRetry'));await live(p);
  const w=await p.evaluate(()=>__dg.level(1).main[0]);await p.evaluate(w=>__dg.submitWord(w),w);
@@ -58,4 +58,16 @@ test('YARN-03: today\'s Tangle card links to today\'s daily and reads its result
  expect(await p.locator('#dailyCard').getAttribute('href')).toBe(await p.evaluate(()=>window.__tn));
  await expect(p.locator('#dailyStatus')).toHaveText('Played today: 31 points');
  await expect(p.locator('#sWords')).toHaveText('2');
+});
+
+test('YARN-04: Back during a round opens the pause sheet instead of leaving; Back after the round leaves',async({phone})=>{
+ await open(phone);const p=phone.p;const url=p.url();
+ await H.tap(p,p.locator('#hPlay'));await live(p);
+ await p.goBack();await expect(p.locator('#pauseSheet')).toBeVisible();expect(p.url()).toBe(url);
+ expect(await p.evaluate(()=>__dg.state().R.state)).toBe('playing');
+ await H.tap(p,p.locator('#pResume'));await live(p);
+ await p.evaluate(()=>__dg.end(true));await expect(p.locator('#result')).toBeVisible();
+ expect(await p.evaluate(()=>history.state)).toBeNull();
+ expect(await ev(p)).toEqual([['game_start',1,'new'],['game_end',1,true]]);
+ expect(phone.errors).toEqual([]);
 });

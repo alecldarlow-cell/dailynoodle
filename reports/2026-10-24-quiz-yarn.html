@@ -9,8 +9,7 @@
 <meta name="dn:standfirst" content="The daily Tangle without the wait: 360 boards, three stars each, and a scarf to knit as you win.">
 <meta name="dn:topic"      content="Quiz">
 <meta name="dn:date"       content="2026-10-24">
-<meta name="dn:read"       content="~3 min">
-<meta name="dn:badge"      content="In development">
+<meta name="dn:read"       content="~2 min">
 <meta name="dn:thumb"      content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI0Y1RUZFNiIvPjxnIGZpbGw9IiNGRkZERjkiIHN0cm9rZT0iIzJBMjExOCIgc3Ryb2tlLXdpZHRoPSIxLjgiPjxyZWN0IHg9IjU4IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9IjU4IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIgZmlsbD0iI0VDRTNENiIgc3Ryb2tlPSIjQjlBQTk2Ii8+PC9nPjxwYXRoIGQ9Ik01OCA2MkM2MiA0NiA2NiAyNiA3MCAyMlM5NiAyMCA5OCAyMiA5OCA0NiA5OCA1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQzA1MzJBIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iODQiIHI9IjI5IiBmaWxsPSIjQzA1MzJBIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEUzQTFDIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNMTYgNzRjMTQgNiAzNCA0IDUwLTEwIi8+PHBhdGggZD0iTTE0IDg4YzE4IDQgMzgtMiA1NC0xOCIvPjxwYXRoIGQ9Ik0yMCAxMDJjMTYgMCAzNC04IDQ2LTI0Ii8+PHBhdGggZD0iTTMwIDU5Yy02IDE0LTYgMzQgNCA1MiIvPjxwYXRoIGQ9Ik00NiA1NmMtOCAxNi04IDM4IDIgNTYiLz48L2c+PGNpcmNsZSBjeD0iMzEiIGN5PSI3MSIgcj0iNSIgZmlsbD0iI0U1ODI2MCIgb3BhY2l0eT0iLjciLz48L3N2Zz4=">
 <meta name="theme-color" content="#F5EFE6" id="themeColor">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -109,7 +108,7 @@ details.how p{margin:0 0 12px;line-height:1.5}
 .more{margin-top:10px}
 
 /* play */
-#play .wrap{gap:8px;height:100%;min-height:0;padding-bottom:max(14px,env(safe-area-inset-bottom,0px))}
+#play .wrap{gap:8px;height:100%;min-height:0;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 30px)}
 #play{overflow:hidden}
 .ptop{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:12px;min-height:52px}
 .scorebox{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;min-width:0}
@@ -150,10 +149,10 @@ details.how p{margin:0 0 12px;line-height:1.5}
 #toast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.9);background:var(--ink);color:var(--bg);border-radius:18px;padding:7px 14px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;white-space:nowrap}
 #toast.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
 #toast.good{background:var(--ok);color:#fff}
-#toast.gold{background:var(--gold);color:var(--goldInk)}
+#toast.gold{background:var(--gold);color:#3B2A00}
 #toast.star{background:var(--sk);color:var(--onSk)}
 #boardWrap{position:relative;display:flex;justify-content:center}
-#board{position:relative;width:min(100%,400px,max(280px,52dvh));aspect-ratio:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;touch-action:none}
+#board{position:relative;width:min(calc(100% - 12px),400px,max(272px,50dvh));aspect-ratio:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;touch-action:none}
 .tile{position:relative;display:grid;place-items:center;border-radius:12px;background:var(--paper);border:1.5px solid var(--edge);box-shadow:0 3px 0 var(--edge);
   font-weight:700;font-size:clamp(26px,8.6vw,38px);font-stretch:95%;cursor:pointer;transition:background .12s,transform .12s,box-shadow .12s;z-index:1}
 .tile.qu{font-size:clamp(22px,7vw,31px)}
@@ -193,6 +192,8 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
 
 .rm *,.rm *::before,.rm *::after{transition:none!important;animation:none!important}
 @media (max-height:640px){#play .wrap{gap:6px} #curWord{font-size:26px} #score{font-size:34px}}
+/* short phones: the level is on the star bar's pill row only when there is room, so the word list keeps two rows */
+@media (orientation:portrait) and (max-height:700px){#lvPill{display:none} .pills{margin-top:2px} #starbar{height:36px}}
 /* short landscape: list and clock beside a full, touchable board */
 @media (orientation:landscape) and (max-height:500px){
   #play .wrap{max-width:900px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
@@ -206,18 +207,6 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
   #pauseSheet{align-items:center} #pauseSheet .sheet{border-radius:20px;max-width:640px}
 }
 </style>
-<!-- og:start (tools/og-tags.js — do not edit by hand) -->
-<meta property="og:site_name" content="The Daily Noodle">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Yarn">
-<meta property="og:description" content="The daily Tangle without the wait: 360 boards, three stars each, and a scarf to knit as you win.">
-<meta property="og:url" content="https://dailynoodle.co.uk/reports/2026-10-24-quiz-yarn.html">
-<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
-<meta name="twitter:card" content="summary_large_image">
-<!-- og:end -->
 </head>
 <body>
 
@@ -239,7 +228,7 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
   <div class="stats"><div><b id="sStars">0</b><span>stars</span></div><div><b id="sBest">0</b><span>best score</span></div><div><b id="sWords">0</b><span>words found</span></div></div>
   <details class="how">
    <summary>How to play</summary>
-   <p>Each level is one board and two minutes. Drag through touching letters, across, up, down or diagonally, to spell a word, or tap letters one by one and tap the last one again to enter. Each tile is used once per word; QU counts as two letters.</p>
+   <p>Each level is one board and 90 seconds. Drag through touching letters, across, up, down or diagonally, to spell a word, or tap letters one by one and tap the last one again to enter. Each tile is used once per word; QU counts as two letters.</p>
    <p>A word scores its length minus two: 1 point for three letters, 2 for four, 3 for five. The board’s longest word scores double.</p>
    <p>The bar above the board shows the level’s three star scores. One star clears the level, knits a stripe into your scarf and opens the next. Replay any level for more stars.</p>
    <p>Words you find here and in the daily Tangle all count towards your words found.</p>
@@ -262,7 +251,7 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
   <div class="ptop">
    <button class="iconbtn" id="pauseBtn" aria-label="Pause"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M6 4v10M12 4v10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
    <div class="scorebox"><b id="score">0</b><span>pts · <span id="nWords">0 words</span></span></div>
-   <div class="pright"><span id="clock">2:00</span></div>
+   <div class="pright"><span id="clock">1:30</span></div>
   </div>
   <div class="timebar" aria-hidden="true"><i id="timeFill"></i></div>
   <div id="starbar" aria-label="Star scores"><div class="rail"></div><div class="fill" id="sbFill"></div></div>
@@ -671,16 +660,19 @@ const LEVELS=[{"t":"gkwaosnrgleaeuts","s":"wrestle"},
 {"t":"arahpecuprvywaot","s":"approve"},
 {"t":"iuetrlsesasgcsth","s":"scarlet"}];
 const SKEINS=[
-  {name:'Oatmeal', c:['#B08A52','#D2AE78'], t:[12,25,38]},
-  {name:'Heather', c:['#8A63AE','#B595D6'], t:[14,27,40]},
-  {name:'Moss',    c:['#5E7F2E','#93B85A'], t:[16,29,42]},
-  {name:'Rust',    c:['#C0532A','#E58260'], t:[17,31,44]},
-  {name:'Denim',   c:['#3A659B','#7FA6D8'], t:[18,33,46]},
-  {name:'Midnight',c:['#2C3270','#8E97E0'], t:[20,35,48]}
+  {name:'Oatmeal', c:['#B08A52','#D2AE78'], t:[11,22,32]},
+  {name:'Heather', c:['#8A63AE','#B595D6'], t:[12,23,33]},
+  {name:'Moss',    c:['#5E7F2E','#93B85A'], t:[13,24,34]},
+  {name:'Rust',    c:['#C0532A','#E58260'], t:[14,25,35]},
+  {name:'Denim',   c:['#3A659B','#7FA6D8'], t:[14,26,36]},
+  {name:'Midnight',c:['#2C3270','#8E97E0'], t:[15,27,37]}
 ];
-const ODDS={name:'Odds and ends', t:[20,35,48]};
-const CAP=[.16,.30,.42];                       // star scores never above these shares of the board's points
-const ROUND=120, MINLEN=3, N=4;
+const ODDS={name:'Odds and ends', t:[15,27,37]};
+/* Star scores (90 s): the skein's scores for a 50-common-word board, scaled by (words/50)^0.7, since
+   richer boards give more to find; never above these shares of the board's points. Set from the
+   family's daily Tangle scores and the first Yarn rounds (24 Oct 2026). */
+const CAP=[.13,.24,.34];
+const ROUND=90, MINLEN=3, N=4;
 
 /* ---------- Noodle site tracking (site contract §5) ---------- */
 const GAME='yarn';
@@ -723,7 +715,7 @@ function level(n){
   const words=solve(tiles),main=words.filter(w=>MAINSET.has(w)).sort(),bonus=words.filter(w=>!MAINSET.has(w)).sort();
   const pts=w=>(w.length-2)*(w===star?2:1);
   const total=main.reduce((a,w)=>a+pts(w),0);
-  const S=skeinOf(n),targets=S.t.map((v,i)=>Math.max(1,Math.min(v,Math.floor(CAP[i]*total))));
+  const S=skeinOf(n),f=Math.pow(main.length/50,0.7),targets=S.t.map((v,i)=>Math.max(1,Math.min(Math.round(v*f),Math.floor(CAP[i]*total))));
   return cache[n]={n,tiles,star,main,bonus,MAIN:new Set(main),ALL:new Set(words),total,targets,skein:S,pts};
 }
 function where(n){if(n>60)return ODDS.name;const S=skeinOf(n);return S.name+' '+((n-1)%10+1)+' of 10';}
@@ -842,7 +834,7 @@ function setSkein(n){document.documentElement.style.setProperty('--sk',sk(n));}
 function starsTxt(n){const s=starsOf(n);return '★'.repeat(s)+'<span class="off">'+'★'.repeat(3-s)+'</span>';}
 
 function renderHome(){
-  closePause();show('home');
+  closePause();disarmBack();show('home');
   const cur=save.cur&&LEVELS[save.cur.n-1]?save.cur:null;
   const n=cur?cur.n:nextLevel(),L=level(n);
   setSkein(n);
@@ -857,7 +849,7 @@ function renderHome(){
   paintDaily();paintScarf();toggles($('homeToggles'));paintFS();
 }
 function renderLevels(){
-  closePause();show('levels');
+  closePause();disarmBack();show('levels');
   const nx=nextLevel(),host=$('lvList');let h='';
   const ts=totalStars();$('lvStars').textContent=plural(ts,'star','stars');
   SKEINS.forEach((S,k)=>{
@@ -1004,6 +996,15 @@ function renderScore(){
   renderClock();
 }
 
+/* ---------- Back during a round pauses it ----------
+   Android's edge swipe (and the Back button) left the page mid-round in the first plays. While a round
+   runs there is one extra history entry: Back takes it and opens the pause sheet instead. */
+let guard=false, ignorePop=false;
+function armBack(){if(guard)return;try{history.pushState({yarn:1},'');guard=true;}catch(e){}}
+function disarmBack(){if(!guard)return;guard=false;ignorePop=true;try{history.back();}catch(e){ignorePop=false;}}
+window.addEventListener('popstate',()=>{if(ignorePop){ignorePop=false;return;}
+  if(guard){guard=false;if(view==='play'&&R&&R.state==='playing')openPause();}});
+
 /* ---------- the round ----------
    A round is one attempt at one level: from the Play tap to time running out. Restarting, choosing
    another level or leaving mid-round sends nothing (abandoned). A round paused and then reloaded
@@ -1022,11 +1023,11 @@ function startLevel(n,how){
   $('lvPill').textContent=n<=60?L.skein.name+' · level '+n:'Odds and ends · level '+n;
   path=[];kb='';show('play');$('play').classList.remove('locked');
   renderList();renderScore();paused=false;paint();last=performance.now();
-  requestAnimationFrame(()=>{measure();countIn();});
+  armBack();requestAnimationFrame(()=>{measure();countIn();});
 }
 function resumeRound(){                             // back to a round paused in this page load
   if(!R||R.state!=='playing'){startLevel(nextLevel(),'new');return;}
-  show('play');closePause();paused=false;requestAnimationFrame(()=>{measure();countIn();});
+  show('play');closePause();paused=false;armBack();requestAnimationFrame(()=>{measure();countIn();});
 }
 function setPaused(on){
   paused=on;
@@ -1068,7 +1069,7 @@ function tick(){
 }
 function endRound(){
   if(!R||R.state!=='playing')return;
-  R.state='done';R.left=0;stopCount();closePause();paused=false;
+  R.state='done';R.left=0;stopCount();closePause();paused=false;disarmBack();
   if(drag)drag=null;path=[];kb='';paint();renderClock();
   $('play').classList.add('locked');$('board').classList.remove('hide');
   const n=L.n,stars=starCount(R.score),prev=save.lv[n]||{s:0,b:0},first=!cleared(n)&&stars>0;
@@ -1177,6 +1178,5 @@ function showResult(r){
   };
 })();
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
