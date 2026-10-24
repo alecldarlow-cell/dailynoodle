@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0213", band:"medium",
   groups:[
-    {rank:1, name:"Money slang for amounts", members:["PONY","MONKEY","GRAND","TON"]},
-    {rank:2, name:"Zoo animals",             members:["LEMUR","TAPIR","GIBBON","OKAPI"]},
-    {rank:3, name:"Kinds of ton",            members:["METRIC","LONG","SKELE","WEIGH A"]},
-    {rank:4, name:"Ways to hoard",           members:["AMASS","STASH","STOCKPILE","SAVE"]}
+    {rank:1, name:"Signs of the zodiac",  members:["LEO","LIBRA","VIRGO","ARIES"]},
+    {rank:2, name:"Olympian gods",        members:["APOLLO","ZEUS","HERMES","POSEIDON"]},
+    {rank:3, name:"Space missions",       members:["GEMINI","VOYAGER","SPUTNIK","SKYLAB"]},
+    {rank:4, name:"Things with chambers", members:["HEART","REVOLVER","PARLIAMENT","PYRAMID"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MONKEY", not:"Zoo animals"},
-    {tile:"PONY",   not:"Zoo animals"},
-    {tile:"TON",    not:"Kinds of ton"}
+    {tile:"GEMINI", not:"Signs of the zodiac"},
+    {tile:"APOLLO", not:"Space missions"},
+    {tile:"ARIES",  not:"Olympian gods"}
   ]
 };
 </script>

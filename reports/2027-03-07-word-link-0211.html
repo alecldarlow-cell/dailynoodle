@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0211", band:"medium",
   groups:[
-    {rank:1, name:"Optical things",         members:["PRISM","LENS","MIRROR","FILTER"]},
-    {rank:2, name:"Kinds of mirror",        members:["WING","REAR-VIEW","TWO-WAY","MAGIC"]},
-    {rank:3, name:"Fairground attractions", members:["HALL","BUMPER CAR","BIG WHEEL","HOOPLA"]},
-    {rank:4, name:"Ways to reflect",        members:["PONDER","MUSE","MULL","RUMINATE"]}
+    {rank:1, name:"___ PARTY",           members:["STAG","DINNER","GARDEN","BIRTHDAY"]},
+    {rank:2, name:"Forms of language",   members:["DIALECT","SLANG","JARGON","LINGO"]},
+    {rank:3, name:"In a three-pin plug", members:["LIVE","NEUTRAL","FUSE","CABLE GRIP"]},
+    {rank:4, name:"Can follow MOTHER",   members:["EARTH","HEN","TONGUE","NATURE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MIRROR", not:"Kinds of mirror"},
-    {tile:"HALL",   not:"Optical things"},
-    {tile:"FILTER", not:"Fairground attractions"}
+    {tile:"HEN",    not:"___ PARTY"},
+    {tile:"TONGUE", not:"Forms of language"},
+    {tile:"EARTH",  not:"In a three-pin plug"}
   ]
 };
 </script>

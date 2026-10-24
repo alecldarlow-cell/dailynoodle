@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0209", band:"medium",
   groups:[
-    {rank:1, name:"Notes and rests", members:["SEMIBREVE","DOTTED","TIE","BAR"]},
-    {rank:2, name:"Kinds of tie",    members:["BOW","BLACK","CUP","OLD SCHOOL"]},
-    {rank:3, name:"Neckwear",        members:["CRAVAT","SCARF","CHOKER","COLLAR"]},
-    {rank:4, name:"Ways to bind up", members:["TETHER","KNOT","STRAP","SECURE"]}
+    {rank:1, name:"Charges",                  members:["FEE","FARE","TARIFF","LEVY"]},
+    {rank:2, name:"Bell sounds",              members:["CHIME","KNELL","CLANG","TOLL"]},
+    {rank:3, name:"Fortune tellers",          members:["PROPHET","ORACLE","PSYCHIC","MYSTIC"]},
+    {rank:4, name:"Sound like kitchen tasks", members:["PEAL","SEER","NEED","BASED"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"TIE",    not:"Kinds of tie"},
-    {tile:"BAR",    not:"Ways to bind up"},
-    {tile:"COLLAR", not:"Notes and rests"}
+    {tile:"TOLL", not:"Charges"},
+    {tile:"PEAL", not:"Bell sounds"},
+    {tile:"SEER", not:"Fortune tellers"}
   ]
 };
 </script>

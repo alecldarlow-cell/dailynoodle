@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0178", band:"medium",
   groups:[
-    {rank:1, name:"Union jobs and roles",    members:["STEWARD","CONVENOR","REP","ORGANISER"]},
-    {rank:2, name:"Kinds of steward",        members:["AIR","SHOP","BAR","CHIEF"]},
-    {rank:3, name:"Flight attendant things", members:["TROLLEY","LIFE VEST","GALLEY","APRON"]},
-    {rank:4, name:"Ways to represent",       members:["STAND FOR","SPEAK FOR","ACT FOR","FRONT"]}
+    {rank:1, name:"Catch",                members:["NET","NAB","SNARE","TRAP"]},
+    {rank:2, name:"At a medieval court",  members:["JESTER","SQUIRE","MINSTREL","HERALD"]},
+    {rank:3, name:"Horse-drawn vehicles", members:["CHARIOT","STAGECOACH","HANSOM CAB","CARRIAGE"]},
+    {rank:4, name:"Things you can turn",  members:["PAGE","TIDE","TABLES","CORNER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"STEWARD", not:"Kinds of steward"},
-    {tile:"REP",     not:"Ways to represent"},
-    {tile:"APRON",   not:"Union jobs and roles"}
+    {tile:"PAGE",   not:"At a medieval court"},
+    {tile:"CORNER", not:"Catch"},
+    {tile:"TRAP",   not:"Horse-drawn vehicles"}
   ]
 };
 </script>

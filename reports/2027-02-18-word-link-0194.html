@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0194", band:"medium",
   groups:[
-    {rank:1, name:"Wallpaper words",          members:["PASTE","LINING","BORDER","MATCH"]},
-    {rank:2, name:"Kinds of border",          members:["FRENCH","FLOWER","OPEN","SOFT"]},
-    {rank:3, name:"Tomato pastes and sauces", members:["PASSATA","KETCHUP","PUREE","RELISH"]},
-    {rank:4, name:"Ways to align",            members:["MATCH UP","LINE UP","SQUARE","TRUE"]}
+    {rank:1, name:"Cheerful",                              members:["JOLLY","CHIRPY","GLAD","JOVIAL"]},
+    {rank:2, name:"Apple varieties",                       members:["COX","GALA","BRAEBURN","BRAMLEY"]},
+    {rank:3, name:"UNCLE ___",                             members:["TOM","FESTER","BUCK","ALBERT"]},
+    {rank:4, name:"Hobbits in the Fellowship of the Ring", members:["FRODO","SAM","MERRY","PIPPIN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BORDER", not:"Kinds of border"},
-    {tile:"MATCH",  not:"Ways to align"},
-    {tile:"PASTE",  not:"Tomato pastes and sauces"}
+    {tile:"MERRY",  not:"Cheerful"},
+    {tile:"PIPPIN", not:"Apple varieties"},
+    {tile:"SAM",    not:"UNCLE ___"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0190", band:"medium",
   groups:[
-    {rank:1, name:"Insulation words",    members:["LAGGING","DRAUGHT","CAVITY","BATTS"]},
-    {rank:2, name:"Kinds of draught",    members:["BEER","COLD","PROOF","HORSE"]},
-    {rank:3, name:"Board game pieces",   members:["COUNTER","DIE","TOKEN","PAWN"]},
-    {rank:4, name:"Ways to fall behind", members:["LAG","DAWDLE","STRAGGLE","TRAIL"]}
+    {rank:1, name:"Terms of endearment",  members:["DARLING","HONEY","PET","SWEETIE"]},
+    {rank:2, name:"Tennis terms",         members:["ACE","DEUCE","RALLY","LOVE"]},
+    {rank:3, name:"Kinds of song",        members:["SERENADE","BALLAD","LULLABY","ANTHEM"]},
+    {rank:4, name:"Things you can steal", members:["HEART","KISS","SHOW","MARCH"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"DRAUGHT", not:"Kinds of draught"},
-    {tile:"LAGGING", not:"Ways to fall behind"},
-    {tile:"COUNTER", not:"Insulation words"}
+    {tile:"LOVE",  not:"Terms of endearment"},
+    {tile:"MARCH", not:"Kinds of song"},
+    {tile:"HEART", not:"Terms of endearment"}
   ]
 };
 </script>

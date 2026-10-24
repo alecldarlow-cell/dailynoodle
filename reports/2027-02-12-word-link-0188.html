@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0188", band:"medium",
   groups:[
-    {rank:1, name:"Film crew jobs", members:["GAFFER","GRIP","BEST BOY","FOLEY"]},
-    {rank:2, name:"Kinds of grip",  members:["HAIR","VICE","FIRM","LOSE YOUR"]},
-    {rank:3, name:"Camera words",   members:["LENS","ZOOM","TRIPOD","PAN"]},
-    {rank:4, name:"Ways to grasp",  members:["CLENCH","SEIZE","CLASP","HOLD"]}
+    {rank:1, name:"Injuries",             members:["SPRAIN","BRUISE","GRAZE","BLISTER"]},
+    {rank:2, name:"Television terms",     members:["EPISODE","FINALE","PILOT","BOX SET"]},
+    {rank:3, name:"Done to a sauce",      members:["REDUCE","SIMMER","STRAIN","SEASON"]},
+    {rank:4, name:"Rearrange for a room", members:["BOREDOM","DUSTY","RECALL","TACIT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,8 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"GRIP", not:"Kinds of grip"},
-    {tile:"PAN",  not:"Film crew jobs"}
+    {tile:"STRAIN", not:"Injuries"},
+    {tile:"SEASON", not:"Television terms"}
   ]
 };
 </script>

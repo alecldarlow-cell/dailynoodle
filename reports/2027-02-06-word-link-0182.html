@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0182", band:"medium",
   groups:[
-    {rank:1, name:"Tides and currents", members:["MILLRACE","UNDERTOW","RIPTIDE","SURGE"]},
-    {rank:2, name:"Kinds of surge",     members:["POWER","STORM","ADRENALINE","PRICE"]},
-    {rank:3, name:"Electrical kit",     members:["FUSE","ADAPTOR","EXTENSION","TIMER"]},
-    {rank:4, name:"Ways to swell",      members:["BALLOON","BULGE","DISTEND","MOUNT"]}
+    {rank:1, name:"Shiny",                         members:["GLOSSY","GLEAMING","POLISHED","LUSTROUS"]},
+    {rank:2, name:"Animals in well-known similes", members:["BEE","OWL","BAT","MULE"]},
+    {rank:3, name:"Shoes",                         members:["LOAFER","PLIMSOLL","STILETTO","BROGUE"]},
+    {rank:4, name:"A vegetable hides in each",     members:["ORCHARD","SLEEK","BEETLE","ACORN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SURGE", not:"Kinds of surge"},
-    {tile:"FUSE",  not:"Ways to swell"},
-    {tile:"MOUNT", not:"Tides and currents"}
+    {tile:"SLEEK",  not:"Shiny"},
+    {tile:"BEETLE", not:"Animals in well-known similes"},
+    {tile:"MULE",   not:"Shoes"}
   ]
 };
 </script>

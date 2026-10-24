@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0180", band:"medium",
   groups:[
-    {rank:1, name:"Weather map symbols", members:["ISOBAR","OCCLUSION","TROUGH","RIDGE"]},
-    {rank:2, name:"Kinds of trough",     members:["FEEDING","WAVE","PIG","LOW"]},
-    {rank:3, name:"Farm feeding kit",    members:["HOPPER","LICK","MANGER","PAIL"]},
-    {rank:4, name:"Ways to dip",         members:["SAG","SINK","SLUMP","DECLINE"]}
+    {rank:1, name:"Thieves' takings",            members:["LOOT","SWAG","PLUNDER","SPOILS"]},
+    {rank:2, name:"At an auction",               members:["BIDDER","GAVEL","LOT","RESERVE"]},
+    {rank:3, name:"Parts of a staircase",        members:["BANISTER","TREAD","RISER","LANDING"]},
+    {rank:4, name:"Sound like parts of a house", members:["SELLER","HAUL","STARES","FLAW"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"TROUGH", not:"Kinds of trough"},
-    {tile:"RIDGE",  not:"Farm feeding kit"},
-    {tile:"SLUMP",  not:"Weather map symbols"}
+    {tile:"HAUL",   not:"Thieves' takings"},
+    {tile:"SELLER", not:"At an auction"},
+    {tile:"STARES", not:"Parts of a staircase"}
   ]
 };
 </script>

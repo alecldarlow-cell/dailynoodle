@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0197", band:"medium",
   groups:[
-    {rank:1, name:"Choir voices",    members:["TREBLE","BASS","DESCANT","ALTO"]},
-    {rank:2, name:"Darts scoring",   members:["DOUBLE","OUTSHOT","CHECKOUT","SCORER"]},
-    {rank:3, name:"Kinds of double", members:["BODY","TROUBLE","DUTCH","BLUFF"]},
-    {rank:4, name:"Ways to echo",    members:["REPEAT","RESOUND","MIRROR","PARROT"]}
+    {rank:1, name:"Roman emperors",               members:["NERO","CALIGULA","HADRIAN","AUGUSTUS"]},
+    {rank:2, name:"Linked with Lord Nelson",      members:["VICTORY","COLUMN","HARDY","TRAFALGAR"]},
+    {rank:3, name:"Shakespeare title roles",      members:["MACBETH","OTHELLO","KING LEAR","PERICLES"]},
+    {rank:4, name:"In Shakespeare's Danish play", members:["HAMLET","CLAUDIUS","HORATIO","OPHELIA"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"TREBLE", not:"Darts scoring"},
-    {tile:"DOUBLE", not:"Kinds of double"},
-    {tile:"BASS",   not:"Ways to echo"}
+    {tile:"CLAUDIUS", not:"Roman emperors"},
+    {tile:"HORATIO",  not:"Linked with Lord Nelson"},
+    {tile:"HAMLET",   not:"Shakespeare title roles"}
   ]
 };
 </script>

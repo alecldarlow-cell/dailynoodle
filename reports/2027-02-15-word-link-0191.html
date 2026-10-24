@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0191", band:"medium",
   groups:[
-    {rank:1, name:"Doctor's surgery",  members:["RECEPTION","TRIAGE","SCRIPT","WAITING"]},
-    {rank:2, name:"Kinds of practice", members:["GENERAL","SHARP","BAD","CHOIR"]},
-    {rank:3, name:"Karate words",      members:["DOJO","KATA","BELT","SENSEI"]},
-    {rank:4, name:"Ways to wait",      members:["LINGER","HOLD ON","SIT TIGHT","BIDE"]}
+    {rank:1, name:"Leafy greens",                  members:["SPINACH","CHARD","CABBAGE","ROCKET"]},
+    {rank:2, name:"Done on horseback",             members:["DRESSAGE","EVENTING","GYMKHANA","JOUSTING"]},
+    {rank:3, name:"In command at sea",             members:["CAPTAIN","SKIPPER","COMMODORE","ADMIRAL"]},
+    {rank:4, name:"Rearrange for a body of water", members:["KALE","POLO","MASTER","ARTIST"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"GENERAL", not:"Doctor's surgery"},
-    {tile:"WAITING", not:"Ways to wait"},
-    {tile:"BELT",    not:"Kinds of practice"}
+    {tile:"KALE",   not:"Leafy greens"},
+    {tile:"POLO",   not:"Done on horseback"},
+    {tile:"MASTER", not:"In command at sea"}
   ]
 };
 </script>

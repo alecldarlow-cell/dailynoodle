@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0210", band:"medium",
   groups:[
-    {rank:1, name:"Rock strata words",     members:["SEAM","FAULT","BEDDING","OUTCROP"]},
-    {rank:2, name:"Kinds of fault",        members:["HAIRLINE","NO","DOUBLE","SEISMIC"]},
-    {rank:3, name:"Tennis serve words",    members:["ACE","LET","DEUCE","TOSS"]},
-    {rank:4, name:"Ways to blame someone", members:["FAULT THEM","ACCUSE","PIN ON","INDICT"]}
+    {rank:1, name:"Kinds of house",          members:["DETACHED","BUNGALOW","TERRACE","COTTAGE"]},
+    {rank:2, name:"Stages of a competition", members:["ROUND","SEMI","PLAY-OFF","QUALIFIER"]},
+    {rank:3, name:"GRAND ___",               members:["PRIX","PIANO","SLAM","NATIONAL"]},
+    {rank:4, name:"Things you can conduct",  members:["HEAT","TOUR","SURVEY","INTERVIEW"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FAULT", not:"Kinds of fault"},
-    {tile:"LET",   not:"Rock strata words"},
-    {tile:"SEAM",  not:"Tennis serve words"}
+    {tile:"SEMI", not:"Kinds of house"},
+    {tile:"HEAT", not:"Stages of a competition"},
+    {tile:"TOUR", not:"GRAND ___"}
   ]
 };
 </script>

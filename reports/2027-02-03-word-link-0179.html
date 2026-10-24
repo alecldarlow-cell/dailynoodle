@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0179", band:"medium",
   groups:[
-    {rank:1, name:"Greek letters",   members:["DELTA","SIGMA","OMEGA","IOTA"]},
-    {rank:2, name:"River mouths",    members:["ESTUARY","FIRTH","BIGHT","OUTFALL"]},
-    {rank:3, name:"Kinds of firth",  members:["MORAY","FORTH","SOLWAY","CLYDE"]},
-    {rank:4, name:"Ways to trickle", members:["SEEP","DRIBBLE","OOZE","PERCOLATE"]}
+    {rank:1, name:"Go quickly",          members:["DASH","HURRY","RACE","ZOOM"]},
+    {rank:2, name:"Symptoms of a cold",  members:["COUGH","SNIFFLE","RUNNY NOSE","HEADACHE"]},
+    {rank:3, name:"Punctuation symbols", members:["COLON","COMMA","HYPHEN","APOSTROPHE"]},
+    {rank:4, name:"Mr Men characters",   members:["SNEEZE","RUSH","BUMP","HAPPY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"DELTA", not:"River mouths"},
-    {tile:"IOTA",  not:"Ways to trickle"},
-    {tile:"FORTH", not:"Greek letters"}
+    {tile:"RUSH",   not:"Go quickly"},
+    {tile:"SNEEZE", not:"Symptoms of a cold"},
+    {tile:"DASH",   not:"Punctuation symbols"}
   ]
 };
 </script>

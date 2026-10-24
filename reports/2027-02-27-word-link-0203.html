@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0203", band:"medium",
   groups:[
-    {rank:1, name:"Loft contents", members:["INSULATION","WATER TANK","JOISTS","BOXES"]},
-    {rank:2, name:"___ tank",      members:["THINK","FISH","PETROL","SEPTIC"]},
-    {rank:3, name:"Fishing spots", members:["WEIR","POOL","EDDY","BANK"]},
-    {rank:4, name:"Ways to store", members:["STASH","STOW","HOARD","KEEP"]}
+    {rank:1, name:"Laze about",         members:["IDLE","LOUNGE","LOLL","VEG"]},
+    {rank:2, name:"Kinds of puppet",    members:["GLOVE","SHADOW","STRING","FINGER"]},
+    {rank:3, name:"FISH ___",           members:["SUPPER","PIE","TANK","FARM"]},
+    {rank:4, name:"Things with a heel", members:["LOAF","SOCK","FOOT","ACHILLES"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"WATER TANK", not:"___ tank"},
-    {tile:"BOXES",      not:"Ways to store"},
-    {tile:"POOL",       not:"Loft contents"}
+    {tile:"LOAF",   not:"Laze about"},
+    {tile:"SOCK",   not:"Kinds of puppet"},
+    {tile:"FINGER", not:"FISH ___"}
   ]
 };
 </script>

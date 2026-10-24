@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0195", band:"medium",
   groups:[
-    {rank:1, name:"School subjects",   members:["BIOLOGY","GEOGRAPHY","LATIN","MUSIC"]},
-    {rank:2, name:"Kinds of degree",   members:["HONOURS","THIRD","MASTER'S","CENTIGRADE"]},
-    {rank:3, name:"Playground shouts", members:["BAGSY","DIBS","TAG","PAX"]},
-    {rank:4, name:"Ways to teach",     members:["COACH","TUTOR","DRILL","SCHOOL"]}
+    {rank:1, name:"Falls from the sky", members:["RAIN","SLEET","SNOW","DRIZZLE"]},
+    {rank:2, name:"Parts of a hat",     members:["CROWN","PEAK","BAND","LINING"]},
+    {rank:3, name:"Old British coins",  members:["SOVEREIGN","GUINEA","FLORIN","SHILLING"]},
+    {rank:4, name:"___STONE",           members:["LIME","HAIL","BRIM","FLAG"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MASTER'S", not:"School subjects"},
-    {tile:"DRILL",    not:"Playground shouts"},
-    {tile:"SCHOOL",   not:"School subjects"}
+    {tile:"HAIL",  not:"Falls from the sky"},
+    {tile:"BRIM",  not:"Parts of a hat"},
+    {tile:"CROWN", not:"Old British coins"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0201", band:"medium",
   groups:[
-    {rank:1, name:"Metals and alloys",      members:["PEWTER","BRONZE","BRASS","SOLDER"]},
-    {rank:2, name:"Kinds of bronze",        members:["AGE","MEDAL","STATUE","TAN"]},
-    {rank:3, name:"Wind instruments' bits", members:["REED","VALVE","SPIT KEY","CROOK"]},
-    {rank:4, name:"Ways to fuse",           members:["WELD","BRAZE","BOND","MERGE"]}
+    {rank:1, name:"Supermarket features",           members:["TILL","BASKET","AISLE","CHECKOUT"]},
+    {rank:2, name:"Nightwear",                      members:["NIGHTIE","ONESIE","BED SOCKS","NIGHTCAP"]},
+    {rank:3, name:"Bedtime drinks",                 members:["COCOA","HORLICKS","OVALTINE","HOT TODDY"]},
+    {rank:4, name:"A breakfast food hides in each", members:["PYJAMAS","SHAMPOO","TROLLEY","LEGGINGS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BRONZE", not:"Kinds of bronze"},
-    {tile:"BRASS",  not:"Wind instruments' bits"},
-    {tile:"SOLDER", not:"Ways to fuse"}
+    {tile:"TROLLEY",  not:"Supermarket features"},
+    {tile:"PYJAMAS",  not:"Nightwear"},
+    {tile:"NIGHTCAP", not:"Bedtime drinks"}
   ]
 };
 </script>

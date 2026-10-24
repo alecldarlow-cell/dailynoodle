@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0192", band:"medium",
   groups:[
-    {rank:1, name:"Paint problems",        members:["RUNS","BLISTER","CRAZING","SAGGING"]},
-    {rank:2, name:"Cricket scoring words", members:["SINGLE","BYE","LEG BYE","EXTRAS"]},
-    {rank:3, name:"Kinds of blister",      members:["HEAT","BLOOD","SUN","PACK"]},
-    {rank:4, name:"Ways to bubble",        members:["FIZZ","SEETHE","EFFERVESCE","FROTH"]}
+    {rank:1, name:"Brainy types",       members:["BOFFIN","SWOT","EGGHEAD","BRAINBOX"]},
+    {rank:2, name:"Baby kit",           members:["COT","HIGHCHAIR","CAR SEAT","BOUNCER"]},
+    {rank:3, name:"At a nightclub",     members:["DJ","CLOAKROOM","STROBE","MIRRORBALL"]},
+    {rank:4, name:"Things with a hood", members:["PRAM","ANORAK","COBRA","COOKER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"RUNS",    not:"Cricket scoring words"},
-    {tile:"BLISTER", not:"Kinds of blister"},
-    {tile:"HEAT",    not:"Ways to bubble"}
+    {tile:"PRAM",    not:"Baby kit"},
+    {tile:"ANORAK",  not:"Brainy types"},
+    {tile:"BOUNCER", not:"At a nightclub"}
   ]
 };
 </script>

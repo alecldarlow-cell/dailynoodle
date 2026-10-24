@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0183", band:"medium",
   groups:[
-    {rank:1, name:"Illness words",        members:["FEVERISH","QUEASY","ACHY","BUNGED UP"]},
-    {rank:2, name:"Kinds of bug",         members:["STOMACH","LOVE","LITTLE","DEBUG"]},
-    {rank:3, name:"Beetle-sized insects", members:["APHID","MITE","THRIP","FLEA"]},
-    {rank:4, name:"Ways to feel rough",   members:["AIL","SUFFER","FLAG","DROOP"]}
+    {rank:1, name:"Gullible people",     members:["DUPE","MUG","SAP","PATSY"]},
+    {rank:2, name:"Things on a string",  members:["CONKER","KITE","YO-YO","TEA BAG"]},
+    {rank:3, name:"BLACK ___",           members:["PUDDING","FRIDAY","MARKET","SHEEP"]},
+    {rank:4, name:"Add an R for a food", members:["BEAD","CAB","PAWN","BOTH"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FLEA",  not:"Kinds of bug"},
-    {tile:"DROOP", not:"Illness words"},
-    {tile:"FLAG",  not:"Kinds of bug"}
+    {tile:"CAB",  not:"BLACK ___"},
+    {tile:"BEAD", not:"Things on a string"},
+    {tile:"PAWN", not:"Gullible people"}
   ]
 };
 </script>

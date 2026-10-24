@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0186", band:"medium",
   groups:[
-    {rank:1, name:"Fireplace parts",  members:["HEARTH","GRATE","MANTEL","FLUE"]},
-    {rank:2, name:"Kinds of grate",   members:["CHEESE","FIRE","IRON","COAL"]},
-    {rank:3, name:"Cheeses to grate", members:["PARMESAN","GRUYERE","COMTE","PECORINO"]},
-    {rank:4, name:"Ways to irritate", members:["GRATE ON","NEEDLE","RILE","CHAFE"]}
+    {rank:1, name:"Food, informally",         members:["GRUB","NOSH","SCRAN","CHOW"]},
+    {rank:2, name:"In pesto",                 members:["PINE NUTS","GARLIC","OLIVE OIL","PARMESAN"]},
+    {rank:3, name:"In nursery rhymes",        members:["BO PEEP","HUBBARD","HORNER","TUCKER"]},
+    {rank:4, name:"Fawlty Towers characters", members:["BASIL","SYBIL","POLLY","MANUEL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"GRATE",  not:"Ways to irritate"},
-    {tile:"CHEESE", not:"Cheeses to grate"},
-    {tile:"IRON",   not:"Fireplace parts"}
+    {tile:"BASIL",  not:"In pesto"},
+    {tile:"POLLY",  not:"In nursery rhymes"},
+    {tile:"TUCKER", not:"Food, informally"}
   ]
 };
 </script>

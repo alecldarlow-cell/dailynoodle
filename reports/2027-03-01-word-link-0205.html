@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0205", band:"medium",
   groups:[
-    {rank:1, name:"Eye words",     members:["PUPIL","IRIS","RETINA","LASH"]},
-    {rank:2, name:"School words",  members:["PREFECT","ASSEMBLY","DETENTION","TUCK SHOP"]},
-    {rank:3, name:"Kinds of lash", members:["EYE","BACK","WHIP","TONGUE"]},
-    {rank:4, name:"Ways to stare", members:["GAZE","GOGGLE","GAWP","GLARE"]}
+    {rank:1, name:"Times of day",               members:["DAWN","NOON","MIDNIGHT","TWILIGHT"]},
+    {rank:2, name:"Mean person",                members:["MISER","SCROOGE","TIGHTWAD","CHEAPSKATE"]},
+    {rank:3, name:"Famous battles",             members:["HASTINGS","WATERLOO","BOSWORTH","CULLODEN"]},
+    {rank:4, name:"A Welsh town hides in each", members:["BALACLAVA","SKINFLINT","DUSK","BENEATH"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PUPIL", not:"School words"},
-    {tile:"LASH",  not:"Kinds of lash"},
-    {tile:"GLARE", not:"Eye words"}
+    {tile:"DUSK",      not:"Times of day"},
+    {tile:"SKINFLINT", not:"Mean person"},
+    {tile:"BALACLAVA", not:"Famous battles"}
   ]
 };
 </script>

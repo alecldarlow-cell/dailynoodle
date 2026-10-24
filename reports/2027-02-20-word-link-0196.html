@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0196", band:"medium",
   groups:[
-    {rank:1, name:"Fastenings",          members:["POPPER","TOGGLE","VELCRO","BUCKLE"]},
-    {rank:2, name:"Kinds of toggle",     members:["SWITCH","DUFFLE","KEY","SHIFT"]},
-    {rank:3, name:"Duffle bag contents", members:["KIT","BOOTS","SHINPADS","TOWEL"]},
-    {rank:4, name:"Ways to do up",       members:["BUTTON","LACE","CINCH","KNOT"]}
+    {rank:1, name:"A great many",                         members:["HOST","HORDE","MOB","THRONG"]},
+    {rank:2, name:"Metallic elements",                    members:["ZINC","LEAD","NICKEL","COBALT"]},
+    {rank:3, name:"Wedding anniversary gifts",            members:["PAPER","PEARL","RUBY","TIN"]},
+    {rank:4, name:"Lose the last letter for a body part", members:["ARMY","CHINA","HEARTH","LUNGE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"TOGGLE", not:"Kinds of toggle"},
-    {tile:"BUCKLE", not:"Ways to do up"},
-    {tile:"KIT",    not:"Fastenings"}
+    {tile:"ARMY",  not:"A great many"},
+    {tile:"CHINA", not:"Wedding anniversary gifts"},
+    {tile:"TIN",   not:"Metallic elements"}
   ]
 };
 </script>

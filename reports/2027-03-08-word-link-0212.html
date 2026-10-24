@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0212", band:"medium",
   groups:[
-    {rank:1, name:"Shop types",          members:["IRONMONGER","COBBLER","MILLINER","CHANDLER"]},
-    {rank:2, name:"Puddings with fruit", members:["CRUMBLE","BETTY","GRUNT","SLUMP"]},
-    {rank:3, name:"Kinds of monger",     members:["FISH","WAR","SCARE","COSTER"]},
-    {rank:4, name:"Ways to sell",        members:["PEDDLE","HAWK","FLOG","TOUT"]}
+    {rank:1, name:"A ___ of sunlight",                            members:["BEAM","SHAFT","STREAK","BURST"]},
+    {rank:2, name:"In the stationery cupboard",                   members:["STAPLER","PAPERCLIP","GLUE STICK","ENVELOPE"]},
+    {rank:3, name:"BROWN ___",                                    members:["BREAD","SAUCE","SUGAR","RICE"]},
+    {rank:4, name:"Add a letter to the front for a kitchen item", members:["INK","RAY","LASS","LENDER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"COBBLER",  not:"Puddings with fruit"},
-    {tile:"CHANDLER", not:"Kinds of monger"},
-    {tile:"HAWK",     not:"Shop types"}
+    {tile:"RAY",      not:"A ___ of sunlight"},
+    {tile:"INK",      not:"In the stationery cupboard"},
+    {tile:"ENVELOPE", not:"BROWN ___"}
   ]
 };
 </script>

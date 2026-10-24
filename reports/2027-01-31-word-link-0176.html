@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0176">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2027-01-31">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0176">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-01-31-word-link-0176.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0176", band:"medium",
   groups:[
-    {rank:1, name:"Meeting words",     members:["AGENDA","MINUTES","APOLOGIES","QUORUM"]},
-    {rank:2, name:"Kinds of minute",   members:["LAST","ANY","NEW YORK","WAIT A"]},
-    {rank:3, name:"Clock parts",       members:["HAND","FACE","PENDULUM","ESCAPEMENT"]},
-    {rank:4, name:"Ways to apologise", members:["GROVEL","ATONE","REPENT","SAY SORRY"]}
+    {rank:1, name:"Animal mums",                  members:["MARE","EWE","HEN","VIXEN"]},
+    {rank:2, name:"Have a sting",                 members:["BEE","WASP","NETTLE","SCORPION"]},
+    {rank:3, name:"At a lighthouse",              members:["LAMP","LENS","KEEPER","FOGHORN"]},
+    {rank:4, name:"Sound like notes in Do-Re-Mi", members:["DOE","RAY","SEW","TEA"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,8 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MINUTES",   not:"Kinds of minute"},
-    {tile:"APOLOGIES", not:"Ways to apologise"},
-    {tile:"HAND",      not:"Meeting words"}
+    {tile:"DOE", not:"Animal mums"},
+    {tile:"RAY", not:"Have a sting"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0207", band:"medium",
   groups:[
-    {rank:1, name:"Payslip words",     members:["GROSS","NET","PENSION","TAX CODE"]},
-    {rank:2, name:"Kinds of net",      members:["SAFETY","HAIR","MOSQUITO","DRAG"]},
-    {rank:3, name:"Fishing boat gear", members:["TRAWL","POT","BUOY","WINCH"]},
-    {rank:4, name:"Ways to earn",      members:["GRAFT","EARN OUT","PULL IN","CLEAR"]}
+    {rank:1, name:"Put right",              members:["MEND","FIX","RESTORE","PATCH"]},
+    {rank:2, name:"Pieces of land",         members:["PLOT","FIELD","PADDOCK","MEADOW"]},
+    {rank:3, name:"Hibernate in winter",    members:["HEDGEHOGS","DORMICE","BATS","TORTOISES"]},
+    {rank:4, name:"Rearrange for a weapon", members:["REPAIR","PEARS","BEARS","WORDS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"NET",   not:"Kinds of net"},
-    {tile:"GROSS", not:"Ways to earn"},
-    {tile:"DRAG",  not:"Fishing boat gear"}
+    {tile:"REPAIR", not:"Put right"},
+    {tile:"BEARS",  not:"Hibernate in winter"},
+    {tile:"PATCH",  not:"Pieces of land"}
   ]
 };
 </script>

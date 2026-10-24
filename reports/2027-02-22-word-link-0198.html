@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0198", band:"medium",
   groups:[
-    {rank:1, name:"Toolbox extras",     members:["BRADAWL","MITRE BOX","SPIRIT","CLAMP"]},
-    {rank:2, name:"Kinds of spirit",    members:["TEAM","FREE","HOLY","SURGICAL"]},
-    {rank:3, name:"Drinks cabinet",     members:["GIN","RUM","BRANDY","VERMOUTH"]},
-    {rank:4, name:"Ways to fix firmly", members:["ANCHOR","BOLT","PIN","MOOR"]}
+    {rank:1, name:"Kitchen appliances",                      members:["HOB","OVEN","FRIDGE","KETTLE"]},
+    {rank:2, name:"Bathroom fittings",                       members:["LOO","BIDET","SHOWER","SINK"]},
+    {rank:3, name:"Window parts",                            members:["SILL","PANE","LATCH","FRAME"]},
+    {rank:4, name:"Things you can draw (not with a pencil)", members:["CURTAINS","BATH","BREATH","STRAWS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SPIRIT", not:"Kinds of spirit"},
-    {tile:"CLAMP",  not:"Ways to fix firmly"},
-    {tile:"GIN",    not:"Toolbox extras"}
+    {tile:"SINK",     not:"Kitchen appliances"},
+    {tile:"BATH",     not:"Bathroom fittings"},
+    {tile:"CURTAINS", not:"Window parts"}
   ]
 };
 </script>

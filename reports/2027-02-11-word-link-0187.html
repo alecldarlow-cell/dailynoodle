@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0187", band:"medium",
   groups:[
-    {rank:1, name:"Job adverts words",  members:["SALARY","BENEFITS","REMOTE","PACKAGE"]},
-    {rank:2, name:"Kinds of package",   members:["HOLIDAY","CARE","SOFTWARE","SUSPICIOUS"]},
-    {rank:3, name:"Post office things", members:["PARCEL","SCALES","FRANKING","QUEUE"]},
-    {rank:4, name:"Ways to bundle up",  members:["PARCEL OUT","WRAP","BALE","TRUSS"]}
+    {rank:1, name:"Religious leaders",                      members:["BISHOP","RABBI","IMAM","VICAR"]},
+    {rank:2, name:"Family members, informally",             members:["NAN","GRAMPS","SIS","BRO"]},
+    {rank:3, name:"___ ROAD",                               members:["ABBEY","OPEN","SLIP","TOLL"]},
+    {rank:4, name:"Lose the last letter for a music genre", members:["ROCKY","FOLKS","POPE","JAZZY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PACKAGE", not:"Kinds of package"},
-    {tile:"PARCEL",  not:"Ways to bundle up"},
-    {tile:"REMOTE",  not:"Post office things"}
+    {tile:"POPE",  not:"Religious leaders"},
+    {tile:"ROCKY", not:"___ ROAD"},
+    {tile:"FOLKS", not:"Family members, informally"}
   ]
 };
 </script>

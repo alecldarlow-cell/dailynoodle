@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0200", band:"medium",
   groups:[
-    {rank:1, name:"Body systems",     members:["NERVOUS","IMMUNE","DIGESTIVE","LYMPHATIC"]},
-    {rank:2, name:"Kinds of nerve",   members:["CHEEK","PINCHED","OPTIC","SOME"]},
-    {rank:3, name:"Biscuits",         members:["BOURBON","JAMMIE","NICE","RICH TEA"]},
-    {rank:4, name:"Ways to unsettle", members:["RATTLE","FAZE","JAR","SPOOK"]}
+    {rank:1, name:"Shortage",                               members:["DEARTH","SCARCITY","SHORTFALL","DEFICIT"]},
+    {rank:2, name:"On a golf course",                       members:["BUNKER","CADDIE","FAIRWAY","CLUBHOUSE"]},
+    {rank:3, name:"___ MUSIC",                              members:["SHEET","CHAMBER","FOLK","BACKGROUND"]},
+    {rank:4, name:"Add a letter to the front for a colour", members:["RANGE","LACK","LIVE","OLD"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"DIGESTIVE", not:"Biscuits"},
-    {tile:"NERVOUS",   not:"Kinds of nerve"},
-    {tile:"NICE",      not:"Ways to unsettle"}
+    {tile:"LACK",  not:"Shortage"},
+    {tile:"RANGE", not:"On a golf course"},
+    {tile:"LIVE",  not:"___ MUSIC"}
   ]
 };
 </script>

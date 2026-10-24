@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0175", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of hinge",     members:["BUTT","PIANO","STRAP","CONCEALED"]},
-    {rank:2, name:"Piano pieces",       members:["NOCTURNE","ETUDE","PRELUDE","SONATA"]},
-    {rank:3, name:"Kinds of strap",     members:["WATCH","SHOULDER","JOCKEY","BOOT"]},
-    {rank:4, name:"Ways to swing open", members:["FLING","YAW","PIVOT","SWEEP"]}
+    {rank:1, name:"At a ski resort",                   members:["PISTE","LIFT","CHALET","GONDOLA"]},
+    {rank:2, name:"Hill words in British place names", members:["FELL","TOR","PIKE","BEN"]},
+    {rank:3, name:"Parts of a mountain",               members:["SUMMIT","RIDGE","SLOPE","CREST"]},
+    {rank:4, name:"___FALL",                           members:["DOWN","FOOT","NIGHT","WIND"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PIANO", not:"Piano pieces"},
-    {tile:"STRAP", not:"Kinds of strap"},
-    {tile:"PIVOT", not:"Kinds of hinge"}
+    {tile:"DOWN",  not:"Hill words in British place names"},
+    {tile:"FOOT",  not:"Parts of a mountain"},
+    {tile:"SLOPE", not:"At a ski resort"}
   ]
 };
 </script>
