@@ -33,7 +33,8 @@
     'ancient-cities': ['🏛️', 'Ancient Cities'],
     'campfire-watch': ['🔥', 'Campfire Watch'],
     'two-dots-landscape': ['⚫', 'Two Dots'],
-    'paper-planes': ['✈️', 'Paper Planes']
+    'paper-planes': ['✈️', 'Paper Planes'],
+    'yarn': ['🧶', 'Yarn']
   };
   var GAME_RE = /\/reports\/\d{4}-\d{2}-\d{2}-(?:arcade|strategy|quiz)-([a-z0-9-]+)\.html$/;
   var m = location.pathname.match(GAME_RE);

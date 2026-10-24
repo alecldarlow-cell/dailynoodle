@@ -509,6 +509,8 @@ function recapNode(found){
   h+=`<details class="fin-rare"><summary>Rarer words: ${bf.length} of ${P.bonus.length} found</summary><p>${P.bonus.map(w=>esc(found.includes(w)?w+' ✓':w)).join(' \u00b7 ')}</p></details>`;
   const d=document.createElement('div');d.innerHTML=h;
   d.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('.fin-more');if(b)b.parentNode.classList.add('open');});
+  /* Yarn (24 Oct 2026) is the game of this puzzle in Noodle Games, as Ballpark is Reckon's and Borderline Borders' */
+  const a=document.createElement('a');a.className='fin-link';a.href='2026-10-24-quiz-yarn.html';a.textContent='Play more boards in Yarn';d.appendChild(a);
   return d;
 }
 function wordsHTML(found){
