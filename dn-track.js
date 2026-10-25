@@ -144,6 +144,25 @@
     try { localStorage.setItem('noodle-board-v1', JSON.stringify(s)); } catch (e) {}
   }
 
+  /* Merge saved data d ({key: stored string}) into this browser by the rules above,
+     and take over league identity b if given. The #dnmove= link below uses it, and
+     so does sign-in sync (dn-sync.js, 25 Oct 2026) with the copy kept for an account. */
+  function importData(d, b){
+    for (var k in d) {
+      if (k === 'digi.aid.prev') continue;
+      var oldV = d[k], here = null;
+      try { here = localStorage.getItem(k); } catch (e) {}
+      var val = oldV;
+      if (here != null) {
+        var a = parse(here), o = parse(oldV);
+        val = (isObj(a) && isObj(o)) ? JSON.stringify(mergeObj(a, o)) : here;
+      }
+      try { localStorage.setItem(k, val); } catch (e) {}
+    }
+    if (isObj(b)) adoptBoard(b);
+  }
+  try { window.dnMove = { importData: importData }; } catch (e) {}
+
   try {
     if (location.hash.indexOf(TAG) !== 0) return;
     var p = parse(b64d(location.hash.slice(TAG.length)));
@@ -160,18 +179,7 @@
           localStorage.setItem('digi.aid.prev', JSON.stringify(prev.slice(-5)));
         }
       } catch (e) {}
-      for (var k in p.d) {
-        if (k === 'digi.aid.prev') continue;
-        var oldV = p.d[k], here = null;
-        try { here = localStorage.getItem(k); } catch (e) {}
-        var val = oldV;
-        if (here != null) {
-          var a = parse(here), b = parse(oldV);
-          val = (isObj(a) && isObj(b)) ? JSON.stringify(mergeObj(a, b)) : here;
-        }
-        try { localStorage.setItem(k, val); } catch (e) {}
-      }
-      if (isObj(p.b)) adoptBoard(p.b);
+      importData(p.d, p.b);
     }
     window.DN_MOVING = true;
     history.replaceState(null, '', location.pathname + location.search + ((p && typeof p.h === 'string') ? p.h : ''));
@@ -418,6 +426,15 @@
       var bs = document.createElement('script');
       bs.src = SELF ? SELF.replace(/dn-track\.js(\?.*)?$/, 'dn-board.js') : '../dn-board.js';
       bs.defer = true; document.head.appendChild(bs);
+    } catch (e) {}
+    // Signed in for sync (dn-sync.js, 25 Oct 2026): it sends this puzzle's result to
+    // the copy kept for the account when the puzzle ends. Only for signed-in players.
+    try {
+      if (localStorage.getItem('noodle-sync-auth')) {
+        var ss = document.createElement('script');
+        ss.src = SELF ? SELF.replace(/dn-track\.js(\?.*)?$/, 'dn-sync.js') : '../dn-sync.js';
+        ss.defer = true; document.head.appendChild(ss);
+      }
     } catch (e) {}
     var startPuzzle = function(e){
       if (puz.started) return;

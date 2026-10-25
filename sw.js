@@ -159,7 +159,7 @@ const KEY = 'sb_publishable_dEMntRNiElpGHn3Hd5Ef1Q_HvLa2wTB';   // public by des
 
 const CORE = [
   '/', '/index.html', '/puzzles.html', '/games.html', '/lab.html', '/board.html', '/privacy.html',
-  '/front.css', '/front.js', '/dn-track.js', '/dn-board.js',
+  '/front.css', '/front.js', '/dn-track.js', '/dn-board.js', '/dn-sync.js',
   '/feed.json', '/puzzles-today.json', '/manifest.webmanifest',
   '/icons/favicon.svg', '/icons/favicon-32.png', '/icons/icon-192.png',
   '/assets/borders-thumb.svg', '/assets/tangle-thumb.svg', '/assets/reckon-thumb.svg',
