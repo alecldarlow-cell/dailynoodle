@@ -138,8 +138,13 @@
 
   window.dnSync = { sync: sync, readLink: readLink };
 
-  /* ---------- puzzle pages: send the result when the puzzle ends ---------- */
+  /* ---------- puzzle pages: start from the account's copy, send the result at the end ----------
+     Pulling as the page opens means a streak continues from a day played elsewhere (the
+     app, another browser) before this puzzle is finished: the page's own save writes then
+     merge with it (dnCore.saveProgress). A round in progress here is kept (the import
+     keeps this browser's fields). */
   if (!ON_BOARD) {
+    sync().catch(function () {});
     document.addEventListener('dn:puzzle_end', function () {
       // Let the page finish writing its save first.
       setTimeout(function () { sync().catch(function () {}); }, 1200);
