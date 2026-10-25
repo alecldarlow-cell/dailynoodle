@@ -378,7 +378,10 @@
     css(); fonts();
     document.documentElement.classList.add('fin-ready');
     box.classList.add('fin-box'); box.setAttribute('data-fin', cfg.type);
-    var old = $('dnFin'); if (old) old.parentNode.removeChild(old);
+    // The previous sheet (Play again on Link or Sweep) goes only once this one has taken the
+    // engine's elements and the board link out of it: removed first, they went with it and the
+    // second sheet had no title and blank stats (25 Oct 2026, found by the app's Link replay).
+    var old = $('dnFin');
     var keep = el('div', 'fin-keep'); keep.hidden = true;
     var f = el('div', 'fin'); f.id = 'dnFin';
     var adopt = function (id) { var e = $(id); if (e) { e.removeAttribute('style'); } return e; };
@@ -436,6 +439,7 @@
     box.appendChild(f);
     // dn-board.js may already have put its link in the old layout; move it into the sheet
     var bl = box.querySelector('.nn-board-wrap'); if (bl) f.querySelector('.fin-board-slot').appendChild(bl);
+    if (old && old.parentNode) old.parentNode.removeChild(old);
     open(box);
   }
   function open(box) {
