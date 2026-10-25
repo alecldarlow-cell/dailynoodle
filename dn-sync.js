@@ -15,13 +15,14 @@
    then push this browser's merged documents (sync_push). Pulling first every time
    means two browsers never overwrite each other's results. The app does the same.
 
-   OFF until Alec has set up the sign-in email (Resend) and allowed
-   https://dailynoodle.co.uk/board.html as a redirect URL in Supabase Auth: then set
-   ON to true. Nothing here runs, and supabase-js is never fetched, while it is off.
+   ON since 25 Oct 2026 (Alec's call, after the sign-in email went through Resend and
+   https://dailynoodle.co.uk/board.html was allowed as a redirect URL in Supabase Auth).
+   Set ON to false to switch it off again: nothing here runs, and supabase-js is never
+   fetched, while it is off. Puzzle pages load this file only for a signed-in player.
    ========================================================================== */
 (function () {
   'use strict';
-  var ON = false;
+  var ON = true;
   if (window.__dnSyncTest) ON = true;   // tools/tests only
   if (!ON || window.dnSync) return;
 
