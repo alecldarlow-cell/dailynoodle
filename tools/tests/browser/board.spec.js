@@ -237,4 +237,29 @@ test.describe('BOARD-E2E', () => {
       expect(A.p.errs, 'page errors').toEqual([]);
     } finally { await A.ctx.close(); }
   });
+
+  test('BOARD-REC-STALE: with an older cached dn-board.js (no records), every board still loads', async ({ browser }) => {
+    test.setTimeout(60000);
+    const A = await phone(browser, db, 'A');
+    try {
+      const fs = require('node:fs'), path = require('node:path');
+      const old = fs.readFileSync(path.join(__dirname, '../../../dn-board.js'), 'utf8').replace('records: records, moment: moment,', '');
+      expect(old).not.toContain('records: records');
+      await A.ctx.route(u => u.pathname.endsWith('/dn-board.js'), r => r.fulfill({ status: 200, contentType: 'application/javascript', body: old }));
+      await go(A, 'board.html');
+      await H.tap(A.p, A.p.locator('[data-go="start"]'));
+      await A.p.fill('input[name="lname"]', 'Stale');
+      await A.p.fill('input[name="nick"]', 'Ada');
+      await H.tap(A.p, A.p.locator('#f .btn.go'));
+      for (const p of ['all', 'mini', 'link']) {
+        await go(A, `board.html?p=${p}&d=${DAY}`);
+        await expect(A.p.locator('.daybar')).toHaveCount(1);
+        await expect(A.p.locator('.loading')).toHaveCount(0);
+      }
+      await go(A, 'board.html?p=records');
+      await expect(A.p.locator('.loading')).toHaveCount(0);
+      await expect(A.p.locator('.nobody')).toContainText('Couldn’t load');   // the Records tab says so instead of hanging
+      expect(A.p.errs, 'page errors').toEqual([]);
+    } finally { await A.ctx.close(); }
+  });
 });
