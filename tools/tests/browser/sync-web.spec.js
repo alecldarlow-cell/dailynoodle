@@ -70,7 +70,7 @@ function fakeSupabase() {
   } };
 }
 
-async function device(browser, dbs, name, { sync = true } = {}) {
+async function device(browser, dbs, name, { sync = true, time = TIME } = {}) {
   const events = [], calls = [], cdn = [];
   const ctx = await H.newPhone(browser, { events });
   if (sync) {
@@ -91,7 +91,7 @@ async function device(browser, dbs, name, { sync = true } = {}) {
   const p = await ctx.newPage();
   p.errs = []; p.on('pageerror', e => p.errs.push(e.message));
   p.on('dialog', d => d.accept());
-  await p.clock.install({ time: new Date(TIME) });
+  await p.clock.install({ time: new Date(time) });
   return { name, ctx, p, calls, cdn };
 }
 /* A link opened from an email or a chat is a new page load, never a same-page jump to a #fragment. */
@@ -303,5 +303,25 @@ test.describe('SYNC-WEB', () => {
       expect(await doneIds(D)).toEqual(['DP·MINI·0099']);
       expect(D.p.errs).toEqual([]);
     } finally { await D.ctx.close(); }
+  });
+
+  test('SYNC-WEB-08: a puzzle page opened straight from a link continues the streak from a day played elsewhere', async ({ browser }) => {
+    // Borders keeps its streak inside its save, with no list of days: only the account's
+    // copy, pulled before the round ends, can tell this browser about yesterday.
+    test.setTimeout(240000);
+    const B17 = 'reports/2026-10-17-geo-borders-0013.html', B18 = 'reports/2026-10-18-geo-borders-0014.html';
+    const A = await device(browser, dbs, 'yesterday', { time: '2026-10-17T19:00:00+01:00' }), B = await device(browser, dbs, 'today');
+    try {
+      await signIn(A, 'alec');
+      await go(A, B17); await play.borders(A.p);
+      await expect.poll(async () => ((await held(dbs.sync, 'alec@example.test')) || {})['digi-borders-v1']?.streak?.last, { timeout: 15000 }).toBe('2026-10-17');
+      // Today, another browser that signed in before opens today's Borders straight from a link.
+      await signIn(B, 'alec');
+      await B.p.evaluate(() => localStorage.removeItem('digi-borders-v1'));
+      await go(B, B18); await play.borders(B.p);
+      await expect.poll(async () => (await store(B, 'digi-borders-v1'))?.streak?.n, { timeout: 15000 }).toBe(2);
+      await expect.poll(async () => (await held(dbs.sync, 'alec@example.test'))['digi-borders-v1'].streak.n, { timeout: 15000 }).toBe(2);
+      expect(A.p.errs.concat(B.p.errs)).toEqual([]);
+    } finally { await A.ctx.close(); await B.ctx.close(); }
   });
 });
