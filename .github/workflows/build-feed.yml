@@ -61,6 +61,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Prepare, test and commit the exact release
         run: node tools/release.js
+      - name: Failures as annotations
+        if: failure()
+        run: node tools/tests/ci-annotate.js Release test-results/*/playwright.json test-results/*.log
       - name: Test evidence
         if: always()
         uses: actions/upload-artifact@v4

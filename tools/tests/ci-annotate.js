@@ -25,6 +25,8 @@ for (const f of files) {
       if (/^[a-z]+:[\w-]+$/.test(l.trim())) cur = l.trim();
       else if (/^\s+(FAIL|KNOWN|skip)\b/.test(l)) lines.push(`${cur} ${l.trim()}`.slice(0, 400));
       else if (/ passed, \d+ failed/.test(l)) lines.push(l.trim());
+      // other groups' logs (node --test, Playwright's list output, scripts): their failure lines
+      else if (/^\s*(not ok \d|✘|Error:|AssertionError|■ .*: FAIL)/.test(l)) lines.push(`${f.replace(/^.*\//, '')}: ${l.trim()}`.slice(0, 400));
     }
   }
 }
