@@ -174,7 +174,7 @@
 
   function render(s){
     if (!box) return;
-    var h = '<h2>Keep your streaks everywhere</h2>';
+    var h = '<h2>' + (s ? 'Your account' : 'Create a free account') + '</h2>';
     if (s) {
       h += '<p>Signed in as <b>' + esc(s.user && s.user.email) + '</b></p>' +
         '<p class="fine" id="dnsyncLast">' + esc(ago()) + '</p>' +
@@ -185,11 +185,12 @@
       h += '<p id="dnsyncSent">Check your email: we sent a sign-in link to <b>' + esc(ui.sent) + '</b>. Open it on this device.</p>' +
         '<div class="acts"><button class="btn" type="button" data-sync="again">Use a different email</button></div>';
     } else {
-      h += '<p>Optional. Sign in with your email and your results and streaks follow you to another browser or the app. ' +
-        'We’ll email you a link; no password.</p>' +
-        '<form class="inline" id="dnsyncForm" novalidate><input id="dnsyncEmail" type="email" autocomplete="email" inputmode="email" ' +
-        'placeholder="you@example.com" aria-label="Email address" required>' +
-        '<button class="btn go" type="submit"' + (ui.busy ? ' disabled' : '') + '>Email me a sign-in link</button></form>';
+      h += '<p>Keep your results and streaks on every phone, browser and the app. Optional and free. ' +
+        'Already have an account? Use the same email to sign in. No password: we email you a link.</p>' +
+        '<form id="dnsyncForm" novalidate><label class="flab" for="dnsyncEmail">Your email</label>' +
+        '<div class="inline"><input id="dnsyncEmail" type="email" autocomplete="email" inputmode="email" ' +
+        'placeholder="you@example.com" required>' +
+        '<button class="btn go" type="submit"' + (ui.busy ? ' disabled' : '') + '>Email me a sign-in link</button></div></form>';
     }
     h += '<p class="msg' + (ui.msg && !ui.bad ? ' ok' : '') + '" id="dnsyncMsg" role="status">' + esc(ui.msg) + '</p>';
     box.innerHTML = h;
