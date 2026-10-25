@@ -327,6 +327,21 @@ const TESTS = {
     ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'link: Play again closes the sheet and marks the replay');
     await ctx.close();
   },
+  /* the sheet after Play again keeps its title and stats (25 Oct 2026: finish.js removed the old sheet
+     before taking the engine's #winTitle/#winTime/#winStreak/#winBest out of it) */
+  async 'finish:link-replay-sheet'(b) {
+    const { ctx, p } = await open(b, F.link);
+    await play.link(p, { wrong: 4 });
+    await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
+    await play.link(p, { wrong: 0 });
+    const k = await p.evaluate(() => ({ sheets: document.querySelectorAll('#dnFin').length,
+      title: (document.querySelector('#dnFin .fin-title') || {}).textContent || '',
+      stats: [...document.querySelectorAll('#dnFin .fin-stats > div > :first-child')].map(e => e.textContent.trim()) }));
+    ok(k.sheets === 1 && k.title.trim() !== '' && k.stats.length === 3 && k.stats.every(Boolean),
+      `link: the replay's sheet has its title and stats (${k.sheets} sheet, "${k.title}", ${JSON.stringify(k.stats)})`);
+    ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
   /* ---------- Reckon (20 Oct 2026): the daily of Ballpark ---------- */
   async 'finish:reckon'(b) {
     const ev = []; const { ctx, p } = await open(b, F.reckon, { events: ev, time: RECKON_DAY });
