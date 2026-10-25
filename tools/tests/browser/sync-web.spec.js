@@ -128,14 +128,21 @@ test.describe('SYNC-WEB', () => {
   test.beforeEach(async () => { dbs.board = await boardDb({ today: DAY }); dbs.sync = await syncDb(); });
   test.afterEach(async () => { await dbs.board.close(); await dbs.sync.close(); });
 
-  test('SYNC-WEB-01: switched off (as published), nothing shows and supabase-js is never fetched', async ({ browser }) => {
+  test('SYNC-WEB-01: switched on (as published), the board offers sign-in and puzzle pages stay as they were', async ({ browser }) => {
+    // The board page: the card under the board, signed out, asking for an email.
+    const B = await device(browser, dbs, 'board');
+    try {
+      await go(B, 'board.html');
+      await expect(card(B)).toBeVisible();
+      await expect(card(B)).toContainText('Keep your streaks everywhere');
+      await expect(card(B).getByRole('button', { name: 'Email me a sign-in link' })).toBeVisible();
+      expect(B.p.errs).toEqual([]);
+    } finally { await B.ctx.close(); }
+    // A puzzle page, for a player who isn't signed in: nothing more loaded or fetched.
     const D = await device(browser, dbs, 'plain', { sync: false });
     try {
-      await go(D, 'board.html');
-      await expect(card(D)).toBeHidden();
-      expect(await D.p.evaluate(() => typeof window.dnSync)).toBe('undefined');
-      expect(await D.p.evaluate(() => typeof (window.dnMove && window.dnMove.importData)), 'dn-track.js offers its import').toBe('function');
       await solveMini(D, MINI18);
+      expect(await D.p.evaluate(() => typeof (window.dnMove && window.dnMove.importData)), 'dn-track.js offers its import').toBe('function');
       await H.wait(D.p, 1500);
       expect(D.cdn).toEqual([]);
       expect(await D.p.evaluate(() => [...document.scripts].some(s => /dn-sync\.js/.test(s.src))), 'puzzle pages load nothing more for a player who isn’t signed in').toBe(false);
