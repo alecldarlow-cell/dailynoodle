@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0248", band:"medium",
   groups:[
-    {rank:1, name:"Musical tempo in English", members:["BROAD","LIVELY","WALKING","FAST"]},
-    {rank:2, name:"Kinds of walking",         members:["SLEEP","POWER","JAY","SPACE"]},
-    {rank:3, name:"Ways to describe a road",  members:["WINDING","STEEP","NARROW","BUSY"]},
-    {rank:4, name:"Kinds of stick",           members:["HOCKEY","GLUE","BIG","CANDY"]}
+    {rank:1, name:"Wild West law",       members:["SHERIFF","DEPUTY","POSSE","RANGER"]},
+    {rank:2, name:"Sports officials",    members:["UMPIRE","LINESMAN","STARTER","MARSHAL"]},
+    {rank:3, name:"Beatles songs",       members:["YESTERDAY","HELP","MICHELLE","GET BACK"]},
+    {rank:4, name:"Things that whistle", members:["KETTLE","REFEREE","BLACKBIRD","TRAIN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"WALKING", not:"Kinds of walking"},
-    {tile:"FAST",    not:"Ways to describe a road"},
-    {tile:"BROAD",   not:"Ways to describe a road"}
+    {tile:"REFEREE",   not:"Sports officials"},
+    {tile:"BLACKBIRD", not:"Beatles songs"},
+    {tile:"MARSHAL",   not:"Wild West law"}
   ]
 };
 </script>

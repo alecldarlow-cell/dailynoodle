@@ -20,6 +20,10 @@
   [
    175,
    214
+  ],
+  [
+   215,
+   249
   ]
  ],
  "plan": [
@@ -47,8 +51,8 @@
     215,
     249
    ],
-   "status": "todo",
-   "note": "St Patrick's Day 221, Good Friday 230, Easter Sunday 232, April Fools' Day 236"
+   "status": "done",
+   "note": "St Patrick's Day 221, Good Friday 230, Easter Sunday 232, April Fools' Day 236; done 25 Oct 2026: 35 published (final serials: 221 Irish counties decoys, 230 ___ BUN, 232 young-animal anagrams beside EASTER ___, 236 FOOL'S ___). 41 drafted (35 + 6 spares). Fixed at the editor's check: furniture anagrams (its Complain group clashed with the instrument anagrams'), add-a-letter jobs (Things with a mouth clashed with 229; ___ BANK reused from 12, now ___BOAT). Failed cold solve: lose-a-letter films (solver anchored on S-words SELF/SCARS/SHOOK and missed CUP>UP; dropped), spare homophone birds (REFEREE/CORNER swap between football and boxing; dropped), young-animal anagrams (TEA TOWEL/LOAF/SET/SERVICE gave a second solution; SET>GEL, re-solved clean), ___MASTER (GRILLMASTER let GRILL and QUIZ swap; GRILL>EXAMINE, re-solved clean). Dropped as flat: BOOK___ (to reserves). Spares used: Muppets, hidden instruments; three more passing spares to reserves. Watch for run 4: live 250 has Kinds of crust (238 is Things with a crust); homophones at 217 and 219 are close together (R6-legal)."
   },
   {
    "run": 4,

@@ -62,7 +62,7 @@ Tiles: 1–10 characters, A–Z plus space, apostrophe or hyphen, UPPER CASE, 16
    the range is dated at least 2 days ahead (`ls reports/*word-link-<serial>.html`); drop any that
    aren't from the range and say so in the report.
 2. Inputs, in a scratch folder:
-   - `node tools/link-existing.js --except <start>-347 > existing.txt` (freshness list);
+   - `node tools/link-existing.js --except <start>-<end> > existing.txt` (freshness list; the gate also checks live Links after the range, so leave them in);
    - recent themes: the group names of the last ~60 puzzles in `toolchain/link-batches/*.json`;
    - spares: `toolchain/link-batches/reserves.json` (flat puzzles that passed; usable after a fix).
    - Runs 4–5 (batch 2): list which live puzzles in the range break a rule (run link-reedit's rules on

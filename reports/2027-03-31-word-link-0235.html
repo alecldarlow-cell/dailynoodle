@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0235", band:"medium",
   groups:[
-    {rank:1, name:"Cheeses of Europe", members:["EMMENTAL","MANCHEGO","ROQUEFORT","COMTE"]},
-    {rank:2, name:"Spanish cities",    members:["MALAGA","GRANADA","SEVILLE","BILBAO"]},
-    {rank:3, name:"Kinds of orange",   members:["BLOOD","NAVEL","BITTER","AGENT"]},
-    {rank:4, name:"Ways to mature",    members:["AGE","RIPEN","MELLOW","SEASON"]}
+    {rank:1, name:"European languages", members:["FRENCH","GERMAN","SPANISH","LATIN"]},
+    {rank:2, name:"Salads",             members:["CAESAR","NICOISE","COLESLAW","GREEK"]},
+    {rank:3, name:"School lab kit",     members:["FLASK","PIPETTE","TEST TUBE","TRIPOD"]},
+    {rank:4, name:"Muppets",            members:["WALDORF","BEAKER","ANIMAL","GONZO"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SEVILLE",  not:"Kinds of orange"},
-    {tile:"MANCHEGO", not:"Spanish cities"},
-    {tile:"COMTE",    not:"Ways to mature"}
+    {tile:"WALDORF", not:"Salads"},
+    {tile:"BEAKER",  not:"School lab kit"},
+    {tile:"GREEK",   not:"European languages"}
   ]
 };
 </script>

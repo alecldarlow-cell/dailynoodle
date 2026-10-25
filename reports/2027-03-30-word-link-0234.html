@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0234", band:"medium",
   groups:[
-    {rank:1, name:"Types of horse jump", members:["OXER","WATER","BRUSH","WALL"]},
-    {rank:2, name:"Kinds of brush",      members:["BOTTLE","CLOTHES","PAINT","BRISTLE"]},
-    {rank:3, name:"Farmyard sounds",     members:["CLUCK","BRAY","LOW","NEIGH"]},
-    {rank:4, name:"Ways to skim past",   members:["GRAZE","SHAVE","CLIP","BRUSH BY"]}
+    {rank:1, name:"Unwell",                                members:["POORLY","PEAKY","SICKLY","OFF COLOUR"]},
+    {rank:2, name:"Nocturnal creatures",                   members:["MOTHS","FOXES","BADGERS","BATS"]},
+    {rank:3, name:"Cricket kit",                           members:["PADS","GLOVES","STUMPS","BAILS"]},
+    {rank:4, name:"Add a letter to the front for a sport", members:["OWLS","ARTS","AILING","QUASH"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BRUSH", not:"Kinds of brush"},
-    {tile:"LOW",   not:"Types of horse jump"},
-    {tile:"CLIP",  not:"Kinds of brush"}
+    {tile:"AILING", not:"Unwell"},
+    {tile:"OWLS",   not:"Nocturnal creatures"},
+    {tile:"BATS",   not:"Cricket kit"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0225", band:"medium",
   groups:[
-    {rank:1, name:"Card games for two", members:["CRIBBAGE","BEZIQUE","PIQUET","GIN"]},
-    {rank:2, name:"Kinds of gin",       members:["SLOE","PINK","COTTON","RUMMY"]},
-    {rank:3, name:"Distilled drinks",   members:["VODKA","GRAPPA","ARRACK","MEZCAL"]},
-    {rank:4, name:"Ways to trap",       members:["CORNER","SNARE","NET","COLLAR"]}
+    {rank:1, name:"Irritable",                members:["RATTY","STROPPY","NARKY","TESTY"]},
+    {rank:2, name:"Sides and ends of a ship", members:["PORT","STARBOARD","BOW","STERN"]},
+    {rank:3, name:"Snow White's dwarfs",      members:["SNEEZY","BASHFUL","DOPEY","GRUMPY"]},
+    {rank:4, name:"Backwards, a fish",        members:["DOC","LEE","AYR","TARPS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"GIN",    not:"Kinds of gin"},
-    {tile:"RUMMY",  not:"Card games for two"},
-    {tile:"COTTON", not:"Ways to trap"}
+    {tile:"DOC",    not:"Snow White's dwarfs"},
+    {tile:"GRUMPY", not:"Irritable"},
+    {tile:"LEE",    not:"Sides and ends of a ship"}
   ]
 };
 </script>

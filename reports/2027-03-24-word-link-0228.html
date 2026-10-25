@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0228", band:"medium",
   groups:[
-    {rank:1, name:"Roman numerals as words", members:["MIX","CIVIL","DILL","MILD"]},
-    {rank:2, name:"Herbs and seeds",         members:["CUMIN","FENNEL","CARAWAY","ANISE"]},
-    {rank:3, name:"Kinds of mix",            members:["CAKE","CEMENT","TRAIL","MARKETING"]},
-    {rank:4, name:"Ways to blend in",        members:["MERGE","MELD","FUSE","BLUR"]}
+    {rank:1, name:"Complain",                           members:["WHINGE","GRIPE","GRUMBLE","BELLYACHE"]},
+    {rank:2, name:"___GROUND",                          members:["PLAY","BACK","BATTLE","FORE"]},
+    {rank:3, name:"___WAY",                             members:["RAIL","MOTOR","DRIVE","FAIR"]},
+    {rank:4, name:"Rearrange for a musical instrument", members:["GROAN","BULGE","STAIR","RELY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MIX",  not:"Kinds of mix"},
-    {tile:"DILL", not:"Herbs and seeds"},
-    {tile:"MELD", not:"Roman numerals as words"}
+    {tile:"GROAN", not:"Complain"},
+    {tile:"STAIR", not:"___WAY"},
+    {tile:"FAIR",  not:"___GROUND"}
   ]
 };
 </script>

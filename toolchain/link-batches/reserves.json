@@ -368,5 +368,281 @@
    }
   ],
   "note": "flat; palindromes too easy"
+ },
+ {
+  "serial": 0,
+  "band": "medium",
+  "r4kind": "fill",
+  "shape": "B",
+  "themes": [
+   "detective fiction",
+   "crosswords",
+   "gates",
+   "books"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "In a whodunnit",
+    "members": [
+     "SUSPECT",
+     "MOTIVE",
+     "ALIBI",
+     "CLUE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "In a crossword",
+    "members": [
+     "GRID",
+     "ACROSS",
+     "DOWN",
+     "SQUARE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "GATE___",
+    "members": [
+     "WAY",
+     "POST",
+     "CRASHER",
+     "HOUSE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "BOOK___",
+    "members": [
+     "CASE",
+     "KEEPER",
+     "WORM",
+     "END"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "CASE",
+    "not": "In a whodunnit"
+   },
+   {
+    "tile": "CLUE",
+    "not": "In a crossword"
+   },
+   {
+    "tile": "KEEPER",
+    "not": "GATE___"
+   }
+  ],
+  "note": "flat (cold solver: fair but flat, stock categories); BOOK___ by counting"
+ },
+ {
+  "serial": 0,
+  "band": "medium",
+  "r4kind": "other",
+  "shape": "B",
+  "themes": [
+   "festivals",
+   "dances",
+   "seaside",
+   "things you can"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "At a music festival",
+    "members": [
+     "STAGE",
+     "WRISTBAND",
+     "WELLIES",
+     "PORTALOO"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Kinds of dance event",
+    "members": [
+     "CEILIDH",
+     "TEA DANCE",
+     "BARN DANCE",
+     "PROM"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "At the seaside",
+    "members": [
+     "PIER",
+     "ARCADE",
+     "BEACH HUT",
+     "LIDO"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Things you can pitch",
+    "members": [
+     "TENT",
+     "BALL",
+     "VOICE",
+     "IDEA"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "TENT",
+    "not": "At a music festival"
+   },
+   {
+    "tile": "BALL",
+    "not": "Kinds of dance event"
+   },
+   {
+    "tile": "PROM",
+    "not": "At the seaside"
+   }
+  ],
+  "note": "passed cold solve (run 3 spare); things-you-can idea, space from 210"
+ },
+ {
+  "serial": 0,
+  "band": "medium",
+  "r4kind": "other",
+  "shape": "B",
+  "themes": [
+   "newness",
+   "soap",
+   "pubs",
+   "plots"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "New",
+    "members": [
+     "FRESH",
+     "MODERN",
+     "ORIGINAL",
+     "RECENT"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "SOAP ___",
+    "members": [
+     "DISH",
+     "STAR",
+     "POWDER",
+     "BAR"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "At the pub",
+    "members": [
+     "LANDLORD",
+     "OPTIC",
+     "BEER MAT",
+     "JUKEBOX"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Things with a plot",
+    "members": [
+     "NOVEL",
+     "OPERA",
+     "ALLOTMENT",
+     "CEMETERY"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "NOVEL",
+    "not": "New"
+   },
+   {
+    "tile": "OPERA",
+    "not": "SOAP ___"
+   },
+   {
+    "tile": "BAR",
+    "not": "At the pub"
+   }
+  ],
+  "note": "passed cold solve (run 3 spare); things-with idea, space from other things-with puzzles"
+ },
+ {
+  "serial": 0,
+  "band": "medium",
+  "r4kind": "anagram",
+  "shape": "B",
+  "themes": [
+   "emptiness",
+   "charts",
+   "chips",
+   "writers"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Empty",
+    "members": [
+     "BLANK",
+     "HOLLOW",
+     "VACANT",
+     "UNOCCUPIED"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "___ AND CHIPS",
+    "members": [
+     "FISH",
+     "EGG",
+     "PIE",
+     "SCAMPI"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "___ CHART",
+    "members": [
+     "BAR",
+     "FLOW",
+     "FLIP",
+     "WALL"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Rearrange for a writer",
+    "members": [
+     "STEAK",
+     "BLEAK",
+     "VOID",
+     "WIELD"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "VOID",
+    "not": "Empty"
+   },
+   {
+    "tile": "STEAK",
+    "not": "___ AND CHIPS"
+   },
+   {
+    "tile": "PIE",
+    "not": "___ CHART"
+   }
+  ],
+  "note": "passed cold solve (run 3 spare); writer anagrams: keep 10+ days from 229 hidden writers and from 238 crust/chart groups; STEAK/KEATS also in reserve 108"
  }
 ]

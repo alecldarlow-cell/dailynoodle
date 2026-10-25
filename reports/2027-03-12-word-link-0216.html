@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0216", band:"medium",
   groups:[
-    {rank:1, name:"Roof types",    members:["GABLE","HIP","MANSARD","PITCHED"]},
-    {rank:2, name:"Kinds of hip",  members:["ROSE","FLASK","HOP","JOINT"]},
-    {rank:3, name:"Dance holds",   members:["BALLROOM","CLOSED","OPEN","SHADOW"]},
-    {rank:4, name:"Ways to slope", members:["SLANT","TILT","INCLINE","CANT"]}
+    {rank:1, name:"A real puzzle",               members:["RIDDLE","ENIGMA","POSER","MYSTERY"]},
+    {rank:2, name:"___ TOUR",                    members:["WORLD","GRAND","GUIDED","FAREWELL"]},
+    {rank:3, name:"Hedgerow shrubs",             members:["BRAMBLE","ELDER","HAZEL","DOG ROSE"]},
+    {rank:4, name:"An instrument hides in each", members:["HAWTHORN","CONUNDRUM","ABSOLUTE","SHARPEN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"HIP",     not:"Kinds of hip"},
-    {tile:"PITCHED", not:"Ways to slope"},
-    {tile:"OPEN",    not:"Roof types"}
+    {tile:"CONUNDRUM", not:"A real puzzle"},
+    {tile:"MYSTERY",   not:"___ TOUR"},
+    {tile:"HAWTHORN",  not:"Hedgerow shrubs"}
   ]
 };
 </script>

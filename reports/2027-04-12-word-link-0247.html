@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0247", band:"medium",
   groups:[
-    {rank:1, name:"Deck of cards words", members:["JOKER","ACE","SUIT","PACK"]},
-    {rank:2, name:"Kinds of suit",       members:["BOILER","WET","LAW","TRACK"]},
-    {rank:3, name:"Wolf words",          members:["HOWL","CUB","DEN","LAIR"]},
-    {rank:4, name:"Ways to excel",       members:["ACE IT","SHINE","STAR","SURPASS"]}
+    {rank:1, name:"Apparitions",                         members:["SPOOK","SPECTRE","PHANTOM","WRAITH"]},
+    {rank:2, name:"Pizza toppings",                      members:["PEPPERONI","ANCHOVY","MUSHROOM","HAM"]},
+    {rank:3, name:"Kinds of actor",                      members:["STAR","EXTRA","UNDERSTUDY","STAND-IN"]},
+    {rank:4, name:"Lose the first letter for a TV term", members:["GHOST","OLIVE","STAKE","GRATING"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SUIT", not:"Kinds of suit"},
-    {tile:"PACK", not:"Wolf words"},
-    {tile:"ACE",  not:"Ways to excel"}
+    {tile:"GHOST", not:"Apparitions"},
+    {tile:"OLIVE", not:"Pizza toppings"},
+    {tile:"HAM",   not:"Kinds of actor"}
   ]
 };
 </script>

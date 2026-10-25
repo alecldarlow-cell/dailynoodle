@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0224", band:"medium",
   groups:[
-    {rank:1, name:"Sea words",         members:["BRINE","SWELL","FOAM","SPRAY"]},
-    {rank:2, name:"Mattress fillings", members:["LATEX","HORSEHAIR","WOOL","COIR"]},
-    {rank:3, name:"Kinds of spray",    members:["HAIR","SEA","NASAL","BODY"]},
-    {rank:4, name:"Ways to grow",      members:["SWELL UP","BALLOON","EXPAND","WAX"]}
+    {rank:1, name:"Rage",                                members:["IRE","FURY","WRATH","SPLEEN"]},
+    {rank:2, name:"___BOAT",                             members:["ROW","LIFE","SPEED","HOUSE"]},
+    {rank:3, name:"Lose your ___",                       members:["NERVE","MARBLES","COOL","WAY"]},
+    {rank:4, name:"Add a letter to the front for a job", members:["ANGER","RIVER","LUMBER","LAZIER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FOAM",  not:"Mattress fillings"},
-    {tile:"SPRAY", not:"Kinds of spray"},
-    {tile:"SWELL", not:"Ways to grow"}
+    {tile:"ANGER", not:"Rage"},
+    {tile:"RIVER", not:"___BOAT"},
+    {tile:"LIFE",  not:"Lose your ___"}
   ]
 };
 </script>

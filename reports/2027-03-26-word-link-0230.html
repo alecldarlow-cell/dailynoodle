@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0230", band:"medium",
   groups:[
-    {rank:1, name:"Cornish and Devon words", members:["COMBE","TOR","LEAT","CROFT"]},
-    {rank:2, name:"Scottish words",          members:["GLEN","BRAE","LOCH","BEN"]},
-    {rank:3, name:"Kinds of ben",            members:["NEVIS","LOMOND","BIG","GENTLE"]},
-    {rank:4, name:"Ways to climb up",        members:["SCRAMBLE","SHIN","MOUNT","CLAMBER"]}
+    {rank:1, name:"Chip shop fish",            members:["COD","SKATE","POLLOCK","PLAICE"]},
+    {rank:2, name:"London football clubs",     members:["WEST HAM","FULHAM","BRENTFORD","MILLWALL"]},
+    {rank:3, name:"English rugby union clubs", members:["SARACENS","HARLEQUINS","GLOUCESTER","LEICESTER"]},
+    {rank:4, name:"___ BUN",                   members:["CHELSEA","BATH","STICKY","HOT CROSS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,8 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BEN", not:"Kinds of ben"},
-    {tile:"TOR", not:"Ways to climb up"}
+    {tile:"CHELSEA", not:"London football clubs"},
+    {tile:"BATH",    not:"English rugby union clubs"}
   ]
 };
 </script>

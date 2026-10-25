@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0231", band:"medium",
   groups:[
-    {rank:1, name:"Fairy tale things", members:["SPINDLE","BEANSTALK","SLIPPER","MIRROR"]},
-    {rank:2, name:"Kinds of slipper",  members:["GLASS","BED","CARPET","BATH"]},
-    {rank:3, name:"Bathroom textiles", members:["BATH MAT","FLANNEL","TOWEL","ROBE"]},
-    {rank:4, name:"Ways to slide",     members:["SKID","GLIDE","SLIP","SLITHER"]}
+    {rank:1, name:"Group of workers",                             members:["GANG","SQUAD","TEAM","SHIFT"]},
+    {rank:2, name:"Computer keys",                                members:["ENTER","ESCAPE","DELETE","TAB"]},
+    {rank:3, name:"SWIMMING ___",                                 members:["COSTUME","TRUNKS","CAP","GALA"]},
+    {rank:4, name:"Add a letter to the end for an English place", members:["CREW","POOL","DOVE","WELL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SLIPPER", not:"Kinds of slipper"},
-    {tile:"SLIP",    not:"Fairy tale things"},
-    {tile:"GLASS",   not:"Fairy tale things"}
+    {tile:"CREW",  not:"Group of workers"},
+    {tile:"POOL",  not:"SWIMMING ___"},
+    {tile:"SHIFT", not:"Computer keys"}
   ]
 };
 </script>

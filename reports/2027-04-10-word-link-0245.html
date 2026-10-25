@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0245", band:"medium",
   groups:[
-    {rank:1, name:"Beers and ales",       members:["PORTER","STOUT","BITTER","MILD"]},
-    {rank:2, name:"Railway staff of old", members:["GUARD","SIGNALMAN","STOKER","FIREMAN"]},
-    {rank:3, name:"Kinds of guard",       members:["OLD","MUD","COAST","FIRE"]},
-    {rank:4, name:"Ways to protect",      members:["SHIELD","SCREEN","SHELTER","COVER"]}
+    {rank:1, name:"Interrogate",          members:["EXAMINE","PUMP","PROBE","DEBRIEF"]},
+    {rank:2, name:"Social media actions", members:["LIKE","FOLLOW","COMMENT","SHARE"]},
+    {rank:3, name:"Stock market terms",   members:["BOND","DIVIDEND","BEAR","BULL"]},
+    {rank:4, name:"___MASTER",            members:["POST","QUIZ","RING","TASK"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PORTER", not:"Railway staff of old"},
-    {tile:"GUARD",  not:"Kinds of guard"},
-    {tile:"MILD",   not:"Ways to protect"}
+    {tile:"QUIZ",  not:"Interrogate"},
+    {tile:"POST",  not:"Social media actions"},
+    {tile:"SHARE", not:"Stock market terms"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0243", band:"medium",
   groups:[
-    {rank:1, name:"Pantomime words",       members:["DAME","SLAPSTICK","PRINCIPAL","BEHIND"]},
-    {rank:2, name:"Kinds of behind",       members:["LEFT","POWER","DROP","GET"]},
-    {rank:3, name:"Chess-piece nicknames", members:["CASTLE","HORSE","BISHOP","MITRE"]},
-    {rank:4, name:"Ways to lag",           members:["TRAIL OFF","DAWDLE","DRAG","HANG BACK"]}
+    {rank:1, name:"Small piece",                      members:["SHRED","SPECK","CRUMB","FLAKE"]},
+    {rank:2, name:"In a church",                      members:["PEW","ALTAR","PULPIT","FONT"]},
+    {rank:3, name:"Text formatting",                  members:["BOLD","ITALIC","UNDERLINE","INDENT"]},
+    {rank:4, name:"Rearrange for a chemical element", members:["ORGAN","SLIVER","NIT","NONE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BEHIND",    not:"Kinds of behind"},
-    {tile:"DRAG",      not:"Pantomime words"},
-    {tile:"PRINCIPAL", not:"Chess-piece nicknames"}
+    {tile:"SLIVER", not:"Small piece"},
+    {tile:"ORGAN",  not:"In a church"},
+    {tile:"FONT",   not:"Text formatting"}
   ]
 };
 </script>

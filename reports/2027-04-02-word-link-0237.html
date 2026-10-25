@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0237", band:"medium",
   groups:[
-    {rank:1, name:"Types of pen nib", members:["ITALIC","BROAD","OBLIQUE","STUB"]},
-    {rank:2, name:"Kinds of stub",    members:["CIGARETTE","TICKET","TOE","PENCIL"]},
-    {rank:3, name:"Typeface styles",  members:["BOLD","ROMAN","CONDENSED","LIGHT"]},
-    {rank:4, name:"Ways to shorten",  members:["CROP","TRUNCATE","ABRIDGE","DOCK"]}
+    {rank:1, name:"Anxious",                  members:["NERVY","JUMPY","EDGY","TWITCHY"]},
+    {rank:2, name:"Chemistry terms",          members:["ATOM","MOLECULE","ISOTOPE","ELEMENT"]},
+    {rank:3, name:"Parts of a kettle",        members:["SPOUT","LID","HANDLE","FILTER"]},
+    {rank:4, name:"A currency hides in each", members:["NEUROTIC","COMPOUND","BRANDY","HYENA"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"STUB",    not:"Kinds of stub"},
-    {tile:"OBLIQUE", not:"Typeface styles"},
-    {tile:"ITALIC",  not:"Typeface styles"}
+    {tile:"NEUROTIC", not:"Anxious"},
+    {tile:"COMPOUND", not:"Chemistry terms"},
+    {tile:"ELEMENT",  not:"Parts of a kettle"}
   ]
 };
 </script>

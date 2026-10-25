@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0239", band:"medium",
   groups:[
-    {rank:1, name:"Things on a farm gate", members:["LATCH","HINGE","CHAIN","SIGN"]},
-    {rank:2, name:"Kinds of sign",         members:["PLUS","STAR","STOP","VITAL"]},
-    {rank:3, name:"Zodiac creatures",      members:["CRAB","SCALES","ARCHER","GOAT"]},
-    {rank:4, name:"Ways to signal",        members:["WAVE","FLASH","BECKON","NOD"]}
+    {rank:1, name:"Farmyard noises",                    members:["MOO","OINK","NEIGH","CLUCK"]},
+    {rank:2, name:"On a TV remote",                     members:["MUTE","PAUSE","MENU","GUIDE"]},
+    {rank:3, name:"POWER ___",                          members:["CUT","NAP","BALLAD","PLAY"]},
+    {rank:4, name:"Rearrange for a piece of furniture", members:["TOOLS","BLEAT","OAFS","REDRESS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SIGN",   not:"Kinds of sign"},
-    {tile:"SCALES", not:"Things on a farm gate"},
-    {tile:"FLASH",  not:"Kinds of sign"}
+    {tile:"BLEAT", not:"Farmyard noises"},
+    {tile:"TOOLS", not:"POWER ___"},
+    {tile:"PLAY",  not:"On a TV remote"}
   ]
 };
 </script>

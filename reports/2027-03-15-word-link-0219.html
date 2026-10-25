@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0219", band:"medium",
   groups:[
-    {rank:1, name:"Cutlery",        members:["FORK","SPOON","LADLE","SKEWER"]},
-    {rank:2, name:"Road features",  members:["VERGE","CAMBER","LAYBY","CHICANE"]},
-    {rank:3, name:"Kinds of spoon", members:["GREASY","WOODEN","SUGAR","SILVER"]},
-    {rank:4, name:"Ways to swerve", members:["VEER","SLEW","CAREEN","SWING OUT"]}
+    {rank:1, name:"Genuine",                         members:["AUTHENTIC","BONA FIDE","ACTUAL","TRUE"]},
+    {rank:2, name:"At the post office",              members:["COUNTER","STAMP","PARCEL","SCALES"]},
+    {rank:3, name:"___ STORY",                       members:["LOVE","TALL","BEDTIME","SOB"]},
+    {rank:4, name:"Sound like things on a film set", members:["SEEN","QUEUE","CASTE","REAL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FORK",  not:"Road features"},
-    {tile:"SPOON", not:"Kinds of spoon"},
-    {tile:"VERGE", not:"Ways to swerve"}
+    {tile:"TRUE",  not:"___ STORY"},
+    {tile:"REAL",  not:"Genuine"},
+    {tile:"QUEUE", not:"At the post office"}
   ]
 };
 </script>

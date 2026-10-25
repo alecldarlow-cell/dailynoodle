@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0232", band:"medium",
   groups:[
-    {rank:1, name:"Cricket grounds",  members:["LORD'S","OVAL","EDGBASTON","TRENT"]},
-    {rank:2, name:"Shapes",           members:["RHOMBUS","TREFOIL","LOZENGE","ELLIPSE"]},
-    {rank:3, name:"Kinds of lozenge", members:["THROAT","COUGH","SWEET","DIAMOND"]},
-    {rank:4, name:"Ways to soothe",   members:["CALM","SALVE","EASE","LULL"]}
+    {rank:1, name:"EASTER ___",                   members:["EGG","BUNNY","BONNET","ISLAND"]},
+    {rank:2, name:"LIP ___",                      members:["GLOSS","SERVICE","SYNC","LINER"]},
+    {rank:3, name:"Solidify",                     members:["GEL","CONGEAL","HARDEN","STIFFEN"]},
+    {rank:4, name:"Rearrange for a young animal", members:["BALM","CLOT","LOAF","TOWEL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"OVAL",    not:"Shapes"},
-    {tile:"LOZENGE", not:"Kinds of lozenge"},
-    {tile:"SALVE",   not:"Cricket grounds"}
+    {tile:"BALM",    not:"LIP ___"},
+    {tile:"CLOT",    not:"Solidify"},
+    {tile:"SERVICE", not:"EASTER ___"}
   ]
 };
 </script>

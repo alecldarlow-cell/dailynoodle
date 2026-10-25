@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0244", band:"medium",
   groups:[
-    {rank:1, name:"Words for mist",      members:["HAZE","FOG","SMOG","BRUME"]},
-    {rank:2, name:"Kinds of fog",        members:["PEA-SOUPER","BRAIN","SEA","WAR"]},
-    {rank:3, name:"Motorway sign words", members:["DIVERSION","CONGESTION","DELAYS","QUEUES"]},
-    {rank:4, name:"Ways to obscure",     members:["BLUR","CLOUD","DIM","VEIL"]}
+    {rank:1, name:"Gems",                  members:["RUBY","EMERALD","SAPPHIRE","OPAL"]},
+    {rank:2, name:"Physical form",         members:["PHYSIQUE","BUILD","FRAME","SHAPE"]},
+    {rank:3, name:"Tradespeople",          members:["JOINER","ROOFER","GLAZIER","TILER"]},
+    {rank:4, name:"A fruit hides in each", members:["PLUMBER","FIGURE","PEARL","IMPEACH"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FOG",   not:"Kinds of fog"},
-    {tile:"HAZE",  not:"Ways to obscure"},
-    {tile:"CLOUD", not:"Words for mist"}
+    {tile:"PLUMBER", not:"Tradespeople"},
+    {tile:"FIGURE",  not:"Physical form"},
+    {tile:"PEARL",   not:"Gems"}
   ]
 };
 </script>

@@ -1,0 +1,2391 @@
+[
+ {
+  "serial": 215,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "B",
+  "themes": [
+   "rogues",
+   "myths",
+   "ancient egypt",
+   "books"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Rogue",
+    "members": [
+     "RASCAL",
+     "SCOUNDREL",
+     "VILLAIN",
+     "ROTTER"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Mythical creatures",
+    "members": [
+     "CENTAUR",
+     "MINOTAUR",
+     "PEGASUS",
+     "SPHINX"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "In ancient Egypt",
+    "members": [
+     "PYRAMID",
+     "PHARAOH",
+     "NILE",
+     "MUMMY"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Characters in Alice in Wonderland",
+    "members": [
+     "KNAVE",
+     "GRYPHON",
+     "DUCHESS",
+     "DODO"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "KNAVE",
+    "not": "Rogue"
+   },
+   {
+    "tile": "GRYPHON",
+    "not": "Mythical creatures"
+   },
+   {
+    "tile": "SPHINX",
+    "not": "In ancient Egypt"
+   }
+  ]
+ },
+ {
+  "serial": 216,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "B",
+  "themes": [
+   "puzzles",
+   "tours",
+   "hedgerows",
+   "instruments"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "A real puzzle",
+    "members": [
+     "RIDDLE",
+     "ENIGMA",
+     "POSER",
+     "MYSTERY"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "___ TOUR",
+    "members": [
+     "WORLD",
+     "GRAND",
+     "GUIDED",
+     "FAREWELL"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Hedgerow shrubs",
+    "members": [
+     "BRAMBLE",
+     "ELDER",
+     "HAZEL",
+     "DOG ROSE"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "An instrument hides in each",
+    "members": [
+     "HAWTHORN",
+     "CONUNDRUM",
+     "ABSOLUTE",
+     "SHARPEN"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "CONUNDRUM",
+    "not": "A real puzzle"
+   },
+   {
+    "tile": "MYSTERY",
+    "not": "___ TOUR"
+   },
+   {
+    "tile": "HAWTHORN",
+    "not": "Hedgerow shrubs"
+   }
+  ]
+ },
+ {
+  "serial": 217,
+  "band": "medium",
+  "r4kind": "homophone",
+  "shape": "A",
+  "themes": [
+   "holes",
+   "boxing",
+   "skin",
+   "scientists"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Make a hole in",
+    "members": [
+     "DRILL",
+     "PIERCE",
+     "PUNCTURE",
+     "PERFORATE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Boxing punches",
+    "members": [
+     "JAB",
+     "UPPERCUT",
+     "CROSS",
+     "HAYMAKER"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Skin complaints",
+    "members": [
+     "WART",
+     "RASH",
+     "BLISTER",
+     "ECZEMA"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Sound like scientists",
+    "members": [
+     "BORE",
+     "HOOK",
+     "BOIL",
+     "WHAT"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "BORE",
+    "not": "Make a hole in"
+   },
+   {
+    "tile": "HOOK",
+    "not": "Boxing punches"
+   },
+   {
+    "tile": "BOIL",
+    "not": "Skin complaints"
+   }
+  ]
+ },
+ {
+  "serial": 218,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "B",
+  "themes": [
+   "eyes",
+   "phone calls",
+   "flowers",
+   "dogs"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Grown from bulbs",
+    "members": [
+     "TULIP",
+     "DAFFODIL",
+     "SNOWDROP",
+     "HYACINTH"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Parts of the eye",
+    "members": [
+     "LENS",
+     "RETINA",
+     "CORNEA",
+     "IRIS"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "___ CALL",
+    "members": [
+     "ROLL",
+     "CLOSE",
+     "WAKE-UP",
+     "CASTING"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A dog hides in each",
+    "members": [
+     "PUPIL",
+     "CURTAIN",
+     "LABEL",
+     "MUTTON"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "PUPIL",
+    "not": "Parts of the eye"
+   },
+   {
+    "tile": "CURTAIN",
+    "not": "___ CALL"
+   },
+   {
+    "tile": "IRIS",
+    "not": "Grown from bulbs"
+   }
+  ]
+ },
+ {
+  "serial": 219,
+  "band": "medium",
+  "r4kind": "homophone",
+  "shape": "B",
+  "themes": [
+   "genuine",
+   "post office",
+   "stories",
+   "filming"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Genuine",
+    "members": [
+     "AUTHENTIC",
+     "BONA FIDE",
+     "ACTUAL",
+     "TRUE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "At the post office",
+    "members": [
+     "COUNTER",
+     "STAMP",
+     "PARCEL",
+     "SCALES"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "___ STORY",
+    "members": [
+     "LOVE",
+     "TALL",
+     "BEDTIME",
+     "SOB"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Sound like things on a film set",
+    "members": [
+     "SEEN",
+     "QUEUE",
+     "CASTE",
+     "REAL"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "TRUE",
+    "not": "___ STORY"
+   },
+   {
+    "tile": "REAL",
+    "not": "Genuine"
+   },
+   {
+    "tile": "QUEUE",
+    "not": "At the post office"
+   }
+  ]
+ },
+ {
+  "serial": 220,
+  "band": "medium",
+  "r4kind": "fill",
+  "shape": "A",
+  "themes": [
+   "lamb",
+   "clothing",
+   "panto",
+   "room"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Cuts of lamb",
+    "members": [
+     "SHANK",
+     "RACK",
+     "LOIN",
+     "CHOP"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Worn over the shoulders",
+    "members": [
+     "CAPE",
+     "SHAWL",
+     "STOLE",
+     "PONCHO"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "In the panto Cinderella",
+    "members": [
+     "PUMPKIN",
+     "SLIPPER",
+     "MIDNIGHT",
+     "BUTTONS"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "___ROOM",
+    "members": [
+     "CLOAK",
+     "LEG",
+     "BALL",
+     "MUSH"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "LEG",
+    "not": "Cuts of lamb"
+   },
+   {
+    "tile": "CLOAK",
+    "not": "Worn over the shoulders"
+   },
+   {
+    "tile": "BALL",
+    "not": "In the panto Cinderella"
+   }
+  ]
+ },
+ {
+  "serial": 221,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "B",
+  "themes": [
+   "poems",
+   "dips",
+   "dances",
+   "ireland"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Kinds of poem",
+    "members": [
+     "SONNET",
+     "HAIKU",
+     "ODE",
+     "ELEGY"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Dips",
+    "members": [
+     "HUMMUS",
+     "GUACAMOLE",
+     "TZATZIKI",
+     "SALSA"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Latin dances",
+    "members": [
+     "CHA-CHA",
+     "MAMBO",
+     "LAMBADA",
+     "SAMBA"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Irish counties",
+    "members": [
+     "CORK",
+     "MAYO",
+     "LIMERICK",
+     "DOWN"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "MAYO",
+    "not": "Dips"
+   },
+   {
+    "tile": "LIMERICK",
+    "not": "Kinds of poem"
+   },
+   {
+    "tile": "SALSA",
+    "not": "Latin dances"
+   }
+  ],
+  "pin": [
+   221,
+   221
+  ]
+ },
+ {
+  "serial": 222,
+  "band": "medium",
+  "r4kind": "anagram",
+  "shape": "B",
+  "themes": [
+   "slack",
+   "end",
+   "weasels",
+   "cooking"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Not tight",
+    "members": [
+     "SLACK",
+     "BAGGY",
+     "LAX",
+     "ROOMY"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "___ END",
+    "members": [
+     "DEAD",
+     "TAIL",
+     "FRONT",
+     "LOOSE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "In the weasel family",
+    "members": [
+     "OTTER",
+     "BADGER",
+     "MINK",
+     "FERRET"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Rearrange for a way of cooking",
+    "members": [
+     "STOAT",
+     "WEST",
+     "BEAK",
+     "TEAMS"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "STOAT",
+    "not": "In the weasel family"
+   },
+   {
+    "tile": "WEST",
+    "not": "___ END"
+   },
+   {
+    "tile": "LOOSE",
+    "not": "Not tight"
+   }
+  ]
+ },
+ {
+  "serial": 223,
+  "band": "medium",
+  "r4kind": "other",
+  "shape": "B",
+  "themes": [
+   "courage",
+   "paint",
+   "salad dressing",
+   "mouths",
+   "things with"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Courage",
+    "members": [
+     "GUTS",
+     "BACKBONE",
+     "DARING",
+     "METTLE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Kinds of paint",
+    "members": [
+     "GLOSS",
+     "EMULSION",
+     "ACRYLIC",
+     "PRIMER"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "In a vinaigrette",
+    "members": [
+     "VINEGAR",
+     "MUSTARD",
+     "OIL",
+     "GARLIC"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Things with a mouth",
+    "members": [
+     "BOTTLE",
+     "RIVER",
+     "CAVE",
+     "TUNNEL"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "BOTTLE",
+    "not": "Courage"
+   },
+   {
+    "tile": "OIL",
+    "not": "Kinds of paint"
+   }
+  ]
+ },
+ {
+  "serial": 224,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "B",
+  "themes": [
+   "anger",
+   "boats",
+   "losing it",
+   "jobs"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Rage",
+    "members": [
+     "IRE",
+     "FURY",
+     "WRATH",
+     "SPLEEN"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "___BOAT",
+    "members": [
+     "ROW",
+     "LIFE",
+     "SPEED",
+     "HOUSE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Lose your ___",
+    "members": [
+     "NERVE",
+     "MARBLES",
+     "COOL",
+     "WAY"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Add a letter to the front for a job",
+    "members": [
+     "ANGER",
+     "RIVER",
+     "LUMBER",
+     "LAZIER"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "ANGER",
+    "not": "Rage"
+   },
+   {
+    "tile": "RIVER",
+    "not": "___BOAT"
+   },
+   {
+    "tile": "LIFE",
+    "not": "Lose your ___"
+   }
+  ]
+ },
+ {
+  "serial": 225,
+  "band": "medium",
+  "r4kind": "reversal",
+  "shape": "B",
+  "themes": [
+   "moods",
+   "ships",
+   "snow white",
+   "fish"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Irritable",
+    "members": [
+     "RATTY",
+     "STROPPY",
+     "NARKY",
+     "TESTY"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Sides and ends of a ship",
+    "members": [
+     "PORT",
+     "STARBOARD",
+     "BOW",
+     "STERN"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Snow White's dwarfs",
+    "members": [
+     "SNEEZY",
+     "BASHFUL",
+     "DOPEY",
+     "GRUMPY"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Backwards, a fish",
+    "members": [
+     "DOC",
+     "LEE",
+     "AYR",
+     "TARPS"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "DOC",
+    "not": "Snow White's dwarfs"
+   },
+   {
+    "tile": "GRUMPY",
+    "not": "Irritable"
+   },
+   {
+    "tile": "LEE",
+    "not": "Sides and ends of a ship"
+   }
+  ]
+ },
+ {
+  "serial": 226,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "B",
+  "themes": [
+   "sports venues",
+   "rivers",
+   "radio alphabet",
+   "london"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "NATO letter words",
+    "members": [
+     "ALPHA",
+     "BRAVO",
+     "CHARLIE",
+     "ECHO"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Famous sporting venues",
+    "members": [
+     "LORD'S",
+     "HEADINGLEY",
+     "TWICKENHAM",
+     "AINTREE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Features of a river",
+    "members": [
+     "BED",
+     "MEANDER",
+     "TRIBUTARY",
+     "DELTA"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "London Underground stations",
+    "members": [
+     "OVAL",
+     "BANK",
+     "TEMPLE",
+     "ANGEL"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "OVAL",
+    "not": "Famous sporting venues"
+   },
+   {
+    "tile": "BANK",
+    "not": "Features of a river"
+   },
+   {
+    "tile": "DELTA",
+    "not": "NATO letter words"
+   }
+  ]
+ },
+ {
+  "serial": 227,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "A",
+  "themes": [
+   "churches",
+   "email",
+   "monopoly",
+   "herbs"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Church buildings",
+    "members": [
+     "CATHEDRAL",
+     "CHAPEL",
+     "ABBEY",
+     "MINSTER"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Email folders",
+    "members": [
+     "INBOX",
+     "DRAFTS",
+     "OUTBOX",
+     "JUNK"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "London Monopoly squares",
+    "members": [
+     "MAYFAIR",
+     "STRAND",
+     "PARK LANE",
+     "PALL MALL"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A herb hides in each",
+    "members": [
+     "ARCHIVE",
+     "BASILICA",
+     "PICCADILLY",
+     "SAUSAGE"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "BASILICA",
+    "not": "Church buildings"
+   },
+   {
+    "tile": "ARCHIVE",
+    "not": "Email folders"
+   },
+   {
+    "tile": "PICCADILLY",
+    "not": "London Monopoly squares"
+   }
+  ]
+ },
+ {
+  "serial": 228,
+  "band": "medium",
+  "r4kind": "anagram",
+  "shape": "B",
+  "themes": [
+   "complaining",
+   "ways",
+   "grounds",
+   "instruments"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Complain",
+    "members": [
+     "WHINGE",
+     "GRIPE",
+     "GRUMBLE",
+     "BELLYACHE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "___GROUND",
+    "members": [
+     "PLAY",
+     "BACK",
+     "BATTLE",
+     "FORE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "___WAY",
+    "members": [
+     "RAIL",
+     "MOTOR",
+     "DRIVE",
+     "FAIR"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Rearrange for a musical instrument",
+    "members": [
+     "GROAN",
+     "BULGE",
+     "STAIR",
+     "RELY"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "GROAN",
+    "not": "Complain"
+   },
+   {
+    "tile": "STAIR",
+    "not": "___WAY"
+   },
+   {
+    "tile": "FAIR",
+    "not": "___GROUND"
+   }
+  ]
+ },
+ {
+  "serial": 229,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "B",
+  "themes": [
+   "flowers",
+   "harry potter",
+   "greens",
+   "writers"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Garden blooms",
+    "members": [
+     "ASTER",
+     "PEONY",
+     "FREESIA",
+     "LUPIN"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Hogwarts staff",
+    "members": [
+     "SNAPE",
+     "HAGRID",
+     "DUMBLEDORE",
+     "SPROUT"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Green vegetables",
+    "members": [
+     "KALE",
+     "CABBAGE",
+     "BROCCOLI",
+     "LEEK"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A writer hides in each",
+    "members": [
+     "DAHLIA",
+     "RICKSHAW",
+     "SPOTTER",
+     "SWELLS"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "DAHLIA",
+    "not": "Garden blooms"
+   },
+   {
+    "tile": "LUPIN",
+    "not": "Hogwarts staff"
+   },
+   {
+    "tile": "SPROUT",
+    "not": "Green vegetables"
+   }
+  ]
+ },
+ {
+  "serial": 230,
+  "band": "medium",
+  "r4kind": "fill",
+  "shape": "A",
+  "themes": [
+   "good friday",
+   "rugby",
+   "football",
+   "fish and chips"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Chip shop fish",
+    "members": [
+     "COD",
+     "SKATE",
+     "POLLOCK",
+     "PLAICE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "London football clubs",
+    "members": [
+     "WEST HAM",
+     "FULHAM",
+     "BRENTFORD",
+     "MILLWALL"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "English rugby union clubs",
+    "members": [
+     "SARACENS",
+     "HARLEQUINS",
+     "GLOUCESTER",
+     "LEICESTER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "___ BUN",
+    "members": [
+     "CHELSEA",
+     "BATH",
+     "STICKY",
+     "HOT CROSS"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "CHELSEA",
+    "not": "London football clubs"
+   },
+   {
+    "tile": "BATH",
+    "not": "English rugby union clubs"
+   }
+  ],
+  "pin": [
+   230,
+   230
+  ]
+ },
+ {
+  "serial": 231,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "B",
+  "themes": [
+   "teams",
+   "keyboards",
+   "swimming",
+   "english places"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Group of workers",
+    "members": [
+     "GANG",
+     "SQUAD",
+     "TEAM",
+     "SHIFT"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Computer keys",
+    "members": [
+     "ENTER",
+     "ESCAPE",
+     "DELETE",
+     "TAB"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "SWIMMING ___",
+    "members": [
+     "COSTUME",
+     "TRUNKS",
+     "CAP",
+     "GALA"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Add a letter to the end for an English place",
+    "members": [
+     "CREW",
+     "POOL",
+     "DOVE",
+     "WELL"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "CREW",
+    "not": "Group of workers"
+   },
+   {
+    "tile": "POOL",
+    "not": "SWIMMING ___"
+   },
+   {
+    "tile": "SHIFT",
+    "not": "Computer keys"
+   }
+  ]
+ },
+ {
+  "serial": 232,
+  "band": "medium",
+  "r4kind": "anagram",
+  "shape": "A",
+  "themes": [
+   "easter",
+   "lips",
+   "setting",
+   "young animals"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "EASTER ___",
+    "members": [
+     "EGG",
+     "BUNNY",
+     "BONNET",
+     "ISLAND"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "LIP ___",
+    "members": [
+     "GLOSS",
+     "SERVICE",
+     "SYNC",
+     "LINER"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Solidify",
+    "members": [
+     "GEL",
+     "CONGEAL",
+     "HARDEN",
+     "STIFFEN"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Rearrange for a young animal",
+    "members": [
+     "BALM",
+     "CLOT",
+     "LOAF",
+     "TOWEL"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "BALM",
+    "not": "LIP ___"
+   },
+   {
+    "tile": "CLOT",
+    "not": "Solidify"
+   },
+   {
+    "tile": "SERVICE",
+    "not": "EASTER ___"
+   }
+  ],
+  "pin": [
+   232,
+   232
+  ]
+ },
+ {
+  "serial": 233,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "B",
+  "themes": [
+   "bosses",
+   "guards",
+   "traffic",
+   "butterflies"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Boss",
+    "members": [
+     "GAFFER",
+     "GUV'NOR",
+     "CHIEF",
+     "SUPREMO"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Guards",
+    "members": [
+     "SENTRY",
+     "WATCHMAN",
+     "LOOKOUT",
+     "WARDEN"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "TRAFFIC ___",
+    "members": [
+     "JAM",
+     "LIGHT",
+     "CONE",
+     "CALMING"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "British butterflies",
+    "members": [
+     "SKIPPER",
+     "GATEKEEPER",
+     "BRIMSTONE",
+     "COMMA"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "SKIPPER",
+    "not": "Boss"
+   },
+   {
+    "tile": "GATEKEEPER",
+    "not": "Guards"
+   },
+   {
+    "tile": "WARDEN",
+    "not": "TRAFFIC ___"
+   }
+  ]
+ },
+ {
+  "serial": 234,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "B",
+  "themes": [
+   "illness",
+   "night animals",
+   "cricket",
+   "sports",
+   "darts"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Unwell",
+    "members": [
+     "POORLY",
+     "PEAKY",
+     "SICKLY",
+     "OFF COLOUR"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Nocturnal creatures",
+    "members": [
+     "MOTHS",
+     "FOXES",
+     "BADGERS",
+     "BATS"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Cricket kit",
+    "members": [
+     "PADS",
+     "GLOVES",
+     "STUMPS",
+     "BAILS"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Add a letter to the front for a sport",
+    "members": [
+     "OWLS",
+     "ARTS",
+     "AILING",
+     "QUASH"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "AILING",
+    "not": "Unwell"
+   },
+   {
+    "tile": "OWLS",
+    "not": "Nocturnal creatures"
+   },
+   {
+    "tile": "BATS",
+    "not": "Cricket kit"
+   }
+  ]
+ },
+ {
+  "serial": 235,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "B",
+  "themes": [
+   "languages",
+   "salads",
+   "science lab",
+   "muppets"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "European languages",
+    "members": [
+     "FRENCH",
+     "GERMAN",
+     "SPANISH",
+     "LATIN"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Salads",
+    "members": [
+     "CAESAR",
+     "NICOISE",
+     "COLESLAW",
+     "GREEK"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "School lab kit",
+    "members": [
+     "FLASK",
+     "PIPETTE",
+     "TEST TUBE",
+     "TRIPOD"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Muppets",
+    "members": [
+     "WALDORF",
+     "BEAKER",
+     "ANIMAL",
+     "GONZO"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "WALDORF",
+    "not": "Salads"
+   },
+   {
+    "tile": "BEAKER",
+    "not": "School lab kit"
+   },
+   {
+    "tile": "GREEK",
+    "not": "European languages"
+   }
+  ]
+ },
+ {
+  "serial": 236,
+  "band": "medium",
+  "r4kind": "fill",
+  "shape": "A",
+  "themes": [
+   "april fools",
+   "jokes",
+   "craftsmen",
+   "ships"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Practical jokes",
+    "members": [
+     "PRANK",
+     "HOAX",
+     "JAPE",
+     "WIND-UP"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "___SMITH",
+    "members": [
+     "BLACK",
+     "LOCK",
+     "WORD",
+     "GUN"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Ship's crew",
+    "members": [
+     "CAPTAIN",
+     "PURSER",
+     "BOSUN",
+     "DECKHAND"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "FOOL'S ___",
+    "members": [
+     "GOLD",
+     "MATE",
+     "ERRAND",
+     "PARADISE"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "GOLD",
+    "not": "___SMITH"
+   },
+   {
+    "tile": "MATE",
+    "not": "Ship's crew"
+   }
+  ],
+  "pin": [
+   236,
+   236
+  ]
+ },
+ {
+  "serial": 237,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "B",
+  "themes": [
+   "nerves",
+   "chemistry",
+   "kettles",
+   "money"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Anxious",
+    "members": [
+     "NERVY",
+     "JUMPY",
+     "EDGY",
+     "TWITCHY"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Chemistry terms",
+    "members": [
+     "ATOM",
+     "MOLECULE",
+     "ISOTOPE",
+     "ELEMENT"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Parts of a kettle",
+    "members": [
+     "SPOUT",
+     "LID",
+     "HANDLE",
+     "FILTER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A currency hides in each",
+    "members": [
+     "NEUROTIC",
+     "COMPOUND",
+     "BRANDY",
+     "HYENA"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "NEUROTIC",
+    "not": "Anxious"
+   },
+   {
+    "tile": "COMPOUND",
+    "not": "Chemistry terms"
+   },
+   {
+    "tile": "ELEMENT",
+    "not": "Parts of a kettle"
+   }
+  ]
+ },
+ {
+  "serial": 238,
+  "band": "medium",
+  "r4kind": "other",
+  "shape": "B",
+  "themes": [
+   "head slang",
+   "charts",
+   "fishing",
+   "things with"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Slang for the head",
+    "members": [
+     "BONCE",
+     "NOGGIN",
+     "NUT",
+     "NOODLE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Kinds of chart",
+    "members": [
+     "BAR",
+     "FLOW",
+     "TALLY",
+     "LINE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Used for fishing",
+    "members": [
+     "ROD",
+     "REEL",
+     "HOOK",
+     "BAIT"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Things with a crust",
+    "members": [
+     "LOAF",
+     "PIE",
+     "EARTH",
+     "PIZZA"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "LOAF",
+    "not": "Slang for the head"
+   },
+   {
+    "tile": "PIE",
+    "not": "Kinds of chart"
+   },
+   {
+    "tile": "LINE",
+    "not": "Used for fishing"
+   }
+  ]
+ },
+ {
+  "serial": 239,
+  "band": "medium",
+  "r4kind": "anagram",
+  "shape": "B",
+  "themes": [
+   "farmyard",
+   "tv remote",
+   "power",
+   "furniture"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Farmyard noises",
+    "members": [
+     "MOO",
+     "OINK",
+     "NEIGH",
+     "CLUCK"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "On a TV remote",
+    "members": [
+     "MUTE",
+     "PAUSE",
+     "MENU",
+     "GUIDE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "POWER ___",
+    "members": [
+     "CUT",
+     "NAP",
+     "BALLAD",
+     "PLAY"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Rearrange for a piece of furniture",
+    "members": [
+     "TOOLS",
+     "BLEAT",
+     "OAFS",
+     "REDRESS"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "BLEAT",
+    "not": "Farmyard noises"
+   },
+   {
+    "tile": "TOOLS",
+    "not": "POWER ___"
+   },
+   {
+    "tile": "PLAY",
+    "not": "On a TV remote"
+   }
+  ]
+ },
+ {
+  "serial": 240,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "B",
+  "themes": [
+   "indian food",
+   "tusks",
+   "white",
+   "classroom"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "On an Indian menu",
+    "members": [
+     "KORMA",
+     "BHAJI",
+     "NAAN",
+     "DHAL"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Have tusks",
+    "members": [
+     "WALRUS",
+     "NARWHAL",
+     "WARTHOG",
+     "ELEPHANT"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "WHITE ___",
+    "members": [
+     "LIE",
+     "NOISE",
+     "KNIGHT",
+     "FLAG"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Add a letter to the end for a classroom item",
+    "members": [
+     "BOAR",
+     "CHAI",
+     "RULE",
+     "GLOB"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "BOAR",
+    "not": "Have tusks"
+   },
+   {
+    "tile": "CHAI",
+    "not": "On an Indian menu"
+   },
+   {
+    "tile": "ELEPHANT",
+    "not": "WHITE ___"
+   }
+  ]
+ },
+ {
+  "serial": 241,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "A",
+  "themes": [
+   "calendars",
+   "stuarts",
+   "crosses",
+   "books"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "___ CROSS",
+    "members": [
+     "RED",
+     "CHARING",
+     "KING'S",
+     "VICTORIA"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Kinds of calendar",
+    "members": [
+     "GREGORIAN",
+     "LUNAR",
+     "ADVENT",
+     "DESK"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Stuart monarchs",
+    "members": [
+     "JAMES",
+     "CHARLES",
+     "MARY",
+     "WILLIAM"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "The Famous Five",
+    "members": [
+     "JULIAN",
+     "GEORGE",
+     "ANNE",
+     "TIMMY"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "JULIAN",
+    "not": "Kinds of calendar"
+   },
+   {
+    "tile": "ANNE",
+    "not": "Stuart monarchs"
+   },
+   {
+    "tile": "GEORGE",
+    "not": "___ CROSS"
+   }
+  ]
+ },
+ {
+  "serial": 242,
+  "band": "medium",
+  "r4kind": "fill",
+  "shape": "B",
+  "themes": [
+   "nonsense",
+   "sweets",
+   "molluscs",
+   "sauces"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Nonsense",
+    "members": [
+     "HOGWASH",
+     "CLAPTRAP",
+     "CODSWALLOP",
+     "DRIVEL"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Sweets",
+    "members": [
+     "BONBON",
+     "GOBSTOPPER",
+     "PEAR DROP",
+     "HUMBUG"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Molluscs",
+    "members": [
+     "MUSSEL",
+     "WHELK",
+     "LIMPET",
+     "SCALLOP"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "___ SAUCE",
+    "members": [
+     "MINT",
+     "BREAD",
+     "APPLE",
+     "OYSTER"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "HUMBUG",
+    "not": "Nonsense"
+   },
+   {
+    "tile": "MINT",
+    "not": "Sweets"
+   },
+   {
+    "tile": "OYSTER",
+    "not": "Molluscs"
+   }
+  ]
+ },
+ {
+  "serial": 243,
+  "band": "medium",
+  "r4kind": "anagram",
+  "shape": "B",
+  "themes": [
+   "small pieces",
+   "church",
+   "word processing",
+   "elements"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Small piece",
+    "members": [
+     "SHRED",
+     "SPECK",
+     "CRUMB",
+     "FLAKE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "In a church",
+    "members": [
+     "PEW",
+     "ALTAR",
+     "PULPIT",
+     "FONT"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Text formatting",
+    "members": [
+     "BOLD",
+     "ITALIC",
+     "UNDERLINE",
+     "INDENT"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Rearrange for a chemical element",
+    "members": [
+     "ORGAN",
+     "SLIVER",
+     "NIT",
+     "NONE"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "SLIVER",
+    "not": "Small piece"
+   },
+   {
+    "tile": "ORGAN",
+    "not": "In a church"
+   },
+   {
+    "tile": "FONT",
+    "not": "Text formatting"
+   }
+  ]
+ },
+ {
+  "serial": 244,
+  "band": "medium",
+  "r4kind": "hidden",
+  "shape": "A",
+  "themes": [
+   "gems",
+   "physique",
+   "trades",
+   "fruit"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Gems",
+    "members": [
+     "RUBY",
+     "EMERALD",
+     "SAPPHIRE",
+     "OPAL"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Physical form",
+    "members": [
+     "PHYSIQUE",
+     "BUILD",
+     "FRAME",
+     "SHAPE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Tradespeople",
+    "members": [
+     "JOINER",
+     "ROOFER",
+     "GLAZIER",
+     "TILER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "A fruit hides in each",
+    "members": [
+     "PLUMBER",
+     "FIGURE",
+     "PEARL",
+     "IMPEACH"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "PLUMBER",
+    "not": "Tradespeople"
+   },
+   {
+    "tile": "FIGURE",
+    "not": "Physical form"
+   },
+   {
+    "tile": "PEARL",
+    "not": "Gems"
+   }
+  ]
+ },
+ {
+  "serial": 245,
+  "band": "medium",
+  "r4kind": "fill",
+  "shape": "B",
+  "themes": [
+   "questioning",
+   "social media",
+   "stock market",
+   "work"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Interrogate",
+    "members": [
+     "EXAMINE",
+     "PUMP",
+     "PROBE",
+     "DEBRIEF"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Social media actions",
+    "members": [
+     "LIKE",
+     "FOLLOW",
+     "COMMENT",
+     "SHARE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Stock market terms",
+    "members": [
+     "BOND",
+     "DIVIDEND",
+     "BEAR",
+     "BULL"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "___MASTER",
+    "members": [
+     "POST",
+     "QUIZ",
+     "RING",
+     "TASK"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "QUIZ",
+    "not": "Interrogate"
+   },
+   {
+    "tile": "POST",
+    "not": "Social media actions"
+   },
+   {
+    "tile": "SHARE",
+    "not": "Stock market terms"
+   }
+  ]
+ },
+ {
+  "serial": 246,
+  "band": "medium",
+  "r4kind": "other",
+  "shape": "B",
+  "themes": [
+   "careers",
+   "cheques",
+   "standards",
+   "forgery",
+   "things you can"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Line of work",
+    "members": [
+     "TRADE",
+     "CALLING",
+     "VOCATION",
+     "PROFESSION"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "On a cheque",
+    "members": [
+     "PAYEE",
+     "AMOUNT",
+     "SORT CODE",
+     "DATE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "UP TO ___",
+    "members": [
+     "SCRATCH",
+     "SPEED",
+     "PAR",
+     "SNUFF"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Things you can forge",
+    "members": [
+     "SIGNATURE",
+     "CAREER",
+     "PASSPORT",
+     "LINK"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "CAREER",
+    "not": "Line of work"
+   },
+   {
+    "tile": "SIGNATURE",
+    "not": "On a cheque"
+   },
+   {
+    "tile": "DATE",
+    "not": "UP TO ___"
+   }
+  ]
+ },
+ {
+  "serial": 247,
+  "band": "medium",
+  "r4kind": "letter",
+  "shape": "B",
+  "themes": [
+   "ghosts",
+   "pizza",
+   "actors",
+   "tv"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Apparitions",
+    "members": [
+     "SPOOK",
+     "SPECTRE",
+     "PHANTOM",
+     "WRAITH"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Pizza toppings",
+    "members": [
+     "PEPPERONI",
+     "ANCHOVY",
+     "MUSHROOM",
+     "HAM"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Kinds of actor",
+    "members": [
+     "STAR",
+     "EXTRA",
+     "UNDERSTUDY",
+     "STAND-IN"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Lose the first letter for a TV term",
+    "members": [
+     "GHOST",
+     "OLIVE",
+     "STAKE",
+     "GRATING"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "GHOST",
+    "not": "Apparitions"
+   },
+   {
+    "tile": "OLIVE",
+    "not": "Pizza toppings"
+   },
+   {
+    "tile": "HAM",
+    "not": "Kinds of actor"
+   }
+  ]
+ },
+ {
+  "serial": 248,
+  "band": "medium",
+  "r4kind": "other",
+  "shape": "B",
+  "themes": [
+   "sports officials",
+   "wild west",
+   "beatles",
+   "whistling",
+   "things with"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Wild West law",
+    "members": [
+     "SHERIFF",
+     "DEPUTY",
+     "POSSE",
+     "RANGER"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Sports officials",
+    "members": [
+     "UMPIRE",
+     "LINESMAN",
+     "STARTER",
+     "MARSHAL"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Beatles songs",
+    "members": [
+     "YESTERDAY",
+     "HELP",
+     "MICHELLE",
+     "GET BACK"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Things that whistle",
+    "members": [
+     "KETTLE",
+     "REFEREE",
+     "BLACKBIRD",
+     "TRAIN"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "REFEREE",
+    "not": "Sports officials"
+   },
+   {
+    "tile": "BLACKBIRD",
+    "not": "Beatles songs"
+   },
+   {
+    "tile": "MARSHAL",
+    "not": "Wild West law"
+   }
+  ]
+ },
+ {
+  "serial": 249,
+  "band": "medium",
+  "r4kind": "reversal",
+  "shape": "B",
+  "themes": [
+   "selling",
+   "string instruments",
+   "horse racing",
+   "games",
+   "darts"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Sell",
+    "members": [
+     "HAWK",
+     "PEDDLE",
+     "VEND",
+     "TOUT"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Played with a bow",
+    "members": [
+     "VIOLIN",
+     "VIOLA",
+     "CELLO",
+     "FIDDLE"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "At the races",
+    "members": [
+     "BOOKIE",
+     "JOCKEY",
+     "STEWARD",
+     "TIPSTER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Backwards, a game",
+    "members": [
+     "FLOG",
+     "LOOP",
+     "PANS",
+     "STRAD"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "FLOG",
+    "not": "Sell"
+   },
+   {
+    "tile": "STRAD",
+    "not": "Played with a bow"
+   },
+   {
+    "tile": "TOUT",
+    "not": "At the races"
+   }
+  ]
+ }
+]

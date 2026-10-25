@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0238", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of collar", members:["DOG","FLEA","WHITE","BLUE"]},
-    {rank:2, name:"Chinese things",  members:["MANDARIN","JADE","JUNK","WOK"]},
-    {rank:3, name:"Kinds of junk",   members:["FOOD","MAIL","SHOP","SPACE"]},
-    {rank:4, name:"Ways to seize",   members:["GRAB","NAB","SNATCH","COLLAR UP"]}
+    {rank:1, name:"Slang for the head",  members:["BONCE","NOGGIN","NUT","NOODLE"]},
+    {rank:2, name:"Kinds of chart",      members:["BAR","FLOW","TALLY","LINE"]},
+    {rank:3, name:"Used for fishing",    members:["ROD","REEL","HOOK","BAIT"]},
+    {rank:4, name:"Things with a crust", members:["LOAF","PIE","EARTH","PIZZA"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"JUNK",      not:"Kinds of junk"},
-    {tile:"COLLAR UP", not:"Kinds of collar"},
-    {tile:"BLUE",      not:"Chinese things"}
+    {tile:"LOAF", not:"Slang for the head"},
+    {tile:"PIE",  not:"Kinds of chart"},
+    {tile:"LINE", not:"Used for fishing"}
   ]
 };
 </script>

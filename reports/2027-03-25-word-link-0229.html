@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0229", band:"medium",
   groups:[
-    {rank:1, name:"Knitting words",      members:["PURL","CASTING ON","SKEIN","GARTER"]},
-    {rank:2, name:"Kinds of garter",     members:["SNAKE","BELT","STITCH","ORDER"]},
-    {rank:3, name:"Snakes of the world", members:["BOA","KRAIT","TAIPAN","RACER"]},
-    {rank:4, name:"Ways to loop",        members:["COIL","TWIST","WIND","CURL"]}
+    {rank:1, name:"Garden blooms",          members:["ASTER","PEONY","FREESIA","LUPIN"]},
+    {rank:2, name:"Hogwarts staff",         members:["SNAPE","HAGRID","DUMBLEDORE","SPROUT"]},
+    {rank:3, name:"Green vegetables",       members:["KALE","CABBAGE","BROCCOLI","LEEK"]},
+    {rank:4, name:"A writer hides in each", members:["DAHLIA","RICKSHAW","SPOTTER","SWELLS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"GARTER", not:"Kinds of garter"},
-    {tile:"PURL",   not:"Ways to loop"},
-    {tile:"COIL",   not:"Snakes of the world"}
+    {tile:"DAHLIA", not:"Garden blooms"},
+    {tile:"LUPIN",  not:"Hogwarts staff"},
+    {tile:"SPROUT", not:"Green vegetables"}
   ]
 };
 </script>

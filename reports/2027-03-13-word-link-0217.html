@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0217", band:"medium",
   groups:[
-    {rank:1, name:"Library words",        members:["CATALOGUE","STACK","ISSUE","OVERDUE"]},
-    {rank:2, name:"Kinds of issue",       members:["BACK","SINGLE","BURNING","FAMILY"]},
-    {rank:3, name:"Chimney stack things", members:["POT","SOOT","COWL","LINER"]},
-    {rank:4, name:"Ways to lend",         members:["LOAN","ADVANCE","FRONT","SUB"]}
+    {rank:1, name:"Make a hole in",        members:["DRILL","PIERCE","PUNCTURE","PERFORATE"]},
+    {rank:2, name:"Boxing punches",        members:["JAB","UPPERCUT","CROSS","HAYMAKER"]},
+    {rank:3, name:"Skin complaints",       members:["WART","RASH","BLISTER","ECZEMA"]},
+    {rank:4, name:"Sound like scientists", members:["BORE","HOOK","BOIL","WHAT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"ISSUE", not:"Kinds of issue"},
-    {tile:"STACK", not:"Chimney stack things"},
-    {tile:"SUB",   not:"Library words"}
+    {tile:"BORE", not:"Make a hole in"},
+    {tile:"HOOK", not:"Boxing punches"},
+    {tile:"BOIL", not:"Skin complaints"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0233", band:"medium",
   groups:[
-    {rank:1, name:"Common British birds",    members:["BLACKBIRD","STARLING","MAGPIE","JACKDAW"]},
-    {rank:2, name:"___ star",                members:["LODE","ALL","SUPER","ROCK"]},
-    {rank:3, name:"Fasteners in a workshop", members:["RIVET","DOWEL","GROMMET","TACK"]},
-    {rank:4, name:"Ways to shine",           members:["GLEAM","GLINT","SPARKLE","BEAM"]}
+    {rank:1, name:"Boss",                members:["GAFFER","GUV'NOR","CHIEF","SUPREMO"]},
+    {rank:2, name:"Guards",              members:["SENTRY","WATCHMAN","LOOKOUT","WARDEN"]},
+    {rank:3, name:"TRAFFIC ___",         members:["JAM","LIGHT","CONE","CALMING"]},
+    {rank:4, name:"British butterflies", members:["SKIPPER","GATEKEEPER","BRIMSTONE","COMMA"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"STARLING", not:"___ star"},
-    {tile:"BEAM",     not:"Common British birds"},
-    {tile:"TACK",     not:"Ways to shine"}
+    {tile:"SKIPPER",    not:"Boss"},
+    {tile:"GATEKEEPER", not:"Guards"},
+    {tile:"WARDEN",     not:"TRAFFIC ___"}
   ]
 };
 </script>
