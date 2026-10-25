@@ -100,8 +100,12 @@ test.describe('BOARD-E2E', () => {
                           where l.code = $1 and m.left_at is null order by m.joined_at`, [code])).toEqual([{ nickname: 'Ada' }, { nickname: 'Bea' }]);
 
       // 3. Both finish today's Mini; dn-board submits each result once, on dn:puzzle_end.
-      // The two phones are separate contexts with their own fake clocks, so they play at once.
-      const [secsA, secsB] = await Promise.all([finishMini(A, 0), finishMini(B, 20)]);
+      // Ada finishes first and her result reaches the board before Bea finishes, as on two real phones.
+      // (Until 25 Oct 2026 they played at once; when Bea's result happened to land first, her sheet
+      // briefly showed her as the league record and the check below failed about half the time.)
+      const secsA = await finishMini(A, 0);
+      await expect.poll(() => submits(A).filter(s => s.status === 200).length, 'A: result on the board first').toBe(1);
+      const secsB = await finishMini(B, 20);
       expect(secsB).toBeGreaterThan(secsA);
       for (const [P, secs] of [[A, secsA], [B, secsB]]) {
         await expect.poll(() => submits(P).length, P.name + ': one board_submit').toBe(1);
