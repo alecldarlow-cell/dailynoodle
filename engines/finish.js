@@ -336,6 +336,20 @@
         recap: { title, sub?, node } the type's own section,
         after?: node placed at the very end (e.g. Play again)
       } */
+  /* a tag added to the end of the share's first line after the sheet opens (25 Oct 2026: dn-board.js adds 🏆 when
+     the result is a league record); the on-screen line and what's shared both carry it */
+  var shareTag = '', shown = null;
+  function tagged(t) {
+    if (!shareTag) return t;
+    var i = t.indexOf('\n'); return i < 0 ? t + ' ' + shareTag : t.slice(0, i) + ' ' + shareTag + t.slice(i);
+  }
+  function shareHtml(text) {
+    return esc(text).replace(/((?:🟩|🟦|🟨|🟧|⬛|⬜|🟥|🟪|❌|🎯){2,}(?: · \d+:\d{2})?)/u, '<span class="fin-nw">$1</span>');
+  }
+  function tag(t) {
+    shareTag = String(t || '');
+    if (shown && shown.card.isConnected) shown.card.querySelector('.fin-share-text').innerHTML = shareHtml(tagged(shown.cfg.share.text()));
+  }
   var stopSaveNotice;
   function saveNotice(f) {
     if (stopSaveNotice) stopSaveNotice();
@@ -381,15 +395,15 @@
     // share
     var label = (cfg.share && cfg.share.label) || 'Share';
     var card = el('section', 'fin-share');
-    var text = cfg.share.text();
-    var sq = esc(text).replace(/((?:🟩|🟦|🟨|🟧|⬛|⬜|🟥|🟪|❌|🎯){2,}(?: · \d+:\d{2})?)/u, '<span class="fin-nw">$1</span>');
+    var sq = shareHtml(tagged(cfg.share.text()));
     var url = shortLink(cfg.type);
     card.innerHTML = '<div class="fin-share-card"><span class="fin-share-body"><span class="fin-share-text">' + sq + '</span>' +
       '<span class="fin-share-url">' + esc(url) + '</span></span>' +
       '<button type="button" class="fin-pill fin-primary fin-share-btn"><span class="fin-share-icon">' + SHARE_ICON + '</span><span class="fin-share-label">' + esc(label) + '</span></button></div>' +
       '<span class="fin-live" role="status" aria-live="polite"></span>';
     f.appendChild(card);
-    shareButton(card.querySelector('.fin-share-btn'), card.querySelector('.fin-live'), function () { return cfg.share.text() + '\n' + url; }, label, cfg.type);
+    shareButton(card.querySelector('.fin-share-btn'), card.querySelector('.fin-live'), function () { return tagged(cfg.share.text()) + '\n' + url; }, label, cfg.type);
+    shown = { card: card, cfg: cfg };
     saveNotice(f);
 
     // stats
@@ -461,6 +475,6 @@
     } catch (e) { go(); }
   })();
 
-  window.dnFinish = { show: show, hide: hide, q: [], _test: { overallRun: overallRun, toMidnight: toMidnight, hm: hm } };
+  window.dnFinish = { show: show, hide: hide, tag: tag, q: [], _test: { overallRun: overallRun, toMidnight: toMidnight, hm: hm } };
   queued.forEach(show);
 })();

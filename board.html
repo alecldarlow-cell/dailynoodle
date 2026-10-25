@@ -142,6 +142,20 @@
   .bnote{margin-top:6px;font-size:14.5px;color:var(--muted)}
   .bnote.how{margin-top:14px;font-size:13px;color:var(--faint)}
   .set .grp p.fine,.grp p.fine{font-size:12.5px;color:var(--faint);margin-top:6px}
+  /* records and honours (25 Oct 2026) */
+  .nk{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left;max-width:100%;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:underline dotted var(--hair);text-underline-offset:4px}
+  .crown{margin-left:4px}
+  .reline{margin-top:10px;padding:10px 12px;border:1px solid var(--hair);border-radius:10px;font-size:14px;color:var(--muted)}
+  .reline b{color:var(--ink)}
+  .row.rec{grid-template-columns:34px 1fr auto}
+  .row.rec .rk{font-size:20px}
+  .row .who .st b{font-weight:700;color:var(--muted)}
+  .hgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+  .hgrid div{padding:12px;border:1px solid var(--hair);border-radius:10px;background:var(--paper);min-width:0}
+  .hgrid b{display:block;font-family:var(--display);font-weight:800;font-size:22px;font-variant-numeric:tabular-nums}
+  .hgrid span{display:block;font-size:12.5px;color:var(--faint);margin-top:2px}
+  .back{margin-top:14px}
   [hidden]{display:none!important}
 </style>
 </head>
@@ -172,11 +186,11 @@
   var $app = document.getElementById('app'), $pills = document.getElementById('pills');
   var Q = new URLSearchParams(location.search);
   var S = {
-    type: (NB.BY_ID[Q.get('p')] || Q.get('p') === 'all') ? Q.get('p') : (NB.lastType() || 'all'),
+    type: (NB.BY_ID[Q.get('p')] || Q.get('p') === 'all' || Q.get('p') === 'records') ? Q.get('p') : (NB.lastType() || 'all'),
     date: /^\d{4}-\d{2}-\d{2}$/.test(Q.get('d') || '') ? Q.get('d') : NB.today(),
     join: (Q.get('join') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12),
     from: Q.get('from') || (Q.get('join') ? 'join' : 'direct'),
-    feed: null, data: null
+    feed: null, data: null, rec: null, card: ''
   };
   if (S.date > NB.today()) S.date = NB.today();
 
@@ -231,7 +245,7 @@
   }
 
   /* ---------- puzzle pills ---------- */
-  var PILLS = [{ id: 'all', emoji: '🏆', name: 'All puzzles' }].concat(TYPES);   // All: the 24 Oct 2026 table across the eight
+  var PILLS = [{ id: 'all', emoji: '🏆', name: 'All puzzles' }, { id: 'records', emoji: '🏅', name: 'Records' }].concat(TYPES);   // All: the 24 Oct 2026 table across the eight; Records: 25 Oct 2026
   function renderPills() {
     $pills.innerHTML = PILLS.map(function (t) {
       return '<button class="chip" type="button" data-p="' + t.id + '" aria-pressed="' + (t.id === S.type) + '">' +
@@ -243,7 +257,7 @@
   }
   $pills.addEventListener('click', function (e) {
     var b = e.target.closest('[data-p]'); if (!b) return;
-    S.type = b.getAttribute('data-p'); NB.setLastType(S.type); renderPills(); loadBoard();
+    S.type = b.getAttribute('data-p'); S.card = ''; NB.setLastType(S.type); renderPills(); loadBoard();
   });
 
   /* ---------- feed (puzzle numbers and links) ---------- */
@@ -484,9 +498,17 @@
     NB.setCurrent(L.code); renderPills(); renderLeague(L); syncUrl();
     if (!S.data || S.data.code !== L.code || S.data.type !== S.type || S.data.date !== S.date) $app.innerHTML = '<p class="loading">Loading…</p>';
     var want = [L.code, S.type, S.date].join('|');
-    (S.type === 'all' ? NB.overall(L.code, S.date) : NB.day(L.code, S.type, S.date)).then(function (d) {
+    var recs = loadRecords(L.code), recsOnly = S.type === 'records';
+    (recsOnly ? recs.then(function (r) { if (!r) throw new Error('Please try again.'); return r; })
+              : Promise.all([S.type === 'all' ? NB.overall(L.code, S.date) : NB.day(L.code, S.type, S.date), recs]).then(function (x) { return x[0]; }))
+    .then(function (d) {
       if (want !== [cur().code, S.type, S.date].join('|')) return;
-      d.code = L.code; d.type = S.type; d.date = S.date; S.data = d; S.type === 'all' ? renderOverall(L, d) : renderBoard(L, d);
+      if (recsOnly) { S.data = { code: L.code, type: S.type, date: S.date, members: (d.players || []).length,
+                                 players: (d.players || []).map(function (p) { return p.nick; }) };
+                      return S.card ? renderCard(L, S.card) : renderRecords(L, d); }
+      d.code = L.code; d.type = S.type; d.date = S.date; S.data = d;
+      if (S.card) return renderCard(L, S.card);
+      S.type === 'all' ? renderOverall(L, d) : renderBoard(L, d);
     }).catch(function (err) {
       if (err.code === 'not_member' || err.code === 'no_league') { NB.refresh().then(loadBoard, loadBoard); return; }
       $app.innerHTML = '<p class="nobody">Couldn’t load the board. ' + esc(err.message) + '</p>';
@@ -551,6 +573,9 @@
     }
     if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
       return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
+    var R = recOf(T.id);
+    if (R) h += '<p class="reline">🏅 League record <b>' + esc(result(T.id, R).big) + '</b>' +
+                (result(T.id, R).small ? ' (' + esc(result(T.id, R).small) + ')' : '') + ' · ' + esc(R.nick) + ' · ' + esc(shortDay(R.date)) + '</p>';
     h += '<div class="acts main">' + (d.ranked.length ? '<button class="btn go" data-act="share">Share leaderboard</button>' : '') +
          '<button class="btn ' + (d.ranked.length ? 'alt' : 'go') + '" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
     h += settings(L, d);
@@ -560,7 +585,7 @@
   function pts(n) { return n + (n === 1 ? ' pt' : ' pts'); }
   function allRow(r, of) {
     return '<li class="row' + (r.me ? ' me' : '') + '"><span class="rk' + (MEDAL[r.rank] ? ' medal' : '') + '">' + (MEDAL[r.rank] || r.rank) + '</span>' +
-      '<span class="who">' + esc(r.nick) + (r.me ? '<span class="you">you</span>' : '') + '</span>' +
+      '<span class="who">' + nick(r.nick) + (r.me ? '<span class="you">you</span>' : '') + '</span>' +
       '<span class="res">' + pts(r.points) + '<small>' + r.completed + ' of ' + of + ' done' + '</small></span></li>';
   }
   function weekLabel(d) {
@@ -594,10 +619,94 @@
     var rk = dim ? '–' : (MEDAL[r.rank] || r.rank);
     return '<li class="row' + (r.me ? ' me' : '') + (dim ? ' dim' : '') + '">' +
       '<span class="rk' + (!dim && MEDAL[r.rank] ? ' medal' : '') + '">' + rk + '</span>' +
-      '<span class="who">' + esc(r.nick) + (r.me ? '<span class="you">you</span>' : '') +
+      '<span class="who">' + nick(r.nick) + (r.me ? '<span class="you">you</span>' : '') +
+      (!dim && isRecord(T.id, r.nick) ? '<span class="st">🏆 New league record</span>' : '') +
       (r.streak > 1 ? '<span class="st">🔥 ' + r.streak + '-day streak</span>' : '') + '</span>' +
       '<span class="res">' + esc(res.big) + (res.small ? '<small>' + esc(res.small) + '</small>' : '') + '</span></li>';
   }
+  /* ---------- records, honours, player cards, crown (25 Oct 2026; data: board_records) ---------- */
+  function loadRecords(code) {   // kept for a minute per league; a failure just leaves the extras off
+    if (S.rec && S.rec.code === code && Date.now() - S.rec.at < 60000) return Promise.resolve(S.rec.d);
+    return NB.records(code).then(function (d) { S.rec = { code: code, at: Date.now(), d: d }; return d; }, function () { return null; });
+  }
+  function R0() { return S.rec && S.rec.code === (cur() || {}).code ? S.rec.d : null; }
+  function recOf(t) { var r = R0(); return r && r.records && r.records[t] || null; }
+  function isRecord(t, n) { var x = recOf(t); return !!x && x.nick === n && x.date === S.date; }
+  function crowned(n) { var r = R0(); return !!r && (r.crown || []).indexOf(n) >= 0; }
+  function nick(n, plain) {   // plain: no 👑 (in lists of names, where it would repeat)
+    return '<button type="button" class="nk" data-nick="' + esc(n) + '">' + esc(n) + '</button>' +
+      (!plain && crowned(n) ? '<span class="crown" title="Last week’s champion" aria-label="last week’s champion">👑</span>' : '');
+  }
+  function shortDay(iso) { return new Date(iso + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }); }
+  var HONOURS = [
+    { k: 'longest', e: '🔥', name: 'Longest streak', unit: function (n) { return n + (n === 1 ? ' day' : ' days'); } },
+    { k: 'current', e: '🔥', name: 'Current streak', unit: function (n) { return n + (n === 1 ? ' day' : ' days'); } },
+    { k: 'wins', e: '🥇', name: 'Daily wins', unit: String },
+    { k: 'titles', e: '👑', name: 'Weekly titles', unit: String },
+    { k: 'perfect', e: '⭐', name: 'Perfect days', unit: String },
+    { k: 'sweeps', e: '🧹', name: 'Clean sweeps', unit: String },
+    { k: 'completed', e: '📚', name: 'Puzzles finished', unit: String }
+  ];
+  function renderRecords(L, d) {
+    var h = topCard(L), any = false;
+    h += '<p class="sub">League records</p><ol class="rows">';
+    TYPES.forEach(function (T) {
+      var r = d.records && d.records[T.id]; if (!r) return; any = true;
+      var res = result(T.id, r);
+      h += '<li class="row rec' + (r.me ? ' me' : '') + '"><span class="rk" aria-hidden="true">' + T.emoji + '</span>' +
+        '<span class="who">' + esc(T.name) + '<span class="st">' + nick(r.nick, true) + ' · ' + esc(shortDay(r.date)) +
+        (r.date === d.today ? ' · 🏆 today' : '') + '</span></span>' +
+        '<span class="res">' + esc(res.big) + (res.small ? '<small>' + esc(res.small) + '</small>' : '') + '</span></li>';
+    });
+    h += '</ol>';
+    if (!any) h += '<p class="bnote">No records yet: finish a puzzle to set the first.</p>';
+    h += '<p class="sub">Honours</p><ol class="rows">';
+    HONOURS.forEach(function (H) {
+      var top = 0; (d.players || []).forEach(function (p) { top = Math.max(top, p[H.k] || 0); });
+      var who = (d.players || []).filter(function (p) { return top > 0 && p[H.k] === top; });
+      h += '<li class="row rec"><span class="rk" aria-hidden="true">' + H.e + '</span><span class="who">' + esc(H.name) +
+        '<span class="st">' + (who.length ? who.map(function (p) { return nick(p.nick, true); }).join(', ') : 'Nobody yet') + '</span></span>' +
+        '<span class="res">' + (top ? esc(H.unit(top)) : '–') + '</span></li>';
+    });
+    h += '</ol>';
+    h += '<p class="sub">Players</p><ol class="rows">' + (d.players || []).slice().sort(function (a, b) { return b.completed - a.completed; }).map(function (p) {
+      return '<li class="row' + (p.me ? ' me' : '') + '"><span class="rk">' + (p.titles ? '👑' : p.wins ? '🥇' : '·') + '</span>' +
+        '<span class="who">' + nick(p.nick) + (p.me ? '<span class="you">you</span>' : '') +
+        '<span class="st">' + p.wins + (p.wins === 1 ? ' win' : ' wins') + ' · ' + p.titles + (p.titles === 1 ? ' title' : ' titles') + ' · best streak ' + p.longest + '</span></span>' +
+        '<span class="res">' + p.completed + '<small>finished</small></span></li>'; }).join('') + '</ol>';
+    h += '<p class="bnote how">Records count finished puzzles only; on a tie, whoever set it first keeps it. A daily win needs at least one ' +
+         'other player to have finished that puzzle, and a weekly title (the All puzzles week) at least two players. A perfect day is every ' +
+         'puzzle that day finished; a clean sweep is a perfect day winning all of them. A streak is days in a row with a puzzle finished. ' +
+         '👑 marks last week’s champion. Tap a name to see their card.</p>';
+    h += '<div class="acts main"><button class="btn go" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
+    h += settings(L, S.data);
+    $app.innerHTML = h;
+  }
+  function renderCard(L, n) {
+    var d = R0(), p = d && (d.players || []).filter(function (x) { return x.nick === n; })[0];
+    if (!p) { S.card = ''; return loadBoard(); }
+    var h = '<div class="bcard"><h2>' + esc(p.nick) + (crowned(p.nick) ? ' 👑' : '') + (p.me ? ' <span class="lgk" style="display:inline">you</span>' : '') + '</h2>' +
+      (crowned(p.nick) ? '<p>Last week’s champion.</p>' : '') +
+      '<div class="hgrid">' + HONOURS.map(function (H) {
+        return '<div><b>' + String(p[H.k] || 0) + '</b><span>' + H.e + ' ' + esc(H.name) +
+          (H.k === 'longest' || H.k === 'current' ? ' (days)' : '') + '</span></div>'; }).join('') + '</div>' +
+      '<p class="sub">Bests</p><ol class="rows">' + TYPES.map(function (T) {
+        var b = p.bests && p.bests[T.id], st = p.streaks && p.streaks[T.id] || 0;
+        var res = b ? result(T.id, b) : null, rec = recOf(T.id), holds = rec && rec.nick === p.nick;
+        return '<li class="row rec"><span class="rk" aria-hidden="true">' + T.emoji + '</span><span class="who">' + esc(T.name) +
+          '<span class="st">' + (b ? esc(shortDay(b.date)) + (holds ? ' · 🏅 league record' : '') : 'Not finished yet') +
+          (st > 1 ? ' · best streak ' + st : '') + '</span></span>' +
+          '<span class="res">' + (res ? esc(res.big) + (res.small ? '<small>' + esc(res.small) + '</small>' : '') : '–') + '</span></li>'; }).join('') + '</ol>' +
+      '<div class="acts back"><button class="btn" data-act="cardback">← Back</button></div></div>';
+    $app.innerHTML = h;
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  $app.addEventListener('click', function (e) {
+    var b = e.target.closest('.nk'); if (!b) return;
+    var L = cur(); if (!L || !R0()) return;
+    S.card = b.getAttribute('data-nick'); renderCard(L, S.card);
+    track('board_card', { type: S.type });
+  });
   function settings(L, d) {
     var h = '<details class="set"><summary>League settings</summary>' +
       '<div class="grp"><h3>Invite</h3><p>Code <span class="code">' + esc(L.code) + '</span> · ' + d.members + (d.members === 1 ? ' player' : ' players') + '</p></div>' +
@@ -631,6 +740,7 @@
     var L = cur(), act = a.getAttribute('data-act'), sm = document.getElementById('sm');
     function fail(err) { if (sm) { sm.className = 'msg'; sm.textContent = err.message; } }
     function done(msg) { return NB.refresh().then(function () { loadBoard(); }); }
+    if (act === 'cardback') { S.card = ''; loadBoard(); return; }
     if (act === 'share') {
       var T = NB.BY_ID[S.type], it = puzzleItem(S.type, S.date), D = S.data;
       var lines = ['🏆 ' + T.emoji + ' ' + (it ? it.headline : T.name) + ' · ' + longDay(S.date)];
