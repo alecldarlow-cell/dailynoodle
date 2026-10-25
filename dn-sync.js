@@ -79,9 +79,12 @@
       return S.createClient(URL_, KEY, { auth: {
         storageKey: AUTH, persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, flowType: 'implicit'
       } });
-    });
+    }, function (e) { made = null; throw e; });   // a failed load is tried again next time, not cached
     return made;
   }
+  // Signed in on this browser before? Until then the card needs no library: a visitor who
+  // never signs in never fetches supabase-js (Alec: not intrusive to current players).
+  function known(){ return !!get(AUTH); }
   function session(sb){
     return sb.auth.getSession().then(function (r) { return (r && r.data && r.data.session) || null; });
   }
@@ -197,6 +200,7 @@
     box.hidden = false;
   }
   function refresh(){
+    if (!known()) { render(null); return Promise.resolve(); }
     return client().then(session).then(render, function (e) { ui.msg = e.message; ui.bad = true; render(null); });
   }
   function act(fn, okMsg){
@@ -250,10 +254,13 @@
     }, 'You’re signed in.');
     else first = refresh();
     first.then(function () {
+      if (!known()) return settled();
       return client().then(session).then(function (s) {
         if (!s) return settled();
         return sync().then(function (r) { refresh(); afterSync(r); }, function (e) { ui.msg = e.message; ui.bad = true; refresh(); settled(); });
       });
+    }).catch(function (e) {   // never an uncaught error on the board page (a blocked CDN, no connection)
+      ui.msg = (e && e.message) || 'Sign-in couldn’t load. Try again.'; ui.bad = true; render(null); settled();
     });
   }
   // dn-track.js (deferred) provides dnMove; it has run by DOMContentLoaded.
