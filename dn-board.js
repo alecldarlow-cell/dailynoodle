@@ -246,6 +246,10 @@
   function overall(code, date) {   // all eight puzzles: the day and its Monday-to-Sunday week
     return rpc('board_overall', { p_player: pid(), p_code: code, p_date: date });
   }
+  /* records and honours (25 Oct 2026): the league's best results ever, each player's honours and bests, and last
+     week's champion; and, for the finish sheet, whether one result is a personal best or a league record */
+  function records(code) { return rpc('board_records', { p_player: pid(), p_code: code }); }
+  function moment(path) { return rpc('board_moment', { p_player: pid(), p_path: path }); }
   /* ---------- PINs (24 Oct 2026) ----------
      A player sets a 4-digit PIN; in any other browser or app they open the
      league's invite link (or type its code), pick their nickname and enter the
@@ -423,7 +427,7 @@
   window.noodleBoard = {
     TYPES: TYPES, BY_ID: BY_ID, typeOfPath: typeOfPath, dateOfPath: dateOfPath,
     pid: pid, leagues: leagues, inAny: inAny, refresh: refresh, create: create, join: join,
-    peek: peek, overall: overall, hasPin: hasPin, setPin: setPin, claim: claim, backfill: backfill, backfillDue: backfillDue, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
+    peek: peek, overall: overall, records: records, moment: moment, hasPin: hasPin, setPin: setPin, claim: claim, backfill: backfill, backfillDue: backfillDue, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
     lastType: lastType, setLastType: setLastType, today: today, rpc: rpc,
     moveLink: moveLink, moved: moved, pending: pending, settlePending: settlePending, isIOS: isIOS
   };
@@ -439,22 +443,29 @@
   var BOARD = '../board.html?p=' + T.id + '&d=' + PDATE;
 
   // 1. Submit the result (members only; the server keeps the first one).
+  var submitted = Promise.resolve(), momentShown = false;
   document.addEventListener('dn:puzzle_end', function (e) {
     var d = e.detail || {};
     if (!inAny() || BY_TV[d.type] !== T) return;
-    rpc('board_submit', {
+    momentShown = false;
+    submitted = rpc('board_submit', {
       p_player: pid(), p_path: here, p_outcome: d.outcome || '',
       p_secs: d.secs == null ? null : d.secs,
       p_score: d.score == null ? null : d.score,
       p_mistakes: d.mistakes == null ? null : d.mistakes
     }).catch(function () {});
+    submitted.then(function () {   // the sheet may have opened before the result reached the board
+      var box = document.getElementById('winModal') || document.getElementById('modal');
+      if (box && box.querySelector('.fin-board-slot .nn-board-wrap')) showMoment(box);
+    });
   });
 
   // 2. "See today's board" in the result box, next to Share.
   var CSS = '.nn-board-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;' +
     'margin-top:10px;font:600 14px/1.2 Inter,system-ui,sans-serif;color:#0E7A4B;text-decoration:none;' +
     'padding:8px 12px;border-radius:999px}.nn-board-link:hover{text-decoration:underline}' +
-    '.nn-board-wrap{text-align:center}';
+    '.nn-board-wrap{text-align:center}' +
+    '.nn-moment{margin:10px 0 0;font:700 15px/1.35 Inter,system-ui,sans-serif;color:inherit}';
   function addLink(box) {
     if (box.querySelector('.nn-board-link')) return;
     var st = document.getElementById('nn-board-css');
@@ -464,7 +475,7 @@
     a.textContent = '🏆 See today’s board';
     var w = document.createElement('div'); w.className = 'nn-board-wrap'; w.appendChild(a);
     var slot = box.querySelector('.fin-board-slot');   // the shared finish sheet (engines/finish.js) has a place for it
-    if (slot) { slot.appendChild(w); return; }
+    if (slot) { slot.appendChild(w); showMoment(box); return; }
     var share = box.querySelector('#winShare, #shareBtn, #shareAgain');
     var host = (share && share.parentNode) || box.querySelector('.modalbtns') || box.querySelector('.modalcard') || box;
     if (share && host === share.parentNode && host.classList && host.classList.contains('modalbtns')) {
@@ -474,6 +485,27 @@
     } else {
       host.appendChild(w);
     }
+  }
+  /* 3. Records (25 Oct 2026): once the result is on the board, a line above the board link says if it's a
+     league record ("New league record" on the puzzle's own day, "League record" after) or a personal best,
+     and a league record adds 🏆 to the share line (dnFinish.tag). Members only; nothing shows otherwise. */
+  function showMoment(box) {
+    if (momentShown || !inAny()) return; momentShown = true;
+    submitted.then(function () { return moment(here); }).then(function (m) {
+      if (!m) return;
+      var slot = box.querySelector('.fin-board-slot'); if (!slot || slot.querySelector('.nn-moment')) return;
+      var fresh = PDATE === today(), txt = '';
+      if (m.records && m.records.length) {
+        txt = '🏆 ' + (fresh ? 'New league record' : 'League record') + ' in ' +
+              m.records.map(function (l) { return l.name; }).join(', ') + '!';
+        if (window.dnFinish && window.dnFinish.tag) window.dnFinish.tag('🏆');
+      } else if (m.pb) {
+        txt = '⭐ ' + (fresh ? 'New personal best' : 'Your personal best') + ' at ' + T.name + '!';
+      }
+      if (!txt) return;
+      var p = document.createElement('p'); p.className = 'nn-moment'; p.textContent = txt;
+      slot.insertBefore(p, slot.firstChild);
+    }, function () { momentShown = false; });
   }
   function watch() {
     var box = document.getElementById('winModal') || document.getElementById('modal');

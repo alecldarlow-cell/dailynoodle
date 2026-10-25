@@ -206,6 +206,64 @@ test('BOARD-PIN-01..04 and BOARD-ALL-01: PIN rejoin, lockout, owner let-back, an
   });
 });
 
+test('BOARD-REC-01..03: league records, honours, crown and the finish-sheet moment', async t => {
+  const db = await boardDb({ today: '2026-10-21' });   // Wed; last week is Mon 12 to Sun 18 Oct
+  t.after(() => db.close());
+  const [ada, bob, cy] = ['00000000-0000-4000-8000-0000000000a1', '00000000-0000-4000-8000-0000000000b2', '00000000-0000-4000-8000-0000000000c3'];
+  const q = async (sql, params = []) => (await db.query(sql, params)).rows;
+  const rpc = async (name, args) => (await q(`select public.${name}(${args.map((_, i) => '$'+(i+1)).join(',')}) as value`, args))[0].value;
+  await db.exec('set role anon');
+  const { code } = await rpc('board_create', [ada, 'Family', 'Ada']);
+  await rpc('board_join', [bob, code, 'Bob']);
+  await rpc('board_join', [cy, code, 'Cy']);
+  const f = (d, x) => `reports/2026-10-${d}-${x}.html`;
+  const sub = (who, d, x, outcome, secs, score, m) => rpc('board_submit', [who, f(d, x), outcome, secs, score, m]);
+  // Tue 14: Mini Ada 50 Bob 70; Doku Bob 90 Ada 100 (the site's set that day: two puzzles)
+  await sub(ada, 14, 'crossword-mini-0090', 'solved', 50, null, null); await sub(bob, 14, 'crossword-mini-0090', 'solved', 70, null, null);
+  await sub(bob, 14, 'logic-doku-0090', 'solved', 90, null, null); await sub(ada, 14, 'logic-doku-0090', 'solved', 100, null, null);
+  // Wed 15: Mini Ada 40 Bob 60. Thu 16: Mini Bob 30 Ada 45. Fri 17: Bob alone (no rival: not a win)
+  await sub(ada, 15, 'crossword-mini-0091', 'solved', 40, null, null); await sub(bob, 15, 'crossword-mini-0091', 'solved', 60, null, null);
+  await sub(bob, 16, 'crossword-mini-0092', 'solved', 30, null, null); await sub(ada, 16, 'crossword-mini-0092', 'solved', 45, null, null);
+  await sub(bob, 17, 'crossword-mini-0093', 'solved', 35, null, null);
+  // Mon 20: Mini Ada 25 (new record) Bob 50. Tue 21: Tangle Cy 300 in 60s beats Bob 300 in 80s; Cy fails a Mini (not completed)
+  await sub(ada, 20, 'crossword-mini-0096', 'solved', 25, null, null); await sub(bob, 20, 'crossword-mini-0096', 'solved', 50, null, null);
+  await sub(bob, 21, 'word-tangle-0050', 'scored', 80, 300, null); await sub(cy, 21, 'word-tangle-0050', 'scored', 60, 300, null);
+  await sub(cy, 21, 'crossword-mini-0097', 'failed', 20, null, null);
+
+  await t.test('BOARD-REC-01: records per puzzle, best result first, holder and day', async () => {
+    const r = await rpc('board_records', [bob, code]);
+    const pick = x => [x.nick, x.date, x.secs, x.score];
+    assert.deepEqual(pick(r.records.mini), ['Ada', '2026-10-20', 25, null]);
+    assert.deepEqual(pick(r.records.doku), ['Bob', '2026-10-14', 90, null]);
+    assert.deepEqual(pick(r.records.tangle), ['Cy', '2026-10-21', 60, 300]);
+    assert.equal(r.records.doku.me, true); assert.equal(r.records.mini.me, false);
+    assert.equal(r.records.link, undefined);
+  });
+
+  await t.test('BOARD-REC-02: honours, streaks, personal bests and last week’s crown', async () => {
+    const r = await rpc('board_records', [ada, code]);
+    const by = Object.fromEntries(r.players.map(p => [p.nick, p]));
+    const h = p => [p.completed, p.wins, p.titles, p.perfect, p.sweeps, p.longest, p.current];
+    assert.deepEqual(h(by.Ada), [5, 3, 0, 4, 2, 3, 1]);
+    // Tue 21 had two puzzles on the site (Cy's failed Mini counts as published), so nobody had a perfect day then
+    assert.deepEqual(h(by.Bob), [7, 2, 1, 5, 1, 4, 2]);
+    assert.deepEqual(h(by.Cy), [1, 1, 0, 0, 0, 1, 1]);
+    assert.equal(by.Ada.me, true);
+    assert.equal(by.Bob.bests.mini.secs, 30); assert.equal(by.Bob.streaks.mini, 4); assert.equal(by.Ada.streaks.doku, 1);
+    assert.deepEqual(r.crown, ['Bob']); assert.equal(r.crown_week, '2026-10-12');
+    await assert.rejects(() => rpc('board_records', ['00000000-0000-4000-8000-0000000000ff', code]), /not_member/);
+  });
+
+  await t.test('BOARD-REC-03: the moment — personal best and league record for one result', async () => {
+    assert.deepEqual(await rpc('board_moment', [ada, f(20, 'crossword-mini-0096')]), { type: 'mini', pb: true, records: [{ code, name: 'Family' }] });
+    assert.deepEqual(await rpc('board_moment', [bob, f(16, 'crossword-mini-0092')]), { type: 'mini', pb: true, records: [] });
+    assert.deepEqual(await rpc('board_moment', [bob, f(21, 'word-tangle-0050')]), { type: 'tangle', pb: false, records: [] });
+    assert.equal(await rpc('board_moment', [cy, f(21, 'crossword-mini-0097')]), null, 'a failed round has no moment');
+    await db.exec('reset role');
+    await assert.rejects(() => q('select * from board.rec_rows(1, current_date)').then(() => db.exec('set role anon').then(() => q('select * from board.rec_rows(1, current_date)'))), /permission denied/);
+  });
+});
+
 // ADMIN-01..04: the admin reporting, on the exact live definitions
 // (toolchain/sql/2026-10-20-admin-live-definitions.sql: a record of what is
 // deployed, read with pg_get_functiondef / pg_get_viewdef on 20 Oct 2026).

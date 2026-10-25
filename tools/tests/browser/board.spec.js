@@ -109,6 +109,13 @@ test.describe('BOARD-E2E', () => {
         expect(s.args).toMatchObject({ p_path: MINI, p_outcome: 'solved', p_secs: secs, p_score: null, p_mistakes: null });
         expect(s.status).toBe(200); expect(s.body).toBe(true);
       }
+      // Records (25 Oct 2026): the first and fastest Mini in the league is its record; the sheet says so and the share
+      // line gains 🏆. Bea's slower Mini is neither a record nor a personal best (her first), so her sheet adds nothing.
+      await expect(A.p.locator('.fin-board-slot .nn-moment')).toHaveText('🏆 New league record in Noodle Testers!');
+      await expect(A.p.locator('.fin-share-text')).toHaveText(/ 🏆$/);
+      await H.wait(B.p, 1500);
+      await expect(B.p.locator('.nn-moment')).toHaveCount(0);
+      await expect(B.p.locator('.fin-share-text')).not.toHaveText(/🏆/);
       expect(await q(db, 'select ptype, puzzle_date::text d, outcome, secs from board.results order by secs')).toEqual([
         { ptype: 'mini', d: DAY, outcome: 'solved', secs: secsA }, { ptype: 'mini', d: DAY, outcome: 'solved', secs: secsB }]);
 
@@ -181,5 +188,53 @@ test.describe('BOARD-E2E', () => {
     } finally {
       await A.ctx.close(); await B.ctx.close();
     }
+  });
+
+  test('BOARD-REC-E2E: Records tab, honours, a player card, the record line and last week’s crown', async ({ browser }) => {
+    test.setTimeout(60000);
+    const A = await phone(browser, db, 'A');
+    try {
+      await go(A, 'board.html');
+      await H.tap(A.p, A.p.locator('[data-go="start"]'));
+      await A.p.fill('input[name="lname"]', 'Recs');
+      await A.p.fill('input[name="nick"]', 'Ada');
+      await H.tap(A.p, A.p.locator('#f .btn.go'));
+      await expect(A.p.locator('.bcard h2')).toHaveText('Recs is ready');
+      const code = (await q(db, 'select code from board.leagues'))[0].code;
+      const bea = '00000000-0000-4000-8000-0000000000be';
+      expect((await rpc(db, 'board_join', JSON.stringify({ p_player: bea, p_code: code, p_nick: 'Bea' }))).status).toBe(200);
+      const ada = (await q(db, "select player from board.members where nickname = 'Ada'"))[0].player;
+      // last week (Mon 5 to Sun 11 Oct): Bea wins both Minis; this week Ada sets the Mini record today
+      const res = [[bea, '2026-10-07', 40], [ada, '2026-10-07', 55], [bea, '2026-10-08', 38], [ada, '2026-10-08', 60],
+                   [ada, '2026-10-18', 30], [bea, '2026-10-18', 45]];
+      for (const [who, d, secs] of res) await q(db, `insert into board.results (player, puzzle_path, ptype, puzzle_date, outcome, secs)
+        values ($1, $2, 'mini', $3, 'solved', $4)`, [who, `reports/${d}-crossword-mini-0${d.slice(8)}.html`, d, secs]);
+      // DAY is Sun 18 Oct, so last week is Mon 5 to Sun 11 Oct: Bea's
+      await go(A, 'board.html?p=records');
+      await expect(A.p.locator('.chip[data-p="records"]')).toHaveAttribute('aria-pressed', 'true');
+      const recRow = A.p.locator('ol.rows').first().locator('li.row');
+      await expect(recRow).toHaveCount(1);
+      await expect(recRow).toContainText('Mini'); await expect(recRow).toContainText('Ada'); await expect(recRow).toContainText('0:30');
+      await expect(recRow).toContainText('🏆 today');
+      const honours = A.p.locator('ol.rows').nth(1);
+      await expect(honours.locator('li', { hasText: 'Daily wins' })).toContainText('Bea');
+      await expect(honours.locator('li', { hasText: 'Daily wins' }).locator('.res')).toHaveText('2');
+      await expect(honours.locator('li', { hasText: 'Weekly titles' })).toContainText('Bea');
+      await expect(A.p.locator('.crown')).not.toHaveCount(0);   // 👑 next to Bea, last week's champion
+      // a player card from a tapped name, and back
+      await H.tap(A.p, A.p.locator('ol.rows').nth(2).locator('.nk', { hasText: 'Bea' }));
+      await expect(A.p.locator('.bcard h2')).toContainText('Bea 👑');
+      await expect(A.p.locator('.hgrid')).toContainText('Daily wins');
+      await expect(A.p.locator('.bcard ol.rows li', { hasText: 'Mini' }).locator('.res')).toContainText('0:38');
+      await H.tap(A.p, A.p.locator('[data-act="cardback"]'));
+      await expect(A.p.locator('.hgrid')).toHaveCount(0);
+      // the Mini's daily board: the record line, the trophy on today's record row and the crown by Bea
+      await go(A, `board.html?p=mini&d=${DAY}`);
+      await expect(A.p.locator('.reline')).toContainText('League record 0:30 · Ada');
+      await expect(A.p.locator('li.row', { hasText: 'Ada' })).toContainText('🏆 New league record');
+      await expect(A.p.locator('li.row', { hasText: 'Bea' }).locator('.crown')).toHaveCount(1);
+      expect(A.calls.filter(c => c.status !== 200), 'failed board calls').toEqual([]);
+      expect(A.p.errs, 'page errors').toEqual([]);
+    } finally { await A.ctx.close(); }
   });
 });
