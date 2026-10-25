@@ -179,7 +179,7 @@
     <p class="privacy"><a href="puzzles.html">← Puzzles</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">contact@dailynoodle.co.uk</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
   </footer>
 </div>
-<script src="dn-board.js"></script>
+<script src="dn-board.js?v=2026-10-25"></script>
 <script>
 (function () {
   var NB = window.noodleBoard, TYPES = NB.TYPES;
@@ -625,8 +625,13 @@
       '<span class="res">' + esc(res.big) + (res.small ? '<small>' + esc(res.small) + '</small>' : '') + '</span></li>';
   }
   /* ---------- records, honours, player cards, crown (25 Oct 2026; data: board_records) ---------- */
-  function loadRecords(code) {   // kept for a minute per league; a failure just leaves the extras off
+  /* kept for a minute per league; a failure just leaves the extras off. A browser can briefly pair this page with
+     an older cached dn-board.js that has no records() (25 Oct 2026: every board stuck on "Loading…" for a while
+     after the release), so its absence must never stop a board from showing. The ?v= on the script tag bumps
+     past that cache; bump it whenever board.html needs something new from dn-board.js. */
+  function loadRecords(code) {
     if (S.rec && S.rec.code === code && Date.now() - S.rec.at < 60000) return Promise.resolve(S.rec.d);
+    if (typeof NB.records !== 'function') return Promise.resolve(null);
     return NB.records(code).then(function (d) { S.rec = { code: code, at: Date.now(), d: d }; return d; }, function () { return null; });
   }
   function R0() { return S.rec && S.rec.code === (cur() || {}).code ? S.rec.d : null; }
