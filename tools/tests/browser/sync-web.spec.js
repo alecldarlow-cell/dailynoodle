@@ -129,14 +129,17 @@ test.describe('SYNC-WEB', () => {
   test.afterEach(async () => { await dbs.board.close(); await dbs.sync.close(); });
 
   test('SYNC-WEB-01: switched on (as published), the board offers sign-in and puzzle pages stay as they were', async ({ browser }) => {
-    // The board page: the card under the board, signed out, asking for an email.
-    const B = await device(browser, dbs, 'board');
+    // The board page, for a visitor who has never signed in: the card under the board asks
+    // for an email, and supabase-js isn't fetched until they use it (no stand-in here).
+    const B = await device(browser, dbs, 'board', { sync: false });
     try {
       await go(B, 'board.html');
       await expect(card(B)).toBeVisible();
       await expect(card(B).locator('h2')).toHaveText('Create a free account');
       await expect(card(B).getByLabel('Your email')).toBeVisible();
       await expect(card(B).getByRole('button', { name: 'Email me a sign-in link' })).toBeVisible();
+      await settled(B);
+      expect(B.cdn, 'no supabase-js for a visitor who hasn’t signed in').toEqual([]);
       expect(B.p.errs).toEqual([]);
     } finally { await B.ctx.close(); }
     // A puzzle page, for a player who isn't signed in: nothing more loaded or fetched.
@@ -193,13 +196,15 @@ test.describe('SYNC-WEB', () => {
       await go(D, 'board.html');
       await expect(card(D)).toBeVisible();
       await expect(card(D).locator('h2')).toHaveText('Create a free account');
-      expect(await D.p.evaluate(() => window.__opts.auth)).toMatchObject({ storageKey: 'noodle-sync-auth', persistSession: true, detectSessionInUrl: false });
+      expect(await D.p.evaluate(() => window.__opts), 'no client until the player signs in').toBeUndefined();
       await D.p.fill('#dnsyncEmail', 'not an email');
       await H.tap(D.p, card(D).locator('button[type="submit"]'));
       await expect(D.p.locator('#dnsyncMsg')).toHaveText('Enter your email address, like you@example.com.');
       await D.p.fill('#dnsyncEmail', ' Jo@Example.test ');
       await H.tap(D.p, card(D).locator('button[type="submit"]'));
       await expect(D.p.locator('#dnsyncSent')).toContainText('we sent a sign-in link to jo@example.test');
+      // The client is made on first use, with the session kept apart from the admin page's.
+      expect(await D.p.evaluate(() => window.__opts.auth)).toMatchObject({ storageKey: 'noodle-sync-auth', persistSession: true, detectSessionInUrl: false });
       expect(await D.p.evaluate(() => window.__auth)).toEqual([['otp', { email: 'jo@example.test', options: { emailRedirectTo: 'https://dailynoodle.co.uk/board.html' } }]]);
       await H.tap(D.p, card(D).locator('[data-sync="again"]'));
       await expect(D.p.locator('#dnsyncEmail')).toBeVisible();
