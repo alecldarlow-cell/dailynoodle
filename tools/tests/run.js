@@ -329,7 +329,7 @@ const TESTS = {
   },
   /* the sheet after Play again keeps its title and stats (25 Oct 2026: finish.js removed the old sheet
      before taking the engine's #winTitle/#winTime/#winStreak/#winBest out of it) */
-  async 'finish:link-replay-sheet'(b) {
+  async 'finish:replay-sheet-link'(b) {
     const { ctx, p } = await open(b, F.link);
     await play.link(p, { wrong: 4 });
     await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
