@@ -116,7 +116,11 @@ async function signIn(D, token) {
   await open(D, SITE + 'board.html#access_token=' + token + '&refresh_token=r-' + token + '&expires_in=3600&token_type=bearer&type=magiclink');
   await expect(card(D)).toContainText('Signed in as ' + token + '@example.test', { timeout: 10000 });
   expect(new URL(D.p.url()).hash, 'the tokens leave the address bar at once').toBe('');
+  await settled(D);
 }
+/* The page's sync is over and it won't reload by itself: a sync that brings results in reloads
+   board.html once, and a step taken during that reload hits a page being torn down. */
+const settled = D => expect(D.p.locator('html[data-dn-sync="done"]')).toHaveCount(1, { timeout: 15000 });
 
 test.describe('SYNC-WEB', () => {
   test.describe.configure({ timeout: 150000 });   // several browsers and two databases each, as in board-key.spec.js
@@ -318,7 +322,7 @@ test.describe('SYNC-WEB', () => {
       // Today, another browser that signed in before opens today's Borders straight from a link.
       await signIn(B, 'alec');
       await B.p.evaluate(() => localStorage.removeItem('digi-borders-v1'));
-      await go(B, B18); await play.borders(B.p);
+      await go(B, B18); await settled(B); await play.borders(B.p);
       await expect.poll(async () => (await store(B, 'digi-borders-v1'))?.streak?.n, { timeout: 15000 }).toBe(2);
       await expect.poll(async () => (await held(dbs.sync, 'alec@example.test'))['digi-borders-v1'].streak.n, { timeout: 15000 }).toBe(2);
       expect(A.p.errs.concat(B.p.errs)).toEqual([]);

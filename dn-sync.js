@@ -137,6 +137,9 @@
   }
 
   window.dnSync = { sync: sync, readLink: readLink };
+  // The page's first sync has finished and nothing more will happen on its own (no reload
+  // coming): <html data-dn-sync="done">. Lets tests (and anything else) wait for it.
+  function settled(){ try { document.documentElement.setAttribute('data-dn-sync', 'done'); } catch (e) {} }
 
   /* ---------- puzzle pages: start from the account's copy, send the result at the end ----------
      Pulling as the page opens means a streak continues from a day played elsewhere (the
@@ -144,7 +147,7 @@
      merge with it (dnCore.saveProgress). A round in progress here is kept (the import
      keeps this browser's fields). */
   if (!ON_BOARD) {
-    sync().catch(function () {});
+    sync().then(settled, settled);
     document.addEventListener('dn:puzzle_end', function () {
       // Let the page finish writing its save first.
       setTimeout(function () { sync().catch(function () {}); }, 1200);
@@ -202,10 +205,10 @@
   }
   // A sync that brought in results or a league: reload once so the board shows them.
   function afterSync(r){
-    if (!r || !r.changed) return;
+    if (!r || !r.changed) return settled();
     var k = 'noodle-sync-reload', last = 0;
     try { last = +sessionStorage.getItem(k) || 0; } catch (e) {}
-    if (Date.now() - last < 60000) return;
+    if (Date.now() - last < 60000) return settled();
     try { sessionStorage.setItem(k, String(Date.now())); } catch (e) {}
     location.reload();
   }
@@ -246,8 +249,8 @@
     else first = refresh();
     first.then(function () {
       return client().then(session).then(function (s) {
-        if (!s) return;
-        return sync().then(function (r) { refresh(); afterSync(r); }, function (e) { ui.msg = e.message; ui.bad = true; refresh(); });
+        if (!s) return settled();
+        return sync().then(function (r) { refresh(); afterSync(r); }, function (e) { ui.msg = e.message; ui.bad = true; refresh(); settled(); });
       });
     });
   }
