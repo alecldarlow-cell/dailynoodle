@@ -134,7 +134,8 @@ test.describe('SYNC-WEB', () => {
     try {
       await go(B, 'board.html');
       await expect(card(B)).toBeVisible();
-      await expect(card(B)).toContainText('Keep your streaks everywhere');
+      await expect(card(B).locator('h2')).toHaveText('Create a free account');
+      await expect(card(B).getByLabel('Your email')).toBeVisible();
       await expect(card(B).getByRole('button', { name: 'Email me a sign-in link' })).toBeVisible();
       expect(B.p.errs).toEqual([]);
     } finally { await B.ctx.close(); }
@@ -191,7 +192,7 @@ test.describe('SYNC-WEB', () => {
     try {
       await go(D, 'board.html');
       await expect(card(D)).toBeVisible();
-      await expect(card(D).locator('h2')).toHaveText('Keep your streaks everywhere');
+      await expect(card(D).locator('h2')).toHaveText('Create a free account');
       expect(await D.p.evaluate(() => window.__opts.auth)).toMatchObject({ storageKey: 'noodle-sync-auth', persistSession: true, detectSessionInUrl: false });
       await D.p.fill('#dnsyncEmail', 'not an email');
       await H.tap(D.p, card(D).locator('button[type="submit"]'));

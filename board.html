@@ -119,13 +119,15 @@
   .msg{margin-top:10px;font-size:14px;color:var(--bad);min-height:1em}
   .msg.ok{color:var(--accent)}
   /* sign-in sync card (dn-sync.js, 25 Oct 2026; hidden until it is switched on) */
-  .synccard{margin-top:26px;padding:18px 16px;background:var(--paper);border:1px solid var(--hair);border-radius:12px}
+  .synccard{margin-top:26px;padding:18px 16px;background:var(--paper);border:1px solid var(--accent);border-radius:12px}
   .synccard h2{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1.25}
   .synccard p{margin-top:8px;font-size:15px;color:var(--muted);line-height:1.5}
   .synccard p b{color:var(--ink)}
   .synccard .acts .btn{flex:1 1 140px}
-  .synccard .inline{margin-top:12px;flex-wrap:wrap}
-  .synccard .inline input{flex:1 1 200px;min-height:42px}
+  .synccard .inline{flex-wrap:wrap}
+  .synccard .flab{display:block;margin-top:14px;font-size:14px;font-weight:600;color:var(--ink)}
+  .synccard .inline input{flex:1 1 200px;min-height:44px;font-size:16px;background:var(--canvas);color:var(--ink);border:1.5px solid var(--muted)}
+  .synccard .inline input:focus{border-color:var(--accent)}
   .synccard p.fine{font-size:13px;color:var(--faint);margin-top:4px}
   .synccard p.msg{font-size:14px;color:var(--bad)}
   .synccard p.msg.ok{color:var(--accent)}
