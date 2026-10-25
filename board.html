@@ -118,6 +118,20 @@
   .field small{display:block;margin-top:5px;font-size:12.5px;color:var(--faint)}
   .msg{margin-top:10px;font-size:14px;color:var(--bad);min-height:1em}
   .msg.ok{color:var(--accent)}
+  /* sign-in sync card (dn-sync.js, 25 Oct 2026; hidden until it is switched on) */
+  .synccard{margin-top:26px;padding:18px 16px;background:var(--paper);border:1px solid var(--hair);border-radius:12px}
+  .synccard h2{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1.25}
+  .synccard p{margin-top:8px;font-size:15px;color:var(--muted);line-height:1.5}
+  .synccard p b{color:var(--ink)}
+  .synccard .acts .btn{flex:1 1 140px}
+  .synccard .inline{margin-top:12px;flex-wrap:wrap}
+  .synccard .inline input{flex:1 1 200px;min-height:42px}
+  .synccard p.fine{font-size:13px;color:var(--faint);margin-top:4px}
+  .synccard p.msg{font-size:14px;color:var(--bad)}
+  .synccard p.msg.ok{color:var(--accent)}
+  .synccard p.msg:empty{display:none}
+  .lnk{font:inherit;font-size:14px;background:none;border:0;padding:6px 0;color:var(--muted);text-decoration:underline;cursor:pointer}
+  .lnk.warn{color:var(--bad)}
   details.set{margin-top:26px;border-top:1px solid var(--hair);padding-top:12px}
   details.set summary{cursor:pointer;font-weight:600;font-size:14.5px;color:var(--muted);list-style:none}
   details.set summary::-webkit-details-marker{display:none}
@@ -172,6 +186,7 @@
   </nav>
 
   <main id="app"><p class="loading">Loading…</p></main>
+  <section class="synccard" id="dnsync" aria-label="Sign in" hidden></section>
 
   <footer class="foot">
     <p><b>The Daily Noodle · Leaderboard</b> — private leagues for friends and family. Only people in a
@@ -179,6 +194,7 @@
     <p class="privacy"><a href="puzzles.html">← Puzzles</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">contact@dailynoodle.co.uk</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
   </footer>
 </div>
+<script src="dn-sync.js?v=2026-10-25"></script>
 <script src="dn-board.js?v=2026-10-25"></script>
 <script>
 (function () {
