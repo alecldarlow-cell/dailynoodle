@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "uk.co.dailynoodle.app",
       "sha256_cert_fingerprints": [
-        "0A:E9:05:AD:A8:46:42:4B:36:5D:10:18:4E:8F:CF:85:A3:2D:83:75:EA:A6:C8:71:DB:CF:34:27:FE:92:CF:6B"
+        "0A:E9:05:AD:A8:46:42:4B:36:5D:10:18:4E:8F:CF:85:A3:2D:83:75:EA:A6:C8:71:DB:CF:34:27:FE:92:CF:6B",
+        "4B:3D:36:4E:09:54:62:90:B1:AB:C9:00:E6:9B:93:22:1D:DD:F9:15:EE:1C:4B:1E:4B:4F:5F:8B:0A:94:27:EA"
       ]
     }
   }
