@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0257", band:"medium",
   groups:[
-    {rank:1, name:"Currencies",               members:["PESO","RAND","KRONA","FORINT"]},
-    {rank:2, name:"Rock types",               members:["GRANITE","SHALE","GNEISS","PUMICE"]},
-    {rank:3, name:"Ways to isolate",          members:["SECLUDE","CUT OFF","STRAND","SHUT AWAY"]},
-    {rank:4, name:"There's a number in each", members:["PHONE","ALONE","STONE","MONEY"]}
+    {rank:1, name:"Football club staff",   members:["SCOUT","PHYSIO","CHAIRMAN","COACH"]},
+    {rank:2, name:"Horse-drawn",           members:["CARRIAGE","CART","TRAP","BUGGY"]},
+    {rank:3, name:"Counties of England",   members:["KENT","DEVON","CORNWALL","NORFOLK"]},
+    {rank:4, name:"A horse hides in each", members:["COBBLER","MANAGER","ARABLE","YORKSHIRE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"STONE", not:"Rock types"},
-    {tile:"MONEY", not:"Currencies"},
-    {tile:"ALONE", not:"Ways to isolate"}
+    {tile:"MANAGER",   not:"Football club staff"},
+    {tile:"YORKSHIRE", not:"Counties of England"},
+    {tile:"COACH",     not:"Horse-drawn"}
   ]
 };
 </script>

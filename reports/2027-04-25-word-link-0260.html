@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0260", band:"medium",
   groups:[
-    {rank:1, name:"Fortified wines",           members:["SHERRY","MADEIRA","MARSALA","VERMOUTH"]},
-    {rank:2, name:"Airside things",            members:["CAROUSEL","TAXIWAY","APRON","STAND"]},
-    {rank:3, name:"Ways to prop up",           members:["BRACE","BOLSTER","SHORE UP","BUTTRESS"]},
-    {rank:4, name:"A drink is buried in each", members:["SUPPORT","REPORT","AIRPORT","SPORTS"]}
+    {rank:1, name:"Fall guy",                    members:["STOOGE","DUPE","CHUMP","MUG"]},
+    {rank:2, name:"Parts of a roof",             members:["EAVES","RIDGE","CHIMNEY","GUTTER"]},
+    {rank:3, name:"___ SHOT",                    members:["BIG","LONG","CHEAP","PARTING"]},
+    {rank:4, name:"Rearrange for a bakery item", members:["GABLE","PATSY","FOAL","BEARD"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"AIRPORT", not:"Airside things"},
-    {tile:"SUPPORT", not:"Ways to prop up"},
-    {tile:"SPORTS",  not:"Airside things"}
+    {tile:"PATSY", not:"Fall guy"},
+    {tile:"GABLE", not:"Parts of a roof"},
+    {tile:"MUG",   not:"___ SHOT"}
   ]
 };
 </script>

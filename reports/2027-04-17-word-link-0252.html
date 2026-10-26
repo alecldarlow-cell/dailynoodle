@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0252", band:"medium",
   groups:[
-    {rank:1, name:"Metals",                    members:["COPPER","ZINC","PEWTER","NICKEL"]},
-    {rank:2, name:"On a bicycle",              members:["HANDLEBAR","PANNIER","MUDGUARD","CHAINSET"]},
-    {rank:3, name:"Ways to bow down",          members:["STOOP","CROUCH","BOB","SALAAM"]},
-    {rank:4, name:"There's an animal in each", members:["STEEL","WHEEL","KNEEL","PEELS"]}
+    {rank:1, name:"ABBA songs",              members:["FERNANDO","SOS","MAMMA MIA","CHIQUITITA"]},
+    {rank:2, name:"Car makers",              members:["FORD","NISSAN","TOYOTA","KIA"]},
+    {rank:3, name:"Parts of a castle",       members:["KEEP","MOAT","TURRET","BAILEY"]},
+    {rank:4, name:"Bridges over the Thames", members:["WATERLOO","VAUXHALL","TOWER","ALBERT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"STEEL", not:"Metals"},
-    {tile:"WHEEL", not:"On a bicycle"},
-    {tile:"KNEEL", not:"Ways to bow down"}
+    {tile:"WATERLOO", not:"ABBA songs"},
+    {tile:"VAUXHALL", not:"Car makers"},
+    {tile:"TOWER",    not:"Parts of a castle"}
   ]
 };
 </script>

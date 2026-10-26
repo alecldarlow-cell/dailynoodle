@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0263", band:"medium",
   groups:[
-    {rank:1, name:"Roof materials",              members:["THATCH","TILE","SHINGLE","LEAD"]},
-    {rank:2, name:"Story words",                 members:["FABLE","YARN","SAGA","MYTH"]},
-    {rank:3, name:"Ways to pinch",               members:["NICK","SWIPE","POCKET","LIFT"]},
-    {rank:4, name:"Rearrange one into the next", members:["SLATE","TALES","STEAL","LEAST"]}
+    {rank:1, name:"Light sources",        members:["LAMP","LANTERN","CANDLE","BULB"]},
+    {rank:2, name:"Sounded as a warning", members:["KLAXON","HOOTER","BELL","BUZZER"]},
+    {rank:3, name:"On a quiz show",       members:["HOST","ROUND","PRIZE","CONTESTANT"]},
+    {rank:4, name:"___ SONG",             members:["TORCH","SIREN","SWAN","THEME"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SLATE", not:"Roof materials"},
-    {tile:"TALES", not:"Story words"},
-    {tile:"STEAL", not:"Ways to pinch"}
+    {tile:"TORCH",  not:"Light sources"},
+    {tile:"SIREN",  not:"Sounded as a warning"},
+    {tile:"BUZZER", not:"On a quiz show"}
   ]
 };
 </script>

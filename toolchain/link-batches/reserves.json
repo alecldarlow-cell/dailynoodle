@@ -444,75 +444,6 @@
   "r4kind": "other",
   "shape": "B",
   "themes": [
-   "festivals",
-   "dances",
-   "seaside",
-   "things you can"
-  ],
-  "groups": [
-   {
-    "rank": 1,
-    "name": "At a music festival",
-    "members": [
-     "STAGE",
-     "WRISTBAND",
-     "WELLIES",
-     "PORTALOO"
-    ]
-   },
-   {
-    "rank": 2,
-    "name": "Kinds of dance event",
-    "members": [
-     "CEILIDH",
-     "TEA DANCE",
-     "BARN DANCE",
-     "PROM"
-    ]
-   },
-   {
-    "rank": 3,
-    "name": "At the seaside",
-    "members": [
-     "PIER",
-     "ARCADE",
-     "BEACH HUT",
-     "LIDO"
-    ]
-   },
-   {
-    "rank": 4,
-    "name": "Things you can pitch",
-    "members": [
-     "TENT",
-     "BALL",
-     "VOICE",
-     "IDEA"
-    ]
-   }
-  ],
-  "traps": [
-   {
-    "tile": "TENT",
-    "not": "At a music festival"
-   },
-   {
-    "tile": "BALL",
-    "not": "Kinds of dance event"
-   },
-   {
-    "tile": "PROM",
-    "not": "At the seaside"
-   }
-  ],
-  "note": "passed cold solve (run 3 spare); things-you-can idea, space from 210"
- },
- {
-  "serial": 0,
-  "band": "medium",
-  "r4kind": "other",
-  "shape": "B",
-  "themes": [
    "newness",
    "soap",
    "pubs",
@@ -644,5 +575,143 @@
    }
   ],
   "note": "passed cold solve (run 3 spare); writer anagrams: keep 10+ days from 229 hidden writers and from 238 crust/chart groups; STEAK/KEATS also in reserve 108"
+ },
+ {
+  "serial": 0,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "B",
+  "themes": [
+   "shaking",
+   "archery",
+   "restaurants",
+   "dickens"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Shake",
+    "members": [
+     "SHIVER",
+     "JUDDER",
+     "WOBBLE",
+     "TREMBLE"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "In archery",
+    "members": [
+     "BOW",
+     "ARROW",
+     "TARGET",
+     "QUIVER"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "At a restaurant",
+    "members": [
+     "MENU",
+     "WAITER",
+     "NAPKIN",
+     "STARTER"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Characters in Oliver Twist",
+    "members": [
+     "BULLSEYE",
+     "BILL",
+     "DODGER",
+     "NANCY"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "QUIVER",
+    "not": "Shake"
+   },
+   {
+    "tile": "BULLSEYE",
+    "not": "In archery"
+   },
+   {
+    "tile": "BILL",
+    "not": "At a restaurant"
+   }
+  ],
+  "note": "run 4 draft, not cold-solved (duplicated drafter A's Oliver Twist idea, used at 285); space 60+ days from 285"
+ },
+ {
+  "serial": 0,
+  "band": "medium",
+  "r4kind": "other",
+  "shape": "B",
+  "themes": [
+   "doors",
+   "planes",
+   "following",
+   "things you can"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "On a door",
+    "members": [
+     "HINGE",
+     "HANDLE",
+     "KNOCKER",
+     "LETTERBOX"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Parts of a plane",
+    "members": [
+     "WING",
+     "FUSELAGE",
+     "CABIN",
+     "TAIL"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Follow secretly",
+    "members": [
+     "SHADOW",
+     "STALK",
+     "TRAIL",
+     "DOG"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Things you can pick",
+    "members": [
+     "LOCK",
+     "NOSE",
+     "FIGHT",
+     "BRAINS"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "LOCK",
+    "not": "On a door"
+   },
+   {
+    "tile": "NOSE",
+    "not": "Parts of a plane"
+   },
+   {
+    "tile": "TAIL",
+    "not": "Follow secretly"
+   }
+  ],
+  "note": "run 4 spare, not cold-solved; its 'On a door' group shares all four members with 250's 'On a front door', so rebuild that group before use"
  }
 ]

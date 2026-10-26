@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0262", band:"medium",
   groups:[
-    {rank:1, name:"Kinds of mark",                  members:["QUESTION","BIRTH","TIDE","BENCH"]},
-    {rank:2, name:"Bus travel words",               members:["FARE","ROUTE","TIMETABLE","SHELTER"]},
-    {rank:3, name:"Ways to halt",                   members:["CEASE","ARREST","STEM","STALL"]},
-    {rank:4, name:"Four words, one set of letters", members:["STOP","POST","SPOT","TOPS"]}
+    {rank:1, name:"Horse riding kit",        members:["SADDLE","REINS","BRIDLE","CROP"]},
+    {rank:2, name:"Parts of a circle",       members:["ARC","CHORD","DIAMETER","SECTOR"]},
+    {rank:3, name:"Hand tools",              members:["SAW","WRENCH","PLIERS","CHISEL"]},
+    {rank:4, name:"Bones in the human body", members:["RADIUS","HAMMER","STIRRUP","ANVIL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"STOP", not:"Ways to halt"},
-    {tile:"SPOT", not:"Kinds of mark"},
-    {tile:"POST", not:"Bus travel words"}
+    {tile:"RADIUS",  not:"Parts of a circle"},
+    {tile:"STIRRUP", not:"Horse riding kit"},
+    {tile:"HAMMER",  not:"Hand tools"}
   ]
 };
 </script>

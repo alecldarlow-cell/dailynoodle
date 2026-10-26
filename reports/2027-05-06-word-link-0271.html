@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0271">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2027-05-06">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0271">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-05-06-word-link-0271.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0271", band:"medium",
   groups:[
-    {rank:1, name:"Gemstones",       members:["DIAMOND","PEARL","AMBER","ONYX"]},
-    {rank:2, name:"Shades of white", members:["IVORY","CHALK","BONE","OYSTER"]},
-    {rank:3, name:"Ways to sparkle", members:["GLITTER","TWINKLE","SHIMMER","GLISTEN"]},
-    {rank:4, name:"___ CRAFT",       members:["AIR","MINE","SPACE","WITCH"]}
+    {rank:1, name:"Money off",             members:["REBATE","REDUCTION","MARKDOWN","SAVING"]},
+    {rank:2, name:"Steaks",                members:["RIBEYE","RUMP","FILLET","T-BONE"]},
+    {rank:3, name:"___ ONION",             members:["SPRING","RED","SPANISH","WHITE"]},
+    {rank:4, name:"A title hides in each", members:["DISCOUNT","SIRLOIN","PEARL","MARMADUKE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MINE",  not:"Gemstones"},
-    {tile:"WITCH", not:"Ways to sparkle"}
+    {tile:"DISCOUNT", not:"Money off"},
+    {tile:"SIRLOIN",  not:"Steaks"},
+    {tile:"PEARL",    not:"___ ONION"}
   ]
 };
 </script>

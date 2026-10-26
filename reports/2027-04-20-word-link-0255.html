@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0255", band:"medium",
   groups:[
-    {rank:1, name:"Organs of the body",        members:["LIVER","SPLEEN","LUNG","BLADDER"]},
-    {rank:2, name:"Planets by name",           members:["MARS","VENUS","SATURN","NEPTUNE"]},
-    {rank:3, name:"Ways to tidy",              members:["NEATEN","SPRUCE","SORT","STOW"]},
-    {rank:4, name:"Each conceals a body part", members:["HEART","LEARN","CLEAR","EARTH"]}
+    {rank:1, name:"In a nativity play",                members:["SHEPHERDS","WISE MEN","INNKEEPER","DONKEY"]},
+    {rank:2, name:"At a hotel",                        members:["LOBBY","LIFT","RECEPTION","MINIBAR"]},
+    {rank:3, name:"___ TRAIN",                         members:["GRAVY","STEAM","GOODS","BULLET"]},
+    {rank:4, name:"Rearrange for a people of history", members:["ANGELS","ROOMS","GHOST","MANORS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"HEART", not:"Organs of the body"},
-    {tile:"EARTH", not:"Planets by name"},
-    {tile:"CLEAR", not:"Ways to tidy"}
+    {tile:"ANGELS", not:"In a nativity play"},
+    {tile:"ROOMS",  not:"At a hotel"},
+    {tile:"GHOST",  not:"___ TRAIN"}
   ]
 };
 </script>

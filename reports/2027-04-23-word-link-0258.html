@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0258", band:"medium",
   groups:[
-    {rank:1, name:"Numbers in other tongues", members:["NEUF","ACHT","CINQ","OCHO"]},
-    {rank:2, name:"Ways to hear",             members:["HEED","ATTEND","EAVESDROP","HARK"]},
-    {rank:3, name:"Front matter of a book",   members:["PREFACE","GLOSSARY","FOREWORD","ERRATA"]},
-    {rank:4, name:"A number hides in each",   members:["OFTEN","LISTEN","WRITTEN","CONTENT"]}
+    {rank:1, name:"Climbing plants",     members:["IVY","CLEMATIS","WISTERIA","JASMINE"]},
+    {rank:2, name:"SEA ___",             members:["URCHIN","BREEZE","BASS","LEVEL"]},
+    {rank:3, name:"Woods for furniture", members:["PINE","TEAK","MAHOGANY","BEECH"]},
+    {rank:4, name:"Symbols of England",  members:["ROSE","LION","OAK","BULLDOG"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"LISTEN",  not:"Ways to hear"},
-    {tile:"CONTENT", not:"Front matter of a book"},
-    {tile:"WRITTEN", not:"Front matter of a book"}
+    {tile:"ROSE", not:"Climbing plants"},
+    {tile:"LION", not:"SEA ___"},
+    {tile:"OAK",  not:"Woods for furniture"}
   ]
 };
 </script>

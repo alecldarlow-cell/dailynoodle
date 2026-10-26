@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0253", band:"medium",
   groups:[
-    {rank:1, name:"Farm jobs",                 members:["MILKER","SHEARER","DROVER","BAILIFF"]},
-    {rank:2, name:"Music words",               members:["MELODY","CADENCE","TIMBRE","REFRAIN"]},
-    {rank:3, name:"Ways to enchant",           members:["BEWITCH","CAPTIVATE","DAZZLE","ENTRANCE"]},
-    {rank:4, name:"A body part hides in each", members:["CHARM","ALARM","FARMER","HARMONY"]}
+    {rank:1, name:"Drinking vessels",   members:["MUG","FLUTE","GOBLET","TUMBLER"]},
+    {rank:2, name:"At the circus",      members:["BIG TOP","UNICYCLE","CLOWN","RINGMASTER"]},
+    {rank:3, name:"At the coast",       members:["CLIFF","COVE","PIER","HARBOUR"]},
+    {rank:4, name:"Things with a lens", members:["GLASSES","LIGHTHOUSE","CAMERA","TELESCOPE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FARMER",  not:"Farm jobs"},
-    {tile:"CHARM",   not:"Ways to enchant"},
-    {tile:"HARMONY", not:"Music words"}
+    {tile:"GLASSES",    not:"Drinking vessels"},
+    {tile:"TUMBLER",    not:"At the circus"},
+    {tile:"LIGHTHOUSE", not:"At the coast"}
   ]
 };
 </script>

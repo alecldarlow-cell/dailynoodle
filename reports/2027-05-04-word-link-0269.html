@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0269", band:"medium",
   groups:[
-    {rank:1, name:"Music writing",                members:["CLEF","STAVE","REST","SHARP"]},
-    {rank:2, name:"Fruit with a stone",           members:["OLIVE","MANGO","LYCHEE","PEACH"]},
-    {rank:3, name:"Ways to begin to show",        members:["EMERGE","DAWN","SET IN","BREAK"]},
-    {rank:4, name:"Identical letters throughout", members:["NOTES","STONE","TONES","ONSET"]}
+    {rank:1, name:"Opponent",                members:["FOE","RIVAL","ADVERSARY","NEMESIS"]},
+    {rank:2, name:"In the woodwork room",    members:["CHISEL","MALLET","LATHE","VICE"]},
+    {rank:3, name:"ROYAL ___",               members:["FLUSH","NAVY","MINT","MAIL"]},
+    {rank:4, name:"Rearrange for a country", members:["ENEMY","PLANE","REIGN","PURE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"NOTES", not:"Music writing"},
-    {tile:"STONE", not:"Fruit with a stone"},
-    {tile:"ONSET", not:"Ways to begin to show"}
+    {tile:"ENEMY", not:"Opponent"},
+    {tile:"PLANE", not:"In the woodwork room"},
+    {tile:"MAIL",  not:"Rearrange for a country"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0266", band:"medium",
   groups:[
-    {rank:1, name:"Roman things",        members:["AQUEDUCT","TOGA","LEGION","CHARIOT"]},
-    {rank:2, name:"Words meaning awful", members:["DIRE","ATROCIOUS","GHASTLY","ABYSMAL"]},
-    {rank:3, name:"Ways to praise",      members:["LAUD","EXTOL","HAIL","SALUTE"]},
-    {rank:4, name:"A body part in each", members:["TRIBUTE","TERRIBLE","DESCRIBE","HORRIBLE"]}
+    {rank:1, name:"Very funny person",                  members:["WAG","RIOT","CARD","LAUGH"]},
+    {rank:2, name:"Bird calls",                         members:["CAW","TWEET","CHIRP","HOOT"]},
+    {rank:3, name:"Meals",                              members:["BREAKFAST","LUNCH","SUPPER","BRUNCH"]},
+    {rank:4, name:"Add a letter to the end for a bird", members:["TEA","COO","HERO","RAVE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"TERRIBLE", not:"Words meaning awful"},
-    {tile:"HORRIBLE", not:"Words meaning awful"},
-    {tile:"TRIBUTE",  not:"Ways to praise"}
+    {tile:"TEA",  not:"Meals"},
+    {tile:"COO",  not:"Bird calls"},
+    {tile:"HOOT", not:"Very funny person"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0264", band:"medium",
   groups:[
-    {rank:1, name:"Cricket bats and kit",      members:["WILLOW","GRIP","PADS","HELMET"]},
-    {rank:2, name:"Military words",            members:["PLATOON","SORTIE","RECON","BIVOUAC"]},
-    {rank:3, name:"Ways to argue",             members:["DISPUTE","WRANGLE","SPAR","CONTEST"]},
-    {rank:4, name:"A flying creature in each", members:["BATTLE","DEBATE","COMBAT","BATTERY"]}
+    {rank:1, name:"Facial hair",           members:["WHISKERS","STUBBLE","SIDEBURNS","MOUSTACHE"]},
+    {rank:2, name:"Brass instruments",     members:["TRUMPET","TUBA","TROMBONE","HORN"]},
+    {rank:3, name:"On a car",              members:["BONNET","BOOT","BUMPER","WING"]},
+    {rank:4, name:"A grain hides in each", members:["GOATEE","CORNET","LIQUORICE","DRYER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BATTLE", not:"Military words"},
-    {tile:"COMBAT", not:"Military words"},
-    {tile:"DEBATE", not:"Ways to argue"}
+    {tile:"GOATEE", not:"Facial hair"},
+    {tile:"CORNET", not:"Brass instruments"},
+    {tile:"HORN",   not:"On a car"}
   ]
 };
 </script>

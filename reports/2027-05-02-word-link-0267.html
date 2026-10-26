@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0267", band:"medium",
   groups:[
-    {rank:1, name:"Wrong turns",          members:["DETOUR","U-TURN","BACKTRACK","DEAD END"]},
-    {rank:2, name:"Body of the church",   members:["NAVE","APSE","TRANSEPT","CHANCEL"]},
-    {rank:3, name:"Ways to be forceful",  members:["ASSERT","INSIST","PRESS","URGE"]},
-    {rank:4, name:"A man's name in each", members:["FRONT","STRONG","WRONG","ELECTRON"]}
+    {rank:1, name:"___ TOWN",                     members:["GHOST","BOOM","NEW","SHANTY"]},
+    {rank:2, name:"Relatives",                    members:["UNCLE","SISTER","NEPHEW","GRANNY"]},
+    {rank:3, name:"CHRISTMAS ___",                members:["TREE","CRACKER","PUDDING","MARKET"]},
+    {rank:4, name:"Rearrange for a sea creature", members:["CALM","SALE","AUNT","CAROL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"WRONG",  not:"Wrong turns"},
-    {tile:"FRONT",  not:"Body of the church"},
-    {tile:"STRONG", not:"Ways to be forceful"}
+    {tile:"AUNT",   not:"Relatives"},
+    {tile:"CAROL",  not:"CHRISTMAS ___"},
+    {tile:"MARKET", not:"___ TOWN"}
   ]
 };
 </script>

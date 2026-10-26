@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0259", band:"medium",
   groups:[
-    {rank:1, name:"Spirits",               members:["VODKA","BRANDY","WHISKY","TEQUILA"]},
-    {rank:2, name:"Under the bonnet",      members:["RADIATOR","DIPSTICK","FANBELT","MANIFOLD"]},
-    {rank:3, name:"Ways to start",         members:["COMMENCE","LAUNCH","KICK OFF","OPEN"]},
-    {rank:4, name:"A drink hides in each", members:["ENGINE","IMAGINE","BEGIN","ORIGIN"]}
+    {rank:1, name:"Expressions on a face",       members:["FROWN","SMIRK","POUT","GRIMACE"]},
+    {rank:2, name:"Sudden pains",                members:["SPASM","TWINGE","PANG","STITCH"]},
+    {rank:3, name:"Knitting words",              members:["PURL","YARN","NEEDLE","PATTERN"]},
+    {rank:4, name:"A farm animal hides in each", members:["SCOWL","CRAMP","OXFORD","BULLETIN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"ENGINE", not:"Under the bonnet"},
-    {tile:"BEGIN",  not:"Ways to start"},
-    {tile:"ORIGIN", not:"Ways to start"}
+    {tile:"SCOWL",  not:"Expressions on a face"},
+    {tile:"CRAMP",  not:"Sudden pains"},
+    {tile:"STITCH", not:"Knitting words"}
   ]
 };
 </script>

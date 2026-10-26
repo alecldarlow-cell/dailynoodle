@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0280">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2027-05-15">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0280">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-05-15-word-link-0280.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0280", band:"medium",
   groups:[
-    {rank:1, name:"Monsters of myth", members:["GORGON","HYDRA","CHIMERA","KRAKEN"]},
-    {rank:2, name:"Cats of the wild", members:["OCELOT","SERVAL","CARACAL","PUMA"]},
-    {rank:3, name:"Ways to terrify",  members:["PETRIFY","APPAL","UNNERVE","DAUNT"]},
-    {rank:4, name:"MOON ___",         members:["BEAM","LIGHT","SHINE","STONE"]}
+    {rank:1, name:"Give off",                    members:["EXUDE","RADIATE","DISCHARGE","RELEASE"]},
+    {rank:2, name:"Forms of the verb TO BE",     members:["IS","WAS","WERE","BEEN"]},
+    {rank:3, name:"PRESS ___",                   members:["GANG","BOX","CUTTING","OFFICER"]},
+    {rank:4, name:"Backwards, a period of time", members:["EMIT","ARE","NAPS","YAM"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PETRIFY", not:"Monsters of myth"},
-    {tile:"STONE",   not:"Cats of the wild"}
+    {tile:"EMIT",    not:"Give off"},
+    {tile:"ARE",     not:"Forms of the verb TO BE"},
+    {tile:"RELEASE", not:"PRESS ___"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0261", band:"medium",
   groups:[
-    {rank:1, name:"Fish market",           members:["MONKFISH","SKATE","HAKE","SEA BASS"]},
-    {rank:2, name:"Words meaning old",     members:["MUSTY","PAST IT","DATED","ANCIENT"]},
-    {rank:3, name:"Ways to measure",       members:["GAUGE","CALIBRATE","WEIGH","PLUMB"]},
-    {rank:4, name:"A drink lurks in each", members:["SCALE","STALE","WHALE","FEMALE"]}
+    {rank:1, name:"Chilly",               members:["ICY","FREEZING","ARCTIC","BITTER"]},
+    {rank:2, name:"___ TEST",             members:["DRIVING","ROAD","ACID","MOT"]},
+    {rank:3, name:"Beers",                members:["LAGER","STOUT","PORTER","MILD"]},
+    {rank:4, name:"Things you can catch", members:["COLD","BREATH","DRIFT","FIRE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"WHALE", not:"Fish market"},
-    {tile:"STALE", not:"Words meaning old"},
-    {tile:"SCALE", not:"Ways to measure"}
+    {tile:"COLD",   not:"Chilly"},
+    {tile:"BREATH", not:"___ TEST"},
+    {tile:"BITTER", not:"Beers"}
   ]
 };
 </script>

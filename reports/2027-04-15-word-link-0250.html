@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0250", band:"medium",
   groups:[
-    {rank:1, name:"Bakery smells and words", members:["YEAST","PROVING","CRUST","GLAZE"]},
-    {rank:2, name:"Kinds of crust",          members:["UPPER","PIE","EARTH'S","PASTRY"]},
-    {rank:3, name:"Pottery words",           members:["KILN","SLIP","THROW","BISQUE"]},
-    {rank:4, name:"Ways to coat",            members:["GLAZE OVER","COVER","DIP","ENROBE"]}
+    {rank:1, name:"Forms of medicine",     members:["TABLET","PILL","LOZENGE","SYRUP"]},
+    {rank:2, name:"Titles in the peerage", members:["DUKE","EARL","VISCOUNT","BARONESS"]},
+    {rank:3, name:"Gadgets",               members:["LAPTOP","SMARTPHONE","E-READER","SAT NAV"]},
+    {rank:4, name:"TIME ___",              members:["CAPSULE","LORD","ZONE","BOMB"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"CRUST", not:"Kinds of crust"},
-    {tile:"GLAZE", not:"Pottery words"},
-    {tile:"SLIP",  not:"Ways to coat"}
+    {tile:"CAPSULE", not:"Forms of medicine"},
+    {tile:"LORD",    not:"Titles in the peerage"},
+    {tile:"TABLET",  not:"Gadgets"}
   ]
 };
 </script>

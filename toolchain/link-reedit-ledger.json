@@ -24,6 +24,10 @@
   [
    215,
    249
+  ],
+  [
+   250,
+   298
   ]
  ],
  "plan": [
@@ -60,8 +64,8 @@
     250,
     298
    ],
-   "status": "todo",
-   "note": "batch 2: keep a puzzle only if it passes every rule AND a cold solve; rewrite the rest; St George's Day 258"
+   "status": "done",
+   "note": "batch 2: keep a puzzle only if it passes every rule AND a cold solve; rewrite the rest; St George's Day 258. Done 26 Oct 2026: 49 published, all rewritten (46 live puzzles broke R1/R2/R4; the 3 compliant ones were not kept: 254 anagram ring LIVE/EVIL/VEIL/VILE, 258 untrue label (GLOSSARY is back matter) and mixed-language numbers, 298 hidden trees four leftovers). Themed: 258 Symbols of England (St George's Day), 268 MAY___ (early May bank holiday, 3 May 2027). 55 drafted (49 + 6 spares). Dropped at the editor's check: snooker colours (flat, used in 65/114), West End musicals (flat stray, Dickens blocked), a second Oliver Twist decoy and a second Things you can serve (duplicated other drafters; to reserves), a spare whose door group duplicated another. Fixed at the editor's check: hidden grains (two OATs; BOATER>DRYER), bakery anagrams (its Drinking vessels clashed with another; now ___ SHOT), ___CASE (Fixings shared 3 with Sound like animals' group; now Enthusiast), add-a-letter book parts (woods clashed with 258). Failed cold solve: add-a-letter book parts (OVERAGE/OVERDONE/OVERBID/OVERSEWING second solution; fixed, then unfindable on re-solve; dropped), hidden newspapers (THEFT hides FT, second solution; THEFT>ROBBERY, re-solved clean). Dropped as flat: Sound like meats (AWFUL/OFFAL, MINTS/MINCE loose). Reserve used: Things you can pitch (run 3 spare). Kept though flat: Boxing weights 272. Watch for run 5: hidden-word rank 4s are 9 of 49 here (R6-legal); go lighter on hidden in 299-347; Kent towns 286; Cluedo/Shades of yellow at 266."
   },
   {
    "run": 5,

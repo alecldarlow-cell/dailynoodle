@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0268", band:"medium",
   groups:[
-    {rank:1, name:"Butcher's words",             members:["MINCE","OFFAL","BRISKET","CHOP"]},
-    {rank:2, name:"Words for a friend",          members:["PAL","CHUM","BUDDY","CRONY"]},
-    {rank:3, name:"Ways to domesticate",         members:["BREAK IN","TRAIN","HOUSE","GENTLE"]},
-    {rank:4, name:"One word, four arrangements", members:["MEAT","MATE","TAME","TEAM"]}
+    {rank:1, name:"Even-handed",       members:["JUST","IMPARTIAL","UNBIASED","NEUTRAL"]},
+    {rank:2, name:"Car gears",         members:["FIRST","SECOND","THIRD","REVERSE"]},
+    {rank:3, name:"Dressmaking terms", members:["SEAM","DART","PLEAT","TUCK"]},
+    {rank:4, name:"MAY___",            members:["FAIR","HEM","POLE","FLOWER"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MEAT", not:"Butcher's words"},
-    {tile:"MATE", not:"Words for a friend"},
-    {tile:"TAME", not:"Ways to domesticate"}
+    {tile:"FAIR",    not:"Even-handed"},
+    {tile:"HEM",     not:"Dressmaking terms"},
+    {tile:"NEUTRAL", not:"Car gears"}
   ]
 };
 </script>

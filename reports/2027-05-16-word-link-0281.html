@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0281", band:"medium",
   groups:[
-    {rank:1, name:"Bread and pastry", members:["BAGEL","PRETZEL","BAGUETTE","BRIOCHE"]},
-    {rank:2, name:"Condiments",       members:["MUSTARD","RELISH","CHUTNEY","PICCALILLI"]},
-    {rank:3, name:"Ways to enjoy",    members:["SAVOUR","LAP UP","REVEL IN","DELIGHT"]},
-    {rank:4, name:"___ cake",         members:["CUP","FISH","PAN","SPONGE"]}
+    {rank:1, name:"Short and to the point", members:["CURT","TERSE","PITHY","CONCISE"]},
+    {rank:2, name:"Enthusiast",             members:["BUFF","FIEND","FANATIC","ANORAK"]},
+    {rank:3, name:"On a front door",        members:["KNOCKER","HANDLE","HINGE","LETTERBOX"]},
+    {rank:4, name:"___CASE",                members:["BRIEF","NUT","STAIR","SHOW"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,8 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"SPONGE", not:"Bread and pastry"},
-    {tile:"FISH",   not:"Condiments"}
+    {tile:"BRIEF", not:"Short and to the point"},
+    {tile:"NUT",   not:"Enthusiast"}
   ]
 };
 </script>

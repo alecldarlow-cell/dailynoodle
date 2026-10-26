@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0282">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2027-05-17">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0282">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-05-17-word-link-0282.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0282", band:"medium",
   groups:[
-    {rank:1, name:"Vegetables of the plot",     members:["MARROW","SHALLOT","SALSIFY","CELERIAC"]},
-    {rank:2, name:"Board game pieces and bits", members:["TILE","RACK","SPINNER","SHAKER"]},
-    {rank:3, name:"Ways to shake",              members:["JUDDER","RATTLE","JOLT","VIBRATE"]},
-    {rank:4, name:"___ CASE",                   members:["BOOK","BRIEF","SUIT","STAIR"]}
+    {rank:1, name:"Shades of yellow",      members:["AMBER","LEMON","MUSTARD","SAFFRON"]},
+    {rank:2, name:"Knight's kit",          members:["LANCE","HELMET","ARMOUR","SHIELD"]},
+    {rank:3, name:"In Cluedo",             members:["PLUM","ROPE","SPANNER","REVOLVER"]},
+    {rank:4, name:"D-Day landing beaches", members:["GOLD","SWORD","JUNO","OMAHA"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"RACK", not:"Vegetables of the plot"},
-    {tile:"SUIT", not:"Board game pieces and bits"}
+    {tile:"GOLD",    not:"Shades of yellow"},
+    {tile:"SWORD",   not:"Knight's kit"},
+    {tile:"MUSTARD", not:"In Cluedo"}
   ]
 };
 </script>

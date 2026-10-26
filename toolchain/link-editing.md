@@ -38,6 +38,10 @@ self-contained: a fresh session with no memory of earlier chats can follow it.
 Mechanical part of 1, 2, 4 and 6, plus freshness (no category name reused, no group sharing 3+ members
 with any live group, blocked substrings such as GRAPES): `tools/link-reedit.js --check`.
 Tiles: 1–10 characters, A–Z plus space, apostrophe or hyphen, UPPER CASE, 16 distinct.
+The blocklist matches substrings in tiles and labels, so innocent words fail (FAGIN, SCREW, ESSEX, SUSSEX,
+DICKENS, "something"): choose another word rather than arguing with the gate. Give each drafter its own
+scratch subfolder. In batch-2 runs the gate also checks the live puzzles of the range itself only once
+they're replaced, so drafters should also avoid names used in the forthcoming Links after the range.
 
 ## What the cold solvers taught us (Links 102–141)
 - Avoid the "hard group by elimination": four rank-4 tiles that fit nothing else, with a visible link.

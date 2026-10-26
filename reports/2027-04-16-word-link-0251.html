@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0251", band:"medium",
   groups:[
-    {rank:1, name:"Sewing stitches",     members:["BLANKET","RUNNING","CHAIN","SATIN"]},
-    {rank:2, name:"Kinds of blanket",    members:["WET","ELECTRIC","SECURITY","SPACE"]},
-    {rank:3, name:"Bedding shops words", members:["DUVET","TOG","PILLOWCASE","THROW"]},
-    {rank:4, name:"Ways to cover fully", members:["SMOTHER","ENGULF","SWATHE","DROWN"]}
+    {rank:1, name:"Highest point",                      members:["PEAK","PINNACLE","ZENITH","SUMMIT"]},
+    {rank:2, name:"In Somerset",                        members:["TAUNTON","YEOVIL","MINEHEAD","BRIDGWATER"]},
+    {rank:3, name:"Kinds of meeting",                   members:["RALLY","SEMINAR","CONGRESS","ASSEMBLY"]},
+    {rank:4, name:"Lose the last letter for an animal", members:["APEX","BATH","TOADY","COWL"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BLANKET", not:"Kinds of blanket"},
-    {tile:"THROW",   not:"Sewing stitches"},
-    {tile:"RUNNING", not:"Ways to cover fully"}
+    {tile:"APEX",   not:"Highest point"},
+    {tile:"BATH",   not:"In Somerset"},
+    {tile:"SUMMIT", not:"Kinds of meeting"}
   ]
 };
 </script>
