@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "uk.co.dailynoodle.app",
+      "sha256_cert_fingerprints": [
+        "0A:E9:05:AD:A8:46:42:4B:36:5D:10:18:4E:8F:CF:85:A3:2D:83:75:EA:A6:C8:71:DB:CF:34:27:FE:92:CF:6B"
+      ]
+    }
+  }
+]
