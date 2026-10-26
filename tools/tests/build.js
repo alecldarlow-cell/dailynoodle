@@ -28,6 +28,14 @@ function build(out=path.join(ROOT,'_site')){
   assert.ok(lite.items.filter(it=>it.json).length>=puzzles.length-60,'Most puzzle cards have app data');
   for(const it of lite.items)if(it.json){const j=JSON.parse(fs.readFileSync(path.join(site,it.json)));assert.equal(j.path,it.path,it.json);assert.equal(j.type,it.type,it.json);assert.ok(j.data&&j.data.id===j.id,it.json);}
   for(const f of fs.readdirSync(path.join(site,'reports')))if(f.endsWith('.json'))assert.ok(fs.existsSync(path.join(site,'reports',f.replace(/\.json$/,'.html'))),'Orphan app data '+f);
+  // App links (SITE.md › App links): the Android verification file and the join page are published.
+  const links=JSON.parse(fs.readFileSync(path.join(site,'.well-known','assetlinks.json')));
+  const app=links.find(l=>l.target&&l.target.package_name==='uk.co.dailynoodle.app');
+  assert.ok(app,'assetlinks.json names the app');
+  assert.deepEqual(app.relation,['delegate_permission/common.handle_all_urls']);
+  assert.ok(app.target.sha256_cert_fingerprints.length>0,'assetlinks.json has a signing fingerprint');
+  for(const f of app.target.sha256_cert_fingerprints)assert.match(f,/^([0-9A-F]{2}:){31}[0-9A-F]{2}$/,'Fingerprint format '+f);
+  assert.ok(fs.existsSync(path.join(site,'join.html')),'join.html published');
   for(const file of ['tools','toolchain','package.json','package-lock.json','playwright.config.js','registry.json','published.json'])assert.ok(!fs.existsSync(path.join(site,file)),'Private tooling deployed: '+file);
   // Inspect every emitted search tag and prove metadata never changes playable content.
   const searchPages=require('../search-meta').entries(feed),titles=new Set();

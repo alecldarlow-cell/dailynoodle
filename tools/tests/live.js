@@ -11,10 +11,14 @@ function searchTags(html,meta,canonical){
 }
 (async()=>{
  const base='https://dailynoodle.co.uk';
- for(const file of ['index.html','admin.html','admin-health.js','puzzles.html','games.html','how-to-play.html','front.js','engines/finish.js','sw.js','manifest.webmanifest']){
+ for(const file of ['index.html','admin.html','admin-health.js','puzzles.html','games.html','how-to-play.html','front.js','engines/finish.js','sw.js','manifest.webmanifest','join.html']){
   const r=await fetch(base+'/'+file,{signal:AbortSignal.timeout(20000),cache:'no-cache'});assert.equal(r.status,200,file);const html=await r.text();assert.ok(html.length>20,file);
   if(HUBS[file])searchTags(html,HUBS[file],base+'/'+(file==='index.html'?'':file));console.log('LIVE '+file+' OK');
  }
+ // App links: Android only opens join.html links in the app if this answers 200 with JSON, without a redirect.
+ {const r=await fetch(base+'/.well-known/assetlinks.json',{signal:AbortSignal.timeout(20000),cache:'no-cache',redirect:'manual'});
+  assert.equal(r.status,200,'assetlinks.json');assert.match(r.headers.get('content-type')||'',/application\/json/,'assetlinks.json content type');
+  assert.ok((await r.json()).some(l=>l.target&&l.target.package_name==='uk.co.dailynoodle.app'),'assetlinks.json names the app');console.log('LIVE .well-known/assetlinks.json OK');}
  const list=await fetch(base+'/puzzles-today.json',{signal:AbortSignal.timeout(20000)}).then(r=>{assert.equal(r.status,200);return r.json();});
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date());assert.equal(list.today,today,'Daily list is stale');assert.equal(list.items.length,require('../../admin-health').TYPES.length);
  require('../../admin-health').dailyList(list,today);

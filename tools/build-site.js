@@ -34,8 +34,9 @@ if (!heldFile || !fs.existsSync(heldFile)) {
 }
 const held = new Set(fs.readFileSync(heldFile, 'utf8').split('\n').map(s => s.trim()).filter(Boolean));
 
-// Folders published whole, except reports/ which is filtered.
-const DIRS = ['icons', 'assets', 'engines', 'reports'];
+// Folders published whole, except reports/ which is filtered. .well-known holds the app-link
+// files (assetlinks.json; SITE.md › App links), the one dot-folder that is published.
+const DIRS = ['icons', 'assets', 'engines', 'reports', '.well-known'];
 // Never published.
 const SKIP_ROOT = new Set(['.git', '.github', 'tools', 'toolchain', 'node_modules', '_site', 'CNAME', '.gitignore', 'package.json', 'package-lock.json', 'playwright.config.js', 'registry.json', 'published.json']);
 const SKIP_EXT = /\.(md|txt|py|pyc|sql|log)$/i;
