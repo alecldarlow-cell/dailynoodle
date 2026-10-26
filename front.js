@@ -448,8 +448,8 @@
 
   /* ---------- played marks on puzzle cards (21 Oct 2026) ----------
      Alec's call, from a player's request and mock A: a card you've finished
-     carries a tick on its tile and your result ("Solved in 1:42", "Scored
-     8/10") where its duration was; a round you've started and not finished
+     carries a tick on its tile and your result ("Solved in 1:42", "650
+     points · 7/10") where its duration was; a round you've started and not finished
      (Tangle, Borders and Reckon only: the other five keep nothing until the
      end) carries a marigold dot and "In progress". Read-only, from the
      players' own saves, matched by the puzzle id build-feed.js puts on each
@@ -484,7 +484,8 @@
         if(r.o === 'win') return num(r.m) ? (r.m === 0 ? 'Solved, no mistakes' : 'Solved, ' + r.m + ' mistake' + (r.m === 1 ? '' : 's')) : 'Solved';
         return '';
       case 'tangle':  return num(r.s) ? r.s + ' points' : '';
-      case 'borders': return num(r.c) ? 'Scored ' + r.c + '/10' : '';
+      // Points since 26 Oct 2026 (100 a right answer, 50 with Show on map); the right answers after.
+      case 'borders': return num(r.p) ? r.p + ' points' + (num(r.c) ? ' · ' + r.c + '/10' : '') : (num(r.c) ? 'Scored ' + r.c + '/10' : '');
       case 'reckon':  return num(r.p) ? r.p + ' points' : '';
     }
     return '';
