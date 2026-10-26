@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" data-section="site">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Invite links for the app (26 Oct 2026; SITE.md › App links): join.html?c=CODE.
+     The Daily Noodle app on Android opens these itself (.well-known/assetlinks.json);
+     everyone else lands here and goes straight on to the league's invite on board.html. -->
+<script>
+(function(){
+  var c='';
+  try{c=(new URLSearchParams(location.search).get('c')||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12);}catch(e){}
+  location.replace(/^[A-Z0-9]{4,12}$/.test(c)?'board.html?join='+encodeURIComponent(c)+'&v=2':'board.html');
+})();
+</script>
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<title>Join a league — The Daily Noodle</title>
+<meta name="description" content="Daily leaderboards for your group: one board per puzzle, every day.">
+<meta name="robots" content="noindex">
+<meta property="og:site_name" content="The Daily Noodle">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Daily Noodle · Leaderboard">
+<meta property="og:description" content="Daily leaderboards for your group: one board per puzzle, every day.">
+<meta property="og:url" content="https://dailynoodle.co.uk/join.html">
+<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<p><a href="board.html">Open the leaderboard</a></p>
+</body>
+</html>
