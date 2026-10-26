@@ -422,6 +422,8 @@ const TESTS = {
       shareRe: /^🌍 Borders #14 — 7\/10 · \d+ pts$/,
       endCheck: x => ok(x && x.outcome === 'scored' && x.got === 7 && x.of === 10 && x.score > 0, `borders: tracker read ${x && x.got} of ${x && x.of}, ${x && x.score} pts`) });
     ok(await text(p, '#winTitle') === 'Spotted' && await text(p, '#rBig') === '7 of 10', 'borders: Spotted, 7 of 10');
+    // 100 a right answer, 50 with Show on map, no bonus for answers in a row (Alec, 26 Oct 2026): six plain + one hinted.
+    ok(await text(p, '#rPts') === '650', `borders: 650 points with no run bonus, got ${await text(p, '#rPts')}`);
     ok(/^You missed \w[\w ]*, [\w ]+ and [\w ]+\./.test(await text(p, '.fin-note')), `borders: note "${await text(p, '.fin-note')}"`);
     ok(await p.locator('.fin-outl figure').count() === 10 && await p.locator('.fin-outl figure.x').count() === 3, 'borders: ten outlines, three missed');
     ok(await p.locator('.fin a.fin-link[href*="borderline"]').count() === 1, 'borders: Borderline link in the recap');

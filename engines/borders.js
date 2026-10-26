@@ -285,7 +285,7 @@ function homeExtras(){
   let st=$('hStats');
   if(!st){st=document.createElement('div');st.className='hstats';st.id='hStats';card.parentNode.insertBefore(st,card.nextSibling);
     const how=document.createElement('details');how.className='how';
-    how.innerHTML='<summary>How to play</summary><p>Ten country outlines, easiest first. Pick the country from four names: 100 points for each right answer, and 10 more for every one in a row, up to 50.</p><p>Stuck? Show on map puts the outline on a world map, for half points. Every country you name goes into your atlas in Borderline.</p>';
+    how.innerHTML='<summary>How to play</summary><p>Ten country outlines, easiest first. Pick the country from four names: 100 points for each right answer, up to 1,000.</p><p>Stuck? Show on map puts the outline on a world map, for half points. Every country you name goes into your atlas in Borderline.</p>';
     st.parentNode.insertBefore(how,st.nextSibling);}
   const best=Math.max(0,...Object.values(save.done||{}).map(d=>+d.p||0));
   st.innerHTML='<div><b>'+liveStreak()+'</b><span>day streak</span></div><div><b>'+best+'</b><span>best score</span></div><div><b>'+Object.keys(save.done||{}).length+'</b><span>Borders played</span></div>';
@@ -297,7 +297,7 @@ function renderHome(){
   homeExtras();
   worldSVG($('homeWorld'),null);
   const c=save.cur&&save.cur.id===P.id?save.cur:null;
-  $('playStatus').textContent=c?`Question ${Math.min(NQ,c.ans.length+1)} of ${NQ}, ${c.pts} points so far.`:'Ten country outlines, easiest first. Name them from four; scored out of ten.';
+  $('playStatus').textContent=c?`Question ${Math.min(NQ,c.ans.length+1)} of ${NQ}, ${c.pts} points so far.`:'Ten country outlines, easiest first. Name them from four; 100 points each.';
   $('playGo').textContent=c?'Resume':'Play';
   toggles($('homeToggles'));
 }
@@ -331,7 +331,7 @@ function answer(k){
   if(locked||!cur||view!=='quiz')return;locked=true;
   const q=P.qs[cur.i],ok=q.o[k]===q.n;
   cur.run=ok?cur.run+1:0;
-  const gain=ok?(cur.hint?50:100)+Math.min(50,(cur.run-1)*10):0;cur.pts+=gain;
+  const gain=ok?(cur.hint?50:100):0;cur.pts+=gain;
   const isNew=ok&&atlasAdd(q.n);
   cur.ans.push({k,ok,h:!!cur.hint,nw:!!isNew});
   if(!save.seenCoach){save.seenCoach=true;$('coach').classList.add('off');}
