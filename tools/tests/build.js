@@ -34,6 +34,8 @@ function build(out=path.join(ROOT,'_site')){
   assert.ok(app,'assetlinks.json names the app');
   assert.deepEqual(app.relation,['delegate_permission/common.handle_all_urls']);
   assert.ok(app.target.sha256_cert_fingerprints.length>0,'assetlinks.json has a signing fingerprint');
+  // Both keys the app is signed with: EAS's (preview/internal builds) and Google Play's app-signing key (Play installs).
+  for(const fp of ['0A:E9:05:AD:A8:46:42:4B','4B:3D:36:4E:09:54:62:90'])assert.ok(app.target.sha256_cert_fingerprints.some(f=>f.startsWith(fp)),'assetlinks.json has the '+fp+'… key');
   for(const f of app.target.sha256_cert_fingerprints)assert.match(f,/^([0-9A-F]{2}:){31}[0-9A-F]{2}$/,'Fingerprint format '+f);
   assert.ok(fs.existsSync(path.join(site,'join.html')),'join.html published');
   for(const file of ['tools','toolchain','package.json','package-lock.json','playwright.config.js','registry.json','published.json'])assert.ok(!fs.existsSync(path.join(site,file)),'Private tooling deployed: '+file);
