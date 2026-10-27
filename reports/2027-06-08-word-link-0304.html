@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0304", band:"medium",
   groups:[
-    {rank:1, name:"Bath-time things",    members:["SPONGE","LOOFAH","FLANNEL","PLUG"]},
-    {rank:2, name:"Electrical bits",     members:["SOCKET","SWITCH","ADAPTOR","CABLE"]},
-    {rank:3, name:"Referee's kit",       members:["WHISTLE","NOTEBOOK","COIN","STOPWATCH"]},
-    {rank:4, name:"Things you can blow", members:["KISS","FUSE","BUBBLE","GASKET"]}
+    {rank:1, name:"Peaceful",       members:["SERENE","PLACID","TRANQUIL","CALM"]},
+    {rank:2, name:"Takeaways",      members:["CHINESE","THAI","KEBAB","PIZZA"]},
+    {rank:3, name:"Sea conditions", members:["ROUGH","CHOPPY","HEAVY","SLIGHT"]},
+    {rank:4, name:"Oceans",         members:["INDIAN","PACIFIC","ARCTIC","SOUTHERN"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PLUG",    not:"Electrical bits"},
-    {tile:"FUSE",    not:"Electrical bits"},
-    {tile:"WHISTLE", not:"Things you can blow"}
+    {tile:"PACIFIC", not:"Peaceful"},
+    {tile:"INDIAN",  not:"Takeaways"},
+    {tile:"CALM",    not:"Sea conditions"}
   ]
 };
 </script>

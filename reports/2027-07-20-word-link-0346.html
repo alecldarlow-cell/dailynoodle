@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0346", band:"medium",
   groups:[
-    {rank:1, name:"Made with batter", members:["YORKSHIRE","FRITTER","CREPE","WAFFLE"]},
-    {rank:2, name:"Highland games",   members:["HAMMER","STONE","TUG OF WAR","HILL RACE"]},
-    {rank:3, name:"FRUIT ___",        members:["BOWL","FLY","BAT","MACHINE"]},
-    {rank:4, name:"Things you toss",  members:["PANCAKE","CABER","SALAD","COIN"]}
+    {rank:1, name:"Courageous",       members:["BOLD","PLUCKY","HEROIC","VALIANT"]},
+    {rank:2, name:"Pop music styles", members:["INDIE","GRIME","PUNK","DISCO"]},
+    {rank:3, name:"Kinds of dance",   members:["FOXTROT","QUICKSTEP","CHARLESTON","WALTZ"]},
+    {rank:4, name:"Pixar films",      members:["BRAVE","SOUL","UP","CARS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PANCAKE", not:"Made with batter"},
-    {tile:"CABER",   not:"Highland games"},
-    {tile:"SALAD",   not:"FRUIT ___"}
+    {tile:"BRAVE", not:"Courageous"},
+    {tile:"SOUL",  not:"Pop music styles"},
+    {tile:"DISCO", not:"Kinds of dance"}
   ]
 };
 </script>

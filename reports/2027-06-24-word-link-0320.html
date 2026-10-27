@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0320", band:"medium",
   groups:[
-    {rank:1, name:"Stolen",            members:["NICKED","PINCHED","SWIPED","LIFTED"]},
-    {rank:2, name:"Mixed up",          members:["MUDDLED","TANGLED","CONFUSED","JUMBLED"]},
-    {rank:3, name:"Spoilt",            members:["PAMPERED","COSSETED","BABIED","INDULGED"]},
-    {rank:4, name:"How eggs are done", members:["SCRAMBLED","CODDLED","DEVILLED","POACHED"]}
+    {rank:1, name:"Forbid",                         members:["BAN","BAR","BLOCK","OUTLAW"]},
+    {rank:2, name:"High street shops",              members:["CHEMIST","NEWSAGENT","FLORIST","DELI"]},
+    {rank:3, name:"Crafts",                         members:["KNITTING","WEAVING","QUILTING","EMBROIDERY"]},
+    {rank:4, name:"Lose the last letter for a job", members:["VETO","BAKERY","POTTERY","DIVERT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"POACHED",   not:"Stolen"},
-    {tile:"SCRAMBLED", not:"Mixed up"},
-    {tile:"CODDLED",   not:"Spoilt"}
+    {tile:"VETO",    not:"Forbid"},
+    {tile:"BAKERY",  not:"High street shops"},
+    {tile:"POTTERY", not:"Crafts"}
   ]
 };
 </script>

@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0335">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2027-07-09">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0335">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-07-09-word-link-0335.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0335", band:"medium",
   groups:[
-    {rank:1, name:"Chatter",        members:["NATTER","WITTER","PRATTLE","JABBER"]},
-    {rank:2, name:"Promontories",   members:["POINT","NESS","BILL","HEAD"]},
-    {rank:3, name:"MAGIC ___",      members:["CARPET","ROUNDABOUT","MUSHROOM","CIRCLE"]},
-    {rank:4, name:"Magician's kit", members:["WAND","TOP HAT","RABBIT","CAPE"]}
+    {rank:1, name:"Right-hand person", members:["AIDE","DEPUTY","SIDEKICK","LIEUTENANT"]},
+    {rank:2, name:"Room features",     members:["WALL","CEILING","SKIRTING","ALCOVE"]},
+    {rank:3, name:"Cleaning kit",      members:["MOP","BROOM","DUSTER","SQUEEGEE"]},
+    {rank:4, name:"SHOP ___",          members:["ASSISTANT","FLOOR","FRONT","STEWARD"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,8 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"RABBIT", not:"Chatter"},
-    {tile:"CAPE",   not:"Promontories"},
-    {tile:"WAND",   not:"MAGIC ___"}
+    {tile:"ASSISTANT", not:"Right-hand person"},
+    {tile:"FLOOR",     not:"Room features"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0311", band:"medium",
   groups:[
-    {rank:1, name:"Puzzle types",   members:["CROSSWORD","SUDOKU","JIGSAW","WORDSEARCH"]},
-    {rank:2, name:"Wintry weather", members:["SLEET","HAIL","SNOW","BLIZZARD"]},
-    {rank:3, name:"___ CODE",       members:["AREA","DRESS","SORT","POST"]},
-    {rank:4, name:"TV detectives",  members:["MORSE","FROST","REBUS","VERA"]}
+    {rank:1, name:"Dismiss from a job",      members:["FIRE","AXE","LAY OFF","BOOT"]},
+    {rank:2, name:"On the outside of a car", members:["BONNET","SUNROOF","HUBCAP","GRILLE"]},
+    {rank:3, name:"Rodents",                 members:["MOUSE","VOLE","HAMSTER","GERBIL"]},
+    {rank:4, name:"___ RACE",                members:["SACK","RAT","ARMS","SPACE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"FROST", not:"Wintry weather"},
-    {tile:"REBUS", not:"Puzzle types"},
-    {tile:"MORSE", not:"___ CODE"}
+    {tile:"SACK", not:"Dismiss from a job"},
+    {tile:"RAT",  not:"Rodents"},
+    {tile:"BOOT", not:"On the outside of a car"}
   ]
 };
 </script>

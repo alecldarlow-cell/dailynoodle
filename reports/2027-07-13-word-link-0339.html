@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0339", band:"medium",
   groups:[
-    {rank:1, name:"Oily fish",        members:["MACKEREL","PILCHARD","ANCHOVY","SPRAT"]},
-    {rank:2, name:"Measuring tools",  members:["SCALES","GAUGE","CALIPERS","PROTRACTOR"]},
-    {rank:3, name:"Royal Navy ranks", members:["COMMODORE","CAPTAIN","ENSIGN","MIDSHIPMAN"]},
-    {rank:4, name:"RED ___",          members:["TAPE","CARPET","HERRING","ADMIRAL"]}
+    {rank:1, name:"Dog noises",              members:["BARK","WOOF","HOWL","GROWL"]},
+    {rank:2, name:"Shapes",                  members:["SQUARE","OVAL","TRIANGLE","HEXAGON"]},
+    {rank:3, name:"In a theatre auditorium", members:["STALLS","CIRCLE","BALCONY","GODS"]},
+    {rank:4, name:"Backwards, money",        members:["YAP","PIT","TOOL","NOW"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"HERRING", not:"Oily fish"},
-    {tile:"TAPE",    not:"Measuring tools"},
-    {tile:"ADMIRAL", not:"Royal Navy ranks"}
+    {tile:"YAP",    not:"Dog noises"},
+    {tile:"PIT",    not:"In a theatre auditorium"},
+    {tile:"CIRCLE", not:"Shapes"}
   ]
 };
 </script>

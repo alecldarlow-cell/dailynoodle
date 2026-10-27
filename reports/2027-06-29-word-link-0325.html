@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0325", band:"medium",
   groups:[
-    {rank:1, name:"Battles",           members:["HASTINGS","BOSWORTH","AGINCOURT","NASEBY"]},
-    {rank:2, name:"London stations",   members:["EUSTON","WATERLOO","MARYLEBONE","FENCHURCH"]},
-    {rank:3, name:"Fictional bears",   members:["PADDINGTON","BALOO","RUPERT","POOH"]},
-    {rank:4, name:"Sounds of disdain", members:["BAH","PSHAW","TUT","HUMPH"]}
+    {rank:1, name:"Untrustworthy types",         members:["CROOK","SHARK","CON ARTIST","TRICKSTER"]},
+    {rank:2, name:"Secure a boat",               members:["DOCK","BERTH","ANCHOR","TIE UP"]},
+    {rank:3, name:"Places to sleep",             members:["BUNK","COT","HAMMOCK","FUTON"]},
+    {rank:4, name:"Backwards, found in a house", members:["LIAR","MOOR","PETS","REWARD"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"POOH",       not:"Sounds of disdain"},
-    {tile:"PADDINGTON", not:"London stations"},
-    {tile:"WATERLOO",   not:"Battles"}
+    {tile:"LIAR",  not:"Untrustworthy types"},
+    {tile:"MOOR",  not:"Secure a boat"},
+    {tile:"BERTH", not:"Places to sleep"}
   ]
 };
 </script>

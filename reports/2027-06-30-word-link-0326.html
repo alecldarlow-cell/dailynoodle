@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0326", band:"medium",
   groups:[
-    {rank:1, name:"Ways to say goodbye", members:["CHEERIO","TA-RA","TOODLE-OO","LATERS"]},
-    {rank:2, name:"Parts of a ship",     members:["KEEL","HULL","BILGE","STERN"]},
-    {rank:3, name:"Offal",               members:["LIVER","KIDNEY","TRIPE","SWEETBREAD"]},
-    {rank:4, name:"Words for nonsense",  members:["TOSH","PIFFLE","TWADDLE","BUNKUM"]}
+    {rank:1, name:"Put into words",                       members:["VOICE","EXPRESS","ARTICULATE","AIR"]},
+    {rank:2, name:"Kinds of race",                        members:["RELAY","SPRINT","HURDLES","MARATHON"]},
+    {rank:3, name:"School uniform",                       members:["BLAZER","TIE","CARDIGAN","BLOUSE"]},
+    {rank:4, name:"Add a letter to the front for a food", members:["UTTER","HEAT","CONE","EACH"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,8 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"TRIPE", not:"Words for nonsense"},
-    {tile:"BILGE", not:"Words for nonsense"}
+    {tile:"UTTER", not:"Put into words"},
+    {tile:"HEAT",  not:"Kinds of race"}
   ]
 };
 </script>

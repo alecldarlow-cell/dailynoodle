@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0306", band:"medium",
   groups:[
-    {rank:1, name:"Bar drinks",       members:["GIN","CIDER","LAGER","SHANDY"]},
-    {rank:2, name:"Words for dirt",   members:["GRIME","FILTH","MUD","SOOT"]},
-    {rank:3, name:"Think it over",    members:["PONDER","MUSE","BROOD","CHEW OVER"]},
-    {rank:4, name:"Scottish islands", members:["RUM","MUCK","MULL","SKYE"]}
+    {rank:1, name:"Steal",                       members:["NICK","FILCH","SNAFFLE","PINCH"]},
+    {rank:2, name:"Places of learning",          members:["ACADEMY","NURSERY","UNIVERSITY","SCHOOL"]},
+    {rank:3, name:"Touchscreen actions",         members:["TAP","SCROLL","DRAG","ZOOM"]},
+    {rank:4, name:"A cut of meat hides in each", members:["PURLOIN","COLLEGE","TRUMPET","TRIBE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"RUM",  not:"Bar drinks"},
-    {tile:"MUCK", not:"Words for dirt"},
-    {tile:"MULL", not:"Think it over"}
+    {tile:"PURLOIN", not:"Steal"},
+    {tile:"COLLEGE", not:"Places of learning"},
+    {tile:"PINCH",   not:"Touchscreen actions"}
   ]
 };
 </script>

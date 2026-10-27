@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0330">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2027-07-04">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0330">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-07-04-word-link-0330.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0330", band:"medium",
   groups:[
-    {rank:1, name:"Old-fashioned toys",  members:["YO-YO","SKITTLES","JACKS","CONKERS"]},
-    {rank:2, name:"Sewing basket",       members:["THIMBLE","BOBBIN","BODKIN","PINCUSHION"]},
-    {rank:3, name:"Inside a tooth",      members:["PULP","ENAMEL","DENTINE","ROOT"]},
-    {rank:4, name:"Things you can lose", members:["TEMPER","MARBLES","THREAD","NERVE"]}
+    {rank:1, name:"Score of nothing",                     members:["NIL","DUCK","NOUGHT","ZERO"]},
+    {rank:2, name:"Tennis umpire's calls",                members:["DEUCE","LET","FAULT","LOVE"]},
+    {rank:3, name:"What snow does",                       members:["SETTLE","DRIFT","FALL","LIE"]},
+    {rank:4, name:"Add a letter to the front for a fish", members:["REAM","MELT","HARK","ROUT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,8 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"THREAD",  not:"Sewing basket"},
-    {tile:"MARBLES", not:"Old-fashioned toys"},
-    {tile:"NERVE",   not:"Inside a tooth"}
+    {tile:"MELT", not:"What snow does"},
+    {tile:"LOVE", not:"Score of nothing"}
   ]
 };
 </script>

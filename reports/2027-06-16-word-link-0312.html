@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0312", band:"medium",
   groups:[
-    {rank:1, name:"Shirt fabrics",         members:["POPLIN","DENIM","OXFORD","FLANNEL"]},
-    {rank:2, name:"___ MINE",              members:["COAL","SALT","LAND","TIN"]},
-    {rank:3, name:"___ CLIP",              members:["BULLDOG","CROCODILE","HAIR","FILM"]},
-    {rank:4, name:"Wedding anniversaries", members:["COTTON","PAPER","LEATHER","CRYSTAL"]}
+    {rank:1, name:"Flop",                 members:["DUD","FIASCO","DISASTER","WASHOUT"]},
+    {rank:2, name:"Rock pool creatures",  members:["SHRIMP","LIMPET","ANEMONE","STARFISH"]},
+    {rank:3, name:"On a computer screen", members:["ICON","CURSOR","TAB","MENU"]},
+    {rank:4, name:"Things you can dress", members:["SALAD","CRAB","WINDOW","TURKEY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"TIN",    not:"Wedding anniversaries"},
-    {tile:"PAPER",  not:"___ CLIP"},
-    {tile:"COTTON", not:"Shirt fabrics"}
+    {tile:"TURKEY", not:"Flop"},
+    {tile:"CRAB",   not:"Rock pool creatures"},
+    {tile:"WINDOW", not:"On a computer screen"}
   ]
 };
 </script>

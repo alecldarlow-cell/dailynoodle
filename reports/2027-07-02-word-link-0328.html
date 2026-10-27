@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0328", band:"medium",
   groups:[
-    {rank:1, name:"Imperial measures",   members:["PINT","GALLON","OUNCE","FURLONG"]},
-    {rank:2, name:"___FISH",             members:["STAR","JELLY","CAT","MONK"]},
-    {rank:3, name:"Spa towns",           members:["BUXTON","HARROGATE","MALVERN","LEAMINGTON"]},
-    {rank:4, name:"Things you can draw", members:["CURTAINS","BATH","LOTS","SWORD"]}
+    {rank:1, name:"Common British trees", members:["OAK","BEECH","SYCAMORE","ASH"]},
+    {rank:2, name:"In the solar system",  members:["PLANET","MOON","ASTEROID","SUN"]},
+    {rank:3, name:"From a bonfire",       members:["SMOKE","SOOT","EMBERS","SPARKS"]},
+    {rank:4, name:"Things with a tail",   members:["KITE","COMET","COIN","PLANE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"PINT",  not:"Things you can draw"},
-    {tile:"BATH",  not:"Spa towns"},
-    {tile:"SWORD", not:"___FISH"}
+    {tile:"PLANE", not:"Common British trees"},
+    {tile:"COMET", not:"In the solar system"},
+    {tile:"ASH",   not:"From a bonfire"}
   ]
 };
 </script>

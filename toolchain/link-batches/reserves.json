@@ -713,5 +713,205 @@
    }
   ],
   "note": "run 4 spare, not cold-solved; its 'On a door' group shares all four members with 250's 'On a front door', so rebuild that group before use"
+ },
+ {
+  "serial": 0,
+  "band": "medium",
+  "r4kind": "decoy",
+  "shape": "B",
+  "themes": [
+   "arguing",
+   "countries",
+   "checkout",
+   "supermarkets"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Argue",
+    "members": [
+     "ROW",
+     "BICKER",
+     "SQUABBLE",
+     "QUARREL"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Countries ending in LAND",
+    "members": [
+     "FINLAND",
+     "POLAND",
+     "THAILAND",
+     "SCOTLAND"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "At the checkout",
+    "members": [
+     "TILL",
+     "RECEIPT",
+     "SCANNER",
+     "CONVEYOR"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "UK grocery chains",
+    "members": [
+     "SPAR",
+     "ICELAND",
+     "CO-OP",
+     "MORRISONS"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "SPAR",
+    "not": "Argue"
+   },
+   {
+    "tile": "ICELAND",
+    "not": "Countries ending in LAND"
+   }
+  ],
+  "note": "run 5 draft, passed cold solve but flat (plain lists, easy decoys SPAR/ICELAND); ICELAND trick also near live 326's island countries"
+ },
+ {
+  "serial": 0,
+  "band": "medium",
+  "r4kind": "fill",
+  "shape": "A",
+  "themes": [
+   "paper",
+   "coffee",
+   "wine",
+   "puddings"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "___PAPER",
+    "members": [
+     "NEWS",
+     "WALL",
+     "SAND",
+     "FLY"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Coffee-shop drinks",
+    "members": [
+     "LATTE",
+     "MOCHA",
+     "ESPRESSO",
+     "CAPPUCCINO"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "On a wine list",
+    "members": [
+     "CLARET",
+     "ROSE",
+     "CHAMPAGNE",
+     "PROSECCO"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "___ PUDDING",
+    "members": [
+     "SUMMER",
+     "RICE",
+     "BLACK",
+     "SUET"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "RICE",
+    "not": "___PAPER"
+   },
+   {
+    "tile": "BLACK",
+    "not": "Coffee-shop drinks"
+   }
+  ],
+  "note": "run 5 spare, not cold-solved; flat (shape A, SUMMER/SUET strays)"
+ },
+ {
+  "serial": 0,
+  "band": "medium",
+  "r4kind": "homophone",
+  "shape": "B",
+  "themes": [
+   "good looks",
+   "pantomime",
+   "titles",
+   "vehicles",
+   "sound-alike"
+  ],
+  "groups": [
+   {
+    "rank": 1,
+    "name": "Good-looking",
+    "members": [
+     "PRETTY",
+     "BONNY",
+     "DISHY",
+     "GORGEOUS"
+    ]
+   },
+   {
+    "rank": 2,
+    "name": "Pantomime characters",
+    "members": [
+     "DAME",
+     "GENIE",
+     "VILLAIN",
+     "BUTTONS"
+    ]
+   },
+   {
+    "rank": 3,
+    "name": "Titles",
+    "members": [
+     "SIR",
+     "LORD",
+     "LADY",
+     "EARL"
+    ]
+   },
+   {
+    "rank": 4,
+    "name": "Sound like vehicles",
+    "members": [
+     "PLAIN",
+     "FAIRY",
+     "SLAY",
+     "HANDSOME"
+    ]
+   }
+  ],
+  "traps": [
+   {
+    "tile": "HANDSOME",
+    "not": "Good-looking"
+   },
+   {
+    "tile": "FAIRY",
+    "not": "Pantomime characters"
+   },
+   {
+    "tile": "DAME",
+    "not": "Titles"
+   }
+  ],
+  "note": "run 5 spare, not cold-solved; homophone (FAIRY/ferry, HANDSOME/hansom): keep 7+ days from other sound-alikes"
  }
 ]

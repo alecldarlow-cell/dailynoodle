@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0333", band:"medium",
   groups:[
-    {rank:1, name:"Small injuries",     members:["BRUISE","GRAZE","CUT","SCRATCH"]},
-    {rank:2, name:"Words for a doctor", members:["QUACK","MEDIC","SAWBONES","PHYSICIAN"]},
-    {rank:3, name:"Mr Men",             members:["TICKLE","BUMP","GREEDY","NOSEY"]},
-    {rank:4, name:"Seven Dwarfs",       members:["DOC","GRUMPY","BASHFUL","SLEEPY"]}
+    {rank:1, name:"Green hues",                       members:["JADE","OLIVE","EMERALD","SAGE"]},
+    {rank:2, name:"Garden herbs",                     members:["THYME","ROSEMARY","DILL","PARSLEY"]},
+    {rank:3, name:"Small kitchen appliances",         members:["AIR FRYER","BREADMAKER","MIXER","TOASTER"]},
+    {rank:4, name:"Lose the last letter for a drink", members:["JUICER","TEAL","CHAIR","RUMP"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"GRUMPY", not:"Mr Men"},
-    {tile:"BUMP",   not:"Small injuries"},
-    {tile:"DOC",    not:"Words for a doctor"}
+    {tile:"TEAL",   not:"Green hues"},
+    {tile:"SAGE",   not:"Garden herbs"},
+    {tile:"JUICER", not:"Small kitchen appliances"}
   ]
 };
 </script>

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0309", band:"medium",
   groups:[
-    {rank:1, name:"Playing cards",          members:["KING","ACE","JOKER","KNAVE"]},
-    {rank:2, name:"Words for a bread roll", members:["BAP","BARM","BATCH","STOTTIE"]},
-    {rank:3, name:"Male animals",           members:["COB","HOB","JACK","GANDER"]},
-    {rank:4, name:"Female animals",         members:["PEN","JILL","JENNY","QUEEN"]}
+    {rank:1, name:"Up to date",              members:["TOPICAL","LATEST","TRENDY","MODERN"]},
+    {rank:2, name:"Towns in the North West", members:["WIGAN","BOLTON","BLACKBURN","OLDHAM"]},
+    {rank:3, name:"___ JAZZ",                members:["TRAD","FREE","ACID","SMOOTH"]},
+    {rank:4, name:"Sound like fruit",        members:["CURRENT","BURY","SLOW","PARE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"QUEEN", not:"Playing cards"},
-    {tile:"JACK",  not:"Playing cards"},
-    {tile:"COB",   not:"Words for a bread roll"}
+    {tile:"CURRENT", not:"Up to date"},
+    {tile:"BURY",    not:"Towns in the North West"},
+    {tile:"MODERN",  not:"___ JAZZ"}
   ]
 };
 </script>

@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0332">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2027-07-06">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0332">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Two of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-07-06-word-link-0332.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0332", band:"medium",
   groups:[
-    {rank:1, name:"Cheeseboard extras", members:["PICKLE","CELERY","CHUTNEY","OATCAKES"]},
-    {rank:2, name:"Dentist's work",     members:["FILLING","BRACE","VENEER","IMPLANT"]},
-    {rank:3, name:"Be anxious",         members:["FUSS","STEW","AGONISE","PANIC"]},
-    {rank:4, name:"Parts of a guitar",  members:["FRET","HEADSTOCK","BRIDGE","NUT"]}
+    {rank:1, name:"Merseyside towns",      members:["BIRKENHEAD","BOOTLE","SOUTHPORT","ST HELENS"]},
+    {rank:2, name:"Heavy rain",            members:["DOWNPOUR","TORRENT","CLOUDBURST","MONSOON"]},
+    {rank:3, name:"Done by a potter",      members:["GLAZING","FIRING","MOULDING","TRIMMING"]},
+    {rank:4, name:"A sport hides in each", members:["LIVERPOOL","DELUGE","THROWING","APOLOGY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,8 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BRIDGE", not:"Dentist's work"},
-    {tile:"FRET",   not:"Be anxious"}
+    {tile:"LIVERPOOL", not:"Merseyside towns"},
+    {tile:"DELUGE",    not:"Heavy rain"},
+    {tile:"THROWING",  not:"Done by a potter"}
   ]
 };
 </script>

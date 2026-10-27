@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0314", band:"medium",
   groups:[
-    {rank:1, name:"Desk tidy contents", members:["RUBBER","RULER","STAPLER","SHARPENER"]},
-    {rank:2, name:"Marine mammals",     members:["SEAL","PORPOISE","DOLPHIN","SEA LION"]},
-    {rank:3, name:"Lucky charms",       members:["HORSESHOE","WISHBONE","CLOVER","BLACK CAT"]},
-    {rank:4, name:"Moustache styles",   members:["HANDLEBAR","WALRUS","PENCIL","CHEVRON"]}
+    {rank:1, name:"Smells",                          members:["AROMA","ODOUR","WHIFF","PONG"]},
+    {rank:2, name:"In advertising",                  members:["LOGO","SLOGAN","JINGLE","POSTER"]},
+    {rank:3, name:"Retro video games",               members:["TETRIS","PAC-MAN","FROGGER","ASTEROIDS"]},
+    {rank:4, name:"Lose the first letter for money", members:["SCENT","BRAND","SQUID","TROUBLE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"WALRUS",    not:"Marine mammals"},
-    {tile:"HORSESHOE", not:"Moustache styles"},
-    {tile:"PENCIL",    not:"Desk tidy contents"}
+    {tile:"SCENT", not:"Smells"},
+    {tile:"BRAND", not:"In advertising"},
+    {tile:"PONG",  not:"Retro video games"}
   ]
 };
 </script>

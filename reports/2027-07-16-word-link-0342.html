@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0342", band:"medium",
   groups:[
-    {rank:1, name:"Yoga poses",          members:["COBRA","TREE","WARRIOR","CHILD"]},
-    {rank:2, name:"Wanderers",           members:["NOMAD","DRIFTER","VAGRANT","ITINERANT"]},
-    {rank:3, name:"Victories",           members:["SUCCESS","CONQUEST","WALKOVER","LANDSLIDE"]},
-    {rank:4, name:"British car marques", members:["ROVER","TRIUMPH","LOTUS","SINGER"]}
+    {rank:1, name:"Creatures of legend", members:["UNICORN","DRAGON","CENTAUR","PHOENIX"]},
+    {rank:2, name:"Farm implements",     members:["PLOUGH","HARROW","SEED DRILL","BALER"]},
+    {rank:3, name:"Public schools",      members:["ETON","RUGBY","WINCHESTER","STOWE"]},
+    {rank:4, name:"A job hides in each", members:["TRACTOR","MAGENTA","MERMAID","CRISPY"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"ROVER",   not:"Wanderers"},
-    {tile:"TRIUMPH", not:"Victories"},
-    {tile:"LOTUS",   not:"Yoga poses"}
+    {tile:"TRACTOR", not:"Farm implements"},
+    {tile:"MERMAID", not:"Creatures of legend"},
+    {tile:"HARROW",  not:"Public schools"}
   ]
 };
 </script>

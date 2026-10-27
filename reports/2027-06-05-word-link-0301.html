@@ -1,7 +1,7 @@
 <!doctype html><html lang="en-GB"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="dn:headline"   content="Link 0301">
-<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Four of them are lying to you about which group they're in.">
+<meta name="dn:standfirst" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta name="dn:topic"      content="Word">
 <meta name="dn:date"       content="2027-06-05">
 <meta name="dn:kind"       content="puzzle">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Link 0301">
-<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Four of them are lying to you about which group they're in.">
+<meta property="og:description" content="Sixteen tiles, four hidden groups, four mistakes. Three of them are lying to you about which group they're in.">
 <meta property="og:url" content="https://dailynoodle.co.uk/reports/2027-06-05-word-link-0301.html">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -38,7 +38,7 @@
   </div>
   <div class="streakbox">streak <b id="streak">0</b> · best <b id="best">0</b></div>
 </header>
-<div class="meta"><span id="pid">DP·LINK·0301</span><span>·</span><span class="tag" id="pband">hard</span><span id="rank"></span><span id="timer">00:00</span></div>
+<div class="meta"><span id="pid">DP·LINK·0301</span><span>·</span><span class="tag" id="pband">medium</span><span id="rank"></span><span id="timer">00:00</span></div>
 <main>
   <div id="board" class="board" aria-label="Link board"></div>
   <div class="lives">mistakes left <span id="pips" class="pips"></span></div>
@@ -78,12 +78,12 @@
 <script>
 /* This puzzle's data. The player is ../engines/link.js, shared by every link. */
 window.DN_PUZZLE={
-  type:"link", id:"DP·LINK·0301", band:"hard",
+  type:"link", id:"DP·LINK·0301", band:"medium",
   groups:[
-    {rank:1, name:"Knitwear",              members:["JUMPER","PULLOVER","TANK TOP","TWINSET"]},
-    {rank:2, name:"Things you can strike", members:["MATCH","POSE","CHORD","DEAL"]},
-    {rank:3, name:"To get a fire going",   members:["KINDLING","LIGHTER","SPILL","TAPER"]},
-    {rank:4, name:"Welsh towns",           members:["CARDIGAN","FLINT","HAY","BARRY"]}
+    {rank:1, name:"Story",                 members:["VERSION","NARRATIVE","CHRONICLE","TALE"]},
+    {rank:2, name:"Internal organs",       members:["LIVER","KIDNEY","LUNG","SPLEEN"]},
+    {rank:3, name:"On a bird",             members:["WING","BEAK","PLUMAGE","CLAW"]},
+    {rank:4, name:"Things you can settle", members:["BILL","STOMACH","ACCOUNT","SCORE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,10 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"CARDIGAN", not:"Knitwear"},
-    {tile:"FLINT",    not:"To get a fire going"},
-    {tile:"MATCH",    not:"To get a fire going"},
-    {tile:"DEAL",     not:"Welsh towns"}
+    {tile:"ACCOUNT", not:"Story"},
+    {tile:"STOMACH", not:"Internal organs"},
+    {tile:"BILL",    not:"On a bird"}
   ]
 };
 </script>

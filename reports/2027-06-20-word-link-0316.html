@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0316", band:"medium",
   groups:[
-    {rank:1, name:"Spice rack",       members:["CINNAMON","TURMERIC","SAFFRON","CARDAMOM"]},
-    {rank:2, name:"River fish",       members:["ROACH","CARP","CHUB","BARBEL"]},
-    {rank:3, name:"A knight's kit",   members:["SHIELD","SPUR","VISOR","GAUNTLET"]},
-    {rank:4, name:"Medieval weapons", members:["MACE","PIKE","LANCE","HALBERD"]}
+    {rank:1, name:"Father, informally", members:["POP","PA","OLD MAN","PAPA"]},
+    {rank:2, name:"Army ranks",         members:["CORPORAL","SERGEANT","MAJOR","CAPTAIN"]},
+    {rank:3, name:"Forms of exercise",  members:["CYCLING","ROWING","SWIMMING","JOGGING"]},
+    {rank:4, name:"___ JOKE",           members:["DAD","PRIVATE","RUNNING","STANDING"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MACE",  not:"Spice rack"},
-    {tile:"PIKE",  not:"River fish"},
-    {tile:"LANCE", not:"A knight's kit"}
+    {tile:"DAD",     not:"Father, informally"},
+    {tile:"PRIVATE", not:"Army ranks"},
+    {tile:"RUNNING", not:"Forms of exercise"}
   ]
 };
 </script>
