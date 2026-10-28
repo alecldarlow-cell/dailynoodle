@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ==== DN FEED META (the site front page reads these) ==== -->
+<meta name="dn:headline"   content="The briefing: Wednesday 28 October">
+<meta name="dn:standfirst" content="Healey delivers his first Budget today with little room to spare · Hospital consultants in England plan a 48-hour strike from 25 November · Peers take up the bill that would end the right to choose jury trial">
+<meta name="dn:topic"      content="Briefing">
+<meta name="dn:date"       content="2026-10-28">
+<meta name="dn:kind"       content="report">
+<meta name="dn:format"     content="briefing">
+<meta name="dn:read"       content="~2 min">
+
+<title>The briefing: Wednesday 28 October — Noodle News</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#FCFCFB; --paper:#FFFFFF; --ink:#15171C; --muted:#5F636B;
+    --faint:#9AA0A6; --hair:#E6E6E2; --accent:#1C46C2; --accent-soft:#ECF0FC;
+    --contrast:#E0312A;
+    --display:'Archivo','Helvetica Neue',Arial,sans-serif;
+    --body:'Inter','Helvetica Neue',Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--canvas);color:var(--ink);font-family:var(--body);line-height:1.6;
+    -webkit-font-smoothing:antialiased;font-size:17px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px 72px}
+  a{color:inherit}
+
+  /* ---------- masthead ---------- */
+  .mast{display:flex;align-items:center;gap:11px;padding:22px 0 14px;border-bottom:2px solid var(--ink)}
+  .mono{width:30px;height:30px;background:var(--accent);color:#fff;font-family:var(--display);
+    font-weight:800;font-size:17px;display:grid;place-content:center;border-radius:4px;letter-spacing:-1px}
+  .word{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.02em}
+  .word b{color:var(--accent)}
+  .mast .kick{margin-left:auto;font-family:var(--body);font-weight:600;font-size:11px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--faint);text-align:right;line-height:1.5}
+
+  /* ---------- headline ---------- */
+  .head{padding:30px 0 8px}
+  .topic{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(31px,7vw,46px);line-height:1.05;letter-spacing:-.02em}
+  .standfirst{font-size:clamp(17px,2.6vw,20px);color:var(--muted);margin-top:16px;line-height:1.45}
+  .dateline{margin-top:18px;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--faint);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:11px 0}
+
+  /* ---------- hero stats ---------- */
+  .herostats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);
+    border:1px solid var(--hair);margin:26px 0 8px}
+  .hs{background:var(--canvas);padding:18px 14px}
+  .hs .n{font-family:var(--display);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:.95;
+    font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .hs .n small{font-size:.36em;font-weight:600;color:var(--muted);letter-spacing:0}
+  .hs .l{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.4}
+  @media(max-width:540px){.herostats{grid-template-columns:1fr 1fr}.hs:last-child{grid-column:1/-1}}
+
+  /* ---------- sections ---------- */
+  .section{margin-top:40px}
+  .eyebrow{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:9px;display:flex;align-items:center;gap:9px}
+  .eyebrow::before{content:"";width:18px;height:2px;background:var(--accent)}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,4.4vw,28px);line-height:1.12;letter-spacing:-.01em}
+  .section p{margin-top:14px}
+  .section p + p{margin-top:12px}
+
+  /* ---------- exhibit ---------- */
+  .exhibit{margin:26px 0;border:1px solid var(--hair);background:var(--paper);border-radius:6px;overflow:hidden}
+  .ex-head{padding:16px 18px 4px}
+  .ex-num{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  .ex-title{font-family:var(--display);font-weight:700;font-size:17px;margin-top:4px;line-height:1.25}
+  .ex-chart{padding:10px 14px 4px}
+  .ex-cap{padding:4px 18px 16px;font-size:12.5px;color:var(--muted);line-height:1.5;
+    border-top:1px solid var(--hair);margin-top:6px;padding-top:12px}
+  .ex-cap b{color:var(--ink);font-weight:600}
+
+  /* ---------- DN chart library styling (real-px responsive SVG) ---------- */
+  .dn-fig{margin:0}
+  .dn-svg{display:block;width:100%;height:auto;overflow:visible}
+  .dn-ax{font-family:var(--body);font-weight:500;fill:var(--faint);font-size:11px}
+  .dn-axlabel{font-family:var(--body);font-weight:600;fill:var(--muted);font-size:11px;letter-spacing:.02em}
+  .dn-clabel{font-family:var(--body);font-weight:600;fill:var(--ink);font-size:12px}
+  .dn-vlabel{font-family:var(--display);font-weight:700;fill:var(--ink);font-size:12.5px;font-variant-numeric:tabular-nums}
+  .dn-endlab{font-family:var(--display);font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
+  .dn-anno{font-family:var(--body);font-weight:600;fill:var(--ink);font-size:11.5px}
+  .dn-annosub{font-family:var(--body);font-weight:500;fill:var(--faint);font-size:10.5px;letter-spacing:.02em}
+  .dn-strip-name{font-family:var(--body);font-weight:600}
+  .dn-legend{display:flex;flex-wrap:wrap;gap:7px 16px;padding:10px 4px 2px;
+    font-family:var(--body);font-size:12px;color:var(--muted)}
+  .dn-key{display:inline-flex;align-items:center;gap:7px}
+  .dn-key i{width:12px;height:12px;border-radius:2px;display:inline-block;flex:0 0 auto}
+  .dn-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  /* sankey: labels keep a paper halo so they stay legible over flow ribbons */
+  .dn-nodelabel{paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+  .dn-flow{transition:fill-opacity .15s ease}
+  .dn-flow:hover{fill-opacity:.72}
+  @media(prefers-reduced-motion:reduce){.dn-flow{transition:none}}
+
+  /* ---------- callout ---------- */
+  .callout{margin:24px 0;background:var(--accent-soft);border-left:3px solid var(--accent);
+    padding:16px 18px;border-radius:0 6px 6px 0;font-size:16px}
+  .callout b{font-weight:700}
+
+  /* ---------- inline citation + source tiers ---------- */
+  sup.cite{font-family:var(--body);font-weight:700;font-size:.64em;line-height:0;margin-left:1px}
+  sup.cite a{color:var(--accent);text-decoration:none;padding:0 1px}
+  sup.cite a:hover{text-decoration:underline}
+  .tier{display:inline-block;font-family:var(--body);font-weight:700;font-size:10px;letter-spacing:.04em;
+    padding:1px 5px;border-radius:3px;vertical-align:middle;margin-right:7px}
+  .tier.t1{background:#E6EDFB;color:#1740A6}
+  .tier.t2{background:#EAF3EC;color:#1C6B3A}
+  .tier.t3{background:#F1EEE6;color:#7A6A36}
+
+  /* ---------- "what we don't know" ---------- */
+  .unknowns{margin:24px 0;border:1px dashed var(--faint);border-radius:6px;padding:15px 18px;background:#fff}
+  .unknowns .h{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .unknowns p{font-size:14.5px;color:var(--muted);margin:0}
+
+  /* ---------- positions (contested only) ---------- */
+  .positions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+  @media(max-width:560px){.positions{grid-template-columns:1fr}}
+  .pos{border:1px solid var(--hair);border-radius:6px;padding:16px;background:var(--paper)}
+  .pos .tag{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .pos.case .tag{color:var(--accent)} .pos.counter .tag{color:var(--contrast)}
+  .pos p{font-size:14.5px;color:var(--ink)}
+  .pos .kind{font-size:11px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
+
+  /* ---------- stat band ---------- */
+  .statband{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair);margin-top:24px}
+  .statband .c{background:var(--paper);padding:16px 14px}
+  .statband .c .n{font-family:var(--display);font-weight:800;font-size:clamp(22px,5vw,30px);line-height:.95;font-variant-numeric:tabular-nums}
+  .statband .c .l{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.35}
+  @media(max-width:560px){.statband{grid-template-columns:1fr 1fr}}
+
+  /* ---------- caveat card ---------- */
+  .caveat{margin-top:18px;border:1px solid var(--hair);border-left:3px solid var(--faint);
+    border-radius:0 6px 6px 0;padding:14px 16px;background:#fff;font-size:14px;color:var(--muted)}
+  .caveat b{color:var(--ink);font-weight:600}
+
+  /* ---------- appendix table ---------- */
+  .appx{margin-top:18px;border:1px solid var(--hair);border-radius:6px;overflow-x:auto}
+  table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:460px}
+  table.tbl th{text-align:left;font-family:var(--body);font-weight:700;font-size:10.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent);padding:11px 12px;border-bottom:1px solid var(--hair);background:#fbfbfa}
+  table.tbl td{padding:9px 12px;border-bottom:1px solid var(--hair)}
+  table.tbl td.num{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+  table.tbl tr:last-child td{border-bottom:none}
+
+  /* ---------- go deeper ---------- */
+  .more{margin-top:18px;list-style:none;border-top:1px solid var(--hair)}
+  .more li{padding:13px 0;border-bottom:1px solid var(--hair);display:flex;gap:12px;align-items:baseline;font-size:15px;color:var(--muted)}
+  .more li::before{content:"\2192";color:var(--accent);font-weight:700}
+  .more li b{color:var(--ink);font-weight:600}
+
+  /* ---------- footer ---------- */
+  .foot{margin-top:46px;border-top:2px solid var(--ink);padding-top:16px;font-size:12px;line-height:1.7;color:var(--muted)}
+  .foot b{color:var(--ink);font-weight:700}
+  .foot .fm{margin-bottom:9px}
+  .foot ol{margin:4px 0 9px 0;padding-left:20px}
+  .foot ol li{margin-bottom:4px}
+  .foot .ver{font-size:11px;color:var(--faint);letter-spacing:.03em}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+  /* the briefing (toolchain/dn-briefing.js) */
+  .bi{margin-top:30px;padding-top:22px;border-top:1px solid var(--hair)}
+  .bi:first-of-type{border-top:0;padding-top:0}
+  .bi h2{font-family:var(--display);font-weight:800;font-size:clamp(21px,4.6vw,25px);line-height:1.2;letter-spacing:-.01em;margin:6px 0 10px}
+  .bi p{margin-top:10px}
+  .bi .bnew{color:var(--accent)}
+  .bi .bdeep a{font-weight:700;color:var(--accent);text-decoration:none}
+  .bi .bsrc{font-size:13.5px;color:var(--muted)}
+  .bi .bsrc a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mono">DN</div>
+    <div class="word">Noodle<b>News</b></div>
+    <div class="kick">BRIEFING<br>28 OCT 2026</div>
+  </header>
+
+  <div class="head">
+    <div class="topic">Briefing &middot; 3 stories</div>
+    <h1>The briefing: Wednesday 28 October</h1>
+    <p class="standfirst">Three stories worth knowing today, in plain English: what happened, why it matters and what comes next.</p>
+    <div class="dateline">Noodle News desk &middot; reading time ~2 min</div>
+  </div>
+
+  <section class="section bi" id="uk-budget-2026" data-story="uk-budget-2026">
+    <div class="eyebrow">1 · Economy</div>
+    <h2>Healey delivers his first Budget today with little room to spare</h2>
+    <p class="bnew"><b>New today:</b> The Budget is today, after a week of pre-Budget reporting; we have not reported its contents.</p>
+    <p>Chancellor John Healey is due to give his first Budget to MPs at about 12.30pm today. He is keeping Rachel Reeves's fiscal rule that day-to-day spending must be covered by taxes by 2029/30.</p>
+    <p><b>Why it matters:</b> The Institute for Fiscal Studies says higher inflation and borrowing costs leave him a roughly £35bn gap to fill with tax rises, benefit cuts or smaller spending plans. Fuel bills, pensions and tax are the areas to watch.</p>
+    <p><b>What next:</b> The Office for Budget Responsibility publishes its forecast alongside the speech. Treat pre-Budget reports as unconfirmed until the Chancellor has spoken.</p>
+    <p class="bsrc">Sources: <a href="https://britbrief.co.uk/business/economy/john-healey-faces-35bn-budget-dilemma-ifs-warns.html">Brit Brief on the IFS pre-Budget analysis</a> · <a href="https://www.which.co.uk/news/article/autumn-budget-2026-when-is-it-and-what-will-it-contain-aQqC47O24jnl">Which? on the Budget date and contents</a></p>
+  </section>
+
+  <section class="section bi" id="nhs-consultant-strike" data-story="nhs-consultant-strike">
+    <div class="eyebrow">2 · Medicine</div>
+    <h2>Hospital consultants in England plan a 48-hour strike from 25 November</h2>
+    <p>The British Medical Association says consultants will strike from 06:59 on 25 November to 06:59 on 27 November, with emergency cover only. It would be their first strike since 2023.</p>
+    <p><b>Why it matters:</b> Planned operations and clinics that need a consultant would be hit, with 7.37 million treatments already waiting in England. The union wants shorter hours and better pay.</p>
+    <p><b>What next:</b> The BMA says it will call the strike off if the Health Secretary commits to formal, funded negotiations before 25 November.</p>
+    <p class="bdeep"><a href="../reports/2026-10-28-consultants-strike-november-nhs.html">Read our full piece →</a></p>
+    <p class="bsrc">Sources: <a href="https://www.bma.org.uk/bma-media-centre/consultants-in-england-to-take-strike-action-in-november">British Medical Association</a> · <a href="https://nhsemployers.org/news/nhs-employers-responds-bma-news-consultants-taking-strike-action-november">NHS Employers</a></p>
+  </section>
+
+  <section class="section bi" id="uk-courts-jury-trials" data-story="uk-courts-jury-trials">
+    <div class="eyebrow">3 · UK politics</div>
+    <h2>Peers take up the bill that would end the right to choose jury trial</h2>
+    <p>The Courts and Tribunals Bill reached the House of Lords for second reading on 27 October. MPs passed it 301 to 193 after ministers dropped plans for judge-only trials but kept the end of a defendant's right to choose a jury in either-way cases.</p>
+    <p><b>Why it matters:</b> The government wants to cut the Crown Court backlog. The Law Society and Bar Council say the change will not fix it and will damage fairness and trust.</p>
+    <p><b>What next:</b> The Lords will examine the bill in detail at later stages. Reports say peers may try to amend the jury changes.</p>
+    <p class="bsrc">Sources: <a href="https://www.parliament.uk/business/news/2026/october-2026/whats-on-in-the-lords-26-october-29-october/">UK Parliament, Lords business</a> · <a href="https://www.lawsociety.org.uk/topics/criminal-justice/courts-and-tribunals-bill">Law Society on the bill</a></p>
+  </section>
+
+  <div class="foot">
+    <div class="fm"><b>How this is made.</b> Each item is drawn from the sources linked under it, published on the record; nothing here is our own reporting. Our full pieces, where linked, carry the detail and the method.</div>
+    <div class="fm">Researched, written and checked by an AI system working to the Noodle News standards; edited and published by the Noodle News editor.</div>
+    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
+  </div>
+
+</div>
+</body>
+</html>
