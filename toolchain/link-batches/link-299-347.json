@@ -211,7 +211,8 @@
    "army",
    "carry on",
    "films",
-   "jobs"
+   "jobs",
+   "painters"
   ],
   "groups": [
    {
@@ -1093,70 +1094,70 @@
  {
   "serial": 315,
   "band": "medium",
-  "r4kind": "decoy",
-  "shape": "B",
-  "themes": [
-   "cooking",
-   "criticism",
-   "canada",
-   "explorers",
-   "history"
-  ],
+  "r4kind": "anagram",
+  "shape": "A",
   "groups": [
    {
     "rank": 1,
-    "name": "Cooking techniques",
+    "name": "Bodies of water",
     "members": [
-     "BAKE",
-     "FRY",
-     "ROAST",
-     "POACH"
+     "POND",
+     "LOCH",
+     "LAGOON",
+     "RESERVOIR"
     ]
    },
    {
     "rank": 2,
-    "name": "Criticise harshly",
+    "name": "Copy someone",
     "members": [
-     "SLAM",
-     "PAN",
-     "SLATE",
-     "KNOCK"
+     "MIMIC",
+     "PARROT",
+     "ECHO",
+     "IMITATE"
     ]
    },
    {
     "rank": 3,
-    "name": "Canadian cities",
+    "name": "On a yacht",
     "members": [
-     "TORONTO",
-     "OTTAWA",
-     "MONTREAL",
-     "CALGARY"
+     "MAST",
+     "SAIL",
+     "BOOM",
+     "RUDDER"
     ]
    },
    {
     "rank": 4,
-    "name": "British explorers",
+    "name": "Rearrange for a vegetable",
     "members": [
-     "VANCOUVER",
-     "COOK",
-     "DRAKE",
-     "SCOTT"
+     "KEEL",
+     "APE",
+     "LAKE",
+     "MAY"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "COOK",
-    "not": "Cooking techniques"
+    "tile": "LAKE",
+    "not": "Bodies of water"
    },
    {
-    "tile": "VANCOUVER",
-    "not": "Canadian cities"
+    "tile": "APE",
+    "not": "Copy someone"
    },
    {
-    "tile": "ROAST",
-    "not": "Criticise harshly"
+    "tile": "KEEL",
+    "not": "On a yacht"
    }
+  ],
+  "from": "d2-111",
+  "themes": [
+   "water",
+   "copying",
+   "boats",
+   "vegetables"
   ]
  },
  {
@@ -1363,69 +1364,68 @@
  {
   "serial": 319,
   "band": "medium",
-  "r4kind": "anagram",
+  "r4kind": "fill",
   "shape": "B",
   "themes": [
-   "middle east",
-   "courage",
-   "stones",
-   "weather",
-   "bravery"
+   "toast",
+   "birds",
+   "lifting",
+   "pots"
   ],
   "groups": [
    {
     "rank": 1,
-    "name": "Middle East countries",
+    "name": "Spread on toast",
     "members": [
-     "IRAQ",
-     "OMAN",
-     "SYRIA",
-     "YEMEN"
+     "MARMALADE",
+     "MARMITE",
+     "LEMON CURD",
+     "BUTTER"
     ]
    },
    {
     "rank": 2,
-    "name": "Bravery",
+    "name": "Wading birds",
     "members": [
-     "NERVE",
-     "BOTTLE",
-     "BACKBONE",
-     "GRIT"
+     "HERON",
+     "STORK",
+     "EGRET",
+     "IBIS"
     ]
    },
    {
     "rank": 3,
-    "name": "Rock fragments",
+    "name": "Lifting gear",
     "members": [
-     "GRAVEL",
-     "SHINGLE",
-     "SCREE",
-     "SAND"
+     "HOIST",
+     "WINCH",
+     "PULLEY",
+     "CRANE"
     ]
    },
    {
     "rank": 4,
-    "name": "Rearrange for a weather word",
+    "name": "___POT",
     "members": [
-     "IRAN",
-     "GUTS",
-     "FORTS",
-     "COULD"
+     "HONEY",
+     "JACK",
+     "HOT",
+     "FUSS"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "IRAN",
-    "not": "Middle East countries"
+    "tile": "HONEY",
+    "not": "Spread on toast"
    },
    {
-    "tile": "GUTS",
-    "not": "Bravery"
+    "tile": "JACK",
+    "not": "Lifting gear"
    },
    {
-    "tile": "GRIT",
-    "not": "Rock fragments"
+    "tile": "CRANE",
+    "not": "Wading birds"
    }
   ]
  },
@@ -2990,70 +2990,70 @@
  {
   "serial": 343,
   "band": "medium",
-  "r4kind": "homophone",
+  "r4kind": "decoy",
   "shape": "B",
-  "themes": [
-   "staring",
-   "maps",
-   "geometry",
-   "harbour",
-   "sound-alike"
-  ],
   "groups": [
    {
     "rank": 1,
-    "name": "Look intently",
+    "name": "Baby animals",
     "members": [
-     "GAZE",
-     "GAWP",
-     "OGLE",
-     "GOGGLE"
+     "KITTEN",
+     "CYGNET",
+     "DUCKLING",
+     "CUB"
     ]
    },
    {
     "rank": 2,
-    "name": "On a map",
+    "name": "Talk on and on",
     "members": [
-     "SCALE",
-     "GRID",
-     "LEGEND",
-     "COMPASS"
+     "WAFFLE",
+     "BLATHER",
+     "YAK",
+     "DRONE"
     ]
    },
    {
     "rank": 3,
-    "name": "In a geometry set",
+    "name": "Uniformed youth groups",
     "members": [
-     "PROTRACTOR",
-     "RULER",
-     "SET SQUARE",
-     "PENCIL"
+     "BROWNIE",
+     "BEAVER",
+     "SCOUT",
+     "GUIDE"
     ]
    },
    {
     "rank": 4,
-    "name": "Sound like things in a harbour",
+    "name": "Winnie-the-Pooh characters",
     "members": [
-     "KEY",
-     "BOY",
-     "PEER",
-     "BIRTH"
+     "PIGLET",
+     "RABBIT",
+     "OWL",
+     "EEYORE"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "KEY",
-    "not": "On a map"
+    "tile": "PIGLET",
+    "not": "Baby animals"
    },
    {
-    "tile": "PEER",
-    "not": "Look intently"
+    "tile": "RABBIT",
+    "not": "Talk on and on"
    },
    {
-    "tile": "COMPASS",
-    "not": "In a geometry set"
+    "tile": "CUB",
+    "not": "Uniformed youth groups"
    }
+  ],
+  "from": "d3-136",
+  "themes": [
+   "young animals",
+   "chatter",
+   "youth groups",
+   "books"
   ]
  },
  {

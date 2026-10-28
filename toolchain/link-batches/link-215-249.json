@@ -2,68 +2,68 @@
  {
   "serial": 215,
   "band": "medium",
-  "r4kind": "decoy",
+  "r4kind": "anagram",
   "shape": "B",
   "themes": [
-   "rogues",
-   "myths",
-   "ancient egypt",
-   "books"
+   "gloom",
+   "train tickets",
+   "records",
+   "painters"
   ],
   "groups": [
    {
     "rank": 1,
-    "name": "Rogue",
+    "name": "Gloomy",
     "members": [
-     "RASCAL",
-     "SCOUNDREL",
-     "VILLAIN",
-     "ROTTER"
+     "DISMAL",
+     "DREARY",
+     "GRIM",
+     "SOMBRE"
     ]
    },
    {
     "rank": 2,
-    "name": "Mythical creatures",
+    "name": "Train tickets",
     "members": [
-     "CENTAUR",
-     "MINOTAUR",
-     "PEGASUS",
-     "SPHINX"
+     "SEASON",
+     "OFF-PEAK",
+     "ADVANCE",
+     "SINGLE"
     ]
    },
    {
     "rank": 3,
-    "name": "In ancient Egypt",
+    "name": "Music releases",
     "members": [
-     "PYRAMID",
-     "PHARAOH",
-     "NILE",
-     "MUMMY"
+     "ALBUM",
+     "EP",
+     "LP",
+     "MIXTAPE"
     ]
    },
    {
     "rank": 4,
-    "name": "Characters in Alice in Wonderland",
+    "name": "Rearrange for a painter",
     "members": [
-     "KNAVE",
-     "GRYPHON",
-     "DUCHESS",
-     "DODO"
+     "BLEAK",
+     "RETURN",
+     "DIAL",
+     "MEANT"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "KNAVE",
-    "not": "Rogue"
+    "tile": "BLEAK",
+    "not": "Gloomy"
    },
    {
-    "tile": "GRYPHON",
-    "not": "Mythical creatures"
+    "tile": "RETURN",
+    "not": "Train tickets"
    },
    {
-    "tile": "SPHINX",
-    "not": "In ancient Egypt"
+    "tile": "SINGLE",
+    "not": "Music releases"
    }
   ]
  },
@@ -1092,68 +1092,64 @@
   "serial": 231,
   "band": "medium",
   "r4kind": "letter",
-  "shape": "B",
-  "themes": [
-   "teams",
-   "keyboards",
-   "swimming",
-   "english places"
-  ],
+  "shape": "C",
   "groups": [
    {
     "rank": 1,
-    "name": "Group of workers",
+    "name": "In a pack of cards",
     "members": [
-     "GANG",
-     "SQUAD",
-     "TEAM",
-     "SHIFT"
+     "JACK",
+     "ACE",
+     "SPADES",
+     "CLUBS"
     ]
    },
    {
     "rank": 2,
-    "name": "Computer keys",
+    "name": "Affectionate names",
     "members": [
-     "ENTER",
-     "ESCAPE",
-     "DELETE",
-     "TAB"
+     "DUCK",
+     "PET",
+     "HONEY",
+     "DEAR"
     ]
    },
    {
     "rank": 3,
-    "name": "SWIMMING ___",
+    "name": "Tennis words",
     "members": [
-     "COSTUME",
-     "TRUNKS",
-     "CAP",
-     "GALA"
+     "LET",
+     "RALLY",
+     "SMASH",
+     "LOVE"
     ]
    },
    {
     "rank": 4,
-    "name": "Add a letter to the end for an English place",
+    "name": "Add a letter at the front for transport",
     "members": [
-     "CREW",
-     "POOL",
-     "DOVE",
-     "WELL"
+     "HIP",
+     "LANE",
+     "RAM",
+     "OAT"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "CREW",
-    "not": "Group of workers"
+    "tile": "ACE",
+    "not": "Tennis words"
    },
    {
-    "tile": "POOL",
-    "not": "SWIMMING ___"
-   },
-   {
-    "tile": "SHIFT",
-    "not": "Computer keys"
+    "tile": "LOVE",
+    "not": "Affectionate names"
    }
+  ],
+  "themes": [
+   "card games",
+   "affection",
+   "tennis",
+   "transport"
   ]
  },
  {

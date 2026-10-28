@@ -58,6 +58,12 @@
     "tile": "POST",
     "not": "Parts of a fence"
    }
+  ],
+  "themes": [
+   "meals",
+   "tv",
+   "fences",
+   "boxes"
   ]
  },
  {
@@ -119,6 +125,12 @@
     "tile": "PRIMROSE",
     "not": "Flowers in a border"
    }
+  ],
+  "themes": [
+   "fruit",
+   "theft",
+   "flowers",
+   "colours"
   ]
  },
  {
@@ -180,6 +192,12 @@
     "tile": "TOBERMORY",
     "not": "In Scotland"
    }
+  ],
+  "themes": [
+   "shoes",
+   "rivers",
+   "scotland",
+   "children's tv"
   ]
  },
  {
@@ -241,6 +259,11 @@
     "tile": "SPARE",
     "not": "Ten-pin bowling terms"
    }
+  ],
+  "themes": [
+   "fruit",
+   "weapons",
+   "bowling"
   ]
  },
  {
@@ -302,6 +325,12 @@
     "tile": "NEIN",
     "not": "German words"
    }
+  ],
+  "themes": [
+   "money",
+   "golf",
+   "languages",
+   "numbers"
   ]
  },
  {
@@ -363,6 +392,12 @@
     "tile": "CROWN",
     "not": "At a coronation"
    }
+  ],
+  "themes": [
+   "card games",
+   "jokes",
+   "royalty",
+   "christmas"
   ]
  },
  {
@@ -424,6 +459,11 @@
     "tile": "DIAL",
     "not": "Parts of a clock"
    }
+  ],
+  "themes": [
+   "coffee",
+   "nerves",
+   "clocks"
   ]
  }
 ]

@@ -59,6 +59,12 @@
     "tile": "RASPBERRY",
     "not": "Jam flavours"
    }
+  ],
+  "themes": [
+   "shoes",
+   "jam",
+   "cars",
+   "tools"
   ]
  },
  {
@@ -121,6 +127,11 @@
     "tile": "NAIL",
     "not": "DIY fixings"
    }
+  ],
+  "themes": [
+   "ice cream",
+   "money slang",
+   "fixings"
   ]
  },
  {
@@ -179,6 +190,11 @@
     "tile": "HOOK",
     "not": "Angler's gear"
    }
+  ],
+  "themes": [
+   "dogs",
+   "fishing",
+   "boxing"
   ]
  },
  {
@@ -241,6 +257,11 @@
     "tile": "MOLE",
     "not": "Marks on the skin"
    }
+  ],
+  "themes": [
+   "moods",
+   "skin",
+   "books"
   ]
  },
  {
@@ -303,6 +324,12 @@
     "tile": "CONSTABLE",
     "not": "British artists"
    }
+  ],
+  "themes": [
+   "bedding",
+   "fabric",
+   "painters",
+   "furniture"
   ]
  },
  {
@@ -365,6 +392,12 @@
     "tile": "PEAK",
     "not": "On a mountain"
    }
+  ],
+  "themes": [
+   "nordic",
+   "cliches",
+   "mountains",
+   "vegetables"
   ]
  },
  {
@@ -423,6 +456,12 @@
     "tile": "BISHOP",
     "not": "Clergy"
    }
+  ],
+  "themes": [
+   "bands",
+   "clergy",
+   "chess",
+   "kitchen"
   ]
  },
  {
@@ -485,69 +524,82 @@
     "tile": "ROBIN",
     "not": "Batman villains"
    }
+  ],
+  "themes": [
+   "faces",
+   "birds",
+   "batman",
+   "measures"
   ]
  },
  {
   "serial": 90,
   "band": "medium",
-  "r4kind": "letter",
-  "shape": "A",
+  "r4kind": "homophone",
+  "shape": "B",
+  "themes": [
+   "cat sounds",
+   "tastes",
+   "pastry",
+   "greek letters"
+  ],
   "groups": [
    {
     "rank": 1,
-    "name": "Parts of a boat",
+    "name": "Cat noises",
     "members": [
-     "BOW",
-     "HULL",
-     "KEEL",
-     "DECK"
+     "PURR",
+     "HISS",
+     "MIAOW",
+     "YOWL"
     ]
    },
    {
     "rank": 2,
-    "name": "Cowardly",
+    "name": "Sour-tasting",
     "members": [
-     "YELLOW",
-     "CHICKEN",
-     "SPINELESS",
-     "GUTLESS"
+     "SHARP",
+     "ACIDIC",
+     "TANGY",
+     "VINEGARY"
     ]
    },
    {
     "rank": 3,
-    "name": "Lawbreakers",
+    "name": "Pastry dishes",
     "members": [
-     "THIEF",
-     "BURGLAR",
-     "MUGGER",
-     "FORGER"
+     "PASTY",
+     "FLAN",
+     "QUICHE",
+     "TART"
     ]
    },
    {
     "rank": 4,
-    "name": "Lose the first letter for a bird",
+    "name": "Sound like Greek letters",
     "members": [
-     "STERN",
-     "CRAVEN",
-     "CROOK",
-     "SCOOT"
+     "MEW",
+     "PIE",
+     "ROW",
+     "BEATER"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "STERN",
-    "not": "Parts of a boat"
+    "tile": "MEW",
+    "not": "Cat noises"
    },
    {
-    "tile": "CRAVEN",
-    "not": "Cowardly"
+    "tile": "PIE",
+    "not": "Pastry dishes"
    },
    {
-    "tile": "CROOK",
-    "not": "Lawbreakers"
+    "tile": "TART",
+    "not": "Sour-tasting"
    }
-  ]
+  ],
+  "from": "draft-173"
  },
  {
   "serial": 91,
@@ -605,6 +657,12 @@
     "tile": "FOXTROT",
     "not": "Dance styles"
    }
+  ],
+  "themes": [
+   "sauces",
+   "dances",
+   "radio alphabet",
+   "boys names"
   ]
  },
  {
@@ -667,6 +725,12 @@
     "tile": "SCARY",
     "not": "Frightening"
    }
+  ],
+  "themes": [
+   "spices",
+   "fear",
+   "football",
+   "pop music"
   ]
  },
  {
@@ -729,63 +793,79 @@
     "tile": "WINDSOR",
     "not": "Royal dynasties"
    }
+  ],
+  "themes": [
+   "transport",
+   "eyes",
+   "royalty",
+   "weather"
   ]
  },
  {
   "serial": 94,
   "band": "medium",
   "r4kind": "letter",
-  "shape": "C",
+  "shape": "B",
+  "themes": [
+   "teams",
+   "keyboards",
+   "swimming",
+   "english places"
+  ],
   "groups": [
    {
     "rank": 1,
-    "name": "In a pack of cards",
+    "name": "Group of workers",
     "members": [
-     "JACK",
-     "ACE",
-     "SPADES",
-     "CLUBS"
+     "GANG",
+     "SQUAD",
+     "TEAM",
+     "SHIFT"
     ]
    },
    {
     "rank": 2,
-    "name": "Affectionate names",
+    "name": "Computer keys",
     "members": [
-     "DUCK",
-     "PET",
-     "HONEY",
-     "DEAR"
+     "ENTER",
+     "ESCAPE",
+     "DELETE",
+     "TAB"
     ]
    },
    {
     "rank": 3,
-    "name": "Tennis words",
+    "name": "SWIMMING ___",
     "members": [
-     "LET",
-     "RALLY",
-     "SMASH",
-     "LOVE"
+     "COSTUME",
+     "TRUNKS",
+     "CAP",
+     "GALA"
     ]
    },
    {
     "rank": 4,
-    "name": "Add a letter at the front for transport",
+    "name": "Add a letter to the end for an English place",
     "members": [
-     "HIP",
-     "LANE",
-     "RAM",
-     "OAT"
+     "CREW",
+     "POOL",
+     "DOVE",
+     "WELL"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "ACE",
-    "not": "Tennis words"
+    "tile": "CREW",
+    "not": "Group of workers"
    },
    {
-    "tile": "LOVE",
-    "not": "Affectionate names"
+    "tile": "POOL",
+    "not": "SWIMMING ___"
+   },
+   {
+    "tile": "SHIFT",
+    "not": "Computer keys"
    }
   ]
  },
@@ -849,6 +929,12 @@
     "tile": "WAIL",
     "not": "Cry"
    }
+  ],
+  "themes": [
+   "seaside",
+   "crying",
+   "music genres",
+   "sea creatures"
   ]
  },
  {
@@ -907,6 +993,12 @@
     "tile": "FLUTE",
     "not": "Blown instruments"
    }
+  ],
+  "themes": [
+   "wind instruments",
+   "keys",
+   "pedals",
+   "metals"
   ]
  },
  {
@@ -969,6 +1061,12 @@
     "tile": "PAIRS",
     "not": "Family card games"
    }
+  ],
+  "themes": [
+   "newspapers",
+   "star wars",
+   "card games",
+   "capitals"
   ]
  },
  {
@@ -1031,6 +1129,12 @@
     "tile": "TUG",
     "not": "Boats"
    }
+  ],
+  "themes": [
+   "boats",
+   "desserts",
+   "hair",
+   "body"
   ]
  },
  {
@@ -1093,6 +1197,12 @@
     "tile": "CUPID",
     "not": "Valentine's Day"
    }
+  ],
+  "themes": [
+   "valentine",
+   "female animals",
+   "night sky",
+   "reindeer"
   ]
  },
  {
@@ -1151,68 +1261,76 @@
     "tile": "POPPY",
     "not": "Flowers"
    }
+  ],
+  "themes": [
+   "flowers",
+   "trees",
+   "girls names",
+   "fish"
   ]
  },
  {
   "serial": 101,
   "band": "medium",
-  "r4kind": "letter",
-  "shape": "B",
+  "r4kind": "anagram",
+  "shape": "C",
   "groups": [
    {
     "rank": 1,
-    "name": "Young animals",
+    "name": "British islands",
     "members": [
-     "FOAL",
-     "CALF",
-     "LAMB",
-     "KID"
+     "JERSEY",
+     "ANGLESEY",
+     "LUNDY",
+     "ARRAN"
     ]
    },
    {
     "rank": 2,
-    "name": "Tease playfully",
+    "name": "Cattle breeds",
     "members": [
-     "RIB",
-     "JOSH",
-     "RAG",
-     "WIND UP"
+     "FRIESIAN",
+     "ANGUS",
+     "HIGHLAND",
+     "HEREFORD"
     ]
    },
    {
     "rank": 3,
-    "name": "Pre-euro currencies",
+    "name": "English cities",
     "members": [
-     "LIRA",
-     "PESETA",
-     "DRACHMA",
-     "GUILDER"
+     "EXETER",
+     "CARLISLE",
+     "YORK",
+     "SALISBURY"
     ]
    },
    {
     "rank": 4,
-    "name": "Add a letter to the end for a country",
+    "name": "One set of five letters",
     "members": [
-     "CHIN",
-     "MALT",
-     "CUB",
-     "FRANC"
+     "RESIN",
+     "RINSE",
+     "SIREN",
+     "REINS"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "KID",
-    "not": "Tease playfully"
+    "tile": "JERSEY",
+    "not": "Cattle breeds"
    },
    {
-    "tile": "CUB",
-    "not": "Young animals"
-   },
-   {
-    "tile": "FRANC",
-    "not": "Pre-euro currencies"
+    "tile": "HEREFORD",
+    "not": "English cities"
    }
+  ],
+  "from": "d2-118",
+  "themes": [
+   "islands",
+   "cattle",
+   "cities"
   ]
  }
 ]

@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0296", band:"medium",
   groups:[
-    {rank:1, name:"Gloomy",                  members:["DISMAL","DREARY","GRIM","SOMBRE"]},
-    {rank:2, name:"Train tickets",           members:["SEASON","OFF-PEAK","ADVANCE","SINGLE"]},
-    {rank:3, name:"Music releases",          members:["ALBUM","EP","LP","MIXTAPE"]},
-    {rank:4, name:"Rearrange for a painter", members:["BLEAK","RETURN","DIAL","MEANT"]}
+    {rank:1, name:"Rogue",                             members:["RASCAL","SCOUNDREL","VILLAIN","ROTTER"]},
+    {rank:2, name:"Mythical creatures",                members:["CENTAUR","MINOTAUR","PEGASUS","SPHINX"]},
+    {rank:3, name:"In ancient Egypt",                  members:["PYRAMID","PHARAOH","NILE","MUMMY"]},
+    {rank:4, name:"Characters in Alice in Wonderland", members:["KNAVE","GRYPHON","DUCHESS","DODO"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"BLEAK",  not:"Gloomy"},
-    {tile:"RETURN", not:"Train tickets"},
-    {tile:"SINGLE", not:"Music releases"}
+    {tile:"KNAVE",   not:"Rogue"},
+    {tile:"GRYPHON", not:"Mythical creatures"},
+    {tile:"SPHINX",  not:"In ancient Egypt"}
   ]
 };
 </script>

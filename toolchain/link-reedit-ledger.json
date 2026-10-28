@@ -86,8 +86,8 @@
     75,
     347
    ],
-   "status": "todo",
-   "note": "seam check only: R6 and theme spacing across every batch boundary; fix by swapping forthcoming puzzles; then the final report"
+   "status": "done",
+   "note": "seam check only: R6 and theme spacing across every batch boundary; fix by swapping forthcoming puzzles; then the final report. Done 28 Oct 2026: R6 had no breaks over 75-347 (seams included). Theme spacing: 75-134 had no theme tags, so they were tagged (themes added to link-075-081, 082-101, 102-134 records) and the whole run checked as one sequence. Fixed by 9 swaps of forthcoming puzzles (18 serials, all 83+; no puzzle rewritten; holiday pins kept): 100/103 both hidden fish, 3 days apart (103 to 295); 101/102 young and baby animals on consecutive days (102 to 343); 296/302 painters 6 days apart, 213/215 Greek myths 2 days apart (215 Alice/myths to 296, painter anagram to 215); 93/94 transport and 94/97 card games (94 to 231); 89/90 birds (90 to 169); 103/105 bathroom (with 103); 117/121 dances (121 to 189); 98/104/111 boats (104 to 315); 113/119 islands (119 to 101); 298/301 birds (298 to 319). Swaps: 90-169, 94-231, 101-119, 102-343, 103-295, 104-315, 121-189, 215-296, 298-319. Left as is: 76/78 fruit and 77/82 shoes (released or too close to edit), 132/139 Christmas (seasonal, deliberate), 129/137 rivers, 129/138 birds, 131/140 countries, 292/300 dogs (8-9 days, loose). Gate, smoke test (all 18), registry comparison and content --all passed."
   }
  ]
 }

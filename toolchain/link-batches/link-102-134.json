@@ -2,187 +2,208 @@
  {
   "serial": 102,
   "band": "medium",
-  "r4kind": "decoy",
+  "r4kind": "homophone",
   "shape": "B",
+  "themes": [
+   "staring",
+   "maps",
+   "geometry",
+   "harbour",
+   "sound-alike"
+  ],
   "groups": [
    {
     "rank": 1,
-    "name": "Baby animals",
+    "name": "Look intently",
     "members": [
-     "KITTEN",
-     "CYGNET",
-     "DUCKLING",
-     "CUB"
+     "GAZE",
+     "GAWP",
+     "OGLE",
+     "GOGGLE"
     ]
    },
    {
     "rank": 2,
-    "name": "Talk on and on",
+    "name": "On a map",
     "members": [
-     "WAFFLE",
-     "BLATHER",
-     "YAK",
-     "DRONE"
+     "SCALE",
+     "GRID",
+     "LEGEND",
+     "COMPASS"
     ]
    },
    {
     "rank": 3,
-    "name": "Uniformed youth groups",
+    "name": "In a geometry set",
     "members": [
-     "BROWNIE",
-     "BEAVER",
-     "SCOUT",
-     "GUIDE"
+     "PROTRACTOR",
+     "RULER",
+     "SET SQUARE",
+     "PENCIL"
     ]
    },
    {
     "rank": 4,
-    "name": "Winnie-the-Pooh characters",
+    "name": "Sound like things in a harbour",
     "members": [
-     "PIGLET",
-     "RABBIT",
-     "OWL",
-     "EEYORE"
+     "KEY",
+     "BOY",
+     "PEER",
+     "BIRTH"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "PIGLET",
-    "not": "Baby animals"
+    "tile": "KEY",
+    "not": "On a map"
    },
    {
-    "tile": "RABBIT",
-    "not": "Talk on and on"
+    "tile": "PEER",
+    "not": "Look intently"
    },
    {
-    "tile": "CUB",
-    "not": "Uniformed youth groups"
+    "tile": "COMPASS",
+    "not": "In a geometry set"
    }
-  ],
-  "from": "d3-136"
+  ]
  },
  {
   "serial": 103,
   "band": "medium",
   "r4kind": "hidden",
-  "shape": "C",
+  "shape": "A",
+  "themes": [
+   "reds",
+   "shoes",
+   "street performers",
+   "vehicles"
+  ],
   "groups": [
    {
     "rank": 1,
-    "name": "Cheeses",
+    "name": "Red shades",
     "members": [
-     "BRIE",
-     "STILTON",
-     "EDAM",
-     "CAMEMBERT"
+     "CRIMSON",
+     "MAROON",
+     "BURGUNDY",
+     "CHERRY"
     ]
    },
    {
     "rank": 2,
-    "name": "In the bathroom",
+    "name": "Worn on the feet",
     "members": [
-     "BASIN",
-     "SHOWER",
-     "TOWEL",
-     "MIRROR"
+     "MULES",
+     "WEDGES",
+     "LOAFERS",
+     "STILETTOS"
     ]
    },
    {
     "rank": 3,
-    "name": "Somerset places",
+    "name": "Street entertainers",
     "members": [
-     "BATH",
-     "WELLS",
-     "CHEDDAR",
-     "TAUNTON"
+     "JUGGLER",
+     "MIME",
+     "CLOWN",
+     "FIRE-EATER"
     ]
    },
    {
     "rank": 4,
-    "name": "Hidden fish",
+    "name": "A vehicle hides in each",
     "members": [
-     "CARPENTER",
-     "FEELING",
-     "SOLEMN",
-     "SHAKE"
+     "SCARLET",
+     "TRAINERS",
+     "BUSKER",
+     "CABLE"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "CHEDDAR",
-    "not": "Cheeses"
+    "tile": "SCARLET",
+    "not": "Red shades"
    },
    {
-    "tile": "BATH",
-    "not": "In the bathroom"
+    "tile": "TRAINERS",
+    "not": "Worn on the feet"
+   },
+   {
+    "tile": "BUSKER",
+    "not": "Street entertainers"
    }
-  ],
-  "from": "d2-104"
+  ]
  },
  {
   "serial": 104,
   "band": "medium",
-  "r4kind": "anagram",
-  "shape": "A",
+  "r4kind": "decoy",
+  "shape": "B",
+  "themes": [
+   "cooking",
+   "criticism",
+   "canada",
+   "explorers",
+   "history"
+  ],
   "groups": [
    {
     "rank": 1,
-    "name": "Bodies of water",
+    "name": "Cooking techniques",
     "members": [
-     "POND",
-     "LOCH",
-     "LAGOON",
-     "RESERVOIR"
+     "BAKE",
+     "FRY",
+     "ROAST",
+     "POACH"
     ]
    },
    {
     "rank": 2,
-    "name": "Copy someone",
+    "name": "Criticise harshly",
     "members": [
-     "MIMIC",
-     "PARROT",
-     "ECHO",
-     "IMITATE"
+     "SLAM",
+     "PAN",
+     "SLATE",
+     "KNOCK"
     ]
    },
    {
     "rank": 3,
-    "name": "On a yacht",
+    "name": "Canadian cities",
     "members": [
-     "MAST",
-     "SAIL",
-     "BOOM",
-     "RUDDER"
+     "TORONTO",
+     "OTTAWA",
+     "MONTREAL",
+     "CALGARY"
     ]
    },
    {
     "rank": 4,
-    "name": "Rearrange for a vegetable",
+    "name": "British explorers",
     "members": [
-     "KEEL",
-     "APE",
-     "LAKE",
-     "MAY"
+     "VANCOUVER",
+     "COOK",
+     "DRAKE",
+     "SCOTT"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "LAKE",
-    "not": "Bodies of water"
+    "tile": "COOK",
+    "not": "Cooking techniques"
    },
    {
-    "tile": "APE",
-    "not": "Copy someone"
+    "tile": "VANCOUVER",
+    "not": "Canadian cities"
    },
    {
-    "tile": "KEEL",
-    "not": "On a yacht"
+    "tile": "ROAST",
+    "not": "Criticise harshly"
    }
-  ],
-  "from": "d2-111"
+  ]
  },
  {
   "serial": 105,
@@ -245,7 +266,13 @@
     "not": "Bathroom shelf"
    }
   ],
-  "from": "d3-133"
+  "from": "d3-133",
+  "themes": [
+   "bathroom",
+   "tv",
+   "clergy",
+   "things you can"
+  ]
  },
  {
   "serial": 106,
@@ -308,7 +335,13 @@
     "not": "Horse tack"
    }
   ],
-  "from": "d2-116"
+  "from": "d2-116",
+  "themes": [
+   "family",
+   "health",
+   "horse riding",
+   "weather"
+  ]
  },
  {
   "serial": 107,
@@ -367,7 +400,13 @@
     "not": "Feathered friends"
    }
   ],
-  "from": "d3-128"
+  "from": "d3-128",
+  "themes": [
+   "birds",
+   "boasting",
+   "card games",
+   "clothes"
+  ]
  },
  {
   "serial": 108,
@@ -430,7 +469,13 @@
     "not": "The Big Five on safari"
    }
   ],
-  "from": "d2-119"
+  "from": "d2-119",
+  "themes": [
+   "snakes",
+   "gems",
+   "safari",
+   "gladiators"
+  ]
  },
  {
   "serial": 109,
@@ -493,7 +538,13 @@
     "not": "Places to live"
    }
   ],
-  "from": "d3-135"
+  "from": "d3-135",
+  "themes": [
+   "houses",
+   "small",
+   "spices",
+   "bread"
+  ]
  },
  {
   "serial": 110,
@@ -556,7 +607,13 @@
     "not": "British rivers"
    }
   ],
-  "from": "d3-130"
+  "from": "d3-130",
+  "themes": [
+   "rivers",
+   "blunders",
+   "alphabet",
+   "things you can"
+  ]
  },
  {
   "serial": 111,
@@ -619,7 +676,13 @@
     "not": "Watercraft"
    }
   ],
-  "from": "d3-127"
+  "from": "d3-127",
+  "themes": [
+   "wild animals",
+   "rubbish",
+   "boats",
+   "body"
+  ]
  },
  {
   "serial": 112,
@@ -682,7 +745,13 @@
     "not": "Walk off in a huff"
    }
   ],
-  "from": "d3-137"
+  "from": "d3-137",
+  "themes": [
+   "vegetables",
+   "sulking",
+   "sewing",
+   "things with"
+  ]
  },
  {
   "serial": 113,
@@ -741,7 +810,13 @@
     "not": "Atlantic islands"
    }
   ],
-  "from": "d2-103"
+  "from": "d2-103",
+  "themes": [
+   "spirits",
+   "shorts",
+   "islands",
+   "holes"
+  ]
  },
  {
   "serial": 114,
@@ -804,7 +879,13 @@
     "not": "Snooker balls"
    }
   ],
-  "from": "d3-125"
+  "from": "d3-125",
+  "themes": [
+   "snooker",
+   "football",
+   "eggs",
+   "harry potter"
+  ]
  },
  {
   "serial": 115,
@@ -863,7 +944,13 @@
     "not": "Social events"
    }
   ],
-  "from": "d3-134"
+  "from": "d3-134",
+  "themes": [
+   "parties",
+   "feet",
+   "fish",
+   "animals"
+  ]
  },
  {
   "serial": 116,
@@ -926,7 +1013,13 @@
     "not": "Shades of grey"
    }
   ],
-  "from": "d2-117"
+  "from": "d2-117",
+  "themes": [
+   "dairy",
+   "fuels",
+   "greys",
+   "cloth"
+  ]
  },
  {
   "serial": 117,
@@ -989,7 +1082,13 @@
     "not": "West Country cities"
    }
   ],
-  "from": "d3-126"
+  "from": "d3-126",
+  "themes": [
+   "board games",
+   "dances",
+   "west country",
+   "things you can"
+  ]
  },
  {
   "serial": 118,
@@ -1052,66 +1151,81 @@
     "not": "Cheat out of money"
    }
   ],
-  "from": "d2-106"
+  "from": "d2-106",
+  "themes": [
+   "flour",
+   "cheating",
+   "animal coverings",
+   "trees"
+  ]
  },
  {
   "serial": 119,
   "band": "medium",
-  "r4kind": "anagram",
-  "shape": "C",
+  "r4kind": "letter",
+  "shape": "B",
   "groups": [
    {
     "rank": 1,
-    "name": "British islands",
+    "name": "Young animals",
     "members": [
-     "JERSEY",
-     "ANGLESEY",
-     "LUNDY",
-     "ARRAN"
+     "FOAL",
+     "CALF",
+     "LAMB",
+     "KID"
     ]
    },
    {
     "rank": 2,
-    "name": "Cattle breeds",
+    "name": "Tease playfully",
     "members": [
-     "FRIESIAN",
-     "ANGUS",
-     "HIGHLAND",
-     "HEREFORD"
+     "RIB",
+     "JOSH",
+     "RAG",
+     "WIND UP"
     ]
    },
    {
     "rank": 3,
-    "name": "English cities",
+    "name": "Pre-euro currencies",
     "members": [
-     "EXETER",
-     "CARLISLE",
-     "YORK",
-     "SALISBURY"
+     "LIRA",
+     "PESETA",
+     "DRACHMA",
+     "GUILDER"
     ]
    },
    {
     "rank": 4,
-    "name": "One set of five letters",
+    "name": "Add a letter to the end for a country",
     "members": [
-     "RESIN",
-     "RINSE",
-     "SIREN",
-     "REINS"
+     "CHIN",
+     "MALT",
+     "CUB",
+     "FRANC"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "JERSEY",
-    "not": "Cattle breeds"
+    "tile": "KID",
+    "not": "Tease playfully"
    },
    {
-    "tile": "HEREFORD",
-    "not": "English cities"
+    "tile": "CUB",
+    "not": "Young animals"
+   },
+   {
+    "tile": "FRANC",
+    "not": "Pre-euro currencies"
    }
   ],
-  "from": "d2-118"
+  "themes": [
+   "young animals",
+   "teasing",
+   "currencies",
+   "countries"
+  ]
  },
  {
   "serial": 120,
@@ -1174,70 +1288,81 @@
     "not": "Hats"
    }
   ],
-  "from": "d2-105"
+  "from": "d2-105",
+  "themes": [
+   "ages",
+   "cars",
+   "hats",
+   "monopoly"
+  ]
  },
  {
   "serial": 121,
   "band": "medium",
   "r4kind": "fill",
-  "shape": "A",
+  "shape": "B",
+  "themes": [
+   "nations",
+   "law",
+   "harbours",
+   "work"
+  ],
   "groups": [
    {
     "rank": 1,
-    "name": "Jewellery",
+    "name": "Realm",
     "members": [
-     "BANGLE",
-     "BRACELET",
-     "ANKLET",
-     "PENDANT"
+     "COUNTRY",
+     "NATION",
+     "STATE",
+     "KINGDOM"
     ]
    },
    {
     "rank": 2,
-    "name": "Folk dances",
+    "name": "In a courtroom",
     "members": [
-     "REEL",
-     "HORNPIPE",
-     "MORRIS",
-     "POLKA"
+     "JUDGE",
+     "JURY",
+     "DOCK",
+     "USHER"
     ]
    },
    {
     "rank": 3,
-    "name": "Newspaper people",
+    "name": "At a harbour",
     "members": [
-     "EDITOR",
-     "REPORTER",
-     "COLUMNIST",
-     "CRITIC"
+     "QUAY",
+     "JETTY",
+     "WHARF",
+     "BREAKWATER"
     ]
    },
    {
     "rank": 4,
-    "name": "___SAW",
+    "name": "___MARK",
     "members": [
-     "CHAIN",
-     "JIG",
-     "HACK",
-     "SEE"
+     "LAND",
+     "BENCH",
+     "TRADE",
+     "BOOK"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "CHAIN",
-    "not": "Jewellery"
+    "tile": "LAND",
+    "not": "Realm"
    },
    {
-    "tile": "JIG",
-    "not": "Folk dances"
+    "tile": "BENCH",
+    "not": "In a courtroom"
    },
    {
-    "tile": "HACK",
-    "not": "Newspaper people"
+    "tile": "DOCK",
+    "not": "At a harbour"
    }
-  ],
-  "from": "d2-110"
+  ]
  },
  {
   "serial": 122,
@@ -1296,7 +1421,13 @@
     "not": "Arguments"
    }
   ],
-  "from": "d2-120"
+  "from": "d2-120",
+  "themes": [
+   "gardening",
+   "arguments",
+   "hair",
+   "girls names"
+  ]
  },
  {
   "serial": 123,
@@ -1359,7 +1490,13 @@
     "not": "An attempt"
    }
   ],
-  "from": "d3-122"
+  "from": "d3-122",
+  "themes": [
+   "chocolate",
+   "attempts",
+   "dogs",
+   "ships"
+  ]
  },
  {
   "serial": 124,
@@ -1422,7 +1559,13 @@
     "not": "High street names"
    }
   ],
-  "from": "d3-140"
+  "from": "d3-140",
+  "themes": [
+   "football",
+   "recycling",
+   "high street",
+   "things with"
+  ]
  },
  {
   "serial": 125,
@@ -1485,7 +1628,13 @@
     "not": "Picture book favourites"
    }
   ],
-  "from": "d3-141"
+  "from": "d3-141",
+  "themes": [
+   "church",
+   "fools",
+   "picture books",
+   "silent letters"
+  ]
  },
  {
   "serial": 126,
@@ -1548,7 +1697,13 @@
     "not": "Storage containers"
    }
   ],
-  "from": "d2-113"
+  "from": "d2-113",
+  "themes": [
+   "pizza",
+   "dishonesty",
+   "containers",
+   "instruments"
+  ]
  },
  {
   "serial": 127,
@@ -1611,7 +1766,13 @@
     "not": "Scottish clans"
    }
   ],
-  "from": "d3-139"
+  "from": "d3-139",
+  "themes": [
+   "fuels",
+   "punch and judy",
+   "scotland",
+   "children's tv"
+  ]
  },
  {
   "serial": 128,
@@ -1674,7 +1835,13 @@
     "not": "Boxing terms"
    }
   ],
-  "from": "d3-123"
+  "from": "d3-123",
+  "themes": [
+   "fishing",
+   "time",
+   "boxing",
+   "things you can"
+  ]
  },
  {
   "serial": 129,
@@ -1733,7 +1900,13 @@
     "not": "English rivers"
    }
   ],
-  "from": "d2-109"
+  "from": "d2-109",
+  "themes": [
+   "birds",
+   "rivers",
+   "beauty",
+   "crops"
+  ]
  },
  {
   "serial": 130,
@@ -1796,7 +1969,13 @@
     "not": "Parties"
    }
   ],
-  "from": "d2-107"
+  "from": "d2-107",
+  "themes": [
+   "salad",
+   "parties",
+   "cars",
+   "corn"
+  ]
  },
  {
   "serial": 131,
@@ -1855,7 +2034,13 @@
     "not": "Old-school boys' names"
    }
   ],
-  "from": "d3-138"
+  "from": "d3-138",
+  "themes": [
+   "greens",
+   "herbs",
+   "boys names",
+   "countries"
+  ]
  },
  {
   "serial": 132,
@@ -1918,7 +2103,13 @@
     "not": "At Christmas"
    }
   ],
-  "from": "d3-129"
+  "from": "d3-129",
+  "themes": [
+   "christmas",
+   "horror",
+   "hedgerows",
+   "cocktails"
+  ]
  },
  {
   "serial": 133,
@@ -1977,7 +2168,13 @@
     "not": "Cricket actions"
    }
   ],
-  "from": "d2-115"
+  "from": "d2-115",
+  "themes": [
+   "crockery",
+   "cricket",
+   "night animals",
+   "colours"
+  ]
  },
  {
   "serial": 134,
@@ -2040,6 +2237,12 @@
     "not": "People on foot"
    }
   ],
-  "from": "d3-132"
+  "from": "d3-132",
+  "themes": [
+   "walking",
+   "fish",
+   "prime ministers",
+   "sitcoms"
+  ]
  }
 ]

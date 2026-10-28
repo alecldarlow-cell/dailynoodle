@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0343", band:"medium",
   groups:[
-    {rank:1, name:"Look intently",                  members:["GAZE","GAWP","OGLE","GOGGLE"]},
-    {rank:2, name:"On a map",                       members:["SCALE","GRID","LEGEND","COMPASS"]},
-    {rank:3, name:"In a geometry set",              members:["PROTRACTOR","RULER","SET SQUARE","PENCIL"]},
-    {rank:4, name:"Sound like things in a harbour", members:["KEY","BOY","PEER","BIRTH"]}
+    {rank:1, name:"Baby animals",               members:["KITTEN","CYGNET","DUCKLING","CUB"]},
+    {rank:2, name:"Talk on and on",             members:["WAFFLE","BLATHER","YAK","DRONE"]},
+    {rank:3, name:"Uniformed youth groups",     members:["BROWNIE","BEAVER","SCOUT","GUIDE"]},
+    {rank:4, name:"Winnie-the-Pooh characters", members:["PIGLET","RABBIT","OWL","EEYORE"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"KEY",     not:"On a map"},
-    {tile:"PEER",    not:"Look intently"},
-    {tile:"COMPASS", not:"In a geometry set"}
+    {tile:"PIGLET", not:"Baby animals"},
+    {tile:"RABBIT", not:"Talk on and on"},
+    {tile:"CUB",    not:"Uniformed youth groups"}
   ]
 };
 </script>

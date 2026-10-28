@@ -3076,135 +3076,132 @@
   "serial": 295,
   "band": "medium",
   "r4kind": "hidden",
-  "shape": "A",
-  "themes": [
-   "reds",
-   "shoes",
-   "street performers",
-   "vehicles"
-  ],
+  "shape": "C",
   "groups": [
    {
     "rank": 1,
-    "name": "Red shades",
+    "name": "Cheeses",
     "members": [
-     "CRIMSON",
-     "MAROON",
-     "BURGUNDY",
-     "CHERRY"
+     "BRIE",
+     "STILTON",
+     "EDAM",
+     "CAMEMBERT"
     ]
    },
    {
     "rank": 2,
-    "name": "Worn on the feet",
+    "name": "In the bathroom",
     "members": [
-     "MULES",
-     "WEDGES",
-     "LOAFERS",
-     "STILETTOS"
+     "BASIN",
+     "SHOWER",
+     "TOWEL",
+     "MIRROR"
     ]
    },
    {
     "rank": 3,
-    "name": "Street entertainers",
+    "name": "Somerset places",
     "members": [
-     "JUGGLER",
-     "MIME",
-     "CLOWN",
-     "FIRE-EATER"
+     "BATH",
+     "WELLS",
+     "CHEDDAR",
+     "TAUNTON"
     ]
    },
    {
     "rank": 4,
-    "name": "A vehicle hides in each",
+    "name": "Hidden fish",
     "members": [
-     "SCARLET",
-     "TRAINERS",
-     "BUSKER",
-     "CABLE"
+     "CARPENTER",
+     "FEELING",
+     "SOLEMN",
+     "SHAKE"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "SCARLET",
-    "not": "Red shades"
+    "tile": "CHEDDAR",
+    "not": "Cheeses"
    },
    {
-    "tile": "TRAINERS",
-    "not": "Worn on the feet"
-   },
-   {
-    "tile": "BUSKER",
-    "not": "Street entertainers"
+    "tile": "BATH",
+    "not": "In the bathroom"
    }
+  ],
+  "from": "d2-104",
+  "themes": [
+   "cheese",
+   "bathroom",
+   "somerset",
+   "fish"
   ]
  },
  {
   "serial": 296,
   "band": "medium",
-  "r4kind": "anagram",
+  "r4kind": "decoy",
   "shape": "B",
   "themes": [
-   "gloom",
-   "train tickets",
-   "records",
-   "painters"
+   "rogues",
+   "myths",
+   "ancient egypt",
+   "books"
   ],
   "groups": [
    {
     "rank": 1,
-    "name": "Gloomy",
+    "name": "Rogue",
     "members": [
-     "DISMAL",
-     "DREARY",
-     "GRIM",
-     "SOMBRE"
+     "RASCAL",
+     "SCOUNDREL",
+     "VILLAIN",
+     "ROTTER"
     ]
    },
    {
     "rank": 2,
-    "name": "Train tickets",
+    "name": "Mythical creatures",
     "members": [
-     "SEASON",
-     "OFF-PEAK",
-     "ADVANCE",
-     "SINGLE"
+     "CENTAUR",
+     "MINOTAUR",
+     "PEGASUS",
+     "SPHINX"
     ]
    },
    {
     "rank": 3,
-    "name": "Music releases",
+    "name": "In ancient Egypt",
     "members": [
-     "ALBUM",
-     "EP",
-     "LP",
-     "MIXTAPE"
+     "PYRAMID",
+     "PHARAOH",
+     "NILE",
+     "MUMMY"
     ]
    },
    {
     "rank": 4,
-    "name": "Rearrange for a painter",
+    "name": "Characters in Alice in Wonderland",
     "members": [
-     "BLEAK",
-     "RETURN",
-     "DIAL",
-     "MEANT"
+     "KNAVE",
+     "GRYPHON",
+     "DUCHESS",
+     "DODO"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "BLEAK",
-    "not": "Gloomy"
+    "tile": "KNAVE",
+    "not": "Rogue"
    },
    {
-    "tile": "RETURN",
-    "not": "Train tickets"
+    "tile": "GRYPHON",
+    "not": "Mythical creatures"
    },
    {
-    "tile": "SINGLE",
-    "not": "Music releases"
+    "tile": "SPHINX",
+    "not": "In ancient Egypt"
    }
   ]
  },
@@ -3280,68 +3277,69 @@
  {
   "serial": 298,
   "band": "medium",
-  "r4kind": "fill",
+  "r4kind": "anagram",
   "shape": "B",
   "themes": [
-   "toast",
-   "birds",
-   "lifting",
-   "pots"
+   "middle east",
+   "courage",
+   "stones",
+   "weather",
+   "bravery"
   ],
   "groups": [
    {
     "rank": 1,
-    "name": "Spread on toast",
+    "name": "Middle East countries",
     "members": [
-     "MARMALADE",
-     "MARMITE",
-     "LEMON CURD",
-     "BUTTER"
+     "IRAQ",
+     "OMAN",
+     "SYRIA",
+     "YEMEN"
     ]
    },
    {
     "rank": 2,
-    "name": "Wading birds",
+    "name": "Bravery",
     "members": [
-     "HERON",
-     "STORK",
-     "EGRET",
-     "IBIS"
+     "NERVE",
+     "BOTTLE",
+     "BACKBONE",
+     "GRIT"
     ]
    },
    {
     "rank": 3,
-    "name": "Lifting gear",
+    "name": "Rock fragments",
     "members": [
-     "HOIST",
-     "WINCH",
-     "PULLEY",
-     "CRANE"
+     "GRAVEL",
+     "SHINGLE",
+     "SCREE",
+     "SAND"
     ]
    },
    {
     "rank": 4,
-    "name": "___POT",
+    "name": "Rearrange for a weather word",
     "members": [
-     "HONEY",
-     "JACK",
-     "HOT",
-     "FUSS"
+     "IRAN",
+     "GUTS",
+     "FORTS",
+     "COULD"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "HONEY",
-    "not": "Spread on toast"
+    "tile": "IRAN",
+    "not": "Middle East countries"
    },
    {
-    "tile": "JACK",
-    "not": "Lifting gear"
+    "tile": "GUTS",
+    "not": "Bravery"
    },
    {
-    "tile": "CRANE",
-    "not": "Wading birds"
+    "tile": "GRIT",
+    "not": "Rock fragments"
    }
   ]
  }

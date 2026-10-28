@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0104", band:"medium",
   groups:[
-    {rank:1, name:"Bodies of water",           members:["POND","LOCH","LAGOON","RESERVOIR"]},
-    {rank:2, name:"Copy someone",              members:["MIMIC","PARROT","ECHO","IMITATE"]},
-    {rank:3, name:"On a yacht",                members:["MAST","SAIL","BOOM","RUDDER"]},
-    {rank:4, name:"Rearrange for a vegetable", members:["KEEL","APE","LAKE","MAY"]}
+    {rank:1, name:"Cooking techniques", members:["BAKE","FRY","ROAST","POACH"]},
+    {rank:2, name:"Criticise harshly",  members:["SLAM","PAN","SLATE","KNOCK"]},
+    {rank:3, name:"Canadian cities",    members:["TORONTO","OTTAWA","MONTREAL","CALGARY"]},
+    {rank:4, name:"British explorers",  members:["VANCOUVER","COOK","DRAKE","SCOTT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"LAKE", not:"Bodies of water"},
-    {tile:"APE",  not:"Copy someone"},
-    {tile:"KEEL", not:"On a yacht"}
+    {tile:"COOK",      not:"Cooking techniques"},
+    {tile:"VANCOUVER", not:"Canadian cities"},
+    {tile:"ROAST",     not:"Criticise harshly"}
   ]
 };
 </script>

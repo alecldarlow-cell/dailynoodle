@@ -2337,71 +2337,70 @@
  {
   "serial": 169,
   "band": "medium",
-  "r4kind": "homophone",
-  "shape": "B",
-  "themes": [
-   "cat sounds",
-   "tastes",
-   "pastry",
-   "greek letters"
-  ],
+  "r4kind": "letter",
+  "shape": "A",
   "groups": [
    {
     "rank": 1,
-    "name": "Cat noises",
+    "name": "Parts of a boat",
     "members": [
-     "PURR",
-     "HISS",
-     "MIAOW",
-     "YOWL"
+     "BOW",
+     "HULL",
+     "KEEL",
+     "DECK"
     ]
    },
    {
     "rank": 2,
-    "name": "Sour-tasting",
+    "name": "Cowardly",
     "members": [
-     "SHARP",
-     "ACIDIC",
-     "TANGY",
-     "VINEGARY"
+     "YELLOW",
+     "CHICKEN",
+     "SPINELESS",
+     "GUTLESS"
     ]
    },
    {
     "rank": 3,
-    "name": "Pastry dishes",
+    "name": "Lawbreakers",
     "members": [
-     "PASTY",
-     "FLAN",
-     "QUICHE",
-     "TART"
+     "THIEF",
+     "BURGLAR",
+     "MUGGER",
+     "FORGER"
     ]
    },
    {
     "rank": 4,
-    "name": "Sound like Greek letters",
+    "name": "Lose the first letter for a bird",
     "members": [
-     "MEW",
-     "PIE",
-     "ROW",
-     "BEATER"
+     "STERN",
+     "CRAVEN",
+     "CROOK",
+     "SCOOT"
     ]
    }
   ],
   "traps": [
    {
-    "tile": "MEW",
-    "not": "Cat noises"
+    "tile": "STERN",
+    "not": "Parts of a boat"
    },
    {
-    "tile": "PIE",
-    "not": "Pastry dishes"
+    "tile": "CRAVEN",
+    "not": "Cowardly"
    },
    {
-    "tile": "TART",
-    "not": "Sour-tasting"
+    "tile": "CROOK",
+    "not": "Lawbreakers"
    }
   ],
-  "from": "draft-173"
+  "themes": [
+   "boats",
+   "cowardice",
+   "crime",
+   "birds"
+  ]
  },
  {
   "serial": 170,

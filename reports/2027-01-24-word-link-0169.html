@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0169", band:"medium",
   groups:[
-    {rank:1, name:"Cat noises",               members:["PURR","HISS","MIAOW","YOWL"]},
-    {rank:2, name:"Sour-tasting",             members:["SHARP","ACIDIC","TANGY","VINEGARY"]},
-    {rank:3, name:"Pastry dishes",            members:["PASTY","FLAN","QUICHE","TART"]},
-    {rank:4, name:"Sound like Greek letters", members:["MEW","PIE","ROW","BEATER"]}
+    {rank:1, name:"Parts of a boat",                  members:["BOW","HULL","KEEL","DECK"]},
+    {rank:2, name:"Cowardly",                         members:["YELLOW","CHICKEN","SPINELESS","GUTLESS"]},
+    {rank:3, name:"Lawbreakers",                      members:["THIEF","BURGLAR","MUGGER","FORGER"]},
+    {rank:4, name:"Lose the first letter for a bird", members:["STERN","CRAVEN","CROOK","SCOOT"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"MEW",  not:"Cat noises"},
-    {tile:"PIE",  not:"Pastry dishes"},
-    {tile:"TART", not:"Sour-tasting"}
+    {tile:"STERN",  not:"Parts of a boat"},
+    {tile:"CRAVEN", not:"Cowardly"},
+    {tile:"CROOK",  not:"Lawbreakers"}
   ]
 };
 </script>

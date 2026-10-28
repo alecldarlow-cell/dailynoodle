@@ -80,10 +80,10 @@
 window.DN_PUZZLE={
   type:"link", id:"DP·LINK·0319", band:"medium",
   groups:[
-    {rank:1, name:"Middle East countries",        members:["IRAQ","OMAN","SYRIA","YEMEN"]},
-    {rank:2, name:"Bravery",                      members:["NERVE","BOTTLE","BACKBONE","GRIT"]},
-    {rank:3, name:"Rock fragments",               members:["GRAVEL","SHINGLE","SCREE","SAND"]},
-    {rank:4, name:"Rearrange for a weather word", members:["IRAN","GUTS","FORTS","COULD"]}
+    {rank:1, name:"Spread on toast", members:["MARMALADE","MARMITE","LEMON CURD","BUTTER"]},
+    {rank:2, name:"Wading birds",    members:["HERON","STORK","EGRET","IBIS"]},
+    {rank:3, name:"Lifting gear",    members:["HOIST","WINCH","PULLEY","CRANE"]},
+    {rank:4, name:"___POT",          members:["HONEY","JACK","HOT","FUSS"]}
   ],
   /* The trap ledger: every tile the author knows reads as a member of another
      group, and the group it must NOT land in. Gated, so a trap can't silently
@@ -91,9 +91,9 @@ window.DN_PUZZLE={
      fair if the group it's tempting you away from is full of members at least
      as well known as the trap itself. */
   traps:[
-    {tile:"IRAN", not:"Middle East countries"},
-    {tile:"GUTS", not:"Bravery"},
-    {tile:"GRIT", not:"Rock fragments"}
+    {tile:"HONEY", not:"Spread on toast"},
+    {tile:"JACK",  not:"Lifting gear"},
+    {tile:"CRANE", not:"Wading birds"}
   ]
 };
 </script>
