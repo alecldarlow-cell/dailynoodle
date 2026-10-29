@@ -9,11 +9,20 @@
    #dnsync. Puzzle pages load it from dn-track.js only for a signed-in player, to send
    the result when the puzzle ends.
 
-   One sync: pull the account's copy (sync_pull), merge it in with dn-track.js's
-   #dnmove= import rules (dnMove.importData: first result kept, better streak wins, a
-   different league player is asked about on the board page, never adopted silently),
-   then push this browser's merged documents (sync_push). Pulling first every time
-   means two browsers never overwrite each other's results. The app does the same.
+   One sync (29 Oct 2026, with revisions): pull the account's copy with each document's
+   revision (sync_pull_rev), merge it in with dn-track.js's #dnmove= import rules
+   (dnMove.importData: first result kept, better streak wins, a different league player
+   is asked about on the board page, never adopted silently), then push the documents
+   that changed, each with the revision it was merged from (sync_push_rev). The server
+   stores them only if no other phone or browser wrote in between (compare-and-swap, all
+   or nothing); if one did, nothing is stored, and this browser pulls again, merges again
+   and retries (at most 3 tries). Results here are never dropped: they stay in this
+   browser whatever the server says. A result the account already holds for a puzzle
+   stays the account's (first result kept there too), while this browser keeps its own.
+   Until the live database has the revision functions, the old sync_pull / sync_push
+   path is used instead (pull first, merge, push: a push made between another browser's
+   pull and push could replace that browser's merge until its next sync). The app does
+   the same.
 
    ON since 25 Oct 2026 (Alec's call, after the sign-in email went through Resend and
    https://dailynoodle.co.uk/board.html was allowed as a redirect URL in Supabase Auth).
@@ -90,9 +99,18 @@
   }
   function rpc(sb, fn, args){
     return sb.rpc(fn, args || {}).then(function (r) {
-      if (r.error) throw new Error(r.error.message || 'Sync failed. Try again.');
+      if (r.error) {
+        var e = new Error(r.error.message || 'Sync failed. Try again.');
+        e.code = r.error.code; e.status = r.status;
+        throw e;
+      }
       return r.data;
     });
+  }
+  // The database hasn't got the revision functions yet (PostgREST: PGRST202, 404).
+  function missing(e){
+    return !!e && (e.code === 'PGRST202' || e.code === '42883' || e.status === 404 ||
+      /could not find the function|function .* does not exist/i.test(e.message || ''));
   }
 
   /* ---------- one sync ---------- */
@@ -107,31 +125,85 @@
     }
     return out;
   }
+  /* Merge the account's documents into this browser (dnMove.importData). */
+  function mergeIn(remote){
+    var d = {};
+    for (var k in remote) if (SYNC_KEY.test(k) && isObj(remote[k])) d[k] = JSON.stringify(remote[k]);
+    // League identity: only another player's needs the import's adopt-or-ask rule;
+    // the same player's leagues come from the server when the board opens.
+    var rb = remote[BOARD], mine = parse(get(BOARD));
+    var b = isObj(rb) && !(isObj(mine) && mine.pid && mine.pid === rb.pid) ? rb : undefined;
+    if (!window.dnMove) throw new Error('Sync couldn’t start. Reload the page and try again.');
+    window.dnMove.importData(d, b);
+    var after = local(), out = {};
+    // While this browser hasn't chosen between its own league player and the
+    // account's, the account keeps the one it had.
+    for (var j in after) if (!(j === BOARD && after[j].pend)) out[j] = after[j];
+    return out;
+  }
+  /* What to send for one key: this browser's merged document, except that a puzzle the
+     account already has a result for keeps the account's result (the first one stored). */
+  var UNION = { done: 1, days: 1, found: 1 };
+  function forAccount(mine, theirs){
+    if (!isObj(theirs)) return mine;
+    var out = {}, k, j;
+    for (k in mine) out[k] = mine[k];
+    for (k in UNION) if (isObj(mine[k]) && isObj(theirs[k])) {
+      var u = {};
+      for (j in mine[k]) u[j] = mine[k][j];
+      for (j in theirs[k]) u[j] = theirs[k][j];
+      out[k] = u;
+    }
+    return out;
+  }
+  var TRIES = 3, legacy = false;
+  function syncRev(sb){
+    var before = local(), n = 0;
+    function once(){
+      n++;
+      return rpc(sb, 'sync_pull_rev').then(function (pulled) {
+        pulled = isObj(pulled) ? pulled : {};
+        var remote = {}, revs = {}, k;
+        for (k in pulled) if (isObj(pulled[k])) { remote[k] = pulled[k].doc; revs[k] = +pulled[k].rev || 0; }
+        var out = mergeIn(remote), saves = {}, any = false;
+        for (k in out) {
+          var doc = forAccount(out[k], remote[k]);
+          if (isObj(remote[k]) && same(doc, remote[k])) continue;   // the account has it already
+          saves[k] = { doc: doc, rev: revs[k] || 0 }; any = true;
+        }
+        if (!any) return true;
+        return rpc(sb, 'sync_push_rev', { p_saves: saves }).then(function (r) {
+          if (isObj(r) && r.ok) return true;
+          // Another phone or browser wrote in between: nothing was stored. Pull, merge, try again.
+          if (n < TRIES) return once();
+          throw new Error('Sync couldn’t finish: another device was syncing. Your results are safe here. Try again.');
+        });
+      });
+    }
+    return once().then(function () { return !same(before, local()); });
+  }
+  function syncOld(sb){
+    return rpc(sb, 'sync_pull').then(function (remote) {
+      remote = isObj(remote) ? remote : {};
+      var before = local(), out = mergeIn(remote), changed = !same(before, local());
+      var send = Object.keys(out).length ? rpc(sb, 'sync_push', { p_saves: out }) : Promise.resolve(0);
+      return send.then(function () { return changed; });
+    });
+  }
   var running = null;
   function sync(){
     if (running) return running;
     running = client().then(function (sb) {
       return session(sb).then(function (s) {
         if (!s) return { signedIn: false, changed: false };
-        return rpc(sb, 'sync_pull').then(function (remote) {
-          remote = isObj(remote) ? remote : {};
-          var before = local(), d = {};
-          for (var k in remote) if (SYNC_KEY.test(k) && isObj(remote[k])) d[k] = JSON.stringify(remote[k]);
-          // League identity: only another player's needs the import's adopt-or-ask rule;
-          // the same player's leagues come from the server when the board opens.
-          var rb = remote[BOARD], mine = parse(get(BOARD));
-          var b = isObj(rb) && !(isObj(mine) && mine.pid && mine.pid === rb.pid) ? rb : undefined;
-          if (!window.dnMove) throw new Error('Sync couldn’t start. Reload the page and try again.');
-          window.dnMove.importData(d, b);
-          var after = local(), changed = !same(before, after), out = {};
-          // While this browser hasn't chosen between its own league player and the
-          // account's, the account keeps the one it had.
-          for (var j in after) if (!(j === BOARD && after[j].pend)) out[j] = after[j];
-          var send = Object.keys(out).length ? rpc(sb, 'sync_push', { p_saves: out }) : Promise.resolve(0);
-          return send.then(function () {
-            set(LAST, JSON.stringify({ at: Date.now() }));
-            return { signedIn: true, changed: changed };
-          });
+        var go = legacy ? syncOld(sb) : syncRev(sb).catch(function (e) {
+          if (!missing(e)) throw e;
+          legacy = true;   // not migrated yet: the old path, for the rest of this page
+          return syncOld(sb);
+        });
+        return go.then(function (changed) {
+          set(LAST, JSON.stringify({ at: Date.now() }));
+          return { signedIn: true, changed: changed };
         });
       });
     });
@@ -172,24 +244,34 @@
     return h < 24 ? 'Synced ' + h + ' h ago' : 'Synced ' + Math.round(h / 24) + ' d ago';
   }
   var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  var ui = { sent: '', msg: '', bad: false, busy: false };
+  var ui = { sent: '', msg: '', bad: false, busy: false, confirm: '' };
   var box = null;
 
   function render(s){
     if (!box) return;
-    var h = '<h2>' + (s ? 'Your account' : 'Create a free account') + '</h2>';
+    var h = '<h2>' + (s ? 'Your account' : 'Sign in or create an account') + '</h2>';
     if (s) {
       h += '<p>Signed in as <b>' + esc(s.user && s.user.email) + '</b></p>' +
         '<p class="fine" id="dnsyncLast">' + esc(ago()) + '</p>' +
         '<div class="acts"><button class="btn" type="button" data-sync="now"' + (ui.busy ? ' disabled' : '') + '>Sync now</button>' +
-        '<button class="btn" type="button" data-sync="out"' + (ui.busy ? ' disabled' : '') + '>Sign out</button></div>' +
-        '<p><button class="lnk warn" type="button" data-sync="forget"' + (ui.busy ? ' disabled' : '') + '>Delete my synced copy</button></p>';
+        '<button class="btn" type="button" data-sync="out"' + (ui.busy ? ' disabled' : '') + '>Sign out</button></div>';
+      if (ui.confirm === 'forget') {
+        // Confirmed on the page, never with a browser pop-up.
+        h += '<div class="confirm" id="dnsyncConfirm" role="group" aria-labelledby="dnsyncConfirmQ" ' +
+          'style="margin-top:14px;padding:12px 14px;border:1px solid var(--bad);border-radius:10px">' +
+          '<p id="dnsyncConfirmQ"><b>Delete your saved data?</b> This deletes the copy of your results, streaks and leagues ' +
+          'kept for your email, and signs you out. This browser’s results stay here.</p>' +
+          '<div class="acts"><button class="btn warn" type="button" data-sync="forget-yes"' + (ui.busy ? ' disabled' : '') + '>Delete my saved data</button>' +
+          '<button class="btn" type="button" data-sync="cancel"' + (ui.busy ? ' disabled' : '') + '>Keep it</button></div></div>';
+      } else {
+        h += '<p><button class="lnk warn" type="button" data-sync="forget"' + (ui.busy ? ' disabled' : '') + '>Delete my saved data</button></p>';
+      }
     } else if (ui.sent) {
       h += '<p id="dnsyncSent">Check your email: we sent a sign-in link to <b>' + esc(ui.sent) + '</b>. Open it on this device.</p>' +
         '<div class="acts"><button class="btn" type="button" data-sync="again">Use a different email</button></div>';
     } else {
-      h += '<p>Keep your results and streaks on every phone, browser and the app. Optional and free. ' +
-        'Already have an account? Use the same email to sign in. No password: we email you a link.</p>' +
+      h += '<p>Enter your email and we’ll send you a link. It signs you in, or sets up a free account if you’re new.</p>' +
+        '<p class="fine">Optional. Keeps your results, streaks and leagues on every phone, browser and the app. No password.</p>' +
         '<form id="dnsyncForm" novalidate><label class="flab" for="dnsyncEmail">Your email</label>' +
         '<div class="inline"><input id="dnsyncEmail" type="email" autocomplete="email" inputmode="email" ' +
         'placeholder="you@example.com" required>' +
@@ -241,9 +323,12 @@
       if (what === 'again') { ui.sent = ''; ui.msg = ''; refresh(); }
       else if (what === 'now') act(function () { return sync().then(function (r) { setTimeout(function () { afterSync(r); }, 0); }); }, 'Synced.');
       else if (what === 'out') act(function (sb) { return sb.auth.signOut(); });
-      else if (what === 'forget') {
-        if (!confirm('Delete your synced copy? Your results stay in this browser. The copy kept for your email is deleted and you’re signed out.')) return;
-        act(function (sb) { return rpc(sb, 'sync_forget').then(function () { return sb.auth.signOut(); }); }, 'Your synced copy is deleted.');
+      else if (what === 'forget') { ui.confirm = 'forget'; ui.msg = ''; refresh().then(function () {
+        var y = box.querySelector('[data-sync="forget-yes"]'); if (y) y.focus(); }); }
+      else if (what === 'cancel') { ui.confirm = ''; refresh(); }
+      else if (what === 'forget-yes') {
+        ui.confirm = '';
+        act(function (sb) { return rpc(sb, 'sync_forget').then(function () { return sb.auth.signOut(); }); }, 'Your saved data is deleted. This browser’s results are still here.');
       }
     });
 
