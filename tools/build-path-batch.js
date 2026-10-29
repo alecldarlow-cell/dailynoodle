@@ -42,6 +42,7 @@
          shape and gets new givens; the rest get a new thread. Re-parses every
          written file and re-runs the gate and the rules on it.
      node tools/build-path-batch.js --through 2028-12-31 [--seed 1] [--dry] [--out dir]
+     node tools/build-path-batch.js --blurb [--from D] [--dry]   (forthcoming days' blurb, AF-026)
          new days after the last Path, cloned from the newest page; run
          `node tools/og-tags.js` afterwards so each page's preview names
          its own headline and URL.
@@ -272,6 +273,14 @@ function fmtLocked(locked) {
   const lines = []; for (let i = 0; i < locked.length; i += 5) lines.push('    ' + locked.slice(i, i + 5).map(l => '[' + l.join(',') + ']').join(','));
   return 'locked:[\n' + lines.join(',\n') + '\n  ],';
 }
+/* The day's blurb (dn:standfirst and og:description). AF-026, 29 Oct 2026: Path
+   calls its line a path ("thread" is Tangle's word). New days always get this
+   wording, whatever the template day said; --blurb rewrites forthcoming days. */
+const BLURB = 'Thirty-six cells, one path. Place 1 through 36 so every consecutive pair sits next door.';
+const OLD_BLURB = 'Thirty-six cells, one thread. Place 1 through 36 so every consecutive pair sits next door.';
+function blurb(s) {
+  return s.replace(/(<meta (?:name="dn:standfirst"|property="og:description")\s+content=")[^"]*(")/g, (m, a, b) => a + BLURB + b);
+}
 function restamp(s, pz) {
   const m = s.match(PZ_RE); if (!m) throw new Error('DN_PUZZLE block not found');
   let b = m[0];
@@ -297,7 +306,7 @@ function maskedSame(before, after) {
   return null;
 }
 
-module.exports = { G, RULES, MIX, frontier, grade, threadKey, maxStraight, readPaths, generate, restamp, maskedSame, parseBlock, seqOf };
+module.exports = { G, RULES, MIX, BLURB, blurb, frontier, grade, threadKey, maxStraight, readPaths, generate, restamp, maskedSame, parseBlock, seqOf };
 if (require.main === module) main();
 
 /* ================= main ================= */
@@ -388,6 +397,7 @@ function main() {
       used.add(pz.key);
       let s = tpl.split(oldId).join(id);
       s = s.replace(/(name="dn:headline"\s+content=")Path \d+(")/, `$1Path ${num}$2`).replace(/(name="dn:date"\s+content=")[^"]*(")/, `$1${date}$2`);
+      s = blurb(s);
       s = restamp(s, pz);
       const g = grade(parseBlock(s, f)); if (!g.gate.pass || g.breaks.length) throw new Error(f + ' fails: ' + g.breaks.join(' '));
       if (!dry) fs.writeFileSync(path.join(outDir, f), s);
@@ -397,5 +407,25 @@ function main() {
       stalls: hist(made.map(m => m.g.stalls)), givens: hist(made.map(m => m.g.givens)) }, null, 1));
     return;
   }
-  console.error('use --report, --check, --regen or --through (see the header)'); process.exit(1);
+  if (has('--blurb')) {
+    // forthcoming days only: from three days ahead (London), as the other tools' no-edit window
+    const ld = (() => { const p = {}; new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date()).forEach(x => { p[x.type] = x.value; }); return p.year + '-' + p.month + '-' + p.day; })();
+    const add = (d, k) => { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + k); return t.toISOString().slice(0, 10); };
+    const from = arg('--from', add(ld, 3));
+    if (from < add(ld, 3)) { console.error('--from ' + from + ' is inside the no-edit window (today and the next two days, London)'); process.exit(1); }
+    let changed = 0;
+    for (const e of all) {
+      if (e.date < from || !e.s.includes(OLD_BLURB)) continue;
+      const out = blurb(e.s);
+      // only the two meta lines may change
+      const a = e.s.split('\n'), b = out.split('\n');
+      const diff = a.map((l, i) => l === b[i] ? null : i).filter(i => i != null);
+      if (a.length !== b.length || diff.length !== 2 || diff.some(i => !/dn:standfirst|og:description/.test(a[i]))) throw new Error(e.f + ': blurb change touched more than the two meta lines');
+      if (!dry) fs.writeFileSync(path.join(REPORTS, e.f), out);
+      changed++;
+    }
+    console.log(JSON.stringify({ blurb: BLURB, from, changed, dry }));
+    return;
+  }
+  console.error('use --report, --check, --regen, --through or --blurb (see the header)'); process.exit(1);
 }

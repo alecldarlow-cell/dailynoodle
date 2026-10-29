@@ -471,6 +471,72 @@ const TESTS = {
     await ctx.close();
     await shareNative(b, F.borders, p2 => play.borders(p2), 'borders');
   },
+  /* ---------- 29 Oct 2026: Borders shows the locator map large (AF-016) ---------- */
+  async 'borders:big-map'(b) {
+    const { ctx, p } = await open(b, F.borders);
+    const P = await play.puzzle(p);
+    await tap(p, p.locator('#playCard')); await wait(p, 1500);
+    const big = () => p.evaluate(() => { const m = document.getElementById('bigMap'), s = m && m.querySelector('svg'), r = s && s.getBoundingClientRect();
+      return { on: !!m && m.classList.contains('on'), w: r ? r.width : 0, vw: innerWidth, vb: s && s.getAttribute('viewBox'), name: ((m && m.querySelector('.bm-name')) || {}).textContent || '',
+        land: !!(m && m.querySelector('.bm-land')), go: ((m && m.querySelector('.bm-go')) || {}).textContent }; });
+    const pick = async (i, right) => { const q = P.qs[i], names = await p.locator('#opts .opt').allTextContents();
+      await tap(p, p.locator('#opts .opt').nth(right ? names.indexOf(q.n) : names.findIndex(n => n !== q.n))); await wait(p, 1200); };
+    // GIVEN a question, WHEN Show on map is used, THEN the small map opens large on a tap, without naming the country
+    await tap(p, p.locator('#hintBtn')); await wait(p, 800);
+    await tap(p, p.locator('#inset')); await wait(p, 400);
+    let m = await big();
+    ok(m.on && m.go === 'Close' && !m.name && m.land, `borders: tapping the small map opens it large, country drawn, not named (${m.vb})`);
+    await tap(p, p.locator('#bigMap .bm-go')); await wait(p, 400);
+    ok(!(await big()).on && await p.locator('#opts .opt:not(.dim)').count() === 4, 'borders: Close goes back to the same question, still unanswered');
+    // WHEN the answer is right, THEN no big map by itself
+    await pick(0, true);
+    ok(!(await big()).on, 'borders: a right answer does not open the big map');
+    await tap(p, p.locator('#nextBtn')); await wait(p, 1000);
+    // WHEN the answer is wrong, THEN the map opens near full width, zoomed to the region, the country highlighted and named, and waits
+    await pick(1, false);
+    m = await big();
+    const vbw = m.vb ? +m.vb.split(' ')[2] : 600;
+    ok(m.on && m.w >= m.vw * 0.85 && vbw < 600 && m.land && m.name === P.qs[1].n && m.go === 'Next',
+      `borders: a wrong answer opens the map large (${Math.round(m.w)} of ${m.vw}px), zoomed (${Math.round(vbw)} of 600), ${m.name} highlighted and named`);
+    await wait(p, 30000);
+    const st = await p.evaluate(() => ({ n: document.querySelectorAll('#ticks i.ok,#ticks i.bad').length, on: document.getElementById('bigMap').classList.contains('on') }));
+    ok(st.on && st.n === 2, 'borders: it waits for a tap rather than moving on');
+    await tap(p, p.locator('#bigMap')); await wait(p, 1000);
+    const after = await p.evaluate(() => ({ on: document.getElementById('bigMap').classList.contains('on'), answered: document.querySelectorAll('#opts .opt.right').length, ticks: document.querySelectorAll('#ticks i.cur').length }));
+    ok(!after.on && after.answered === 0 && after.ticks === 1, 'borders: a tap goes on to the next question');
+    const s = await ls(p, 'digi-borders-v1');
+    ok(s.cur && s.cur.i === 2 && s.cur.ans.length === 2 && s.cur.pts === 50 && s.cur.ans[0].h === true && s.cur.ans[1].ok === false, `borders: scores and the saved round as before (${JSON.stringify(s.cur && { i: s.cur.i, pts: s.cur.pts })})`);
+    // the big map after a wrong answer, on a small phone in the dark: still inside the screen
+    ok(!p.errs.length, 'borders: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+    const d = await open(b, F.borders, { scheme: 'dark', width: 320, height: 568 });
+    await tap(d.p, d.p.locator('#playCard')); await wait(d.p, 1500);
+    const q0 = P.qs[0], n0 = await d.p.locator('#opts .opt').allTextContents();
+    await tap(d.p, d.p.locator('#opts .opt').nth(n0.findIndex(n => n !== q0.n))); await wait(d.p, 1200);
+    const r = await d.p.evaluate(() => { const c = document.querySelector('#bigMap .bm-card').getBoundingClientRect(), g = document.querySelector('#bigMap .bm-go').getBoundingClientRect(); return { l: c.left, r: c.right, b: g.bottom, vw: innerWidth, vh: innerHeight }; });
+    ok(r.l >= 0 && r.r <= r.vw && r.b <= r.vh, `borders: on a 320×568 phone the big map and its button fit (${JSON.stringify(r)})`);
+    await d.ctx.close();
+  },
+  async 'path:words'(b) {
+    // AF-026: GIVEN a Path, WHEN it is read and played, THEN its words call the line a path; "thread" is left to Tangle
+    const { ctx, p } = await open(b, F.path);
+    const card = await p.evaluate(() => [...document.querySelectorAll('.dn-start-card p,.dn-how p')].map(e => e.textContent).join(' | '));
+    ok(/Join 1 to 36 in one unbroken path, through every given number\./.test(card) && /grow the path from either end/.test(card) && /checkpoints the path must pass through/.test(card) && !/thread/i.test(card),
+      `path: start card rule and How to play say path ("${card.slice(0, 80)}…")`);
+    await play.start(p);
+    const P = await play.puzzle(p), at = {}; P.solution.forEach((row, r) => row.forEach((v, c) => at[v] = [r, c]));
+    await tap(p, p.locator('#grid .cell').nth(at[1][0] * 6 + at[1][1])); await wait(p, 300);
+    const far = P.solution.flat().findIndex((v, i) => { const r = Math.floor(i / 6), c = i % 6; return Math.abs(r - at[1][0]) > 1 || Math.abs(c - at[1][1]) > 1; });
+    await tap(p, p.locator('#grid .cell').nth(far)); await wait(p, 300);
+    ok(await text(p, '#msg') === 'Not next to the active end — the path grows one square at a time.', `path: play message "${await text(p, '#msg')}"`);
+    await tap(p, p.locator('#grid .cell').nth(at[1][0] * 6 + at[1][1])); await wait(p, 300);
+    const m = await text(p, '#msg');
+    ok(!/thread/i.test(m), `path: no "thread" in "${m}"`);
+    const meta = await p.evaluate(() => [document.querySelector('meta[name="dn:standfirst"]').content, document.querySelector('meta[property="og:description"]').content]);
+    ok(meta.every(t => /one thread/.test(t)), 'path: a released day (18 Oct) keeps its published blurb');
+    ok(!p.errs.length, 'path: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
   async 'finish:mini'(b) {
     const ev = []; const { ctx, p } = await open(b, F.mini, { events: ev });
     await play.grid(p);
@@ -635,8 +701,10 @@ const TESTS = {
     await sheetChecks(p, ev, { type: 'path', boxId: 'modal', ids: ['winTitle', 'statTime', 'statStreak'],
       shareRe: /^〰️ Path #92 — \d:\d\d$/,
       endCheck: x => ok(x && x.outcome === 'solved' && x.secs > 0, `path: tracker read solved in ${x && x.secs}s`) });
-    ok(await text(p, '#winTitle') === 'Thread complete' && await text(p, '.fin-note') === 'One to 36 without a hint.', 'path: title and note');
-    ok(await p.locator('.fin-path .fin-grid i').count() === 36 && await p.locator('.fin-path polyline').count() === 1, 'path: the thread in the recap');
+    // AF-026 (29 Oct 2026): Path calls its line a path, not a thread
+    ok(await text(p, '#winTitle') === 'Path complete' && await text(p, '.fin-note') === 'One to 36 without a hint.', 'path: title and note');
+    ok(await p.locator('.fin-path .fin-grid i').count() === 36 && await p.locator('.fin-path polyline').count() === 1, 'path: the path in the recap');
+    ok(await text(p, '.fin-recap h3') === 'The path', `path: recap heading "${await text(p, '.fin-recap h3')}"`);
     await shareClipboard(p, ctx, 'path');
     await reopen(p, ev, 'path', 'modal');
     ok(await text(p, '.fin-streak') === '🔥 1-day streak', 'path: reopened sheet keeps the streak');

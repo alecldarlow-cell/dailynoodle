@@ -367,7 +367,7 @@ function onTap(r,c){
   const target   = low ? state.lowHead+1 : state.highHead-1;
 
   if(manhattan([r,c], headCell)!==1){
-    reject(r,c,"Not next to the active end — the thread grows one square at a time.");
+    reject(r,c,"Not next to the active end — the path grows one square at a time.");
     return;
   }
 
@@ -385,14 +385,14 @@ function onTap(r,c){
       return;
     }
     reject(r,c, lockedSet.has(key)
-      ? "That given is "+existing+", but the thread needs "+target+" next."
-      : "That square is already part of the thread.");
+      ? "That given is "+existing+", but the path needs "+target+" next."
+      : "That square is already part of the path.");
     return;
   }
 
   // Empty square. If the target value is a given elsewhere, it can only go there.
   if(lockedByValue.has(target)){
-    reject(r,c, target+" is already given elsewhere — the thread has to pass through it.");
+    reject(r,c, target+" is already given elsewhere — the path has to pass through it.");
     return;
   }
   // The placed value must also sit next to its other neighbour, if that’s on the board.
@@ -531,8 +531,8 @@ function checkWin(){
   for(let r=0;r<N;r++) for(let c=0;c<N;c++){
     if(state.cellValue[r][c]===null) return;
   }
-  // Belt and braces: the tap rules only ever build the one true thread,
-  // and the gate proved that thread unique — but verify anyway.
+  // Belt and braces: the tap rules only ever build the one true path,
+  // and the gate proved that path unique — but verify anyway.
   for(let r=0;r<N;r++) for(let c=0;c<N;c++){
     if(state.cellValue[r][c] !== PUZZLE.solution[r][c]) return;
   }
@@ -647,7 +647,7 @@ function restoreDone(){
   clearInterval(state.timerHandle);
   timerEl.textContent=t; document.getElementById("statTime").textContent=t;
   paint();
-  setMsg("Thread complete in "+t+".");
+  setMsg("Path complete in "+t+".");
   // reopen on the finish sheet (no "on": the tracker logged this finish the first time)
   document.getElementById("statTime").textContent=dnTime(t);document.getElementById("statStreak").textContent=state.streak;
   finishSheet(false);
@@ -655,7 +655,7 @@ function restoreDone(){
 /* ---- the shared finish sheet (engines/finish.js) ---- */
 function finishSheet(fresh){
   const W=["no","one","two","three","four","five","six","seven","eight","nine","ten"];
-  const h2=document.querySelector("#modal h2"); if(h2){h2.id="winTitle";h2.textContent="Thread complete";}
+  const h2=document.querySelector("#modal h2"); if(h2){h2.id="winTitle";h2.textContent="Path complete";}
   const note=fresh?(usedHints?`One to 36 with ${usedHints===1?"one hint":(W[usedHints]||usedHints)+" hints"}.`:"One to 36 without a hint."):"";
   let played=0;try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");played=s&&s.done?Object.keys(s.done).length:0;}catch(e){}
   const st=streakGet()||{};
@@ -669,8 +669,17 @@ function finishSheet(fresh){
     box:"modal",title:"winTitle",hero:"statTime",note,
     share:{text:()=>"〰️ Path "+dnNum(PUZZLE.id)+" — "+dnTime(timerEl.textContent)+dnStreak(String(state.streak))},
     stats:[{id:"statStreak",label:"day streak"},{value:Math.max(st.best||0,state.streak||0),label:"best streak"},{value:played,label:"Paths played"}],
-    recap:{title:"The thread",sub:"The given numbers are shaded.",node:wrap}});
+    recap:{title:"The path",sub:"The given numbers are shaded.",node:wrap}});
 }
+/* AF-026 (29 Oct 2026): Path calls its line a path; "thread" belongs to Tangle.
+   The start card's rule and How to play come from engines/house.js (built
+   after this file runs), so Path's own words are put right here once it has. */
+function pathWords(){
+  document.querySelectorAll(".dn-start-card p,.dn-how p").forEach(e=>{
+    if(/thread/.test(e.textContent))e.textContent=e.textContent.replace(/\bthread\b/g,"path");
+  });
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",pathWords);else pathWords();
 buildGrid();
 restoreDone();
 doneShow();

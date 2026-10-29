@@ -274,6 +274,69 @@ function worldSVG(s,pin){
   return s;
 }
 function insetMap(c){$('inset').innerHTML='';$('inset').appendChild(worldSVG(document.createElementNS(SVGNS,'svg'),c));}
+
+/* ---------- the big map (AF-016, 29 Oct 2026) ----------
+   After a wrong answer the locator map opens near full width, zoomed to the
+   country's region, the country drawn on it in the pin colour and named, and
+   it waits for a tap: the tap goes on to the next question. The small map
+   can also be tapped whenever it shows (after Show on map, or after an
+   answer) to open it large; before the answer it names nothing. Scores,
+   saves and question order are unchanged.
+   The world inset is an Equal Earth map, 600 units wide; each question's
+   outline is Mercator about (lo, la) with scale K and offset (tx, ty), so the
+   outline is carried across point by point and pinned on the question's own
+   (x, y), which lines it up with the inset's land (fitted 29 Oct 2026 on the
+   168 countries: rms 1.9 units in the 600 frame). */
+const EE={a1:1.340264,a2:-0.081106,a3:0.000893,a4:0.003796,m:Math.sqrt(3)/2,kx:112.4375,ky:-101.3006};
+function eqEarth(lon,lat){const r=Math.PI/180,t=Math.asin(EE.m*Math.sin(lat*r)),t2=t*t,t6=t2*t2*t2;
+  return [EE.kx*lon*r*Math.cos(t)/(EE.m*(EE.a1+3*EE.a2*t2+t6*(7*EE.a3+9*EE.a4*t2))),EE.ky*t*(EE.a1+EE.a2*t2+t6*(EE.a3+EE.a4*t2))];}
+function onWorld(c){
+  // only absolute M and relative l/z are written by the batch tool; anything else, show the pin alone
+  if(!/^[Mlz0-9 .,-]+$/.test(c.d))return null;
+  const r=Math.PI/180,pin=eqEarth(c.lo,c.la),ox=c.x*2-pin[0],oy=c.y*2-pin[1],rings=[];
+  let x=0,y=0,ring=null;const re=/([Mlz])([^Mlz]*)/g;let m;
+  const put=()=>{const lon=c.lo+(x-c.tx)/(c.K*r),lat=(2*Math.atan(Math.exp((c.ty-y)/c.K))-Math.PI/2)/r,w=eqEarth(lon,lat);ring.push([w[0]+ox,w[1]+oy]);};
+  while((m=re.exec(c.d))){const n=(m[2].match(/-?[\d.]+/g)||[]).map(Number);
+    if(m[1]==='M'){x=n[0];y=n[1];ring=[];rings.push(ring);put();for(let i=2;i+1<n.length;i+=2){x+=n[i];y+=n[i+1];put();}}
+    else if(m[1]==='l'&&ring){for(let i=0;i+1<n.length;i+=2){x+=n[i];y+=n[i+1];put();}}}
+  return rings.filter(g=>g.length>1);
+}
+let bigOpen=false,bigNext=false,bigT=0;
+function bigMap(c,named,goesOn){
+  clearTimeout(bigT);
+  let box=$('bigMap');
+  if(!box){box=document.createElement('div');box.id='bigMap';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');
+    box.innerHTML='<div class="bm-card"><svg class="bm-svg" aria-hidden="true"></svg><p class="bm-cap"></p><button type="button" class="btn primary bm-go"></button></div>';
+    $('quiz').appendChild(box);
+    box.addEventListener('click',e=>{e.stopPropagation();bigDone();});}
+  const svg=box.querySelector('svg'),rings=onWorld(c)||[];svg.innerHTML='';
+  const H=Math.min(WORLD.wh*2,270);
+  el('path',{d:WORLD.s,fill:'#E4F1F1',stroke:'#1F3A4A','stroke-width':1.5,'vector-effect':'non-scaling-stroke'},svg);
+  el('path',{d:WORLD.w,fill:'#E9DCAE',stroke:'#1F3A4A','stroke-width':1,'vector-effect':'non-scaling-stroke'},svg);
+  let x0=c.x*2,x1=c.x*2,y0=c.y*2,y1=c.y*2;
+  for(const g of rings)for(const [x,y] of g){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+  if(rings.length)el('path',{d:rings.map(g=>'M'+g.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join('L')+'Z').join(''),class:'bm-land','vector-effect':'non-scaling-stroke'},svg);
+  // the region: three times the country, at least about a seventh of the world across, never more than all of it
+  const ar=0.66,cx=(x0+x1)/2,cy=(y0+y1)/2;
+  let w=Math.max(84,(x1-x0)*3,(y1-y0)*3/ar);w=Math.min(600,w);const h=Math.min(H,w*ar);w=h/ar>w?w:Math.min(600,h/ar);
+  const vx=Math.max(0,Math.min(600-w,cx-w/2)),vy=Math.max(0,Math.min(H-h,cy-h/2));
+  svg.setAttribute('viewBox',vx.toFixed(1)+' '+vy.toFixed(1)+' '+w.toFixed(1)+' '+h.toFixed(1));
+  const u=w/600;
+  el('circle',{cx:c.x*2,cy:c.y*2,r:(9*u).toFixed(2),class:'ring'},svg).style.strokeWidth=(3*u)+'px';
+  el('circle',{cx:c.x*2,cy:c.y*2,r:(5*u).toFixed(2),class:'dot',stroke:'#fff','stroke-width':(2*u).toFixed(2)},svg);
+  if(named){const fs=Math.max(16*u,w*0.05),below=cy+(y1-y0)/2+fs*1.35,ty=below<vy+h-fs*0.4?below:Math.max(vy+fs*1.1,cy-(y1-y0)/2-fs*0.5);
+    const t=el('text',{x:Math.max(vx+w*0.2,Math.min(vx+w*0.8,cx)).toFixed(1),y:ty.toFixed(1),class:'bm-name','text-anchor':'middle','font-size':fs.toFixed(2)},svg);t.textContent=c.n;
+    t.style.strokeWidth=(fs*0.22)+'px';}
+  box.querySelector('.bm-cap').textContent=named?'Where '+c.n+' is':'Where today’s country is';
+  box.setAttribute('aria-label',box.querySelector('.bm-cap').textContent);
+  bigNext=!!goesOn;
+  box.querySelector('.bm-go').textContent=goesOn?(cur&&cur.i===NQ-1?'See result':'Next'):'Close';
+  box.classList.add('on');bigOpen=true;
+  setTimeout(()=>{try{box.querySelector('.bm-go').focus({preventScroll:true});}catch(e){}},30);
+}
+function bigClose(){clearTimeout(bigT);const b=$('bigMap');if(b)b.classList.remove('on');bigOpen=false;bigNext=false;}
+function bigDone(){if(!bigOpen)return;const on=bigNext;bigClose();if(on)next();}
+function openInset(){if(view!=='quiz'||!cur||paused||!$('inset').classList.contains('on'))return;const q=P.qs[cur.i];if(q)bigMap(q,locked,false);}
 function tileSVG(c){return `<svg viewBox="0 0 600 600" aria-hidden="true"><path class="land" fill="${colourOf(c)}" d="${c.d}"/></svg>`;}
 
 /* ---------- home ---------- */
@@ -317,7 +380,7 @@ function updatePts(){$('pts').innerHTML=cur.pts+'<small>pts</small>';}
 function showQuestion(){
   const q=P.qs[cur.i];locked=false;cur.hint=false;
   $('sheet').classList.remove('revealed');$('quiz').classList.remove('locked');
-  $('nameplate').innerHTML='';$('inset').classList.remove('on');
+  $('nameplate').innerHTML='';$('inset').classList.remove('on');bigClose();
   drawLand($('qmap'),q,true);scaleBar(q);insetMap(q);
   const box=$('opts');box.innerHTML='';
   q.o.forEach((name,k)=>{const b=document.createElement('button');b.className='btn opt';b.textContent=name;
@@ -345,8 +408,9 @@ function answer(k){
   (ok?sfx.right:sfx.wrong)();
   try{if(!ok&&navigator.vibrate&&!reduced())navigator.vibrate(30);}catch(e){}
   setTimeout(()=>{try{$('nextBtn').focus({preventScroll:true});}catch(e){}},50);
+  if(!ok){const at=cur.i;bigT=setTimeout(()=>{if(locked&&cur&&cur.i===at&&view==='quiz')bigMap(q,true,true);},reduced()?0:700);}
 }
-function next(){if(!locked||!cur)return;cur.i++;save.cur=cur;persist();if(cur.i>=NQ)finish();else showQuestion();}
+function next(){if(!locked||!cur)return;bigClose();cur.i++;save.cur=cur;persist();if(cur.i>=NQ)finish();else showQuestion();}
 function finish(){
   if(!cur||ending)return;ending=true;
   const correct=cur.ans.filter(a=>a.ok).length;
@@ -359,7 +423,7 @@ function finish(){
   showResult(rec,true);
   sfx.pass();                                    // one finishing chime: there is no pass mark
 }
-function abandon(){closePause();cur=null;renderHome();}
+function abandon(){closePause();bigClose();cur=null;renderHome();}
 
 /* ---------- result ---------- */
 function starSVG(on){return `<svg viewBox="0 0 20 20"><path d="M10 1.8l2.5 5.3 5.7.7-4.2 3.9 1.1 5.7L10 14.6l-5.1 2.8 1.1-5.7L1.8 7.8l5.7-.7z" fill="${on?'#1F3A4A':'none'}" stroke="#1F3A4A" stroke-width="1.4" stroke-linejoin="round"/></svg>`;}
@@ -447,6 +511,9 @@ function loop(now){
   for(const a of document.querySelectorAll('a.back'))if(/Digi Puzzles/.test(a.textContent))a.textContent='← Puzzles';
   $('playCard').addEventListener('click',()=>{goFS();audio();start();});
   $('hintBtn').addEventListener('click',useHint);
+  const inset=$('inset');inset.removeAttribute('aria-hidden');inset.setAttribute('role','button');inset.setAttribute('aria-label','Open the map large');inset.tabIndex=0;
+  inset.addEventListener('click',openInset);
+  inset.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();openInset();}});
   $('nextBtn').addEventListener('click',()=>{goFS();next();});
   $('pauseBtn').addEventListener('click',openPause);
   $('resumePause').addEventListener('click',()=>{goFS();closePause();});
@@ -454,6 +521,7 @@ function loop(now){
   $('winShare').addEventListener('click',share);
   document.addEventListener('keydown',e=>{
     if(view!=='quiz')return;
+    if(bigOpen&&!paused){if(e.key==='Escape'){bigClose();e.preventDefault();}else if(e.key==='Enter'||e.key===' '){e.preventDefault();bigDone();}return;}
     if(e.key==='Escape'){paused?closePause():openPause();return;}
     if(paused)return;
     if(!locked&&/^[1-4]$/.test(e.key))answer(+e.key-1);
