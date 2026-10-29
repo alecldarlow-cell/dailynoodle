@@ -160,7 +160,7 @@ async function sweepByHint(p, { onHint, afterMove, afterOpen } = {}) {
   await wait(p, 4000);
   return seen;
 }
-/* Path: tap 1 to 35 in order (36 closes the thread) */
+/* Path: tap 1 to 35 in order (36 closes the path) */
 async function path(p) {
   await start(p);
   const P = await puzzle(p), at = {};

@@ -256,3 +256,20 @@ details.how p{margin:0 0 12px;font-size:15px;line-height:1.5;color:var(--ink2)}
   #opts{grid-area:choices;align-self:center}
   .qfoot{grid-area:actions}
 }
+
+/* 29 Oct 2026 (AF-016): the locator map, large. The small map opens it with a tap
+   whenever it shows; a wrong answer opens it by itself and waits for a tap to go on. */
+#inset.on{pointer-events:auto;cursor:zoom-in}
+#bigMap{position:absolute;inset:0;z-index:4;display:none;align-items:center;justify-content:center;padding:12px;background:rgba(31,58,74,.45)}
+#bigMap.on{display:flex;animation:bmIn .28s ease-out}
+.bm-card{width:min(100%,640px);background:var(--paper);border:1.5px solid var(--edge);border-radius:6px;box-shadow:0 4px 0 var(--ledge);padding:8px 8px 12px;display:flex;flex-direction:column;gap:10px}
+.bm-svg{display:block;width:100%;height:auto;aspect-ratio:1/.66;background:var(--sea);border-radius:3px}
+.bm-land{fill:var(--pin);fill-opacity:.85;stroke:var(--ink);stroke-width:1.25px}
+.bm-name{font-family:var(--serif);font-style:italic;fill:var(--ink);stroke:var(--paper);paint-order:stroke;stroke-linejoin:round}
+#bigMap .ring{stroke:var(--pin)}
+.bm-cap{margin:0 4px;font-size:15px;color:var(--ink2)}
+.bm-go{min-height:48px}
+@keyframes bmIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){#bigMap.on{animation:none}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #bigMap{background:rgba(0,0,0,.55)}}
+:root[data-theme="dark"] #bigMap{background:rgba(0,0,0,.55)}
