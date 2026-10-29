@@ -10,7 +10,13 @@
 (function(){
   var c='';
   try{c=(new URLSearchParams(location.search).get('c')||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12);}catch(e){}
-  location.replace(/^[A-Z0-9]{4,12}$/.test(c)?'board.html?join='+encodeURIComponent(c)+'&v=2':'board.html');
+  /* a leaderboard share from the app (29 Oct 2026, AF-010) also names the puzzle and day: join.html?c=CODE&p=mini&d=2026-10-29.
+     A valid p (a daily type, all or records) and d (YYYY-MM-DD) go on to the board; anything else is dropped. */
+  var q='',p='',d='';
+  try{var u=new URLSearchParams(location.search);p=u.get('p')||'';d=u.get('d')||'';}catch(e){}
+  if(/^(mini|doku|sweep|path|link|tangle|borders|reckon|all|records)$/.test(p))q+='&p='+p;
+  if(/^\d{4}-\d{2}-\d{2}$/.test(d))q+='&d='+d;
+  location.replace(/^[A-Z0-9]{4,12}$/.test(c)?'board.html?join='+encodeURIComponent(c)+'&v=2'+q:'board.html');
 })();
 </script>
 <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
