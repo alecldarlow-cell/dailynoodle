@@ -109,6 +109,10 @@
         out[k] = u;
       } else if (k === 'streak' && isObj(out[k]) && isObj(old[k])) {
         out[k] = mergeObj(out[k], old[k]);
+      } else if (k === 'cur' && isObj(old[k]) && +old[k].at > 0 && (out[k] == null || (isObj(out[k]) && +old[k].at > (+out[k].at || 0)))) {
+        // An unfinished round stamped with when it was saved (Link, 29 Oct 2026):
+        // the newer one wins. Rounds without a stamp (Borders, Reckon) keep this browser's.
+        out[k] = old[k];
       }
     }
     return out;

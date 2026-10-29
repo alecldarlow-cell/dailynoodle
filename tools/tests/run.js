@@ -671,6 +671,164 @@ const TESTS = {
     ok(/3-day streak/.test(await text(p, '#run')), `run: Puzzles page "${await text(p, '#run')}"`);
     await ctx.close();
   },
+  /* ---------- 29 Oct 2026: Link keeps its round and pauses while away (AF-029, R10, AF-028) ---------- */
+  async 'link:waiting-clock'(b) {
+    // GIVEN a fresh Link, WHEN it opens, THEN the clock reads 0:00 the house way, dimmed, and waits
+    const { ctx, p } = await open(b, F.link);
+    const t = await p.evaluate(() => { const e = document.getElementById('timer'); return { text: e.textContent, waiting: e.classList.contains('waiting'), op: +getComputedStyle(e).opacity }; });
+    ok(t.text === '0:00' && t.waiting && t.op < 0.6, `link: clock waits at "${t.text}", dimmed (opacity ${t.op})`);
+    // WHEN the start card is skipped (it failed to load), THEN the line under the board says what starts the clock
+    await p.evaluate(() => { document.documentElement.classList.remove('dn-starting'); const c = document.querySelector('.dn-start'); if (c) c.hidden = true; });
+    ok(await text(p, '#msg') === 'Starts when you tap a word', `link: "${await text(p, '#msg')}" under the board until the first tap`);
+    await wait(p, 20000);
+    ok(await text(p, '#timer') === '0:00', 'link: no time passes before the first tap');
+    await tap(p, p.locator('#board .tile').first()); await wait(p, 3000);
+    const after = await p.evaluate(() => { const e = document.getElementById('timer'); return { text: e.textContent, waiting: e.classList.contains('waiting') }; });
+    ok(/^0:0[34]$/.test(after.text) && !after.waiting, `link: first tap starts the clock, undimmed (${after.text})`);
+    ok(await text(p, '#msg') === '', 'link: the waiting line goes once the clock starts');
+    ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
+  async 'link:pause-resume'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
+    const away = hide => p.evaluate(hide => {
+      Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => hide ? 'hidden' : 'visible' });
+      Object.defineProperty(document, 'hidden', { configurable: true, get: () => hide });
+      document.dispatchEvent(new Event('visibilitychange'));
+    }, hide);
+    const secs = async () => { const [m, s] = (await text(p, '#timer')).split(':').map(Number); return m * 60 + s; };
+    await play.start(p);
+    const P = await play.puzzle(p), G = P.groups.map(g => g.members.map(m => m.toUpperCase()));
+    const pick = async ws => { if (await p.locator('#board .tile.sel').count()) { await tap(p, p.locator('#clear')); await wait(p, 300); } for (const w of ws) { await tap(p, p.locator(`#board .tile[data-w="${w}"]`)); await wait(p, 300); }
+      await tap(p, p.locator('#submit')); await wait(p, 1500); await p.waitForTimeout(1500); await wait(p, 400); };
+    await pick(G[0]);                                  // one group found
+    await pick([G[1][0], G[1][1], G[1][2], G[2][0]]);  // one mistake ("one away")
+    await tap(p, p.locator(`#board .tile[data-w="${G[3][0]}"]`)); await wait(p, 300);   // a tile left selected
+    const before = await secs();
+    // GIVEN a round part-played, WHEN the page goes away for five minutes, THEN the clock stands still
+    await away(true); await wait(p, 300000); await away(false); await wait(p, 200);
+    const back = await secs();
+    ok(back >= before && back <= before + 1, `link: five minutes away cost no time (${before}s → ${back}s)`);
+    await wait(p, 4000);
+    ok(await secs() >= back + 3, 'link: the clock carries on on return');
+    // the round is kept beside done, which stays untouched
+    const s1 = await ls(p, 'digi-link-v1');
+    ok(s1 && s1.v === 1 && s1.cur && s1.cur.id === P.id && JSON.stringify(s1.cur.f) === '[1]' && s1.cur.m === 1 && s1.cur.g.length === 2 && !(s1.done && s1.done[P.id]),
+      `link: the unfinished round is kept in digi-link-v1.cur (${JSON.stringify(s1 && s1.cur && { f: s1.cur.f, m: s1.cur.m, s: s1.cur.s })})`);
+    // WHEN the page is closed and reopened, THEN it shows the round paused with Resume, time unchanged
+    await away(true); const kept = (await ls(p, 'digi-link-v1')).cur.s;
+    await p.reload(); await wait(p, 1500);
+    const card = await p.evaluate(() => ({ play: (document.getElementById('dnPlay') || {}).textContent, shown: !!document.querySelector('.dn-start') && !document.querySelector('.dn-start').hidden,
+      rule: (document.querySelector('.dn-start-card h2+p') || {}).textContent }));
+    ok(card.shown && card.play === 'Resume' && /^Paused at \d+:\d\d\. One group found so far/.test(card.rule || ''), `link: reopening offers Resume ("${card.rule}")`);
+    await wait(p, 60000);
+    ok(await secs() === kept, `link: the paused clock stays at ${kept}s while the card is up`);
+    ok(await p.evaluate(() => document.getElementById('timer').classList.contains('waiting')), 'link: the paused clock is dimmed');
+    await tap(p, p.locator('#dnPlay')); await wait(p, 600);
+    const st = await p.evaluate(() => ({ bands: document.querySelectorAll('#board .band').length, tiles: document.querySelectorAll('#board .tile').length,
+      sel: document.querySelectorAll('#board .tile.sel').length, pips: document.querySelectorAll('#pips .pip.gone').length }));
+    ok(st.bands === 1 && st.tiles === 12 && st.sel === 0 && st.pips === 1, `link: resumed with 1 group, 12 tiles, nothing selected, 1 mistake (${JSON.stringify(st)})`);
+    ok(await secs() >= kept && await secs() <= kept + 1, 'link: Resume carries on from the saved time');
+    // the same guess again still costs nothing after the reload
+    await pick([G[1][0], G[1][1], G[1][2], G[2][0]]);
+    ok(await p.locator('#pips .pip.gone').count() === 1, 'link: a guess tried before leaving is still "already tried"');
+    await pick(G[1]); await pick(G[2]); await pick(G[3]);
+    await wait(p, 4000); await p.waitForTimeout(1500); await wait(p, 2000);
+    const s2 = await ls(p, 'digi-link-v1'), rec = s2.done && s2.done[P.id];
+    ok(rec && rec.o === 'win' && rec.m === 1 && JSON.stringify(rec.r) === '[1,2,3,4]' && rec.g.length === 5 && !s2.cur, `link: the finish is saved as before and the round is cleared (${JSON.stringify(rec)})`);
+    const total = rec ? rec.t.split(':').reduce((m, s) => +m * 60 + +s) : 1e9;
+    ok(total < 60, `link: the finished time leaves out the time away (${rec && rec.t})`);
+    ok(/^🔗 Link #71 — 🟩❌🟦🟨⬛ · \d:\d\d$/.test(await text(p, '.fin-share-text')), 'link: the share line is unchanged in form');
+    ok(ends(ev).length === 1 && ends(ev)[0].x.mistakes === 1 && ends(ev)[0].x.outcome === 'solved', 'link: one puzzle_end, solved, 1 mistake');
+    ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
+  async 'link:round-kept-loss'(b) {
+    // GIVEN a round kept with three mistakes, WHEN it is resumed and lost, THEN the loss is saved as before and the round cleared
+    const { ctx, p } = await open(b, F.link);
+    await play.start(p);
+    const P = await play.puzzle(p), G = P.groups.map(g => g.members.map(m => m.toUpperCase()));
+    const pick = async ws => { if (await p.locator('#board .tile.sel').count()) { await tap(p, p.locator('#clear')); await wait(p, 300); } for (const w of ws) { await tap(p, p.locator(`#board .tile[data-w="${w}"]`)); await wait(p, 300); }
+      await tap(p, p.locator('#submit')); await wait(p, 1500); await p.waitForTimeout(1500); await wait(p, 400); };
+    const W = [[G[1][0], G[1][1], G[1][2], G[2][0]], [G[1][0], G[1][1], G[2][0], G[2][1]], [G[1][0], G[2][0], G[3][0], G[3][1]], [G[2][1], G[2][2], G[3][0], G[1][3]]];
+    for (const w of W.slice(0, 3)) await pick(w);
+    await p.reload(); await wait(p, 1500); await play.start(p);
+    ok(await p.locator('#pips .pip.gone').count() === 3, 'link: three mistakes kept over a reload');
+    await pick(W[3]); await wait(p, 4000); await p.waitForTimeout(1500); await wait(p, 2000);
+    const s = await ls(p, 'digi-link-v1'), rec = s.done && s.done[P.id];
+    ok(rec && rec.o === 'loss' && rec.m === 4 && rec.g.length === 4 && !s.cur, `link: loss saved, round cleared (${JSON.stringify(rec)})`);
+    ok(await text(p, '#winTitle') === 'So close.', 'link: loss title unchanged');
+    await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
+    await pick(G[0]);
+    ok(!(await ls(p, 'digi-link-v1')).cur, 'link: a replay is never kept as a round');
+    ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
+  /* ---------- 29 Oct 2026: Tangle flashes green for every accepted word, gold for the star (AF-027) ---------- */
+  async 'tangle:flash-colours'(b) {
+    const { ctx, p } = await open(b, F.tangle);
+    const P = await play.puzzle(p);
+    await tap(p, p.locator('#playCard')); await wait(p, 4500);
+    const say = async w => { for (const ch of w) await p.keyboard.press(ch); await p.keyboard.press('Enter');
+      return p.evaluate(() => ({ good: document.querySelectorAll('#board .tile.good').length, gold: document.querySelectorAll('#board .tile.gold').length,
+        meh: document.querySelectorAll('#board .tile.meh').length, bonus: document.querySelectorAll('#board .tile.bonus').length,
+        bg: (document.querySelector('#board .tile.good, #board .tile.gold, #board .tile.meh') || {}).className, toast: document.getElementById('toast').textContent })); };
+    const settle = () => wait(p, 600);
+    const main = P.main.filter(w => w !== P.star).sort((a, b) => a.length - b.length)[0], rare = P.bonus.slice().sort((a, b) => a.length - b.length)[0];
+    let f = await say(main);
+    ok(f.good > 0 && !f.gold && !f.meh, `tangle: a common word flashes green (${main}: ${f.good} tiles)`);
+    ok(f.toast === '+' + (main.length - 2) + ' ' + main.toUpperCase(), `tangle: common word message "${f.toast}"`);
+    await settle();
+    ok(await p.locator('#board .tile.good').count() === 0, 'tangle: the flash clears after about 420 ms');
+    f = await say(rare);
+    ok(f.good > 0 && !f.gold && !f.bonus && !f.meh, `tangle: a rarer word flashes green too, not yellow (${rare})`);
+    ok(f.toast === '+' + (rare.length - 2) + ' ' + rare.toUpperCase() + ' · rarer word', `tangle: rarer word message "${f.toast}"`);
+    await settle();
+    f = await say(P.star);
+    ok(f.gold === P.starPath.length && !f.good, `tangle: the star word flashes gold (${f.gold} tiles)`);
+    ok(/^★ Longest word! \+\d+$/.test(f.toast), `tangle: star message "${f.toast}"`);
+    await settle();
+    f = await say(main);
+    ok(f.meh > 0 && !f.good && f.toast === 'Already found', 'tangle: already found stays the grey flash');
+    await settle();
+    const bad = P.tiles.slice(0, 3).join('').toLowerCase();
+    if (!P.main.includes(bad) && !P.bonus.includes(bad)) { f = await say(bad); ok(f.meh > 0 && f.toast === "Not in today's list", `tangle: not in the list stays grey (${bad})`); }
+    await settle();
+    ok(!p.errs.length, 'tangle: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
+  /* ---------- 29 Oct 2026: Mini typing skips filled squares (AF-031) ---------- */
+  async 'mini:skip-filled'(b) {
+    // 18 Oct Mini: BOX / TAX / ARISE / DUE / TEN across; BAR / OXIDE / TAP / FEE / SUN down
+    const { ctx, p } = await open(b, F.mini);
+    await play.start(p);
+    const at = () => p.evaluate(() => { const c = document.querySelector('#grid .cell.active'); return c ? c.dataset.r + ',' + c.dataset.c + ' ' + (document.querySelector('#cluebar b') || {}).textContent : ''; });
+    const type = async s => { for (const ch of s) { await p.keyboard.press(ch); await wait(p, 120); } };
+    const cell = (r, c) => p.locator('#grid .cell').nth(r * 5 + c);
+    ok(await at() === '0,1 1A', `mini: starts on 1A (${await at()})`);
+    await type('box');
+    ok(await at() === '1,0 3A', `mini: a full word moves to the next clue with a gap, at its first gap (${await at()})`);
+    await type('tax');
+    ok(await at() === '2,0 5A', `mini: then 5A (${await at()})`);
+    // GIVEN 2D OXIDE with its X already in from 3A, WHEN O is typed, THEN the cursor skips the X
+    await tap(p, cell(0, 2)); await wait(p, 200); await tap(p, cell(0, 2)); await wait(p, 200);
+    ok(await at() === '0,2 2D', `mini: tapping a filled square selects it (${await at()})`);
+    await type('o');
+    ok(await at() === '2,2 2D', `mini: typing skips the filled X and lands on the next empty square (${await at()})`);
+    ok(await p.evaluate(() => document.querySelectorAll('#grid .cell')[7].textContent.replace(/\d/g, '')) === 'X', 'mini: the crossing letter is kept');
+    await type('ide');
+    ok(await at() === '2,0 3D', `mini: a full down word moves to the next clue in the bar's order with a gap (${await at()})`);
+    // Backspace unchanged: on an empty square it steps back one and clears it
+    await p.keyboard.press('Backspace'); await wait(p, 150);
+    ok(await at() === '1,0 3D' && await p.evaluate(() => document.querySelector('#grid .cell:nth-child(6) .ltr').textContent) === '', `mini: Backspace still steps back one square and clears it (${await at()})`);
+    // the gap-wrap: earlier gaps in the same word come next when the end is full
+    await tap(p, cell(4, 3)); await wait(p, 200); await tap(p, cell(4, 3)); await wait(p, 200);   // 6D, then a second tap turns it to 8A
+    ok(await at() === '4,3 8A', `mini: on 8A's last square (${await at()})`);
+    await type('n');
+    ok(await at() === '4,1 8A', `mini: at a word's end, the cursor goes back to the word's first gap (${await at()})`);
+    ok(!p.errs.length, 'mini: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
   /* ---------- the five fixes of 18 Oct ---------- */
   async 'fix:link-replay'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
