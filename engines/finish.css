@@ -12,6 +12,7 @@
   --f-gold:#E0A100; --f-goldT:#FFEFB8; --f-goldInk:#5C4300;
   --f-ok:#157A52; --f-bad:#C2362B; --f-block:#141726; --f-frame:#141726; --f-cell:#FFFFFF; --f-cellAlt:#DCDFE7;
   --f-g1:#157A52; --f-g2:#2E5BFF; --f-g3:#FFD54A; --f-g4:#141726;
+  --f-go:#0E7A4B; --f-onGo:#FFFFFF; --f-goT:#E4F4EB; --f-goInk:#0B5E39;
   --f-serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
   --f-sans:Archivo,"Helvetica Neue",Arial,system-ui,sans-serif;
 }
@@ -21,6 +22,7 @@
     --f-act:#3D63FF; --f-actInk:#A9BBFF; --f-actT:#25305C;
     --f-gold:#F2BE2E; --f-goldT:#3B3010; --f-goldInk:#FFE08A; --f-ok:#4CC793; --f-bad:#FF7A6E;
     --f-block:#050608; --f-frame:#4A5066; --f-cell:#2E3344; --f-cellAlt:#1E2230; --f-g4:#ECEEF4;
+    --f-go:#4CC793; --f-onGo:#0B0D12; --f-goT:#142C24; --f-goInk:#7FDCB3;
   }
 }
 
@@ -50,58 +52,69 @@ html.fin-shown body{overflow:hidden}
 
 .fin-top{display:flex;align-items:center;min-height:44px}
 .fin-back{color:var(--f-ink2)!important;text-decoration:none;font-size:15px;display:inline-flex;align-items:center;gap:6px;min-height:44px}
-.fin-kick{font-family:var(--f-serif);font-style:italic;font-size:19px;color:var(--f-ink2);margin:6px 0 0;font-weight:400}
-.fin .fin-title{font-family:var(--f-serif);font-weight:400;font-size:44px;line-height:1;margin:6px 0 0;letter-spacing:-.01em;color:var(--f-ink);text-wrap:balance}
-.fin-hero{margin:2px 0 0;font-family:var(--f-serif);font-weight:400}
-.fin .fin-hero-val{display:flex;align-items:baseline;gap:10px;margin:0;font-family:var(--f-serif);font-weight:400;font-size:112px;line-height:.92;letter-spacing:-.03em;color:var(--f-ink);font-variant-numeric:lining-nums}
-.fin .fin-hero-val small{font-family:var(--f-serif);font-size:30px;letter-spacing:0;color:var(--f-ink2);font-weight:400}
-.fin-note{font-size:16px;line-height:1.45;color:var(--f-ink2);margin:10px 0 0;max-width:34em}
+.fin-kick{font:600 15px/1.3 var(--f-sans);color:var(--f-ink2);margin:0}
+/* RESULT (AF-019): a small label, one big score, one line under it */
+.fin-result{margin:8px 0 0}
+.fin-label{display:flex;flex-wrap:wrap;align-items:baseline;font:600 15px/1.3 var(--f-sans);color:var(--f-ink2)}
+.fin-dot{white-space:pre}
+.fin .fin-title{font:600 15px/1.3 var(--f-sans);margin:0;letter-spacing:0;color:var(--f-ink2);display:inline}
+.fin-hero{margin:4px 0 0;font-family:var(--f-serif);font-weight:400}
+.fin .fin-hero-val{display:flex;align-items:baseline;gap:10px;margin:0;font-family:var(--f-serif);font-weight:400;font-size:84px;line-height:.95;letter-spacing:-.03em;color:var(--f-ink);font-variant-numeric:lining-nums}
+.fin .fin-hero-val small{font-family:var(--f-serif);font-size:26px;letter-spacing:0;color:var(--f-ink2);font-weight:400}
+.fin-streak{font-size:16px;line-height:1.4;color:var(--f-ink);margin:8px 0 0}
+.fin-streak[hidden]{display:none}
+.fin-note{font-size:15px;line-height:1.45;color:var(--f-ink2);margin:6px 0 0;max-width:34em}
 .fin-note strong{color:var(--f-ink);font-weight:600}
 .fin-save{margin:16px 0 0;padding:12px 16px;border:1px solid var(--f-hair);border-radius:12px;color:var(--f-ink2);font:400 14px/1.5 var(--f-sans)}
 .fin-save[hidden],.fin-save button[hidden]{display:none}
 .fin-save p{margin:0}
 .fin-save button{margin-top:8px;font-size:14px;min-height:44px}
 
-/* share: the line as it will be sent, with a compact Share pill */
+/* SHARE (AF-019): one full-width filled button in the app's green; the line goes in the share sheet.
+   The line stays in the page, visually hidden, for the copy fallback (shown when it must be copied by hand). */
 .fin-share{margin:22px 0 0}
-.fin-share-card{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--f-paper);border-radius:16px;padding:10px 10px 10px 16px;font-size:17px;font-weight:600;line-height:1.35}
+.fin-share-body{min-width:0;display:flex;flex-direction:column;gap:2px;margin:0 0 10px;font-size:17px;font-weight:600;line-height:1.35;-webkit-user-select:text;user-select:text}
 .fin-share-text{min-width:0;-webkit-user-select:text;user-select:text}
-/* the short link that ends every share (20 Oct 2026); shown under the line so people see what they send */
-.fin-share-body{min-width:0;display:flex;flex-direction:column;gap:2px;-webkit-user-select:text;user-select:text}
 .fin-share-url{font-size:13px;font-weight:500;color:var(--f-ink2);overflow-wrap:anywhere}
+.fin-vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}
 .fin-nw{white-space:nowrap}
-/* Reckon's ten squares: kept together on their own line when they fit, wrapped only on a very narrow phone */
 .fin-box[data-fin="reckon"] .fin-nw{display:inline-block;white-space:normal}
-.fin-pill{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:24px;border:0;font:600 16px/1 var(--f-sans);text-decoration:none;cursor:pointer;flex:none;-webkit-tap-highlight-color:transparent}
+.fin-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 16px;border-radius:24px;border:0;font:600 16px/1 var(--f-sans);text-decoration:none;cursor:pointer;flex:none;-webkit-tap-highlight-color:transparent}
 .fin-pill svg{width:18px;height:18px;display:block}
-.fin-primary{background:var(--f-act);color:var(--f-onAct)}
-.fin-primary:active{filter:brightness(.92)}
+.fin-primary{background:var(--f-go);color:var(--f-onGo)}
+.fin-primary:active{filter:brightness(.9)}
+.fin-share-btn{display:flex;width:100%;min-height:52px;font-size:17px}
 .fin-share-icon{display:inline-flex}
 .fin-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* stats: always three equal cells */
-.fin-stats{display:grid;grid-template-columns:repeat(3,1fr);margin:22px 0 0;border-top:1px solid var(--f-line);border-bottom:1px solid var(--f-line)}
-.fin-stats>div{padding:12px 0 12px 14px;border-left:1px solid var(--f-hair);min-width:0}
-.fin-stats>div:first-child{border-left:0;padding-left:0}
-.fin-stats b,.fin .fin-stat-val{display:block;font-family:var(--f-serif);font-weight:400;font-size:34px;line-height:1;font-variant-numeric:tabular-nums;color:var(--f-ink);margin:0}
-.fin-stats span{display:block;font-size:13px;color:var(--f-ink2);margin-top:4px}
-
-/* next puzzle, board link, countdown */
-.fin-next{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;margin:14px 0 0;color:var(--f-ink)!important;text-decoration:none;border-bottom:1px solid var(--f-line);font-weight:600;font-size:17px}
-.fin-next small{display:block;font-weight:400;font-size:14px;color:var(--f-ink2);margin-top:3px}
-.fin-next svg{color:var(--f-ink2);flex:none}
-.fin-board-slot{min-height:48px}   /* "See today's board" arrives a moment later (dn-board.js); its room is kept so nothing below jumps */
+/* LEADERBOARD: dn-board.js's one line ("Currently 1st in Noodlers ›"); its room is kept so nothing below jumps */
+.fin-board-slot{min-height:52px;margin:8px 0 0}
 .fin-board-slot .nn-board-wrap{text-align:left}
-.fin-board-slot .nn-board-link{padding:12px 0!important;min-height:44px;margin-top:4px!important;color:var(--f-actInk)!important;font-family:var(--f-sans)!important;font-size:15px!important}
-.fin-clock{font-size:14px;color:var(--f-ink2);margin:12px 0 0;font-variant-numeric:tabular-nums}
+.fin-board-slot .nn-board-link{display:flex!important;align-items:center;gap:10px;min-height:48px;padding:0!important;margin:0!important;color:var(--f-ink)!important;font:600 16px/1.3 var(--f-sans)!important;text-decoration:none;border-radius:0}
+.fin-board-slot .nn-board-link svg{width:22px;height:22px;flex:none;color:var(--f-go)}
+.fin-board-slot .nn-board-link .nn-go{color:var(--f-ink2);margin-left:2px}
+.fin-board-slot .nn-moment{margin:0 0 2px;font:600 15px/1.35 var(--f-sans);color:var(--f-ink)}
+/* PLAY MORE: a tonal button the same height as Share, its count under it */
+.fin-next{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;margin:10px 0 0;padding:8px 16px;border-radius:24px;background:var(--f-goT);color:var(--f-goInk)!important;text-decoration:none;font-weight:600;font-size:17px;text-align:center}
+.fin-next small{display:block;font-weight:400;font-size:13px;color:var(--f-ink2)}
+.fin-next:active{filter:brightness(.95)}
+.fin-next.fin-next-done{background:none;min-height:48px;padding:0;align-items:flex-start;font-size:15px;color:var(--f-goInk)!important}
+.fin-next.fin-next-done small{display:none}
+/* footer */
+.fin-foot{margin:30px 0 0;padding-top:14px;border-top:1px solid var(--f-hair);display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px}
+.fin-clock{font-size:14px;color:var(--f-ink2);margin:0;font-variant-numeric:tabular-nums;flex:1 1 auto}
 .fin-clock b{color:var(--f-ink);font-weight:600}
-.fin-clock a{color:var(--f-actInk);font-weight:600}
+.fin-clock a{color:var(--f-goInk);font-weight:600}
+.fin-day{font-size:13px;color:var(--f-ink2);margin:0;flex:1 1 100%;order:3}
+.fin-sound{min-height:44px;padding:0 4px;border:0;background:none;color:var(--f-goInk);font:600 14px var(--f-sans);cursor:pointer}
+.fin-sound[aria-pressed="false"]{color:var(--f-ink2)}
 
 /* the type's recap */
-.fin-recap{margin:30px 0 0;padding-top:18px;border-top:1px solid var(--f-line)}
+.fin-recap{margin:26px 0 0;padding-top:18px;border-top:1px solid var(--f-line)}
+.fin-recap.fin-recap-first{margin-top:18px}
 .fin-recap h3{font-family:var(--f-serif);font-weight:400;font-size:28px;margin:0;line-height:1.1;color:var(--f-ink)}
 .fin-recap-sub{font-size:14px;color:var(--f-ink2);margin:6px 0 0}
-.fin-link{display:inline-flex;align-items:center;min-height:44px;margin-top:10px;color:var(--f-actInk)!important;font-weight:600;font-size:15px;text-decoration:none;background:none;border:0;padding:0;font-family:var(--f-sans);cursor:pointer}
+.fin-link{display:inline-flex;align-items:center;min-height:44px;margin-top:10px;color:var(--f-goInk)!important;font-weight:600;font-size:15px;text-decoration:none;background:none;border:0;padding:0;font-family:var(--f-sans);cursor:pointer}
 
 /* Tangle: the word bank */
 .fin-meter{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:6px 0 0;font-size:14px;color:var(--f-ink2)}
@@ -197,4 +210,4 @@ html.fin-ready:not(.dn-fonts) .fin-box.fin-open{visibility:hidden!important}
 
 /* A touch can leave :hover active. The old engines' generic button:hover
    must not turn the Share pill pale while its text stays white. */
-.fin .fin-primary:hover{background:var(--f-act);color:var(--f-onAct)}
+.fin .fin-primary:hover{background:var(--f-go);color:var(--f-onGo)}

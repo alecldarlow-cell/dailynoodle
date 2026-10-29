@@ -45,13 +45,13 @@ async function nextRow(browser) {
   const { p } = await open(browser, '2026-10-19-logic-sweep.html', { ctx, time: DAY + 'T23:58:00+01:00' });
   const row = p.locator('.fin-next'), sub = p.locator('.fin-next-sub');
   try {
-    ok(await row.getAttribute('href') === '../puzzles.html' && !/played today/.test(await sub.textContent()), 'yesterday in storage and on the server is never labelled today');
+    ok(await row.getAttribute('href') === '../puzzles.html' && !/done today/.test(await sub.textContent()), 'yesterday in storage and on the server is never labelled today');
     served = list(NEXT);
     await p.evaluate(() => dispatchEvent(new Event('online'))); await wait(p, 500);
     ok(await row.getAttribute('href') === '../puzzles.html', 'a future-dated list is not offered early');
     served = { today: DAY, items: [] };
     await p.evaluate(() => dispatchEvent(new Event('online'))); await wait(p, 500);
-    ok(!/All today/.test(await row.textContent()), 'an empty build is not presented as all puzzles done');
+    ok(!/All \d+ done today/.test(await row.textContent()), 'an empty build is not presented as all puzzles done');
     served = list(DAY);
     await p.evaluate(() => dispatchEvent(new Event('online'))); await wait(p, 500);
     ok((await row.getAttribute('href')).includes(DAY + '-word-link'), 'reconnecting picks up today’s newly published list');
@@ -60,7 +60,7 @@ async function nextRow(browser) {
     ok((await row.getAttribute('href')).includes(DAY + '-word-link'), 'offline refresh keeps a valid same-day list');
     await p.clock.setSystemTime(new Date(NEXT + 'T00:05:00+01:00'));
     await wait(p, 31000);
-    ok(await row.getAttribute('href') === '../puzzles.html' && !/played today/.test(await sub.textContent()), 'an open finish sheet discards yesterday after London midnight, even offline');
+    ok(await row.getAttribute('href') === '../puzzles.html' && !/done today/.test(await sub.textContent()), 'an open finish sheet discards yesterday after London midnight, even offline');
     fail = false; served = list(NEXT);
     await p.evaluate(() => document.dispatchEvent(new Event('visibilitychange'))); await wait(p, 500);
     ok((await row.getAttribute('href')).includes(NEXT + '-word-link'), 'resuming the app refreshes the list for the new day');

@@ -61,6 +61,8 @@ async function sheetChecks(p, ev, { type, boxId = 'winModal', ids, shareRe, endC
       nextHref: (document.querySelector('.fin-next') || {}).getAttribute && document.querySelector('.fin-next').getAttribute('href'),
       clock: (document.querySelector('.fin-clock') || {}).textContent || '',
       board: !!document.querySelector('.fin-board-slot .nn-board-link'),
+      order: [...document.querySelectorAll('#dnFin > *')].map(e => [...e.classList].find(c => /^fin-(result|recap|share|save|board-slot|next|foot|keep|top)$/.test(c)) || e.className).filter(c => !/^fin-(top|keep|save|foot)$/.test(c)),
+      solved: (document.getElementById('dnFin') || { getAttribute: () => '' }).getAttribute('data-solved'),
       scrollW: document.documentElement.scrollWidth, vw: innerWidth,
     };
   }, { boxId, ids });
@@ -71,9 +73,14 @@ async function sheetChecks(p, ev, { type, boxId = 'winModal', ids, shareRe, endC
   // The harness serves the list for the page's fake London date, just as a
   // successful daily build would. Yesterday's real file is not today's list.
   const day = await p.evaluate(() => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()));
-  ok(/^Next: \w+ \d+$/.test(s.next) && /^\d of [78] played today$/.test(s.nextSub) && (s.nextHref || '').startsWith('../reports/' + day + '-'), `${type}: next row "${s.next}" (${s.nextSub}) → ${s.nextHref}`);
-  ok(/^A new \w+ in (\d+h )?\d+m\./.test(s.clock), `${type}: countdown "${s.clock}"`);
-  ok(s.board, `${type}: "See today's board" sits in the sheet`);
+  // AF-019 (29 Oct 2026): "Play Borders 24" with "6 of 8 done today" under it; footer "New Mini in 3h 38m"
+  ok(/^Play \w+ \d+$/.test(s.next) && /^\d of [78] done today$/.test(s.nextSub) && (s.nextHref || '').startsWith('../reports/' + day + '-'), `${type}: next row "${s.next}" (${s.nextSub}) → ${s.nextHref}`);
+  ok(/^New \w+ in (\d+h )?\d+m$/.test(s.clock), `${type}: countdown "${s.clock}"`);
+  ok(s.board, `${type}: the league line sits in the sheet`);
+  ok(s.order[0] === 'fin-result' && s.order.indexOf('fin-share') < s.order.indexOf('fin-board-slot') && s.order.indexOf('fin-board-slot') < s.order.indexOf('fin-next'),
+    `${type}: result, share, league line, play more, in that order (${s.order.join(' > ')})`);
+  ok(s.solved === 'no' ? s.order.indexOf('fin-recap') === 1 : s.order.indexOf('fin-recap') < 0 || s.order.indexOf('fin-recap') > s.order.indexOf('fin-next'),
+    `${type}: the answer is first only when the round wasn't solved (solved: ${s.solved}; ${s.order.join(' > ')})`);
   ok(s.scrollW <= s.vw, `${type}: no sideways scroll (${s.scrollW} > ${s.vw})`);
   ok(ends(ev).length === 1, `${type}: tracker logged exactly one puzzle_end`);
   if (endCheck) endCheck(ends(ev)[0] && ends(ev)[0].x, s);
@@ -95,7 +102,7 @@ async function shareClipboard(p, ctx, type) {
   else ok(got === want, `${type}: Share copies the line and the short link when there is no share sheet`);
   ok(await text(p, '.fin-share-label') === 'Copied' && await text(p, '.fin-live') === 'Copied', `${type}: button says Copied, and so does the screen-reader line`);
   await wait(p, 2500);
-  ok(await text(p, '.fin-share-label') === 'Share', `${type}: button goes back to Share`);
+  ok(await text(p, '.fin-share-label') === 'Share result', `${type}: button goes back to Share result`);
 }
 async function shareNative(browser, file, driver, type) {
   const events = [];
@@ -318,6 +325,37 @@ const TESTS = {
     await ctx.close();
     await shareNative(b, F.link, p2 => play.link(p2, { wrong: 0 }), 'link');
   },
+  /* the celebration jingle (AF-013, 29 Oct 2026): a fresh win on the five grid types plays it once; a loss,
+     a reopened puzzle and Sound off play nothing; the Sound switch is on the start card and the sheet */
+  async 'finish:jingle'(b) {
+    const stub = () => { window.__notes = 0; const A = function () { return { state: 'running', currentTime: 0, destination: {}, resume: () => Promise.resolve(),
+      createOscillator: () => { window.__notes++; return { type: '', frequency: { setValueAtTime() {} }, connect: x => x, start() {}, stop() {} }; },
+      createGain: () => ({ gain: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect: x => x }) }; };
+      window.AudioContext = A; window.webkitAudioContext = A; };
+    const jingles = p => p.evaluate(() => +(document.documentElement.getAttribute('data-dn-jingle') || 0));
+    let { ctx, p } = await open(b, F.mini, {}); await ctx.addInitScript(stub); await p.reload(); await wait(p, 800);
+    ok(await p.locator('#dnSound').count() === 1 && await p.locator('#dnSound').isChecked(), 'jingle: the Mini start card has a Sound switch, on by default');
+    await play.grid(p); await wait(p, 600);
+    ok(await jingles(p) === 1 && await p.evaluate(() => window.__notes) === 6, `jingle: a fresh Mini win plays the jingle once (${await jingles(p)})`);
+    ok(await text(p, '.fin-sound') === 'Sound on', 'jingle: the sheet shows the Sound switch');
+    await p.reload(); await wait(p, 1500);
+    ok(await jingles(p) === 0, 'jingle: reopening the finished Mini plays nothing');
+    await tap(p, p.locator('.fin-sound')); await wait(p, 100);
+    ok(await text(p, '.fin-sound') === 'Sound off' && await p.evaluate(() => localStorage.getItem('dn-sound')) === '0', 'jingle: the sheet switch turns Sound off (dn-sound)');
+    await ctx.close();
+    ({ ctx, p } = await open(b, F.link, {})); await ctx.addInitScript(stub);
+    await ctx.addInitScript(() => { try { localStorage.setItem('dn-sound', '0'); } catch (e) {} }); await p.reload(); await wait(p, 800);
+    ok(!(await p.locator('#dnSound').isChecked()), 'jingle: the start card follows dn-sound');
+    await play.link(p, { wrong: 0 }); await wait(p, 600);
+    ok(await jingles(p) === 0, 'jingle: with Sound off a Link win plays nothing');
+    await ctx.close();
+    ({ ctx, p } = await open(b, F.link, {})); await ctx.addInitScript(stub); await p.reload(); await wait(p, 800);
+    await play.link(p, { wrong: 4 }); await wait(p, 600);
+    ok(await jingles(p) === 0, 'jingle: a lost Link plays nothing');
+    ok(await p.evaluate(() => document.getElementById('dnFin').getAttribute('data-solved')) === 'no', 'jingle: a lost Link is marked not solved');
+    ok(!p.errs.length, 'jingle: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
   async 'finish:link-loss'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
     await play.link(p, { wrong: 4 });
@@ -336,9 +374,9 @@ const TESTS = {
     await play.link(p, { wrong: 0 });
     const k = await p.evaluate(() => ({ sheets: document.querySelectorAll('#dnFin').length,
       title: (document.querySelector('#dnFin .fin-title') || {}).textContent || '',
-      stats: [...document.querySelectorAll('#dnFin .fin-stats > div > :first-child')].map(e => e.textContent.trim()) }));
+      stats: ['winTime', 'winStreak', 'winBest'].map(id => { const e = document.querySelector('#dnFin #' + id); return e ? e.textContent.trim() : ''; }) }));
     ok(k.sheets === 1 && k.title.trim() !== '' && k.stats.length === 3 && k.stats.every(Boolean),
-      `link: the replay's sheet has its title and stats (${k.sheets} sheet, "${k.title}", ${JSON.stringify(k.stats)})`);
+      `link: the replay's sheet has its title and (kept, for the tracker) stats (${k.sheets} sheet, "${k.title}", ${JSON.stringify(k.stats)})`);
     ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },
@@ -444,7 +482,7 @@ const TESTS = {
     ok(await p.locator('.fin-grid.g5 i').count() === 25, 'mini: solved grid in the recap');
     await shareClipboard(p, ctx, 'mini');
     await reopen(p, ev, 'mini');
-    ok(await text(p, '.fin-stats > div:first-child b') === '1', 'mini: reopened sheet shows the streak');
+    ok(await text(p, '.fin-streak') === '🔥 1-day streak', 'mini: reopened sheet shows the streak');
     ok(!p.errs.length, 'mini: no page errors ' + p.errs.join(' | '));
     await ctx.close();
     await shareNative(b, F.mini, p2 => play.grid(p2), 'mini');
@@ -601,7 +639,7 @@ const TESTS = {
     ok(await p.locator('.fin-path .fin-grid i').count() === 36 && await p.locator('.fin-path polyline').count() === 1, 'path: the thread in the recap');
     await shareClipboard(p, ctx, 'path');
     await reopen(p, ev, 'path', 'modal');
-    ok(await text(p, '.fin-stats > div:first-child b') === '1', 'path: reopened sheet keeps the streak');
+    ok(await text(p, '.fin-streak') === '🔥 1-day streak', 'path: reopened sheet keeps the streak');
     ok(!p.errs.length, 'path: no page errors ' + p.errs.join(' | '));
     await ctx.close();
     await shareNative(b, F.path, p2 => play.path(p2), 'path');
@@ -627,7 +665,8 @@ const TESTS = {
       localStorage.setItem('digi-borders-v1', JSON.stringify({ v: 1, done: { 'DP·BORD·0013': { c: 6, p: 500, on: '2026-10-17' } } })); });
     const { p } = await open(b, F.link, { ctx });
     await play.link(p, { wrong: 0 });
-    ok(/every day for 3 days\./.test(await text(p, '.fin-clock')), `run: finish sheet "${await text(p, '.fin-clock')}"`);
+    // AF-019 took the run sentence off the sheet; the run it counted is still checked here and on Puzzles
+    ok(await p.evaluate(() => window.dnFinish._test.overallRun()) === 3, `run: the sheet's overall run is 3 days`);
     await p.goto('https://dailynoodle.co.uk/puzzles.html'); await wait(p, 1500);
     ok(/3-day streak/.test(await text(p, '#run')), `run: Puzzles page "${await text(p, '#run')}"`);
     await ctx.close();

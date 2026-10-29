@@ -129,6 +129,15 @@ details.dn-how summary::-webkit-details-marker{display:none}
 details.dn-how summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--ink-soft);border-bottom:2px solid var(--ink-soft);transform:rotate(45deg) translateY(-3px)}
 details.dn-how[open] summary::after{transform:rotate(-135deg) translateY(-1px)}
 details.dn-how p{font-size:15px;line-height:1.5;color:var(--ink-soft);margin:0 0 12px}
+/* the Sound switch (AF-013): a native checkbox drawn as a switch, 48 tall */
+.dn-sound{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px;border-bottom:1px solid var(--line-soft);font-weight:600;font-size:16px;color:var(--ink);cursor:pointer}
+.dn-sound small{display:block;font-weight:400;font-size:13px;color:var(--ink-soft);margin-top:2px}
+.dn-sound input{appearance:none;-webkit-appearance:none;flex:none;width:48px;height:28px;border-radius:14px;background:var(--line-soft);position:relative;margin:0;cursor:pointer;transition:background .15s}
+.dn-sound input::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.dn-sound input:checked{background:#0E7A4B}
+.dn-sound input:checked::after{transform:translateX(20px)}
+html.dn-dark .dn-sound input:checked{background:#4CC793}
+.dn-sound input:focus-visible{outline:3px solid #0E7A4B;outline-offset:2px}
 .dn-start :focus-visible,.dn-bar :focus-visible{outline:3px solid var(--brand);outline-offset:2px}
 /* Link's wrong-guess shake: a tint, not a pale slab, in the dark */
 @media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .tile.miss{background:rgba(255,122,110,.16)}}

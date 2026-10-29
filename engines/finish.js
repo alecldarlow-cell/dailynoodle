@@ -118,10 +118,10 @@
    The Daily Noodle: the shared finish sheet, used by every puzzle engine.
    (18 Oct 2026. Design approved by Alec from the mocks; see SITE.md.)
 
-   One anatomy for all seven types: kicker, outcome, the result that gets
-   shared, one line of comment, the share line with a Share button, three
-   stats, the next puzzle you haven't played today, a countdown to the next
-   board and your overall run, then the type's own recap.
+   One anatomy for all eight types (AF-019, 29 Oct 2026): the result (label,
+   one big score, the day streak, a note), one Share result button, the
+   league line, Play the next puzzle, the type's own recap (first when the
+   round wasn't solved), then a footer with the countdown.
 
    How an engine uses it. At the top of the engine:
        window.dnFinish=window.dnFinish||{q:[],show(c){this.q.push(c)},hide(){}};
@@ -238,6 +238,7 @@
       clearTimeout(reset); reset = setTimeout(function () { btn.querySelector('.fin-share-icon').innerHTML = SHARE_ICON; lab.textContent = label; }, ms || 2000);
     }
     function select() {
+      var body = btn.parentNode.querySelector('.fin-share-body'); if (body) body.classList.remove('fin-vh');
       try { var r = document.createRange(); r.selectNodeContents(btn.parentNode.querySelector('.fin-share-body')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {}
       say(SHARE_ICON, 'Press and hold the line to copy', 3500);
     }
@@ -291,6 +292,7 @@
   function fillNext(row, type) {
     loadToday(function (j) {
       var main = row.querySelector('.fin-next-main'), sub = row.querySelector('.fin-next-sub');
+      row.classList.remove('fin-next-done');
       if (!j) { main.textContent = 'Today’s puzzles'; sub.textContent = '\u00a0'; row.href = '../puzzles.html'; return; }
       var items = j.items, playedN = 0, next = null, start = ORDER.indexOf(type);
       items.forEach(function (it) { if (done(it.type)[it.id]) playedN++; });
@@ -298,9 +300,11 @@
         var t = ORDER[(start + k) % ORDER.length];
         items.forEach(function (it) { if (!next && it.type === t && !done(t)[it.id]) next = it; });
       }
-      sub.textContent = playedN + ' of ' + items.length + ' played today';
-      if (next) { main.textContent = 'Next: ' + next.name; row.href = '../' + next.path; }
-      else { main.textContent = 'All today’s puzzles done'; row.href = '../puzzles.html'; }
+      if (next) { main.textContent = 'Play ' + next.name; sub.textContent = playedN + ' of ' + items.length + ' done today'; row.href = '../' + next.path; }
+      else {   // AF-019: once all are done, a quiet line to the archive instead of a button
+        row.classList.add('fin-next-done');
+        main.textContent = 'All ' + items.length + ' done today. Try the archive ›'; sub.textContent = ''; row.href = '../puzzles.html';
+      }
     });
   }
   function refreshNext() {
@@ -314,14 +318,81 @@
   var clockTimer = 0;
   function fillClock(p, name) {
     function paint() {
-      var s = toMidnight(), run = overallRun();
-      var runTxt = run >= 2 ? ' You’ve played every day for <b>' + run + ' days</b>.' : '';
+      var s = toMidnight();
       if (s <= 60 || s >= 86340) {
-        p.innerHTML = 'Today’s puzzles are out. <a href="" class="fin-reload">Reload</a>' + runTxt;
+        p.innerHTML = 'Today’s puzzles are out. <a href="" class="fin-reload">Reload</a>';
         var a = p.querySelector('.fin-reload'); if (a) a.addEventListener('click', function (e) { e.preventDefault(); location.reload(); });
-      } else p.innerHTML = 'A new ' + esc(name) + ' in <b>' + hm(s) + '</b>.' + runTxt;
+      } else p.innerHTML = 'New ' + esc(name) + ' in <b>' + hm(s) + '</b>';
     }
     paint(); clearInterval(clockTimer); clockTimer = setInterval(function () { paint(); if (!document.hidden) refreshNext(); }, 30000);
+  }
+
+  /* ---------- the celebration jingle (AF-013, 29 Oct 2026) ----------
+     Mini, Doku, Sweep, Path and Link play one short jingle on a fresh win only: never when a finished
+     puzzle is reopened (the engine adds the tracker's "on" only on a real finish, so that is the signal).
+     Web Audio, no files. Each note is the same tone() the Tangle/Borders/Reckon engines use:
+     an oscillator of `type` at f Hz from t s, gain 0.0001 → g over 12 ms, → 0.0001 at t + dur, stopped
+     50 ms later. The app renders exactly these notes to a file (scripts/make-sounds.js), so keep them in step.
+     One switch for the five, "Sound" on their start card and this sheet, saved as dn-sound ("0" = off;
+     on by default). Tangle, Borders and Reckon keep their own sounds and switches. */
+  var JINGLE_TYPES = { mini: 1, doku: 1, sweep: 1, path: 1, link: 1 };
+  var JINGLE = [[523.25, 0, 0.16, 'triangle', 0.12], [659.25, 0.09, 0.16, 'triangle', 0.12], [783.99, 0.18, 0.16, 'triangle', 0.12],
+                [1046.5, 0.27, 0.6, 'triangle', 0.13], [783.99, 0.27, 0.6, 'triangle', 0.08], [1318.51, 0.36, 0.5, 'sine', 0.05]];
+  var SOUND_KEY = 'dn-sound';
+  function soundOn() { try { return localStorage.getItem(SOUND_KEY) !== '0'; } catch (e) { return true; } }
+  function setSound(on) { try { localStorage.setItem(SOUND_KEY, on ? '1' : '0'); } catch (e) {} }
+  var actx = null;
+  function jingle() {
+    if (!soundOn()) return false;
+    try {
+      if (!actx) { var A = window.AudioContext || window.webkitAudioContext; if (!A) return false; actx = new A(); }
+      if (actx.state === 'suspended' && actx.resume) actx.resume().catch(function () {});
+      JINGLE.forEach(function (n) {
+        var o = actx.createOscillator(), v = actx.createGain(), t0 = actx.currentTime + n[1];
+        o.type = n[3]; o.frequency.setValueAtTime(n[0], t0); v.gain.setValueAtTime(0.0001, t0);
+        v.gain.exponentialRampToValueAtTime(n[4], t0 + 0.012); v.gain.exponentialRampToValueAtTime(0.0001, t0 + n[2]);
+        o.connect(v).connect(actx.destination); o.start(t0); o.stop(t0 + n[2] + 0.05);
+      });
+      try { document.documentElement.setAttribute('data-dn-jingle', String((+document.documentElement.getAttribute('data-dn-jingle') || 0) + 1)); } catch (e) {}
+      return true;
+    } catch (e) { return false; }
+  }
+  /* the jingle plays once the engine marks the finish as real (class "on"), within 1.5 s of the sheet opening */
+  function jingleOnFreshWin(box, cfg, solved) {
+    if (!JINGLE_TYPES[cfg.type] || !solved) return;
+    var played = false, mo = null;
+    function check() { if (!played && box.classList.contains('on')) { played = true; if (mo) mo.disconnect(); jingle(); } }
+    check(); if (played || !('MutationObserver' in window)) return;
+    mo = new MutationObserver(check); mo.observe(box, { attributes: true, attributeFilter: ['class'] });
+    setTimeout(function () { if (mo) mo.disconnect(); }, 1500);
+  }
+  function soundSwitch() {
+    var b = el('button', 'fin-sound'); b.type = 'button';
+    function paint() { var on = soundOn(); b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.textContent = on ? 'Sound on' : 'Sound off'; }
+    b.addEventListener('click', function () { setSound(!soundOn()); paint(); try { document.dispatchEvent(new CustomEvent('dn:sound')); } catch (e) {} });
+    document.addEventListener('dn:sound', paint);
+    paint(); return b;
+  }
+
+  /* was this round solved? Engines say so (cfg.solved); otherwise it's read from the type's own save, and
+     scored types (Tangle, Borders, Reckon) count as finished. Used only to put the answer first (AF-015). */
+  function solvedOf(cfg) {
+    if (typeof cfg.solved === 'boolean') return cfg.solved;
+    var r = done(cfg.type)[cfg.id];
+    if (r && (cfg.type === 'link' || cfg.type === 'sweep') && r.o) return r.o === 'win';
+    return true;
+  }
+  /* the type's "day streak" as one line under the score (AF-019): the stat the engine passes, live if adopted */
+  function streakLine(cfg, adopted) {
+    var p = el('p', 'fin-streak'), src = null, val = '';
+    (cfg.stats || []).forEach(function (s) { if (/day streak/i.test(s.label || '') && src == null) { src = s.id ? adopted[s.id] || null : null; val = s.value; } });
+    function paint() {
+      var n = parseInt(src ? src.textContent : val, 10) || 0;
+      p.textContent = n >= 1 ? '🔥 ' + n + '-day streak' : ''; p.hidden = n < 1;
+    }
+    paint();
+    if (src && 'MutationObserver' in window) new MutationObserver(paint).observe(src, { childList: true, characterData: true, subtree: true });
+    return p;
   }
 
   /* ---------- build ---------- */
@@ -373,6 +444,14 @@
     });
     stopSaveNotice = core.onSaveChange(render); render();
   }
+  /* One left-aligned column (AF-019, Alec's design, 28 Oct 2026; the same order as the app's FinishSheet):
+       1 RESULT: small label "Doku 107 · Solved", one big score, one line "🔥 5-day streak" (and the note)
+       2 SHARE: one full-width filled button, "Share result" (the line itself goes in the share sheet)
+       3 LEADERBOARD: one line in .fin-board-slot, filled by dn-board.js ("Currently 1st in Noodlers ›")
+       4 PLAY MORE: a tonal button, "Play Borders 24" / "6 of 8 done today"
+       5 ANSWER: the type's recap; when the round wasn't solved it comes straight after RESULT (AF-015)
+     footer: "New Doku in 3h 38m", the day, and the Sound switch on the five grid types.
+     The stats the engines pass are adopted into the hidden keep box: the tracker still reads their ids. */
   function show(cfg) {
     var box = $(cfg.box); if (!box) return;
     css(); fonts();
@@ -385,54 +464,69 @@
     var keep = el('div', 'fin-keep'); keep.hidden = true;
     var f = el('div', 'fin'); f.id = 'dnFin';
     var adopt = function (id) { var e = $(id); if (e) { e.removeAttribute('style'); } return e; };
+    var solved = solvedOf(cfg);
+    f.setAttribute('data-solved', solved ? 'yes' : 'no');
 
     f.appendChild(el('div', 'fin-top', '<a class="fin-back" href="../puzzles.html"><span aria-hidden="true">←</span> Puzzles</a>'));
-    f.appendChild(el('p', 'fin-kick', esc(NAME[cfg.type] + ' ' + cfg.n + ', ' + longDate(cfg.date))));
-    var t = adopt(cfg.title); if (t) { t.className = 'fin-title'; f.appendChild(t); }
+
+    // 1 RESULT
+    var res = el('section', 'fin-result');
+    var label = el('div', 'fin-label');
+    label.appendChild(el('span', 'fin-kick', esc(NAME[cfg.type] + ' ' + cfg.n)));
+    var t = adopt(cfg.title);
+    if (t) { label.appendChild(el('span', 'fin-dot', ' · ')); label.lastChild.setAttribute('aria-hidden', 'true'); t.className = 'fin-title'; label.appendChild(t); }
+    res.appendChild(label);
     var hero = el('div', 'fin-hero');
     var h = typeof cfg.hero === 'string' ? adopt(cfg.hero) : cfg.hero;
     if (h) { if (h.id) h.classList.add('fin-hero-val'); hero.appendChild(h); }
-    f.appendChild(hero);
-    if (cfg.note) f.appendChild(el('p', 'fin-note', cfg.note));
+    res.appendChild(hero);
+    var adopted = {};
+    (cfg.stats || []).forEach(function (s) { if (s.id) { var v = adopt(s.id); if (v) { adopted[s.id] = v; v.className = 'fin-stat-val'; keep.appendChild(v); } } });
+    res.appendChild(streakLine(cfg, adopted));
+    if (cfg.note) res.appendChild(el('p', 'fin-note', cfg.note));
+    f.appendChild(res);
 
-    // share
-    var label = (cfg.share && cfg.share.label) || 'Share';
-    var card = el('section', 'fin-share');
-    var sq = shareHtml(tagged(cfg.share.text()));
-    var url = shortLink(cfg.type);
-    card.innerHTML = '<div class="fin-share-card"><span class="fin-share-body"><span class="fin-share-text">' + sq + '</span>' +
-      '<span class="fin-share-url">' + esc(url) + '</span></span>' +
-      '<button type="button" class="fin-pill fin-primary fin-share-btn"><span class="fin-share-icon">' + SHARE_ICON + '</span><span class="fin-share-label">' + esc(label) + '</span></button></div>' +
-      '<span class="fin-live" role="status" aria-live="polite"></span>';
-    f.appendChild(card);
-    shareButton(card.querySelector('.fin-share-btn'), card.querySelector('.fin-live'), function () { return tagged(cfg.share.text()) + '\n' + url; }, label, cfg.type);
-    shown = { card: card, cfg: cfg };
-    saveNotice(f);
-
-    // stats
-    var st = el('div', 'fin-stats');
-    (cfg.stats || []).forEach(function (s) {
-      var c = el('div'); var v = s.id ? adopt(s.id) : null;
-      if (!v) { v = el('b'); v.textContent = s.value == null ? '' : s.value; } else { v.className = 'fin-stat-val'; }
-      c.appendChild(v); c.appendChild(el('span', '', esc(s.label))); st.appendChild(c);
-    });
-    f.appendChild(st);
-
-    // next, board link slot, countdown
-    var next = el('a', 'fin-next', '<span><span class="fin-next-main">Today’s puzzles</span><small class="fin-next-sub">\u00a0</small></span>' + CHEVRON);
-    next.href = '../puzzles.html'; f.appendChild(next); nextRow = next; nextType = cfg.type; fillNext(next, cfg.type);
-    f.appendChild(el('div', 'fin-board-slot'));
-    var clock = el('p', 'fin-clock'); f.appendChild(clock); fillClock(clock, NAME[cfg.type]);
-
-    // the type's own recap
+    // 5 ANSWER, first when the round wasn't solved (AF-015)
+    var rc = null;
     if (cfg.recap) {
-      var rc = el('section', 'fin-recap');
+      rc = el('section', 'fin-recap');
       rc.appendChild(el('h3', '', esc(cfg.recap.title)));
       if (cfg.recap.sub) rc.appendChild(el('p', 'fin-recap-sub', cfg.recap.sub));
       if (cfg.recap.node) rc.appendChild(cfg.recap.node);
-      f.appendChild(rc);
+      if (!solved) { rc.classList.add('fin-recap-first'); f.appendChild(rc); }
     }
+
+    // 2 SHARE: one filled button; the line is kept (visually hidden) for the copy fallback and dnFinish.tag
+    var shareLabel = (cfg.share && cfg.share.label && cfg.share.label !== 'Share') ? cfg.share.label : 'Share result';
+    var card = el('section', 'fin-share');
+    var sq = shareHtml(tagged(cfg.share.text()));
+    var url = shortLink(cfg.type);
+    card.innerHTML = '<span class="fin-share-body fin-vh"><span class="fin-share-text">' + sq + '</span>' +
+      '<span class="fin-share-url">' + esc(url) + '</span></span>' +
+      '<button type="button" class="fin-pill fin-primary fin-share-btn"><span class="fin-share-icon">' + SHARE_ICON + '</span><span class="fin-share-label">' + esc(shareLabel) + '</span></button>' +
+      '<span class="fin-live" role="status" aria-live="polite"></span>';
+    f.appendChild(card);
+    shareButton(card.querySelector('.fin-share-btn'), card.querySelector('.fin-live'), function () { return tagged(cfg.share.text()) + '\n' + url; }, shareLabel, cfg.type);
+    shown = { card: card, cfg: cfg };
+    saveNotice(f);
+
+    // 3 LEADERBOARD: dn-board.js puts its one line here; the room is kept so nothing jumps
+    f.appendChild(el('div', 'fin-board-slot'));
+
+    // 4 PLAY MORE
+    var next = el('a', 'fin-next', '<span class="fin-next-main">Today’s puzzles</span><small class="fin-next-sub">\u00a0</small>');
+    next.href = '../puzzles.html'; f.appendChild(next); nextRow = next; nextType = cfg.type; fillNext(next, cfg.type);
+
+    // 5 ANSWER, in its usual place
+    if (rc && solved) f.appendChild(rc);
     if (cfg.after) f.appendChild(cfg.after);
+
+    // footer
+    var foot = el('div', 'fin-foot');   // a div: some engines hide their own <footer>
+    var clock = el('p', 'fin-clock'); foot.appendChild(clock); fillClock(clock, NAME[cfg.type]);
+    if (cfg.date) foot.appendChild(el('p', 'fin-day', esc(NAME[cfg.type] + ' ' + cfg.n + ', ' + longDate(cfg.date))));
+    if (JINGLE_TYPES[cfg.type]) foot.appendChild(soundSwitch());
+    f.appendChild(foot);
 
     (cfg.keep || []).forEach(function (id) { var e = $(id); if (e) keep.appendChild(e); });
     f.appendChild(keep);
@@ -441,6 +535,7 @@
     var bl = box.querySelector('.nn-board-wrap'); if (bl) f.querySelector('.fin-board-slot').appendChild(bl);
     if (old && old.parentNode) old.parentNode.removeChild(old);
     open(box);
+    jingleOnFreshWin(box, cfg, solved);
   }
   function open(box) {
     box.classList.add('fin-open'); document.documentElement.classList.add('fin-shown');
@@ -479,6 +574,6 @@
     } catch (e) { go(); }
   })();
 
-  window.dnFinish = { show: show, hide: hide, tag: tag, q: [], _test: { overallRun: overallRun, toMidnight: toMidnight, hm: hm } };
+  window.dnFinish = { show: show, hide: hide, tag: tag, q: [], JINGLE: JINGLE, soundOn: soundOn, _test: { overallRun: overallRun, toMidnight: toMidnight, hm: hm, jingle: jingle } };
   queued.forEach(show);
 })();

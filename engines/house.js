@@ -235,8 +235,21 @@
     '<div class="dn-start-card"><div class="dn-start-art">' + art() + '</div><div><h2>Today’s ' + NAME + '</h2><p>' + RULE + '</p></div>' +
     '<div><button type="button" class="dn-pill" id="dnPlay">Play</button></div></div>' +
     '<div class="dn-start-stats"><div><b>' + liveStreak + '</b><span>day streak</span></div><div><b>' + (st.best || 0) + '</b><span>best streak</span></div><div><b>' + played + '</b><span>' + NAME + 's played</span></div></div>' +
-    '<details class="dn-how"><summary>How to play</summary>' + HOW.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</details></div>';
+    '<details class="dn-how"><summary>How to play</summary>' + HOW.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</details>' +
+    '<label class="dn-sound"><span>Sound<small>A short jingle when you solve it</small></span><input type="checkbox" role="switch" id="dnSound"></label></div>';
   document.body.appendChild(card);
+  /* the Sound switch for the five (AF-013, 29 Oct 2026): one setting, dn-sound ("0" = off, on by default), shared
+     with the finish sheet's switch (engines/finish.js), which plays the jingle on a fresh win */
+  (function () {
+    var box = $('dnSound'); if (!box) return;
+    function on() { try { return localStorage.getItem('dn-sound') !== '0'; } catch (e) { return true; } }
+    box.checked = on();
+    box.addEventListener('change', function () {
+      try { localStorage.setItem('dn-sound', box.checked ? '1' : '0'); } catch (e) {}
+      try { document.dispatchEvent(new CustomEvent('dn:sound')); } catch (e) {}
+    });
+    document.addEventListener('dn:sound', function () { box.checked = on(); });
+  })();
   root.classList.add('dn-starting');
   $('dnPlay').addEventListener('click', function () {
     root.classList.remove('dn-starting'); card.hidden = true;
