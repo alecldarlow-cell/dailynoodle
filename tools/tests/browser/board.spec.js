@@ -123,6 +123,11 @@ test.describe('BOARD-E2E', () => {
       expect(await q(db, 'select ptype, puzzle_date::text d, outcome, secs from board.results order by secs')).toEqual([
         { ptype: 'mini', d: DAY, outcome: 'solved', secs: secsA }, { ptype: 'mini', d: DAY, outcome: 'solved', secs: secsB }]);
 
+      // AF-019 (29 Oct 2026): the sheet's league line is the player's rank only, no names: Ada first, Bea second of two.
+      await expect(A.p.locator('.fin-board-slot .nn-board-link')).toHaveText(/^Currently 1st in Noodle Testers›$/);
+      await expect(B.p.locator('.fin-board-slot .nn-board-link')).toHaveText(/^Currently 2nd of 2 in Noodle Testers›$/);
+      await expect(A.p.locator('.fin-board-slot .nn-board-link svg')).toHaveCount(1);
+
       // 4. Each opens the board from the result sheet and sees both rows, faster first.
       const want = [['🥇', 'Ada', mmss(secsA)], ['🥈', 'Bea', mmss(secsB)]];
       for (const P of [A, B]) {

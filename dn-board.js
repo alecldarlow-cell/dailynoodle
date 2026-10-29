@@ -129,7 +129,7 @@
        dn:puzzle_end event with the result it reads), but only if this
        browser is in at least one league; first finish only (the server
        keeps the first result for each puzzle);
-     - adds a "See today's board" link to the result box.
+     - adds the league line to the result box ("Currently 1st in Noodlers ›", AF-019).
 
    Saved in localStorage under noodle-board-v1:
      { pid, leagues: [{code, name, nick, owner}], cur: code, ptype, fill: {n, aids} }
@@ -457,25 +457,65 @@
     submitted.then(function () {   // the sheet may have opened before the result reached the board
       var box = document.getElementById('winModal') || document.getElementById('modal');
       if (box && box.querySelector('.fin-board-slot .nn-board-wrap')) showMoment(box);
+      var a = box && box.querySelector('.nn-board-link'); if (a && lineLeague()) fillRank(a);
     });
   });
 
-  // 2. "See today's board" in the result box, next to Share.
+  // 2. The league line in the result box (AF-019 and AF-022, 29 Oct 2026; Alec: rank only, no names).
+  //    In a league: "Currently 1st in Noodlers ›" / "Currently 3rd of 6 in Noodlers ›", for the league last
+  //    viewed (cur), opening that league's board for this puzzle and day; "currently" because others may
+  //    still play today. Until the rank is known, or when the round has no rank (failed, revealed):
+  //    "See today's board in Noodlers ›". Not in a league: "Start a league with friends ›" (no account needed).
+  //    The app's own line trophy icon, no emoji. Class .nn-board-link stays (tests and older sheets use it).
+  var TROPHY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M16 5h2.5a1.5 1.5 0 0 1 1.5 1.5V7a3 3 0 0 1-3 3h-1"/><path d="M8 5H5.5A1.5 1.5 0 0 0 4 6.5V7a3 3 0 0 0 3 3h1"/>' +
+    '<path d="M12 13v4"/><path d="M8.5 20h7"/><path d="M9.5 17h5v3h-5z"/></svg>';
   var CSS = '.nn-board-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;' +
     'margin-top:10px;font:600 14px/1.2 Inter,system-ui,sans-serif;color:#0E7A4B;text-decoration:none;' +
     'padding:8px 12px;border-radius:999px}.nn-board-link:hover{text-decoration:underline}' +
+    '.nn-board-link svg{width:20px;height:20px}' +
     '.nn-board-wrap{text-align:center}' +
     '.nn-moment{margin:10px 0 0;font:700 15px/1.35 Inter,system-ui,sans-serif;color:inherit}';
+  function ordinal(n) { var v = n % 100; return n + ((v >= 11 && v <= 13) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th')); }
+  function rankText(d, name) {
+    var me = null; (d && d.ranked || []).forEach(function (r) { if (r.me && !me) me = r; });
+    if (!me) return '';
+    var n = (d.players || []).length;
+    return 'Currently ' + ordinal(me.rank) + (me.rank > 1 && n > 1 ? ' of ' + n : '') + ' in ' + name;
+  }
+  function lineLeague() {
+    var ls = leagues(), c = current();
+    for (var i = 0; i < ls.length; i++) if (ls[i].code === c) return ls[i];
+    return ls[0] || null;
+  }
+  function setLine(a, text) { a.innerHTML = TROPHY + '<span class="nn-line">' + text.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }) + '</span><span class="nn-go" aria-hidden="true">›</span>'; }
+  var rankAsked = 0;
+  function fillRank(a) {
+    var L = lineLeague(); if (!L) return;
+    var ask = ++rankAsked;
+    submitted.then(function () { return day(L.code, T.id, PDATE); }).then(function (d) {
+      if (ask !== rankAsked || !a.isConnected) return;
+      var t = rankText(d, L.name); if (t) { setLine(a, t); a.setAttribute('data-rank', 'yes'); }
+    }, function () {});
+  }
   function addLink(box) {
     if (box.querySelector('.nn-board-link')) return;
     var st = document.getElementById('nn-board-css');
     if (!st) { st = document.createElement('style'); st.id = 'nn-board-css'; st.textContent = CSS; document.head.appendChild(st); }
     var a = document.createElement('a');
-    a.className = 'nn-board-link'; a.href = BOARD + '&from=result';
-    a.textContent = '🏆 See today’s board';
+    a.className = 'nn-board-link';
+    var L = lineLeague();
+    if (L) {
+      a.href = BOARD + '&from=result';
+      setLine(a, 'See today’s board in ' + L.name);
+      a.addEventListener('click', function () { try { setCurrent(L.code); } catch (e) {} });
+    } else {
+      a.href = '../board.html?from=result';
+      setLine(a, 'Start a league with friends');
+    }
     var w = document.createElement('div'); w.className = 'nn-board-wrap'; w.appendChild(a);
     var slot = box.querySelector('.fin-board-slot');   // the shared finish sheet (engines/finish.js) has a place for it
-    if (slot) { slot.appendChild(w); showMoment(box); return; }
+    if (slot) { slot.appendChild(w); showMoment(box); if (L) fillRank(a); return; }
     var share = box.querySelector('#winShare, #shareBtn, #shareAgain');
     var host = (share && share.parentNode) || box.querySelector('.modalbtns') || box.querySelector('.modalcard') || box;
     if (share && host === share.parentNode && host.classList && host.classList.contains('modalbtns')) {
@@ -485,6 +525,7 @@
     } else {
       host.appendChild(w);
     }
+    if (L) fillRank(a);
   }
   /* 3. Records (25 Oct 2026): once the result is on the board, a line above the board link says if it's a
      league record ("New league record" on the puzzle's own day, "League record" after) or a personal best,
