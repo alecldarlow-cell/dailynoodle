@@ -314,7 +314,7 @@ function drawPath(pt){
   $('pathLine').setAttribute('points',pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '));
 }
 function canAdd(i){return i>=0&&!path.includes(i)&&(path.length===0||NB[path[path.length-1]].includes(i));}
-function add(i){if(!path.length){tiles.forEach(t=>t.classList.remove('good','bonus','meh'));$('toast').className='';}path.push(i);sfx.step(path.length);try{if(navigator.vibrate&&!reduced())navigator.vibrate(8);}catch(e){}}
+function add(i){if(!path.length){tiles.forEach(t=>t.classList.remove('good','gold','meh'));$('toast').className='';}path.push(i);sfx.step(path.length);try{if(navigator.vibrate&&!reduced())navigator.vibrate(8);}catch(e){}}
 
 function onDown(e){
   if(!live())return;
@@ -388,10 +388,12 @@ function submit(p){
   const g=pts(w);
   R.found.push(w);R.score+=g;
   persist();
-  flashTiles(p,MAIN.has(w)?'good':'bonus');
+  /* AF-027 (29 Oct 2026, Alec): every accepted word flashes green, rarer words
+     included (they score the same); gold is only for the star word */
+  flashTiles(p,w===P.star?'gold':'good');
   renderList(w);renderScore();
   if(w===P.star){toast('★ Longest word! +'+g,'gold');sfx.star();}
-  else{toast('+'+g+' '+w.toUpperCase(),'good');sfx.word(w.length);}
+  else{toast('+'+g+' '+w.toUpperCase()+(MAIN.has(w)?'':' · rarer word'),'good');sfx.word(w.length);}
   return {r:MAIN.has(w)?'main':'bonus',w,pts:g};
 }
 

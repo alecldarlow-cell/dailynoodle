@@ -121,7 +121,7 @@ details.how p{margin:6px 0}
 .tile.on{background:var(--threadT);border-color:var(--thread);box-shadow:0 1px 0 var(--thread);transform:translateY(2px)}
 .tile.last{background:var(--thread);color:var(--onThread)}
 .tile.good{background:var(--okT);border-color:var(--ok);box-shadow:0 1px 0 var(--ok)}
-.tile.bonus{background:var(--goldT);border-color:var(--gold);box-shadow:0 1px 0 var(--gold)}
+.tile.gold{background:var(--goldT);border-color:var(--gold);box-shadow:0 1px 0 var(--gold)}
 .tile.meh{background:var(--soft)}
 #board.hide .tile{color:transparent}
 #pathSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}

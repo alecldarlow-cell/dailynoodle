@@ -341,11 +341,29 @@ function advance(back=false){
   const j=back?i-1:i+1;
   if(j>=0&&j<w.cells.length){sel.r=w.cells[j][0];sel.c=w.cells[j][1];}
 }
+/* After a letter (AF-031, 29 Oct 2026, agreed with Alec): go to the next EMPTY
+   square in the word (forward, then back round to the word's start), so
+   letters already in from crossing answers aren't typed over. If the word is
+   now full, go to the next clue in the clue bar's order (across 1…, then
+   down 1…, round again) that has an empty square, at its first empty square.
+   A full grid stays where it is. Backspace and tapping a square are unchanged. */
+function advanceEmpty(){
+  const w=wordAt(sel.r,sel.c,sel.dir); if(!w)return;
+  const empty=([y,x])=>!entries[y][x];
+  const i=w.cells.findIndex(([y,x])=>y===sel.r&&x===sel.c);
+  const n=w.cells.length;
+  for(let k=1;k<n;k++){const cell=w.cells[(i+k)%n];if(empty(cell)){sel.r=cell[0];sel.c=cell[1];return;}}
+  const list=orderedSlots(),at=list.indexOf(w);
+  for(let k=1;k<=list.length;k++){
+    const s=list[(at+k)%list.length],cell=s.cells.find(empty);
+    if(cell){sel={r:cell[0],c:cell[1],dir:s.t};return;}
+  }
+}
 function type(ch){
   if(P.grid[sel.r][sel.c]==="#"||solved)return;
   startTimer();
   entries[sel.r][sel.c]=ch.toUpperCase(); checked[sel.r][sel.c]=null;
-  advance(); paint(); checkWin();
+  advanceEmpty(); paint(); checkWin();
 }
 function del(){
   if(solved)return; startTimer();

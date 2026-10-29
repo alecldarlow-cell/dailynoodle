@@ -178,7 +178,7 @@ const APPMODE=!!(window.matchMedia&&window.matchMedia("(pointer:coarse) and (hov
 if(APPMODE)document.documentElement.classList.add("app-mode");
 const byName=new Map(); P.groups.forEach(g=>g.members.forEach(m=>byName.set(m.toUpperCase(),g)));
 
-let live=[], sel=new Set(), solved=[], mistakes=0, over=false, won=false, ranked=true, t0=0, tick=0, guesses=[], tried=new Set(), busy=false, newBand=null, bandArriving=false, bandLanded=null, justLost=false;
+let live=[], sel=new Set(), solved=[], mistakes=0, over=false, won=false, ranked=true, t0=0, acc=0, tick=0, guesses=[], tried=new Set(), busy=false, newBand=null, bandArriving=false, bandLanded=null, justLost=false;
 
 const comboKey=ws=>[...ws].map(w=>w.toUpperCase()).sort().join("|");
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -318,6 +318,7 @@ function submit(){
   }
   tried.add(key);
   guesses.push(picked.map(w=>byName.get(w).rank));
+  curDirty=true;
   const counts=new Map();
   for(const w of picked){const g=byName.get(w); counts.set(g,(counts.get(g)||0)+1);}
   const best=Math.max(...counts.values());
@@ -332,7 +333,7 @@ function submit(){
       setMsg("");
       render(); newBand=null; bandArriving=false;
     };
-    const checkWin=()=>{ if(solved.length===4){won=true;over=true;stopTimer();finish(true);} };
+    const checkWin=()=>{ if(solved.length===4){won=true;over=true;stopTimer();finish(true);} else curSave(); };
     if(reduceMotion){busy=false;commit(false);render();checkWin();return;}
     busy=true;
     /* THE SETTLE, beat one: the four turn their group's colour left to right,
@@ -360,9 +361,9 @@ function submit(){
   buzz(best===3?[16,80,16]:[26,60,26,60,26]);
   setTimeout(()=>{$$(".tile").forEach(e=>e.classList.remove("miss"));},780);
   if(mistakes>=MAX_MISTAKES){
-    over=true;stopTimer();
+    over=true;stopTimer();curClear();
     setTimeout(revealRest,420);
-  }
+  }else curSave();
 }
 function revealRest(){
   sel.clear();
@@ -419,11 +420,33 @@ function flyIntoBand(first,g,done){
   });
 }
 
-/* ---- timer ---- */
-function stamp(){const s=t0?Math.floor((Date.now()-t0)/1000):0;return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
-function startTimer(){if(over||tick)return;t0=Date.now();tick=setInterval(()=>{$("#timer").textContent=stamp();},250);}
-function stopTimer(){clearInterval(tick);tick=0;$("#timer").textContent=stamp();}
+/* ---- timer ----
+   acc holds the time already played; t0 is when the current stretch began
+   (0 while the clock is stopped). The clock waits at zero until play starts
+   (Play on the start card, or the first tap on the board if the card never
+   loaded), and pauses while the page is away (R10, 29 Oct 2026): hidden,
+   closed or frozen time doesn't count. Records keep the "mm:ss" form they
+   always had; the bar shows it the house way ("0:42"), dimmed while waiting. */
+function secs(){return Math.floor((acc+(t0?Date.now()-t0:0))/1000);}
+function stamp(){const s=secs();return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+function showClock(){const e=$("#timer");e.textContent=dnTime(stamp());e.classList.toggle("waiting",!tick&&!over);}
+const WAIT_HINT="Starts when you tap a word";
+function startTimer(){
+  if(over||tick)return;
+  t0=Date.now();tick=setInterval(showClock,250);showClock();
+  const m=$("#msg");if(m&&m.classList.contains("wait"))setMsg("");
+}
+function stopTimer(){if(t0){acc+=Date.now()-t0;t0=0;}clearInterval(tick);tick=0;showClock();}
 window.addEventListener('dn:play',startTimer);
+/* away: stop the clock and keep the round; back: carry on where it stopped */
+let awayPaused=false;
+function away(){if(tick&&!over){stopTimer();awayPaused=true;}curSave();}
+function back(){if(awayPaused&&!over&&document.visibilityState!=="hidden"){awayPaused=false;startTimer();}}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")away();else back();});
+window.addEventListener("pagehide",away);
+window.addEventListener("pageshow",back);
+document.addEventListener("freeze",away);
+document.addEventListener("resume",back);
 
 /* ---- streak (shared: advances once per calendar day on any solve) ---- */
 const KEY="digi-link-streak";
@@ -471,7 +494,8 @@ async function refreshStreakUI(s){
 /* ---- celebration (shared) ---- */
 const reduceMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
 async function finish(win){
-  donePut(P.id,{o:win?"win":"loss",t:$("#timer").textContent,m:mistakes,r:solved.map(g=>g.rank),g:guesses});
+  donePut(P.id,{o:win?"win":"loss",t:stamp(),m:mistakes,r:solved.map(g=>g.rank),g:guesses});
+  curClear();
   endRanked=ranked;
   if(ranked)await recordResult(win);
   if(win)buzz([12,50,12,50,28]);
@@ -485,7 +509,7 @@ function showEnd(win){
   $("#endIcon").textContent=win?"✓":"✕";
   $("#winTitle").textContent=win?"Linked":"So close.";      // "So close." is the tracker's loss title: keep it exact
   $("#winSub").textContent=dnLabel(P.id)+(endRanked?"":" · replay");
-  $("#winTime").textContent=dnTime($("#timer").textContent);
+  $("#winTime").textContent=dnTime(stamp());
   $("#winStreak").textContent=$("#streak").textContent;
   $("#winBest").textContent=$("#best").textContent;
   $("#winNew").textContent=win?"Done":"Play again";
@@ -513,7 +537,7 @@ function finishSheet(share,win){
   if(!win){after=document.createElement("button");after.type="button";after.className="fin-link";after.textContent="Play again (not recorded)";
     after.addEventListener("click",()=>{window.dnFinish.hide();$("#winModal").classList.remove("on");replayStarted=true;start();rankLabel();doneSync();});}
   window.dnFinish.show({type:"link",id:P.id,n:parseInt(String(P.id).split("·").pop(),10),date:(document.querySelector('meta[name="dn:date"]')||{}).content||"",
-    box:"winModal",title:"winTitle",hero,note,share:{text:()=>share},
+    box:"winModal",title:"winTitle",solved:!!win,hero,note,share:{text:()=>share},
     stats:[{id:"winTime",label:"time"},{id:"winStreak",label:"day streak"},{id:"winBest",label:"best streak"}],
     recap:{title:"The groups",sub:"Easiest to hardest",node:bands},after});
 }
@@ -550,7 +574,7 @@ function confettiLoop(){
 }
 const GLYPH={1:"🟩",2:"🟦",3:"🟨",4:"⬛"};
 function shareText(){
-  return dnLink(guesses,won,$("#timer").textContent,$("#streak").textContent,P.id);
+  return dnLink(guesses,won,stamp(),$("#streak").textContent,P.id);
 }
 $("#winShare").onclick=async()=>{
   const b=$("#winShare"), txt=shareText();
@@ -588,7 +612,8 @@ function start(){
   _fitKey="";_unitW=0;_unitH=0;
   sel.clear(); solved=[]; mistakes=0; over=false; won=false; guesses=[]; tried=new Set(); busy=false; newBand=null;
   $("#pid").textContent=dnLabel(P.id); $("#pband").textContent=P.band;
-  setMsg(""); render(); stopTimer(); t0=0; $("#timer").textContent="00:00";
+  clearInterval(tick); tick=0; t0=0; acc=0; awayPaused=false;
+  setMsg(replayStarted?"":WAIT_HINT,replayStarted?"":"wait"); render(); showClock();
   if(replayStarted)startTimer();   // replays open straight on the board, without a start card
 }
 /* ---- digi-done-v1: a finished puzzle reopens finished (digi-link-v1 → done[id]) ---- */
@@ -639,7 +664,7 @@ function restoreDone(){
   mistakes=Math.max(0,Math.min(MAX_MISTAKES,Math.floor(+rec.m)||0));
   guesses=Array.isArray(rec.g)?rec.g.filter(x=>Array.isArray(x)&&x.every(v=>GLYPH[v])):[];
   over=true; won=rec.o==="win";
-  clearInterval(tick); $("#timer").textContent=t;
+  clearInterval(tick); tick=0; t0=0; acc=(+t.split(":")[0]*60+ +t.split(":")[1])*1000; showClock();
   render();
   if(won)setMsg("Linked in "+t+(mistakes?" · "+mistakes+" mistake"+(mistakes>1?"s":""):" · perfect"));
   else setMsg("Out of mistakes — here's the rest");
@@ -648,5 +673,73 @@ function restoreDone(){
   $("#winTime").textContent=dnTime(t);$("#winStreak").textContent=$("#streak").textContent;$("#winBest").textContent=$("#best").textContent;
   finishSheet(doneText(rec),won);
 }
+/* ---- the unfinished round (AF-029, 29 Oct 2026): leaving part-way keeps it,
+   in digi-link-v1 beside done, as Borders and Reckon do:
+     cur = {id, f: ranks found in order, m: mistakes, g: guesses (ranks),
+            tr: guesses already tried, l: the board's remaining order,
+            s: seconds played, at: when saved}
+   Written after every guess and whenever the page goes away; cleared when the
+   round finishes. Only the first go at a puzzle is kept (never a replay of a
+   finished one). Reopening shows the round paused, clock unchanged; Resume on
+   the start card (or a tap on the board) carries on. ---- */
+let curDirty=false, resumed=null;
+function curSave(){
+  if(over||replayStarted||doneGet(P.id))return;
+  if(!curDirty&&!secs())return;
+  curWrite({id:P.id,f:solved.map(g=>g.rank),m:mistakes,g:guesses.map(x=>x.slice()),tr:[...tried],l:live.slice(),s:secs(),at:Date.now()});
+}
+/* read-modify-write of the one field, so done and anything else stored stay
+   exactly as they are. Quiet on failure: a lost round-in-progress write never
+   raises the save notice or displaces a pending finished-result retry. */
+function curWrite(c){
+  try{
+    const raw=localStorage.getItem(DONE_KEY);let s=null;try{s=JSON.parse(raw||"null");}catch(e){}
+    if(!s||typeof s!=="object"||Array.isArray(s)||s.v!==1){if(raw)return;s={v:1};}   // never overwrite a save it can't read
+    if(!c&&!s.cur)return;
+    s.cur=c;localStorage.setItem(DONE_KEY,JSON.stringify(s));
+  }catch(e){}
+}
+function curClear(){curWrite(null);}
+function curRead(){
+  let s=null;try{s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");}catch(e){}
+  const c=s&&s.cur;
+  if(!c||typeof c!=="object"||c.id!==P.id||(s.done&&s.done[P.id]))return null;
+  if(!Array.isArray(c.f)||c.f.length>=4||new Set(c.f).size!==c.f.length)return null;
+  const found=c.f.map(k=>P.groups.find(g=>g.rank===k));
+  if(found.some(g=>!g))return null;
+  const m=Math.floor(+c.m);if(!(m>=0&&m<MAX_MISTAKES))return null;
+  const s2=Math.floor(+c.s);if(!(s2>=0&&s2<=359999))return null;
+  const g=Array.isArray(c.g)?c.g.filter(x=>Array.isArray(x)&&x.length===4&&x.every(v=>GLYPH[v])):[];
+  /* a right guess saved while its group was still flying into place counts as found */
+  g.forEach(x=>{if(x.every(v=>v===x[0])){const grp=P.groups.find(q=>q.rank===x[0]);if(grp&&!found.includes(grp))found.push(grp);}});
+  if(found.length>=4)return null;
+  const tr=Array.isArray(c.tr)?c.tr.filter(x=>typeof x==="string"):[];
+  return {found,m,s:s2,g,tr,l:Array.isArray(c.l)?c.l:null};
+}
+function curRestore(){
+  const c=curRead(); if(!c)return false;
+  solved=c.found; mistakes=c.m; guesses=c.g; tried=new Set(c.tr); sel.clear();
+  const rest=P.groups.filter(g=>!solved.includes(g)).flatMap(g=>g.members.map(m=>m.toUpperCase()));
+  const same=c.l&&c.l.length===rest.length&&c.l.every(w=>rest.includes(w))&&new Set(c.l).size===rest.length;
+  live=same?c.l.slice():shuffle(rest);
+  acc=c.s*1000; t0=0; clearInterval(tick); tick=0;
+  resumed={found:solved.length,s:c.s};
+  setMsg("Paused at "+dnTime(stamp())+" · tap a word to carry on","wait");
+  render(); showClock();
+  return true;
+}
+/* the house start card (engines/house.js, built after this file runs) offers
+   Resume rather than Play for a round in progress */
+function resumeCard(){
+  if(!resumed)return;
+  const b=document.getElementById("dnPlay"); if(!b)return;
+  b.textContent="Resume";
+  const p=document.querySelector(".dn-start-card h2+p");
+  const n=["No groups","One group","Two groups","Three groups"][resumed.found]||"";
+  if(p)p.textContent="Paused at "+dnTime(stamp())+". "+n+" found so far; your clock carries on from there.";
+  const h=document.querySelector(".dn-start-card h2"); if(h)h.textContent="Today’s Link, part-played";
+}
 start();
+if(!doneGet(P.id))curRestore();
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",resumeCard);else resumeCard();
 initRanked();
