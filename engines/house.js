@@ -209,14 +209,14 @@
     mini: (cap(W[nClues] || nClues)) + ' clues, across and down. The clock starts with your first letter.',
     doku: 'Place the ' + (W[tiles] || tiles) + ' letter tiles so every word across and down is real.',
     sweep: 'Clear the board without hitting one of the ' + (W[mines] || mines) + ' mines. Start on the highlighted square.',
-    path: 'Join 1 to 36 in one unbroken thread, through every given number.',
+    path: 'Join 1 to 36 in one unbroken path, through every given number.',   // "path", not "thread" (AF-026)
     link: 'Sixteen words, four hidden groups of four. Four mistakes and it’s over.'
   }[TYPE];
   var HOW = {
     mini: ['Tap a square and type. Tap the clue bar to switch between across and down; the arrows either side step through the clues.', 'Check word and Check all mark wrong letters; Reveal word fills one in. The clock stops when the grid is right.'],
     doku: ['Tap a tile in the bank, then tap a square to place it; or tap a square and type. Every run of letters, across and down, must make a real word.', 'Shaded letters are given. With Hints on, a word turns green once it matches the answer.'],
     sweep: ['Tap to dig, or switch to Flag and tap to mark a mine. Each number counts the mines touching that square.', 'Every square can be worked out by deduction, so one mine ends the game. Hint shows a square you could have reasoned out, and why.'],
-    path: ['Tap the marigold 1, then tap a touching square to place 2, and so on. Tap the 1 or the 36 to grow the thread from either end.', 'Given numbers are checkpoints the thread must pass through. Undo takes back a step; Hint shows a square that is forced.'],
+    path: ['Tap the marigold 1, then tap a touching square to place 2, and so on. Tap the 1 or the 36 to grow the path from either end.', 'Given numbers are checkpoints the path must pass through. Undo takes back a step; Hint shows a square that is forced.'],
     link: ['Tap four words you think belong together, then Submit. Three right gets a “one away”.', 'Groups run easiest to hardest: green, blue, yellow, then black. Guessing the same four twice costs nothing.']
   }[TYPE];
   var st = read(STREAK) || {}, played = save && save.done ? Object.keys(save.done).length : 0;

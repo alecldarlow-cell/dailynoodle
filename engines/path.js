@@ -671,15 +671,6 @@ function finishSheet(fresh){
     stats:[{id:"statStreak",label:"day streak"},{value:Math.max(st.best||0,state.streak||0),label:"best streak"},{value:played,label:"Paths played"}],
     recap:{title:"The path",sub:"The given numbers are shaded.",node:wrap}});
 }
-/* AF-026 (29 Oct 2026): Path calls its line a path; "thread" belongs to Tangle.
-   The start card's rule and How to play come from engines/house.js (built
-   after this file runs), so Path's own words are put right here once it has. */
-function pathWords(){
-  document.querySelectorAll(".dn-start-card p,.dn-how p").forEach(e=>{
-    if(/thread/.test(e.textContent))e.textContent=e.textContent.replace(/\bthread\b/g,"path");
-  });
-}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",pathWords);else pathWords();
 buildGrid();
 restoreDone();
 doneShow();
