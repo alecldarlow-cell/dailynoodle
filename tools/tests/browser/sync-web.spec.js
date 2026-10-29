@@ -18,9 +18,12 @@ const MINI18 = 'reports/2026-10-18-crossword-mini-0099.html';
 const MINI17 = 'reports/2026-10-17-crossword-mini-0098.html';
 const MINI16 = 'reports/2026-10-16-crossword-mini-0097.html';
 const SITE = 'https://dailynoodle.co.uk/';
+/* The sync functions a device has called, in order, across page loads (a sync that brings results in reloads board.html). */
+const syncCalls = (dbs, name) => dbs.log.filter(c => c[0] === name).map(c => c[1]);
 
 /* ---------- the account side: the real sync functions ---------- */
 const SYNC_SQL = fs.readFileSync(path.join(H.REPO, 'toolchain/sql/2026-10-25-sync.sql'), 'utf8');
+const REV_SQL = fs.readFileSync(path.join(H.REPO, 'toolchain/sql/2026-10-29-sync-revision.sql'), 'utf8');
 const AUTH_HOSTING = `
   create role anon; create role authenticated;
   create schema auth;
@@ -28,18 +31,28 @@ const AUTH_HOSTING = `
     $$ select nullif(coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb->>'sub', '')::uuid $$;
 `;
 const USERS = { 'alec@example.test': '00000000-0000-4000-8000-00000000000a', 'jo@example.test': '00000000-0000-4000-8000-00000000000b' };
-async function syncDb() { const d = new PGlite(); await d.exec(AUTH_HOSTING); await d.exec(SYNC_SQL); return d; }
-async function account(d, email, fn, args) {
-  const sql = { sync_pull: 'select public.sync_pull() as v', sync_push: 'select public.sync_push($1::jsonb) as v', sync_forget: 'select public.sync_forget() as v' }[fn];
+// { rev: false }: the live database as it was before 29 Oct 2026, without the revision functions.
+async function syncDb({ rev = true } = {}) { const d = new PGlite(); await d.exec(AUTH_HOSTING); await d.exec(SYNC_SQL); if (rev) await d.exec(REV_SQL); return d; }
+const FNS = {
+  sync_pull: 'select public.sync_pull() as v', sync_push: 'select public.sync_push($1::jsonb) as v', sync_forget: 'select public.sync_forget() as v',
+  sync_pull_rev: 'select public.sync_pull_rev() as v', sync_push_rev: 'select public.sync_push_rev($1::jsonb) as v'
+};
+/* One rpc as PostgREST answers it: a function the database hasn't got is a 404 PGRST202. */
+async function account(d, email, fn, args, hooks = {}) {
+  const sql = FNS[fn];
   if (!sql) return { data: null, error: { message: 'no function ' + fn } };
+  if (hooks[fn]) { const h = hooks[fn]; delete hooks[fn]; await h(); }   // another device acting just before this call
   try {
     const rows = await d.transaction(async tx => {
       await tx.exec('set local role authenticated');
       await tx.query("select set_config('request.jwt.claims', $1, true)", [JSON.stringify(email ? { sub: USERS[email], role: 'authenticated' } : { role: 'anon' })]);
-      return (await tx.query(sql, fn === 'sync_push' ? [JSON.stringify(args.p_saves)] : [])).rows;
+      return (await tx.query(sql, /push/.test(fn) ? [JSON.stringify(args.p_saves)] : [])).rows;
     });
-    return { data: rows[0].v, error: null };
-  } catch (e) { return { data: null, error: { message: e.message } }; }
+    return { data: rows[0].v, error: null, status: 200 };
+  } catch (e) {
+    if (e.code === '42883') return { data: null, status: 404, error: { code: 'PGRST202', message: 'Could not find the function public.' + fn + ' in the schema cache' } };
+    return { data: null, status: 400, error: { code: e.code, message: e.message } };
+  }
 }
 const held = async (d, email) => (await account(d, email, 'sync_pull')).data;
 
@@ -75,7 +88,7 @@ async function device(browser, dbs, name, { sync = true, time = TIME } = {}) {
   const ctx = await H.newPhone(browser, { events });
   if (sync) {
     await ctx.addInitScript(fakeSupabase);
-    await ctx.exposeBinding('__account', (src, email, fn, args) => account(dbs.sync, email, fn, args));
+    await ctx.exposeBinding('__account', (src, email, fn, args) => { (dbs.log || (dbs.log = [])).push([name, fn]); return account(dbs.sync, email, fn, args, dbs.hooks || (dbs.hooks = {})); });
   } else {
     await ctx.addInitScript(() => { window.__shared = []; navigator.share = d => { window.__shared.push(d); return Promise.resolve(); }; });
   }
@@ -125,7 +138,7 @@ const settled = D => expect(D.p.locator('html[data-dn-sync="done"]')).toHaveCoun
 test.describe('SYNC-WEB', () => {
   test.describe.configure({ timeout: 150000 });   // several browsers and two databases each, as in board-key.spec.js
   const dbs = {};
-  test.beforeEach(async () => { dbs.board = await boardDb({ today: DAY }); dbs.sync = await syncDb(); });
+  test.beforeEach(async () => { dbs.board = await boardDb({ today: DAY }); dbs.sync = await syncDb(); dbs.hooks = {}; dbs.log = []; });
   test.afterEach(async () => { await dbs.board.close(); await dbs.sync.close(); });
 
   test('SYNC-WEB-01: switched on (as published), the board offers sign-in and puzzle pages stay as they were', async ({ browser }) => {
@@ -135,7 +148,8 @@ test.describe('SYNC-WEB', () => {
     try {
       await go(B, 'board.html');
       await expect(card(B)).toBeVisible();
-      await expect(card(B).locator('h2')).toHaveText('Create a free account');
+      await expect(card(B).locator('h2')).toHaveText('Sign in or create an account');
+      await expect(card(B)).toContainText('Enter your email and we’ll send you a link. It signs you in, or sets up a free account if you’re new.');
       await expect(card(B).getByLabel('Your email')).toBeVisible();
       await expect(card(B).getByRole('button', { name: 'Email me a sign-in link' })).toBeVisible();
       await settled(B);
@@ -195,7 +209,7 @@ test.describe('SYNC-WEB', () => {
     try {
       await go(D, 'board.html');
       await expect(card(D)).toBeVisible();
-      await expect(card(D).locator('h2')).toHaveText('Create a free account');
+      await expect(card(D).locator('h2')).toHaveText('Sign in or create an account');
       expect(await D.p.evaluate(() => window.__opts), 'no client until the player signs in').toBeUndefined();
       await D.p.fill('#dnsyncEmail', 'not an email');
       await H.tap(D.p, card(D).locator('button[type="submit"]'));
@@ -301,7 +315,7 @@ test.describe('SYNC-WEB', () => {
     } finally { await A.ctx.close(); await B.ctx.close(); }
   });
 
-  test('SYNC-WEB-07: sign out keeps the account’s copy; Delete my synced copy removes it; results stay here', async ({ browser }) => {
+  test('SYNC-WEB-07: sign out keeps the account’s copy; Delete my saved data asks on the page, then removes it; results stay here', async ({ browser }) => {
     const D = await device(browser, dbs, 'alec');
     try {
       await solveMini(D, MINI18);
@@ -313,11 +327,21 @@ test.describe('SYNC-WEB', () => {
       expect(Object.keys(await held(dbs.sync, 'alec@example.test'))).toContain('digi-mini-v1');
 
       await signIn(D, 'alec');
+      const dialogs = []; D.p.on('dialog', d => dialogs.push(d.type()));
+      // The first tap only asks, on the page; Keep it goes back with nothing deleted.
+      await H.tap(D.p, card(D).getByRole('button', { name: 'Delete my saved data' }));
+      await expect(D.p.locator('#dnsyncConfirm')).toContainText('This browser’s results stay here.');
+      await H.tap(D.p, card(D).locator('[data-sync="cancel"]'));
+      await expect(D.p.locator('#dnsyncConfirm')).toHaveCount(0);
+      expect(Object.keys(await held(dbs.sync, 'alec@example.test'))).toContain('digi-mini-v1');
+      // The second tap, in the confirm block, deletes.
       await H.tap(D.p, card(D).locator('[data-sync="forget"]'));
-      await expect(D.p.locator('#dnsyncMsg')).toHaveText('Your synced copy is deleted.');
+      await H.tap(D.p, card(D).locator('[data-sync="forget-yes"]'));
+      await expect(D.p.locator('#dnsyncMsg')).toHaveText('Your saved data is deleted. This browser’s results are still here.');
       await expect(D.p.locator('#dnsyncEmail')).toBeVisible();
       expect(await held(dbs.sync, 'alec@example.test')).toEqual({});
       expect(await doneIds(D)).toEqual(['DP·MINI·0099']);
+      expect(dialogs, 'no browser pop-ups').toEqual([]);
       expect(D.p.errs).toEqual([]);
     } finally { await D.ctx.close(); }
   });
@@ -338,6 +362,63 @@ test.describe('SYNC-WEB', () => {
       await go(B, B18); await settled(B); await play.borders(B.p);
       await expect.poll(async () => (await store(B, 'digi-borders-v1'))?.streak?.n, { timeout: 15000 }).toBe(2);
       await expect.poll(async () => (await held(dbs.sync, 'alec@example.test'))['digi-borders-v1'].streak.n, { timeout: 15000 }).toBe(2);
+      expect(A.p.errs.concat(B.p.errs)).toEqual([]);
+    } finally { await A.ctx.close(); await B.ctx.close(); }
+  });
+  test('SYNC-WEB-09: GIVEN another browser syncs between this one’s pull and push WHEN this one pushes THEN it is refused, pulls again, merges and retries, and both results reach the account', async ({ browser }) => {
+    test.setTimeout(240000);
+    const A = await device(browser, dbs, 'laptop'), B = await device(browser, dbs, 'phone');
+    try {
+      await solveMini(A, MINI17);
+      await signIn(A, 'alec');
+      const base = (await account(dbs.sync, 'alec@example.test', 'sync_pull_rev')).data;
+      expect(base['digi-mini-v1'].rev, 'the laptop used the revision path').toBeGreaterThan(0);
+      expect(syncCalls(dbs, 'laptop').slice(0, 2)).toEqual(['sync_pull_rev', 'sync_push_rev']);
+      expect(syncCalls(dbs, 'laptop').filter(f => !/_rev$/.test(f)), 'never the old functions while the new ones are there').toEqual([]);
+
+      // The phone has the 18th. Just as its push goes out, the laptop (on the 16th) gets in first.
+      await solveMini(B, MINI18);
+      await solveMini(A, MINI16);
+      await expect.poll(async () => Object.keys((await held(dbs.sync, 'alec@example.test'))['digi-mini-v1'].done).sort(), { timeout: 10000 })
+        .toEqual(['DP·MINI·0097', 'DP·MINI·0098']);
+      let refused = null;
+      dbs.hooks.sync_push_rev = async () => {
+        // An app on another phone writes a new 18th result, from the account's current revision.
+        const now = (await account(dbs.sync, 'alec@example.test', 'sync_pull_rev')).data;
+        const doc = { ...now['digi-mini-v1'].doc, done: { ...now['digi-mini-v1'].doc.done, 'DP·MINI·0099': { s: 5, d: DAY, app: true } } };
+        const r = await account(dbs.sync, 'alec@example.test', 'sync_push_rev', { p_saves: { 'digi-mini-v1': { doc, rev: now['digi-mini-v1'].rev } } });
+        expect(r.data.ok).toBe(true);
+        dbs.hooks.sync_push_rev = async () => { refused = 'retried'; };
+      };
+      await signIn(B, 'alec');
+      await expect.poll(() => refused, { timeout: 10000 }).toBe('retried');
+      const calls = syncCalls(dbs, 'phone');
+      expect(calls.filter(f => !/_rev$/.test(f))).toEqual([]);
+      expect(calls.slice(0, 4), 'pull, refused push, pull again, push again').toEqual(['sync_pull_rev', 'sync_push_rev', 'sync_pull_rev', 'sync_push_rev']);
+      const acc = await held(dbs.sync, 'alec@example.test');
+      expect(Object.keys(acc['digi-mini-v1'].done).sort()).toEqual(['DP·MINI·0097', 'DP·MINI·0098', 'DP·MINI·0099']);
+      expect(acc['digi-mini-v1'].done['DP·MINI·0099'], 'the account keeps the result it stored first').toMatchObject({ app: true });
+      expect((await store(B, 'digi-mini-v1')).done['DP·MINI·0099'].app, 'and the phone keeps its own').toBeUndefined();
+      expect(await doneIds(B)).toEqual(['DP·MINI·0097', 'DP·MINI·0098', 'DP·MINI·0099']);
+      expect(A.p.errs.concat(B.p.errs)).toEqual([]);
+    } finally { await A.ctx.close(); await B.ctx.close(); }
+  });
+
+  test('SYNC-WEB-10: before the database has the revision functions, the old pull and push still sync', async ({ browser }) => {
+    test.setTimeout(240000);
+    await dbs.sync.close(); dbs.sync = await syncDb({ rev: false });
+    const A = await device(browser, dbs, 'laptop'), B = await device(browser, dbs, 'phone');
+    try {
+      await solveMini(A, MINI17);
+      await signIn(A, 'alec');
+      expect(Object.keys((await held(dbs.sync, 'alec@example.test'))['digi-mini-v1'].done)).toEqual(['DP·MINI·0098']);
+      expect(syncCalls(dbs, 'laptop'), 'tried the new path once, then the old one')
+        .toEqual(['sync_pull_rev', 'sync_pull', 'sync_push']);
+      await solveMini(B, MINI18);
+      await signIn(B, 'alec');
+      await expect.poll(() => doneIds(B), { timeout: 10000 }).toEqual(['DP·MINI·0098', 'DP·MINI·0099']);
+      expect(Object.keys((await held(dbs.sync, 'alec@example.test'))['digi-mini-v1'].done).sort()).toEqual(['DP·MINI·0098', 'DP·MINI·0099']);
+      await expect(B.p.locator('#dnsyncMsg')).not.toContainText(/function|fail|couldn/i);
       expect(A.p.errs.concat(B.p.errs)).toEqual([]);
     } finally { await A.ctx.close(); await B.ctx.close(); }
   });
