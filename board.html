@@ -66,12 +66,14 @@
   .lgslot select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
   .pillbar{padding:6px 0 8px}
   .pillbar .chips{padding-top:2px}
-  .daybar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 6px}
-  .daybtn{flex:none;width:40px;height:40px;display:grid;place-content:center;border:1px solid var(--hair);
-    background:var(--paper);color:var(--ink);border-radius:999px;font-size:18px;cursor:pointer}
+  /* the day: one slim line, "‹ Today · Wed 28 Oct ›" (AF-017, 29 Oct 2026, as the app); 32 px buttons with 44 px tap areas */
+  .daybar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px}
+  .daybtn{position:relative;flex:none;width:32px;height:32px;display:grid;place-content:center;border:1px solid var(--hair);
+    background:var(--paper);color:var(--ink);border-radius:999px;font-size:16px;cursor:pointer}
+  .daybtn::after{content:"";position:absolute;inset:-6px}
   .daybtn:disabled{opacity:.3;cursor:default}
-  .daylabel{position:relative;flex:1;text-align:center;font-family:var(--display);font-weight:700;font-size:16px;
-    padding:8px 0;border-radius:8px;cursor:pointer}
+  .daylabel{position:relative;flex:1;text-align:center;font-family:var(--display);font-weight:700;font-size:15px;
+    padding:6px 0;min-height:44px;display:grid;place-content:center;border-radius:8px;cursor:pointer}
   .daylabel small{display:block;font:600 11px var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
   .daylabel input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
   .play{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 4px;padding:12px 14px;
@@ -237,7 +239,9 @@
   function mmss(s) { if (s == null) return ''; s = Math.round(s); var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
     return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(x).padStart(2, '0'); }
   function result(t, r) {
-    if (t === 'tangle' || t === 'borders' || t === 'reckon') return { big: (r.score == null ? '–' : r.score) + ' pts', small: r.secs ? mmss(r.secs) : '' };
+    // Tangle's round is always 1:30, so it shows no time (AF-025, 29 Oct 2026, as the app): rows, records and shares read "29 pts"
+    if (t === 'tangle') return { big: (r.score == null ? '–' : r.score) + ' pts', small: '' };
+    if (t === 'borders' || t === 'reckon') return { big: (r.score == null ? '–' : r.score) + ' pts', small: r.secs ? mmss(r.secs) : '' };
     if (r.outcome === 'failed') return { big: t === 'link' ? 'Out of guesses' : 'Didn’t finish', small: '' };
     if (r.outcome === 'revealed') return { big: 'Revealed', small: '' };
     var small = t === 'link' ? (r.mistakes === 1 ? '1 mistake' : (r.mistakes || 0) + ' mistakes') : '';
@@ -474,7 +478,7 @@
   /* the league in the masthead: a name, or a switcher when there's more than one */
   var $slot = document.getElementById('lgslot');
   function renderLeague(L) {
-    var ls = NB.leagues(), h = '<span class="lgk">Leaderboard</span>';
+    var ls = NB.leagues(), h = L ? '' : '<span class="lgk">Leaderboard</span>';
     if (L) {
       // Always a menu: switch league, or start / join another. The phone's own picker opens it.
       h += '<span class="lgn">' + esc(L.name) + '<span class="car" aria-hidden="true">▼</span></span>';
@@ -572,7 +576,7 @@
   }
   function dayBar(label, first) {
     return '<div class="daybar"><button class="daybtn" data-day="-1" aria-label="Previous day"' + (S.date <= first ? ' disabled' : '') + '>‹</button>' +
-         '<label class="daylabel">' + esc(dayName(S.date)) + '<small>' + esc(label) + '</small>' +
+         '<label class="daylabel" aria-label="' + esc(label) + '">' + esc(dayName(S.date)) + (dayName(S.date) === longDay(S.date) ? '' : ' · ' + esc(longDay(S.date))) +
          '<input type="date" id="pick" value="' + S.date + '" min="' + first + '" max="' + NB.today() + '" aria-label="Pick a day"></label>' +
          '<button class="daybtn" data-day="1" aria-label="Next day"' + (S.date >= NB.today() ? ' disabled' : '') + '>›</button></div>';
   }
@@ -792,7 +796,7 @@
       share(KEY_TEXT, NB.moveLink(), a);
       track('board_key', { act: 'send' });
     } else if (act === 'invite') {
-      share('Join ' + L.name + ' on Noodle Puzzles: tap the link, pick a nickname, and your results go on our daily leaderboards.', link(L.code), a);
+      share('Join ' + L.name + ' on Daily Noodle: tap the link, pick a nickname, and your results go on our daily leaderboards.', link(L.code), a);
       track('board_invite', {});
     } else if (act === 'leave') {
       if (!confirm('Leave ' + L.name + '? You’ll come off its boards. You can rejoin with the link.')) return;

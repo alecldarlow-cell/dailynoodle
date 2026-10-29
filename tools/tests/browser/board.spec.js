@@ -247,6 +247,38 @@ test.describe('BOARD-E2E', () => {
     } finally { await A.ctx.close(); }
   });
 
+  // S5 (29 Oct 2026, as the app): Tangle shows no time (AF-025), the day is one slim line and the league picker is the
+  // heading (AF-017), and the invite says Daily Noodle.
+  test('BOARD-S5-01: Tangle rows without a time, the slim day line, the picker as heading, Daily Noodle invite', async ({ browser }) => {
+    test.setTimeout(60000);
+    const A = await phone(browser, db, 'A');
+    try {
+      await go(A, 'board.html');
+      await H.tap(A.p, A.p.locator('[data-go="start"]'));
+      await A.p.fill('input[name="lname"]', 'Slim');
+      await A.p.fill('input[name="nick"]', 'Ada');
+      await H.tap(A.p, A.p.locator('#f .btn.go'));
+      await expect(A.p.locator('.bcard h2')).toHaveText('Slim is ready');
+      await H.tap(A.p, A.p.locator('.bcard [data-act="invite"]'));
+      const shared = await A.p.evaluate(() => window.__shared);
+      expect(shared[0].text).toContain('Join Slim on Daily Noodle:');
+      expect(shared[0].text).not.toContain('Noodle Puzzles');
+      const ada = (await q(db, "select player from board.members where nickname = 'Ada'"))[0].player;
+      await q(db, `insert into board.results (player, puzzle_path, ptype, puzzle_date, outcome, secs, score)
+        values ($1, $2, 'tangle', $3, 'scored', 90, 29)`, [ada, `reports/${DAY}-word-tangle-0011.html`, DAY]);
+      await go(A, `board.html?p=tangle&d=${DAY}`);
+      const row = A.p.locator('ol.rows li.row', { hasText: 'Ada' });
+      await expect(row.locator('.res')).toHaveText('29 pts');
+      await expect(A.p.locator('.daylabel')).toHaveText('Today · Sun 18 Oct');
+      await expect(A.p.locator('#lgslot .lgk')).toHaveCount(0);
+      await expect(A.p.locator('#lgslot .lgn')).toContainText('Slim');
+      const tap = await A.p.locator('.daybtn').first().evaluate(e => { const r = e.getBoundingClientRect(), a = getComputedStyle(e, '::after');
+        return { h: r.height, inset: a.inset || a.top }; });
+      expect(tap.h).toBe(32); expect(tap.inset).toContain('-6px');   // 32 px drawn, 44 px to tap
+      expect(A.p.errs, 'page errors').toEqual([]);
+    } finally { await A.ctx.close(); }
+  });
+
   test('BOARD-REC-STALE: with an older cached dn-board.js (no records), every board still loads', async ({ browser }) => {
     test.setTimeout(60000);
     const A = await phone(browser, db, 'A');
