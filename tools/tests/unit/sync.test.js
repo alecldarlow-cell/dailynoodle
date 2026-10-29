@@ -257,3 +257,57 @@ test('SYNC-REV-07: the new path keeps the same keys, sizes and counts, and refus
     assert.deepEqual(await pullRev(d, A), before);
   } finally { await d.close(); }
 });
+
+/* ---------- SYNC-DEL: delete my account (toolchain/sql/2026-10-29-delete-account.sql) ---------- */
+const DEL_SQL = fs.readFileSync(path.join(__dirname, '../../../toolchain/sql/2026-10-29-delete-account.sql'), 'utf8');
+// Supabase's auth.users, reduced to what the function touches; sessions cascade from it as on the hosting.
+const AUTH_USERS = `
+  create table auth.users (id uuid primary key, email text);
+  create table auth.sessions (id serial primary key, user_id uuid not null references auth.users(id) on delete cascade);
+`;
+async function dbDel() {
+  const d = new PGlite();
+  await d.exec(HOSTING);
+  await d.exec(AUTH_USERS);
+  await d.exec(SQL);
+  await d.exec(REV_SQL);
+  await d.exec(DEL_SQL);
+  await d.exec(DEL_SQL);   // re-runnable
+  await d.query("insert into auth.users values ($1, 'a@example.test'), ($2, 'b@example.test')", [A, B]);
+  await d.query('insert into auth.sessions (user_id) values ($1), ($1), ($2)', [A, B]);
+  return d;
+}
+const users = async d => (await d.query('select id from auth.users order by id')).rows.map(r => r.id);
+const sessions = async d => (await d.query('select user_id from auth.sessions order by user_id')).rows.map(r => r.user_id);
+const deleteAccount = (d, u, role = 'authenticated') => call(d, role, u, 'select public.sync_delete_account() as v').then(r => r[0].v);
+
+test('SYNC-DEL-01: GIVEN a signed-in player WHEN they delete their account THEN their synced copy, sign-in user and sessions are gone, and nobody else’s', async () => {
+  const d = await dbDel();
+  try {
+    await push(d, A, { 'digi-mini-v1': { v: 1, done: { a: {} } }, 'noodle-board-v1': { pid: B, leagues: [] } });
+    await push(d, B, { 'digi-mini-v1': { v: 1, done: { b: {} } } });
+    assert.equal(await deleteAccount(d, A), true);
+    assert.deepEqual((await d.query('select user_id from sync.saves')).rows.map(r => r.user_id), [B], 'only B’s rows are left');
+    assert.deepEqual(await users(d), [B], 'A’s sign-in account is gone, B’s is not');
+    assert.deepEqual(await sessions(d), [B]);
+    assert.deepEqual(Object.keys((await pull(d, B))['digi-mini-v1'].done), ['b']);
+  } finally { await d.close(); }
+});
+
+test('SYNC-DEL-02: no sign-in, no deletion; calling twice is safe', async () => {
+  const d = await dbDel();
+  try {
+    await assert.rejects(() => deleteAccount(d, null, 'anon'), /permission denied/);
+    await assert.rejects(() => deleteAccount(d, A, 'anon'), /permission denied/, 'anon can’t call it even with a user in the claims');
+    await assert.rejects(() => deleteAccount(d, null), /not_signed_in/);
+    assert.deepEqual(await users(d), [A, B], 'nothing deleted by refused calls');
+    assert.equal(await deleteAccount(d, A), true);
+    assert.equal(await deleteAccount(d, A), true, 'a second call (a stale token) deletes nothing more and does not fail');
+    assert.deepEqual(await users(d), [B]);
+    // The role can't touch auth.users directly; only the function can.
+    await assert.rejects(() => call(d, 'authenticated', B, 'delete from auth.users'), /permission denied/);
+    const src = (await d.query("select prosecdef, proconfig from pg_proc where proname = 'sync_delete_account'")).rows[0];
+    assert.equal(src.prosecdef, true);
+    assert.deepEqual(src.proconfig, ['search_path=""']);
+  } finally { await d.close(); }
+});

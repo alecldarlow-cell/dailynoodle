@@ -263,8 +263,16 @@
           'kept for your email, and signs you out. This browser’s results stay here.</p>' +
           '<div class="acts"><button class="btn warn" type="button" data-sync="forget-yes"' + (ui.busy ? ' disabled' : '') + '>Delete my saved data</button>' +
           '<button class="btn" type="button" data-sync="cancel"' + (ui.busy ? ' disabled' : '') + '>Keep it</button></div></div>';
+      } else if (ui.confirm === 'account') {
+        h += '<div class="confirm" id="dnsyncConfirm" role="group" aria-labelledby="dnsyncConfirmQ" ' +
+          'style="margin-top:14px;padding:12px 14px;border:1px solid var(--bad);border-radius:10px">' +
+          '<p id="dnsyncConfirmQ"><b>Delete your account?</b> This deletes your sign-in account and the copy of your results ' +
+          'and streaks kept for your email, and signs you out. This browser’s results and your leagues stay.</p>' +
+          '<div class="acts"><button class="btn warn" type="button" data-sync="account-yes"' + (ui.busy ? ' disabled' : '') + '>Delete my account</button>' +
+          '<button class="btn" type="button" data-sync="cancel"' + (ui.busy ? ' disabled' : '') + '>Keep it</button></div></div>';
       } else {
-        h += '<p><button class="lnk warn" type="button" data-sync="forget"' + (ui.busy ? ' disabled' : '') + '>Delete my saved data</button></p>';
+        h += '<p><button class="lnk warn" type="button" data-sync="forget"' + (ui.busy ? ' disabled' : '') + '>Delete my saved data</button>' +
+          '<br><button class="lnk warn" type="button" data-sync="account"' + (ui.busy ? ' disabled' : '') + '>Delete my account</button></p>';
       }
     } else if (ui.sent) {
       h += '<p id="dnsyncSent">Check your email: we sent a sign-in link to <b>' + esc(ui.sent) + '</b>. Open it on this device.</p>' +
@@ -325,7 +333,20 @@
       else if (what === 'out') act(function (sb) { return sb.auth.signOut(); });
       else if (what === 'forget') { ui.confirm = 'forget'; ui.msg = ''; refresh().then(function () {
         var y = box.querySelector('[data-sync="forget-yes"]'); if (y) y.focus(); }); }
+      else if (what === 'account') { ui.confirm = 'account'; ui.msg = ''; refresh().then(function () {
+        var y = box.querySelector('[data-sync="account-yes"]'); if (y) y.focus(); }); }
       else if (what === 'cancel') { ui.confirm = ''; refresh(); }
+      else if (what === 'account-yes') {
+        ui.confirm = '';
+        act(function (sb) {
+          return rpc(sb, 'sync_delete_account').then(function () {
+            // The user is gone on the server; sign out here even if the server can't revoke a deleted user's session.
+            return Promise.resolve(sb.auth.signOut({ scope: 'local' })).catch(function () {}).then(function () {
+              try { localStorage.removeItem(AUTH); localStorage.removeItem(LAST); } catch (e) {}
+            });
+          });
+        }, 'Your account has been deleted.');
+      }
       else if (what === 'forget-yes') {
         ui.confirm = '';
         act(function (sb) { return rpc(sb, 'sync_forget').then(function () { return sb.auth.signOut(); }); }, 'Your saved data is deleted. This browser’s results are still here.');

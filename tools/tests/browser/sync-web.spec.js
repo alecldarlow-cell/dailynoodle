@@ -24,18 +24,26 @@ const syncCalls = (dbs, name) => dbs.log.filter(c => c[0] === name).map(c => c[1
 /* ---------- the account side: the real sync functions ---------- */
 const SYNC_SQL = fs.readFileSync(path.join(H.REPO, 'toolchain/sql/2026-10-25-sync.sql'), 'utf8');
 const REV_SQL = fs.readFileSync(path.join(H.REPO, 'toolchain/sql/2026-10-29-sync-revision.sql'), 'utf8');
+const DEL_SQL = fs.readFileSync(path.join(H.REPO, 'toolchain/sql/2026-10-29-delete-account.sql'), 'utf8');
 const AUTH_HOSTING = `
   create role anon; create role authenticated;
   create schema auth;
   create function auth.uid() returns uuid language sql stable as
     $$ select nullif(coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb->>'sub', '')::uuid $$;
+  create table auth.users (id uuid primary key, email text);
 `;
 const USERS = { 'alec@example.test': '00000000-0000-4000-8000-00000000000a', 'jo@example.test': '00000000-0000-4000-8000-00000000000b' };
 // { rev: false }: the live database as it was before 29 Oct 2026, without the revision functions.
-async function syncDb({ rev = true } = {}) { const d = new PGlite(); await d.exec(AUTH_HOSTING); await d.exec(SYNC_SQL); if (rev) await d.exec(REV_SQL); return d; }
+async function syncDb({ rev = true } = {}) {
+  const d = new PGlite(); await d.exec(AUTH_HOSTING); await d.exec(SYNC_SQL);
+  if (rev) { await d.exec(REV_SQL); await d.exec(DEL_SQL); }
+  for (const e in USERS) await d.query('insert into auth.users values ($1, $2)', [USERS[e], e]);
+  return d;
+}
 const FNS = {
   sync_pull: 'select public.sync_pull() as v', sync_push: 'select public.sync_push($1::jsonb) as v', sync_forget: 'select public.sync_forget() as v',
-  sync_pull_rev: 'select public.sync_pull_rev() as v', sync_push_rev: 'select public.sync_push_rev($1::jsonb) as v'
+  sync_pull_rev: 'select public.sync_pull_rev() as v', sync_push_rev: 'select public.sync_push_rev($1::jsonb) as v',
+  sync_delete_account: 'select public.sync_delete_account() as v'
 };
 /* One rpc as PostgREST answers it: a function the database hasn't got is a 404 PGRST202. */
 async function account(d, email, fn, args, hooks = {}) {
@@ -421,5 +429,42 @@ test.describe('SYNC-WEB', () => {
       await expect(B.p.locator('#dnsyncMsg')).not.toContainText(/function|fail|couldn/i);
       expect(A.p.errs.concat(B.p.errs)).toEqual([]);
     } finally { await A.ctx.close(); await B.ctx.close(); }
+  });
+  test('SYNC-WEB-11: Delete my account asks on the page, then deletes the sign-in account and synced copy; this browser’s results and league stay', async ({ browser }) => {
+    const D = await device(browser, dbs, 'alec');
+    try {
+      await go(D, 'board.html');
+      await H.tap(D.p, D.p.locator('[data-go="start"]'));
+      await D.p.fill('input[name="lname"]', 'Family');
+      await D.p.fill('input[name="nick"]', 'Alec');
+      await H.tap(D.p, D.p.locator('#f .btn.go'));
+      await expect(D.p.locator('.daybar')).toHaveCount(1);
+      await solveMini(D, MINI18);
+      await signIn(D, 'alec');
+      await expect.poll(async () => Object.keys((await held(dbs.sync, 'alec@example.test')) || {}).length).toBeGreaterThan(0);
+      const board = await store(D, 'noodle-board-v1');
+      const dialogs = []; D.p.on('dialog', d => dialogs.push(d.type()));
+      const userIds = async () => (await dbs.sync.query('select email from auth.users order by email')).rows.map(r => r.email);
+
+      await H.tap(D.p, card(D).getByRole('button', { name: 'Delete my account' }));
+      await expect(D.p.locator('#dnsyncConfirm')).toContainText('This browser’s results and your leagues stay.');
+      await H.tap(D.p, card(D).locator('[data-sync="cancel"]'));
+      await expect(D.p.locator('#dnsyncConfirm')).toHaveCount(0);
+      expect(await userIds(), 'Keep it deletes nothing').toEqual(['alec@example.test', 'jo@example.test']);
+
+      await H.tap(D.p, card(D).locator('[data-sync="account"]'));
+      await H.tap(D.p, card(D).locator('[data-sync="account-yes"]'));
+      await expect(D.p.locator('#dnsyncMsg')).toHaveText('Your account has been deleted.');
+      await expect(card(D).locator('h2')).toHaveText('Sign in or create an account');
+      expect(await store(D, 'noodle-sync-auth'), 'signed out here').toBeNull();
+      expect(await userIds(), 'the sign-in account is gone; another player’s is not').toEqual(['jo@example.test']);
+      expect((await dbs.sync.query('select count(*)::int as n from sync.saves')).rows[0].n, 'and its synced copy').toBe(0);
+      expect(await doneIds(D), 'this browser’s results stay').toEqual(['DP·MINI·0099']);
+      expect((await store(D, 'noodle-board-v1')).pid, 'and its league player').toBe(board.pid);
+      expect((await store(D, 'noodle-board-v1')).leagues.map(l => l.name)).toEqual(['Family']);
+      await expect(D.p.locator('#app')).toContainText('Playing as Alec');
+      expect(dialogs, 'no browser pop-ups').toEqual([]);
+      expect(D.p.errs).toEqual([]);
+    } finally { await D.ctx.close(); }
   });
 });
