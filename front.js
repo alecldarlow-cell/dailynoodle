@@ -367,8 +367,8 @@
 
   /* ---------- the daily briefing (News, 24 Oct 2026) ----------
      The newest briefing from today or yesterday leads the News list, its
-     stories as links into it. Under "All topics" the list itself is the full
-     pieces; past briefings are under the Briefing chip.                     */
+     stories as links into it. Older briefings sit in the list at their own
+     date like any piece (and the Briefing chip lists only briefings).       */
   function isBrief(it){ return it.format === 'briefing'; }
   function leadBrief(){
     if(SEC.kind !== 'report' || LAB || state.topic !== 'all' || state.q) return null;
@@ -388,13 +388,13 @@
       + '</ol><a class="brief-all" href="'+esc(it.path)+'">Read the briefing →</a></li>';
   }
 
-  function visible(){
+  function visible(lead){
     var q = state.q.trim().toLowerCase();
     return state.items.filter(function(it){
       if(!mine(it)) return false;
-      if(isBrief(it) && state.topic === 'all' && !q) return false;   // briefings: the lead block, or the Briefing chip
+      if(it === lead) return false;   // the lead block already shows it
       if(state.topic!=='all' && facet(it)!==state.topic) return false;
-      if(q && (it.headline+' '+it.standfirst+' '+it.topic).toLowerCase().indexOf(q)===-1) return false;
+      if(q && (it.headline+' '+it.standfirst+' '+it.topic+' '+(it.stories||[]).map(function(s){ return s.h; }).join(' ')).toLowerCase().indexOf(q)===-1) return false;
       return true;
     });
   }
@@ -404,7 +404,7 @@
 
   function render(){
     renderChips();
-    var v = visible(), lead = leadBrief();
+    var lead = leadBrief(), v = visible(lead);
     $feed.innerHTML = (lead ? briefBlock(lead) : '') + (v.length
       ? v.map(card).join('')
       : '<li class="empty">'+esc(state.items.some(mine)
