@@ -71,3 +71,21 @@ test('YARN-04: Back during a round opens the pause sheet instead of leaving; Bac
  expect(await ev(p)).toEqual([['game_start',1,'new'],['game_end',1,true]]);
  expect(phone.errors).toEqual([]);
 });
+
+test('YARN-05: accepted words flash green, rarer ones too, gold only for the longest word (as Tangle, AF-027)',async({phone})=>{
+ await open(phone);const p=phone.p;
+ await H.tap(p,p.locator('#hPlay'));await live(p);
+ const {rare,star}=await p.evaluate(()=>{const L=__dg.level(1);return {rare:L.bonus.find(w=>w!==L.star),star:L.star};});
+ const flashOf=async w=>{
+  const path=await p.evaluate(w=>__dg.pathOf(w),w);
+  for(const i of path)await H.tap(p,p.locator(`.tile[data-i="${i}"]`));
+  await H.tap(p,p.locator(`.tile[data-i="${path[path.length-1]}"]`));
+  return p.evaluate(i=>document.querySelector(`.tile[data-i="${i}"]`).className,path[0]);
+ };
+ const r=await flashOf(rare);
+ expect(r).toContain('good');expect(r).not.toContain('bonus');
+ await expect(p.locator('#toast')).toContainText('rarer word');
+ await p.waitForTimeout(500);
+ const s=await flashOf(star);
+ expect(s).toContain('bonus');
+});

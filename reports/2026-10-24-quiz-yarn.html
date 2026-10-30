@@ -968,11 +968,11 @@ function submit(p){
     return {r:'dup',w};}
   if(!L.ALL.has(w)){toast('Not in Yarn’s word list');sfx.meh();flashTiles(p,'meh');return {r:'none',w};}
   const {g,up}=addWord(w);
-  flashTiles(p,L.MAIN.has(w)?'good':'bonus');
+  flashTiles(p,w===L.star?'bonus':'good');   // as the daily Tangle (AF-027, 30 Oct 2026): green for every accepted word, gold only for the longest
   renderList(w);renderScore();saveCur();
   if(w===L.star){toast('Longest word! +'+g,'gold');sfx.star();buzz([30,40,30]);}
   else if(up){const s=starCount(R.score);toast('★'.repeat(s)+'  +'+g+' '+w.toUpperCase(),'star');sfx.target();buzz([20,30,20]);}
-  else{toast('+'+g+' '+w.toUpperCase(),'good');sfx.word(w.length);buzz(18);}
+  else{toast('+'+g+' '+w.toUpperCase()+(L.MAIN.has(w)?'':' · rarer word'),'good');sfx.word(w.length);buzz(18);}
   return {r:L.MAIN.has(w)?'main':'bonus',w,pts:g};
 }
 function groups(words){const g={};for(const w of words)(g[w.length]||(g[w.length]=[])).push(w);return g;}
