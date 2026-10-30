@@ -106,6 +106,9 @@
         var u = {}, j;
         for (j in old[k]) u[j] = old[k][j];
         for (j in out[k]) u[j] = out[k][j];
+        // A day finished there beats the same day still in play here (Tangle, 30 Oct 2026):
+        // otherwise a round paused on one device comes back as "Resume" after it was finished.
+        if (k === 'days') for (j in old[k]) if (finished(old[k][j]) && !finished(out[k][j])) u[j] = old[k][j];
         out[k] = u;
       } else if (k === 'streak' && isObj(out[k]) && isObj(old[k])) {
         out[k] = mergeObj(out[k], old[k]);
@@ -118,6 +121,7 @@
     return out;
   }
   function isStreak(o){ return isObj(o) && 'last' in o && ('streak' in o || 'n' in o); }
+  function finished(d){ return isObj(d) && d.state === 'done'; }
 
   /* A player's own link from the board page (21 Oct 2026, dn-board.js
      moveLink) also carries b: {pid, leagues, cur}, the leaderboard id. This
