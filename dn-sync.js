@@ -142,8 +142,10 @@
     return out;
   }
   /* What to send for one key: this browser's merged document, except that a puzzle the
-     account already has a result for keeps the account's result (the first one stored). */
+     account already has a result for keeps the account's result (the first one stored);
+     a day this browser has finished replaces the account's unfinished copy of that day. */
   var UNION = { done: 1, days: 1, found: 1 };
+  function finished(d){ return isObj(d) && d.state === 'done'; }
   function forAccount(mine, theirs){
     if (!isObj(theirs)) return mine;
     var out = {}, k, j;
@@ -152,6 +154,9 @@
       var u = {};
       for (j in mine[k]) u[j] = mine[k][j];
       for (j in theirs[k]) u[j] = theirs[k][j];
+      // ...but a day finished here replaces the account's copy of it still in play (Tangle,
+      // 30 Oct 2026), or the account would keep offering "Resume" for a finished round.
+      if (k === 'days') for (j in mine[k]) if (finished(mine[k][j]) && !finished(theirs[k][j])) u[j] = mine[k][j];
       out[k] = u;
     }
     return out;
