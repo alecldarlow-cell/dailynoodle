@@ -1,9 +1,42 @@
 {
-  "built": "2026-10-30T05:37:40.324Z",
+  "built": "2026-10-30T06:21:57.791Z",
   "today": "2026-10-30",
   "timezone": "Europe/London",
-  "count": 731,
+  "count": 733,
   "items": [
+    {
+      "path": "reports/2026-10-30-briefing.html",
+      "kind": "report",
+      "topic": "Briefing",
+      "headline": "The briefing: Friday 30 October",
+      "standfirst": "Typical UK household incomes are forecast to fall 3% by 2029 · Israel's final count leaves Netanyahu's bloc on 53 seats, short of a majority · Healey concedes no welfare bill cuts are planned before the next election",
+      "date": "2026-10-30",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "format": "briefing",
+      "stories": [
+        {
+          "id": "uk-living-standards",
+          "h": "Typical UK household incomes are forecast to fall 3% by 2029",
+          "t": "Economy"
+        },
+        {
+          "id": "israel-election-2026",
+          "h": "Israel's final count leaves Netanyahu's bloc on 53 seats, short of a majority",
+          "t": "World"
+        },
+        {
+          "id": "uk-welfare-bill",
+          "h": "Healey concedes no welfare bill cuts are planned before the next election",
+          "t": "UK politics"
+        }
+      ]
+    },
     {
       "path": "reports/2026-10-30-crossword-mini-0111.html",
       "kind": "puzzle",
@@ -105,6 +138,21 @@
       "mask": "",
       "type": "reckon",
       "id": "DP·RECK·0011"
+    },
+    {
+      "path": "reports/2026-10-30-uk-household-incomes-fall-budget.html",
+      "kind": "report",
+      "topic": "Economy",
+      "headline": "Typical UK household incomes are forecast to fall 3% by 2029",
+      "standfirst": "The Resolution Foundation projects that a typical working-age household will lose about £1,050 a year by 2028-29, erasing most of the gains of the Parliament’s first years. The Institute for Fiscal Studies says the 2020s are on course to…",
+      "date": "2026-10-30",
+      "updated": "",
+      "read": "~5 min",
+      "thumb": "",
+      "stat": "3",
+      "statUnit": "%",
+      "statLabel": "income fall",
+      "mask": ""
     },
     {
       "path": "reports/2026-10-30-word-link-0083.html",
