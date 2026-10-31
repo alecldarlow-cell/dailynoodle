@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ==== DN FEED META (the site front page reads these) ==== -->
+<meta name="dn:headline"   content="The briefing: Saturday 31 October">
+<meta name="dn:standfirst" content="Most economists expect the Bank of England to raise rates to 4% on 5 November · Oil climbs towards $118 after two tankers are hit near the Strait of Hormuz · Ebola outbreak passes 9,700 confirmed cases, with imported cases in Kenya and Nigeria">
+<meta name="dn:topic"      content="Briefing">
+<meta name="dn:date"       content="2026-10-31">
+<meta name="dn:kind"       content="report">
+<meta name="dn:format"     content="briefing">
+<meta name="dn:read"       content="~2 min">
+
+<title>The briefing: Saturday 31 October — Noodle News</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#FCFCFB; --paper:#FFFFFF; --ink:#15171C; --muted:#5F636B;
+    --faint:#9AA0A6; --hair:#E6E6E2; --accent:#1C46C2; --accent-soft:#ECF0FC;
+    --contrast:#E0312A;
+    --display:'Archivo','Helvetica Neue',Arial,sans-serif;
+    --body:'Inter','Helvetica Neue',Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--canvas);color:var(--ink);font-family:var(--body);line-height:1.6;
+    -webkit-font-smoothing:antialiased;font-size:17px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px 72px}
+  a{color:inherit}
+
+  /* ---------- masthead ---------- */
+  .mast{display:flex;align-items:center;gap:11px;padding:22px 0 14px;border-bottom:2px solid var(--ink)}
+  .mono{width:30px;height:30px;background:var(--accent);color:#fff;font-family:var(--display);
+    font-weight:800;font-size:17px;display:grid;place-content:center;border-radius:4px;letter-spacing:-1px}
+  .word{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.02em}
+  .word b{color:var(--accent)}
+  .mast .kick{margin-left:auto;font-family:var(--body);font-weight:600;font-size:11px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--faint);text-align:right;line-height:1.5}
+
+  /* ---------- headline ---------- */
+  .head{padding:30px 0 8px}
+  .topic{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(31px,7vw,46px);line-height:1.05;letter-spacing:-.02em}
+  .standfirst{font-size:clamp(17px,2.6vw,20px);color:var(--muted);margin-top:16px;line-height:1.45}
+  .dateline{margin-top:18px;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--faint);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:11px 0}
+
+  /* ---------- hero stats ---------- */
+  .herostats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);
+    border:1px solid var(--hair);margin:26px 0 8px}
+  .hs{background:var(--canvas);padding:18px 14px}
+  .hs .n{font-family:var(--display);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:.95;
+    font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .hs .n small{font-size:.36em;font-weight:600;color:var(--muted);letter-spacing:0}
+  .hs .l{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.4}
+  @media(max-width:540px){.herostats{grid-template-columns:1fr 1fr}.hs:last-child{grid-column:1/-1}}
+
+  /* ---------- sections ---------- */
+  .section{margin-top:40px}
+  .eyebrow{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:9px;display:flex;align-items:center;gap:9px}
+  .eyebrow::before{content:"";width:18px;height:2px;background:var(--accent)}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,4.4vw,28px);line-height:1.12;letter-spacing:-.01em}
+  .section p{margin-top:14px}
+  .section p + p{margin-top:12px}
+
+  /* ---------- exhibit ---------- */
+  .exhibit{margin:26px 0;border:1px solid var(--hair);background:var(--paper);border-radius:6px;overflow:hidden}
+  .ex-head{padding:16px 18px 4px}
+  .ex-num{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  .ex-title{font-family:var(--display);font-weight:700;font-size:17px;margin-top:4px;line-height:1.25}
+  .ex-chart{padding:10px 14px 4px}
+  .ex-cap{padding:4px 18px 16px;font-size:12.5px;color:var(--muted);line-height:1.5;
+    border-top:1px solid var(--hair);margin-top:6px;padding-top:12px}
+  .ex-cap b{color:var(--ink);font-weight:600}
+
+  /* ---------- DN chart library styling (real-px responsive SVG) ---------- */
+  .dn-fig{margin:0}
+  .dn-svg{display:block;width:100%;height:auto;overflow:visible}
+  .dn-ax{font-family:var(--body);font-weight:500;fill:var(--faint);font-size:11px}
+  .dn-axlabel{font-family:var(--body);font-weight:600;fill:var(--muted);font-size:11px;letter-spacing:.02em}
+  .dn-clabel{font-family:var(--body);font-weight:600;fill:var(--ink);font-size:12px}
+  .dn-vlabel{font-family:var(--display);font-weight:700;fill:var(--ink);font-size:12.5px;font-variant-numeric:tabular-nums}
+  .dn-endlab{font-family:var(--display);font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
+  .dn-anno{font-family:var(--body);font-weight:600;fill:var(--ink);font-size:11.5px}
+  .dn-annosub{font-family:var(--body);font-weight:500;fill:var(--faint);font-size:10.5px;letter-spacing:.02em}
+  .dn-strip-name{font-family:var(--body);font-weight:600}
+  .dn-legend{display:flex;flex-wrap:wrap;gap:7px 16px;padding:10px 4px 2px;
+    font-family:var(--body);font-size:12px;color:var(--muted)}
+  .dn-key{display:inline-flex;align-items:center;gap:7px}
+  .dn-key i{width:12px;height:12px;border-radius:2px;display:inline-block;flex:0 0 auto}
+  .dn-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  /* sankey: labels keep a paper halo so they stay legible over flow ribbons */
+  .dn-nodelabel{paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+  .dn-flow{transition:fill-opacity .15s ease}
+  .dn-flow:hover{fill-opacity:.72}
+  @media(prefers-reduced-motion:reduce){.dn-flow{transition:none}}
+
+  /* ---------- callout ---------- */
+  .callout{margin:24px 0;background:var(--accent-soft);border-left:3px solid var(--accent);
+    padding:16px 18px;border-radius:0 6px 6px 0;font-size:16px}
+  .callout b{font-weight:700}
+
+  /* ---------- inline citation + source tiers ---------- */
+  sup.cite{font-family:var(--body);font-weight:700;font-size:.64em;line-height:0;margin-left:1px}
+  sup.cite a{color:var(--accent);text-decoration:none;padding:0 1px}
+  sup.cite a:hover{text-decoration:underline}
+  .tier{display:inline-block;font-family:var(--body);font-weight:700;font-size:10px;letter-spacing:.04em;
+    padding:1px 5px;border-radius:3px;vertical-align:middle;margin-right:7px}
+  .tier.t1{background:#E6EDFB;color:#1740A6}
+  .tier.t2{background:#EAF3EC;color:#1C6B3A}
+  .tier.t3{background:#F1EEE6;color:#7A6A36}
+
+  /* ---------- "what we don't know" ---------- */
+  .unknowns{margin:24px 0;border:1px dashed var(--faint);border-radius:6px;padding:15px 18px;background:#fff}
+  .unknowns .h{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .unknowns p{font-size:14.5px;color:var(--muted);margin:0}
+
+  /* ---------- positions (contested only) ---------- */
+  .positions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+  @media(max-width:560px){.positions{grid-template-columns:1fr}}
+  .pos{border:1px solid var(--hair);border-radius:6px;padding:16px;background:var(--paper)}
+  .pos .tag{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .pos.case .tag{color:var(--accent)} .pos.counter .tag{color:var(--contrast)}
+  .pos p{font-size:14.5px;color:var(--ink)}
+  .pos .kind{font-size:11px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
+
+  /* ---------- stat band ---------- */
+  .statband{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair);margin-top:24px}
+  .statband .c{background:var(--paper);padding:16px 14px}
+  .statband .c .n{font-family:var(--display);font-weight:800;font-size:clamp(22px,5vw,30px);line-height:.95;font-variant-numeric:tabular-nums}
+  .statband .c .l{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.35}
+  @media(max-width:560px){.statband{grid-template-columns:1fr 1fr}}
+
+  /* ---------- caveat card ---------- */
+  .caveat{margin-top:18px;border:1px solid var(--hair);border-left:3px solid var(--faint);
+    border-radius:0 6px 6px 0;padding:14px 16px;background:#fff;font-size:14px;color:var(--muted)}
+  .caveat b{color:var(--ink);font-weight:600}
+
+  /* ---------- appendix table ---------- */
+  .appx{margin-top:18px;border:1px solid var(--hair);border-radius:6px;overflow-x:auto}
+  table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:460px}
+  table.tbl th{text-align:left;font-family:var(--body);font-weight:700;font-size:10.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent);padding:11px 12px;border-bottom:1px solid var(--hair);background:#fbfbfa}
+  table.tbl td{padding:9px 12px;border-bottom:1px solid var(--hair)}
+  table.tbl td.num{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+  table.tbl tr:last-child td{border-bottom:none}
+
+  /* ---------- go deeper ---------- */
+  .more{margin-top:18px;list-style:none;border-top:1px solid var(--hair)}
+  .more li{padding:13px 0;border-bottom:1px solid var(--hair);display:flex;gap:12px;align-items:baseline;font-size:15px;color:var(--muted)}
+  .more li::before{content:"\2192";color:var(--accent);font-weight:700}
+  .more li b{color:var(--ink);font-weight:600}
+
+  /* ---------- footer ---------- */
+  .foot{margin-top:46px;border-top:2px solid var(--ink);padding-top:16px;font-size:12px;line-height:1.7;color:var(--muted)}
+  .foot b{color:var(--ink);font-weight:700}
+  .foot .fm{margin-bottom:9px}
+  .foot ol{margin:4px 0 9px 0;padding-left:20px}
+  .foot ol li{margin-bottom:4px}
+  .foot .ver{font-size:11px;color:var(--faint);letter-spacing:.03em}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+  /* the briefing (toolchain/dn-briefing.js) */
+  .bi{margin-top:30px;padding-top:22px;border-top:1px solid var(--hair)}
+  .bi:first-of-type{border-top:0;padding-top:0}
+  .bi h2{font-family:var(--display);font-weight:800;font-size:clamp(21px,4.6vw,25px);line-height:1.2;letter-spacing:-.01em;margin:6px 0 10px}
+  .bi p{margin-top:10px}
+  .bi .bnew{color:var(--accent)}
+  .bi .bdeep a{font-weight:700;color:var(--accent);text-decoration:none}
+  .bi .bsrc{font-size:13.5px;color:var(--muted)}
+  .bi .bsrc a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mono">DN</div>
+    <div class="word">Noodle<b>News</b></div>
+    <div class="kick">BRIEFING<br>31 OCT 2026</div>
+  </header>
+
+  <div class="head">
+    <div class="topic">Briefing &middot; 3 stories</div>
+    <h1>The briefing: Saturday 31 October</h1>
+    <p class="standfirst">Three stories worth knowing today, in plain English: what happened, why it matters and what comes next.</p>
+    <div class="dateline">Noodle News desk &middot; reading time ~2 min</div>
+  </div>
+
+  <section class="section bi" id="uk-interest-rates" data-story="uk-interest-rates">
+    <div class="eyebrow">1 · Economy</div>
+    <h2>Most economists expect the Bank of England to raise rates to 4% on 5 November</h2>
+    <p>Bank Rate is 3.75%. In a Reuters poll of 63 economists, 54 expect a quarter-point rise to 4% when the Bank's Monetary Policy Committee next decides. It voted 6-3 to hold rates in September.</p>
+    <p><b>Why it matters:</b> Inflation rose to 3.5% in September, up from 3.1%, mainly because of dearer motor fuel. A rise would lift payments on tracker and variable mortgages, but not on fixed deals until they end.</p>
+    <p><b>What next:</b> The decision is on 5 November. The next ones are on 17 December and 4 February.</p>
+    <p class="bsrc">Sources: <a href="https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/september2026">Office for National Statistics, CPI September 2026</a> · <a href="https://hoa.org.uk/news/interest-rate-predictions-2/">HomeOwners Alliance, citing the Reuters poll</a></p>
+  </section>
+
+  <section class="section bi" id="hormuz-oil" data-story="hormuz-oil">
+    <div class="eyebrow">2 · World</div>
+    <h2>Oil climbs towards $118 after two tankers are hit near the Strait of Hormuz</h2>
+    <p>Iran's Revolutionary Guard said a tanker hit a mine on Friday on an unauthorised route. UK Maritime Trade Operations said another was struck on Thursday night by explosives attached to its hull. Brent crude rose about 2.4% to $117.56 a barrel, and is up about 15% in October.</p>
+    <p><b>Why it matters:</b> The US-Iran war is in its ninth month. Dearer fuel was the main reason UK inflation rose to 3.5% in September, with motor fuel prices up 29.8% on a year earlier.</p>
+    <p><b>What next:</b> Qatari mediators were in Tehran on Friday working on a deal. US midterm elections are on 3 November, and Trump had said the US would not strike Iran before them.</p>
+    <p class="bsrc">Sources: <a href="https://www.thenationalnews.com/business/markets/2026/10/30/oil-prices-set-for-sharp-monthly-rise-on-hormuz-strikes-and-us-threat-to-hit-iran/">The National, oil prices and Hormuz incidents</a> · <a href="https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/september2026">Office for National Statistics, CPI September 2026</a></p>
+  </section>
+
+  <section class="section bi" id="ebola-bundibugyo-2026" data-story="ebola-bundibugyo-2026">
+    <div class="eyebrow">3 · Medicine</div>
+    <h2>Ebola outbreak passes 9,700 confirmed cases, with imported cases in Kenya and Nigeria</h2>
+    <p>The World Health Organization reports 9,704 confirmed cases and 4,687 deaths from Bundibugyo-virus Ebola, nearly all in the DR Congo, as of 20 October. Kenya has nine cases in one cluster. Nigeria confirmed one imported case on 20 October.</p>
+    <p><b>Why it matters:</b> WHO rates the risk to the world as low. But no vaccine or specific treatment is approved for this strain, and spread is still sustained in the DR Congo.</p>
+    <p><b>What next:</b> WHO is revising its risk assessment, last set on 14 August. A vaccine trial began in Bunia, DR Congo, on 23 October.</p>
+    <p class="bsrc">Sources: <a href="https://www.who.int/emergencies/disease-outbreak-news/item/2026-DON622">World Health Organization, Disease Outbreak News, 23 October 2026</a></p>
+  </section>
+
+  <div class="foot">
+    <div class="fm"><b>How this is made.</b> Each item is drawn from the sources linked under it, published on the record; nothing here is our own reporting. Our full pieces, where linked, carry the detail and the method.</div>
+    <div class="fm">Researched, written and checked by an AI system working to the Noodle News standards; edited and published by the Noodle News editor.</div>
+    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
+  </div>
+
+</div>
+</body>
+</html>
