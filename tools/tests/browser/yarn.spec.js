@@ -14,7 +14,7 @@ const live=p=>expect.poll(()=>p.evaluate(()=>{const s=__dg.state();return !!s.R&
 
 test('YARN-01: a word entered by tapping scores; one star clears the level and opens the next',async({phone})=>{
  await open(phone);const p=phone.p;
- await expect(p.locator('#hStatus')).toContainText('Stars at 14, 29, 42 points');
+ await expect(p.locator('#hStatus')).toContainText('Stars at 14, 29, 42, 46, 50 points');
  await H.tap(p,p.locator('#hPlay'));await live(p);
  const w=await p.evaluate(()=>__dg.level(1).main.find(x=>x.length===4));
  const path=await p.evaluate(w=>__dg.pathOf(w),w);
@@ -88,4 +88,33 @@ test('YARN-05: accepted words flash green, rarer ones too, gold only for the lon
  await p.waitForTimeout(500);
  const s=await flashOf(star);
  expect(s).toContain('bonus');
+});
+
+test('YARN-06: plurals and other real words score; saved three-star levels get the stars their best earned; the second basket opens after 360',async({phone})=>{
+ await phone.ctx.addInitScript(()=>{if(sessionStorage.getItem('seeded'))return;sessionStorage.setItem('seeded','1');
+  const lv={};for(let n=1;n<=360;n++)lv[n]={s:n===5?3:2,b:n===5?99:30};
+  localStorage.setItem('digi-yarn-v1',JSON.stringify({v:1,lv,cur:null,words:[],best:99,snd:false,vib:false,rm:true,fs:false}));});
+ await open(phone);const p=phone.p;
+ // level 5 was saved with three stars and a best of 99: it now has five; levels saved with two stay as they were
+ await expect.poll(()=>p.evaluate(()=>__dg.state().save.lv[5].s),{timeout:6000}).toBe(5);
+ expect(await p.evaluate(()=>[__dg.state().save.lv[6].s,__dg.state().save.up5])).toEqual([2,1]);
+ await expect(p.locator('#hHead')).toHaveText('Level 361');
+ await expect(p.locator('#hStatus')).toContainText('Saffron 1 of 10');
+ await H.tap(p,p.locator('#hLevels'));
+ await expect(p.locator('.tier')).toHaveCount(2);
+ await expect(p.locator('.tier.t2')).toContainText('The second basket');
+ await expect(p.locator('.lv[data-lv="361"]')).toBeEnabled();await expect(p.locator('.lv[data-lv="362"]')).toBeDisabled();
+ await expect(p.locator('.lv[data-lv="5"] i')).toHaveText('★★★★★');
+ await H.tap(p,p.locator('.lv[data-lv="361"]'));await live(p);
+ // a plural no daily list had is now a word (level 59's board spells WITHDRAWS), and a rarer word scores like any word
+ expect(await p.evaluate(()=>__dg.level(59).bonus.includes('withdraws'))).toBe(true);
+ const w=await p.evaluate(()=>__dg.level(361).bonus[0]);
+ expect(w).toBeTruthy();
+ const r=await p.evaluate(w=>__dg.submitWord(w),w);expect(r.r).toBe('bonus');expect(r.pts).toBe(w.length-2);
+ await expect(p.locator('#starbar .mk')).toHaveCount(5);
+ await p.evaluate(()=>__dg.end(true));await expect(p.locator('#result')).toBeVisible();
+ await expect(p.locator('#rStars span')).toHaveCount(5);
+ expect(await ev(p)).toEqual([['game_start',361,'new'],['game_end',361,true]]);
+ expect(await p.evaluate(()=>window.__yev.map(e=>e.x.mode))).toEqual(['skein','skein']);
+ expect(phone.errors).toEqual([]);
 });
