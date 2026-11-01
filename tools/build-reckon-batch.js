@@ -58,6 +58,8 @@ const EXCLUDE = {
   'food:74': "oldest edible honey: 3,000 years (Egyptian tombs, an unverified tale) and 5,500 years (a Georgian tomb, 2003) are both quoted, and neither was shown to be edible",
   'food:17': "UK tea a day: 100 million and 165 million cups are both quoted by the UK tea industry",
   'food:76': "UK chocolate per person: about 8, 10 and 11 kg a year are all quoted, depending on the year and the survey",
+  // the scheduled check of 1 Nov 2026 (tools/reckon-fact-fixes-2026-11-01.json)
+  'animals:99': "elephant’s trunk: a 2021 study measured about 5.5 litres but popular sources say 8 to 10; the wording that pins the study can’t go in yet, because apply-ballpark-fixes.js can’t edit the last fact in a pack",
 };
 
 /* ---- the bank, by anchor ---- */

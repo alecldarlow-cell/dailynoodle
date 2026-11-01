@@ -1,0 +1,73 @@
+{
+ "_about": "Fact check of 1 Nov 2026 (scheduled): the 257 facts first scheduled for 26 Nov-25 Dec 2026 and not yet in the ledger. WebSearch only (titles, mostly no snippets) plus the checkers’ own knowledge; 61 facts ran out of the first run’s search budget and were re-checked with searches. Restamping then brought in 4 more facts (sport:14, animals:37, animals:24, places:1), checked the same way. Applied with tools/apply-ballpark-fixes.js.",
+ "fixes": {
+  "animals:10": {
+   "q": "How wide can a wandering albatross’s wings be, tip to tip, in metres?"
+  },
+  "animals:21": {
+   "a": 6800,
+   "n": "Close to 6,800, and still rising."
+  },
+  "animals:24": {
+   "q": "How tall can an emperor penguin grow, in centimetres?",
+   "n": "Up to about 115 cm, the height of a six-year-old child."
+  },
+  "animals:41": {
+   "n": "It eats, drinks and is thought to sleep on the wing."
+  },
+  "animals:86": {
+   "q": "How many days can a male emperor penguin go without food during the breeding season?",
+   "n": "Courting, then guarding the egg through the Antarctic winter, losing almost half his weight."
+  },
+  "body:20": {
+   "q": "How many bones make up the human skull, not counting the ear bones?"
+  },
+  "body:38": {
+   "q": "How many vertebrae are in the human neck?",
+   "n": "7, the same number as a giraffe’s."
+  },
+  "britain:40": {
+   "n": "Leeds diocese alone has three: Ripon, Wakefield and Bradford."
+  },
+  "britain:52": {
+   "q": "About how many official English Heritage blue plaques are there in London?"
+  },
+  "britain:54": {
+   "q": "How long is the network of canals and rivers looked after by the Canal & River Trust, in kilometres?",
+   "n": "About 2,000 miles, much of it built for horse-drawn boats."
+  },
+  "build:80": {
+   "n": "They can carry more than 24,000 twenty-foot containers."
+  },
+  "everyday:83": {
+   "q": "What typing speed is usually quoted for an average person, in words a minute?",
+   "n": "Professional typists often manage 70 or more."
+  },
+  "science:3": {
+   "n": "A litre weighs almost exactly a kilogram."
+  },
+  "science:66": {
+   "q": "What is the highest voltage carried by Britain’s National Grid power lines, in volts?",
+   "n": "400,000 volts on the main lines (some carry 275,000). High voltage loses less energy on the way."
+  },
+  "science:90": {
+   "q": "How many nanoseconds does light take to travel the length of a football pitch?"
+  },
+  "science:92": {
+   "q": "How many cycles of caesium-133’s radiation make up one second, by definition?"
+  },
+  "sport:27": {
+   "n": "Higher than a standard modern British ceiling (about 2.4 m)."
+  },
+  "sport:60": {
+   "q": "How many seconds did Pan Zhanle take to swim his world-record 100 m freestyle at the Paris 2024 Olympics?",
+   "n": "Exactly two lengths of a 50 m pool."
+  },
+  "sport:62": {
+   "q": "How many rounds does a men’s professional boxing world title fight last?"
+  }
+ },
+ "excludeFromReckon": {
+  "animals:99": "elephant’s trunk: a 2021 study measured about 5.5 litres but popular sources say 8 to 10; the wording fix that pins the study can’t be applied yet, because tools/apply-ballpark-fixes.js can’t edit the last fact in a pack"
+ }
+}
