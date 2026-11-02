@@ -20,7 +20,7 @@
   'use strict';
   if (window.__dnGameShare) return; window.__dnGameShare = true;
 
-  var SKIP = { 'paper-planes': 1 };   // has its own Share on the daily flight
+  var SKIP = { 'paper-planes': 1, 'tally': 1 };   // have their own Share (Paper Planes' daily flight; Tally's finish sheet)
   /* name and emoji by game slug (from the file name); anything else uses the page headline */
   var GAMES = {
     'bubble-burst': ['🫧', 'Bubble Burst'],
