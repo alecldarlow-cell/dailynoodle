@@ -166,8 +166,8 @@
 
   var ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon'];
   var SAVE = { mini: 'digi-mini-v1', doku: 'digi-doku-v1', sweep: 'digi-sweep-v1', path: 'digi-path-v1',
-               link: 'digi-link-v1', tangle: 'digi-tangle-v1', borders: 'digi-borders-v1', reckon: 'digi-reckon-v1' };
-  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon' };
+               link: 'digi-link-v1', tangle: 'digi-tangle-v1', borders: 'digi-borders-v1', reckon: 'digi-reckon-v1', tally: 'digi-tally-v1' };
+  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally' };
   var SHARE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>';
   var TICK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   var CHEVRON = '<svg width="10" height="16" viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -335,7 +335,7 @@
      50 ms later. The app renders exactly these notes to a file (scripts/make-sounds.js), so keep them in step.
      One switch for the five, "Sound" on their start card and this sheet, saved as dn-sound ("0" = off;
      on by default). Tangle, Borders and Reckon keep their own sounds and switches. */
-  var JINGLE_TYPES = { mini: 1, doku: 1, sweep: 1, path: 1, link: 1 };
+  var JINGLE_TYPES = { mini: 1, doku: 1, sweep: 1, path: 1, link: 1, tally: 1 };
   var JINGLE = [[523.25, 0, 0.16, 'triangle', 0.12], [659.25, 0.09, 0.16, 'triangle', 0.12], [783.99, 0.18, 0.16, 'triangle', 0.12],
                 [1046.5, 0.27, 0.6, 'triangle', 0.13], [783.99, 0.27, 0.6, 'triangle', 0.08], [1318.51, 0.36, 0.5, 'sine', 0.05]];
   var SOUND_KEY = 'dn-sound';
@@ -500,7 +500,7 @@
     var shareLabel = (cfg.share && cfg.share.label && cfg.share.label !== 'Share') ? cfg.share.label : 'Share result';
     var card = el('section', 'fin-share');
     var sq = shareHtml(tagged(cfg.share.text()));
-    var url = shortLink(cfg.type);
+    var url = (cfg.share && cfg.share.url) || shortLink(cfg.type);   // a Lab type shares its page: it has no short link yet
     card.innerHTML = '<span class="fin-share-body fin-vh"><span class="fin-share-text">' + sq + '</span>' +
       '<span class="fin-share-url">' + esc(url) + '</span></span>' +
       '<button type="button" class="fin-pill fin-primary fin-share-btn"><span class="fin-share-icon">' + SHARE_ICON + '</span><span class="fin-share-label">' + esc(shareLabel) + '</span></button>' +
@@ -523,7 +523,8 @@
 
     // footer
     var foot = el('div', 'fin-foot');   // a div: some engines hide their own <footer>
-    var clock = el('p', 'fin-clock'); foot.appendChild(clock); fillClock(clock, NAME[cfg.type]);
+    var clock = el('p', 'fin-clock'); foot.appendChild(clock);
+    if (cfg.lab) clock.textContent = 'In development: a Lab puzzle, not yet daily.'; else fillClock(clock, NAME[cfg.type]);
     if (cfg.date) foot.appendChild(el('p', 'fin-day', esc(NAME[cfg.type] + ' ' + cfg.n + ', ' + longDate(cfg.date))));
     if (JINGLE_TYPES[cfg.type]) foot.appendChild(soundSwitch());
     f.appendChild(foot);

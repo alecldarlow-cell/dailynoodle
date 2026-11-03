@@ -199,7 +199,7 @@ function heroStat(html) {
 // digi-doku-0004) predate the naming pattern. A new type needs a line here and
 // a label in front.js's PUZZLE_TYPES, or its cards show under All puzzles only.
 const TYPE_OF_ID = { MINI: 'mini', LEXI: 'doku', SWEEP: 'sweep', PATH: 'path',
-                     LINK: 'link', TANG: 'tangle', BORD: 'borders', RECK: 'reckon' };
+                     LINK: 'link', TANG: 'tangle', BORD: 'borders', RECK: 'reckon', TALLY: 'tally' };
 function puzzleType(html, rel, warnings) {
   const m = html.match(/\bid\s*:\s*"DP·([A-Z]+)·/) || html.match(/DP·([A-Z]+)·[0-9]/);
   const type = m && TYPE_OF_ID[m[1]];
@@ -229,6 +229,8 @@ function puzzleMask(html, rel, warnings) {
   // object is confirmed to hold ten questions.
   // Reckon has no grid either: ten numbers to guess. Like Borders, its card uses the fixed dn:thumb
   // every Reckon file carries (assets/reckon-thumb.svg: the scale, never a day's numbers).
+  // Tally (3 Nov 2026): a 4×4 calcudoku; the tile is a 4x4 of chips, like Link's (its cages would spoil nothing, but the chips are the house tile)
+  if (/\bwindow\.DN_PUZZLE=\{type:"tally"/.test(html)) return '.'.repeat(16);
   if (/\bwindow\.DN_PUZZLE=\{id:"DP\u00b7RECK\u00b7/.test(html)) {
     const qs = (html.match(/"lo":/g) || []).length;
     if (qs !== 10) warnings.push(`${rel} — Reckon puzzle parsed as ${qs} question(s), expected 10`);
@@ -312,7 +314,7 @@ for (const { dir, kind } of DIRS) {
       firstMatch(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) ||
       firstMatch(head, /<title[^>]*>([\s\S]*?)<\/title>/i).replace(/\s*[—–-]\s*(?:Digi|Noodle) News\s*$/i, '').replace(/^\s*(?:Digi|Noodle) News\s*[—–-]\s*/i, '') ||
       titleCase(fn.slug)
-    ).replace(/^(Mini|Doku|Sweep|Path|Link|Borders|Tangle|Reckon)\s+0*(\d+)$/, '$1 $2');
+    ).replace(/^(Mini|Doku|Sweep|Path|Link|Borders|Tangle|Reckon|Tally)\s+0*(\d+)$/, '$1 $2');
 
     const standfirst =
       meta(head, 'dn:standfirst') ||

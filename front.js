@@ -128,7 +128,7 @@
   }
 
   var PUZZLE_TYPES = [['mini','Mini'],['doku','Doku'],['sweep','Sweep'],['path','Path'],
-                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon']];
+                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally']];   // tally: Lab from 3 Nov 2026
   var TYPE_LABEL = {}, TYPE_RANK = {};
   PUZZLE_TYPES.forEach(function(t, i){ TYPE_LABEL[t[0]] = t[1]; TYPE_RANK[t[1]] = i; });
   function puzzleType(it){
@@ -478,6 +478,7 @@
         if(r.o === 'gave') return 'Gave up';
         t = clock(r.s); return t ? 'Cleared in ' + t : '';
       case 'path':
+      case 'tally':
         t = shownClock(r.t) || clock(r.s); return t ? 'Solved in ' + t : '';
       case 'link':
         if(r.o === 'loss') return 'Out of mistakes';

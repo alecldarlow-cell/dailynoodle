@@ -1,0 +1,106 @@
+/* Digi Puzzles — tally engine. One copy serves every tally page in reports/.
+   Tally is a 4×4 calcudoku (KenKen-style), built 3 Nov 2026 for Lab on the
+   house chrome (engines/house.js, engines/finish.js). The page supplies its
+   puzzle as window.DN_PUZZLE before loading engines/tally.js.
+   Edit here to change every tally; keep element ids and localStorage keys
+   stable (dn-track.js and players' saved progress depend on them). */
+/* shared sheets first, so dark mode and the finish sheet are right from the first paint */
+@import url("finish.css");
+@import url("house.css");
+
+:root{
+  --paper:#EDEEF2; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
+  --line:#141726; --line-soft:#D3D6E0; --brand:#2E5BFF; --brand-deep:#1B3B9E;
+  --active:#FFD54A; --active-word:#FFF0B8; --good:#1F9E6B; --bad:#E4483B;
+  --cell:#FFFFFF; --cell-peer:#F3F5FA; --cell-cage:#E9EDFB; --cell-sel:#D6DFFF; --cell-same:#E3E9FF;
+  --radius:14px;
+  --mono:"Space Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Space Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+/* dark mode: house.css sets the shared tokens on html.dn-house; these are Tally's own */
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]){--cell:#1E2230;--cell-peer:#242939;--cell-cage:#2A3250;--cell-sel:#3A4A86;--cell-same:#30406E;--line-soft:#3A3F52}}
+html.dn-house[data-theme="dark"]{--cell:#1E2230;--cell-peer:#242939;--cell-cage:#2A3250;--cell-sel:#3A4A86;--cell-same:#30406E;--line-soft:#3A3F52}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.45;font-variant-numeric:tabular-nums;
+  display:flex;justify-content:center;padding:max(10px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));min-height:100dvh}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.app{width:100%;max-width:520px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:2px solid var(--ink);padding-bottom:11px}
+.masthead{display:flex;align-items:center;gap:10px}
+.mono-mark{font-family:var(--mono);font-weight:700;font-size:13px;background:var(--ink);color:var(--paper);border-radius:8px;padding:6px 7px;line-height:1}
+.mh-name{font-weight:700;font-size:18px;letter-spacing:-.01em}.mh-name .accent{color:var(--brand)}
+.mh-eyebrow{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase}
+.streakbox{font-family:var(--mono);font-size:13px}
+.meta{font-family:var(--mono);font-size:12px;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.meta #pband{text-transform:capitalize}
+.meta #timer{margin-left:auto;color:var(--ink);font-weight:700}
+#timer.waiting{color:var(--ink-soft)}
+main{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px}
+
+/* ---- the board ---- */
+.grid{--n:4;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));grid-template-rows:repeat(var(--n),minmax(0,1fr));
+  width:min(100%,380px,calc(100dvh - 330px));min-width:240px;aspect-ratio:1;border:3px solid var(--line);border-radius:8px;background:var(--line);touch-action:manipulation}
+.cell{position:relative;min-width:0;min-height:0;overflow:hidden;background:var(--cell);border:1px solid var(--line-soft);display:grid;place-items:center;padding:0;color:var(--ink);user-select:none;-webkit-user-select:none}
+/* cage edges are inset shadows (2px a side, 5px with the shared hairline), so every cell keeps the same 1px border and the thin lines stay aligned */
+.cell{--bt:0px;--bb:0px;--bl:0px;--br:0px;box-shadow:inset 0 var(--bt) 0 0 var(--line),inset 0 calc(-1*var(--bb)) 0 0 var(--line),inset var(--bl) 0 0 0 var(--line),inset calc(-1*var(--br)) 0 0 0 var(--line)}
+/* html.dn-house.dn-tally: house.css recolours every .cell border, so the cage sides need the higher specificity */
+html.dn-house.dn-tally .cell{border-color:var(--line-soft)}
+.cell.bt,html.dn-house.dn-tally .cell.bt{--bt:2px;border-top-color:var(--line)}.cell.bb,html.dn-house.dn-tally .cell.bb{--bb:2px;border-bottom-color:var(--line)}
+.cell.bl,html.dn-house.dn-tally .cell.bl{--bl:2px;border-left-color:var(--line)}.cell.br,html.dn-house.dn-tally .cell.br{--br:2px;border-right-color:var(--line)}
+.cell.peer{background:var(--cell-peer)}.cell.cage{background:var(--cell-cage)}.cell.same{background:var(--cell-same)}.cell.sel{background:var(--cell-sel)}
+/* the clue: number then sign; the sign is bigger and blue so × + − ÷ never read alike (Alec, 3 Nov 2026) */
+.cell .clue{position:absolute;top:4px;left:6px;display:inline-flex;align-items:baseline;gap:1px;line-height:1;font-variant-numeric:tabular-nums}
+.cell .clue b{font-size:15px;font-weight:700;color:var(--ink-soft);letter-spacing:.01em}
+.cell .clue i{font-style:normal;font-size:19px;font-weight:700;color:var(--brand-deep);line-height:.8;position:relative;top:1px}
+.cell .clue.ok b,.cell .clue.ok i{color:var(--good)}.cell .clue.bad b,.cell .clue.bad i{color:var(--bad)}
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .cell .clue i{color:#8EA6FF}}
+html.dn-house[data-theme="dark"] .cell .clue i{color:#8EA6FF}
+.cell .val{font-weight:500;font-size:clamp(26px,9vmin,40px);line-height:1}
+.cell.bad .val{color:var(--bad)}
+.cell .notes{position:absolute;left:4px;right:4px;bottom:3px;display:grid;grid-template-columns:repeat(4,1fr);font-size:12px;line-height:1.1;color:var(--ink-soft);text-align:center}
+.cell .notes span{visibility:hidden}.cell .notes span.on{visibility:visible}
+.cell.has .notes{display:none}
+body.win .cell{background:var(--cell)}body.win .cell .val{color:var(--good)}
+
+/* ---- keypad ---- */
+.pad{width:min(100%,380px);display:flex;flex-direction:column;gap:10px}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.keys button,.tools button{min-height:54px;border-radius:12px;background:var(--card);border:1px solid var(--line-soft);font-weight:600;font-size:22px}
+.keys button:active,.tools button:active{background:var(--cell-cage)}
+.keys button[disabled],.tools button[disabled]{opacity:.35;cursor:default}
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tools button{font-size:15px}
+.tools button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
+.msg{margin:0;min-height:20px;font-size:14px;color:var(--ink-soft);text-align:center}
+body.win .pad{display:none}
+#shareAgain{min-height:48px;border-radius:12px;border:1px solid var(--line-soft);background:var(--card);font-weight:600;padding:0 18px}
+@media (orientation:landscape) and (max-height:500px){
+  .app{max-width:none}
+  main{flex-direction:row;align-items:flex-start;justify-content:center;gap:18px}
+  .grid{width:min(calc(100dvh - 110px),380px);min-width:200px}
+  .pad{width:min(44vw,300px)}
+  .keys button,.tools button{min-height:44px;font-size:18px}
+}
+
+/* ---- the result box the finish sheet is built in ---- */
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(20,23,38,.42)}
+.modal.on{display:flex}
+.modalcard{width:100%;max-width:340px;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:22px 20px;text-align:center}
+.modalcard h2{font-family:var(--sans);font-size:25px;margin:0 0 3px;color:var(--ink)}
+.modalcard .sub{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:15px}
+.statrow{display:flex;justify-content:center;gap:18px;margin:8px 0 14px}
+.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--ink-soft);letter-spacing:.06em;text-transform:uppercase}
+.modalbtns{display:flex;gap:8px;justify-content:center}
+.modalbtns button{min-height:44px;border-radius:12px;border:1px solid var(--line-soft);background:var(--card);padding:0 16px;font-weight:600}
+.modalbtns .primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+footer{display:none}
+
+/* the answer on the finish sheet: the solved board with its cage lines */
+.fin-tally{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr));width:min(100%,240px);aspect-ratio:1;border:3px solid var(--line);border-radius:8px;background:var(--line);margin:8px 0 0}
+.fin-tally i{position:relative;font-style:normal;background:var(--card);border:1px solid var(--line-soft);display:grid;place-items:center;font-weight:600;font-size:20px;min-width:0;min-height:0;
+  --bt:0px;--bb:0px;--bl:0px;--br:0px;box-shadow:inset 0 var(--bt) 0 0 var(--line),inset 0 calc(-1*var(--bb)) 0 0 var(--line),inset var(--bl) 0 0 0 var(--line),inset calc(-1*var(--br)) 0 0 0 var(--line)}
+.fin-tally i.bt{--bt:2px;border-top-color:var(--line)}.fin-tally i.bb{--bb:2px;border-bottom-color:var(--line)}.fin-tally i.bl{--bl:2px;border-left-color:var(--line)}.fin-tally i.br{--br:2px;border-right-color:var(--line)}
+.fin-tally i small{position:absolute;top:2px;left:4px;font-size:11px;font-weight:700;color:var(--ink-soft);line-height:1}

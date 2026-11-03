@@ -7,7 +7,7 @@ const { write, TYPES } = require('../../short-links');
 
 test('short links: one page per puzzle type, with link-preview tags and the today lookup', () => {
   const out = fs.mkdtempSync(path.join(os.tmpdir(), 'sl-'));
-  assert.strictEqual(write(out), 8);
+  assert.strictEqual(write(out), 9);   // the eight dailies plus Tally (Lab, 3 Nov 2026)
   for (const type of Object.keys(TYPES)) {
     const html = fs.readFileSync(path.join(out, type, 'index.html'), 'utf8');
     assert.match(html, new RegExp(`og:url" content="https://dailynoodle.co.uk/${type}"`));
@@ -36,7 +36,7 @@ test('short links: published games get one each (Lab games and puzzle names excl
     { path: 'reports/' + files[2], kind: 'game', headline: 'Campfire Watch', badge: 'In development' },
     { path: 'reports/2026-12-01-arcade-held.html', kind: 'game', headline: 'Held' },
   ] }));
-  assert.strictEqual(write(out), 10);
+  assert.strictEqual(write(out), 11);   // 9 puzzle types + 2 published games
   const bb = fs.readFileSync(path.join(out, 'bubble-burst', 'index.html'), 'utf8');
   assert.match(bb, /location\.replace\("\/reports\/2026-09-26-arcade-bubble-burst\.html"\+'\?'\+tag\)/);
   assert.match(bb, /og:url" content="https:\/\/dailynoodle.co.uk\/bubble-burst"/);
