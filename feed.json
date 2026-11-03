@@ -1,8 +1,8 @@
 {
-  "built": "2026-11-03T04:20:09.887Z",
+  "built": "2026-11-03T04:29:57.928Z",
   "today": "2026-11-03",
   "timezone": "Europe/London",
-  "count": 771,
+  "count": 780,
   "items": [
     {
       "path": "reports/2026-11-03-briefing.html",
@@ -121,6 +121,24 @@
       "mask": "...................o................",
       "type": "sweep",
       "id": "DP·SWEEP·2026-11-03"
+    },
+    {
+      "path": "reports/2026-11-03-logic-tally-0010.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 10",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-11-03",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0010",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-11-03-quiz-reckon-0015.html",
@@ -307,6 +325,24 @@
       "id": "DP·SWEEP·2026-11-02"
     },
     {
+      "path": "reports/2026-11-02-logic-tally-0009.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 9",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-11-02",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0009",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-02-quiz-reckon-0014.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -322,22 +358,6 @@
       "mask": "",
       "type": "reckon",
       "id": "DP·RECK·0014"
-    },
-    {
-      "path": "reports/2026-11-02-quiz-tally.html",
-      "kind": "game",
-      "topic": "Quiz",
-      "headline": "Tally",
-      "standfirst": "A numbers puzzle to try: fill the grid 1 to 5 so every cage makes its number. Ten boards, no guessing needed.",
-      "date": "2026-11-02",
-      "updated": "",
-      "read": "~3 min",
-      "thumb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48c3R5bGU+LnB7ZmlsbDojRURFRUYyfS5je2ZpbGw6I0ZGRkZGRn0ua3tzdHJva2U6IzE0MTcyNn0udHtmaWxsOiMxNDE3MjZ9LnN7ZmlsbDojNUE1RjczfS5ie2ZpbGw6IzJFNUJGRn1AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6ZGFyayl7LnB7ZmlsbDojMTExMzFBfS5je2ZpbGw6IzFFMjIzMH0ua3tzdHJva2U6I0VDRUVGNH0udHtmaWxsOiNFQ0VFRjR9LnN7ZmlsbDojQTZBQkJEfS5ie2ZpbGw6IzhFQTZGRn19PC9zdHlsZT48cmVjdCBjbGFzcz0icCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiLz48cmVjdCBjbGFzcz0iYyIgeD0iMTgiIHk9IjE4IiB3aWR0aD0iODQiIGhlaWdodD0iODQiIHJ4PSI2Ii8+PGcgY2xhc3M9ImsiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgb3BhY2l0eT0iLjM1Ij48cGF0aCBkPSJNNDYgMTh2ODRNNzQgMTh2ODRNMTggNDZoODRNMTggNzRoODQiLz48L2c+PGcgY2xhc3M9ImsiIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHJlY3QgeD0iMTgiIHk9IjE4IiB3aWR0aD0iODQiIGhlaWdodD0iODQiIHJ4PSI2Ii8+PHBhdGggZD0iTTQ2IDE4djI4aDI4djI4TTc0IDQ2aDI4TTE4IDc0aDI4djI4Ii8+PC9nPjxnIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iNjAwIiBmb250LXNpemU9IjkiPjx0ZXh0IGNsYXNzPSJzIiB4PSIyMiIgeT0iMjkiPjbDlzwvdGV4dD48dGV4dCBjbGFzcz0icyIgeD0iNTAiIHk9IjI5Ij4z4oiSPC90ZXh0Pjx0ZXh0IGNsYXNzPSJzIiB4PSI3OCIgeT0iNTciPjQrPC90ZXh0Pjx0ZXh0IGNsYXNzPSJzIiB4PSIyMiIgeT0iODUiPjLDtzwvdGV4dD48L2c+PGcgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI1MDAiIGZvbnQtc2l6ZT0iMjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjx0ZXh0IGNsYXNzPSJiIiB4PSIzMiIgeT0iNjciPjM8L3RleHQ+PHRleHQgY2xhc3M9InQiIHg9IjYwIiB5PSI2NyI+MTwvdGV4dD48dGV4dCBjbGFzcz0idCIgeD0iODgiIHk9Ijk1Ij4yPC90ZXh0PjwvZz48L3N2Zz4=",
-      "stat": "",
-      "statUnit": "",
-      "statLabel": "",
-      "mask": "",
-      "badge": "In development"
     },
     {
       "path": "reports/2026-11-02-word-link-0086.html",
@@ -522,6 +542,24 @@
       "id": "DP·SWEEP·2026-11-01"
     },
     {
+      "path": "reports/2026-11-01-logic-tally-0008.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 8",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-11-01",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0008",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-01-quiz-reckon-0013.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -689,6 +727,24 @@
       "mask": ".....................o..............",
       "type": "sweep",
       "id": "DP·SWEEP·2026-10-31"
+    },
+    {
+      "path": "reports/2026-10-31-logic-tally-0007.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 7",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-10-31",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0007",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-31-quiz-reckon-0012.html",
@@ -875,6 +931,24 @@
       "id": "DP·SWEEP·2026-10-30"
     },
     {
+      "path": "reports/2026-10-30-logic-tally-0006.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 6",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-10-30",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0006",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-30-quiz-reckon-0011.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -1057,6 +1131,24 @@
       "mask": "...........................o........",
       "type": "sweep",
       "id": "DP·SWEEP·2026-10-29"
+    },
+    {
+      "path": "reports/2026-10-29-logic-tally-0005.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 5",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-10-29",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0005",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-29-quiz-reckon-0010.html",
@@ -1243,6 +1335,24 @@
       "id": "DP·SWEEP·2026-10-28"
     },
     {
+      "path": "reports/2026-10-28-logic-tally-0004.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 4",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-10-28",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0004",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-28-quiz-reckon-0009.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -1410,6 +1520,24 @@
       "mask": "...o................................",
       "type": "sweep",
       "id": "DP·SWEEP·2026-10-27"
+    },
+    {
+      "path": "reports/2026-10-27-logic-tally-0003.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 3",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-10-27",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0003",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-27-quiz-reckon-0008.html",
@@ -1581,6 +1709,24 @@
       "id": "DP·SWEEP·2026-10-26"
     },
     {
+      "path": "reports/2026-10-26-logic-tally-0002.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 2",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-10-26",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0002",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-26-quiz-reckon-0007.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -1715,6 +1861,24 @@
       "mask": "....................o...............",
       "type": "sweep",
       "id": "DP·SWEEP·2026-10-25"
+    },
+    {
+      "path": "reports/2026-10-25-logic-tally-0001.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 1",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-10-25",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0001",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-25-quiz-reckon-0006.html",
