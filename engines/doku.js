@@ -384,6 +384,18 @@ function advanceEmpty(){
 }
 
 /* ---- bank ---- */
+/* The bank keeps the height of its full set of tiles all game: on a phone the board is
+   centred in the space above it, so losing a row of tiles would shift the board. */
+function holdBank(){
+  const host=$("#bank"),tile=host&&host.querySelector(".tile");
+  if(!tile||!tile.offsetWidth)return;   // empty or not on screen: keep the height it has
+  const st=getComputedStyle(host),gap=parseFloat(st.columnGap)||0;
+  const across=host.clientWidth-parseFloat(st.paddingLeft)-parseFloat(st.paddingRight);
+  const perRow=Math.max(1,Math.floor((across+gap)/(tile.offsetWidth+gap)));
+  const rows=Math.ceil(tiles.length/perRow);
+  const box=host.offsetHeight-host.clientHeight+parseFloat(st.paddingTop)+parseFloat(st.paddingBottom);
+  host.style.minHeight=(rows*tile.offsetHeight+(rows-1)*gap+box)+"px";
+}
 function buildBank(){
   const host=$("#bank");host.innerHTML="";
   const free=tiles.filter(t=>!t.at);
@@ -400,6 +412,7 @@ function buildBank(){
     b.addEventListener("dragstart",e=>{selTile=t.id;e.dataTransfer.setData("text/plain",t.id);});
     host.appendChild(b);
   });
+  holdBank();
 }
 
 /* ---- paint. green means "this is right", never "this is a word" ---- */
@@ -642,6 +655,7 @@ $("#winModal").addEventListener("click",e=>{if(e.target===$("#winModal"))$("#win
 
 /* ---- app mode: board + bank in one screen, no scroll ---- */
 function fitGrid(){
+  holdBank();
   if(!document.documentElement.classList.contains("app-mode"))return;
   const wrap=document.querySelector(".gridwrap"),g=$("#grid");
   if(!wrap||!g)return;

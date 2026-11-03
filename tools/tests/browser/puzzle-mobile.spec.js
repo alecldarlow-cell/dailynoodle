@@ -82,3 +82,20 @@ test('MOBILE: a tapped result Share button keeps its contrasting background',asy
  await share.hover();await expect(share).toHaveCSS('background-color',background);
  expect(phone.errors).toEqual([]);
 });
+// Alec, 3 Nov 2026: the board must not shift when the bank loses a row of tiles.
+test('MOBILE: doku board stays still as the bank empties',async({phone})=>{
+ const {p}=phone;await p.setViewportSize({width:320,height:568});await goto(phone,'reports/2026-10-19-logic-doku-0098.html');
+ await p.locator('#dnPlay').click();await H.wait(p,500);
+ const rows=()=>p.locator('#bank .tile').evaluateAll(t=>new Set(t.map(e=>Math.round(e.getBoundingClientRect().top))).size);
+ const top=async()=>(await p.locator('#grid').boundingBox()).y;
+ const before=await top(),fullRows=await rows();
+ expect(fullRows).toBeGreaterThan(1);
+ const open=await p.locator('#grid .cell:not(.block):not(.locked)').count();
+ for(let i=0;i<open;i++){
+  await p.locator('#bank .tile').first().click();
+  await p.locator('#grid .cell:not(.block):not(.locked)').nth(i).click();
+  expect(await top()).toBe(before);
+  if(await rows()<fullRows)break;
+ }
+ expect(await rows()).toBeLessThan(fullRows);
+});
