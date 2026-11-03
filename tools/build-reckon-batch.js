@@ -46,6 +46,7 @@ const BAND = [1.15, 1.3, 1.6, 3];  // rules 1, the game's scoring bands (100 / 7
    places answers 0.21–1.79 decades up so the wider zones stay on the scale. */
 const RULES2_FROM = '2026-11-04', EASY_A_DAY = 4, BAND2 = [1.2, 1.6, 2.2, 3];
 const EASY = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, 'reckon-easy.json'), 'utf8')).easy);
+const EXTRA = path.join(__dirname, 'reckon-extra-facts.json');
 /* Facts kept out of Reckon (they stay in Ballpark): ones whose good sources disagree by more
    than 15%, or that can't be worded fairly. Add the id and the reason. First list: the fact check of
    20 Oct 2026 (tools/reckon-fact-fixes-2026-10-20.json). */
@@ -65,6 +66,46 @@ const EXCLUDE = {
   'food:17': "UK tea a day: 100 million and 165 million cups are both quoted by the UK tea industry",
   'food:76': "UK chocolate per person: about 8, 10 and 11 kg a year are all quoted, depending on the year and the survey",
   // the scheduled check of 1 Nov 2026 (tools/reckon-fact-fixes-2026-11-01.json)
+  // the difficulty review of 3 Nov 2026 (toolchain/reckon-difficulty.md): nearly everyone more than 3× out
+  'body:41': "unguessable: rated or played as nearly always over 3× out",
+  'body:48': "unguessable: rated or played as nearly always over 3× out",
+  'body:50': "unguessable: rated or played as nearly always over 3× out",
+  'body:63': "unguessable: rated or played as nearly always over 3× out",
+  'body:64': "unguessable: rated or played as nearly always over 3× out",
+  'body:65': "unguessable: rated or played as nearly always over 3× out",
+  'body:74': "unguessable: rated or played as nearly always over 3× out",
+  'body:82': "unguessable: rated or played as nearly always over 3× out",
+  'body:99': "unguessable: rated or played as nearly always over 3× out",
+  'build:9': "unguessable: rated or played as nearly always over 3× out",
+  'earth:82': "unguessable: rated or played as nearly always over 3× out",
+  'earth:84': "unguessable: rated or played as nearly always over 3× out",
+  'earth:92': "unguessable: rated or played as nearly always over 3× out",
+  'everyday:59': "unguessable: rated or played as nearly always over 3× out",
+  'everyday:60': "unguessable: rated or played as nearly always over 3× out",
+  'everyday:72': "unguessable: rated or played as nearly always over 3× out",
+  'everyday:73': "unguessable: rated or played as nearly always over 3× out",
+  'food:58': "unguessable: rated or played as nearly always over 3× out",
+  'food:62': "unguessable: rated or played as nearly always over 3× out",
+  'food:80': "unguessable: rated or played as nearly always over 3× out",
+  'food:90': "unguessable: rated or played as nearly always over 3× out",
+  'science:34': "unguessable: rated or played as nearly always over 3× out",
+  'science:74': "unguessable: rated or played as nearly always over 3× out",
+  'science:75': "unguessable: rated or played as nearly always over 3× out",
+  'science:77': "unguessable: rated or played as nearly always over 3× out",
+  'science:78': "unguessable: rated or played as nearly always over 3× out",
+  'science:79': "unguessable: rated or played as nearly always over 3× out",
+  'science:80': "unguessable: rated or played as nearly always over 3× out",
+  'science:90': "unguessable: rated or played as nearly always over 3× out",
+  'science:91': "unguessable: rated or played as nearly always over 3× out",
+  'science:92': "unguessable: rated or played as nearly always over 3× out",
+  'science:93': "unguessable: rated or played as nearly always over 3× out",
+  'science:95': "unguessable: rated or played as nearly always over 3× out",
+  'space:42': "unguessable: rated or played as nearly always over 3× out",
+  'space:53': "unguessable: rated or played as nearly always over 3× out",
+  'space:74': "unguessable: rated or played as nearly always over 3× out",
+  'weather:29': "unguessable: rated or played as nearly always over 3× out",
+  'weather:92': "unguessable: rated or played as nearly always over 3× out",
+  'weather:97': "unguessable: rated or played as nearly always over 3× out",
   'animals:99': "elephant’s trunk: a 2021 study measured about 5.5 litres but popular sources say 8 to 10; the wording that pins the study can’t go in yet, because apply-ballpark-fixes.js can’t edit the last fact in a pack",
 };
 
@@ -79,6 +120,9 @@ function loadBank(file) {
     f: p.k + ':' + i, k: p.k, q: f[0],
     u: f[1] || (/^How many people/.test(f[0]) ? 'people' : ''),   // as the game's fact()
     a: f[2], n: f[3] || '', i: f[4] & 2 ? 1 : 0, e: f[4] & 1 ? 1 : 0 }));
+  // Reckon's own easy facts (3 Nov 2026): Ballpark's packs stay at 100, so these live beside the bank, ids "<pack>:r<n>"
+  const extra = JSON.parse(fs.readFileSync(EXTRA, 'utf8')).facts;
+  for (const [k, list] of Object.entries(extra)) list.forEach((x, n) => { facts.push({ f: `${k}:r${n}`, k, q: x.q, u: x.u, a: x.a, n: x.n, i: x.whole ? 1 : 0, e: 0 }); EASY.add(`${k}:r${n}`); });
   return { packs: packs.map(p => ({ k: p.k, name: p.name, sh: p.sh || '', c: p.c, ic: p.ic })), facts };
 }
 const BANK = loadBank();
