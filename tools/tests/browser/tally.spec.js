@@ -27,6 +27,10 @@ test('TALLY-E2E-01: start card, real taps, notes, a conflict, resume after a rel
  const d0=+P.sol[0];
  await H.tap(p,cell(p,1));await H.tap(p,key(p,d0));await H.tap(p,cell(p,0));await H.tap(p,key(p,d0));
  await expect(cell(p,0)).toHaveClass(/bad/);await expect(cell(p,1)).toHaveClass(/bad/);
+ // the selected square alone gets the solid yellow; the other square holding its number keeps its own background
+ const bg=i=>cell(p,i).evaluate(e=>getComputedStyle(e).backgroundColor);
+ expect(await bg(0)).toBe('rgb(255, 213, 74)');expect(await bg(1)).not.toBe('rgb(255, 213, 74)');
+ await expect(cell(p,1)).toHaveClass(/same/);
  await H.tap(p,p.locator('#undoBtn'));await expect(cell(p,0)).not.toHaveClass(/bad/);
  await H.wait(p,1200);
  const clock=await p.locator('#timer').textContent();expect(clock).not.toBe('0:00');
