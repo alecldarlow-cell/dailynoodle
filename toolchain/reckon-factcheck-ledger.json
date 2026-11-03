@@ -3650,6 +3650,606 @@
    "checked": "2026-10-20",
    "verdict": "OK",
    "action": "none"
+  },
+  "places:5": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:40": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:26": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:71": {
+   "checked": "2026-11-03",
+   "verdict": "FIX",
+   "action": "fixed"
+  },
+  "animals:2": {
+   "checked": "2026-11-03",
+   "verdict": "FIX",
+   "action": "fixed"
+  },
+  "science:42": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:34": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:15": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:82": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:43": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:1": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:70": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:3": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:64": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:63": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:16": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:54": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:43": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:13": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:98": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:27": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:0": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:47": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:56": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:30": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:62": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:70": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:35": {
+   "checked": "2026-11-03",
+   "verdict": "FIX",
+   "action": "fixed"
+  },
+  "science:57": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "sport:2": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:93": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "everyday:45": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:0": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:3": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:56": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:6": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:97": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:1": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:78": {
+   "checked": "2026-11-03",
+   "verdict": "EXCLUDE",
+   "action": "excluded"
+  },
+  "earth:2": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:6": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:33": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:36": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:76": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:79": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:9": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:97": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:10": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "places:16": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:93": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "food:47": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "science:28": {
+   "checked": "2026-11-03",
+   "verdict": "FIX",
+   "action": "fixed"
+  },
+  "body:81": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r0": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r1": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r2": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r3": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r4": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r5": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r6": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r7": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r8": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r9": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r10": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r11": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "space:r12": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r0": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r1": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r2": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r3": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r4": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r5": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r6": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r7": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r8": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r9": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r10": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r11": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "britain:r12": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r0": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r1": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r2": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r3": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r4": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r5": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r6": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r7": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r8": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r9": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "earth:r10": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r0": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r1": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r2": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r3": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r4": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r5": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r6": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r7": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r8": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r9": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r10": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "build:r11": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:r0": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:r1": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:r2": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:r3": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:r4": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:r5": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "weather:r6": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:r0": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:r1": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:r2": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:r3": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:r4": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:r5": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:r6": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:r7": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "animals:r8": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:7": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
+  },
+  "body:83": {
+   "checked": "2026-11-03",
+   "verdict": "OK",
+   "action": "none"
   }
  }
 }

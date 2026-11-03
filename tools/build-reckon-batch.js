@@ -106,6 +106,7 @@ const EXCLUDE = {
   'weather:29': "unguessable: rated or played as nearly always over 3× out",
   'weather:92': "unguessable: rated or played as nearly always over 3× out",
   'weather:97': "unguessable: rated or played as nearly always over 3× out",
+  'body:78': "face muscles: counts vary by source, with no agreed number",
   'animals:99': "elephant’s trunk: a 2021 study measured about 5.5 litres but popular sources say 8 to 10; the wording that pins the study can’t go in yet, because apply-ballpark-fixes.js can’t edit the last fact in a pack",
 };
 
@@ -197,7 +198,8 @@ function pickDay(di, last) {
     const rr = rng(hashStr(`reckon-lo-${date}-${q}`));
     let lo = +(Math.log10(x.a) - (v2 ? 0.21 + 1.58 * rr() : 0.15 + 1.7 * rr())).toFixed(3);
     if (x.i) lo = Math.max(lo, 0);
-    return { f: x.f, k: x.k, q: x.q, u: x.u, a: x.a, n: x.n, i: x.i, e: x.e, lo, ...(v2 && EASY.has(x.f) ? { t: 1 } : {}) };
+    // a rules 2 opener also carries e:1, so an app build from before rules 2 still opens the day
+    return { f: x.f, k: x.k, q: x.q, u: x.u, a: x.a, n: x.n, i: x.i, e: v2 && q === 0 ? 1 : x.e, lo, ...(v2 && EASY.has(x.f) ? { t: 1 } : {}) };
   });
   return { id: 'DP·RECK·' + String(di + 1).padStart(4, '0'), date, serial: di + 1, ...(v2 ? { r: 2 } : {}), qs };
 }
@@ -277,7 +279,7 @@ function drift(p) {
   for (const q of p.qs) {
     const x = BY_ID.get(q.f);
     if (!x) { d.push(`${q.f} no longer in the bank`); continue; }
-    for (const k of ['q', 'u', 'a', 'n', 'i', 'e', 'k']) if (x[k] !== q[k]) d.push(`${q.f} ${k} changed`);
+    for (const k of ['q', 'u', 'a', 'n', 'i', 'e', 'k']) if (x[k] !== q[k] && !(k === 'e' && p.r === 2 && q === p.qs[0])) d.push(`${q.f} ${k} changed`);
     if (EXCLUDE[q.f]) d.push(`${q.f} is excluded`);
     if (p.r === 2 && !!q.t !== EASY.has(q.f)) d.push(`${q.f} easy mark changed`);
   }
