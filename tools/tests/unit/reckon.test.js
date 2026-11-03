@@ -14,7 +14,7 @@ function slice(src, from, to) { const a = src.indexOf(from), b = src.indexOf(to,
 // the engine's constants and gate, run on their own
 const engine = vm.createContext({});
 vm.runInContext(slice(ENGINE, 'const NQ=10', 'const SQ=') + slice(ENGINE, 'const MANT=', '/* Ballpark') + slice(ENGINE, 'const L10=', 'const W=') + slice(ENGINE, '/*@GATE*/', '/*@GATE_END*/') +
-  slice(ENGINE, 'function grp(', 'function longDate(') + ';this.X={GATE,zone,offText,fmt,fmtA,ladder};', engine);
+  slice(ENGINE, 'function grp(', 'function longDate(') + ';this.X={GATE,zone,offText,fmt,fmtA,ladder,useRules,RULES};', engine);
 const ball = vm.createContext({});
 vm.runInContext(slice(BALLPARK, 'const NQ=10', 'const ZC=') + slice(BALLPARK, 'const MANT=', '/* ---------- small helpers') + 'const L10=Math.log10;' +
   slice(BALLPARK, 'function grp(', 'function shortLab(') + slice(BALLPARK, 'function zone(', 'function stars(') + slice(BALLPARK, 'function ladder(', '// The answer can sit') +
@@ -53,7 +53,8 @@ test('a tampered day is refused by both gates', () => {
   assert.ok(E.GATE(good, '2001-01-01').length > 0, 'engine refuses a dn:date that disagrees');
 });
 
-test('scoring, gaps and number wording are Ballpark’s own', () => {
+test('rules 1, on days without r, are Ballpark’s own scoring, gaps and number wording', () => {
+  E.useRules({});
   for (let a of [0.75, 3, 12, 99, 310, 8849, 384400, 1.5e8, 3.7e13]) for (let r = 0.2; r <= 5; r *= 1.037) {
     const g = +(a * r).toPrecision(3);
     assert.equal(E.zone(g, a), B.zone(g, a), `zone ${g} vs ${a}`);
@@ -62,6 +63,14 @@ test('scoring, gaps and number wording are Ballpark’s own', () => {
   }
   assert.deepEqual([100, 115, 115.01, 130, 130.01, 160, 160.01, 300, 300.01].map(x => E.zone(x, 100)), [0, 0, 1, 1, 2, 2, 3, 3, 4]);
   for (const lo of [-0.4, 0, 0.7, 2.31, 5.9]) for (const i of [0, 1]) assert.equal(JSON.stringify(E.ladder(lo, i)), JSON.stringify(B.ladder(lo, i)), `ladder ${lo} ${i}`);
+});
+
+test('rules 2 pages score 20% / 60% / 2.2× / 3×, and a miss pays 20', () => {
+  E.useRules({ r: 2 });
+  assert.deepEqual([100, 120, 120.01, 160, 160.01, 220, 220.01, 300, 300.01].map(x => E.zone(x, 100)), [0, 0, 1, 1, 2, 2, 3, 3, 4]);
+  assert.equal(JSON.stringify(E.RULES[2].p), '[100,80,60,40,20]');
+  assert.equal(JSON.stringify(E.RULES[2].b), JSON.stringify(R.BAND2), 'engine and generator agree');
+  E.useRules({});
 });
 
 test('each day’s facts are Ballpark’s bank as it stands, and excluded facts never appear', () => {

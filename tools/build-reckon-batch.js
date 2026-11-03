@@ -39,7 +39,13 @@ const arg = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] :
 /* ---- rules ---- */
 const LAUNCH = '2026-10-20';       // serial 0001 (moved forward from 26 Oct by Alec, 20 Oct 2026)
 const NQ = 10, MINGAP = 100, KIND_CAP = 2, WINDOW = 6, SPAN = 2;
-const BAND = [1.15, 1.3, 1.6, 3];  // the game's scoring bands (100 / 75 / 50 / 25)
+const BAND = [1.15, 1.3, 1.6, 3];  // rules 1, the game's scoring bands (100 / 75 / 50 / 25)
+/* Rules 2 (Alec, 3 Nov 2026): days from RULES2_FROM carry r:2, scored 20% / 60% / 2.2× / 3× for
+   100 / 80 / 60 / 40, 20 for a miss (the engine's RULES table; a page's rules never change once released).
+   Each such day has EASY_A_DAY facts from the easy list and six others, opens on an easy one, and
+   places answers 0.21–1.79 decades up so the wider zones stay on the scale. */
+const RULES2_FROM = '2026-11-04', EASY_A_DAY = 4, BAND2 = [1.2, 1.6, 2.2, 3];
+const EASY = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, 'reckon-easy.json'), 'utf8')).easy);
 /* Facts kept out of Reckon (they stay in Ballpark): ones whose good sources disagree by more
    than 15%, or that can't be worded fairly. Add the id and the reason. First list: the fact check of
    20 Oct 2026 (tools/reckon-fact-fixes-2026-10-20.json). */
@@ -97,7 +103,7 @@ function pickDay(di, last) {
   const date = dateOf(di), r = rng(hashStr('reckon-day-' + date));
   const out = new Set([(2 * di) % PACK_KEYS.length, (2 * di + 1) % PACK_KEYS.length]);
   const packs = shuffle(PACK_KEYS.filter((_, j) => !out.has(j)), r);
-  const kinds = {}, picks = [];
+  const v2 = date >= RULES2_FROM, kinds = {}, picks = [];
   const ok = x => !EXCLUDE[x.f] && (last.get(x.f) == null || di - last.get(x.f) >= MINGAP) && (kinds[kind(x.q)] || 0) < KIND_CAP;
   // never asked first (in a fixed seeded order), then the longest unasked
   const order = (a, b) => {
@@ -106,14 +112,28 @@ function pickDay(di, last) {
     if (la == null) return -1; if (lb == null) return 1;
     return la - lb || hashStr('reckon-' + a.f) - hashStr('reckon-' + b.f);
   };
+  // rules 2: which packs give today's easy facts, weighted by how many easy ones each can offer
+  const easyFrom = new Set();
+  if (v2) {
+    const left = packs.map(k => ({ k, w: BANK.facts.filter(x => x.k === k && EASY.has(x.f) && ok(x)).length })).filter(o => o.w);
+    while (easyFrom.size < EASY_A_DAY && left.length) {
+      let t = r() * left.reduce((s, o) => s + o.w, 0), j = 0;
+      while (j < left.length - 1 && (t -= left[j].w) >= 0) j++;
+      easyFrom.add(left.splice(j, 1)[0].k);
+    }
+    if (easyFrom.size < EASY_A_DAY) throw new Error(`${date}: only ${easyFrom.size} packs have an easy fact free`);
+  }
   for (const k of packs) {
-    const cands = BANK.facts.filter(x => x.k === k && ok(x)).sort(order);
+    const all = BANK.facts.filter(x => x.k === k && ok(x)).sort(order);
+    let cands = all;
+    if (v2) { cands = all.filter(x => EASY.has(x.f) === easyFrom.has(k)); if (!cands.length) throw new Error(`${date}: pack ${k} has no ${easyFrom.has(k) ? 'easy' : 'other'} fact free`); }
     if (!cands.length) throw new Error(`${date}: pack ${k} has nothing it may ask (gap ${MINGAP}, kind cap ${KIND_CAP})`);
     const x = cands[Math.floor(r() * Math.min(WINDOW, cands.length))];
     kinds[kind(x.q)] = (kinds[kind(x.q)] || 0) + 1; picks.push(x);
   }
   // an easy opener: one of today's, or swap a pick for an easy fact from the same pack
-  let open = picks.findIndex(x => x.e);
+  const isOpener = x => (v2 ? EASY.has(x.f) : x.e);
+  let open = picks.findIndex(isOpener);
   if (open < 0) {
     for (let j = 0; j < picks.length && open < 0; j++) {
       const was = picks[j]; kinds[kind(was.q)]--;
@@ -127,16 +147,16 @@ function pickDay(di, last) {
   const rest = shuffle(picks, r);
   const qs = [first, ...rest].map((x, q) => {
     const rr = rng(hashStr(`reckon-lo-${date}-${q}`));
-    let lo = +(Math.log10(x.a) - (0.15 + 1.7 * rr())).toFixed(3);
+    let lo = +(Math.log10(x.a) - (v2 ? 0.21 + 1.58 * rr() : 0.15 + 1.7 * rr())).toFixed(3);
     if (x.i) lo = Math.max(lo, 0);
-    return { f: x.f, k: x.k, q: x.q, u: x.u, a: x.a, n: x.n, i: x.i, e: x.e, lo };
+    return { f: x.f, k: x.k, q: x.q, u: x.u, a: x.a, n: x.n, i: x.i, e: x.e, lo, ...(v2 && EASY.has(x.f) ? { t: 1 } : {}) };
   });
-  return { id: 'DP·RECK·' + String(di + 1).padStart(4, '0'), date, serial: di + 1, qs };
+  return { id: 'DP·RECK·' + String(di + 1).padStart(4, '0'), date, serial: di + 1, ...(v2 ? { r: 2 } : {}), qs };
 }
 
 /* ---- pages ---- */
 const PZ_RE = /window\.DN_PUZZLE=\{id:.*\};/;
-const pzLine = p => `window.DN_PUZZLE={id:${JSON.stringify(p.id)},date:${JSON.stringify(p.date)},qs:${JSON.stringify(p.qs)}};`;
+const pzLine = p => `window.DN_PUZZLE={id:${JSON.stringify(p.id)},date:${JSON.stringify(p.date)},${p.r ? `r:${p.r},` : ''}qs:${JSON.stringify(p.qs)}};`;
 const fileOf = p => `${p.date}-quiz-reckon-${String(dayIdx(p.date) + 1).padStart(4, '0')}.html`;
 const FILE_RE = /^(\d{4}-\d{2}-\d{2})-quiz-reckon-(\d{4})\.html$/;
 const live = dir => fs.readdirSync(dir || REPORTS).filter(f => FILE_RE.test(f)).sort();
@@ -164,7 +184,12 @@ function gateDay(p) {
   if (!Array.isArray(p.qs) || p.qs.length !== NQ) { e.push('ten questions'); return e; }
   if (new Set(p.qs.map(q => q.f)).size !== NQ) e.push('distinct facts');
   if (new Set(p.qs.map(q => q.k)).size !== NQ) e.push('ten different packs');
-  if (!p.qs[0].e) e.push('opener is not an easy one');
+  if (p.r != null && p.r !== 2) e.push('rules');
+  if (p.r === 2) {
+    if (!p.qs[0].t) e.push('opener is not an easy one');
+    if (p.qs.filter(q => q.t).length !== EASY_A_DAY) e.push(`expected ${EASY_A_DAY} easy questions`);
+  } else if (!p.qs[0].e) e.push('opener is not an easy one');
+  const band = p.r === 2 ? BAND2 : BAND;
   const kinds = {}; p.qs.forEach(q => { kinds[kind(q.q)] = (kinds[kind(q.q)] || 0) + 1; });
   if (Object.values(kinds).some(v => v > KIND_CAP)) e.push('more than two of a kind');
   p.qs.forEach((q, j) => {
@@ -174,7 +199,7 @@ function gateDay(p) {
     else {
       const a = Math.log10(q.a);
       // the 100- and 75-point zones must sit wholly on the scale
-      if (a - Math.log10(BAND[1]) < q.lo - 1e-9 || a + Math.log10(BAND[1]) > q.lo + SPAN + 1e-9) e.push(`q${j + 1} zones off the scale`);
+      if (a - Math.log10(band[1]) < q.lo - 1e-9 || a + Math.log10(band[1]) > q.lo + SPAN + 1e-9) e.push(`q${j + 1} zones off the scale`);
       if (q.i && q.lo < 0) e.push(`q${j + 1} whole-number scale below 1`);
     }
     if (!PACK_KEYS.includes(q.k) || !String(q.f).startsWith(q.k + ':')) e.push(`q${j + 1} pack`);
@@ -206,6 +231,7 @@ function drift(p) {
     if (!x) { d.push(`${q.f} no longer in the bank`); continue; }
     for (const k of ['q', 'u', 'a', 'n', 'i', 'e', 'k']) if (x[k] !== q[k]) d.push(`${q.f} ${k} changed`);
     if (EXCLUDE[q.f]) d.push(`${q.f} is excluded`);
+    if (p.r === 2 && !!q.t !== EASY.has(q.f)) d.push(`${q.f} easy mark changed`);
   }
   return d;
 }
@@ -229,7 +255,7 @@ function continueFrom(hist, through, fromIdx) {
   return out;
 }
 
-module.exports = { BANK, BY_ID, pickDay, gateDay, gateRun, drift, stamp, pzLine, fileOf, live, readPuzzle, dayIdx, dateOf, LAUNCH, MINGAP, NQ, BAND, SPAN, kind, EXCLUDE };
+module.exports = { BANK, BY_ID, pickDay, gateDay, gateRun, drift, stamp, pzLine, fileOf, live, readPuzzle, dayIdx, dateOf, LAUNCH, MINGAP, NQ, BAND, BAND2, SPAN, kind, EXCLUDE, EASY, EASY_A_DAY, RULES2_FROM };
 if (require.main === module) main();
 
 function main() {
