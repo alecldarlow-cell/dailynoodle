@@ -1,1 +1,537 @@
-{"facts":{}}
+{
+"note": "Reckon-only easy facts (3 Nov 2026), ids <pack>:r<n>; only ever append. Ballpark's packs stay at 100. See toolchain/reckon-difficulty.md.",
+"facts": {
+"space": [
+{
+"q": "How many Apollo missions landed people on the Moon?",
+"u": "",
+"a": 6,
+"n": "Every crewed landing from Apollo 11 to 17 succeeded except Apollo 13, which had to turn back.",
+"whole": true,
+"source": "Search result title: List of 6 Manned Moon Landings (historylists.org)"
+},
+{
+"q": "For how many days did Tim Peake stay in space on his 2015–16 mission?",
+"u": "days",
+"a": 186,
+"n": "He ran the London Marathon on a treadmill during the trip, strapped down by a harness.",
+"whole": true,
+"source": "Search result title: Tim Peake... returns safely after 186 days in space (ibtimes.co.uk)"
+},
+{
+"q": "Roughly how many months does a spacecraft take to reach Mars?",
+"u": "months",
+"a": 7,
+"n": "Launches have to wait for a window that opens only about every 26 months.",
+"whole": false,
+"source": "Search result title: Nasa's newest rover on seven-month trip to Mars (wgcu.org, Perseverance 2020)"
+},
+{
+"q": "From launch to splashdown, how many days did Apollo 11 last?",
+"u": "days",
+"a": 8,
+"n": "Less than one of those days was spent on the lunar surface.",
+"whole": false,
+"source": "Search result title: the 8-day Apollo 11 mission (click2houston.com)"
+},
+{
+"q": "Dwarf planets recognised by the IAU: how many are there?",
+"u": "",
+"a": 5,
+"n": "Ceres is the only one in the asteroid belt; the rest lie beyond Neptune.",
+"whole": true,
+"source": "Search result title: Our 5 dwarf planets (britannica.com)"
+},
+{
+"q": "Planets with no moons at all: how many are there in our solar system?",
+"u": "",
+"a": 2,
+"n": "Mercury and Venus are the two without one.",
+"whole": true,
+"source": "Search result title: Which two planets in our solar system don't have any moons? (laffgaff.com)"
+},
+{
+"q": "Between Sputnik 1 and the first Moon landing, how many years passed?",
+"u": "years",
+"a": 12,
+"n": "The space age went from a beeping metal ball to footprints in under a generation.",
+"whole": false,
+"source": "Search result title: From Sputnik to the Moon in Twelve Years (info-nexus.pages.dev)"
+},
+{
+"q": "Star signs in the traditional zodiac: how many are named?",
+"u": "",
+"a": 12,
+"n": "The Sun also passes through a thirteenth constellation, Ophiuchus, which astrology leaves out.",
+"whole": true,
+"source": "Search result title: What are the 12 Constellations of the Zodiac? (underluckystars.com)"
+},
+{
+"q": "In 1610, how many moons of Jupiter did Galileo spot?",
+"u": "",
+"a": 4,
+"n": "Seeing bodies circle another planet was powerful evidence against an Earth-centred universe.",
+"whole": true,
+"source": "Search result title: Jan. 7, 1610: Galileo sees four moons of Jupiter (astronomy.com)"
+},
+{
+"q": "Of the Space Shuttle orbiters, how many actually flew in space?",
+"u": "",
+"a": 5,
+"n": "The prototype Enterprise only ever made test flights in the atmosphere.",
+"whole": true,
+"source": "Search result title: From Columbia to Discovery: the five... NASA space shuttles (wionews.com); ESA Space Shuttle fleet page"
+},
+{
+"q": "Going round the Sun takes Venus how many Earth days?",
+"u": "days",
+"a": 225,
+"n": "Venus spins so slowly that its day is longer than its year.",
+"whole": false,
+"source": "Topic results only, figure not shown in search output; general knowledge: Venus orbital period, Orbit of Venus (Wikipedia) surfaced"
+},
+{
+"q": "Aboard each Apollo Moon mission, how many astronauts flew?",
+"u": "",
+"a": 3,
+"n": "Two went down to the surface while the third stayed in orbit.",
+"whole": true,
+"source": "Topic results only, figure not shown in search output; general knowledge: Apollo crew, Spacecraft of the Apollo Program (britannica.com) surfaced"
+},
+{
+"q": "At what age did Neil Armstrong first walk on the Moon?",
+"u": "years old",
+"a": 38,
+"n": "He was just over two weeks short of his next birthday.",
+"whole": true,
+"source": "Topic results only, figure not shown in search output; general knowledge: born 5 Aug 1930, Moon walk 20–21 Jul 1969; Neil Armstrong (britannica.com) surfaced"
+}
+],
+"britain": [
+{
+"q": "How many prime ministers served under Queen Elizabeth II?",
+"u": "",
+"a": 15,
+"n": "The first was Winston Churchill; the last, Liz Truss, took office two days before the Queen died.",
+"whole": true,
+"source": "Search result title: Queen Elizabeth II and Her 15 Prime Ministers (thequint.com)"
+},
+{
+"q": "English kings called Henry: how many have there been?",
+"u": "",
+"a": 8,
+"n": "No king has taken the name since Henry VIII died in 1547.",
+"whole": true,
+"source": "Search result title: The 8 King Henrys of England in Order (historyhit.com)"
+},
+{
+"q": "Counting Charles III, how many monarchs has the House of Windsor had?",
+"u": "",
+"a": 5,
+"n": "George V chose the name in 1917, dropping the German-sounding Saxe-Coburg and Gotha.",
+"whole": true,
+"source": "Search result title: The 5 Monarchs of the House of Windsor In Order (historyhit.com)"
+},
+{
+"q": "Queen Victoria and Prince Albert had how many children?",
+"u": "",
+"a": 9,
+"n": "So many married into Europe's royal houses that she became known as the grandmother of Europe.",
+"whole": true,
+"source": "Search result title: Who Were Queen Victoria's 9 Children? (historyhit.com)"
+},
+{
+"q": "Aged how many did Charles III become king?",
+"u": "years old",
+"a": 73,
+"n": "He is the oldest person ever to take the British throne.",
+"whole": true,
+"source": "Search result title: King Charles III, 73, ascends as oldest British monarch to take throne (upi.com)"
+},
+{
+"q": "Up to and including 2012, how often had London hosted the Olympics?",
+"u": "",
+"a": 3,
+"n": "The 1908 Games were moved to London after Vesuvius erupted and Rome withdrew.",
+"whole": true,
+"source": "Search result title: London 2012: A record third time as Olympic host (cbsnews.com)"
+},
+{
+"q": "Northern Ireland has how many traditional counties?",
+"u": "",
+"a": 6,
+"n": "They are Antrim, Armagh, Down, Fermanagh, Londonderry and Tyrone.",
+"whole": true,
+"source": "Search result title: What are the Six Counties of Northern Ireland? (twinkl.com)"
+},
+{
+"q": "Saints' crosses on the Union Flag: how many are combined?",
+"u": "",
+"a": 3,
+"n": "Wales is not represented, because it was already united with England.",
+"whole": true,
+"source": "Search result title: The Union Jack is a Hidden Tribute to Three Saints (ncregister.com)"
+},
+{
+"q": "Shakespeare wrote roughly how many plays?",
+"u": "",
+"a": 37,
+"n": "The total shifts by one or two depending on which collaborations are counted.",
+"whole": true,
+"source": "Search result title: 37 plays by William Shakespeare (witcritic.com); What Are the 37 Works of Shakespeare? (actingmagazine.com)"
+},
+{
+"q": "Sitting in an English crown court, how many people form a jury?",
+"u": "",
+"a": 12,
+"n": "Scottish criminal juries are larger, with 15 members.",
+"whole": true,
+"source": "Search result title: Why do we have 12 jurors (lawyersweekly.com.au); search for England/Scotland jury sizes"
+},
+{
+"q": "The UK is made up of how many countries?",
+"u": "",
+"a": 4,
+"n": "Each has its own patron saint, though only three have devolved legislatures.",
+"whole": true,
+"source": "Search result title: The United Kingdom: the four nations (lessonup.com)"
+},
+{
+"q": "Early England is traditionally split into how many Anglo-Saxon kingdoms?",
+"u": "",
+"a": 7,
+"n": "Wessex, the survivor among them, became the core of a united England.",
+"whole": true,
+"source": "Search result title: The 7 Great Kingdoms of the Anglo-Saxons (historyhit.com)"
+},
+{
+"q": "What age had Elizabeth II reached when she died in 2022?",
+"u": "years old",
+"a": 96,
+"n": "She had been on the throne since her twenties.",
+"whole": true,
+"source": "Search result title: Queen Elizabeth II dies aged 96 (multiple, e.g. countrylife.co.uk)"
+}
+],
+"earth": [
+{
+"q": "How many continents are there, as usually counted in Britain?",
+"u": "",
+"a": 7,
+"n": "Some countries teach six, merging the Americas or Europe and Asia.",
+"whole": true,
+"source": "Search result title: 7 Continents of the World (mappr.co, careerpower.in)"
+},
+{
+"q": "Oceans of the world: how many does National Geographic now recognise?",
+"u": "",
+"a": 5,
+"n": "It added the Southern Ocean to its maps in 2021.",
+"whole": true,
+"source": "Search result title: There are now five oceans on Earth, proclaims National Geographic (boingboing.net)"
+},
+{
+"q": "Together, how many lakes make up North America's Great Lakes?",
+"u": "",
+"a": 5,
+"n": "Between them they hold about a fifth of the world's surface fresh water.",
+"whole": true,
+"source": "Search result title: Five Great Lakes of North America (geeksforgeeks.org)"
+},
+{
+"q": "Into how many hour-wide zones is the globe divided for time?",
+"u": "",
+"a": 24,
+"n": "Many places add half-hour offsets, so the real number of local times is higher.",
+"whole": true,
+"source": "Search result title: Why are there 24 time zones? (calendar-uk.co.uk)"
+},
+{
+"q": "Geologists split the Earth into how many main layers?",
+"u": "",
+"a": 4,
+"n": "Only the outer core is liquid; the inner core stays solid under immense pressure.",
+"whole": true,
+"source": "Search result title: Which of the following best displays the four major layers of Earth?; what are the 4 layers of the earth in order"
+},
+{
+"q": "Most columns at the Giant's Causeway have how many sides?",
+"u": "",
+"a": 6,
+"n": "The shape comes from lava cracking as it cooled and shrank.",
+"whole": true,
+"source": "Search result title: The Giant's Causeway and Its Hexagonal Columns (squarespace blog); Giant's Causeway hexagonal columns"
+},
+{
+"q": "What is the latitude of the North Pole, in degrees?",
+"u": "°",
+"a": 90,
+"n": "Every direction you could walk from there is south.",
+"whole": false,
+"source": "Search result title: D) 90°N; What is the latitude of the North Pole? (vaia.com)"
+},
+{
+"q": "Water covers what percentage of the Earth's surface?",
+"u": "%",
+"a": 71,
+"n": "Nearly all of it is salty ocean rather than fresh water.",
+"whole": false,
+"source": "Search result title: Total Earth's surface covered by water is a) 71 (careers360 NCERT question); weak, answer option only"
+},
+{
+"q": "How tall is Helvellyn in the Lake District, in metres?",
+"u": "m",
+"a": 950,
+"n": "Striding Edge, its famous knife-edge ridge, is one of England's best-known scrambles.",
+"whole": false,
+"source": "Search result title: Height: 950 m; 3117 ft (thinkadventure.co.uk)"
+},
+{
+"q": "Germany shares land borders with how many countries?",
+"u": "",
+"a": 9,
+"n": "That is more than any other country in the EU.",
+"whole": true,
+"source": "Search result title: Germany nine neighbours facts (deutschland.de)"
+},
+{
+"q": "Australia is divided into how many states?",
+"u": "",
+"a": 6,
+"n": "It also has two mainland territories, including the one around Canberra.",
+"whole": true,
+"source": "Search result title: What are the six states of Australia (sapi.ugru.com); Australia six states and two territories search"
+}
+],
+"build": [
+{
+"q": "Lorries on UK roads can normally weigh up to how much, in tonnes?",
+"u": "tonnes",
+"a": 44,
+"n": "That is roughly the weight of 30 family cars.",
+"whole": false,
+"source": "Search result title: 44 tonne lorries; Forty-four tonne lorries (Hansard, api.parliament.uk)"
+},
+{
+"q": "LeShuttle takes how long from Folkestone to Calais, in minutes?",
+"u": "minutes",
+"a": 35,
+"n": "Drivers stay in their cars while the train carries them under the Channel.",
+"whole": false,
+"source": "Search result title: 35 Minutes to Destination (leshuttle.com)"
+},
+{
+"q": "Standing at Falkirk, how tall are the Kelpies horse heads, in metres?",
+"u": "m",
+"a": 30,
+"n": "They are named after shape-shifting water spirits of Scottish folklore.",
+"whole": false,
+"source": "Search result title: The Kelpies are 30 metre high horse-head sculptures (bitesizedbritain.co.uk); Scotland's 100 ft horse head sculptures"
+},
+{
+"q": "An Airbus A380 flies on how many engines?",
+"u": "",
+"a": 4,
+"n": "Airlines came to prefer cheaper-to-run twin-engined jets, which helped end production.",
+"whole": true,
+"source": "Search result title: Why Airbus Chose Four Engines for the A380 (eplaneai.com)"
+},
+{
+"q": "Counting the dummy one, how many funnels did the Titanic have?",
+"u": "",
+"a": 4,
+"n": "The rearmost was mainly for ventilation and for looks.",
+"whole": true,
+"source": "Search result title: Titanic: what were the four smokestacks used for (historyonthenet.com)"
+},
+{
+"q": "Passenger capsules on the London Eye: how many are there?",
+"u": "",
+"a": 32,
+"n": "They are numbered up to 33, because number 13 is skipped for luck.",
+"whole": true,
+"source": "Search result title: London Eye 32 pods (secretldn.com)"
+},
+{
+"q": "At its January 2013 anniversary, how many years old was the London Underground?",
+"u": "years",
+"a": 150,
+"n": "The first line ran between Paddington and Farringdon using steam trains.",
+"whole": true,
+"source": "Search result title: London Underground celebrates its 150th anniversary (yahoo); 150 years old and still running late (nbcnews.com)"
+},
+{
+"q": "Passenger railways reached what birthday in Britain in 2025, in years?",
+"u": "years",
+"a": 200,
+"n": "The celebration dates from the Stockton and Darlington Railway of 1825.",
+"whole": true,
+"source": "Search result title: From horse-drawn to high-speed: Britain celebrates 200 years of rail travel in 2025 (euronews.com)"
+},
+{
+"q": "Reaching 2024, how many years old was the Forth Road Bridge?",
+"u": "years",
+"a": 60,
+"n": "It replaced a ferry that had crossed the Firth for centuries.",
+"whole": true,
+"source": "Search result title: 60 Years of the Forth Road Bridge (transport.gov.scot)"
+},
+{
+"q": "From London to New York, how long did Concorde take, in hours?",
+"u": "hours",
+"a": 3.5,
+"n": "Arriving before you left, by local clock, became its famous selling point.",
+"whole": false,
+"source": "Topic results only, figure not shown in search output; general knowledge: Concorde UK-USA flight time pages surfaced; only a Son of Concorde 3.5-hour headline showed the figure"
+},
+{
+"q": "On the Elizabeth Tower, how many clock faces are there?",
+"u": "",
+"a": 4,
+"n": "The tower housing Big Ben was renamed in 2012 for the Diamond Jubilee.",
+"whole": true,
+"source": "Topic results only, figure not shown in search output; general knowledge: Big Ben (Wikipedia) and clock-face cleaning stories surfaced"
+},
+{
+"q": "Sailing Dover to Calais takes about how long, in minutes?",
+"u": "minutes",
+"a": 90,
+"n": "It is the shortest ferry route between England and France.",
+"whole": false,
+"source": "Topic results only, figure not shown in search output; general knowledge: P&O and DFDS Dover–Calais timetable pages surfaced"
+}
+],
+"weather": [
+{
+"q": "Met Office warnings come in how many colours?",
+"u": "",
+"a": 3,
+"n": "Colour depends on both how likely the weather is and how severe its impact could be.",
+"whole": true,
+"source": "Search result title: Met Office: What are yellow, amber and red weather warnings? (gazette-news.co.uk)"
+},
+{
+"q": "Naming UK storms, how many letters of the alphabet are skipped?",
+"u": "",
+"a": 5,
+"n": "Q, U, X, Y and Z are left out, following the US hurricane naming convention.",
+"whole": true,
+"source": "Search result title: Stop excluding names starting with Q, U, X, Y, Z petition (repetition.me); count of those letters"
+},
+{
+"q": "If it rains on St Swithin's Day, legend says rain follows for how many days?",
+"u": "days",
+"a": 40,
+"n": "Met Office records show this has never actually happened.",
+"whole": true,
+"source": "Search result title: St Swithin's Day: Will we have rain for the next 40 days? (stv.tv)"
+},
+{
+"q": "What warming limit did the 2015 Paris Agreement aim for, in °C?",
+"u": "°C",
+"a": 1.5,
+"n": "The formal goal is well below 2 °C, while pursuing this tighter limit.",
+"whole": false,
+"source": "Search result title: What is the 1.5C target? (news.yahoo.com); The 1.5°C target... Paris Agreement (glasgowguardian.co.uk)"
+},
+{
+"q": "Near the Equator, how many hours of daylight are there each day?",
+"u": "hours",
+"a": 12,
+"n": "Sunrise and sunset barely shift there through the year.",
+"whole": false,
+"source": "Search result title: Do some parts of the world really have 12 hours of daylight each day? (outdoors.codidact.com)"
+},
+{
+"q": "Standing at the North Pole, how many months would the Sun stay up?",
+"u": "months",
+"a": 6,
+"n": "The Sun rises once a year there, around the March equinox.",
+"whole": false,
+"source": "Search result title: Why do the poles experience about six months' day and six months' night (byjus.com)"
+},
+{
+"q": "On the Fahrenheit scale, at what temperature does water freeze?",
+"u": "°F",
+"a": 32,
+"n": "Daniel Fahrenheit set his zero using a brine mixture, not plain water.",
+"whole": false,
+"source": "Topic results only, figure not shown in search output; general knowledge: freezing point in Fahrenheit pages (worldatlas.com) surfaced"
+}
+],
+"animals": [
+{
+"q": "A cow's stomach has how many compartments?",
+"u": "",
+"a": 4,
+"n": "The rumen, the largest, ferments grass with the help of microbes.",
+"whole": true,
+"source": "Search result title: How Cows Digest Grass with Their Four-Stomach System (a-z-animals.com)"
+},
+{
+"q": "Spiders walk on how many legs?",
+"u": "",
+"a": 8,
+"n": "That is one way to tell them from insects, which are a separate class.",
+"whole": true,
+"source": "Search result title: Spiders have eight legs (peda.net)"
+},
+{
+"q": "How many wings does a butterfly have?",
+"u": "",
+"a": 4,
+"n": "Forewings and hindwings overlap, so they can look like a single pair.",
+"whole": true,
+"source": "Search result title: The four wings of a butterfly (birdsofnewengland.com); Why do butterflies have four wings?"
+},
+{
+"q": "Most starfish grow how many arms?",
+"u": "",
+"a": 5,
+"n": "Some species have many more, and many can regrow a lost one.",
+"whole": true,
+"source": "Search result title: Discover How Starfish Gained Five Arms (discovermagazine.com)"
+},
+{
+"q": "What top speed can a brown hare reach, in km per hour?",
+"u": "km/h",
+"a": 72,
+"n": "Its long hind legs make it one of Britain's fastest land mammals.",
+"whole": false,
+"source": "Search result title: It has a top speed of 72kph (countryfile.com hare guide)"
+},
+{
+"q": "Kept warm, a hen's egg hatches after how many days?",
+"u": "days",
+"a": 21,
+"n": "Chicks start calling from inside the shell before they break out.",
+"whole": false,
+"source": "Search result title: Hatching Eggs at Home: A 21-Day Guide (purinamills.com)"
+},
+{
+"q": "Adding up all four paws, how many toes does a typical cat have?",
+"u": "",
+"a": 18,
+"n": "Cats with extra toes are called polydactyl, and they were favoured on ships.",
+"whole": true,
+"source": "Search result title: Why do cats have 5 toes on the front and 4 on the back (catbandit.com); sum"
+},
+{
+"q": "Typically, a dog's pregnancy lasts how many days?",
+"u": "days",
+"a": 63,
+"n": "Puppies are born with their eyes closed and open them about two weeks later.",
+"whole": false,
+"source": "Topic results only, figure not shown in search output; general knowledge: How Long Are Dogs Pregnant pages (chewy.com, gazettelive.co.uk) surfaced"
+},
+{
+"q": "Foals take how many months to develop inside a mare?",
+"u": "months",
+"a": 11,
+"n": "A foal can stand within an hour or so of being born.",
+"whole": false,
+"source": "Topic results only, figure not shown in search output; general knowledge: How Long Are Horses Pregnant? (chewy.com) surfaced"
+}
+]
+}
+}

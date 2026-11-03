@@ -185,7 +185,7 @@ function GATE(P,metaDate){
     if(typeof q.k!=='string'||packs.has(q.k))f.push(w+'pack');packs.add(q.k);
   });
   if(P.r===2){if(P.qs[0]&&!P.qs[0].t)f.push('opener is not an easy one');
-    if(P.qs.filter(q=>q&&q.t).length!==EASY_A_DAY)f.push('expected '+EASY_A_DAY+' easy questions');}
+    if(P.qs.filter(q=>q&&q.t).length<EASY_A_DAY)f.push('expected '+EASY_A_DAY+' easy questions');}
   else if(P.qs[0]&&!P.qs[0].e)f.push('opener is not an easy one');
   return f;
 }
