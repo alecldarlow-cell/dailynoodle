@@ -12,14 +12,14 @@
   --paper:#EDEEF2; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
   --line:#141726; --line-soft:#D3D6E0; --brand:#2E5BFF; --brand-deep:#1B3B9E;
   --active:#FFD54A; --active-word:#FFF0B8; --good:#1F9E6B; --bad:#E4483B;
-  --cell:#FFFFFF; --cell-peer:#F3F5FA; --cell-cage:#E9EDFB; --cell-sel:#D6DFFF; --cell-same:#E3E9FF;
+  --cell:#FFFFFF; --cell-peer:#F3F5FA; --cell-cage:#E9EDFB;
   --radius:14px;
   --mono:"Space Mono",ui-monospace,Menlo,Consolas,monospace;
   --sans:"Space Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 /* dark mode: house.css sets the shared tokens on html.dn-house; these are Tally's own */
-@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]){--cell:#1E2230;--cell-peer:#242939;--cell-cage:#2A3250;--cell-sel:#3A4A86;--cell-same:#30406E;--line-soft:#3A3F52}}
-html.dn-house[data-theme="dark"]{--cell:#1E2230;--cell-peer:#242939;--cell-cage:#2A3250;--cell-sel:#3A4A86;--cell-same:#30406E;--line-soft:#3A3F52}
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]){--cell:#1E2230;--cell-peer:#242939;--cell-cage:#2A3250;--line-soft:#3A3F52}}
+html.dn-house[data-theme="dark"]{--cell:#1E2230;--cell-peer:#242939;--cell-cage:#2A3250;--line-soft:#3A3F52}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0}
@@ -50,7 +50,17 @@ main{position:relative;display:flex;flex-direction:column;align-items:center;gap
 html.dn-house.dn-tally .cell{border-color:var(--line-soft)}
 .cell.bt,html.dn-house.dn-tally .cell.bt{--bt:2px;border-top-color:var(--line)}.cell.bb,html.dn-house.dn-tally .cell.bb{--bb:2px;border-bottom-color:var(--line)}
 .cell.bl,html.dn-house.dn-tally .cell.bl{--bl:2px;border-left-color:var(--line)}.cell.br,html.dn-house.dn-tally .cell.br{--br:2px;border-right-color:var(--line)}
-.cell.peer{background:var(--cell-peer)}.cell.cage{background:var(--cell-cage)}.cell.same{background:var(--cell-same)}.cell.sel{background:var(--cell-sel)}
+.cell.peer{background:var(--cell-peer)}.cell.cage{background:var(--cell-cage)}
+/* the selected square is the house solid yellow (as Mini and Doku) and the only strong fill; matching numbers change their digit, not their square (Alec, 3 Nov 2026) */
+.cell.sel{background:var(--active)}
+.cell.same .val{color:var(--brand);font-weight:700}
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .cell.same .val{color:#8EA6FF}}
+html.dn-house[data-theme="dark"] .cell.same .val{color:#8EA6FF}
+/* yellow stays yellow in dark mode, so everything on it keeps dark ink and darker status colours */
+html.dn-house.dn-tally .cell.sel,html.dn-house.dn-tally .cell.sel .val,html.dn-house.dn-tally .cell.sel .notes,html.dn-house.dn-tally .cell.sel .clue b{color:#141726}
+html.dn-house.dn-tally .cell.sel .clue i{color:#1B3B9E}
+html.dn-house.dn-tally .cell.sel.bad .val,html.dn-house.dn-tally .cell.sel .clue.bad b,html.dn-house.dn-tally .cell.sel .clue.bad i{color:#A81E14}
+html.dn-house.dn-tally .cell.sel .clue.ok b,html.dn-house.dn-tally .cell.sel .clue.ok i{color:#0B6B46}
 /* the clue: number then sign; the sign is bigger and blue so × + − ÷ never read alike (Alec, 3 Nov 2026) */
 .cell .clue{position:absolute;top:4px;left:6px;display:inline-flex;align-items:baseline;gap:1px;line-height:1;font-variant-numeric:tabular-nums}
 .cell .clue b{font-size:15px;font-weight:700;color:var(--ink-soft);letter-spacing:.01em}
