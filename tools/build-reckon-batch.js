@@ -42,7 +42,7 @@ const NQ = 10, MINGAP = 100, KIND_CAP = 2, WINDOW = 6, SPAN = 2;
 const BAND = [1.15, 1.3, 1.6, 3];  // rules 1, the game's scoring bands (100 / 75 / 50 / 25)
 /* Rules 2 (Alec, 3 Nov 2026): days from RULES2_FROM carry r:2, scored 20% / 60% / 2.2× / 3× for
    100 / 80 / 60 / 40, 20 for a miss (the engine's RULES table; a page's rules never change once released).
-   Each such day has EASY_A_DAY facts from the easy list and six others, opens on an easy one, and
+   Each such day has at least EASY_A_DAY facts from the easy list, opens on an easy one, and
    places answers 0.21–1.79 decades up so the wider zones stay on the scale. */
 const RULES2_FROM = '2026-11-04', EASY_A_DAY = 4, BAND2 = [1.2, 1.6, 2.2, 3];
 const EASY = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, 'reckon-easy.json'), 'utf8')).easy);
@@ -156,25 +156,29 @@ function pickDay(di, last) {
     if (la == null) return -1; if (lb == null) return 1;
     return la - lb || hashStr('reckon-' + a.f) - hashStr('reckon-' + b.f);
   };
-  // rules 2: which packs give today's easy facts, weighted by how many easy ones each can offer
-  const easyFrom = new Set();
+  // rules 2: the packs go in a draw weighted by how many easy facts each can offer; the first ones able to give an easy fact do
+  let needEasy = v2 ? EASY_A_DAY : 0;
   if (v2) {
-    const left = packs.map(k => ({ k, w: BANK.facts.filter(x => x.k === k && EASY.has(x.f) && ok(x)).length })).filter(o => o.w);
-    while (easyFrom.size < EASY_A_DAY && left.length) {
+    const left = packs.map(k => ({ k, w: 1 + BANK.facts.filter(x => x.k === k && EASY.has(x.f) && ok(x)).length }));
+    packs.length = 0;
+    while (left.length) {
       let t = r() * left.reduce((s, o) => s + o.w, 0), j = 0;
       while (j < left.length - 1 && (t -= left[j].w) >= 0) j++;
-      easyFrom.add(left.splice(j, 1)[0].k);
+      packs.push(left.splice(j, 1)[0].k);
     }
-    if (easyFrom.size < EASY_A_DAY) throw new Error(`${date}: only ${easyFrom.size} packs have an easy fact free`);
   }
   for (const k of packs) {
     const all = BANK.facts.filter(x => x.k === k && ok(x)).sort(order);
     let cands = all;
-    if (v2) { cands = all.filter(x => EASY.has(x.f) === easyFrom.has(k)); if (!cands.length) throw new Error(`${date}: pack ${k} has no ${easyFrom.has(k) ? 'easy' : 'other'} fact free`); }
+    if (v2) {
+      const easy = all.filter(x => EASY.has(x.f));
+      if (needEasy && easy.length) { cands = easy; needEasy--; } else { cands = all.filter(x => !EASY.has(x.f)); if (!cands.length) cands = easy; }   // a pack out of others gives a fifth easy fact
+    }
     if (!cands.length) throw new Error(`${date}: pack ${k} has nothing it may ask (gap ${MINGAP}, kind cap ${KIND_CAP})`);
     const x = cands[Math.floor(r() * Math.min(WINDOW, cands.length))];
     kinds[kind(x.q)] = (kinds[kind(x.q)] || 0) + 1; picks.push(x);
   }
+  if (needEasy) throw new Error(`${date}: ${needEasy} easy facts short (gap ${MINGAP})`);
   // an easy opener: one of today's, or swap a pick for an easy fact from the same pack
   const isOpener = x => (v2 ? EASY.has(x.f) : x.e);
   let open = picks.findIndex(isOpener);
@@ -231,7 +235,7 @@ function gateDay(p) {
   if (p.r != null && p.r !== 2) e.push('rules');
   if (p.r === 2) {
     if (!p.qs[0].t) e.push('opener is not an easy one');
-    if (p.qs.filter(q => q.t).length !== EASY_A_DAY) e.push(`expected ${EASY_A_DAY} easy questions`);
+    if (p.qs.filter(q => q.t).length < EASY_A_DAY) e.push(`expected ${EASY_A_DAY} easy questions`);
   } else if (!p.qs[0].e) e.push('opener is not an easy one');
   const band = p.r === 2 ? BAND2 : BAND;
   const kinds = {}; p.qs.forEach(q => { kinds[kind(q.q)] = (kinds[kind(q.q)] || 0) + 1; });
