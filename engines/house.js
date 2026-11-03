@@ -134,7 +134,7 @@
 (function () {
   'use strict';
   var P = window.DN_PUZZLE || {};
-  var TYPE = { mini: 'mini', lexi: 'doku', sweep: 'sweep', path: 'path', link: 'link' }[P.type];
+  var TYPE = { mini: 'mini', lexi: 'doku', sweep: 'sweep', path: 'path', link: 'link', tally: 'tally' }[P.type];
   if (!TYPE) return;
   var $ = function (id) { return document.getElementById(id); };
   var W = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen'];
@@ -142,11 +142,11 @@
   var meta = function (n) { var m = document.querySelector('meta[name="' + n + '"]'); return m ? m.content : ''; };
   function read(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
 
-  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link' }[TYPE];
+  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tally: 'Tally' }[TYPE];
   var NUM = parseInt((meta('dn:headline').match(/(\d+)\s*$/) || [])[1], 10) || '';
   var DATE = meta('dn:date');
-  var SAVE = { mini: 'digi-mini-v1', doku: 'digi-doku-v1', sweep: 'digi-sweep-v1', path: 'digi-path-v1', link: 'digi-link-v1' }[TYPE];
-  var STREAK = { mini: 'digi-mini-streak', doku: 'digi-doku-streak', sweep: 'digi-sweep-streak', path: 'digi-path-streak', link: 'digi-link-streak' }[TYPE];
+  var SAVE = { mini: 'digi-mini-v1', doku: 'digi-doku-v1', sweep: 'digi-sweep-v1', path: 'digi-path-v1', link: 'digi-link-v1', tally: 'digi-tally-v1' }[TYPE];
+  var STREAK = { mini: 'digi-mini-streak', doku: 'digi-doku-streak', sweep: 'digi-sweep-streak', path: 'digi-path-streak', link: 'digi-link-streak', tally: 'digi-tally-streak' }[TYPE];
 
   /* ---- fonts: Archivo for the interface, Instrument Serif for the big moments ---- */
   if (!document.querySelector('link[data-fin-fonts]')) {
@@ -196,6 +196,13 @@
         var on = (hot && hot[0] === i && hot[1] === j) || (one && one[0] === i && one[1] === j);
         s += '<rect x="' + (8 + j * 17.5) + '" y="' + (8 + i * 17.5) + '" width="16" height="16" rx="2" fill="' + (on ? '#FFD54A' : TYPE === 'sweep' ? 'var(--hidden-cell)' : 'var(--card)') + '"/>';
       }
+    } else if (TYPE === 'tally') {
+      // a 4×4 board with its cage lines and two digits placed
+      s = '<rect x="4" y="4" width="112" height="112" rx="8" fill="var(--block)"/>';
+      for (var q = 0; q < 16; q++) s += '<rect x="' + (8 + (q % 4) * 26.5) + '" y="' + (8 + Math.floor(q / 4) * 26.5) + '" width="25" height="25" rx="2" fill="var(--card)"/>';
+      s += '<path d="M60.5 8v53h26.5v51M8 60.5h26.5v26.5h52" fill="none" stroke="var(--block)" stroke-width="3" stroke-linejoin="round"/>' +
+        '<text x="20.5" y="26" font-family="Archivo,Arial,sans-serif" font-weight="500" font-size="15" text-anchor="middle" fill="#2E5BFF">3</text>' +
+        '<text x="73.5" y="105" font-family="Archivo,Arial,sans-serif" font-weight="500" font-size="15" text-anchor="middle" fill="var(--ink)">1</text>';
     } else {
       for (var k = 0; k < 16; k++) {
         var row = Math.floor(k / 4), col = k % 4, sel = row === 1 && col < 3 || k === 9;
@@ -210,14 +217,16 @@
     doku: 'Place the ' + (W[tiles] || tiles) + ' letter tiles so every word across and down is real.',
     sweep: 'Clear the board without hitting one of the ' + (W[mines] || mines) + ' mines. Start on the highlighted square.',
     path: 'Join 1 to 36 in one unbroken path, through every given number.',   // "path", not "thread" (AF-026)
-    link: 'Sixteen words, four hidden groups of four. Four mistakes and it’s over.'
+    link: 'Sixteen words, four hidden groups of four. Four mistakes and it’s over.',
+    tally: 'Fill the grid with 1 to 4, no repeats in a row or column, so every cage makes its number.'
   }[TYPE];
   var HOW = {
     mini: ['Tap a square and type. Tap the clue bar to switch between across and down; the arrows either side step through the clues.', 'Check word and Check all mark wrong letters; Reveal word fills one in. The clock stops when the grid is right.'],
     doku: ['Tap a tile in the bank, then tap a square to place it; or tap a square and type. Every run of letters, across and down, must make a real word.', 'Shaded letters are given. With Hints on, a word turns green once it matches the answer.'],
     sweep: ['Tap to dig, or switch to Flag and tap to mark a mine. Each number counts the mines touching that square.', 'Every square can be worked out by deduction, so one mine ends the game. Hint shows a square you could have reasoned out, and why.'],
     path: ['Tap the marigold 1, then tap a touching square to place 2, and so on. Tap the 1 or the 36 to grow the path from either end.', 'Given numbers are checkpoints the path must pass through. Undo takes back a step; Hint shows a square that is forced.'],
-    link: ['Tap four words you think belong together, then Submit. Three right gets a “one away”.', 'Groups run easiest to hardest: green, blue, yellow, then black. Guessing the same four twice costs nothing.']
+    link: ['Tap four words you think belong together, then Submit. Three right gets a “one away”.', 'Groups run easiest to hardest: green, blue, yellow, then black. Guessing the same four twice costs nothing.'],
+    tally: ['Tap a square, then a number. The number in a cage is the answer and the sign is how you get there: 12× multiplies to 12, 9+ adds to 9, 3÷ is the larger over the smaller, 2− the larger minus the smaller. A lone number is that digit.', 'Notes puts small candidates in a square; Undo takes back a move. Every board is solved by logic alone, so no guessing is ever needed. The clock starts when you tap Play.']
   }[TYPE];
   var st = read(STREAK) || {}, played = save && save.done ? Object.keys(save.done).length : 0;
   var longDate = (function () { try { return new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(DATE + 'T12:00:00Z')).replace(',', ''); } catch (e) { return DATE; } })();
@@ -234,7 +243,7 @@
     '<h1 class="dn-start-title">' + NAME + '</h1><p class="dn-start-date">No. ' + NUM + ', ' + longDate + '</p>' +
     '<div class="dn-start-card"><div class="dn-start-art">' + art() + '</div><div><h2>Today’s ' + NAME + '</h2><p>' + RULE + '</p></div>' +
     '<div><button type="button" class="dn-pill" id="dnPlay">Play</button></div></div>' +
-    '<div class="dn-start-stats"><div><b>' + liveStreak + '</b><span>day streak</span></div><div><b>' + (st.best || 0) + '</b><span>best streak</span></div><div><b>' + played + '</b><span>' + NAME + 's played</span></div></div>' +
+    '<div class="dn-start-stats"><div><b>' + liveStreak + '</b><span>day streak</span></div><div><b>' + (st.best || 0) + '</b><span>best streak</span></div><div><b>' + played + '</b><span>' + (TYPE === 'tally' ? 'boards played' : NAME + 's played') + '</span></div></div>' +
     '<details class="dn-how"><summary>How to play</summary>' + HOW.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</details>' +
     '<label class="dn-sound"><span>Sound<small>A short jingle when you solve it</small></span><input type="checkbox" role="switch" id="dnSound"></label></div>';
   document.body.appendChild(card);

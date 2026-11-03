@@ -46,7 +46,7 @@ try {
   const perm=debt.filter(d=>d.permanent).length;
   console.log('Registry: no new errors; '+errors.length+' exact archive exceptions ('+perm+' accepted history, '+(debt.length-perm)+' dated; see test-results/registry.log).');
   const {G:link}=require('../build-link-batch'),{G:pg,grade}=require('../build-path-batch'),sweep=require('../build-sweep-batch');
-  const {broadAlts}=require('../doku-broad-check'),reckon=require('../build-reckon-batch');
+  const {broadAlts}=require('../doku-broad-check'),reckon=require('../build-reckon-batch'),tally=require('../tally');
   const veto=require('../word-veto'),banned=new Set([...veto.BLOCKED,...veto.SENSITIVE,...veto.VETO]);
   const gates={};
   for(const type of ['mini','doku']) {
@@ -63,7 +63,7 @@ try {
   let through=today;const n=new Date(today+'T12:00Z');n.setUTCDate(n.getUTCDate()+7);through=n.toISOString().slice(0,10);
   let checked=0;
   for(const file of fs.readdirSync(path.join(ROOT,'reports')).sort()){
-    if(!/^\d{4}-\d{2}-\d{2}-(crossword-mini|logic-(doku|sweep|path)|word-(link|tangle)|geo-borders|quiz-reckon)/.test(file))continue;
+    if(!/^\d{4}-\d{2}-\d{2}-(crossword-mini|logic-(doku|sweep|path|tally)|word-(link|tangle)|geo-borders|quiz-reckon)/.test(file))continue;
     const day=file.slice(0,10);if(day<today||(!all&&day>through))continue;
     const p=read(path.join(ROOT,'reports',file));let gate;
     if(file.includes('crossword-mini')){
@@ -78,6 +78,7 @@ try {
     else if(file.includes('word-link'))gate=link.validateLink(p);
     else if(file.includes('word-tangle')){assert.equal(p.tiles.length,16,file);assert.ok(p.main.includes(p.star),file);assert.equal(new Set(p.main).size,p.main.length,file);gate={pass:true};}
     else if(file.includes('quiz-reckon')){const errs=reckon.gateDay(p);assert.equal(p.date,day,file);gate={pass:!errs.length,checks:errs};}
+    else if(file.includes('logic-tally')){const errs=tally.check(p);const g=errs.length?null:tally.grade(p);if(g&&g.pairs)errs.push('needs a naked pair');gate={pass:!errs.length,checks:errs};}   // Tally (Lab, 3 Nov 2026): tools/tally.js, no guess ever
     else {assert.equal(p.qs.length,10,file);for(const q of p.qs)assert.ok(q.o.includes(q.n),file+' has no correct answer');gate={pass:true};}
     assert.ok(gate&&gate.pass,file+' fails its ship gate: '+JSON.stringify(gate?.checks));checked++;
   }

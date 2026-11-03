@@ -48,7 +48,8 @@ const TYPES = {
   "word-link":      { key: "link",    id: "LINK",  serial: true,  topic: "Word",      gridMask: false },
   "geo-borders":    { key: "borders", id: "BORD",  serial: true,  topic: "Geography", gridMask: false },
   "quiz-reckon":    { key: "reckon",  id: "RECK",  serial: true,  topic: "Quiz",      gridMask: false },
-  "word-tangle":    { key: "tangle",  id: "TANG",  serial: true,  topic: "Word",      gridMask: true, gridChars: /^[.]*$/ }
+  "word-tangle":    { key: "tangle",  id: "TANG",  serial: true,  topic: "Word",      gridMask: true, gridChars: /^[.]*$/ },
+  "logic-tally":    { key: "tally",   id: "TALLY", serial: true,  topic: "Logic",     gridMask: false, lab: true }   // lab: in Lab from 3 Nov 2026, no runway yet
 };
 const PUZZLE_TOPICS = new Set(Object.values(TYPES).map(t => t.topic));
 const FNAME = new RegExp(`^(\\d{4}-\\d{2}-\\d{2})-(${Object.keys(TYPES).join("|")})(?:-(\\d{4}))?\\.html$`);
@@ -333,7 +334,7 @@ for (const [type, rows] of Object.entries(byType)) {
     bands: rows.reduce((a, r) => (a[r.band] = (a[r.band] || 0) + 1, a), {})
   };
   if (gaps.length) note("ERROR", type, "-", `${gaps.length} missing day(s); first is ${gaps[0]}`);
-  if (runway < 30) note("ERROR", type, "-", `only ${runway} days of runway left — goes dark ${firstMissing}`);
+  if (runway < 30) note(Object.values(TYPES).some(t => t.key === type && t.lab) ? "WARN" : "ERROR", type, "-", `only ${runway} days of runway left — goes dark ${firstMissing}`);
 }
 
 /* --- answer repetition (Mini), against the length ladder --------------- */

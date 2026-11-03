@@ -21,7 +21,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ORIGIN = 'https://dailynoodle.co.uk';
-const TYPES = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon' };
+const TYPES = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally' };   // tally: in Lab from 3 Nov 2026; its page sends to puzzles.html until a daily exists
 
 function page(type, name) {
   const title = `Today's ${name} — Noodle Puzzles`;
