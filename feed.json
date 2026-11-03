@@ -1,9 +1,42 @@
 {
-  "built": "2026-11-03T00:59:39.675Z",
+  "built": "2026-11-03T01:09:07.525Z",
   "today": "2026-11-03",
   "timezone": "Europe/London",
-  "count": 770,
+  "count": 771,
   "items": [
+    {
+      "path": "reports/2026-11-03-briefing.html",
+      "kind": "report",
+      "topic": "Briefing",
+      "headline": "The briefing: Tuesday 3 November",
+      "standfirst": "Most migrants will wait ten years to settle in the UK, not five · Hospital consultants in England will strike on 25 and 26 November unless talks begin · Americans vote today in midterm elections that decide control of Congress",
+      "date": "2026-11-03",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "format": "briefing",
+      "stories": [
+        {
+          "id": "uk-earned-settlement",
+          "h": "Most migrants will wait ten years to settle in the UK, not five",
+          "t": "Immigration"
+        },
+        {
+          "id": "nhs-consultant-strike",
+          "h": "Hospital consultants in England will strike on 25 and 26 November unless talks begin",
+          "t": "Medicine"
+        },
+        {
+          "id": "us-midterms-2026",
+          "h": "Americans vote today in midterm elections that decide control of Congress",
+          "t": "World"
+        }
+      ]
+    },
     {
       "path": "reports/2026-11-03-crossword-mini-0115.html",
       "kind": "puzzle",
