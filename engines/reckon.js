@@ -130,7 +130,13 @@ document.write('<link rel="stylesheet" href="../engines/finish.css"><script src=
 
 const PUZZLE=window.DN_PUZZLE;
 const NQ=10, SPAN=2;
-const BAND=[1.15,1.3,1.6,3], PTS=[100,75,50,25,0], ZN=['Bullseye','Close','Ballpark','In range','Miss'];
+/* Scoring goes with the page, so a released day is scored as it was played. Rules 1: Ballpark's own, on
+   days without `r`. Rules 2 (Alec, 3 Nov 2026): softer inner zones, same 3× edge, and a miss pays 20. */
+const RULES={1:{b:[1.15,1.3,1.6,3],p:[100,75,50,25,0]},2:{b:[1.2,1.6,2.2,3],p:[100,80,60,40,20]}};
+const EASY_A_DAY=4;
+let BAND=RULES[1].b, PTS=RULES[1].p;
+const useRules=pz=>{const t=RULES[pz&&pz.r===2?2:1];BAND=t.b;PTS=t.p};
+const ZN=['Bullseye','Close','Ballpark','In range','Miss'];
 const ZC=['var(--z0)','var(--z1)','var(--z2)','var(--z3)','var(--zm)'];
 const SQ=['🎯','🟩','🟨','🟧','⬜'];   // share: bullseye, then the game's zone colours (Alec, 20 Oct 2026)
 const MANT=[1,1.05,1.1,1.15,1.2,1.25,1.3,1.35,1.4,1.5,1.6,1.7,1.8,1.9,2,2.1,2.2,2.3,2.4,2.5,2.6,2.8,3,3.2,3.4,3.6,3.8,4,4.2,4.4,4.6,4.8,5,5.2,5.4,5.6,5.8,6,6.25,6.5,6.75,7,7.25,7.5,7.75,8,8.25,8.5,8.75,9,9.25,9.5,9.75];
@@ -160,6 +166,8 @@ const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 function GATE(P,metaDate){
   const f=[];const num=x=>typeof x==='number'&&isFinite(x);
   if(!P||typeof P!=='object')return['no puzzle object'];
+  useRules(P);
+  if(P.r!=null&&P.r!==2)f.push('rules '+P.r);
   if(!/^DP·RECK·\d{4}$/.test(P.id||''))f.push('id '+P.id);
   if(!/^\d{4}-\d{2}-\d{2}$/.test(P.date||''))f.push('date '+P.date);
   if(metaDate!=null&&metaDate!==P.date)f.push('dn:date '+metaDate+' != '+P.date);
@@ -176,7 +184,9 @@ function GATE(P,metaDate){
     if(typeof q.f!=='string'||ids.has(q.f))f.push(w+'fact id');ids.add(q.f);
     if(typeof q.k!=='string'||packs.has(q.k))f.push(w+'pack');packs.add(q.k);
   });
-  if(P.qs[0]&&!P.qs[0].e)f.push('opener is not an easy one');
+  if(P.r===2){if(P.qs[0]&&!P.qs[0].t)f.push('opener is not an easy one');
+    if(P.qs.filter(q=>q&&q.t).length!==EASY_A_DAY)f.push('expected '+EASY_A_DAY+' easy questions');}
+  else if(P.qs[0]&&!P.qs[0].e)f.push('opener is not an easy one');
   return f;
 }
 /*@GATE_END*/
@@ -282,6 +292,8 @@ function renderHome(){
   show('home');
   $('dateLine').textContent='No. '+serial()+', '+longDate(P.date);
   $('homeArt').innerHTML=ART;
+  const hw=document.querySelectorAll('.how p')[1];
+  if(hw&&P.r===2)hw.textContent='Within 20% of the answer scores 100; within 60%, 80; within 2.2 times, 60; within three times either way, 40; anything further, 20. Gaps are measured from the smaller number, so half the answer scores the same as double it.';
   const n=liveStreak();$('homeStreak').textContent=n>=1?n+'-day streak':'';
   $('sStreak').textContent=n;$('sBest').textContent=bestScore();$('sPlayed').textContent=Object.keys(save.done||{}).length;
   const c=save.cur&&save.cur.id===P.id?save.cur:null;
@@ -392,7 +404,8 @@ function noteFor(rec){
   if(b===NQ)return '<strong>Ten bullseyes.</strong> Perfect.';
   if(b>0)return '<strong>'+cap(W[b])+' bullseye'+(b>1?'s':'')+'</strong>'+(spot?', '+(spot===b?(b>1?'all':'and it was'):(spot===1?'one of them':W[spot]+' of them'))+' spot on.':'.');
   let best=Infinity;rec.g.forEach((g,i)=>{const a=P.qs[i].a,k=Math.max(g/a,a/g);if(k<best)best=k;});
-  return 'No bullseyes today. Your closest was '+Math.ceil((best-1)*100-1e-6)+'% out.';
+  const near=rec.z.filter(z=>z<4).length,pc=Math.ceil((best-1)*100-1e-6);
+  return near>1?'<strong>'+cap(W[near])+' of ten in range.</strong> Your closest was '+pc+'% out.':'<strong>Your closest was '+pc+'% out.</strong>';
 }
 function showResult(rec,fresh){
   // fill every field first: the tracker reads them the moment "on" lands
@@ -423,7 +436,7 @@ function showResult(rec,fresh){
 function reviewEnd(k){if(!shown)return;VR={g:shown.g,z:shown.z};R=null;Q=k;paused=false;show('play');renderQ();}
 function backToResult(){VR=null;showResult(shown,false);}
 
-/* ---------- share: one mark per question, in play order (🎯 within 15%, 🟩 30%, 🟨 60%, 🟧 3×, ⬜ miss); never a question or an answer ---------- */
+/* ---------- share: one mark per question, in play order (🎯 bullseye, 🟩 close, 🟨 ballpark, 🟧 in range, ⬜ miss); never a question or an answer ---------- */
 function shareText(rec){
   const n=liveStreak();
   return '🎯 Reckon #'+serial()+' — '+rec.z.map(z=>SQ[z]).join('')+' · '+rec.p+' pts'+(n>=2?' · 🔥'+n:'');
