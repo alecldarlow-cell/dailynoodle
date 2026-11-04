@@ -52,6 +52,7 @@ function build(out=path.join(ROOT,'_site')){
    if(file!=='puzzles.html')assert.equal(published.slice(published.indexOf('</head>')),source.slice(source.indexOf('</head>')),file+' body changed');
    assert.deepEqual(published.match(/<meta\b[^>]*\b(?:name="dn:|property="og:)[^>]*>/g),source.match(/<meta\b[^>]*\b(?:name="dn:|property="og:)[^>]*>/g),file+' card/social metadata changed');
   }
+  for(const it of feed.items.filter(it=>it.kind==='puzzle'&&it.type)){assert.equal(it.thumb,'assets/'+it.type+'-thumb.svg','One fixed icon per type: '+it.path);assert.ok(fs.existsSync(path.join(site,it.thumb)),it.thumb);}
   for(const it of feed.items.filter(it=>it.kind==='puzzle'&&!it.badge)){
    assert.ok(searchPages.some(([file])=>file===it.path),'Puzzle missing search metadata: '+it.path);
    const doc=fs.readFileSync(path.join(site,it.path),'utf8');
