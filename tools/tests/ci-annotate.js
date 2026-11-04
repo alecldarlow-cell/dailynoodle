@@ -2,6 +2,8 @@
 /* Turn test failures into GitHub annotations, so a failed nightly run shows what
    failed on its summary page (and through the checks API) without opening logs.
      node tools/tests/ci-annotate.js <title> <puzzle-log | playwright.json>...
+   A passed run calls it with the Playwright JSON alone, so a test that needed its
+   retry shows up as a FLAKY warning instead of passing unseen.
    Puzzle logs: FAIL, KNOWN and skip lines from tools/tests/run.js. Playwright
    JSON: each failed test with the first line of its error. Never fails itself. */
 const fs = require('node:fs');
@@ -11,12 +13,12 @@ for (const f of files) {
   let src; try { src = fs.readFileSync(f, 'utf8'); } catch (e) { lines.push(`(no ${f})`); continue; }
   if (f.endsWith('.json')) {
     let r; try { r = JSON.parse(src); } catch (e) { lines.push(`(unreadable ${f})`); continue; }
-    const walk = s => { for (const spec of s.specs || []) for (const t of spec.tests || []) for (const res of t.results || [])
+    const walk = s => { for (const spec of s.specs || []) for (const t of spec.tests || []) { if (t.status === 'flaky') lines.push(`FLAKY ${spec.file}: ${spec.title} (failed, then passed on retry)`); for (const res of t.results || [])
       if (res.status !== 'passed' && res.status !== 'skipped' && res.retry === (t.results.length - 1)) {
         const err = ((res.error && res.error.message) || res.status).replace(/\u001b\[[0-9;]*m/g, '').replace(/\s+/g, ' ').replace(/ ?\+ ?/g, '+').replace(/Object \{/g, '{').replace(/Array \[/g, '[');
         lines.push(`FAIL ${spec.file}: ${spec.title} — ${err.slice(0, 3600)}`);
       }
-      for (const c of s.suites || []) walk(c); };
+      } for (const c of s.suites || []) walk(c); };
     for (const s of r.suites || []) walk(s);
     if (r.stats) lines.push(`playwright: ${r.stats.expected} passed, ${r.stats.unexpected} failed, ${r.stats.flaky} flaky, ${r.stats.skipped} skipped`);
   } else {
@@ -37,5 +39,5 @@ const groups = []; let cur = [];
 for (const l of lines) { if (l.length > 400) { groups.push([l]); continue; } if (cur.join('\n').length + l.length > 3800) { groups.push(cur); cur = []; } cur.push(l); }
 if (cur.length) groups.push(cur);
 groups.slice(0, 18).forEach((g, n) =>
-  console.log(`::${g.some(l => l.startsWith('FAIL') || / FAIL /.test(l)) ? 'error' : 'notice'} title=${title} (${n + 1})::${esc(g.join('\n'))}`));
+  console.log(`::${g.some(l => l.startsWith('FAIL') || / FAIL /.test(l)) ? 'error' : g.some(l => l.startsWith('FLAKY')) ? 'warning' : 'notice'} title=${title} (${n + 1})::${esc(g.join('\n'))}`));
 if (!lines.length) console.log(`::notice title=${title}::nothing to report`);
