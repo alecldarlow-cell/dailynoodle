@@ -237,6 +237,8 @@
   html[data-section="lab"] li[data-kind="report"]{--accent:var(--news);--accent-soft:var(--news-soft)}
   html[data-section="lab"] li[data-kind="puzzle"]{--accent:var(--puzzles);--accent-soft:var(--puzzles-soft)}
   html[data-section="lab"] li[data-kind="game"]{--accent:var(--games);--accent-soft:var(--games-soft)}
+  /* puzzle icons carry their own edge: no tile behind them (SITE.md › Puzzle card icons) */
+  .puzzle-card img.thumb{border:0;border-radius:0;background:none}
   .thumbwrap{position:relative;width:96px;align-self:start}
   .thumbwrap .thumb{display:block}
   .badge{position:absolute;left:5px;right:5px;bottom:5px;text-align:center;background:rgba(20,22,26,.82);color:#fff;
