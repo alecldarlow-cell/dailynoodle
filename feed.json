@@ -1,8 +1,8 @@
 {
-  "built": "2026-11-04T12:33:45.784Z",
+  "built": "2026-11-04T19:18:45.481Z",
   "today": "2026-11-04",
   "timezone": "Europe/London",
-  "count": 789,
+  "count": 790,
   "items": [
     {
       "path": "reports/2026-11-04-briefing.html",
@@ -126,6 +126,23 @@
       "mask": ".....................o..............",
       "type": "sweep",
       "id": "DP·SWEEP·2026-11-04"
+    },
+    {
+      "path": "reports/2026-11-04-logic-tally-0011.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tally 11",
+      "standfirst": "Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.",
+      "date": "2026-11-04",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "assets/tally-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "................",
+      "type": "tally",
+      "id": "DP·TALLY·0011"
     },
     {
       "path": "reports/2026-11-04-quiz-reckon-0016.html",
@@ -320,14 +337,13 @@
       "date": "2026-11-03",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0010",
-      "badge": "In development"
+      "id": "DP·TALLY·0010"
     },
     {
       "path": "reports/2026-11-03-quiz-reckon-0015.html",
@@ -522,14 +538,13 @@
       "date": "2026-11-02",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0009",
-      "badge": "In development"
+      "id": "DP·TALLY·0009"
     },
     {
       "path": "reports/2026-11-02-quiz-reckon-0014.html",
@@ -724,14 +739,13 @@
       "date": "2026-11-01",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0008",
-      "badge": "In development"
+      "id": "DP·TALLY·0008"
     },
     {
       "path": "reports/2026-11-01-quiz-reckon-0013.html",
@@ -911,14 +925,13 @@
       "date": "2026-10-31",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0007",
-      "badge": "In development"
+      "id": "DP·TALLY·0007"
     },
     {
       "path": "reports/2026-10-31-quiz-reckon-0012.html",
@@ -1113,14 +1126,13 @@
       "date": "2026-10-30",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0006",
-      "badge": "In development"
+      "id": "DP·TALLY·0006"
     },
     {
       "path": "reports/2026-10-30-quiz-reckon-0011.html",
@@ -1315,14 +1327,13 @@
       "date": "2026-10-29",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0005",
-      "badge": "In development"
+      "id": "DP·TALLY·0005"
     },
     {
       "path": "reports/2026-10-29-quiz-reckon-0010.html",
@@ -1517,14 +1528,13 @@
       "date": "2026-10-28",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0004",
-      "badge": "In development"
+      "id": "DP·TALLY·0004"
     },
     {
       "path": "reports/2026-10-28-quiz-reckon-0009.html",
@@ -1704,14 +1714,13 @@
       "date": "2026-10-27",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0003",
-      "badge": "In development"
+      "id": "DP·TALLY·0003"
     },
     {
       "path": "reports/2026-10-27-quiz-reckon-0008.html",
@@ -1891,14 +1900,13 @@
       "date": "2026-10-26",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0002",
-      "badge": "In development"
+      "id": "DP·TALLY·0002"
     },
     {
       "path": "reports/2026-10-26-quiz-reckon-0007.html",
@@ -2045,14 +2053,13 @@
       "date": "2026-10-25",
       "updated": "",
       "read": "~2 min",
-      "thumb": "",
+      "thumb": "assets/tally-thumb.svg",
       "stat": "",
       "statUnit": "",
       "statLabel": "",
       "mask": "................",
       "type": "tally",
-      "id": "DP·TALLY·0001",
-      "badge": "In development"
+      "id": "DP·TALLY·0001"
     },
     {
       "path": "reports/2026-10-25-quiz-reckon-0006.html",

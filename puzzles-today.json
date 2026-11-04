@@ -48,6 +48,12 @@
    "id": "DP·RECK·0016",
    "name": "Reckon 16",
    "path": "reports/2026-11-04-quiz-reckon-0016.html"
+  },
+  {
+   "type": "tally",
+   "id": "DP·TALLY·0011",
+   "name": "Tally 11",
+   "path": "reports/2026-11-04-logic-tally-0011.html"
   }
  ]
 }
