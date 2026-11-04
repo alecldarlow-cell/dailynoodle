@@ -149,7 +149,7 @@
 'use strict';
 
 const OFF = false;
-const VERSION = 'nn-4-icons';
+const VERSION = 'nn-5-icons';
 const PAGES = 'nn-pages-' + VERSION;      // this site's files
 const FONTS = 'nn-fonts-' + VERSION;      // Google Fonts (stylesheets and font files)
 const MAX_ENTRIES = 400;                  // pages cache trimmed past this, oldest first
