@@ -1,9 +1,25 @@
 {
-  "built": "2026-11-04T21:56:39.872Z",
+  "built": "2026-11-04T22:03:28.881Z",
   "today": "2026-11-04",
   "timezone": "Europe/London",
-  "count": 790,
+  "count": 791,
   "items": [
+    {
+      "path": "reports/2026-11-04-arcade-astro-drop.html",
+      "kind": "game",
+      "topic": "Arcade",
+      "headline": "Astro Drop",
+      "standfirst": "Merge space dust into planets and planets into Suns. Then light a supernova.",
+      "date": "2026-11-04",
+      "updated": "",
+      "read": "~4 min",
+      "thumb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMyYjMyNzYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMzYTJjOGEiLz48L2xpbmVhckdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0icyIgY3g9Ii4zNiIgY3k9Ii4zMiIgcj0iLjgiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZjBjOCIvPjxzdG9wIG9mZnNldD0iLjU1IiBzdG9wLWNvbG9yPSIjZThjNDg2Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOGE1ZTNhIi8+PC9yYWRpYWxHcmFkaWVudD48cmFkaWFsR3JhZGllbnQgaWQ9Im0iIGN4PSIuMzYiIGN5PSIuMzIiIHI9Ii44Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmYiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM4ZjlhYzAiLz48L3JhZGlhbEdyYWRpZW50PjxyYWRpYWxHcmFkaWVudCBpZD0iZSIgY3g9Ii4zNiIgY3k9Ii4zMiIgcj0iLjgiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzdmZDBmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzE0NDg5YyIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2IpIi8+PGcgZmlsbD0iI2ZmZiI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxOCIgcj0iMS40Ii8+PGNpcmNsZSBjeD0iNDQiIGN5PSIxMCIgcj0iMSIvPjxjaXJjbGUgY3g9IjEwMiIgY3k9IjE2IiByPSIxLjUiLz48Y2lyY2xlIGN4PSI3NiIgY3k9IjI2IiByPSIxIi8+PGNpcmNsZSBjeD0iMTA4IiBjeT0iNDYiIHI9IjEiLz48L2c+PHBhdGggZD0iTTggMzRWMTEySDExMlYzNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjdkNmZmIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNOCAzNEgxMTIiIHN0cm9rZT0iI2RmZTZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIyIDUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjgyIiBjeT0iMjAiIHI9IjkiIGZpbGw9InVybCgjbSkiLz48Y2lyY2xlIGN4PSIzNCIgY3k9IjkyIiByPSIxOSIgZmlsbD0idXJsKCNlKSIvPjxwYXRoIGQ9Ik0yNCA4NnE4LTYgMTMgMHQtMyAxMnEtOSAyLTEwLTEyeiIgZmlsbD0iIzNmOWE1OCIvPjxlbGxpcHNlIGN4PSI3NCIgY3k9Ijg0IiByeD0iMzgiIHJ5PSI5IiBmaWxsPSJub25lIiBzdHJva2U9IiNjOWE4NzciIHN0cm9rZS13aWR0aD0iNCIgdHJhbnNmb3JtPSJyb3RhdGUoLTE1IDc0IDg0KSIvPjxjaXJjbGUgY3g9Ijc0IiBjeT0iODQiIHI9IjI1IiBmaWxsPSJ1cmwoI3MpIi8+PHBhdGggZD0iTTUwIDgwcTI0IDEwIDQ4LTYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M5OWE1ZSIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTUxIDkwcTI2IDggNDYtOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjk4YTUyIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik0zOCA5NWEzOCA5IC0xNSAwIDAgNzMtMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2U4ZDBhMCIgc3Ryb2tlLXdpZHRoPSI0Ii8+PC9zdmc+",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "badge": "In development"
+    },
     {
       "path": "reports/2026-11-04-briefing.html",
       "kind": "report",
