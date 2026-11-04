@@ -3,13 +3,18 @@
 // Only Actions publishes/commits. Local npm test builds in a disposable copy.
 const {spawnSync}=require('node:child_process'),fs=require('node:fs');
 const {prepare,run}=require('./prepare-site');
+const {fromGit}=require('./release-scope');
 function git(args,allowFailure=false){const r=spawnSync('git',args,{encoding:'utf8',stdio:['ignore','pipe','pipe']});if(r.status&&!allowFailure)throw Error(r.stderr||r.stdout);return r;}
 const day=require('../dn-core').londonDay;
 if(process.env.GITHUB_ACTIONS!=='true')throw Error('release.js runs only in GitHub Actions; use npm test locally');
 fs.rmSync('test-results/release.json',{force:true});
 for(let attempt=1;attempt<=3;attempt++){
  git(['fetch','origin','main']);git(['merge','--ff-only','origin/main']);
- const builtDay=day();process.env.DN_HELD_OUT='held.txt';prepare();
+ const builtDay=day();
+ // Worked out before prepare() and on every attempt: a rebase can bring in other work.
+ const scope=fromGit(a=>git(a).stdout,process.env.GITHUB_EVENT_NAME,builtDay);
+ process.env.DN_RELEASE_SCOPE=scope.scope;console.log('Release scope: '+scope.scope+' ('+scope.reason+')');
+ process.env.DN_HELD_OUT='held.txt';prepare();
  run('tests/suite.js');
  // The release artifact is the one the suite built from this exact transformed
  // source tree. Never reassemble or patch it after this point.
