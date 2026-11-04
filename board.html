@@ -615,15 +615,15 @@
     var o = { day: 'numeric', month: 'short', timeZone: 'UTC' };
     return f.toLocaleDateString('en-GB', o) + ' – ' + t.toLocaleDateString('en-GB', o);
   }
-  function weekDays(d) {   // puzzles so far this week: 8 a day, up to the chosen day
+  function weekDays(d) {   // puzzles so far this week: 9 a day, up to the chosen day
     var n = Math.round((new Date(S.date + 'T12:00:00Z') - new Date(d.week_from + 'T12:00:00Z')) / 864e5) + 1;
-    return 8 * Math.max(1, Math.min(7, n));
+    return 9 * Math.max(1, Math.min(7, n));
   }
   function renderOverall(L, d) {
     var h = topCard(L);
     h += dayBar('🏆 All nine puzzles · ' + longDay(S.date), d.first || S.date);
     if (!d.day.length) h += '<p class="nobody">Nobody in ' + esc(L.name) + ' has played ' + (S.date === NB.today() ? 'yet today' : 'on this day') + '.</p>';
-    else h += '<ol class="rows">' + d.day.map(function (r) { return allRow(r, 8); }).join('') + '</ol>';
+    else h += '<ol class="rows">' + d.day.map(function (r) { return allRow(r, 9); }).join('') + '</ol>';
     if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
       return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
     h += '<p class="sub">This week · ' + esc(weekLabel(d)) + '</p>';
