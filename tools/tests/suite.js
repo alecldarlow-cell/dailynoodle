@@ -27,7 +27,7 @@ const results=[];
  if(nightly)process.env.DN_NIGHTLY='1';
  writeSummary();
  fs.rmSync(path.join(ROOT,'test-results/timing.json'),{force:true});
- await execute(t=>run(t.name,t.args,t.env),{nightly,crossBrowser:process.env.DN_CROSS_BROWSER==='1',serial,jobs});
+ await execute(t=>run(t.name,t.args,t.env),{nightly,crossBrowser:process.env.DN_CROSS_BROWSER==='1',serial,jobs,newsOnly:!nightly&&process.env.DN_RELEASE_SCOPE==='news'});
  console.log('\nAll required groups passed. Device checks remain manual: see toolchain/testing.md.');
 })().catch(e=>{console.error(e.message);process.exitCode=1;}).finally(()=>{
  const wallSeconds=+((Date.now()-started)/1000).toFixed(1),groupSeconds=+results.reduce((n,r)=>n+r.seconds,0).toFixed(1);

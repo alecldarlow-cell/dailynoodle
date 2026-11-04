@@ -8,7 +8,7 @@ function browserFiles(){
  const all=fs.readdirSync(path.join(__dirname,'browser'),{recursive:true}).filter(isBrowserSpec).sort();
  return {games:all.filter(f=>f==='games.spec.js'),pages:all.filter(f=>f!=='games.spec.js')};
 }
-function plan({nightly=false,crossBrowser=false}={}){
+function plan({nightly=false,crossBrowser=false,newsOnly=false}={}){
  const fs=require('node:fs'),path=require('node:path');
  const task=(name,args,env={})=>({name,args,env});
  const preflight=[
@@ -27,6 +27,8 @@ function plan({nightly=false,crossBrowser=false}={}){
  // News pieces rendered in a real browser (dn-render): the last 7 days at release, every piece nightly.
  const news=task('news',['tools/tests/news.js',...(nightly?['--all','--jobs','2']:['--jobs','2'])]);
  const artifact=task('artifact',['tools/tests/browser-run.js','--project=chromium','artifact.spec.js'],{DN_TEST_ROOT:path.resolve(__dirname,'../../_site'),DN_TEST_WORKERS:'1'});
+ // A release of news files alone (tools/release-scope.js): no game or puzzle code changed, so only what a news file can break.
+ if(newsOnly){const pre=preflight.filter(t=>t.name!=='backend');return {preflight:pre,tasks:[news,artifact],serial:[...pre,news,artifact]};}
  // Long groups start first. All groups after preflight read immutable source
  // or _site; report paths are isolated by DN_TEST_GROUP in suite.js.
  const tasks=[...puzzles,...browser,news,focused[0],focused[2],artifact,focused[4],focused[1],focused[3],...cross];

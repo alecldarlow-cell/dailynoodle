@@ -67,3 +67,8 @@ test('CI: nightly and optional cross-browser gates remain required',()=>{
  assert.ok(!plan().serial.some(t=>t.name==='cross-browser'));
  assert.ok(plan({nightly:true,crossBrowser:true}).serial.some(t=>t.name==='cross-browser'));
 });
+test('CI: a news-only release runs the checks a news file can break, and no game or puzzle groups',()=>{
+ const p=plan({newsOnly:true});
+ assert.deepEqual(p.serial.map(t=>t.name),['unit','content','build','news','artifact']);
+ assert.ok(plan().tasks.some(t=>t.name==='browser-games'));
+});

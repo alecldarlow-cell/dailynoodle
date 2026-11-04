@@ -217,6 +217,8 @@ in `toolchain/site-sections-and-tracking.md`.
 
 - **Timing failures and the retry** (4 Nov 2026, Alec's call): of the 100 Build feed runs to 4 Nov, 20 failed, 19 of them on five timing-sensitive browser tests and none on a player-breaking bug. YARN-01/05 were a one-frame gap in the page (fixed there); GAME-SHARE-01 measured a pill mid-slide, GLASS-01 let a 450 ms guard expire on a busy machine and TALLY-E2E-01 compared a running clock exactly, so those three tests now wait for the state they check. Playwright retries once in CI. A test that fails then passes counts as passed but is reported: `FLAKY` lines from `ci-annotate.js`, a warning on the run. Treat a FLAKY line as a bug to find, not as noise; the retry is a backstop. `tools/tests/run.js` puzzle checks have no retry.
 
+- **News-only releases** (4 Nov 2026, Alec's call): `tools/release-scope.js` lets a push go out on `unit`, `content`, `build`, `news` and `artifact` (about 2 minutes) only when every change since the last release commit is an added or edited `dn:kind` report file, and `feed.json` is already on today's London day. Scheduled and manual runs, a new day's puzzles, any other file and any code left untested by a failed run always get the full suite. The run log prints `Release scope: …`. So a game test can no longer hold back a correction or a daytime piece; the night's first briefing usually still goes through the full suite, because it often arrives before that day's puzzle release.
+
 ## Changing something site-wide
 1. Update this file in the same commit as the change.
 2. If a name or address changes, also check: `toolchain/README.md` and `toolchain/SESSION-PROTOCOL.md` (clone commands), the two scheduled tasks' prompts, Supabase Auth URLs, and the forwarding repo.
