@@ -1449,11 +1449,11 @@ function startLevel(n,how){
   $('lvPill').textContent=L.skein.name+' · level '+n;
   path=[];kb='';show('play');$('play').classList.remove('locked');
   renderList();renderScore();paused=false;paint();last=performance.now();
-  armBack();requestAnimationFrame(()=>{measure();countIn();});
+  armBack();counting=true;requestAnimationFrame(()=>{measure();countIn();});   // closed from now, not from the next frame
 }
 function resumeRound(){                             // back to a round paused in this page load
   if(!R||R.state!=='playing'){startLevel(nextLevel(),'new');return;}
-  show('play');closePause();paused=false;armBack();requestAnimationFrame(()=>{measure();countIn();});
+  show('play');closePause();paused=false;armBack();counting=true;requestAnimationFrame(()=>{measure();countIn();});   // closed from now, not from the next frame
 }
 function setPaused(on){
   paused=on;
