@@ -615,15 +615,18 @@
     var o = { day: 'numeric', month: 'short', timeZone: 'UTC' };
     return f.toLocaleDateString('en-GB', o) + ' – ' + t.toLocaleDateString('en-GB', o);
   }
-  function weekDays(d) {   // puzzles so far this week: 9 a day, up to the chosen day
-    var n = Math.round((new Date(S.date + 'T12:00:00Z') - new Date(d.week_from + 'T12:00:00Z')) / 864e5) + 1;
-    return 9 * Math.max(1, Math.min(7, n));
+  function dayCount(day) { return day >= '2026-11-05' ? 9 : 8; }   // Tally joined the leagues on 5 Nov 2026
+  function weekDays(d) {   // puzzles so far this week, up to the chosen day
+    var n = Math.round((new Date(S.date + 'T12:00:00Z') - new Date(d.week_from + 'T12:00:00Z')) / 864e5) + 1, sum = 0;
+    n = Math.max(1, Math.min(7, n));
+    for (var i = 0; i < n; i++) sum += dayCount(new Date(Date.parse(d.week_from + 'T12:00:00Z') + i * 864e5).toISOString().slice(0, 10));
+    return sum;
   }
   function renderOverall(L, d) {
     var h = topCard(L);
     h += dayBar('🏆 All nine puzzles · ' + longDay(S.date), d.first || S.date);
     if (!d.day.length) h += '<p class="nobody">Nobody in ' + esc(L.name) + ' has played ' + (S.date === NB.today() ? 'yet today' : 'on this day') + '.</p>';
-    else h += '<ol class="rows">' + d.day.map(function (r) { return allRow(r, 9); }).join('') + '</ol>';
+    else h += '<ol class="rows">' + d.day.map(function (r) { return allRow(r, dayCount(S.date)); }).join('') + '</ol>';
     if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
       return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
     h += '<p class="sub">This week · ' + esc(weekLabel(d)) + '</p>';
@@ -781,7 +784,7 @@
       track('board_share', { type: S.type });
     } else if (act === 'shareall') {
       var D2 = S.data, ln = ['🏆 All puzzles · ' + longDay(S.date)];
-      D2.day.slice(0, 5).forEach(function (r) { ln.push((MEDAL[r.rank] || r.rank + '.') + ' ' + r.nick + ' ' + pts(r.points) + ' (' + r.completed + '/8)'); });
+      D2.day.slice(0, 5).forEach(function (r) { ln.push((MEDAL[r.rank] || r.rank + '.') + ' ' + r.nick + ' ' + pts(r.points) + ' (' + r.completed + '/' + dayCount(S.date) + ')'); });
       if (D2.day.length > 5) ln.push('+' + (D2.day.length - 5) + ' more');
       ln.push(L.name + ' leaderboard:');
       share(ln.join('\n'), link(L.code) + '&p=all&d=' + S.date, a);
