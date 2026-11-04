@@ -1,9 +1,47 @@
 {
-  "built": "2026-11-04T08:33:01.040Z",
+  "built": "2026-11-04T09:03:42.047Z",
   "today": "2026-11-04",
   "timezone": "Europe/London",
-  "count": 788,
+  "count": 789,
   "items": [
+    {
+      "path": "reports/2026-11-04-briefing.html",
+      "kind": "report",
+      "topic": "Briefing",
+      "headline": "The briefing: Wednesday 4 November",
+      "standfirst": "Democrats win both houses of Congress in a heavy defeat for Trump · Oil falls sharply on hopes of a US-Iran deal, despite new US strikes · Bank of England is expected to raise interest rates to 4% on Thursday · MPs take the final Commons…",
+      "date": "2026-11-04",
+      "updated": "",
+      "read": "~2 min",
+      "thumb": "",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "format": "briefing",
+      "stories": [
+        {
+          "id": "us-midterms-2026",
+          "h": "Democrats win both houses of Congress in a heavy defeat for Trump",
+          "t": "World"
+        },
+        {
+          "id": "iran-war",
+          "h": "Oil falls sharply on hopes of a US-Iran deal, despite new US strikes",
+          "t": "World"
+        },
+        {
+          "id": "uk-interest-rates",
+          "h": "Bank of England is expected to raise interest rates to 4% on Thursday",
+          "t": "Economy"
+        },
+        {
+          "id": "sporting-events-bill",
+          "h": "MPs take the final Commons stages of the law for hosting Euro 2028 today",
+          "t": "UK politics"
+        }
+      ]
+    },
     {
       "path": "reports/2026-11-04-crossword-mini-0116.html",
       "kind": "puzzle",
