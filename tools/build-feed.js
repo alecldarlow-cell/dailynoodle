@@ -212,6 +212,11 @@ function puzzleType(html, rel, warnings) {
 // puzzle file's puzzle object — never hand-drawn, and never a spoiler: only the
 // SHAPE travels (blocks and pre-locked cells), never a letter.
 //   #  black square      L  pre-locked cell (LexiDoku)      .  to be filled
+// Puzzle cards show one fixed icon per type, never the day's grid (Alec, 4 Nov 2026; SITE.md › Puzzle card icons).
+// These five types carry no dn:thumb in their pages, so the card's icon is set here; their `mask` stays in the feed.
+const FIXED_THUMBS = { mini: 'assets/mini-thumb.svg', doku: 'assets/doku-thumb.svg', path: 'assets/path-thumb.svg',
+  sweep: 'assets/sweep-thumb.svg', link: 'assets/link-thumb.svg' };
+
 // Returns a 16-, 25- or 36-char string (4x4 Link, 5x5, 6x6), or '' if the
 // object can't be read. Mask alphabet: '#' block, 'L' pre-locked, 'o' free opening, '.' fillable.
 // the card falls back to the Play glyph rather than inventing a grid.
@@ -402,7 +407,7 @@ for (const { dir, kind } of DIRS) {
       read: meta(head, 'dn:read') || (firstMatch(html, /<div class="dateline"[^>]*>([\s\S]*?)<\/div>/i).match(/~\s*\d+\s*min/i) || [''])[0].replace(/\s+/g, ' '),
       // Tangle pages carry their card tile as a data: URI, which can't follow dark mode; the same tile with a
       // dark version lives in assets/tangle-thumb.svg (18 Oct 2026), so Tangle cards use that instead.
-      thumb: (/-word-tangle-\d+\.html$/.test(file) && /^data:image\/svg/.test(meta(head, 'dn:thumb'))) ? 'assets/tangle-thumb.svg' : (meta(head, 'dn:thumb') || ''),
+      thumb: FIXED_THUMBS[ptype] || ((/-word-tangle-\d+\.html$/.test(file) && /^data:image\/svg/.test(meta(head, 'dn:thumb'))) ? 'assets/tangle-thumb.svg' : (meta(head, 'dn:thumb') || '')),
       // stat is now the FIGURE only — the tile sizes itself by its length, so a
       // trailing "%" or "×" must not count. unit and label are set separately.
       stat: hs ? hs.figure : '',
