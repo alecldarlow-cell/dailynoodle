@@ -311,6 +311,7 @@ const TESTS = {
   async 'finish:link'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
     await play.link(p, { wrong: 1 });
+    ok(!/replay/i.test(await text(p, '#winSub')), 'link: first win is not labelled replay');
     await sheetChecks(p, ev, { type: 'link', ids: ['winTitle', 'winTime', 'winStreak', 'winBest'],
       shareRe: /^🔗 Link #71 — 🟩❌🟦🟨⬛ · \d:\d\d$/,
       endCheck: x => ok(x && x.outcome === 'solved' && x.mistakes === 1, `link: tracker read solved, ${x && x.mistakes} mistake`) });
@@ -320,6 +321,7 @@ const TESTS = {
     ok(await p.locator('.fin-band').count() === 4, 'link: four groups in the recap');
     await shareClipboard(p, ctx, 'link');
     await reopen(p, ev, 'link');
+    ok(await text(p, '#rank') === '', 'link: reopened shows no replay label');
     ok(/^🔗 Link #71 — 🟩❌🟦🟨⬛ · \d:\d\d$/.test(await text(p, '.fin-share-text')), 'link: reopened sheet shares the same line');
     ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
     await ctx.close();
@@ -356,21 +358,15 @@ const TESTS = {
     ok(!p.errs.length, 'jingle: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },
-  async 'finish:link-loss'(b) {
+  /* the sheet after Play again keeps its title and stats (25 Oct 2026: finish.js removed the old sheet
+     before taking the engine's #winTitle/#winTime/#winStreak/#winBest out of it) */
+  async 'finish:replay-sheet-link'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
     await play.link(p, { wrong: 4 });
     ok(await text(p, '#winTitle') === 'So close.' && ends(ev)[0] && ends(ev)[0].x.outcome === 'failed', 'link: loss keeps the exact title and logs failed');
     ok(/^You found one group of four\./.test(await text(p, '.fin-note')), `link: loss note "${await text(p, '.fin-note')}"`);
     await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
     ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'link: Play again closes the sheet and marks the replay');
-    await ctx.close();
-  },
-  /* the sheet after Play again keeps its title and stats (25 Oct 2026: finish.js removed the old sheet
-     before taking the engine's #winTitle/#winTime/#winStreak/#winBest out of it) */
-  async 'finish:replay-sheet-link'(b) {
-    const { ctx, p } = await open(b, F.link);
-    await play.link(p, { wrong: 4 });
-    await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
     await play.link(p, { wrong: 0 });
     const k = await p.evaluate(() => ({ sheets: document.querySelectorAll('#dnFin').length,
       title: (document.querySelector('#dnFin .fin-title') || {}).textContent || '',
@@ -604,6 +600,7 @@ const TESTS = {
   async 'finish:sweep'(b) {
     const ev = []; const { ctx, p } = await open(b, F.sweep, { events: ev });
     await play.sweep(p);
+    ok(!/replay/i.test(await text(p, '#winSub')), 'sweep: first win is not labelled replay');
     await sheetChecks(p, ev, { type: 'sweep', ids: ['winTitle', 'winTime', 'winStreak', 'winBest'],
       shareRe: /^💣 Sweep 18 Oct — swept in \d:\d\d$/,
       endCheck: x => ok(x && x.outcome === 'solved', `sweep: tracker read ${x && x.outcome}`) });
@@ -898,20 +895,6 @@ const TESTS = {
     await ctx.close();
   },
   /* ---------- the five fixes of 18 Oct ---------- */
-  async 'fix:link-replay'(b) {
-    const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
-    await play.link(p, { wrong: 1 });
-    ok(!/replay/i.test(await text(p, '#winSub')), 'link: first win is not labelled replay');
-    await p.reload(); await wait(p, 1500);
-    ok(await text(p, '#rank') === '', 'link: reopened shows no replay label');
-    await ctx.close();
-  },
-  async 'fix:sweep-replay'(b) {
-    const { ctx, p } = await open(b, F.sweep);
-    await play.sweep(p);
-    ok(!/replay/i.test(await text(p, '#winSub')), 'sweep: first win is not labelled replay');
-    await ctx.close();
-  },
   async 'fix:tangle-yesterday'(b) {
     const { ctx, p } = await open(b, F.tangle);
     await tap(p, p.locator('#yBtn')); await p.waitForTimeout(600); await wait(p, 500);

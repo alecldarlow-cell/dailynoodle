@@ -23,7 +23,7 @@ test('PUZZLE-SHARDS: estimates are fixed and unknown future scenarios cannot dis
  assert.equal(flat.filter(n=>n==='new:future-scenario').length,1);assert.equal(flat.length,extended.length);
 });
 test('PUZZLE-SHARDS: focused filters and old two-shard commands still work; invalid selections fail',()=>{
- const all=Object.keys(TESTS);assert.deepEqual(selection(all,['finish:link']),['finish:link','finish:link-loss']);
+ const all=Object.keys(TESTS);assert.deepEqual(selection(all,['finish:sweep']),['finish:sweep','finish:sweep-boom']);
  const groups=partition(all,3),i=groups.findIndex(g=>g.includes('finish:link'));
  assert.deepEqual(selection(all,['finish:link','--shard='+(i+1)+'/3']),groups[i].filter(n=>n.includes('finish:link')));
  for(const args of [['--shard=0/2'],['--shard=3/2'],['--shard=1/0'],['--shard=1/9'],['--shard=1/2','--shard=2/2'],['typo']])assert.throws(()=>selection(all,args));

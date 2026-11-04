@@ -219,6 +219,8 @@ in `toolchain/site-sections-and-tracking.md`.
 
 - **News-only releases** (4 Nov 2026, Alec's call): `tools/release-scope.js` lets a push go out on `unit`, `content`, `build`, `news` and `artifact` (about 2 minutes) only when every change since the last release commit is an added or edited `dn:kind` report file, and `feed.json` is already on today's London day. Scheduled and manual runs, a new day's puzzles, any other file and any code left untested by a failed run always get the full suite. The run log prints `Release scope: …`. So a game test can no longer hold back a correction or a daytime piece; the night's first briefing usually still goes through the full suite, because it often arrives before that day's puzzle release.
 
+- **Suite review** (4 Nov 2026, Alec's go-ahead): the suite was not oversized and nothing retired was found. `browser-pages` set the length of every release, so the multi-browser specs moved to their own `browser-accounts` group; `artifact.spec.js` no longer runs twice; `fix:link-replay`, `fix:sweep-replay` and `finish:link-loss` were merged into `finish:link`, `finish:sweep` and `finish:replay-sheet-link`, every check kept. Left in place by choice: `echo-cave.spec.js` at release, and the Borders and Reckon two-tab tests.
+
 ## Changing something site-wide
 1. Update this file in the same commit as the change.
 2. If a name or address changes, also check: `toolchain/README.md` and `toolchain/SESSION-PROTOCOL.md` (clone commands), the two scheduled tasks' prompts, Supabase Auth URLs, and the forwarding repo.
