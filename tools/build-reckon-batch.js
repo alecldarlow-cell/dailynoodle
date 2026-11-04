@@ -44,7 +44,7 @@ const BAND = [1.15, 1.3, 1.6, 3];  // rules 1, the game's scoring bands (100 / 7
    100 / 80 / 60 / 40, 20 for a miss (the engine's RULES table; a page's rules never change once released).
    Each such day has at least EASY_A_DAY facts from the easy list, opens on an easy one, and
    places answers 0.21–1.79 decades up so the wider zones stay on the scale. */
-const RULES2_FROM = '2026-11-04', EASY_A_DAY = 4, BAND2 = [1.2, 1.6, 2.2, 3];
+const RULES2_FROM = '2026-11-05', EASY_A_DAY = 4, BAND2 = [1.2, 1.6, 2.2, 3];
 const EASY = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, 'reckon-easy.json'), 'utf8')).easy);
 const EXTRA = path.join(__dirname, 'reckon-extra-facts.json');
 /* Facts kept out of Reckon (they stay in Ballpark): ones whose good sources disagree by more
