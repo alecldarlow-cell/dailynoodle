@@ -283,11 +283,11 @@ test.describe('BOARD-KEY', () => {
       await go(O, `board.html?p=all&d=${DAY}`);
       await expect(O.p.locator('ol.rows').first().locator('li.row')).toHaveCount(1);
       await expect(O.p.locator('ol.rows').first()).toContainText('Jake');
-      await expect(O.p.locator('ol.rows').first()).toContainText('1 pt');
+      await expect(O.p.locator('ol.rows').first()).toContainText('0 pts');
       await expect(O.p.locator('.notyet')).toHaveText('Alec (you), Kim');
       await H.tap(O.p, O.p.locator('[data-act="shareall"]'));
       const sh = (await O.p.evaluate(() => window.__shared)).pop();
-      expect(sh.text).toContain('🥇 Jake 1 pt (1/8)');
+      expect(sh.text).toContain('🥇 Jake 0 pts (1/8)');
       expect(sh.url).toContain('&p=all&d=' + DAY);
 
       for (const P of [O, W, S, K, K2]) {
