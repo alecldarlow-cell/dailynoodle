@@ -10,7 +10,8 @@ module.exports = defineConfig({
   expect: { timeout: 5000, toHaveScreenshot: { maxDiffPixelRatio: 0.002, animations: 'disabled' } },
   fullyParallel: false,
   workers: process.env.DN_TEST_WORKERS ? Number(process.env.DN_TEST_WORKERS) : (process.env.CI ? 2 : 1),
-  retries: 0,
+  // One retry in CI (Alec, 4 Nov 2026): a test that fails then passes is reported as flaky, never passed silently (ci-annotate.js).
+  retries: process.env.CI ? 1 : 0,
   forbidOnly: !!process.env.CI,
   reporter: [['list'], ['html', { open: 'never',outputFolder:group?'playwright-report/'+group:'playwright-report' }], ['json', { outputFile: output+'/playwright.json' }]],
   use: { headless: true, locale: 'en-GB', timezoneId: 'Europe/London', trace: 'retain-on-failure', screenshot: 'only-on-failure', // Chromium can't resolve the live database (see NO_LIVE_DB in tools/tests/harness.js); Firefox/WebKit rely on newPhone()'s rewrite.

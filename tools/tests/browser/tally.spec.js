@@ -36,7 +36,11 @@ test('TALLY-E2E-01: start card, real taps, notes, a conflict, resume after a rel
  const clock=await p.locator('#timer').textContent();expect(clock).not.toBe('0:00');
  // an unfinished board is kept: reload shows the start card again, Play brings the entries and the clock back
  await p.reload();await H.wait(p,1500);
- await expect(p.locator('.dn-start')).toBeVisible();await expect(p.locator('#timer')).toHaveText(clock);
+ await expect(p.locator('.dn-start')).toBeVisible();
+ // the clock runs until the page goes, so it may have moved on a moment from the reading above; it must never go back or reset
+ const toS=t=>{const [m,s]=t.split(':').map(Number);return m*60+s;};
+ await expect.poll(async()=>toS(await p.locator('#timer').textContent())).toBeGreaterThanOrEqual(toS(clock));
+ expect(toS(await p.locator('#timer').textContent())).toBeLessThanOrEqual(toS(clock)+5);
  await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
  await expect(cell(p,1).locator('.val')).toHaveText(String(d0));
  await expect(p.locator('#msg')).toContainText('Carrying on');

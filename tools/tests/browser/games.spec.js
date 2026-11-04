@@ -65,6 +65,8 @@ test('DOTS-01: a death tap cannot skip results; a deliberate later tap retries',
 });
 test('GLASS-01: result tap guard and shelf Back preserve the result',async({phone})=>{
  await game(phone,games.find(g=>g.id==='glass'));const p=phone.p;await H.tap(p,p.locator('#go'));
+ // hold the clock still: on a busy machine the 450 ms guard could otherwise expire before the click lands
+ await p.clock.pauseAt(await p.evaluate(()=>Date.now())+1000);
  await p.evaluate(()=>window.__dg.end(true));await expect(p.locator('#card')).toHaveClass(/settling/);
  const link=p.locator('#eShelf');const r=await link.boundingBox();await p.mouse.click(r.x+r.width/2,r.y+r.height/2);
  await expect(p.locator('#card h2')).not.toHaveText('Collection shelf');
@@ -97,6 +99,8 @@ test('GAME-SHARE-01: a won round offers Share score with the line and short link
  await p.evaluate(()=>window.__dg.end(true));
  const pill=p.locator('.dngs.on');await expect(pill).toBeVisible({timeout:5000});
  await expect(p.locator('.dngs .lab')).toHaveText('Share score');
+ // the pill slides up into place: measure it once it has landed, not mid-slide
+ await expect.poll(async()=>{const b=await pill.boundingBox();return b.y+b.height;}).toBeLessThanOrEqual(await p.evaluate(()=>innerHeight));
  const box=await pill.boundingBox(),vw=await p.evaluate(()=>innerWidth),vh=await p.evaluate(()=>innerHeight);
  expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(vw);expect(box.y+box.height).toBeLessThanOrEqual(vh);expect(box.height).toBeLessThan(70);
  await H.tap(p,p.locator('.dngs .go'));await H.wait(p,300);
