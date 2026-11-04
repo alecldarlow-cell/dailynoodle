@@ -1,53 +1,53 @@
 {
- "today": "2026-11-03",
+ "today": "2026-11-04",
  "items": [
   {
    "type": "mini",
-   "id": "DP·MINI·0115",
-   "name": "Mini 115",
-   "path": "reports/2026-11-03-crossword-mini-0115.html"
+   "id": "DP·MINI·0116",
+   "name": "Mini 116",
+   "path": "reports/2026-11-04-crossword-mini-0116.html"
   },
   {
    "type": "doku",
-   "id": "DP·LEXI·0113",
-   "name": "Doku 113",
-   "path": "reports/2026-11-03-logic-doku-0113.html"
+   "id": "DP·LEXI·0114",
+   "name": "Doku 114",
+   "path": "reports/2026-11-04-logic-doku-0114.html"
   },
   {
    "type": "sweep",
-   "id": "DP·SWEEP·2026-11-03",
-   "name": "Sweep 110",
-   "path": "reports/2026-11-03-logic-sweep.html"
+   "id": "DP·SWEEP·2026-11-04",
+   "name": "Sweep 111",
+   "path": "reports/2026-11-04-logic-sweep.html"
   },
   {
    "type": "path",
-   "id": "DP·PATH·0108",
-   "name": "Path 108",
-   "path": "reports/2026-11-03-logic-path-0108.html"
+   "id": "DP·PATH·0109",
+   "name": "Path 109",
+   "path": "reports/2026-11-04-logic-path-0109.html"
   },
   {
    "type": "link",
-   "id": "DP·LINK·0087",
-   "name": "Link 87",
-   "path": "reports/2026-11-03-word-link-0087.html"
+   "id": "DP·LINK·0088",
+   "name": "Link 88",
+   "path": "reports/2026-11-04-word-link-0088.html"
   },
   {
    "type": "tangle",
-   "id": "DP·TANG·0028",
-   "name": "Tangle 28",
-   "path": "reports/2026-11-03-word-tangle-0028.html"
+   "id": "DP·TANG·0029",
+   "name": "Tangle 29",
+   "path": "reports/2026-11-04-word-tangle-0029.html"
   },
   {
    "type": "borders",
-   "id": "DP·BORD·0030",
-   "name": "Borders 30",
-   "path": "reports/2026-11-03-geo-borders-0030.html"
+   "id": "DP·BORD·0031",
+   "name": "Borders 31",
+   "path": "reports/2026-11-04-geo-borders-0031.html"
   },
   {
    "type": "reckon",
-   "id": "DP·RECK·0015",
-   "name": "Reckon 15",
-   "path": "reports/2026-11-03-quiz-reckon-0015.html"
+   "id": "DP·RECK·0016",
+   "name": "Reckon 16",
+   "path": "reports/2026-11-04-quiz-reckon-0016.html"
   }
  ]
 }
