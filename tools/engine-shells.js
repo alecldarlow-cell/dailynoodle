@@ -88,6 +88,12 @@ const TYPES = {
     data: /\nconst PUZZLE=(\{[^\n]*\});\n/,
     dataDecl: '\nconst PUZZLE=window.DN_PUZZLE;\n',
   },
+  // Tally: thin from birth too (tools/build-tally-batch.js).
+  tally: {
+    match: /^\d{4}-\d{2}-\d{2}-logic-tally-\d+\.html$/,
+    data: /\nconst PUZZLE=(\{[^\n]*\});\n/,
+    dataDecl: '\nconst PUZZLE=window.DN_PUZZLE;\n',
+  },
 };
 
 const STYLE = /<style>([\s\S]*?)<\/style>/;

@@ -1,7 +1,7 @@
 'use strict';
 const {test,expect,H,goto}=require('./support');
 const {TYPES,addDay}=require('../../publishing-health');
-const ids={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK'};
+const ids={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK',tally:'TALLY'};
 const today='2026-10-19';
 const list={today,items:Object.entries(TYPES).map(([type,slug])=>({type,id:'DP·'+ids[type]+'·0001',path:'reports/'+today+'-'+slug+'-0001.html'}))};
 const stock={version:1,today,builtAt:today+'T10:00:00Z',runId:'100',days:Object.fromEntries([1,2,3].map(n=>[addDay(today,n),{counts:Object.fromEntries(Object.keys(TYPES).map(t=>[t,1])),blocked:[]}]))};
@@ -24,11 +24,11 @@ async function fixtures(phone){
 }
 test('ADMIN-PUBLISH: live files, future stock and release states remain independent; refresh reports failures',async({phone})=>{
  await auth(phone);const state=await fixtures(phone);await phone.p.setViewportSize({width:360,height:780});await goto(phone,'admin.html');
- const p=phone.p;await expect(p.locator('#pubLive')).toContainText('8/8 puzzle files responding');
+ const p=phone.p;await expect(p.locator('#pubLive')).toContainText('9/9 puzzle files responding');
  await expect(p.locator('#pubStock')).toContainText('3 complete future days');await expect(p.locator('#pubStock')).toContainText('23 Oct 2026');
  await expect(p.locator('#pubRelease')).toContainText('In progress');await expect(p.locator('#pubRelease')).toContainText('19 Oct 2026');
  // Overview shows the checks as one line (20 Oct 2026 tabs layout); 3 days of stock is a warning.
- await expect(p.locator('#pubLine')).toHaveClass(/warn/);await expect(p.locator('#pubLine')).toContainText('Only 3 days of puzzle stock');await expect(p.locator('#pubLine')).toContainText('8 of 8 puzzles live');
+ await expect(p.locator('#pubLine')).toHaveClass(/warn/);await expect(p.locator('#pubLine')).toContainText('Only 3 days of puzzle stock');await expect(p.locator('#pubLine')).toContainText('9 of 9 puzzles live');
  await p.locator('#pubLine').click();await expect(p.locator('#publishing')).toBeVisible();await expect(p.getByRole('tab',{name:'Publishing'})).toHaveAttribute('aria-selected','true');
  await p.getByRole('button',{name:'Settings'}).click();await p.getByRole('button',{name:'7 days',exact:true}).click();await p.keyboard.press('Escape');
  await expect(p.locator('#publishing')).toBeVisible();expect(state.calls.filter(x=>x==='GET github')).toHaveLength(1);
@@ -37,7 +37,7 @@ test('ADMIN-PUBLISH: live files, future stock and release states remain independ
  await p.locator('#publishing').screenshot({path:'test-results/admin-publishing-phone.png'});
  await p.setViewportSize({width:1120,height:850});await p.locator('#publishing').screenshot({path:'test-results/admin-publishing-desktop.png'});
  state.phase='problem';await p.locator('#pubCheck').click();
- await expect(p.locator('#pubLive')).toContainText('7/8 puzzle files responding');await expect(p.locator('#pubStock')).toContainText('out of date');await expect(p.locator('#pubRelease')).toContainText('GitHub status not confirmed');
+ await expect(p.locator('#pubLive')).toContainText('8/9 puzzle files responding');await expect(p.locator('#pubStock')).toContainText('out of date');await expect(p.locator('#pubRelease')).toContainText('GitHub status not confirmed');
  await expect(p.locator('#pubLine')).toHaveClass(/bad/);await expect(p.locator('#pubLine')).toContainText('1 of today’s puzzles not responding');
  expect(state.calls.every(c=>/^(GET|HEAD) /.test(c))).toBe(true);expect(phone.errors).toEqual([]);
 });

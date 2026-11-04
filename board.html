@@ -603,7 +603,7 @@
     h += settings(L, d);
     $app.innerHTML = h;
   }
-  /* ---------- all eight puzzles (24 Oct 2026): the day and its Monday-to-Sunday week ---------- */
+  /* ---------- all nine puzzles (24 Oct 2026): the day and its Monday-to-Sunday week ---------- */
   function pts(n) { return n + (n === 1 ? ' pt' : ' pts'); }
   function allRow(r, of) {
     return '<li class="row' + (r.me ? ' me' : '') + '"><span class="rk' + (MEDAL[r.rank] ? ' medal' : '') + '">' + (MEDAL[r.rank] || r.rank) + '</span>' +
@@ -621,7 +621,7 @@
   }
   function renderOverall(L, d) {
     var h = topCard(L);
-    h += dayBar('🏆 All eight puzzles · ' + longDay(S.date), d.first || S.date);
+    h += dayBar('🏆 All nine puzzles · ' + longDay(S.date), d.first || S.date);
     if (!d.day.length) h += '<p class="nobody">Nobody in ' + esc(L.name) + ' has played ' + (S.date === NB.today() ? 'yet today' : 'on this day') + '.</p>';
     else h += '<ol class="rows">' + d.day.map(function (r) { return allRow(r, 8); }).join('') + '</ol>';
     if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {

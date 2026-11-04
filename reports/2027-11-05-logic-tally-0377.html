@@ -1,0 +1,71 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="dn:headline"   content="Tally 0377">
+<meta name="dn:standfirst" content="Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.">
+<meta name="dn:topic"      content="Logic">
+<meta name="dn:date"       content="2027-11-05">
+<meta name="dn:kind"       content="puzzle">
+<meta name="dn:read"       content="~2 min">
+<meta name="dn:thumb"      content="assets/tally-thumb.svg">
+<meta name="theme-color" content="#2E5BFF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tally">
+<title>Tally — Noodle Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../engines/tally.css">
+</head>
+<body>
+<div class="app" id="app">
+<header>
+  <div class="masthead">
+    <div class="mono-mark">DP</div>
+    <div class="mh-text">
+      <div class="mh-name">Noodle<span class="accent">Puzzles</span></div>
+      <div class="mh-eyebrow">Tally</div>
+    </div>
+  </div>
+  <div class="streakbox">🔥 <b id="streakn">0</b></div>
+</header>
+<div class="meta">
+  <span class="tag">Tally</span>
+  <span id="pid">DP·TALLY·0377</span>
+  <span>·</span>
+  <span id="pband">medium</span>
+  <span id="timer">0:00</span>
+</div>
+<main>
+  <div class="grid" id="grid" role="grid" aria-label="Tally board"></div>
+  <div class="pad">
+    <div class="keys" id="keys"></div>
+    <div class="tools">
+      <button id="notesBtn" type="button" aria-pressed="false">Notes</button>
+      <button id="eraseBtn" type="button">Erase</button>
+      <button id="undoBtn" type="button">Undo</button>
+    </div>
+    <p class="msg" id="msg">Tap a square, then a number.</p>
+  </div>
+</main>
+<footer>SHELL — Tally v1 · DP·TALLY·0377 · verified in code, not by eye</footer>
+</div>
+
+<div class="modal" id="modal"><div class="modalcard">
+  <h2>Solved</h2>
+  <div class="sub" id="modalsub">DP·TALLY·0377 · MEDIUM</div>
+  <div class="statrow">
+    <div class="stat"><b id="statTime">0:00</b><span>Time</span></div>
+    <div class="stat"><b id="statStreak">0</b><span>Streak</span></div>
+  </div>
+  <div class="modalbtns">
+    <button id="shareBtn">Share result</button>
+    <button class="primary" id="closeBtn">Nice</button>
+  </div>
+</div></div>
+
+<script>
+/* This puzzle's data. The player is ../engines/tally.js, shared by every tally. */
+window.DN_PUZZLE={type:"tally",id:"DP·TALLY·0377",band:"medium",n:4,cages:[{c:[0,4],op:"-",t:1},{c:[3,7,11,15],op:"+",t:10},{c:[1,2],op:"+",t:4},{c:[6,10,14],op:"*",t:8},{c:[8,12,13],op:"+",t:5},{c:[5,9],op:"+",t:7}],sol:"4132342123141243"};
+</script>
+<script src="../engines/tally.js"></script>
+</body></html>

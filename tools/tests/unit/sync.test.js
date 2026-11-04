@@ -257,3 +257,16 @@ test('SYNC-REV-07: the new path keeps the same keys, sizes and counts, and refus
     assert.deepEqual(await pullRev(d, A), before);
   } finally { await d.close(); }
 });
+
+// TALLY-SYNC: toolchain/sql/2026-11-04-tally-sync.sql
+test('TALLY-SYNC: the Tally save and streak keys are accepted, other keys are still refused', async () => {
+  // GIVEN the sync schema with the Tally migration
+  const d = await db();
+  await d.exec(fs.readFileSync(path.join(__dirname, '../../../toolchain/sql/2026-11-04-tally-sync.sql'), 'utf8'));
+  try {
+    const put = key => d.query("insert into sync.saves (user_id, key, doc) values ($1, $2, '{}'::jsonb)", [A, key]);
+    // WHEN each key is saved THEN Tally's two go in and the unknown one is refused
+    await put('digi-tally-v1'); await put('digi-tally-streak');
+    await assert.rejects(() => put('digi-other-v1'), /sync_key_allowed/);
+  } finally { await d.close(); }
+});

@@ -14,7 +14,8 @@ test('specific titles and rules describe the eight actual games',()=>{
   link:'Link 101 — Daily Word Groups Puzzle | Daily Noodle',
   tangle:'Tangle 101 — Daily Word Finding Puzzle | Daily Noodle',
   borders:'Borders 101 — Daily Country Outline Quiz | Daily Noodle',
-  reckon:'Reckon 101 — Daily Number Estimation Quiz | Daily Noodle'
+  reckon:'Reckon 101 — Daily Number Estimation Quiz | Daily Noodle',
+  tally:'Tally 101 — Daily Number Logic Puzzle | Daily Noodle'
  };
  for(const [type,title] of Object.entries(titles)){
   const meta=puzzleMeta(puzzle(type,101));

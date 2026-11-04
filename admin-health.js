@@ -4,10 +4,10 @@
  else {root.dnPublishingHealth=api;api.mount();}
 })(typeof globalThis==='object'?globalThis:this,function(){
  'use strict';
- const TYPES=['mini','doku','sweep','path','link','tangle','borders','reckon'];   // Reckon from 20 Oct 2026
- const NAMES={mini:'Mini',doku:'Doku',sweep:'Sweep',path:'Path',link:'Link',tangle:'Tangle',borders:'Borders',reckon:'Reckon'};
- const SLUGS={mini:'crossword-mini',doku:'logic-doku',sweep:'logic-sweep',path:'logic-path',link:'word-link',tangle:'word-tangle',borders:'geo-borders',reckon:'quiz-reckon'};
- const IDS={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK'};
+ const TYPES=['mini','doku','sweep','path','link','tangle','borders','reckon','tally'];   // Reckon from 20 Oct 2026, Tally from 5 Nov 2026
+ const NAMES={mini:'Mini',doku:'Doku',sweep:'Sweep',path:'Path',link:'Link',tangle:'Tangle',borders:'Borders',reckon:'Reckon',tally:'Tally'};
+ const SLUGS={mini:'crossword-mini',doku:'logic-doku',sweep:'logic-sweep',path:'logic-path',link:'word-link',tangle:'word-tangle',borders:'geo-borders',reckon:'quiz-reckon',tally:'logic-tally'};
+ const IDS={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK',tally:'TALLY'};
  const REPO='https://github.com/alecldarlow-cell/dailynoodle';
  const API='https://api.github.com/repos/alecldarlow-cell/dailynoodle/actions/workflows/build-feed.yml/runs?per_page=20';
  const day=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());

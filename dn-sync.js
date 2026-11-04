@@ -42,7 +42,7 @@
   var SRI = 'sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok';
   var AUTH = 'noodle-sync-auth';   // the signed-in session (supabase-js storageKey); dn-track.js checks it
   var LAST = 'noodle-sync-last';   // when this browser last synced, for the card
-  var SYNC_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon)-(v1|streak)$/;
+  var SYNC_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon|tally)-(v1|streak)$/;
   var BOARD = 'noodle-board-v1';
   var ON_BOARD = /\/board\.html$/.test(location.pathname);
 

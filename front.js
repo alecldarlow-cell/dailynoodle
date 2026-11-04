@@ -128,7 +128,7 @@
   }
 
   var PUZZLE_TYPES = [['mini','Mini'],['doku','Doku'],['sweep','Sweep'],['path','Path'],
-                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally']];   // tally: Lab from 3 Nov 2026
+                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally']];
   var TYPE_LABEL = {}, TYPE_RANK = {};
   PUZZLE_TYPES.forEach(function(t, i){ TYPE_LABEL[t[0]] = t[1]; TYPE_RANK[t[1]] = i; });
   function puzzleType(it){
@@ -423,8 +423,8 @@
      Consecutive London days with at least one puzzle finished, from the
      players' own saves; the same count the finish sheet shows. */
   function showRun(){
-    var KEYS = ['digi-mini-v1','digi-doku-v1','digi-sweep-v1','digi-path-v1','digi-link-v1','digi-tangle-v1','digi-borders-v1','digi-reckon-v1'],
-        STREAKS = ['digi-mini-streak','digi-doku-streak','digi-link-streak','digi-sweep-streak','digi-path-streak'], days = {};
+    var KEYS = ['digi-mini-v1','digi-doku-v1','digi-sweep-v1','digi-path-v1','digi-link-v1','digi-tangle-v1','digi-borders-v1','digi-reckon-v1','digi-tally-v1'],
+        STREAKS = ['digi-mini-streak','digi-doku-streak','digi-link-streak','digi-sweep-streak','digi-path-streak','digi-tally-streak'], days = {};
     function read(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
     KEYS.forEach(function(k){ var s = read(k); if (s && s.done) for (var id in s.done) { var d = s.done[id] && (s.done[id].d || s.done[id].on); if (d) days[d] = 1; } });
     STREAKS.forEach(function(k){ var s = read(k); if (s && Array.isArray(s.dates)) s.dates.forEach(function(d){ days[d] = 1; }); });
@@ -450,7 +450,7 @@
      Alec's call, from a player's request and mock A: a card you've finished
      carries a tick on its tile and your result ("Solved in 1:42", "650
      points · 7/10") where its duration was; a round you've started and not finished
-     (Tangle, Borders and Reckon only: the other five keep nothing until the
+     (Tangle, Borders, Reckon and Tally only: the other five keep nothing until the
      end) carries a marigold dot and "In progress". Read-only, from the
      players' own saves, matched by the puzzle id build-feed.js puts on each
      card (a feed cached from before has none, so no marks). Added after the
@@ -501,7 +501,7 @@
     if(r) return { done:true, lost: typeof r === 'object' && (r.o === 'loss' || r.o === 'gave'), text: (typeof r === 'object' && resultText(it.type, r)) || 'Played' };
     var d = s.days && s.days[it.id];
     if(it.type === 'tangle' && d && (d.state === 'playing' || d.state === 'suspended')) return { done:false };
-    if((it.type === 'borders' || it.type === 'reckon') && s.cur && s.cur.id === it.id) return { done:false };
+    if((it.type === 'borders' || it.type === 'reckon' || it.type === 'tally') && s.cur && s.cur.id === it.id) return { done:false };
     return null;
   }
   function showPlayed(){

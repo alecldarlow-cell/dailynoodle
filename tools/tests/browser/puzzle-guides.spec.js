@@ -1,7 +1,7 @@
 'use strict';
 const {test,expect,H,goto}=require('./support');
-const types=['mini','doku','sweep','path','link','tangle','borders','reckon'];
-const names=['Mini','Doku','Sweep','Path','Link','Tangle','Borders','Reckon'];
+const types=['mini','doku','sweep','path','link','tangle','borders','reckon','tally'];
+const names=['Mini','Doku','Sweep','Path','Link','Tangle','Borders','Reckon','Tally'];
 const fixture={built:'2026-10-19T12:00:00Z',items:types.map((type,i)=>({
  kind:'puzzle',type,headline:names[i]+' 1',standfirst:'A daily puzzle to work out.',
  topic:i===0?'Crossword':'Logic',date:'2026-10-19',read:'~3 min',
@@ -16,7 +16,7 @@ test('GUIDES: card date, duration and separate help target at '+width+' '+scheme
  // Include a long archive date and an old feed without a type field.
  const items=fixture.items.map(x=>({...x}));items[3].date='2026-09-03';items[3].read='~10 min';delete items[3].type;
  await feed(phone,items);await goto(phone,'puzzles.html');
- await expect(p.locator('#feed .card-guide')).toHaveCount(8);
+ await expect(p.locator('#feed .card-guide')).toHaveCount(9);
  for(let i=0;i<types.length;i++){
   const row=p.locator('#feed > li').nth(i);
   await expect(row.locator('.card-time')).toHaveText(i===3?'~10 min':'~3 min');
@@ -84,9 +84,9 @@ test('GUIDES: readable rules and real hash links even without the guide script',
  await goto(phone,'puzzles.html');
  await phone.p.getByRole('link',{name:'How to play',exact:true}).click();
  await expect(phone.p).toHaveTitle('How to play our daily puzzles — The Daily Noodle');
- await expect(phone.p.locator('meta[name="description"]')).toHaveAttribute('content',/Mini, Doku, Sweep, Path, Link, Tangle, Borders and Reckon/);
+ await expect(phone.p.locator('meta[name="description"]')).toHaveAttribute('content',/Mini, Doku, Sweep, Path, Link, Tangle, Borders, Reckon and Tally/);
  await expect(phone.p.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(0);
- await expect(phone.p.locator('.guide-panel:visible')).toHaveCount(8);
+ await expect(phone.p.locator('.guide-panel:visible')).toHaveCount(9);
  await expect(phone.p.locator('link[rel="canonical"]')).toHaveAttribute('href','https://dailynoodle.co.uk/how-to-play.html');
  for(const type of types){
   await expect(phone.p.locator('#'+type+' ol li')).toHaveCount(3);

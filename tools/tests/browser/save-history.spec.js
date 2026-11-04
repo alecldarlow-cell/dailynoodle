@@ -31,6 +31,19 @@ for(const type of ['borders','tangle'])test('SAVE-TABS: '+type+' retains both re
  }finally{await ctx.close();}
 });
 
+// Tally keeps results through dnCore.putDone: a tab that read the save before another finished can't lose either result.
+test('SAVE-TABS: tally retains both results from tabs opened before either finishes',async({browser})=>{
+ const files=['2026-11-05-logic-tally-0012.html','2026-11-06-logic-tally-0013.html'],time='2026-11-06T12:00:00Z';
+ const ctx=await H.newPhone(browser);
+ try{
+  const a=await H.open(browser,files[0],{ctx,time}),b=await H.open(browser,files[1],{ctx,time});
+  await play.tally(a.p);await play.tally(b.p);
+  const save=await b.p.evaluate(()=>JSON.parse(localStorage.getItem('digi-tally-v1')));
+  expect(Object.keys(save.done).sort()).toEqual(['DP·TALLY·0012','DP·TALLY·0013']);
+  expect(a.p.errs).toEqual([]);expect(b.p.errs).toEqual([]);
+ }finally{await ctx.close();}
+});
+
 // Reckon (20 Oct 2026) saves through the same dn-core saveProgress/mergeProgress
 // path. Fails against an engine whose persist() writes its in-memory save
 // without the merge: the second tab drops the first tab's result.

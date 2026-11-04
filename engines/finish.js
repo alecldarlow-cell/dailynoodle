@@ -118,7 +118,7 @@
    The Daily Noodle: the shared finish sheet, used by every puzzle engine.
    (18 Oct 2026. Design approved by Alec from the mocks; see SITE.md.)
 
-   One anatomy for all eight types (AF-019, 29 Oct 2026): the result (label,
+   One anatomy for all nine types (AF-019, 29 Oct 2026): the result (label,
    one big score, the day streak, a note), one Share result button, the
    league line, Play the next puzzle, the type's own recap (first when the
    round wasn't solved), then a footer with the countdown.
@@ -164,7 +164,7 @@
   'use strict';
   var queued = (window.dnFinish && window.dnFinish.q) || [];
 
-  var ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon'];
+  var ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon', 'tally'];
   var SAVE = { mini: 'digi-mini-v1', doku: 'digi-doku-v1', sweep: 'digi-sweep-v1', path: 'digi-path-v1',
                link: 'digi-link-v1', tangle: 'digi-tangle-v1', borders: 'digi-borders-v1', reckon: 'digi-reckon-v1', tally: 'digi-tally-v1' };
   var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally' };
@@ -328,12 +328,12 @@
   }
 
   /* ---------- the celebration jingle (AF-013, 29 Oct 2026) ----------
-     Mini, Doku, Sweep, Path and Link play one short jingle on a fresh win only: never when a finished
+     Mini, Doku, Sweep, Path, Link and Tally play one short jingle on a fresh win only: never when a finished
      puzzle is reopened (the engine adds the tracker's "on" only on a real finish, so that is the signal).
      Web Audio, no files. Each note is the same tone() the Tangle/Borders/Reckon engines use:
      an oscillator of `type` at f Hz from t s, gain 0.0001 → g over 12 ms, → 0.0001 at t + dur, stopped
      50 ms later. The app renders exactly these notes to a file (scripts/make-sounds.js), so keep them in step.
-     One switch for the five, "Sound" on their start card and this sheet, saved as dn-sound ("0" = off;
+     One switch for the six, "Sound" on their start card and this sheet, saved as dn-sound ("0" = off;
      on by default). Tangle, Borders and Reckon keep their own sounds and switches. */
   var JINGLE_TYPES = { mini: 1, doku: 1, sweep: 1, path: 1, link: 1, tally: 1 };
   var JINGLE = [[523.25, 0, 0.16, 'triangle', 0.12], [659.25, 0.09, 0.16, 'triangle', 0.12], [783.99, 0.18, 0.16, 'triangle', 0.12],
@@ -500,7 +500,7 @@
     var shareLabel = (cfg.share && cfg.share.label && cfg.share.label !== 'Share') ? cfg.share.label : 'Share result';
     var card = el('section', 'fin-share');
     var sq = shareHtml(tagged(cfg.share.text()));
-    var url = (cfg.share && cfg.share.url) || shortLink(cfg.type);   // a Lab type shares its page: it has no short link yet
+    var url = (cfg.share && cfg.share.url) || shortLink(cfg.type);   // a Lab type would share its page: it has no short link
     card.innerHTML = '<span class="fin-share-body fin-vh"><span class="fin-share-text">' + sq + '</span>' +
       '<span class="fin-share-url">' + esc(url) + '</span></span>' +
       '<button type="button" class="fin-pill fin-primary fin-share-btn"><span class="fin-share-icon">' + SHARE_ICON + '</span><span class="fin-share-label">' + esc(shareLabel) + '</span></button>' +

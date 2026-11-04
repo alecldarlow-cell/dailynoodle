@@ -149,7 +149,7 @@
 'use strict';
 
 const OFF = false;
-const VERSION = 'nn-2-health';
+const VERSION = 'nn-3-tally';
 const PAGES = 'nn-pages-' + VERSION;      // this site's files
 const FONTS = 'nn-fonts-' + VERSION;      // Google Fonts (stylesheets and font files)
 const MAX_ENTRIES = 400;                  // pages cache trimmed past this, oldest first
@@ -162,7 +162,7 @@ const CORE = [
   '/front.css', '/front.js', '/dn-track.js', '/dn-board.js', '/dn-sync.js',
   '/feed.json', '/puzzles-today.json', '/manifest.webmanifest',
   '/icons/favicon.svg', '/icons/favicon-32.png', '/icons/icon-192.png',
-  '/assets/borders-thumb.svg', '/assets/tangle-thumb.svg', '/assets/reckon-thumb.svg',
+  '/assets/borders-thumb.svg', '/assets/tangle-thumb.svg', '/assets/reckon-thumb.svg', '/assets/tally-thumb.svg',
   '/engines/finish.css', '/engines/finish.js', '/engines/house.css', '/engines/house.js'
 ];
 const NEVER = /^\/(admin\.html|admin-health\.js|publishing-health\.json|sw\.js)$/;

@@ -223,4 +223,14 @@ async function reckon(p, { wrong = [2, 5], stop = 10 } = {}) {
   await wait(p, 2500);
 }
 
-module.exports = { start, puzzle, boxOn, link, sweep, sweepHintState, sweepHintCheck, sweepProvable, sweepByHint, SWEEP_WRONG_FLAG, path, grid, tangle, borders, reckon };
+/* Tally: Play, then every square through the keypad, from the page's own solution. */
+async function tally(p) {
+  await start(p);
+  const sol = await p.evaluate(() => window.DN_PUZZLE.sol);
+  for (let i = 0; i < sol.length; i++) {
+    await p.locator('#grid .cell').nth(i).dispatchEvent('pointerdown');
+    await p.locator('#keys button').nth(+sol[i] - 1).click();
+  }
+}
+
+module.exports = { tally, start, puzzle, boxOn, link, sweep, sweepHintState, sweepHintCheck, sweepProvable, sweepByHint, SWEEP_WRONG_FLAG, path, grid, tangle, borders, reckon };

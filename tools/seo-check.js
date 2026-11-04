@@ -42,7 +42,7 @@ function check(site){
  }
  if(fs.existsSync(path.join(site,'how-to-play.html'))){
   const guide=fs.readFileSync(path.join(site,'how-to-play.html'),'utf8');
-  for(const type of ['mini','doku','sweep','path','link','tangle','borders','reckon']){
+  for(const type of ['mini','doku','sweep','path','link','tangle','borders','reckon','tally']){
    const latest=(feed.items||[]).find(it=>it.kind==='puzzle'&&!it.badge&&it.type===type&&it.date===feed.today);
    if(latest&&!guide.includes('href="/'+latest.path+'?via=how-to-play"'))fail('guide has no direct daily link for '+type);
    if(!guide.includes('id="'+type+'"'))fail('missing guide section '+type);

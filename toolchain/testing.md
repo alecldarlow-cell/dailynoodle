@@ -67,6 +67,10 @@ The eight daily engines report failed completion/streak writes, and Borders/Tang
 
 Reckon (the daily of the Ballpark game, first day 20 October 2026) is covered at each layer: `unit/reckon.test.js` checks that the engine's load gate and `tools/build-reckon-batch.js`'s build gate agree on every Reckon in `reports/`, that both refuse tampered days (missing question, two from one pack, answer off its scale, hard opener, repeated fact, bad id, mismatched `dn:date`), that forthcoming days still match Ballpark's bank, and that scoring, gap wording, number formatting and the scale ladder are byte-for-byte Ballpark's; `content.js` gates the release window's Reckons with the build gate; the database test applies `toolchain/sql/2026-10-20-reckon-board.sql` (live board functions with Reckon) and its `RECKON-BOARD` case checks the 0–1,000 limit and ties broken by time; the puzzle suite's `finish:reckon`, `reckon:start-resume` and `reckon:streak-and-dark` play real rounds by touching the scale (with sensor jitter) on Reckon's own fake dates. Facts themselves are editorial: schemas cannot check them, so `toolchain/reckon-factcheck-ledger.json` records which have been checked against sources.
 
+## Tally, the ninth daily (5 Nov 2026)
+
+Tally is covered by `unit/tally.test.js` (generator, gate, the unbroken batch to Tally 433), `browser/tally.spec.js`, `finish:tally` in `run.js`, the shared phone, guide, save-tabs and save-notice specs, and `TALLY-BOARD` and `TALLY-SYNC` on PGlite.
+
 ## Test scheduling and evidence
 
 `tools/tests/plan.js` defines the complete required group inventory and its dependencies; `suite.js` runs it. Unit, database, content and build checks finish before parallel work starts. The first five groups are three puzzle shards plus source browser Games and Pages groups. Clock/date, worker, transformed-artifact and other short checks take the next available slot, so they no longer wait behind every source browser test. Optional nightly cross-browser work remains required when enabled. Every group is still awaited before publication. A failure stops dispatch and waits for active work before returning failure.

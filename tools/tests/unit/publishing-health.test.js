@@ -1,7 +1,7 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),os=require('node:os');
 const {snapshot,TYPES,addDay}=require('../../publishing-health'),{analyse,dailyList}=require('../../../admin-health');
-const ids={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK'};
+const ids={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK',tally:'TALLY'};
 const list=day=>({today:day,items:Object.entries(TYPES).map(([type,slug])=>({type,id:'DP·'+ids[type]+'·0001',path:'reports/'+day+'-'+slug+'-0001.html'}))});
 const fixture=t=>{const root=fs.mkdtempSync(path.join(os.tmpdir(),'publishing-'));fs.mkdirSync(path.join(root,'reports'));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));return root;};
 function put(root,date,type,serial=1,metaDate=date){
