@@ -4,7 +4,7 @@ The Publishing tab of `admin.html` checks three independent things. It starts af
 
 ## Today's live puzzles
 
-The browser requests the current `puzzles-today.json`, requires exactly one correctly typed/id'd URL for each puzzle type on today's London date (eight with Reckon from 20 Oct 2026; the type lists are `TYPES` in `admin-health.js` and `tools/publishing-health.js`), then makes a network HEAD request to each URL. A missing, stale, duplicate or unsafe list is not reported as healthy. The count means **files responding**, not a full play-through. These requests do not load the tracker or submit puzzle results.
+The browser requests the current `puzzles-today.json`, requires exactly one correctly typed/id'd URL for each puzzle type on today's London date (eight with Reckon from 20 Oct 2026, nine with Tally from 5 Nov 2026; the type lists are `TYPES` in `admin-health.js` and `tools/publishing-health.js`), then makes a network HEAD request to each URL. A missing, stale, duplicate or unsafe list is not reported as healthy. The count means **files responding**, not a full play-through. These requests do not load the tracker or submit puzzle results.
 
 `sw.js` bypasses cache for requests marked `publishing-check=1`, and never caches `admin-health.js` or `publishing-health.json`. A twelve-second timeout includes JSON response bodies. Requests that cannot be confirmed are shown explicitly; there is no cached green fallback. Checks and GitHub status are independent, so an API rate limit does not disguise a broken puzzle or turn a working site red by itself.
 

@@ -32,7 +32,9 @@ const F = {
   sweep: '2026-10-18-logic-sweep.html', path: '2026-10-18-logic-path-0092.html', path2: '2026-10-19-logic-path-0093.html',
   link: '2026-10-18-word-link-0071.html', tangle: '2026-10-18-word-tangle-0012.html', borders: '2026-10-18-geo-borders-0014.html',
   reckon: '2026-10-20-quiz-reckon-0001.html', reckon2: '2026-10-21-quiz-reckon-0002.html',
+  tally: '2026-11-05-logic-tally-0012.html',
 };
+const TALLY_DAY = '2026-11-05T12:00:00Z';   // Tally's first daily
 const RECKON_DAY = '2026-10-20T14:30:00Z', RECKON_DAY2 = '2026-10-21T14:30:00Z';   // Reckon's first two days (15:30 BST)
 let pass = 0, fail = 0;
 const ENGINE_NOW = process.env.DN_BROWSER || 'chromium';
@@ -376,6 +378,21 @@ const TESTS = {
     ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },
+  /* ---------- Tally: the ninth daily, from 5 Nov 2026 ---------- */
+  async 'finish:tally'(b) {
+    const ev = []; const { ctx, p } = await open(b, F.tally, { events: ev, time: TALLY_DAY });
+    await play.tally(p);
+    await sheetChecks(p, ev, { type: 'tally', boxId: 'modal', ids: ['winTitle', 'statTime', 'statStreak'],
+      shareRe: /^🧮 Tally #12 — \d:\d\d$/u,
+      endCheck: x => ok(x && x.outcome === 'solved' && x.secs >= 0, `tally: tracker read solved in ${x && x.secs}s`) });
+    ok(await text(p, '.fin-share-url') === 'dailynoodle.co.uk/tally', 'tally: shares the short link');
+    ok(await p.locator('.fin-tally i').count() === 16, 'tally: the board in the recap');
+    await shareClipboard(p, ctx, 'tally');
+    await reopen(p, ev, 'tally', 'modal');
+    ok(!p.errs.length, 'tally: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
+  },
+
   /* ---------- Reckon (20 Oct 2026): the daily of Ballpark ---------- */
   async 'finish:reckon'(b) {
     const ev = []; const { ctx, p } = await open(b, F.reckon, { events: ev, time: RECKON_DAY });

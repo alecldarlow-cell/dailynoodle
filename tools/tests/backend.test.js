@@ -419,3 +419,28 @@ test('ADMIN-01..04: dashboard refusals, one-page readers, excluded readers and t
       'p_ghosts has no default, so a two-argument call can only reach the wrapper');
   });
 });
+
+// TALLY-BOARD: toolchain/sql/2026-11-04-tally-board.sql. Tally is timed, fastest first, and starts on 5 Nov 2026.
+test('TALLY-BOARD: a timed puzzle from its first daily, ranked by fastest time; Lab days stay out', async () => {
+  // GIVEN a league on a day after Tally's first daily
+  const db = await boardDb({ today: '2026-11-06' });
+  try {
+    const q = async (sql, params = []) => (await db.query(sql, params)).rows;
+    const rpc = async (name, args) => (await q(`select public.${name}(${args.map((_, i) => '$'+(i+1)).join(',')}) as value`, args))[0].value;
+    const one = '00000000-0000-4000-8000-0000000000a1', two = '00000000-0000-4000-8000-0000000000a2';
+    const lg = await rpc('board_create', [one, 'Tally league', 'One']);
+    await rpc('board_join', [two, lg.code, 'Two']);
+    // WHEN both finish the same day and one posts a Lab day
+    const path = 'reports/2026-11-05-logic-tally-0012.html';
+    assert.equal(await rpc('board_submit', [one, path, 'solved', 200, null, null]), true);
+    assert.equal(await rpc('board_submit', [two, path, 'solved', 90, 999, 3]), true);
+    assert.equal(await rpc('board_submit', [one, 'reports/2026-11-04-logic-tally-0011.html', 'solved', 80, null, null]), false);
+    assert.equal(await rpc('board_submit', [one, 'reports/2026-11-03-logic-tally-0010.html', 'solved', 80, null, null]), false);
+    // THEN the fastest ranks first, stray score and mistakes aren't kept, and the Lab days never landed
+    const day = await rpc('board_day', [one, lg.code, 'tally', '2026-11-05']);
+    assert.deepEqual(day.ranked.map(r => [r.rank, r.nick, r.secs, r.score, r.mistakes]), [[1, 'Two', 90, null, null], [2, 'One', 200, null, null]]);
+    assert.equal((await q("select count(*)::int as n from board.results where ptype = 'tally'"))[0].n, 2);
+    // AND a solve in under 3 seconds is refused, as for the other timed types
+    await assert.rejects(() => rpc('board_submit', [one, 'reports/2026-11-06-logic-tally-0013.html', 'solved', 2, null, null]), /bad_result/);
+  } finally { await db.close(); }
+});

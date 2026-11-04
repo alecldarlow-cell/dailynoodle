@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><style>.b{fill:#EDEEF2}.c{fill:#FFFFFF}.s{fill:#FFD84D}.l{stroke:#141726;stroke-opacity:.16;stroke-width:1.5;fill:none}.k{stroke:#141726;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;fill:none}.i{fill:#141726}.o{fill:#2E5BFF}.t{font-family:Arial,Helvetica,sans-serif;font-weight:700}
+@media (prefers-color-scheme:dark){.b{fill:#11131A}.c{fill:#1E2130}.s{fill:#E5B93C}.l{stroke:#ECEEF4;stroke-opacity:.2}.k{stroke:#ECEEF4}.i{fill:#ECEEF4}.o{fill:#9DB8FF}}</style>
+<rect class="b" width="120" height="120"/><rect class="c" x="12" y="12" width="96" height="96" rx="6"/><rect class="s" x="60" y="84" width="24" height="24"/>
+<path class="l" d="M36 12V108M60 12V108M84 12V108M12 36H108M12 60H108M12 84H108"/>
+<path class="k" d="M18 12H102a6 6 0 0 1 6 6V102a6 6 0 0 1-6 6H18a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6ZM60 12V108M12 60H108"/>
+<text class="t i" x="17" y="29" font-size="13">12×</text><text class="t i" x="65" y="29" font-size="13">3÷</text><text class="t i" x="17" y="77" font-size="13">2−</text><text class="t i" x="65" y="77" font-size="13">7+</text>
+<text class="t o" x="72" y="104" font-size="22" text-anchor="middle">3</text>
+</svg>

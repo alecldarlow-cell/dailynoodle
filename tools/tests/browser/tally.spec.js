@@ -1,5 +1,5 @@
 'use strict';
-/* Tally (engines/tally.js; Lab pages reports/*-logic-tally-NNNN.html, 3 Nov 2026): the house start card, the
+/* Tally (engines/tally.js; reports/*-logic-tally-NNNN.html, built 3 Nov 2026, daily from 5 Nov 2026): the house start card, the
    board through real taps, an unfinished board kept across a reload, the shared finish sheet with the share
    line and Lab address, the saved record and streak, and a reopened puzzle that logs no second finish. */
 const {test,expect,H,goto}=require('./support');
@@ -51,8 +51,9 @@ test('TALLY-E2E-01: start card, real taps, notes, a conflict, resume after a rel
  await expect(sheet.locator('.fin-kick')).toHaveText('Tally 10');await expect(sheet.locator('.fin-title')).toHaveText('Solved');
  const secs=await p.evaluate(()=>document.getElementById('statTime').textContent);
  expect(await sheet.locator('.fin-share-text').textContent()).toBe('🧮 Tally #10 — '+secs);
- expect(await sheet.locator('.fin-share-url').textContent()).toBe('dailynoodle.co.uk/'+FILE);   // Lab: the page itself, not a short link
- await expect(sheet.locator('.fin-clock')).toContainText('In development');
+ expect(await sheet.locator('.fin-share-url').textContent()).toBe('dailynoodle.co.uk/tally');   // a daily: the short link, as the other types
+ await expect(sheet.locator('.fin-clock')).toContainText('New Tally in');
+ await expect(sheet.locator('.fin-clock')).not.toContainText('In development');
  await expect(sheet.locator('.fin-tally i')).toHaveCount(16);
  expect(await p.evaluate(()=>document.getElementById('modal').classList.contains('on'))).toBe(true);
  const save=await p.evaluate(()=>JSON.parse(localStorage.getItem('digi-tally-v1')));

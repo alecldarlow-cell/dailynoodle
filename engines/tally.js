@@ -1,6 +1,6 @@
 /* Digi Puzzles — tally engine. One copy serves every tally page in reports/.
-   Tally is a 4×4 calcudoku (KenKen-style), built 3 Nov 2026 for Lab on the
-   house chrome. The page supplies its puzzle as window.DN_PUZZLE before
+   Tally is a 4×4 calcudoku (KenKen-style), built 3 Nov 2026 on the house chrome,
+   a daily from 5 Nov 2026. The page supplies its puzzle as window.DN_PUZZLE before
    loading this file: {type:"tally", id:"DP·TALLY·0001", band, n:4,
    cages:[{c:[cell…], op:"+"|"-"|"*"|"/"|"=", t}], sol:"16 digits"}.
    Edit here to change every tally; keep element ids and localStorage keys
@@ -133,7 +133,7 @@ const OPS={'+':'+','-':'−','*':'×','/':'÷','=':''};
 const $=id=>document.getElementById(id);
 const gridEl=$("grid"),keysEl=$("keys"),msgEl=$("msg"),timerEl=$("timer");
 const meta=n=>{const m=document.querySelector('meta[name="'+n+'"]');return m?m.content:"";};
-const LAB=!!meta("dn:badge");   // in Lab the share carries the page's own address (no short link yet)
+const LAB=!!meta("dn:badge");   // an In development page shares its own address (every Tally is daily since 5 Nov 2026, so this is off)
 
 /* ---------- rules ---------- */
 function label(cg){return cg.op==='='?String(cg.t):cg.t+OPS[cg.op];}

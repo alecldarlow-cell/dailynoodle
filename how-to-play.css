@@ -24,5 +24,5 @@
 @media(min-width:560px){.guide-title{font-size:28px}.guide-heading h2{font-size:26px}}
 
 /* A selected guide needs only the shared footer divider. Without scripts,
-   keep separators between the eight consecutive sections. */
+   keep separators between the nine consecutive sections. */
 .guide-enhanced .guide-panel{border-bottom:0;padding-bottom:0;margin-bottom:0}

@@ -14,7 +14,7 @@
      A valid p (a daily type, all or records) and d (YYYY-MM-DD) go on to the board; anything else is dropped. */
   var q='',p='',d='';
   try{var u=new URLSearchParams(location.search);p=u.get('p')||'';d=u.get('d')||'';}catch(e){}
-  if(/^(mini|doku|sweep|path|link|tangle|borders|reckon|all|records)$/.test(p))q+='&p='+p;
+  if(/^(mini|doku|sweep|path|link|tangle|borders|reckon|tally|all|records)$/.test(p))q+='&p='+p;
   if(/^\d{4}-\d{2}-\d{2}$/.test(d))q+='&d='+d;
   location.replace(/^[A-Z0-9]{4,12}$/.test(c)?'board.html?join='+encodeURIComponent(c)+'&v=2'+q:'board.html');
 })();

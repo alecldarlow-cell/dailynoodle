@@ -11,11 +11,12 @@ const TYPES={
  link:{name:'Link',title:'Daily Word Groups Puzzle',rules:'Find four hidden groups of four among sixteen word tiles.'},
  tangle:{name:'Tangle',title:'Daily Word Finding Puzzle',rules:'Join touching letters to find as many words as you can in ninety seconds.'},
  borders:{name:'Borders',title:'Daily Country Outline Quiz',rules:'Identify ten countries from their outlines, with four answers to choose from.'},
- reckon:{name:'Reckon',title:'Daily Number Estimation Quiz',rules:'Estimate ten numbers from different topics. The closer you get, the more you score.'}
+ reckon:{name:'Reckon',title:'Daily Number Estimation Quiz',rules:'Estimate ten numbers from different topics. The closer you get, the more you score.'},
+ tally:{name:'Tally',title:'Daily Number Logic Puzzle',rules:'Fill the four by four grid with 1 to 4 so no row or column repeats and each cage makes its number.'}
 };
 const HUBS={
- 'index.html':{title:'Daily Noodle | News, Daily Puzzles & Browser Games',description:'Read sourced data journalism, play eight daily word, logic and geography puzzles, and explore quick browser games at The Daily Noodle.'},
- 'puzzles.html':{title:'Daily Puzzles: Crosswords, Words & Logic | Daily Noodle',description:'Play Mini crosswords, Doku, Sweep, Path, Link, Tangle, Borders and Reckon. Eight daily word, logic, geography and number puzzles, with a how-to guide.'},
+ 'index.html':{title:'Daily Noodle | News, Daily Puzzles & Browser Games',description:'Read sourced data journalism, play nine daily word, logic and geography puzzles, and explore quick browser games at The Daily Noodle.'},
+ 'puzzles.html':{title:'Daily Puzzles: Crosswords, Words & Logic | Daily Noodle',description:'Play Mini crosswords, Doku, Sweep, Path, Link, Tangle, Borders, Reckon and Tally. Nine daily word, logic, geography and number puzzles, with a how-to guide.'},
  'games.html':{title:'Browser Games: Arcade, Puzzles & Quizzes | Daily Noodle',description:'Play quick, replayable browser games at The Daily Noodle. Browse arcade games, puzzles and quizzes, and find a new favourite.'}
 };
 function puzzleMeta(item,dated=false){

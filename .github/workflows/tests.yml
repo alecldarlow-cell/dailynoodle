@@ -89,7 +89,7 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npx playwright install --with-deps webkit
-      - name: Puzzle suite in WebKit (all eight types to the finish screen)
+      - name: Puzzle suite in WebKit (all nine types to the finish screen)
         env:
           DN_TEST_GROUP: webkit-puzzles
         run: |

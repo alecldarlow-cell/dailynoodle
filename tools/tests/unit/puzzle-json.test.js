@@ -11,6 +11,7 @@ const FIXTURES = {
   sweep: '2026-10-18-logic-sweep.html', path: '2026-10-18-logic-path-0092.html',
   link: '2026-10-18-word-link-0071.html', tangle: '2026-10-18-word-tangle-0012.html',
   borders: '2026-10-18-geo-borders-0014.html', reckon: '2026-10-20-quiz-reckon-0001.html',
+  tally: '2026-11-05-logic-tally-0012.html',
 };
 
 // An independent reading of the page's script: run it as the browser would, with a window.

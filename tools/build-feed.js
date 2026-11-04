@@ -229,7 +229,7 @@ function puzzleMask(html, rel, warnings) {
   // object is confirmed to hold ten questions.
   // Reckon has no grid either: ten numbers to guess. Like Borders, its card uses the fixed dn:thumb
   // every Reckon file carries (assets/reckon-thumb.svg: the scale, never a day's numbers).
-  // Tally (3 Nov 2026): a 4×4 calcudoku; the tile is a 4x4 of chips, like Link's (its cages would spoil nothing, but the chips are the house tile)
+  // Tally: a 4×4 calcudoku. Its card uses the fixed dn:thumb every Tally file carries (assets/tally-thumb.svg, never a day's board); this mask is what the feed's mask field holds.
   if (/\bwindow\.DN_PUZZLE=\{type:"tally"/.test(html)) return '.'.repeat(16);
   if (/\bwindow\.DN_PUZZLE=\{id:"DP\u00b7RECK\u00b7/.test(html)) {
     const qs = (html.match(/"lo":/g) || []).length;
@@ -431,7 +431,7 @@ console.log(`feed.json written — ${items.length} item(s) live; today = ${TODAY
 // whole feed. One item per type, in the finish sheet's own order.
 {
   const TYPE_OF = { 'crossword-mini': 'mini', 'logic-doku': 'doku', 'logic-sweep': 'sweep', 'logic-path': 'path',
-                    'word-link': 'link', 'word-tangle': 'tangle', 'geo-borders': 'borders', 'quiz-reckon': 'reckon' };
+                    'word-link': 'link', 'word-tangle': 'tangle', 'geo-borders': 'borders', 'quiz-reckon': 'reckon', 'logic-tally': 'tally' };
   const today = [];
   for (const it of items) {
     if (it.kind !== 'puzzle' || it.date !== TODAY) continue;
@@ -443,7 +443,7 @@ console.log(`feed.json written — ${items.length} item(s) live; today = ${TODAY
     if (!id) { warnings.push(`puzzles-today: no puzzle id in ${it.path}`); continue; }
     today.push({ type, id, name: it.headline, path: it.path });
   }
-  const ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon'];
+  const ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon', 'tally'];
   today.sort((a, b) => ORDER.indexOf(a.type) - ORDER.indexOf(b.type));
   fs.writeFileSync(path.join(ROOT, 'puzzles-today.json'), JSON.stringify({ today: TODAY, items: today }, null, 1) + '\n');
   console.log(`puzzles-today.json written — ${today.length} puzzle(s) for ${TODAY}`);

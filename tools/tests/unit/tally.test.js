@@ -35,12 +35,13 @@ test('TALLY-02: the gate refuses what a player would call unfair', () => {
   assert.ok(B.boardFor(1, null).sol === p.sol, 'a serial always gives the same board');
 });
 
-test('TALLY-03: the pages are thin Lab puzzle pages on the engine', () => {
+test('TALLY-03: the pages are thin daily puzzle pages on the engine, none in Lab', () => {
   for (const e of B.existing()) {
     const html = fs.readFileSync(path.join(ROOT, 'reports', e.file), 'utf8');
     const meta = n => (html.match(new RegExp('<meta name="' + n + '"\\s+content="([^"]*)"')) || [])[1];
     assert.strictEqual(meta('dn:kind'), 'puzzle', e.file);
-    assert.strictEqual(meta('dn:badge'), 'In development', e.file);
+    assert.strictEqual(meta('dn:badge'), undefined, e.file);
+    assert.strictEqual(meta('dn:thumb'), 'assets/tally-thumb.svg', e.file);
     assert.strictEqual(meta('dn:topic'), 'Logic', e.file);
     assert.strictEqual(meta('dn:headline'), 'Tally ' + String(e.serial).padStart(4, '0'), e.file);
     assert.ok(/<script src="\.\.\/engines\/tally\.js"><\/script>/.test(html), e.file + ' loads the engine');
@@ -49,4 +50,26 @@ test('TALLY-03: the pages are thin Lab puzzle pages on the engine', () => {
   const engine = fs.readFileSync(path.join(ROOT, 'engines/tally.js'), 'utf8');
   assert.ok(/digi-tally-v1/.test(engine) && /digi-tally-streak/.test(engine), 'save keys');
   assert.ok(/dn-core:start/.test(engine), 'dn-core bundled (tools/sync-core.js)');
+});
+
+test('TALLY-04: the daily batch runs unbroken from Tally 1 to Tally 433 on 31 Dec 2027, with Tally 12 on 5 Nov 2026', () => {
+  // GIVEN the pages on disk WHEN they're listed by serial
+  const list = B.existing();
+  // THEN one page a day, no serial skipped, and the launch dates hold
+  assert.strictEqual(list.length, 433);
+  list.forEach((e, i) => {
+    assert.strictEqual(e.serial, i + 1, e.file);
+    if (i) assert.strictEqual(Date.parse(e.date) - Date.parse(list[i - 1].date), 864e5, e.file);
+  });
+  assert.strictEqual(list[10].date, '2026-11-04');
+  assert.strictEqual(list[11].date, '2026-11-05');
+  assert.strictEqual(list[432].date, '2027-12-31');
+  // AND the whole batch still passes its gate, seeds and no-repeat check
+  assert.deepStrictEqual(B.check(), []);
+});
+
+test('TALLY-05: --through never writes over an existing page', () => {
+  // GIVEN a date already covered WHEN the batch is run to it THEN nothing is written
+  assert.deepStrictEqual(B.writeThrough('2027-12-31'), []);
+  assert.throws(() => B.writeThrough('soon'), /needs a date/);
 });

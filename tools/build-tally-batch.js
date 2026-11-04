@@ -1,9 +1,8 @@
 'use strict';
 /* Tally pages: 4×4 calcudoku, one steady band, from tools/tally.js.
 
-     node tools/build-tally-batch.js --lab            # the ten Lab boards (DP·TALLY·0001–0010, 25 Oct–3 Nov 2026)
      node tools/build-tally-batch.js --check          # exit 1 if any Tally page in reports/ fails the gate or its DN_PUZZLE differs from its seed
-     node tools/build-tally-batch.js --through D      # (daily batches, later) continue from the newest page to date D
+     node tools/build-tally-batch.js --through D      # continue from the newest page to date D; never touches an existing page
 
    Every board: exactly one solution, finished by cage arithmetic, naked and
    hidden singles only (no naked pair, so no guess), 3–5 solver rounds, 5–7
@@ -14,7 +13,7 @@
 const fs = require('fs'), path = require('path');
 const T = require('./tally.js');
 const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports');
-const N = 4, LAB_FROM = '2026-10-25', LAB_COUNT = 10;
+const N = 4;
 const BAND = g => g.rounds >= 3 && g.rounds <= 5 && g.hidden <= 3 && g.pairs === 0;
 function shape(p) {
   const twos = p.cages.filter(c => c.c.length === 2).length, bigs = p.cages.filter(c => c.c.length >= 3).length;
@@ -36,7 +35,7 @@ function boardFor(serial, seen) {
   throw new Error('no board found for serial ' + serial);
 }
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-function page({ serial, date, board, lab }) {
+function page({ serial, date, board }) {
   const id = 'DP·TALLY·' + pad(serial), num = pad(serial);
   const stand = 'Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.';
   // a JS literal with bare keys, like every other type's DN_PUZZLE (the registry and feed read `id:"DP·…"`)
@@ -50,7 +49,8 @@ function page({ serial, date, board, lab }) {
 <meta name="dn:date"       content="${date}">
 <meta name="dn:kind"       content="puzzle">
 <meta name="dn:read"       content="~2 min">
-${lab ? '<meta name="dn:badge"      content="In development">\n' : ''}<meta name="theme-color" content="#2E5BFF">
+<meta name="dn:thumb"      content="assets/tally-thumb.svg">
+<meta name="theme-color" content="#2E5BFF">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -124,7 +124,7 @@ function readPage(file) {
   return require('vm').runInNewContext('(' + m[1] + ')', {}, { timeout: 200 });
 }
 function check() {
-  const errs = [], seen = new Set(), list = existing();
+  const errs = [], seen = new Set(), wanted = new Set(), list = existing();
   if (!list.length) errs.push('no Tally pages');
   for (const e of list) {
     const p = readPage(e.file);
@@ -132,19 +132,30 @@ function check() {
     const g = T.grade(p); if (g && g.pairs) errs.push(e.file + ' needs a naked pair');
     if (p.id !== 'DP·TALLY·' + pad(e.serial)) errs.push(e.file + ' id ' + p.id);
     const fp = T.fingerprint(p); if (seen.has(fp)) errs.push(e.file + ' repeats an earlier board'); seen.add(fp);
-    const want = boardFor(e.serial, null);
+    const want = boardFor(e.serial, wanted);   // in serial order, so a seed skipped as a repeat is skipped here too
     if (JSON.stringify(want.cages) !== JSON.stringify(p.cages) || want.sol !== p.sol) errs.push(e.file + ' differs from its seed');
     const html = fs.readFileSync(path.join(REPORTS, e.file), 'utf8');
     if (!html.includes('content="' + e.date + '"')) errs.push(e.file + ' dn:date mismatch');
+    if (/name="dn:badge"/.test(html)) errs.push(e.file + ' still carries a Lab badge');
   }
   return errs;
 }
-function writeLab() {
-  const seen = new Set(), out = [];
-  for (let k = 0; k < LAB_COUNT; k++) {
-    const serial = k + 1, date = addDay(LAB_FROM, k), board = boardFor(serial, seen);
-    const file = date + '-logic-tally-' + pad(serial) + '.html';
-    fs.writeFileSync(path.join(REPORTS, file), page({ serial, date, board, lab: true }));
+/* continue from the newest page to `through`: every existing board is re-read from disk and re-gated
+   first, so a new board can't repeat one (D4, cages and clues), and no existing file is written */
+function writeThrough(through) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(through)) throw new Error('--through needs a date, YYYY-MM-DD');
+  const list = existing(), seen = new Set(), out = [];
+  if (!list.length) throw new Error('no Tally pages to continue from');
+  for (const e of list) {
+    const p = readPage(e.file), errs = T.check(p);
+    if (errs.length) throw new Error(e.file + ': ' + errs.join('; '));
+    seen.add(T.fingerprint(p));
+  }
+  const last = list[list.length - 1];
+  for (let serial = last.serial + 1, date = addDay(last.date, 1); date <= through; serial++, date = addDay(date, 1)) {
+    const board = boardFor(serial, seen), file = date + '-logic-tally-' + pad(serial) + '.html';
+    const errs = T.check(board); if (errs.length) throw new Error(file + ': ' + errs.join('; '));
+    fs.writeFileSync(path.join(REPORTS, file), page({ serial, date, board }), { flag: 'wx' });
     out.push(file + ' r' + T.grade(board).rounds + ' ' + board.cages.map(T.label).join(' '));
   }
   return out;
@@ -152,8 +163,7 @@ function writeLab() {
 if (require.main === module) {
   const a = process.argv.slice(2);
   if (a.includes('--check')) { const errs = check(); if (errs.length) { console.error(errs.join('\n')); process.exit(1); } console.log('Tally: ' + existing().length + ' pages pass the gate and match their seeds'); }
-  else if (a.includes('--lab')) { console.log(writeLab().join('\n')); const errs = check(); if (errs.length) { console.error(errs.join('\n')); process.exit(1); } }
-  else if (a.includes('--through')) { console.error('daily batches: not yet (Tally is in Lab)'); process.exit(2); }
-  else { console.log('usage: --lab | --check | --through D'); process.exit(2); }
+  else if (a.includes('--through')) { const out = writeThrough(a[a.indexOf('--through') + 1]); console.log(out.length + ' pages written' + (out.length ? ', last ' + out[out.length - 1] : '')); const errs = check(); if (errs.length) { console.error(errs.join('\n')); process.exit(1); } }
+  else { console.log('usage: --check | --through D'); process.exit(2); }
 }
-module.exports = { boardFor, page, check, existing, readPage, BAND, shape };
+module.exports = { boardFor, page, check, existing, readPage, writeThrough, BAND, shape };

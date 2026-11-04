@@ -151,12 +151,13 @@
     { id: 'link',    tv: 'word-link',      name: 'Link',    emoji: '🔗' },
     { id: 'tangle',  tv: 'word-tangle',    name: 'Tangle',  emoji: '🧶' },
     { id: 'borders', tv: 'geo-borders',    name: 'Borders', emoji: '🌍' },
-    { id: 'reckon',  tv: 'quiz-reckon',    name: 'Reckon',  emoji: '🎯' }
+    { id: 'reckon',  tv: 'quiz-reckon',    name: 'Reckon',  emoji: '🎯' },
+    { id: 'tally',   tv: 'logic-tally',    name: 'Tally',   emoji: '🧮' }
   ];
   var BY_TV = {}, BY_ID = {};
   TYPES.forEach(function (t) { BY_TV[t.tv] = t; BY_ID[t.id] = t; });
   function typeOfPath(p) {
-    var m = String(p || '').match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|word-tangle|geo-borders|quiz-reckon)/);
+    var m = String(p || '').match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|word-tangle|geo-borders|quiz-reckon|logic-tally)/);
     return m ? BY_TV[m[1]] : null;
   }
   function dateOfPath(p) {
@@ -243,7 +244,7 @@
   function day(code, type, date) {
     return rpc('board_day', { p_player: pid(), p_code: code, p_type: type, p_date: date });
   }
-  function overall(code, date) {   // all eight puzzles: the day and its Monday-to-Sunday week
+  function overall(code, date) {   // all nine puzzles: the day and its Monday-to-Sunday week
     return rpc('board_overall', { p_player: pid(), p_code: code, p_date: date });
   }
   /* records and honours (25 Oct 2026): the league's best results ever, each player's honours and bests, and last
@@ -303,7 +304,8 @@
     { key: 'digi-sweep-v1',   code: 'SWEEP', t: 'sweep',   read: function (r) { return { outcome: r.o === 'win' ? 'solved' : r.o === 'loss' ? 'failed' : 'revealed', secs: r.s }; } },
     { key: 'digi-tangle-v1',  code: 'TANG',  t: 'tangle',  read: function (r) { return { outcome: 'scored', score: r.s }; } },
     { key: 'digi-borders-v1', code: 'BORD',  t: 'borders', read: function (r) { return { outcome: 'scored', score: r.p, secs: r.secs }; } },
-    { key: 'digi-reckon-v1',  code: 'RECK',  t: 'reckon',  read: function (r) { return { outcome: 'scored', score: r.p, secs: r.secs }; } }
+    { key: 'digi-reckon-v1',  code: 'RECK',  t: 'reckon',  read: function (r) { return { outcome: 'scored', score: r.p, secs: r.secs }; } },
+    { key: 'digi-tally-v1',   code: 'TALLY', t: 'tally',   read: function (r) { return { outcome: 'solved', secs: r.s }; } }
   ];
   function clock(v) {
     var m = String(v || '').match(/^(\d{1,4}):(\d{2})$/);
@@ -378,7 +380,7 @@
      without overwriting newer progress, and the board id is adopted (or, if
      that browser is already in a league as someone else, offered as a choice
      here). The link is the player's key, so the page calls it personal.   */
-  var PUZZLE_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon)-(v1|streak)$/;
+  var PUZZLE_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon|tally)-(v1|streak)$/;
   var GAME_BUDGET = 40000;   // characters of game saves; puzzle saves always go
   function b64e(s) {
     return btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');

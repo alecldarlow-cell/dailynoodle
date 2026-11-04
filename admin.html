@@ -742,9 +742,9 @@
   function feedList(){ return Object.keys(FEED).map(function(k){ return FEED[k]; }); }
   function title(path){ var f=FEED[path]; if(f) return f.headline; var m=String(path).replace(/^reports\//,'').replace(/\.html$/,'').replace(/^\d{4}-\d{2}-\d{2}-/,''); return m.replace(/-/g,' '); }
   function pubDate(path){ var f=FEED[path]; if(f&&f.date) return f.date; var m=String(path).match(/(\d{4}-\d{2}-\d{2})/); return m?m[1]:''; }
-  var TYPE_NAMES = {'crossword-mini':'Mini','logic-doku':'Doku','logic-path':'Path','logic-sweep':'Sweep','word-link':'Link','geo-borders':'Borders','word-tangle':'Tangle','quiz-reckon':'Reckon'};
-  var TYPE_ORDER = ['crossword-mini','logic-doku','logic-path','word-link','logic-sweep','word-tangle','geo-borders','quiz-reckon'];
-  function ptype(path){ var m=String(path).match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|geo-borders|word-tangle|quiz-reckon)/); return m?m[1]:''; }
+  var TYPE_NAMES = {'crossword-mini':'Mini','logic-doku':'Doku','logic-path':'Path','logic-sweep':'Sweep','word-link':'Link','geo-borders':'Borders','word-tangle':'Tangle','quiz-reckon':'Reckon','logic-tally':'Tally'};
+  var TYPE_ORDER = ['crossword-mini','logic-doku','logic-path','word-link','logic-sweep','word-tangle','geo-borders','quiz-reckon','logic-tally'];
+  function ptype(path){ var m=String(path).match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|geo-borders|word-tangle|quiz-reckon|logic-tally)/); return m?m[1]:''; }
   function isScoredType(t){ return /word-tangle|geo-borders|quiz-reckon/.test(t); }
 
   /* ---------------- sortable tables ---------------- */

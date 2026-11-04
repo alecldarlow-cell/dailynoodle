@@ -7,6 +7,7 @@ Written Tue 3 Nov 2026. Build runs **Thu 5 Nov 2026, 22:13 London** (scheduled t
 STATUS: GO
 
 ## Alec's decisions (3 Nov 2026)
+- **4 Nov 2026, Alec's message when the run started early:** first daily moved to **Thu 5 Nov 2026, Tally 12** (was Fri 6 Nov, Tally 13). Tally 11 fills 4 Nov (archive). The batch still ends at Tally 433 on 31 Dec 2027. Read 6 Nov / Tally 13 below as 5 Nov / Tally 12; merge the site before the 01:22 news run on Thu 5 Nov. Leagues start 5 Nov.
 - Tally becomes the ninth daily, on web and app, with puzzles to 31 Dec 2027.
 - **Numbering:** Tally 1–10 keep their ids and dates and move from Lab to Puzzles (no Lab cards remain). Tally 11–12 fill 4–5 Nov. Fri 6 Nov is **Tally 13**. The batch ends at **Tally 433 on 31 Dec 2027**.
 - **App:** native player, proved by replay; the web-view bridge is the fallback if the replay is not clean.
@@ -72,6 +73,8 @@ A safety check has refused this dispatch in a Claude session before (log, 27 Oct
 - Database: a dry `board_day` read for `tally` returns without error (SELECT only).
 - App: not provable on a phone from here. List what Alec should try on the Pixel.
 - A fresh-context checker subagent reviews the site and app diffs against this plan before each merge.
+
+- **Flaky tests can hold back the publish.** On 3 Nov, unrelated Yarn and Glass game tests (`yarn.spec.js`, `games.spec.js`) failed several scheduled Build feed runs and one docs-only PR, then passed on rerun. Don't treat a merge as live: watch Build feed until Tally 13 is on the deployed site. If a failure is only in tests unrelated to Tally, rerun the failed job once (never edit the test) and report it. A red check that touches Tally is a real failure.
 
 ### 6. Rollback
 - Site: revert the PR. Pages dated in the future stay held back, and removing wiring doesn't touch saves. Never change a page once its day has passed.
