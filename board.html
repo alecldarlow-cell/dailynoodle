@@ -632,7 +632,7 @@
     h += '<p class="sub">This week · ' + esc(weekLabel(d)) + '</p>';
     if (!d.week.length) h += '<p class="bnote">No results yet this week.</p>';
     else h += '<ol class="rows">' + d.week.map(function (r) { return allRow(r, weekDays(d)); }).join('') + '</ol>';
-    h += '<p class="bnote how">Each puzzle you finish scores 1 point, plus 1 for every player whose result on it was worse. ' +
+    h += '<p class="bnote how">Each puzzle you finish scores 1 point for every player you beat. ' +
          'Equal points: more puzzles finished goes first.</p>';
     h += '<div class="acts main">' + (d.day.length ? '<button class="btn go" data-act="shareall">Share leaderboard</button>' : '') +
          '<button class="btn ' + (d.day.length ? 'alt' : 'go') + '" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';

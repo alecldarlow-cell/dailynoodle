@@ -176,7 +176,7 @@ test('BOARD-PIN-01..04 and BOARD-ALL-01: PIN rejoin, lockout, owner let-back, an
     await db.exec('reset role'); await q('delete from board.attempts'); await db.exec('set role anon');
   });
 
-  await t.test('BOARD-ALL-01: points per puzzle (1 for completing + 1 per worse completed result), day and week', async () => {
+  await t.test('BOARD-ALL-01: points per puzzle (1 per player beaten, failed or revealed rounds included), day and week', async () => {
     const f = (d, t) => `reports/2026-10-${d}-${t}.html`;
     // Mon 19: Mini, Ada 50s, Bob 70s, Cy failed
     await rpc('board_submit', [ada, f(19, 'crossword-mini-0100'), 'solved', 50, null, null]);
@@ -193,16 +193,23 @@ test('BOARD-PIN-01..04 and BOARD-ALL-01: PIN rejoin, lockout, owner let-back, an
     const all = await rpc('board_overall', [ada, code, '2026-10-21']);
     assert.equal(all.week_from, '2026-10-19'); assert.equal(all.week_to, '2026-10-25');
     const pick = rows => rows.map(r => [r.rank, r.nick, r.points, r.played, r.completed]);
-    // day: Tangle Bob 3, Cy 2, Ada 1; Link Cy 2, Ada 1
-    assert.deepEqual(pick(all.day), [[1, 'Cy', 4, 2, 2], [2, 'Bob', 3, 1, 1], [3, 'Ada', 2, 2, 2]]);
-    // week adds Monday's Mini: Ada 2, Bob 1, Cy 0 (played, failed)
-    // all on 4 points: more completed puzzles ranks first, then equal
-    assert.deepEqual(pick(all.week), [[1, 'Ada', 4, 3, 3], [2, 'Bob', 4, 2, 2], [2, 'Cy', 4, 3, 2]]);
+    // day: Tangle Bob 2, Cy 1, Ada 0; Link Cy 1, Ada 0. Equal on 2: more completed puzzles ranks first
+    assert.deepEqual(pick(all.day), [[1, 'Cy', 2, 2, 2], [2, 'Bob', 2, 1, 1], [3, 'Ada', 0, 2, 2]]);
+    // week adds Monday's Mini: Ada 2 (beat Bob and Cy, who failed), Bob 1 (beat Cy), Cy 0 (played, failed)
+    assert.deepEqual(pick(all.week), [[1, 'Bob', 3, 2, 2], [2, 'Ada', 2, 3, 3], [3, 'Cy', 2, 3, 2]]);
     assert.deepEqual(all.not_yet, []);
     const mon = await rpc('board_overall', [bob, code, '2026-10-19']);
     assert.deepEqual(pick(mon.day), [[1, 'Ada', 2, 1, 1], [2, 'Bob', 1, 1, 1], [3, 'Cy', 0, 1, 0]]);
     assert.deepEqual(pick(mon.week), pick(mon.day), 'a Monday’s week holds only that day so far');
-    await rejects(() => rpc('board_overall', ['00000000-0000-4000-8000-0000000000ff', code, '2026-10-21']), 'not_member');
+    // alone on a puzzle: finished, beat nobody, no points
+    const sun = await rpc('board_overall', [ada, code, '2026-10-18']);
+    assert.deepEqual(pick(sun.day), [[1, 'Ada', 0, 1, 1]]);
+    // weekly titles add up the same points as this table
+    await db.exec('reset role');
+    const rows = await q(`select r.nickname, r.worse_rank::int as p from board.rec_rows((select league_id from board.members where player = '${ada}' limit 1), '2026-10-21') r
+                          where r.puzzle_path = '${f(19, 'crossword-mini-0100')}' order by 2 desc`);
+    await db.exec('set role anon');
+    assert.deepEqual(rows.map(r => [r.nickname, r.p]), [['Ada', 2], ['Bob', 1]]);
   });
 });
 
