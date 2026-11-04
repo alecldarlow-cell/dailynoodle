@@ -2,11 +2,15 @@
 // Every post-build group is independent. Dispatch short follow-up checks as
 // slots free up rather than appending them to the busiest browser lane.
 const MAX_JOBS=5;
+// The slow multi-browser specs have their own lane, so browser-pages no longer sets the length of every release.
+const ACCOUNT_SPECS=new Set(['sync-web.spec.js','board-key.spec.js','board.spec.js','save-history.spec.js']);
 const isBrowserSpec=file=>/\.(?:spec|test)\.[cm]?[jt]sx?$/.test(file);
 function browserFiles(){
  const fs=require('node:fs'),path=require('node:path');
  const all=fs.readdirSync(path.join(__dirname,'browser'),{recursive:true}).filter(isBrowserSpec).sort();
- return {games:all.filter(f=>f==='games.spec.js'),pages:all.filter(f=>f!=='games.spec.js')};
+ // artifact.spec.js runs once, on the built site, in the artifact group: testing the source copy as well added nothing.
+ const rest=all.filter(f=>f!=='games.spec.js'&&f!=='artifact.spec.js');
+ return {games:all.filter(f=>f==='games.spec.js'),pages:rest.filter(f=>!ACCOUNT_SPECS.has(f)),accounts:rest.filter(f=>ACCOUNT_SPECS.has(f))};
 }
 function plan({nightly=false,crossBrowser=false,newsOnly=false}={}){
  const fs=require('node:fs'),path=require('node:path');

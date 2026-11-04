@@ -16,8 +16,9 @@ test('CI: build precedes the bounded pool; free slots immediately take the next 
  });
  await tick();assert.equal(gates.size,MAX_JOBS);assert.equal(peak,MAX_JOBS);
  assert.ok(!calls.includes('news'));
- gates.get('browser-games').resolve();await tick();assert.ok(calls.includes('news'));assert.ok(!calls.includes('timing-dates'));
- gates.get('browser-pages').resolve();await tick();assert.ok(calls.includes('timing-dates'));
+ gates.get('browser-games').resolve();await tick();assert.ok(calls.includes('browser-accounts'));assert.ok(!calls.includes('news'));
+ gates.get('browser-pages').resolve();await tick();assert.ok(calls.includes('news'));assert.ok(!calls.includes('timing-dates'));
+ gates.get('browser-accounts').resolve();await tick();assert.ok(calls.includes('timing-dates'));
  for(let round=0;round<plan().tasks.length+2;round++){for(const g of gates.values())g.resolve();await tick();if(calls.length===plan().serial.length&&active===0)break;}
  await job;assert.deepEqual(calls.slice().sort(),plan().serial.map(t=>t.name).sort());
  assert.equal(peak,MAX_JOBS);
@@ -45,14 +46,14 @@ test('CI: smaller pools and serial mode retain every required check; invalid cap
  for(const jobs of [0,6,1.5,NaN])await assert.rejects(execute(async()=>{}, {jobs}),/DN_TEST_JOBS/);
 });
 test('CI: every gate and source browser spec appears once in the plan',()=>{
- const expected=['unit','backend','content','build','browser-games','browser-pages','artifact','puzzles-1','puzzles-2','puzzles-3','timing-dates','offline-next','worker','push-crypto','push-panel','news'].sort();
+ const expected=['unit','backend','content','build','browser-games','browser-pages','browser-accounts','artifact','puzzles-1','puzzles-2','puzzles-3','timing-dates','offline-next','worker','push-crypto','push-panel','news'].sort();
  const p=plan();assert.deepEqual(p.serial.map(t=>t.name).sort(),expected);
  assert.deepEqual([...p.preflight,...p.tasks].map(t=>t.name).sort(),expected);
- const files=browserFiles(),flat=Object.values(files).flat();assert.ok(files.games.length&&files.pages.length);
+ const files=browserFiles(),flat=Object.values(files).flat();assert.ok(files.games.length&&files.pages.length&&files.accounts.length);
  assert.equal(new Set(flat).size,flat.length);
  const fs=require('node:fs'),path=require('node:path');
  const allSpecs=fs.readdirSync(path.join(__dirname,'../browser'),{recursive:true}).filter(isBrowserSpec).sort();
- assert.deepEqual(flat.slice().sort(),allSpecs);
+ assert.deepEqual(flat.slice().sort(),allSpecs.filter(f=>f!=='artifact.spec.js'));   // that one runs in the artifact group
  for(const [group,specs] of Object.entries(files)){
   const t=p.tasks.find(t=>t.name==='browser-'+group);
   assert.deepEqual(t.args.slice(2),specs.map(f=>'tools/tests/browser/'+f));assert.equal(t.env.DN_TEST_WORKERS,'1');
