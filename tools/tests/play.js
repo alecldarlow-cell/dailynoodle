@@ -228,9 +228,10 @@ async function tally(p) {
   await start(p);
   const sol = await p.evaluate(() => window.DN_PUZZLE.sol);
   for (let i = 0; i < sol.length; i++) {
-    await p.locator('#grid .cell').nth(i).dispatchEvent('pointerdown');
-    await p.locator('#keys button').nth(+sol[i] - 1).click();
+    await tap(p, p.locator('#grid .cell').nth(i));
+    await tap(p, p.locator('#keys button').nth(+sol[i] - 1));
   }
+  await wait(p, 1500); await p.waitForTimeout(300); await wait(p, 300);
 }
 
 module.exports = { tally, start, puzzle, boxOn, link, sweep, sweepHintState, sweepHintCheck, sweepProvable, sweepByHint, SWEEP_WRONG_FLAG, path, grid, tangle, borders, reckon };

@@ -32,9 +32,9 @@ const F = {
   sweep: '2026-10-18-logic-sweep.html', path: '2026-10-18-logic-path-0092.html', path2: '2026-10-19-logic-path-0093.html',
   link: '2026-10-18-word-link-0071.html', tangle: '2026-10-18-word-tangle-0012.html', borders: '2026-10-18-geo-borders-0014.html',
   reckon: '2026-10-20-quiz-reckon-0001.html', reckon2: '2026-10-21-quiz-reckon-0002.html',
-  tally: '2026-11-05-logic-tally-0012.html',
+  tally: '2026-11-03-logic-tally-0010.html',
 };
-const TALLY_DAY = '2026-11-05T12:00:00Z';   // Tally's first daily
+const TALLY_DAY = '2026-11-03T12:00:00Z';   // a page that already carries the tracker line the publish step adds
 const RECKON_DAY = '2026-10-20T14:30:00Z', RECKON_DAY2 = '2026-10-21T14:30:00Z';   // Reckon's first two days (15:30 BST)
 let pass = 0, fail = 0;
 const ENGINE_NOW = process.env.DN_BROWSER || 'chromium';
@@ -76,7 +76,7 @@ async function sheetChecks(p, ev, { type, boxId = 'winModal', ids, shareRe, endC
   // successful daily build would. Yesterday's real file is not today's list.
   const day = await p.evaluate(() => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()));
   // AF-019 (29 Oct 2026): "Play Borders 24" with "6 of 8 done today" under it; footer "New Mini in 3h 38m"
-  ok(/^Play \w+ \d+$/.test(s.next) && /^\d of [78] done today$/.test(s.nextSub) && (s.nextHref || '').startsWith('../reports/' + day + '-'), `${type}: next row "${s.next}" (${s.nextSub}) → ${s.nextHref}`);
+  ok(/^Play \w+ \d+$/.test(s.next) && /^\d of [789] done today$/.test(s.nextSub) && (s.nextHref || '').startsWith('../reports/' + day + '-'), `${type}: next row "${s.next}" (${s.nextSub}) → ${s.nextHref}`);
   ok(/^New \w+ in (\d+h )?\d+m$/.test(s.clock), `${type}: countdown "${s.clock}"`);
   ok(s.board, `${type}: the league line sits in the sheet`);
   ok(s.order[0] === 'fin-result' && s.order.indexOf('fin-share') < s.order.indexOf('fin-board-slot') && s.order.indexOf('fin-board-slot') < s.order.indexOf('fin-next'),
@@ -383,7 +383,7 @@ const TESTS = {
     const ev = []; const { ctx, p } = await open(b, F.tally, { events: ev, time: TALLY_DAY });
     await play.tally(p);
     await sheetChecks(p, ev, { type: 'tally', boxId: 'modal', ids: ['winTitle', 'statTime', 'statStreak'],
-      shareRe: /^🧮 Tally #12 — \d:\d\d$/u,
+      shareRe: /^🧮 Tally #10 — \d:\d\d$/u,
       endCheck: x => ok(x && x.outcome === 'solved' && x.secs >= 0, `tally: tracker read solved in ${x && x.secs}s`) });
     ok(await text(p, '.fin-share-url') === 'dailynoodle.co.uk/tally', 'tally: shares the short link');
     ok(await p.locator('.fin-tally i').count() === 16, 'tally: the board in the recap');
