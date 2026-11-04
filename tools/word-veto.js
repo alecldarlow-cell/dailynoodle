@@ -17,4 +17,6 @@ const VETO = ["non","abuse","pic","anti","amino","rep","xxx","iii","vii","viii",
   "edema","eon","eons","gonna","wanna","gotta","mol","balls","sera","lea","rad","aging","hath","thine","thou","thee"];
 // 24 Oct 2026 (Doku veto audit): non-words without their apostrophe, brands, jargon, unkind words
 VETO.push("cant","anon","stein","tesla","yahoo","lieu","renal","obese","idiot","swine");
+// 4 Nov 2026 (Jennifer spotted LBS in Doku 0104): abbreviations that aren't words; forthcoming Dokus holding one regenerated the same day
+VETO.push("lbs","mph","etc","adv","aka","avg","ave","aux","ans","cir","cis","com","def","div","exp","ext","fol","gov","inc","ind","inf","int","mes","mic","mos","mus","nos","org","reg","rel","res","sci","seq","soc","tel","til","val","var","viz","xii","xiv","xvi","ecu","esp","miami");
 module.exports = { BLOCKED, SENSITIVE, VETO };
