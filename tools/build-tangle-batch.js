@@ -78,7 +78,12 @@ function d4(tiles) {
 }
 const addDay = (d, k) => { const t = new Date(d + 'T12:00:00Z'); t.setUTCDate(t.getUTCDate() + k); return t.toISOString().slice(0, 10); };
 
-module.exports = { stamp, pzLine, standfirst, traceable, d4, engineGate };
+/* Words beyond the kit dictionary (Alec, 5 Nov 2026, in line with Yarn): rarer words a board traces but lacks, shorter than the star so it stays the unique longest word */
+const EXTRA = JSON.parse(fs.readFileSync(path.join(__dirname, 'tangle-extra-words.json'), 'utf8')).words;
+const extrasFor = (P, trace = traceable) => { const have = new Set(P.main.concat(P.bonus)); return EXTRA.filter(w => !have.has(w) && w.length < P.star.length && trace(P.tiles, w)); };
+const byLen = (a, b) => a.length - b.length || (a < b ? -1 : 1);
+
+module.exports = { stamp, pzLine, standfirst, traceable, d4, engineGate, extrasFor, EXTRA };
 if (require.main === module) main();
 
 function main() {
@@ -94,6 +99,7 @@ function main() {
   const kit = arg('--kit'), daysF = arg('--days');
   if (!kit || !daysF) { console.error('need --kit DIR --days days.json (or --verify)'); process.exit(1); }
   const days = JSON.parse(fs.readFileSync(daysF, 'utf8'));
+  for (const d of days) d.bonus = d.bonus.concat(extrasFor(d)).sort(byLen);
   const DICT = JSON.parse(fs.readFileSync(path.join(kit, 'tangle-dict.json'), 'utf8'));
   const MAINSET = new Set(DICT.main), BONUSSET = new Set(DICT.bonus), ALL = DICT.main.concat(DICT.bonus);
   const BL = JSON.parse(fs.readFileSync(path.join(kit, 'blocklist.json'), 'utf8'));
@@ -130,9 +136,11 @@ function main() {
     if (!s.includes(`content="Tangle ${String(P.n).padStart(4, '0')}"`)) err(f, 'headline');
     if (!s.includes(`${P.main.length} common words`) || !s.includes(`${NUM[P.star.length]}-letter longest word`)) err(f, 'standfirst disagrees with the board');
     const traced = ALL.filter(w => !blocked(w) && traceable(P.tiles, w));   // blocked words are left out of the lists, not required in them
+    const dictBonus = P.bonus.filter(w => !EXTRA.includes(w) || BONUSSET.has(w));
     const wm = traced.filter(w => MAINSET.has(w)).sort(), wb = traced.filter(w => BONUSSET.has(w)).sort();
+    for (const w of P.bonus) if (!dictBonus.includes(w) && (w.length >= P.star.length || !traceable(P.tiles, w))) err(f, 'extra word breaks the board: ' + w);
     if (j(wm) !== j(P.main.slice().sort())) err(f, 'main list != independent solver');
-    if (j(wb) !== j(P.bonus.slice().sort())) err(f, 'bonus list != independent solver');
+    if (j(wb) !== j(dictBonus.slice().sort())) err(f, 'bonus list != independent solver');
     for (const w of P.main.concat(P.bonus)) if (blocked(w)) err(f, 'blocklisted word ' + w);
     if (NOSTAR.has(P.star)) err(f, 'star on the nostar list: ' + P.star);
     if (stars.has(P.star)) err(f, `star ${P.star} repeats ${stars.get(P.star)}`); else stars.set(P.star, f);
