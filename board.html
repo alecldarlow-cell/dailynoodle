@@ -206,7 +206,7 @@
   var $app = document.getElementById('app'), $pills = document.getElementById('pills');
   var Q = new URLSearchParams(location.search);
   var S = {
-    type: (NB.BY_ID[Q.get('p')] || Q.get('p') === 'all' || Q.get('p') === 'records') ? Q.get('p') : (NB.lastType() || 'all'),
+    type: (NB.BY_ID[Q.get('p')] || Q.get('p') === 'all' || Q.get('p') === 'records' || Q.get('p') === 'astro') ? Q.get('p') : (NB.lastType() || 'all'),
     date: /^\d{4}-\d{2}-\d{2}$/.test(Q.get('d') || '') ? Q.get('d') : NB.today(),
     join: (Q.get('join') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12),
     from: Q.get('from') || (Q.get('join') ? 'join' : 'direct'),
@@ -267,7 +267,7 @@
   }
 
   /* ---------- puzzle pills ---------- */
-  var PILLS = [{ id: 'all', emoji: '🏆', name: 'All puzzles' }, { id: 'records', emoji: '🏅', name: 'Records' }].concat(TYPES);   // All: the 24 Oct 2026 table across the eight; Records: 25 Oct 2026
+  var PILLS = [{ id: 'all', emoji: '🏆', name: 'All puzzles' }, { id: 'records', emoji: '🏅', name: 'Records' }].concat(TYPES, [{ id: 'astro', emoji: '🪐', name: 'Astro Drop' }]);   // All: the 24 Oct 2026 table across the eight; Records: 25 Oct 2026
   function renderPills() {
     $pills.innerHTML = PILLS.map(function (t) {
       return '<button class="chip" type="button" data-p="' + t.id + '" aria-pressed="' + (t.id === S.type) + '">' +
@@ -522,7 +522,7 @@
     var want = [L.code, S.type, S.date].join('|');
     var recs = loadRecords(L.code), recsOnly = S.type === 'records';
     (recsOnly ? recs.then(function (r) { if (!r) throw new Error('Please try again.'); return r; })
-              : Promise.all([S.type === 'all' ? NB.overall(L.code, S.date) : NB.day(L.code, S.type, S.date), recs]).then(function (x) { return x[0]; }))
+              : Promise.all([S.type === 'all' ? NB.overall(L.code, S.date) : S.type === 'astro' ? NB.rpc('board_game_day', { p_player: NB.pid(), p_code: L.code, p_game: 'astro-drop', p_date: S.date }) : NB.day(L.code, S.type, S.date), recs]).then(function (x) { return x[0]; }))
     .then(function (d) {
       if (want !== [cur().code, S.type, S.date].join('|')) return;
       if (recsOnly) { S.data = { code: L.code, type: S.type, date: S.date, members: (d.players || []).length,
@@ -530,7 +530,7 @@
                       return S.card ? renderCard(L, S.card) : renderRecords(L, d); }
       d.code = L.code; d.type = S.type; d.date = S.date; S.data = d;
       if (S.card) return renderCard(L, S.card);
-      S.type === 'all' ? renderOverall(L, d) : renderBoard(L, d);
+      S.type === 'all' ? renderOverall(L, d) : S.type === 'astro' ? renderAstro(L, d) : renderBoard(L, d);
     }).catch(function (err) {
       if (err.code === 'not_member' || err.code === 'no_league') { NB.refresh().then(loadBoard, loadBoard); return; }
       $app.innerHTML = '<p class="nobody">Couldn’t load the board. ' + esc(err.message) + '</p>';
@@ -579,6 +579,23 @@
          '<label class="daylabel" aria-label="' + esc(label) + '">' + esc(dayName(S.date)) + (dayName(S.date) === longDay(S.date) ? '' : ' · ' + esc(longDay(S.date))) +
          '<input type="date" id="pick" value="' + S.date + '" min="' + first + '" max="' + NB.today() + '" aria-label="Pick a day"></label>' +
          '<button class="daybtn" data-day="1" aria-label="Next day"' + (S.date >= NB.today() ? ' disabled' : '') + '>›</button></div>';
+  }
+  /* ---------- Astro Drop Daily (5 Nov 2026): its own table, never in All puzzles ---------- */
+  function renderAstro(L, d) {
+    var played = d.ranked.some(function (r) { return r.me; }), h = topCard(L);
+    h += dayBar('🪐 Astro Drop Daily · ' + longDay(S.date), d.first || S.date);
+    if (!played && S.date === NB.today()) h += '<div class="play"><span>You haven’t played today’s Daily yet.</span><a href="reports/2026-11-04-arcade-astro-drop.html">Play Astro Drop →</a></div>';
+    if (!d.ranked.length) h += '<p class="nobody">Nobody in ' + esc(L.name) + ' has played the Daily ' + (S.date === NB.today() ? 'yet today' : 'on this day') + '.</p>';
+    else h += '<ol class="rows">' + d.ranked.map(function (r) {
+      return '<li class="row' + (r.me ? ' me' : '') + '"><span class="rk' + (MEDAL[r.rank] ? ' medal' : '') + '">' + (MEDAL[r.rank] || r.rank) + '</span>' +
+        '<span class="who">' + nick(r.nick) + (r.me ? '<span class="you">you</span>' : '') + '</span>' +
+        '<span class="res">' + Number(r.score).toLocaleString('en-GB') + ' pts<small>' + '★'.repeat(r.stars) + '</small></span></li>';
+    }).join('') + '</ol>';
+    if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) { return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
+    h += '<p class="bnote how">Scores here don’t count towards All puzzles.</p>';
+    h += '<div class="acts main"><button class="btn go" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
+    h += settings(L, d);
+    $app.innerHTML = h;
   }
   function renderBoard(L, d) {
     var T = NB.BY_ID[S.type], it = puzzleItem(S.type, S.date);

@@ -249,6 +249,30 @@ test.describe('BOARD-E2E', () => {
 
   // S5 (29 Oct 2026, as the app): Tangle shows no time (AF-025), the day is one slim line and the league picker is the
   // heading (AF-017), and the invite says Daily Noodle.
+  test('BOARD-ASTRO-01: a Daily from the game reaches the Astro Drop pill, once, and stays out of All puzzles', async ({ browser }) => {
+    test.setTimeout(60000);
+    const A = await phone(browser, db, 'A');
+    try {
+      await go(A, 'board.html');
+      await H.tap(A.p, A.p.locator('[data-go="start"]'));
+      await A.p.fill('input[name="lname"]', 'Orbit');
+      await A.p.fill('input[name="nick"]', 'Ada');
+      await H.tap(A.p, A.p.locator('#f .btn.go'));
+      await expect(A.p.locator('.bcard h2')).toHaveText('Orbit is ready');
+      await go(A, 'reports/2026-11-04-arcade-astro-drop.html');
+      await expect.poll(() => A.p.evaluate(() => !!window.noodleBoard)).toBe(true);
+      const send = s => A.p.evaluate(s => document.dispatchEvent(new CustomEvent('dn:game_end', { detail: { game: 'astro-drop', mode: 'daily', score: s, stars: 2, level: 9 } })), s);
+      await send(13500); await H.wait(A.p, 300); await send(99999); await H.wait(A.p, 300);
+      await A.p.evaluate(() => document.dispatchEvent(new CustomEvent('dn:game_end', { detail: { game: 'astro-drop', mode: 'free', score: 7 } })));
+      await H.wait(A.p, 300);
+      expect(A.calls.filter(c => c.fn === 'board_game_submit').map(c => c.body)).toEqual([true, false]);
+      await go(A, 'board.html?p=astro');
+      expect(await rows(A.p)).toEqual([['🥇', 'Ada', '13,500 pts']]);
+      await go(A, 'board.html?p=all');
+      await expect(A.p.locator('ol.rows li.row')).toHaveCount(0);
+      expect(A.p.errs).toEqual([]);
+    } finally { await A.ctx.close(); }
+  });
   test('BOARD-S5-01: Tangle rows without a time, the slim day line, the picker as heading, Daily Noodle invite', async ({ browser }) => {
     test.setTimeout(60000);
     const A = await phone(browser, db, 'A');
