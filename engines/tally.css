@@ -109,7 +109,7 @@ body.win .pad{display:none}
 footer{display:none}
 
 /* the answer on the finish sheet: the solved board with its cage lines */
-.fin-tally{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr));width:min(100%,240px);aspect-ratio:1;border:3px solid var(--line);border-radius:8px;background:var(--line);margin:8px 0 0}
+.fin-tally{margin-inline:auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr));width:min(100%,240px);aspect-ratio:1;border:3px solid var(--line);border-radius:8px;background:var(--line);margin:8px 0 0}
 .fin-tally i{position:relative;font-style:normal;background:var(--card);border:1px solid var(--line-soft);display:grid;place-items:center;font-weight:600;font-size:20px;min-width:0;min-height:0;
   --bt:0px;--bb:0px;--bl:0px;--br:0px;box-shadow:inset 0 var(--bt) 0 0 var(--line),inset 0 calc(-1*var(--bb)) 0 0 var(--line),inset var(--bl) 0 0 0 var(--line),inset calc(-1*var(--br)) 0 0 0 var(--line)}
 .fin-tally i.bt{--bt:2px;border-top-color:var(--line)}.fin-tally i.bb{--bb:2px;border-bottom-color:var(--line)}.fin-tally i.bl{--bl:2px;border-left-color:var(--line)}.fin-tally i.br{--br:2px;border-right-color:var(--line)}

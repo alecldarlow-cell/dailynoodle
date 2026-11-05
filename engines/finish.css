@@ -175,7 +175,7 @@ details.fin-rare p{font-size:14px;line-height:1.7;color:var(--f-ink2);margin:0 0
 .fin-grid.sw .n1{color:var(--f-actInk)} .fin-grid.sw .n2{color:var(--f-ok)} .fin-grid.sw .n3,.fin-grid.sw .n4,.fin-grid.sw .n5{color:var(--f-bad)}
 .fin-grid.sw i.flag{background:var(--f-goldT);color:var(--f-goldInk)} .fin-grid.sw i.flag svg{width:44%;height:44%}
 .fin-grid.sw i.boom{background:#FFD9D4;color:var(--f-bad)}
-.fin-path{position:relative;margin:14px 0 0;width:min(100%,300px);background:var(--f-cell);border-radius:6px}
+.fin-path{position:relative;margin:14px auto 0;width:min(100%,300px);background:var(--f-cell);border-radius:6px}
 .fin-path .fin-grid{margin:0;background:transparent;position:relative;z-index:2}
 .fin-path .fin-grid i{font-size:15px;background:transparent}
 .fin-path .fin-grid i span{min-width:26px;height:26px;border-radius:13px;display:grid;place-items:center;background:var(--f-cell)}
