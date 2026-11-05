@@ -6,7 +6,7 @@
 <title>Inkline</title>
 <meta name="dn:kind" content="game">
 <meta name="dn:headline" content="Inkline">
-<meta name="dn:standfirst" content="One line. Lift your finger. Thirty contraptions that physics may or may not approve of.">
+<meta name="dn:standfirst" content="One line. Lift your finger. Thirty-six contraptions that physics may or may not approve of.">
 <meta name="dn:topic" content="Arcade">
 <meta name="dn:date" content="2026-11-05">
 <meta name="dn:read" content="~1 min">
@@ -120,24 +120,28 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 const {Engine,Bodies,Body,Composite,Constraint,Common,Events,Vertices}=Matter;
 const W=360,H=640,R=11,THICK=6,PAD=2.2,TAPER=16,DT=1000/120;
 const CAT={marble:1,scenery:2,peg:4,line:8};
-const INKS={ink:{f:.5,e:.08,d:.0022},rubber:{f:.7,e:.86,d:.0016},ice:{f:0,e:.04,d:.002},glass:{f:.4,e:.1,d:.0022,breaks:3.1}};
+const GRAV=1.3,TOP=20;
+const INKS={ink:{f:.35,e:.3,d:.0022},rubber:{f:.7,e:.92,d:.0016},ice:{f:0,e:.2,d:.002},glass:{f:.3,e:.25,d:.0022,breaks:4}};
 const cupParts=(c)=>{const[x,y,sd=1]=c;return[{x:x-sd*23,y,w:6,h:38,a:0,cup:1},{x:x+sd*23,y:y-26,w:6,h:90,a:0,cup:1},{x,y:y+18,w:52,h:6,a:0,cup:1}]};
 function makeSim(L){
   Common._nextId=0;Common.logLevel=0;
-  const e=Engine.create({positionIterations:10,velocityIterations:8});e.gravity.y=1;
+  const e=Engine.create({positionIterations:10,velocityIterations:8});e.gravity.y=GRAV;
   const parts=[...(L.s||[]).map(p=>({x:p[0],y:p[1],w:p[2],h:p[3],a:p[4]||0})),...cupParts(L.c)];
   (L.mv||[]).forEach(m=>parts.push({x:m.x,y:m.y,w:m.w,h:m.h,a:m.a||0,mv:m}));
-  parts.forEach(p=>{p.b=Bodies.rectangle(p.x,p.y,p.w,p.h,{isStatic:true,angle:p.a,friction:p.mv&&p.mv.k=='belt'?1:.6,restitution:.12,collisionFilter:{category:CAT.scenery}})});
+  (L.sp||[]).forEach(q=>parts.push({x:q[0],y:q[1],w:q[2],h:10,a:q[3]||0,pow:q[4]||14}));
+  parts.forEach(p=>{p.b=Bodies.rectangle(p.x,p.y,p.w,p.h,{isStatic:true,angle:p.a,friction:p.mv&&p.mv.k=='belt'?1:.35,restitution:p.cup?.1:.34,collisionFilter:{category:CAT.scenery}})});
   const pegs=(L.p||[]).map(p=>Bodies.circle(p[0],p[1],5,{isStatic:true,collisionFilter:{category:CAT.peg,mask:CAT.marble}}));
-  const marble=Bodies.circle(L.m[0],L.m[1],R,{isStatic:true,friction:.05,frictionAir:.002,restitution:.25,density:.004,collisionFilter:{category:CAT.marble}});
+  const marble=Bodies.circle(L.m[0],L.m[1],R,{isStatic:true,friction:.02,frictionAir:.0006,restitution:.42,density:.004,collisionFilter:{category:CAT.marble}});
   Composite.add(e.world,[...parts.map(p=>p.b),...pegs,marble]);
-  const S={L,e,parts,marble,pts:[],line:null,local:null,widths:null,mode:null,state:'draw',t:0,idle:0,got:new Set(),fx:[],ink:INKS[L.ink||'ink'],shards:null,closed:false};
+  const S={L,e,parts,marble,pts:[],line:null,local:null,widths:null,mode:null,state:'draw',t:0,idle:0,got:new Set(),fx:[],ink:INKS[L.ink||'ink'],shards:null,closed:false,contact:0,kick:null,boosting:false};
   Events.on(e,'collisionStart',ev=>ev.pairs.forEach(p=>{
     const a=p.bodyA,b=p.bodyB,m=a.parent===marble||b.parent===marble,l=S.line&&(a.parent===S.line||b.parent===S.line);
     const dvx=a.parent.velocity.x-b.parent.velocity.x,dvy=a.parent.velocity.y-b.parent.velocity.y,v=Math.hypot(dvx,dvy);
+    if(m){const o=a.parent===marble?b:a,sp=S.parts.find(q=>q.b===o.parent&&q.pow);if(sp)S.kick=sp;const air=S.t-S.contact;if(S.state=='run'&&air>420)S.fx.push({k:'land',air,x:marble.position.x,y:marble.position.y});S.contact=S.t}
     if(v>.8)S.fx.push({k:m&&l?'hit':l?'thud':'tap',v});
     if(l&&S.ink.breaks&&v>S.ink.breaks&&!S.broke)S.broke=true;
   }));
+  Events.on(e,'collisionActive',ev=>ev.pairs.forEach(p=>{if(p.bodyA.parent===marble||p.bodyB.parent===marble)S.contact=S.t}));
   return S;
 }
 const inRect=(x,y,p,pad)=>{const c=Math.cos(-p.a),s=Math.sin(-p.a),dx=x-p.x,dy=y-p.y,X=dx*c-dy*s,Y=dx*s+dy*c;return Math.abs(X)<p.w/2+pad&&Math.abs(Y)<p.h/2+pad};
@@ -188,13 +192,28 @@ function simplify(pts,tol){ /* Douglas-Peucker */
     if(md>tol){keep[mi]=1;st.push([a,mi],[mi,b])}}
   return pts.filter((_,i)=>keep[i]);
 }
+/* The line sets when the finger lifts: wobble goes, corners stay, and anything touching a peg or an object stays where it was drawn. */
+function smooth(S){
+  const raw=[S.pts[0]];let acc=0;
+  for(let i=1;i<S.pts.length;i++){const a=S.pts[i-1],b=S.pts[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);acc+=l;if(acc>=4||i==S.pts.length-1){raw.push(b);acc=0}}
+  const n=raw.length,fix=new Uint8Array(n);fix[0]=fix[n-1]=1;
+  for(let i=0;i<n;i++){const[x,y]=raw[i];
+    if((S.L.p||[]).some(p=>Math.hypot(p[0]-x,p[1]-y)<14))fix[i]=1;
+    if([[4.5,0],[-4.5,0],[0,4.5],[0,-4.5]].some(d=>obstacle(S,x+d[0],y+d[1])))fix[i]=1;
+    const A=raw[Math.max(0,i-3)],B=raw[Math.min(n-1,i+3)],u=[x-A[0],y-A[1]],v=[B[0]-x,B[1]-y],lu=Math.hypot(...u),lv=Math.hypot(...v);
+    if(lu>2&&lv>2&&(u[0]*v[0]+u[1]*v[1])/(lu*lv)<.55)fix[i]=1}
+  let p=raw.map(q=>q.slice());
+  for(let k=0;k<4;k++){const c=p.map(q=>q.slice());for(let i=1;i<n-1;i++)if(!fix[i]){c[i][0]=(p[i-1][0]+2*p[i][0]+p[i+1][0])/4;c[i][1]=(p[i-1][1]+2*p[i][1]+p[i+1][1])/4}p=c}
+  for(let i=0;i<n;i++){const dx=p[i][0]-raw[i][0],dy=p[i][1]-raw[i][1],d=Math.hypot(dx,dy);if(d>2.5){p[i][0]=raw[i][0]+dx/d*2.5;p[i][1]=raw[i][1]+dy/d*2.5}if(blocked(S,p[i][0],p[i][1]))p[i]=raw[i].slice()}
+  S.raw=raw;S.sm=p;return p;
+}
 function along(pts,d){ /* the point d along the line, and which segment it falls in */
   for(let i=0;i<pts.length-1;i++){const l=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);if(d<=l){const t=d/l;return{i,p:[pts[i][0]+(pts[i+1][0]-pts[i][0])*t,pts[i][1]+(pts[i+1][1]-pts[i][1])*t]}}d-=l}
   return null;
 }
 function release(S){
   const len=lineLength(S.pts);if(len<16){S.pts=[];return false}
-  let tol=.9,pts=simplify(S.pts,tol);while(pts.length>70){tol*=1.4;pts=simplify(S.pts,tol)}
+  const hits=pegHits(S),sm=smooth(S);let tol=.5,pts=simplify(sm,tol);while(pts.length>70){tol*=1.4;pts=simplify(sm,tol)}
   /* Pen-stroke ends: each end tapers, so a marble rolls up on to a line instead of stopping at a lip. */
   const tapered=lineLength(pts)>TAPER*2.5;
   if(tapered){const f=along(pts,TAPER),r=along([...pts].reverse(),TAPER);pts=[pts[0],f.p,...pts.slice(f.i+1,pts.length-1-r.i),r.p,pts[pts.length-1]]}
@@ -204,7 +223,7 @@ function release(S){
     if(tapered&&(i==0||i==n-2)){const wa=i==0?.5:hw,wb=i==0?hw:.5,v=[{x:a[0]+nx*wa,y:a[1]+ny*wa},{x:b[0]+nx*wb,y:b[1]+ny*wb},{x:b[0]-nx*wb,y:b[1]-ny*wb},{x:a[0]-nx*wa,y:a[1]-ny*wa}],c=Vertices.centre(v);
       parts.push(Bodies.fromVertices(c.x,c.y,[v],{collisionFilter:filter}))}
     else parts.push(Bodies.rectangle((a[0]+b[0])/2,(a[1]+b[1])/2,l+THICK*.5,THICK,{angle:Math.atan2(b[1]-a[1],b[0]-a[0]),chamfer:{radius:2.4},collisionFilter:filter}))}
-  const hits=pegHits(S),I=S.ink;
+  const I=S.ink;
   const body=Body.create({parts,friction:I.f,frictionStatic:I.f?.5:0,frictionAir:.004,restitution:I.e,collisionFilter:filter});
   Body.setDensity(body,I.d);
   /* Matter leaves out each part's offset in a compound, so long lines would otherwise spin far too easily. */
@@ -237,6 +256,11 @@ function step(S){
     Composite.remove(S.e.world,Composite.allConstraints(S.e.world));Composite.remove(S.e.world,l);S.line=null;S.fx.push({k:'smash',v:6});S.mode='gone'}
   if(S.state!='run')return;
   const m=S.marble,[cx,cy]=S.L.c;
+  if(S.kick){const k=S.kick,nx=Math.sin(k.a),ny=-Math.cos(k.a),v=Body.getVelocity(m),tv=v.x*Math.cos(k.a)+v.y*Math.sin(k.a);Body.setVelocity(m,{x:nx*k.pow+Math.cos(k.a)*tv*.6,y:ny*k.pow+Math.sin(k.a)*tv*.6});S.fx.push({k:'spring',x:k.x,y:k.y,pow:k.pow});k.fired=S.t;S.kick=null}
+  let on=false;(S.L.bo||[]).forEach(q=>{const c=Math.cos(q[3]||0),s=Math.sin(q[3]||0),dx=m.position.x-q[0],dy=m.position.y-q[1],X=dx*c+dy*s,Y=-dx*s+dy*c;
+    if(Math.abs(X)<q[2]/2&&Math.abs(Y)<20){on=true;const v=Body.getVelocity(m),al=v.x*c+v.y*s,t=q[4]||16;if(al<t)Body.setVelocity(m,{x:v.x+c*1.1,y:v.y+s*1.1})}});
+  if(on&&!S.boosting)S.fx.push({k:'boost',x:m.position.x,y:m.position.y});S.boosting=on;
+  if(Body.getSpeed(m)>TOP)Body.setSpeed(m,TOP);
   S.L.g.forEach((g,i)=>{if(!S.got.has(i)&&Math.hypot(m.position.x-g[0],m.position.y-g[1])<R+10){S.got.add(i);S.fx.push({k:'gem',i,x:g[0],y:g[1],n:S.got.size})}});
   if(Math.abs(m.position.x-cx)<19&&m.position.y>cy-15&&m.position.y<cy+16){S.state='won';return}
   if(m.position.y>H+30||m.position.x<-30||m.position.x>W+30){S.state='lost';return}
@@ -252,10 +276,10 @@ function testRun(L,pts,track){
   return{state:S.state,gems:S.got.size,len:lineLength(S.pts),t:S.t,x:S.marble.position.x,y:S.marble.position.y,path};
 }
 
-const CH=[{n:'Ledges',c:6},{n:'Pegs',c:6},{n:'Hands Off',c:6},{n:'Odd Inks',c:6},{n:'Clockwork',c:6}];
-const LEVELS=[{"n":"First Bridge","m":[26,232],"s":[[75,290,158,16,0.3],[245,356,130,16,0.1]],"c":[332,430],"h":"Draw one line across the gap. Lift to let go.","g":[[172,315],[225,297]]},{"n":"Back Again","m":[334,232],"s":[[285,290,158,16,-0.3],[115,356,130,16,-0.1]],"c":[28,430,-1],"g":[[109,332],[151,295]]},{"n":"Shelf Ramp","m":[64,120],"s":[[64,280,70,14],[176,352,70,14]],"c":[316,560],"h":"Lines rest on ledges.","g":[[52,244],[274,447]]},{"n":"Zigzag","m":[30,100],"s":[[80,160,150,14,0.28],[275,280,140,14,-0.22],[90,400,130,14,0.2]],"c":[300,560],"g":[[207,425],[299,498]]},{"n":"Long Way Down","m":[330,90],"s":[[285,131,120,12,-0.21015824481192977],[57,340,50,12],[298,498,50,12,0.048049477608874444]],"c":[47,599,-1],"g":[[163,521],[58,547]]},{"n":"Nudge","m":[150,300],"s":[[169,343,210,14,0.06000496604014188]],"c":[322,488],"h":"A falling line shoves things.","g":[[211,324],[311,354]]},{"n":"See-saw","m":[222,150],"p":[[176,330]],"c":[316,540],"h":"A line through a peg pivots.","g":[[310,490],[298,441]]},{"n":"Two Pegs","m":[64,150],"s":[[250,560,220,14]],"c":[330,520],"p":[[92,300],[226,392]],"h":"Through two pegs, a line locks.","g":[[279,428],[329,447]]},{"n":"Long Slide","m":[40,90],"p":[[38,218],[267,417]],"c":[330,496],"g":[[108,261],[93,213]]},{"n":"Hammer","m":[196,416],"s":[[235,436,150,16],[352,400,8,400]],"c":[320,590],"p":[[200,190]],"h":"Long lines are heavy. Swing one.","g":[[265,417],[335,435]]},{"n":"Tip Up","m":[120,160],"s":[[300,470,110,14,0.1]],"p":[[170,360]],"c":[60,560,-1],"g":[[89,440],[77,516]]},{"n":"Which Pegs?","m":[300,100],"p":[[250,260],[110,260],[180,410]],"c":[40,570,-1],"g":[[227,249],[93,447]]},{"n":"Red Zone","m":[26,232],"s":[[67,318,158,16,0.3],[208,445,130,14,0.1]],"c":[330,487],"z":[[150,250,60,100]],"h":"You can't draw in the red zone.","g":[[50,287],[198,389]]},{"n":"Narrow Door","m":[330,110],"s":[[292,179,120,14,-0.25],[117,489,120,14,-0.1]],"c":[46,563,-1],"z":[[0,240,240,120]],"g":[[133,465],[178,244]]},{"n":"Hands Off","m":[30,250],"s":[[75,290,150,16,0.16],[120,440,60,14],[230,520,60,14]],"c":[325,590],"z":[[150,200,210,190]],"g":[[291,496],[219,436]]},{"n":"Peg Ban","m":[64,150],"c":[310,560],"p":[[100,330],[240,420]],"z":[[150,230,60,70],[150,440,210,60]],"g":[[102,304],[282,469]]},{"n":"Last Patch","m":[30,110],"s":[[66,189,150,14,0.3],[306,355,100,14,-0.21677867275942117],[121,451,110,14,0.130473862468265]],"c":[294,561],"z":[[170,180,190,120],[0,350,90,110]],"g":[[79,170],[242,373]]},{"n":"Under the Wire","m":[64,120],"s":[[65,244,80,14,0.2],[271,283,70,14,-0.06804980732500554]],"c":[330,555],"z":[[120,250,130,110]],"g":[[326,383],[331,473]]},{"n":"Handle With Care","m":[26,232],"ink":"glass","s":[[75,290,158,16,0.3],[245,356,130,16,0.1]],"c":[332,430],"g":[[169,305],[220,298]],"h":"Glass breaks if it lands hard."},{"n":"Ice Slide","m":[40,100],"ink":"ice","p":[[67,261],[248,400]],"c":[330,511],"g":[[271,372],[317,460]],"h":"Ice ink has no grip."},{"n":"Rubber","m":[90,110],"ink":"rubber","s":[[38,421,60,14],[152,463,60,14,-0.05614796931948513],[236,366,12,120]],"c":[285,540],"h":"Rubber ink bounces.","g":[[95,406],[191,411]]},{"n":"Glass","m":[64,120],"ink":"glass","s":[[76,309,70,14],[170,382,70,14]],"c":[44,562,-1],"g":[[85,449],[51,491]]},{"n":"Ice","m":[26,232],"ink":"ice","s":[[75,294,158,16,0.3],[249,441,110,14,-0.05]],"c":[64,600,-1],"g":[[135,482],[158,422]]},{"n":"Trampoline","m":[180,110],"ink":"rubber","s":[[90,456,50,14],[284,465,50,14]],"c":[74,409,-1],"g":[[114,361],[163,304]]},{"n":"Going Up","m":[26,232],"s":[[75,290,158,16,0.3]],"c":[332,430],"mv":[{"k":"lift","x":245,"y":356,"w":110,"h":14,"dy":30,"per":3}],"h":"Scenery moves once you lift.","g":[[283,323],[223,297]]},{"n":"Belt","m":[64,120],"s":[[64,194,80,14,0.2]],"c":[40,600,-1],"mv":[{"k":"belt","x":181,"y":467,"w":220,"h":14,"v":-1.6}],"h":"Belts carry the marble.","g":[[139,353],[148,272]]},{"n":"Ferry","m":[26,232],"s":[[75,290,158,16,0.3]],"c":[332,500],"mv":[{"k":"lift","x":230,"y":390,"w":90,"h":14,"dx":50,"per":4}],"g":[[228,366],[284,425]]},{"n":"The Works","m":[30,100],"s":[[81,188,150,14,0.28]],"c":[330,594],"p":[[223,282],[85,403]],"mv":[{"k":"spin","x":202,"y":467,"w":120,"h":12,"rate":-1.2}],"g":[[179,226],[233,346]]},{"n":"Up and Over","m":[330,120],"s":[[290,180,120,14,-0.25]],"c":[40,590,-1],"mv":[{"k":"lift","x":120,"y":420,"w":100,"h":14,"dy":40,"per":2.6},{"k":"belt","x":280,"y":500,"w":110,"h":12,"v":-1.2}],"g":[[259,163],[90,364]]},{"n":"Windmill","m":[60,130],"s":[[70,190,120,14,0.25]],"c":[320,570],"mv":[{"k":"spin","x":230,"y":380,"w":150,"h":12,"rate":1.1}],"h":"Time your line.","g":[[158,229],[199,297]]}];
+const CH=[{n:'Ledges',c:6},{n:'Pegs',c:6},{n:'Big Air',c:6},{n:'Hands Off',c:6},{n:'Odd Inks',c:6},{n:'Clockwork',c:6}];
+const LEVELS=[{"n":"First Bridge","m":[26,232],"s":[[87,309,158,16,0.3],[243,337,130,16,0.1]],"c":[330,409],"h":"Draw one line across the gap. Lift to let go.","g":[[156,289],[215,294]]},{"n":"Back Again","m":[334,232],"s":[[284,271,158,16,-0.24313699155673385],[103,371,130,16,-0.14227952983230352]],"c":[30,410,-1],"g":[[171,283],[119,313]]},{"n":"Shelf Ramp","m":[64,120],"s":[[64,280,70,14],[176,352,70,14]],"c":[316,560],"h":"Lines rest on ledges.","g":[[275,386],[139,243]]},{"n":"Zigzag","m":[30,100],"s":[[77,142,150,14,0.28],[262,291,140,14,-0.20886691457033157],[78,375,130,14,0.2]],"c":[285,546],"bo":[[89,149,90,0.28,15]],"g":[[185,390],[249,393]]},{"n":"Long Way Down","m":[330,90],"s":[[302,154,120,12,-0.21015824481192977],[31,307,50,12],[304,489,50,12,0.048049477608874444]],"c":[47,600,-1],"g":[[155,220],[57,539]]},{"n":"Nudge","m":[150,300],"s":[[169,343,210,14,0.06000496604014188]],"c":[322,488],"h":"A falling line shoves things.","g":[[309,427],[315,359]]},{"n":"See-saw","m":[222,150],"p":[[176,330]],"c":[316,540],"h":"A line through a peg pivots.","g":[[222,227],[275,361]]},{"n":"Two Pegs","m":[64,150],"s":[[250,560,220,14]],"c":[330,520],"p":[[92,300],[226,392]],"h":"Through two pegs, a line locks.","g":[[143,283],[309,434]]},{"n":"Long Slide","m":[40,90],"p":[[38,218],[267,417]],"c":[330,496],"bo":[[120,245,80,0.5,18]],"g":[[40,167],[295,420]]},{"n":"Hammer","m":[196,416],"s":[[245,491,150,16,0.0663955645263195],[361,434,8,400]],"c":[330,600],"p":[[183,239]],"h":"Long lines are heavy. Swing one.","g":[[232,465],[294,469]]},{"n":"Tip Up","m":[120,160],"s":[[300,470,110,14,0.1]],"p":[[170,360]],"c":[60,560,-1],"g":[[120,237],[105,354]]},{"n":"Which Pegs?","m":[300,100],"p":[[256,253],[121,277],[172,423]],"c":[52,547,-1],"g":[[300,177],[84,260]]},{"n":"Ski Jump","m":[24,70],"s":[[85,204,190,14,0.6486167179960758]],"bo":[[97,176,120,0.62,19]],"c":[323,469],"h":"Strips add speed. Build a jump.","g":[[257,318],[309,410]]},{"n":"Speed Strip","m":[30,270],"s":[[63,386,180,14,0.14],[285,444,70,14,0.1]],"bo":[[97,298,130,0.14,18]],"c":[330,465],"g":[[201,385],[70,339]]},{"n":"Launch Pad","m":[60,150],"s":[[80,210,130,14,0.25]],"sp":[[170,560,70,0.22,17]],"c":[318,300],"h":"Red pads fire the marble.","g":[[182,335],[217,176]]},{"n":"Over the Wall","m":[30,260],"s":[[101,346,200,14,0.1],[192,493,14,240,0.01866838131286204]],"bo":[[129,293,130,0.1,18]],"c":[320,569],"g":[[310,519],[259,403]]},{"n":"Double Bounce","m":[70,110],"s":[[112,159,100,14,0.2]],"sp":[[155,600,70,0.35036810450255873,16],[269,410,60,-0.32,14.30547048151493]],"c":[30,333,-1],"g":[[40,282],[61,216]]},{"n":"Pinball","m":[180,70],"sp":[[50,420,70,0.5,15],[310,420,70,-0.5,15],[180,590,80,0,17]],"s":[[180,300,70,12]],"c":[60,210,-1],"g":[[180,147],[107,368]]},{"n":"Red Zone","m":[26,232],"s":[[51,310,158,16,0.34958971941284833],[226,454,130,14,0.03474385592527687]],"c":[317,454],"z":[[150,250,60,100]],"h":"You can't draw in the red zone.","g":[[203,361],[307,399]]},{"n":"Narrow Door","m":[330,110],"s":[[292,179,120,14,-0.25],[117,489,120,14,-0.1]],"c":[46,563,-1],"z":[[0,240,240,120]],"g":[[199,252],[174,321]]},{"n":"Hands Off","m":[30,250],"s":[[75,290,150,16,0.16],[120,440,60,14],[230,520,60,14]],"c":[325,590],"z":[[150,200,210,190]],"g":[[313,509],[254,468]]},{"n":"Peg Ban","m":[64,150],"c":[317,539],"p":[[88,315],[250,439]],"z":[[150,230,60,70],[150,440,210,60]],"g":[[139,313],[236,498]]},{"n":"Last Patch","m":[30,110],"s":[[66,189,150,14,0.3],[306,355,100,14,-0.21677867275942117],[121,451,110,14,0.130473862468265]],"c":[294,561],"z":[[170,180,190,120],[0,350,90,110]],"g":[[185,326],[251,446]]},{"n":"Under the Wire","m":[64,120],"s":[[65,244,80,14,0.2],[271,283,70,14,-0.06804980732500554]],"c":[330,555],"z":[[120,250,130,110]],"g":[[207,243],[153,263]]},{"n":"Handle With Care","m":[26,232],"ink":"glass","s":[[66,290,158,16,0.27003858918976037],[257,351,130,16,0.1]],"c":[330,435],"h":"Glass breaks if it lands hard.","g":[[81,270],[169,319]]},{"n":"Ice Slide","m":[40,100],"ink":"ice","p":[[67,261],[248,400]],"c":[330,511],"h":"Ice ink has no grip.","sp":[[50,540,60,0.3,14]],"g":[[129,283],[309,455]]},{"n":"Rubber","m":[90,110],"ink":"rubber","s":[[38,421,60,14],[152,463,60,14,-0.05614796931948513],[236,366,12,120]],"c":[285,540],"h":"Rubber ink bounces.","g":[[90,187],[193,319]]},{"n":"Glass","m":[64,120],"ink":"glass","s":[[69,326,70,14,0.024486644307151438],[192,387,70,14,0.015476524142548444]],"c":[37,570,-1],"g":[[71,437],[58,508]]},{"n":"Ice","m":[26,232],"ink":"ice","s":[[63,311,158,16,0.35879386013466863],[259,445,110,14,-0.05845938639249653]],"c":[89,589,-1],"g":[[162,456],[110,483]]},{"n":"Trampoline","m":[180,110],"ink":"rubber","s":[[93,453,50,14,0.051908322676084945],[291,474,50,14,-0.03896155086625368]],"c":[81,427,-1],"g":[[173,176],[114,353]]},{"n":"Going Up","m":[26,232],"s":[[72,270,158,16,0.36570139826741066]],"c":[320,404],"mv":[{"k":"lift","x":256,"y":347,"w":110,"h":14,"dy":30,"per":3}],"h":"Scenery moves once you lift.","bo":[[103,282,100,0.3,16]],"g":[[201,294],[292,300]]},{"n":"Belt","m":[64,120],"s":[[78,194,80,14,0.2]],"c":[47,574,-1],"mv":[{"k":"belt","x":180,"y":470,"w":220,"h":14,"v":-1.6}],"h":"Belts carry the marble.","g":[[164,426],[159,269]]},{"n":"Ferry","m":[26,232],"s":[[75,290,158,16,0.3]],"c":[332,500],"mv":[{"k":"lift","x":230,"y":390,"w":90,"h":14,"dx":50,"per":4}],"g":[[204,323],[305,363]]},{"n":"The Works","m":[30,100],"s":[[82,178,150,14,0.28]],"c":[324,594],"p":[[225,299],[92,401]],"mv":[{"k":"spin","x":209,"y":481,"w":120,"h":12,"rate":-1.2}],"bo":[[97,137,90,0.28,16]],"g":[[183,290],[188,370]]},{"n":"Up and Over","m":[330,120],"s":[[294,159,120,14,-0.25]],"c":[30,569,-1],"mv":[{"k":"lift","x":141,"y":425,"w":100,"h":14,"dy":40,"per":2.6},{"k":"belt","x":262,"y":475,"w":110,"h":12,"v":-1.2}],"g":[[203,244],[50,439]]},{"n":"Windmill","m":[60,130],"s":[[92,200,120,14,0.23097628061752767]],"c":[322,565],"mv":[{"k":"spin","x":211,"y":403,"w":150,"h":12,"rate":1.1}],"h":"Time your line.","sp":[[41,544,60,0.34425167329004036,15]],"g":[[199,229],[218,339]]}];
 
-const DAILY=[{"m":[64,150],"c":[313,561],"p":[[101,335],[244,424]],"z":[[150,230,60,70],[150,440,210,60]],"n":"Daily","g":[[306,514],[292,465]],"par":219},{"m":[26,232],"s":[[73,282,158,16,0.3]],"c":[330,418],"mv":[{"k":"lift","x":245,"y":356,"w":110,"h":14,"dy":30,"per":3}],"n":"Daily","g":[[122,269],[245,300]],"par":87},{"m":[26,232],"s":[[70,298,158,16,0.3],[251,363,130,16,0.1]],"c":[330,418],"n":"Daily","g":[[228,321],[174,331]],"par":66},{"m":[334,232],"s":[[278,303,158,16,-0.3],[106,347,130,16,-0.1]],"c":[31,441,-1],"n":"Daily","g":[[273,264],[142,298]],"par":65},{"m":[40,90],"p":[[30,207],[260,419]],"c":[330,483],"n":"Daily","g":[[89,227],[300,399]],"par":329},{"m":[26,232],"s":[[81,282,158,16,0.3]],"c":[327,485],"mv":[{"k":"lift","x":230,"y":390,"w":90,"h":14,"dx":50,"per":4}],"n":"Daily","g":[[298,368],[297,421]],"par":64},{"m":[150,300],"s":[[160,344,210,14,0.06000496604014188]],"c":[310,473],"n":"Daily","g":[[285,405],[278,351]],"par":17},{"m":[64,150],"s":[[253,556,220,14]],"c":[325,517],"p":[[90,303],[231,402]],"n":"Daily","g":[[314,466],[312,416]],"par":122},{"m":[30,250],"s":[[82,299,150,16,0.16],[122,440,60,14],[234,531,60,14]],"c":[329,585],"z":[[150,200,210,190]],"n":"Daily","g":[[302,510],[231,507]],"par":115},{"m":[64,150],"c":[305,556],"p":[[109,340],[236,426]],"z":[[150,230,60,70],[150,440,210,60]],"n":"Daily","g":[[299,449],[299,504]],"par":108},{"m":[40,100],"ink":"ice","p":[[67,273],[244,398]],"c":[330,502],"n":"Daily","g":[[197,347],[316,456]],"par":176},{"m":[40,90],"p":[[46,221],[264,425]],"c":[330,489],"n":"Daily","g":[[325,430],[94,218]],"par":324},{"m":[26,232],"ink":"glass","s":[[66,277,158,16,0.3],[242,364,130,16,0.1]],"c":[330,426],"n":"Daily","g":[[244,337],[180,278]],"par":18},{"m":[330,90],"s":[[279,140,120,12,-0.21015824481192977],[64,334,50,12],[289,510,50,12,0.048049477608874444]],"c":[39,600,-1],"n":"Daily","g":[[200,170],[98,527]],"par":231},{"m":[64,120],"s":[[70,268,70,14],[184,350,70,14]],"c":[323,573],"n":"Daily","g":[[298,431],[301,516]],"par":187},{"m":[222,150],"p":[[175,332]],"c":[313,556],"n":"Daily","g":[[224,373],[289,463]],"par":69},{"m":[120,160],"s":[[305,472,110,14,0.1]],"p":[[175,351]],"c":[61,565,-1],"n":"Daily","g":[[133,382],[77,512]],"par":63},{"m":[180,110],"ink":"rubber","s":[[81,455,50,14],[287,475,50,14]],"c":[81,421,-1],"n":"Daily","g":[[168,323],[82,337]],"par":292},{"m":[26,232],"s":[[74,319,158,16,0.3],[204,450,130,14,0.1]],"c":[330,484],"z":[[150,250,60,100]],"n":"Daily","g":[[252,431],[200,385]],"par":87},{"m":[90,110],"ink":"rubber","s":[[30,417,60,14],[149,477,60,14,-0.05614796931948513],[241,361,12,120]],"c":[292,525],"n":"Daily","g":[[90,335],[62,379]],"par":110},{"m":[64,150],"s":[[243,550,220,14]],"c":[324,512],"p":[[101,295],[235,392]],"n":"Daily","g":[[97,279],[338,426]],"par":223},{"m":[222,150],"p":[[171,329]],"c":[308,536],"n":"Daily","g":[[251,413],[234,350]],"par":53},{"m":[330,90],"s":[[293,140,120,12,-0.21015824481192977],[49,328,50,12],[300,489,50,12,0.048049477608874444]],"c":[36,582,-1],"n":"Daily","g":[[210,200],[255,472]],"par":237},{"m":[26,232],"s":[[66,295,158,16,0.3],[248,356,130,16,0.1]],"c":[319,412],"n":"Daily","g":[[183,328],[233,315]],"par":63},{"m":[120,160],"s":[[301,467,110,14,0.1]],"p":[[166,352]],"c":[49,575,-1],"n":"Daily","g":[[137,280],[114,358]],"par":68},{"m":[64,120],"ink":"glass","s":[[81,307,70,14],[175,375,70,14]],"c":[42,544,-1],"n":"Daily","g":[[55,496],[96,430]],"par":34},{"m":[334,232],"s":[[281,281,158,16,-0.3],[109,345,130,16,-0.1]],"c":[30,433,-1],"n":"Daily","g":[[148,298],[240,253]],"par":64},{"m":[30,110],"s":[[62,194,150,14,0.3],[298,351,100,14,-0.21677867275942117],[127,447,110,14,0.130473862468265]],"c":[290,560],"z":[[170,180,190,120],[0,350,90,110]],"n":"Daily","g":[[68,174],[249,425]],"par":19},{"m":[30,250],"s":[[75,283,150,16,0.16],[124,443,60,14],[225,523,60,14]],"c":[320,575],"z":[[150,200,210,190]],"n":"Daily","g":[[315,517],[236,479]],"par":98},{"m":[330,110],"s":[[287,187,120,14,-0.25],[114,483,120,14,-0.1]],"c":[54,573,-1],"z":[[0,240,240,120]],"n":"Daily","g":[[176,418],[166,345]],"par":24}];
+const DAILY=[{"m":[26,232],"s":[[91,315,158,16,0.3],[239,329,130,16,0.1]],"c":[317,394],"n":"Daily","g":[[89,274],[144,278]],"par":80},{"m":[64,150],"s":[[245,556,220,14]],"c":[330,539],"p":[[98,297],[217,386]],"n":"Daily","g":[[70,222],[167,354]],"par":190},{"m":[196,416],"s":[[241,483,150,16,0.0663955645263195],[364,429,8,400]],"c":[330,600],"p":[[178,235]],"n":"Daily","g":[[335,519],[254,459]],"par":18},{"m":[180,110],"ink":"rubber","s":[[97,460,50,14,0.051908322676084945],[295,474,50,14,-0.03896155086625368]],"c":[82,437,-1],"n":"Daily","g":[[168,377],[116,366]],"par":244},{"m":[64,150],"s":[[246,564,220,14]],"c":[330,526],"p":[[86,311],[224,390]],"n":"Daily","g":[[285,413],[311,470]],"par":215},{"m":[334,232],"s":[[287,258,158,16,-0.24313699155673385],[103,381,130,16,-0.14227952983230352]],"c":[30,417,-1],"n":"Daily","g":[[176,275],[148,322]],"par":99},{"m":[90,110],"ink":"rubber","s":[[36,417,60,14],[158,471,60,14,-0.05614796931948513],[243,353,12,120]],"c":[281,528],"n":"Daily","g":[[90,187],[131,363]],"par":106},{"m":[30,250],"s":[[80,278,150,16,0.16],[115,426,60,14],[225,527,60,14]],"c":[330,600],"z":[[150,200,210,190]],"n":"Daily","g":[[185,380],[215,439]],"par":46},{"m":[60,130],"s":[[95,203,120,14,0.23097628061752767]],"c":[328,579],"mv":[{"k":"spin","x":211,"y":403,"w":150,"h":12,"rate":1.1}],"sp":[[41,544,60,0.34425167329004036,15]],"n":"Daily","g":[[207,349],[89,501]],"par":43},{"m":[30,270],"s":[[73,381,180,14,0.14],[291,453,70,14,0.1]],"bo":[[97,298,130,0.14,18]],"c":[330,483],"n":"Daily","g":[[208,390],[257,375]],"par":101},{"m":[26,232],"s":[[77,276,158,16,0.3]],"c":[322,506],"mv":[{"k":"lift","x":230,"y":390,"w":90,"h":14,"dx":50,"per":4}],"n":"Daily","g":[[198,315],[312,388]],"par":42},{"m":[26,232],"s":[[77,316,158,16,0.3],[253,347,130,16,0.1]],"c":[330,402],"n":"Daily","g":[[172,297],[319,315]],"par":52},{"m":[64,120],"s":[[70,274,70,14],[169,341,70,14]],"c":[322,549],"n":"Daily","g":[[64,197],[120,228]],"par":70},{"m":[30,250],"s":[[69,296,150,16,0.16],[115,434,60,14],[227,512,60,14]],"c":[330,591],"z":[[150,200,210,190]],"n":"Daily","g":[[293,506],[235,439]],"par":104},{"m":[334,232],"s":[[293,285,158,16,-0.24313699155673385],[113,358,130,16,-0.14227952983230352]],"c":[33,427,-1],"n":"Daily","g":[[113,317],[173,295]],"par":60},{"m":[120,160],"s":[[290,480,110,14,0.1]],"p":[[167,349]],"c":[52,543,-1],"n":"Daily","g":[[91,433],[101,363]],"par":52},{"m":[64,150],"c":[314,540],"p":[[89,320],[260,436]],"z":[[150,230,60,70],[150,440,210,60]],"n":"Daily","g":[[64,227],[194,492]],"par":286},{"m":[30,100],"s":[[74,139,150,14,0.28],[271,294,140,14,-0.20886691457033157],[88,384,130,14,0.2]],"c":[288,532],"bo":[[89,149,90,0.28,15]],"n":"Daily","g":[[189,254],[98,341]],"par":43},{"m":[30,110],"s":[[67,191,150,14,0.3],[307,362,100,14,-0.21677867275942117],[112,462,110,14,0.130473862468265]],"c":[307,558],"z":[[170,180,190,120],[0,350,90,110]],"n":"Daily","g":[[190,333],[216,479]],"par":30},{"m":[120,160],"s":[[296,474,110,14,0.1]],"p":[[161,368]],"c":[58,562,-1],"n":"Daily","g":[[120,226],[79,426]],"par":48},{"m":[26,232],"ink":"ice","s":[[66,312,158,16,0.35879386013466863],[251,445,110,14,-0.05845938639249653]],"c":[93,581,-1],"n":"Daily","g":[[169,348],[114,446]],"par":19},{"m":[222,150],"p":[[169,325]],"c":[311,553],"n":"Daily","g":[[222,227],[236,438]],"par":58},{"m":[70,110],"s":[[115,158,100,14,0.2]],"sp":[[155,600,70,0.35036810450255873,16],[269,410,60,-0.32,14.30547048151493]],"c":[30,337,-1],"n":"Daily","g":[[28,205],[41,265]],"par":18},{"m":[222,150],"p":[[166,327]],"c":[306,542],"n":"Daily","g":[[272,418],[251,338]],"par":64},{"m":[30,270],"s":[[55,385,180,14,0.14],[289,453,70,14,0.1]],"bo":[[97,298,130,0.14,18]],"c":[328,458],"n":"Daily","g":[[256,403],[73,335]],"par":119},{"m":[330,110],"s":[[300,183,120,14,-0.25],[117,498,120,14,-0.1]],"c":[45,547,-1],"z":[[0,240,240,120]],"n":"Daily","g":[[193,244],[155,299]],"par":37},{"m":[30,110],"s":[[65,191,150,14,0.3],[302,365,100,14,-0.21677867275942117],[115,443,110,14,0.130473862468265]],"c":[295,562],"z":[[170,180,190,120],[0,350,90,110]],"n":"Daily","g":[[193,341],[241,432]],"par":17},{"m":[40,100],"ink":"ice","p":[[65,263],[247,400]],"c":[330,529],"sp":[[50,540,60,0.3,14]],"n":"Daily","g":[[40,177],[40,397]],"par":65},{"m":[26,232],"s":[[74,258,158,16,0.36570139826741066]],"c":[330,388],"mv":[{"k":"lift","x":256,"y":347,"w":110,"h":14,"dy":30,"per":3}],"bo":[[103,282,100,0.3,16]],"n":"Daily","g":[[314,304],[194,270]],"par":52},{"m":[40,90],"p":[[28,217],[273,424]],"c":[330,490],"bo":[[120,245,80,0.5,18]],"n":"Daily","g":[[40,167],[277,408]],"par":52}];
 
 /* ---------- Noodle site tracking (site contract §5) ---------- */
 const GAME='inkline';let LEVEL=1,rnd={armed:false,open:false,secs:0,how:'new'};
@@ -266,9 +290,11 @@ function rndEnd(win,x){if(!rnd.open)rndStart();if(!rnd.open)return;rnd.open=fals
 /* ---------- Save ---------- */
 const KEY='digi-inkline-v1',coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
 const quiet=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
-const blank={stars:{},open:0,fails:{},snd:true,vib:true,still:quiet,raised:false,fs:coarse,daily:{},streak:0,last:null};
+const blank={v:2,stars:{},open:0,fails:{},snd:true,vib:true,still:quiet,raised:false,fs:coarse,daily:{},streak:0,last:null};
 let save=(()=>{try{return Object.assign({},blank,JSON.parse(localStorage.getItem(KEY))||{})}catch(e){return Object.assign({},blank)}})();
 function keep(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
+/* Big Air went in as chapter 3, so older saves move up six places from level 13. */
+if(save.v!==2){const m={};Object.keys(save.stars).forEach(k=>{m[+k>=12?+k+6:k]=save.stars[k]});save.stars=m;if(save.open>=12)save.open+=6;save.fails={};save.v=2}
 keep();
 /* ---------- Full screen (contract §10) ---------- */
 const fsOK=(()=>{try{return !!(document.fullscreenEnabled||document.webkitFullscreenEnabled)}catch(e){return false}})();
@@ -282,7 +308,7 @@ const A={ctx:null,pen:null,roll:null,noise:null};
 function audio(){if(A.ctx||!save.snd)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=A.ctx=new C(),n=c.createBuffer(1,c.sampleRate*2,c.sampleRate),d=n.getChannelData(0);let b=0;
  for(let i=0;i<d.length;i++){b=.6*b+.4*(Math.random()*2-1);d[i]=b}A.noise=n;
  const loop=(type,f,q)=>{const s=c.createBufferSource(),fl=c.createBiquadFilter(),g=c.createGain();s.buffer=n;s.loop=true;fl.type=type;fl.frequency.value=f;fl.Q.value=q;g.gain.value=0;s.connect(fl);fl.connect(g);g.connect(c.destination);s.start();g.fl=fl;return g};
- A.pen=loop('bandpass',3100,1.1);A.penF=A.pen.fl;A.roll=loop('lowpass',420,.7);}catch(e){A.ctx=null}}
+ A.wind=loop('bandpass',850,.8);A.pen=loop('bandpass',3100,1.1);A.penF=A.pen.fl;A.roll=loop('lowpass',420,.7);}catch(e){A.ctx=null}}
 function tone(f,t,v,type,when){const c=A.ctx;if(!c||!save.snd)return;try{const o=c.createOscillator(),g=c.createGain(),s=c.currentTime+(when||0);o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.0005,s+t);o.connect(g);g.connect(c.destination);o.start(s);o.stop(s+t+.02)}catch(e){}}
 function tick(v,f){const c=A.ctx;if(!c||!save.snd)return;try{const s=c.createBufferSource(),fl=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;s.buffer=A.noise;fl.type='bandpass';fl.frequency.value=f||900;fl.Q.value=1.6;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0005,t+.09);s.connect(fl);fl.connect(g);g.connect(c.destination);s.start(t,Math.random());s.stop(t+.11)}catch(e){}}
 function knock(v){const a=Math.min(.34,.05+v*.04);tone(150+v*14,.1,a,'triangle');tick(a*.7,700)}
@@ -291,9 +317,9 @@ function setLoop(g,v){if(!g||!A.ctx)return;try{g.gain.setTargetAtTime(save.snd?v
 function buzz(x){if(!save.vib)return;try{navigator.vibrate&&navigator.vibrate(x)}catch(e){}}
 /* ---------- State ---------- */
 const $=id=>document.getElementById(id),cv=$('c'),g=cv.getContext('2d');
-const TINTS=[['#e9f1ea','#c6dccd'],['#e6eff6','#c4d8e8'],['#f3ecdf','#e3d3b8'],['#eeeaf6','#d6cee9'],['#f4f0d8','#e2dcaa']];
+const TINTS=[['#e9f1ea','#c6dccd'],['#e6eff6','#c4d8e8'],['#f8e7e0','#efc9bb'],['#f3ecdf','#e3d3b8'],['#eeeaf6','#d6cee9'],['#f4f0d8','#e2dcaa']];
 const INKCOL={ink:'#1c2c4c',rubber:'#a4432a',ice:'#3b9fc9',glass:'#2f9a84'};
-let S=null,scene='home',mode='levels',idx=0,L=null,sc=1,ox=0,oy=0,dpr=1,VW=360,VH=640,bg=null,finger=null,last=0,acc=0,ghost=null,tries=0,wonAt=0,cardDue=0,parts=[],replaying=false,penV=0,lastPt=null,pegsLit=0,demo=null;
+let S=null,scene='home',mode='levels',idx=0,L=null,sc=1,ox=0,oy=0,dpr=1,VW=360,VH=640,bg=null,finger=null,last=0,acc=0,ghost=null,tries=0,wonAt=0,cardDue=0,parts=[],replaying=false,shake=0,trail=[],pops=[],setting=null,penV=0,lastPt=null,pegsLit=0,demo=null;
 const DAY=(()=>{const d=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date());return d})();
 const dayNo=Math.floor(Date.parse(DAY+'T00:00:00Z')/864e5);
 const todayLevel=()=>DAILY[((dayNo%DAILY.length)+DAILY.length)%DAILY.length];
@@ -310,8 +336,9 @@ function fit(){VW=innerWidth;VH=innerHeight;dpr=Math.min(devicePixelRatio||1,2.5
 const seedR=s=>()=>(s=(s*16807)%2147483647)/2147483647;
 function wobble(x,y,w,h,a,seed){const r=seedR(Math.abs(Math.round(x*7+y*13+w))+11),P=[],c=Math.cos(a),s=Math.sin(a),edge=(x0,y0,x1,y1)=>{const n=Math.max(1,Math.round(Math.hypot(x1-x0,y1-y0)/22));for(let i=0;i<n;i++){const t=i/n,u=x0+(x1-x0)*t+(i?(r()-.5)*1.5:0),v=y0+(y1-y0)*t+(i?(r()-.5)*1.5:0);P.push([x+u*c-v*s,y+u*s+v*c])}};
  edge(-w/2,-h/2,w/2,-h/2);edge(w/2,-h/2,w/2,h/2);edge(w/2,h/2,-w/2,h/2);edge(-w/2,h/2,-w/2,-h/2);return P}
+function spring(c,p){const n=[Math.sin(p.a),-Math.cos(p.a)],t=[Math.cos(p.a),Math.sin(p.a)];c.strokeStyle='#1c2c4c';c.lineWidth=2;c.beginPath();for(let i=0;i<=6;i++){const d=8+i*2.6,o=(i%2?1:-1)*p.w*.28;const x=p.x-n[0]*d+t[0]*o,y=p.y-n[1]*d+t[1]*o;i?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}
 function poly(c,P){c.beginPath();P.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath()}
-function drawPart(c,p,x,y,a){const col=p.cup?'#a4432a':'#1c2c4c',P=wobble(x,y,p.w,p.h,a);poly(c,P);c.fillStyle=p.cup?'#e7b75a':p.mv?'#ffe9a8':'#fbf7ea';c.fill();
+function drawPart(c,p,x,y,a){const col=p.cup?'#a4432a':'#1c2c4c',P=wobble(x,y,p.w,p.h,a);if(p.pow)spring(c,p);poly(c,P);c.fillStyle=p.pow?'#e0584c':p.cup?'#e7b75a':p.mv?'#ffe9a8':'#fbf7ea';c.fill();
  c.save();poly(c,P);c.clip();c.strokeStyle=p.cup?'rgba(164,67,42,.5)':'rgba(28,44,76,.5)';c.lineWidth=1.1;c.beginPath();const R2=Math.max(p.w,p.h);for(let i=-R2;i<R2;i+=7){const dx=Math.cos(a),dy=Math.sin(a);c.moveTo(x+dx*i-dy*-20+dx*-20,y+dy*i+dx*-20+dy*-20);c.lineTo(x+dx*(i+40)-dy*20,y+dy*(i+40)+dx*20)}c.stroke();c.restore();
  poly(c,P);c.strokeStyle=col;c.lineWidth=2;c.lineJoin='round';c.stroke()}
 function paintBg(){bg=document.createElement('canvas');bg.width=cv.width;bg.height=cv.height;const c=bg.getContext('2d'),[pa,gr]=tint();c.fillStyle=pa;c.fillRect(0,0,bg.width,bg.height);c.scale(dpr,dpr);
@@ -320,6 +347,7 @@ function paintBg(){bg=document.createElement('canvas');bg.width=cv.width;bg.heig
  c.strokeStyle='rgba(28,44,76,.3)';c.lineWidth=1.4;c.setLineDash([2,6]);c.strokeRect(1,1,W-2,H-2);c.setLineDash([]);
  (S.L.z||[]).forEach(z=>{c.save();c.beginPath();c.rect(z[0],z[1],z[2],z[3]);c.fillStyle='rgba(207,58,46,.1)';c.fill();c.clip();c.strokeStyle='rgba(207,58,46,.34)';c.lineWidth=1.6;c.beginPath();for(let i=-H;i<W+H;i+=12){c.moveTo(i,0);c.lineTo(i+H,H)}c.stroke();c.restore();c.strokeStyle='rgba(207,58,46,.75)';c.lineWidth=2;c.setLineDash([7,5]);c.strokeRect(z[0],z[1],z[2],z[3]);c.setLineDash([])});
  S.parts.forEach(p=>{if(!p.mv)drawPart(c,p,p.x,p.y,p.a)});
+ (S.L.bo||[]).forEach(q=>{c.save();c.translate(q[0],q[1]);c.rotate(q[3]||0);c.fillStyle='rgba(224,161,6,.2)';c.strokeStyle='rgba(164,67,42,.55)';c.lineWidth=1.5;c.setLineDash([5,4]);c.fillRect(-q[2]/2,-14,q[2],28);c.strokeRect(-q[2]/2,-14,q[2],28);c.restore()});
  (S.L.mv||[]).forEach(m=>{if(m.k=='lift'){c.strokeStyle='rgba(28,44,76,.35)';c.lineWidth=1.5;c.setLineDash([5,5]);c.beginPath();c.moveTo(m.x-(m.dx||0),m.y-(m.dy||0));c.lineTo(m.x+(m.dx||0),m.y+(m.dy||0));c.stroke();c.setLineDash([])}});
  const k=S.L.c,sd=k[2]||1;c.fillStyle='#cf3a2e';c.strokeStyle='#1c2c4c';c.lineWidth=1.6;c.beginPath();const fx=k[0]+sd*23,fy=k[1]-69;c.moveTo(fx,fy-14);c.lineTo(fx-sd*18,fy-7);c.lineTo(fx,fy);c.closePath();c.fill();c.stroke()}
 /* ---------- Drawing ---------- */
@@ -331,18 +359,23 @@ function gem(x,y,t){const b=(save.still?0:Math.sin(t/330+x)*1.8);g.save();g.tran
 function marble(m,a){g.save();g.translate(m.x,m.y);const G=g.createRadialGradient(-4,-5,1,0,0,R);G.addColorStop(0,'#ff8d73');G.addColorStop(.5,'#d93c30');G.addColorStop(1,'#a8211b');g.fillStyle=G;g.beginPath();g.arc(0,0,R,0,7);g.fill();g.strokeStyle='#1c2c4c';g.lineWidth=2;g.stroke();g.rotate(a);g.strokeStyle='rgba(255,255,255,.65)';g.lineWidth=1.8;g.beginPath();g.arc(0,0,6.5,.3,2);g.stroke();g.restore()}
 function peg(p,lit){g.save();if(lit){g.strokeStyle=lit>1?'#cf3a2e':'#e0a106';g.lineWidth=3;g.beginPath();g.arc(p[0],p[1],11,0,7);g.stroke()}g.fillStyle='#c98f2c';g.strokeStyle='#1c2c4c';g.lineWidth=2;g.beginPath();g.arc(p[0],p[1],6,0,7);g.fill();g.stroke();g.fillStyle='#fff3cf';g.beginPath();g.arc(p[0]-1.6,p[1]-1.8,1.7,0,7);g.fill();g.restore()}
 function render(t){
- g.setTransform(1,0,0,1,0,0);if(bg)g.drawImage(bg,0,0);g.setTransform(dpr*sc,0,0,dpr*sc,dpr*ox,dpr*oy);
+ let sx=0,sy=0;if(shake>.2&&!save.still){sx=(Math.random()-.5)*shake;sy=(Math.random()-.5)*shake;shake*=.86}else shake=0;
+ g.setTransform(1,0,0,1,0,0);if(bg)g.drawImage(bg,sx*dpr,sy*dpr);g.setTransform(dpr*sc,0,0,dpr*sc,dpr*(ox+sx),dpr*(oy+sy));
  if(!S)return;
+ (S.L.bo||[]).forEach(q=>{g.save();g.translate(q[0],q[1]);g.rotate(q[3]||0);g.strokeStyle='#cf3a2e';g.lineWidth=3;g.lineJoin='round';const m=save.still?0:(t/9)%18,L2=q[2]/2;for(let x=-L2+6+m;x<L2-6;x+=18){g.beginPath();g.moveTo(x-5,-8);g.lineTo(x+3,0);g.lineTo(x-5,8);g.stroke()}g.restore()});
  S.parts.forEach(p=>{if(p.mv){g.save();drawPart(g,p,p.b.position.x,p.b.position.y,p.b.angle);if(p.mv.k=='belt'){g.strokeStyle='#1c2c4c';g.lineWidth=2;const v=Math.sign(p.mv.v);for(let i=-2;i<3;i++){const x=p.x+i*p.w/5,y=p.y;g.beginPath();g.moveTo(x-v*3,y-3);g.lineTo(x+v*3,y);g.lineTo(x-v*3,y+3);g.stroke()}}g.restore()}});
  S.L.g.forEach((q,i)=>{if(!S.got.has(i))gem(q[0],q[1],t)});
  const col=INKCOL[S.L.ink||'ink'];
  if(ghost&&S.state=='draw')stroke(ghost,null,col,.17);
  const hits=S.state=='draw'?pegHits(S):[];
  (S.L.p||[]).forEach(p=>peg(p,hits.includes(p)?hits.length:0));
- if(S.line)stroke(placed(),S.widths,col);else if(S.state=='draw')stroke(S.pts,null,col);
+ if(setting){const k=Math.min(1,(t-setting.t0)/110);stroke(setting.a.map((q,i)=>[q[0]+(setting.b[i][0]-q[0])*k,q[1]+(setting.b[i][1]-q[1])*k]),null,col)}
+ else if(S.line)stroke(placed(),S.widths,col);else if(S.state=='draw')stroke(S.pts,null,col);
  if(S.shards&&!save.still){S.shards.forEach((q,i)=>{const T=(S.t-S.shardT)/1000,sp=seedR(i*97+13),vx=(sp()-.5)*90,vy=-40-sp()*60;g.fillStyle='#2f9a84';g.globalAlpha=Math.max(0,1-T);g.fillRect(q.x+vx*T,q.y+vy*T+300*T*T,4,4)});g.globalAlpha=1}
  if(S.state=='draw'&&finger!=null&&S.slid&&S.pen&&lastPt){g.strokeStyle='rgba(28,44,76,.32)';g.lineWidth=1.5;g.setLineDash([3,5]);g.beginPath();g.moveTo(S.pen[0],S.pen[1]);g.lineTo(lastPt[0],lastPt[1]);g.stroke();g.setLineDash([])}
+ if(!save.still&&S.state!='draw'){const v=Math.hypot(S.marble.velocity.x,S.marble.velocity.y);trail.push([S.marble.position.x,S.marble.position.y,v]);if(trail.length>16)trail.shift();trail.forEach((q,i)=>{const a=i/trail.length;if(q[2]<2.2)return;g.globalAlpha=a*.32;g.fillStyle='#cf3a2e';g.beginPath();g.arc(q[0],q[1],R*(.35+a*.6),0,7);g.fill()});g.globalAlpha=1}
  marble(S.marble.position,S.marble.angle);
+ pops=pops.filter(p=>t-p.t<900);pops.forEach(p=>{const k=(t-p.t)/900;g.globalAlpha=1-k*k;g.fillStyle='#1c2c4c';g.font='22px "Gochi Hand",cursive';g.textAlign='center';g.fillText(p.s,Math.min(W-50,Math.max(50,p.x)),p.y-18-k*26)});g.globalAlpha=1;
  parts=parts.filter(p=>p.l>0);parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.12;p.l-=.022;g.globalAlpha=Math.max(0,p.l);g.fillStyle=p.c;g.fillRect(p.x-2,p.y-2,4,4)});g.globalAlpha=1;
 }
 function spark(x,y,n,c){if(save.still)return;for(let i=0;i<n;i++){const a=Math.random()*6.28,v=1+Math.random()*2.6;parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1,l:1,c})}}
@@ -350,12 +383,15 @@ function spark(x,y,n,c){if(save.still)return;for(let i=0;i<n;i++){const a=Math.r
 function drain(){if(!S)return;S.fx.forEach(f=>{if(demo)return;
  if(f.k=='gem'){bell(f.n);buzz(10);spark(f.x,f.y,16,'#f6c62c');ttl()}
  else if(f.k=='smash'){tick(.3,3400);tone(2300,.2,.05);tone(3100,.16,.04);buzz(20);S.shardT=S.t}
+ else if(f.k=='spring'){tone(150,.09,.16,'triangle');const c=A.ctx;if(c&&save.snd)try{const o=c.createOscillator(),h=c.createGain(),n=c.currentTime;o.frequency.setValueAtTime(190,n);o.frequency.exponentialRampToValueAtTime(760,n+.2);h.gain.setValueAtTime(.13,n);h.gain.exponentialRampToValueAtTime(.001,n+.24);o.connect(h);h.connect(c.destination);o.start(n);o.stop(n+.26)}catch(e){}spark(f.x,f.y,12,'#e0584c');shake=5;buzz(16)}
+ else if(f.k=='boost'){tick(.2,1900);tone(520,.16,.05,'sawtooth');spark(f.x,f.y,8,'#e0a106');buzz(8)}
+ else if(f.k=='land'){knock(Math.min(7,f.air/110));spark(f.x,f.y+9,Math.min(16,6+f.air/70),'#51607c');shake=Math.min(8,f.air/120);buzz(12);if(f.air>800){pops.push({s:f.air>1300?'Huge air!':'Big air!',x:f.x,y:f.y,t:performance.now()});tone(660,.15,.07,'triangle');tone(880,.2,.06,'triangle',.08)}}
  else if(f.k=='hit'){if(S.ink.e>.5){tone(180+f.v*30,.16,.12,'sine')}else knock(f.v)}
  else knock(f.v*.7)});S.fx.length=0}
 /* ---------- Scenes ---------- */
 function show(n){scene=n;$('home').hidden=n!='home';$('levels').hidden=n!='levels';$('pause').hidden=n!='pause';$('hud').hidden=n!='play'&&n!='pause';$('hint').hidden=n!='play';$('turn').hidden=!(VW>VH&&VH<=500&&n=='play');if(n!='play'){$('card').hidden=true;$('toast').hidden=true}}
 function ttl(){if(!S)return;const n=S.got.size;$('ttl').innerHTML=(mode=='daily'?'Daily':(idx+1)+'. '+L.n)+`<small>${mode=='daily'?(save.daily[DAY]?'Best '+cm(save.daily[DAY].best):'Shortest line wins'):(CH[chapOf(idx)].n)} · ${'◆'.repeat(n)}${'◇'.repeat(L.g.length-n)}</small>`}
-function load(lv,how){L=lv;S=makeSim(L);demo=null;finger=null;penV=0;wonAt=0;cardDue=0;replaying=false;LEVEL=mode=='daily'?1:idx+1;parts=[];$('card').hidden=true;$('toast').hidden=true;rndArm(how);paintBg();ttl();
+function load(lv,how){L=lv;S=makeSim(L);setting=null;trail=[];pops=[];shake=0;demo=null;finger=null;penV=0;wonAt=0;cardDue=0;replaying=false;LEVEL=mode=='daily'?1:idx+1;parts=[];$('card').hidden=true;$('toast').hidden=true;rndArm(how);paintBg();ttl();
  const h=$('hint');h.textContent=L.h&&(mode=='levels')&&tries==0?L.h:'';h.style.opacity=1}
 function startLevel(i){mode='levels';idx=i;tries=0;ghost=null;show('play');load(LEVELS[i],'new');goFS()}
 function startDaily(){mode='daily';idx=0;tries=0;ghost=null;show('play');load(todayLevel(),'new');goFS()}
@@ -390,7 +426,7 @@ cv.addEventListener('pointerdown',e=>{audio();if(A.ctx&&A.ctx.state=='suspended'
 cv.addEventListener('pointermove',e=>{if(e.pointerId!==finger)return;const ev=e.getCoalescedEvents?e.getCoalescedEvents():[e];(ev.length?ev:[e]).forEach(v=>{const q=toW(v);S.slid=!addPoint(S,q[0],q[1]);penV+=Math.hypot(q[0]-lastPt[0],q[1]-lastPt[1]);lastPt=q});
  const h=pegHits(S).length;if(h>pegsLit){tone(1320,.07,.08,'triangle');buzz(6)}pegsLit=h});
 function up(e){if(e.pointerId!==finger)return;finger=null;setLoop(A.pen,0);if(S.state!='draw')return;if(!S.pts.length){return}
- if(release(S)){tick(.18,500);ttl()}else{const t=$('toast');t.hidden=false;t.textContent='Draw a longer line.';$('hint').style.opacity=1}}
+ if(release(S)){tick(.18,500);ttl();if(!save.still&&S.raw&&S.raw.length>2)setting={a:S.raw,b:S.sm,t0:performance.now()}}else{const t=$('toast');t.hidden=false;t.textContent='Draw a longer line.';$('hint').style.opacity=1}}
 cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
 /* ---------- Main loop ---------- */
 function frame(t){requestAnimationFrame(frame);const dt=Math.min(t-last,50);last=t;if(document.hidden||scene=='pause')return;
@@ -398,17 +434,18 @@ function frame(t){requestAnimationFrame(frame);const dt=Math.min(t-last,50);last
  if(!S)return;if(rnd.open)rnd.secs+=dt/1000;
  setLoop(A.pen,Math.min(.16,penV*.012));penV*=.55;try{if(A.penF)A.penF.frequency.setTargetAtTime(S.slid&&finger!=null?1500:3100,A.ctx.currentTime,.04)}catch(e){}
  let dts=dt;if(wonAt){const a=(t-wonAt);dts=dt*(save.still?1:(a<850?.22:1))}
- acc+=dts;while(acc>=DT){step(S);acc-=DT}drain();
- setLoop(A.roll,S.state=='run'?Math.min(.11,S.marble.speed*.014):0);
+ if(setting&&performance.now()-setting.t0>=120)setting=null;
+ if(setting)acc=0;else{acc+=dts;while(acc>=DT){step(S);acc-=DT}}drain();
+ const sp=S.state=='run'?Body.getSpeed(S.marble):0,air=S.state=='run'&&S.t-S.contact>120;setLoop(A.roll,sp&&!air?Math.min(.12,sp*.012):0);setLoop(A.wind,air?Math.min(.1,sp*.008):0);
  if(S.state=='won'&&!wonAt){wonAt=t;const p=S.L.c;spark(p[0],p[1]-14,26,'#cf3a2e');spark(p[0],p[1]-14,22,'#f6c62c');knock(5);tone(880,.4,.12);cardDue=t+(save.still?300:1000)}
  if(cardDue&&t>cardDue){cardDue=0;if(replaying){const k=replaying;replaying=false;S=k;paintBg();$('card').hidden=false}else win()}
  if(S.state=='lost'){S.state='ended';if(replaying){const k=replaying;replaying=false;S=k;paintBg();$('card').hidden=false}else lost()}
  render(t)}
 /* ---------- Home: the game draws its own line, for real ---------- */
-const DEMO={...LEVELS[0],g:[[185,305],[322,372]]},DLINE=[[153,300],[176,312],[200,328],[222,342]];
+const DLINE=[[301.74112796770373,310.28940139489583],[279.30197414776495,304.45547230859944],[256.86282032782617,298.621543222303],[234.42366650788733,292.7876141360066],[211.98451268794855,286.95368504971015],[189.54535886800977,281.11975596341375],[167.10620504807096,275.2858268771173],[144.66705122813218,269.4518977908209],[122.22789740819337,263.6179687045245],[107.26846152823418,259.72868264699355]],DEMO=LEVELS[0];
 function homeReset(){L=DEMO;mode='levels';idx=0;S=makeSim(DEMO);demo={t:0,i:0};paintBg()}
 function homeTick(dt){if(!S||!demo||save.still)return;demo.t+=dt;
- if(S.state=='draw'){const want=Math.min(DLINE.length-1,demo.t/260|0),k=(demo.t%260)/260,a=DLINE[want],b=DLINE[want+1]||a;addPoint(S,a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k);if(demo.t>1100){addPoint(S,...DLINE[3]);release(S)}return}
+ if(S.state=='draw'){const want=Math.min(DLINE.length-1,demo.t/260|0),k=(demo.t%260)/260,a=DLINE[want],b=DLINE[want+1]||a;addPoint(S,a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k);if(demo.t>(DLINE.length-1)*260){addPoint(S,...DLINE[DLINE.length-1]);release(S)}return}
  acc+=dt;while(acc>=DT){step(S);acc-=DT}S.fx.length=0;
  if(S.state=='won'||S.state=='lost'){demo.w=(demo.w||0)+dt;if(demo.w>900)homeReset()}}
 function openHome(){show('home');homeReset();const n=totalStars();$('tot').innerHTML=n?`<b>★</b> ${n} of ${LEVELS.length*3}`:'';$('play').textContent=n||save.open?'Continue':'Play';$('daily').textContent=save.daily[DAY]?'Daily ✓':'Daily'}
