@@ -192,7 +192,7 @@ function buzz(p){try{if(save.vib&&navigator.vibrate)navigator.vibrate(p)}catch(e
    level = biggest object reached (1 dust ... 11 Sun). The world is simulated in field units
    (width 1, height H_F) so every phone plays the same game, and the Daily is fair. */
 const GAME='astro-drop',KEY='digi-astro-drop-v1',ORIENT='portrait';
-const $=i=>document.getElementById(i),H_F=1.42,R0=.05,GROW=1.2,METER=80,METER_STEP=60,ST=[[5000,8],[12000,9],[25000,10]];
+const $=i=>document.getElementById(i),H_F=1.42,R0=.05,GROW=1.2,METER=80,METER_STEP=60,ST=[[5000,8],[12000,9],[25000,10]],MERGE_GAP=1.08;
 const meterMax=()=>METER+cc*METER_STEP;
 const rad=i=>R0*Math.pow(GROW,i);
 const RANKS=[['Cadet',0],['Pilot',1000],['Navigator',3000],['Commander',7000],['Captain',15000],['Admiral',30000],['Stargazer',60000]];
@@ -283,7 +283,7 @@ function novaTick(dt){sn.t+=dt;const{x,y}=sn,px=sx(x),py=sy(y);
 /* ---------- physics, in field units ---------- */
 function land(b,rv){if(b.landed||b.age>3||b.age<.05)return;if(rv>-.2)return;b.landed=1;if(headless)return;b.sq=Math.min(1,.45+Math.max(0,b.t)*.06);const v=.05+Math.max(0,b.t)*.016;thump(150-Math.max(0,b.t)*10,v,0,.14+Math.max(0,b.t)*.02);if(b.t>=8)buzz(10)}
 function step(dt){const G=4.4;for(const b of bodies){b.age+=dt;if(b.mg||b.gone)continue;b.vy+=G*dt;const dm=Math.pow(.42,dt);b.vx*=dm;b.vy*=dm;const mv=Math.hypot(b.x-(b.lx??b.x),b.y-(b.ly??b.y))/dt;b.lx=b.x;b.ly=b.y;b.ms=b.ms*.98+mv*.02;b.w*=Math.pow(b.ms<.035?.01:.45,dt);b.w=Math.max(-3,Math.min(3,b.w));b.x+=b.vx*dt;b.y+=b.vy*dt;b.a+=b.w*dt}
- const hits=[];for(let it=0;it<3;it++){for(let i=0;i<bodies.length;i++){const a=bodies[i];if(a.mg||a.gone)continue;for(let j=i+1;j<bodies.length;j++){const b=bodies[j];if(b.mg||b.gone)continue;const dx=b.x-a.x,dy=b.y-a.y,rr=a.r+b.r;if(dx*dx+dy*dy>=rr*rr)continue;const d=Math.sqrt(dx*dx+dy*dy)||.0001,nx=dx/d,ny=dy/d,ov=rr-d;
+ const hits=[];for(let it=0;it<3;it++){for(let i=0;i<bodies.length;i++){const a=bodies[i];if(a.mg||a.gone)continue;for(let j=i+1;j<bodies.length;j++){const b=bodies[j];if(b.mg||b.gone)continue;const dx=b.x-a.x,dy=b.y-a.y,rr=a.r+b.r,d2=dx*dx+dy*dy;if(d2>=rr*rr){const k=rr*MERGE_GAP;if(!sn&&!a.idle&&!b.idle&&a.t===b.t&&a.t>=0&&a.age>.25&&b.age>.25&&d2<k*k&&!hits.some(h=>h.includes(a)||h.includes(b)))hits.push([a,b]);continue}const d=Math.sqrt(dx*dx+dy*dy)||.0001,nx=dx/d,ny=dy/d,ov=rr-d;
    if(!sn&&!a.idle&&!b.idle&&(a.t===b.t||a.t<0||b.t<0)&&a.age>.06&&b.age>.06){if(!hits.some(h=>h.includes(a)||h.includes(b)))hits.push([a,b]);continue}
    const ia=1/a.m,ib=1/b.m,s=ia+ib;a.x-=nx*ov*ia/s;a.y-=ny*ov*ia/s;b.x+=nx*ov*ib/s;b.y+=ny*ov*ib/s;const rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;if(rv<0){land(a,rv);land(b,rv);
     const J=-1.12*rv/s;a.vx-=J*nx*ia;a.vy-=J*ny*ia;b.vx+=J*nx*ib;b.vy+=J*ny*ib;const tx=-ny,ty=nx,tv=(b.vx-a.vx)*tx+(b.vy-a.vy)*ty,f=tv*.14/s;a.vx+=f*tx*ia;a.vy+=f*ty*ia;b.vx-=f*tx*ib;b.vy-=f*ty*ib;if(Math.abs(tv)>.03&&Math.max(a.ms,b.ms)>.035){a.w-=tv*.006;b.w+=tv*.006}}}}
