@@ -470,6 +470,7 @@
     else if (go === 'claimjoin') claimForm({ code: S.join, name: S.peeked.name, players: S.peeked.players || [] });
     else if (go === 'joinback') joinForm(S.peeked);
     else if (go === 'pin') pinForm(false);
+    else if (go === 'recapdone') { try { localStorage.setItem('noodle-board-recap-' + (cur() || {}).code, NB.today()); } catch (x) {} var rc = g.closest('.bcard'); if (rc) rc.remove(); }
     else if (go === 'pinlater') { try { localStorage.setItem('noodle-board-pinlater', NB.today()); } catch (x) {} var c = g.closest('.bcard'); if (c) c.remove(); }
     else if (go === 'back') { NB.inAny() ? loadBoard() : intro(); } else if (go === 'board') { S.join = ''; loadBoard(); }
   });
@@ -539,6 +540,29 @@
   // Person-with-plus, drawn in the button's text colour.
   var INVITE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
     '<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.1-6.5 7-6.5s7 2.5 7 6.5"/><path d="M19 8v6M16 11h6"/></svg>';
+  /* ---------- the Monday card (5 Nov 2026): last week's top three, to share ---------- */
+  function recapDue(code, today) {
+    if (new Date(today + 'T12:00:00Z').getUTCDay() !== 1) return false;
+    try { return localStorage.getItem('noodle-board-recap-' + code) !== today; } catch (e) { return true; }
+  }
+  function recapRows(week) { return (week || []).filter(function (r) { return r.rank <= 3; }).slice(0, 5); }
+  function recapLines(name, label, week) {
+    var rows = recapRows(week), lines = ['🏆 ' + name + ' · ' + label];
+    rows.forEach(function (r) { lines.push((MEDAL[r.rank] || r.rank + '.') + ' ' + r.nick + ' ' + pts(r.points)); });
+    if (week.length > rows.length) lines.push('+' + (week.length - rows.length) + ' more');
+    return lines;
+  }
+  function fillRecap(L) {
+    var sun = addDays(NB.today(), -1);
+    (S.recap && S.recap.key === L.code + sun ? Promise.resolve(S.recap.d) : NB.overall(L.code, sun)).then(function (d) {
+      S.recap = { key: L.code + sun, d: d, sun: sun };
+      var box = document.getElementById('recap');
+      if (!box || !d || (d.week || []).length < 2) return;
+      box.innerHTML = '<div class="bcard" data-recap="1"><h2>🏆 Last week in ' + esc(L.name) + '</h2>' +
+        '<p>' + recapRows(d.week).map(function (r) { return (MEDAL[r.rank] || r.rank + '.') + ' ' + esc(r.nick) + ' · ' + pts(r.points); }).join('<br>') + '</p>' +
+        '<div class="acts"><button class="btn go" data-act="recapshare">Share</button><button class="btn" data-go="recapdone">Close</button></div></div>';
+    }, function () {});
+  }
   function topCard(L) {
     var h = '';
     if (S.created === L.code) {
@@ -567,6 +591,9 @@
       h += '<div class="bcard"><h2>PIN saved</h2><p>To play as yourself in another browser or app, open the league’s invite link there ' +
            'and tap <b>Already in this league?</b></p></div>';
       S.pinSaved = false;
+    } else if (recapDue(L.code, NB.today())) {
+      h += '<div id="recap"></div>';
+      fillRecap(L);
     } else if (!NB.hasPin() && !pinLater()) {
       h += '<div class="bcard"><h2>Set a PIN</h2><p>Then you can join as yourself from another phone or app' +
            (IOS ? ', like Safari and the home-screen app on an iPhone, which each keep their own leagues' : '') + '.</p>' +
@@ -792,7 +819,11 @@
     function fail(err) { if (sm) { sm.className = 'msg'; sm.textContent = err.message; } }
     function done(msg) { return NB.refresh().then(function () { loadBoard(); }); }
     if (act === 'cardback') { S.card = ''; loadBoard(); return; }
-    if (act === 'share') {
+    if (act === 'recapshare') {
+      var rd = S.recap.d;
+      share(recapLines(L.name, weekLabel(rd), rd.week).concat([L.name + ' leaderboard:']).join('\n'), link(L.code) + '&p=all&d=' + S.recap.sun, a);
+      track('board_share', { type: 'recap' });
+    } else if (act === 'share') {
       var T = NB.BY_ID[S.type], it = puzzleItem(S.type, S.date), D = S.data;
       var lines = ['🏆 ' + T.emoji + ' ' + (it ? it.headline : T.name) + ' · ' + longDay(S.date)];
       D.ranked.slice(0, 5).forEach(function (r) {

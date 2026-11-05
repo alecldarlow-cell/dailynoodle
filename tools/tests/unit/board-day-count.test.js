@@ -28,3 +28,33 @@ test('BOARD-CROWN: the line that explains the crown shows only when a league has
   c.R0 = () => ({ crown: [] }); assert.equal(c.crownNote(), '');
   c.R0 = () => null; assert.equal(c.crownNote(), '');
 });
+
+test('BOARD-RECAP: the Monday card shows on Mondays, until closed, with the top three', () => {
+  // GIVEN the page's recap functions
+  const start = html.indexOf('function recapDue'), end = html.indexOf('function fillRecap');
+  const store = {};
+  const c = { MEDAL: { 1: '🥇', 2: '🥈', 3: '🥉' }, pts: n => n + ' pts', localStorage: { getItem: k => store[k] ?? null } };
+  vm.createContext(c); vm.runInContext(html.slice(start, end), c);
+  // WHEN it's a Monday THEN it's due, and not once closed, nor on a Tuesday
+  assert.equal(c.recapDue('ABC', '2026-11-09'), true);
+  store['noodle-board-recap-ABC'] = '2026-11-09'; assert.equal(c.recapDue('ABC', '2026-11-09'), false);
+  assert.equal(c.recapDue('ABC', '2026-11-10'), false);
+  // AND the share lines hold the top three, then how many more
+  const week = [1, 2, 3, 4].map(r => ({ rank: r, nick: 'P' + r, points: 10 - r }));
+  assert.deepEqual([...c.recapLines('Family', '2 Nov – 8 Nov', week)],
+    ['🏆 Family · 2 Nov – 8 Nov', '🥇 P1 9 pts', '🥈 P2 8 pts', '🥉 P3 7 pts', '+1 more']);
+});
+
+test('BOARD-BATCH: a long history goes in batches the server accepts', () => {
+  // GIVEN dn-board.js's batching
+  const src = fs.readFileSync(path.join(__dirname, '../../../dn-board.js'), 'utf8');
+  const start = src.indexOf('var BACKFILL_BATCH'), end = src.indexOf('function backfillDue');
+  const c = {}; vm.createContext(c); vm.runInContext(src.slice(start, end), c);
+  const rows = Array.from({ length: 2500 }, (_, i) => i);
+  // WHEN 2,500 rows go THEN no call is over the limit and none is lost, the visitor code with the first
+  const calls = c.backfillCalls({ rows, aids: ['a'] });
+  assert.deepEqual([...calls].map(x => x.rows.length), [1000, 1000, 500]);
+  assert.equal(calls[0].aid, 'a'); assert.equal(calls[1].aid, null);
+  // AND a short history is still one call
+  assert.equal(c.backfillCalls({ rows: [1], aids: [] }).length, 1);
+});
