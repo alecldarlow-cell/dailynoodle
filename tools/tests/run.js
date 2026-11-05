@@ -561,7 +561,7 @@ const TESTS = {
     ok(await p.locator('.fin-grid.g5 i').count() === 25, 'mini: solved grid in the recap');
     await shareClipboard(p, ctx, 'mini');
     await reopen(p, ev, 'mini');
-    ok(await text(p, '.fin-streak') === '🔥 1-day streak', 'mini: reopened sheet shows the streak');
+    ok(await text(p, '.fin-streak') === '🔥 1-day Mini streak', 'mini: reopened sheet shows the streak');
     ok(!p.errs.length, 'mini: no page errors ' + p.errs.join(' | '));
     await ctx.close();
     await shareNative(b, F.mini, p2 => play.grid(p2), 'mini');
@@ -721,7 +721,7 @@ const TESTS = {
     ok(await text(p, '.fin-recap h3') === 'The path', `path: recap heading "${await text(p, '.fin-recap h3')}"`);
     await shareClipboard(p, ctx, 'path');
     await reopen(p, ev, 'path', 'modal');
-    ok(await text(p, '.fin-streak') === '🔥 1-day streak', 'path: reopened sheet keeps the streak');
+    ok(await text(p, '.fin-streak') === '🔥 1-day Path streak', 'path: reopened sheet keeps the streak');
     ok(!p.errs.length, 'path: no page errors ' + p.errs.join(' | '));
     await ctx.close();
     await shareNative(b, F.path, p2 => play.path(p2), 'path');
@@ -750,7 +750,7 @@ const TESTS = {
     // AF-019 took the run sentence off the sheet; the run it counted is still checked here and on Puzzles
     ok(await p.evaluate(() => window.dnFinish._test.overallRun()) === 3, `run: the sheet's overall run is 3 days`);
     await p.goto('https://dailynoodle.co.uk/puzzles.html'); await wait(p, 1500);
-    ok(/3-day streak/.test(await text(p, '#run')), `run: Puzzles page "${await text(p, '#run')}"`);
+    ok(/3-day daily streak/.test(await text(p, '#run')), `run: Puzzles page "${await text(p, '#run')}"`);
     await ctx.close();
   },
   /* ---------- 29 Oct 2026: Link keeps its round and pauses while away (AF-029, R10, AF-028) ---------- */

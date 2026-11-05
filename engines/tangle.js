@@ -247,25 +247,17 @@ function homeExtras(){
   const y=$('yBtn'),tg=$('homeToggles');
   if(y&&tg&&!y.classList.contains('ylink')){y.classList.add('ylink');y.classList.remove('btn');tg.parentNode.insertBefore(y,tg.nextSibling);}
 }
-function artSVG(){
-  let s='<rect width="120" height="120" fill="none"/>';
-  for(let i=0;i<16;i++){const x=12+(i%4)*26,y=12+Math.floor(i/4)*26;
-    s+=`<rect x="${x}" y="${y}" width="21" height="21" rx="4" style="fill:var(--paper);stroke:var(--edge)" stroke-width="1.6"/>`;}
-  const pts=[[22.5,74.5],[48.5,48.5],[74.5,22.5],[100.5,48.5],[74.5,74.5],[48.5,100.5],[74.5,100.5]].map(p=>p.join(',')).join(' ');
-  s+=`<polyline points="${pts}" fill="none" style="stroke:var(--thread)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>`;
-  return s;
-}
 function liveStreak(){const s=save.streak||{n:0},t=today();return (s.last===t||s.last===dayBefore(t))?s.n:0;}
 function renderHome(){
   show('home');
   $('numLabel').textContent='No. '+parseInt(P.id.slice(-4),10);
   $('dateLine').textContent='No. '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date).replace(/ \d{4}$/,'');
-  $('homeArt').innerHTML=artSVG();
+  $('homeArt').innerHTML='<image href="../assets/tangle-thumb.svg" width="120" height="120"/>';
   if(D.state==='done'){$('playHead').textContent=plural(D.score,'point','points');$('playStatus').textContent=`${plural(D.found.length,'word','words')} today. See the answers; a new board arrives at midnight.`;$('playGo').textContent='View';}
   else if(D.state==='playing'){$('playHead').textContent='Round paused';$('playStatus').textContent=`${mmss(D.left)} left, ${plural(D.score,'point','points')} so far.`;$('playGo').textContent='Resume';}
-  else{$('playHead').textContent='Today’s Tangle';$('playStatus').textContent=`90 seconds. Longer words score more; the ${num(P.star.length)}-letter word scores double.`;$('playGo').textContent='Play';}
+  else{$('playHead').textContent='Ready to play';$('playStatus').textContent=`90 seconds. Longer words score more; the ${num(P.star.length)}-letter word scores double.`;$('playGo').textContent='Play';}
   $('yBtn').hidden=P.n<=1;
-  $('hStreak').textContent=liveStreak();$('hBest').textContent=save.best||0;
+  $('hStreak').textContent=liveStreak();$('hStreak').nextElementSibling.textContent='Tangle streak';$('hBest').textContent=save.best||0;
   homeExtras();
   toggles($('homeToggles'));
 }

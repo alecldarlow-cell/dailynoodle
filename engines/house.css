@@ -116,7 +116,7 @@ html.dn-house[data-theme="dark"] .dn-start-card{background:#1B1E29}
 .dn-start-art{display:grid;place-items:center;padding:6px 0}
 .dn-start-card h2{font-family:var(--serif);font-weight:400;font-size:32px;margin:0;line-height:1;color:var(--ink)}
 .dn-start-card p{margin:6px 0 0;font-size:16px;line-height:1.45;color:var(--ink-soft)}
-.dn-pill{display:inline-flex;align-items:center;min-height:44px;padding:0 22px;border-radius:24px;border:0;background:var(--brand);color:#fff;font:600 16px/1 var(--sans);cursor:pointer}
+.dn-pill{display:flex;width:100%;justify-content:center;align-items:center;min-height:52px;padding:0 22px;border-radius:24px;border:0;background:var(--dn-go);color:var(--dn-onGo);font:600 17px/1 var(--sans);cursor:pointer}
 .dn-pill:active{filter:brightness(.92)}
 .dn-start-stats{display:grid;grid-template-columns:repeat(3,1fr);margin:18px 0 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
 .dn-start-stats div{padding:10px 0 10px 14px;border-left:1px solid var(--line-soft);min-width:0}

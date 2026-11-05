@@ -180,37 +180,6 @@
   var finished = !!(save && save.done && save.done[myId]);
   if (finished) return;
 
-  function art() {
-    var g = P.grid, s = '';
-    if (TYPE === 'mini' || TYPE === 'doku') {
-      s = '<rect x="4" y="4" width="112" height="112" rx="8" fill="var(--block)"/>';
-      for (var r = 0; r < 5; r++) for (var c = 0; c < 5; c++) {
-        var blk = g && g[r] && g[r][c] === '#', lit = r === 0 && !blk && c > 0 && c < 4;
-        s += '<rect x="' + (9 + c * 21.6) + '" y="' + (9 + r * 21.6) + '" width="19.6" height="19.6" rx="2" fill="' + (blk ? 'var(--block)' : lit ? (c === 1 ? '#FFD54A' : '#FFF0B8') : 'var(--card)') + '"/>';
-      }
-    } else if (TYPE === 'sweep' || TYPE === 'path') {
-      var hot = TYPE === 'sweep' ? P.start && [P.start[0] - 1, P.start[1] - 1] : null, one = null;
-      if (TYPE === 'path' && P.locked) P.locked.forEach(function (x) { if (x[2] === 1) one = [x[0] - 1, x[1] - 1]; });
-      s = '<rect x="4" y="4" width="112" height="112" rx="8" fill="var(--block)"/>';
-      for (var i = 0; i < 6; i++) for (var j = 0; j < 6; j++) {
-        var on = (hot && hot[0] === i && hot[1] === j) || (one && one[0] === i && one[1] === j);
-        s += '<rect x="' + (8 + j * 17.5) + '" y="' + (8 + i * 17.5) + '" width="16" height="16" rx="2" fill="' + (on ? '#FFD54A' : TYPE === 'sweep' ? 'var(--hidden-cell)' : 'var(--card)') + '"/>';
-      }
-    } else if (TYPE === 'tally') {
-      // a 4×4 board with its cage lines and two digits placed
-      s = '<rect x="4" y="4" width="112" height="112" rx="8" fill="var(--block)"/>';
-      for (var q = 0; q < 16; q++) s += '<rect x="' + (8 + (q % 4) * 26.5) + '" y="' + (8 + Math.floor(q / 4) * 26.5) + '" width="25" height="25" rx="2" fill="var(--card)"/>';
-      s += '<path d="M60.5 8v53h26.5v51M8 60.5h26.5v26.5h52" fill="none" stroke="var(--block)" stroke-width="3" stroke-linejoin="round"/>' +
-        '<text x="20.5" y="26" font-family="Archivo,Arial,sans-serif" font-weight="500" font-size="15" text-anchor="middle" fill="#2E5BFF">3</text>' +
-        '<text x="73.5" y="105" font-family="Archivo,Arial,sans-serif" font-weight="500" font-size="15" text-anchor="middle" fill="var(--ink)">1</text>';
-    } else {
-      for (var k = 0; k < 16; k++) {
-        var row = Math.floor(k / 4), col = k % 4, sel = row === 1 && col < 3 || k === 9;
-        s += '<rect x="' + (6 + col * 28) + '" y="' + (6 + row * 28) + '" width="24" height="24" rx="5" fill="' + (sel ? '#FFF0B8' : 'var(--card)') + '" stroke="' + (sel ? '#FFD54A' : 'var(--line-soft)') + '" stroke-width="2"/>';
-      }
-    }
-    return '<svg width="132" height="132" viewBox="0 0 120 120" aria-hidden="true">' + s + '</svg>';
-  }
   var tiles = (P.bank || []).length, mines = (P.mines || []).length, nClues = P.clues ? Object.keys(P.clues).length : 10;
   var RULE = {
     mini: (cap(W[nClues] || nClues)) + ' clues, across and down. The clock starts with your first letter.',
@@ -239,11 +208,11 @@
 
   var card = document.createElement('section'); card.className = 'dn-start'; card.setAttribute('aria-label', NAME + ' ' + NUM);
   card.innerHTML = '<div class="dn-start-in">' +
-    '<div class="dn-start-top"><a class="dn-back-text" href="../puzzles.html"><span aria-hidden="true">←</span> Puzzles</a>' + (liveStreak >= 1 ? '<span class="dn-start-streak">' + liveStreak + '-day streak</span>' : '') + '</div>' +
+    '<div class="dn-start-top"><a class="dn-back-text" href="../puzzles.html"><span aria-hidden="true">←</span> Puzzles</a>' + '</div>' +
     '<h1 class="dn-start-title">' + NAME + '</h1><p class="dn-start-date">No. ' + NUM + ', ' + longDate + '</p>' +
-    '<div class="dn-start-card"><div class="dn-start-art">' + art() + '</div><div><h2>Today’s ' + NAME + '</h2><p>' + RULE + '</p></div>' +
+    '<div class="dn-start-card"><div class="dn-start-art"><img src="../assets/' + TYPE + '-thumb.svg" width="132" height="132" alt=""></div><div><h2>Ready to play</h2><p>' + RULE + '</p></div>' +
     '<div><button type="button" class="dn-pill" id="dnPlay">Play</button></div></div>' +
-    '<div class="dn-start-stats"><div><b>' + liveStreak + '</b><span>day streak</span></div><div><b>' + (st.best || 0) + '</b><span>best streak</span></div><div><b>' + played + '</b><span>' + (TYPE === 'tally' ? 'boards played' : NAME + 's played') + '</span></div></div>' +
+    '<div class="dn-start-stats"><div><b>' + liveStreak + '</b><span>' + NAME + ' streak</span></div><div><b>' + (st.best || 0) + '</b><span>best streak</span></div><div><b>' + played + '</b><span>' + (TYPE === 'tally' ? 'boards played' : NAME + 's played') + '</span></div></div>' +
     '<details class="dn-how"><summary>How to play</summary>' + HOW.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</details>' +
     '<label class="dn-sound"><span>Sound<small>A short jingle when you solve it</small></span><input type="checkbox" role="switch" id="dnSound"></label></div>';
   document.body.appendChild(card);

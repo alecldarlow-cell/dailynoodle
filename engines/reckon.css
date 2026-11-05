@@ -51,16 +51,17 @@ a{color:inherit}
 .st{max-width:480px;margin:0 auto;padding:8px 20px 28px}
 .st-top{display:flex;justify-content:space-between;align-items:center;min-height:52px}
 .back{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--ink2);font-size:15px;text-decoration:none}
-.st-streak{font-size:14px;color:var(--ink2)}
+.st-streak{display:none}
 .st-title{font-family:var(--serif);font-weight:400;font-size:72px;line-height:.95;letter-spacing:-.02em;margin:14px 0 0}
 .st-date{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink2);margin:6px 0 0}
 .st-card{margin:22px 0 0;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:22px 20px 20px;display:flex;flex-direction:column;gap:16px}
 .st-art{display:flex;justify-content:center;padding:4px 0 2px}
-.st-art svg{width:280px;max-width:100%;height:auto}
+.st-art img{width:132px;height:132px;display:block}
 .st-card h2{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1;margin:0}
 .st-card p{margin:6px 0 0;font-size:16px;line-height:1.45;color:var(--ink2)}
 .pill{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 26px;border-radius:24px;background:var(--tom);color:var(--onTom);font:600 16px/1 var(--sans);align-self:flex-start}
 .pill:active{filter:brightness(.92)}
+#playCard.pill{width:100%;min-height:52px;background:var(--dn-go);color:var(--dn-onGo);font-size:17px}
 .st3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:18px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .st3>div{padding:10px 0 10px 14px;border-left:1px solid var(--line);min-width:0}
 .st3>div:first-child{border-left:0;padding-left:0}

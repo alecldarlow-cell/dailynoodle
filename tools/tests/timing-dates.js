@@ -75,7 +75,7 @@ async function midnight(browser) {
     check(Object.values(saved.done)[0].d === '2026-10-19', 'Sweep at 00:30 BST saves the London day');
     check(await p.evaluate(() => window.dnFinish._test.overallRun()) === 1, 'one midnight play does not earn two days on the finish sheet');
     await p.goto('https://dailynoodle.co.uk/puzzles.html'); await wait(p, 1500);
-    check(!/2-day streak/.test(await p.locator('#run').textContent()), 'one midnight play does not earn two days on the front page');
+    check(!/2-day daily streak/.test(await p.locator('#run').textContent()), 'one midnight play does not earn two days on the front page');
   } finally { await ctx.close(); }
 }
 

@@ -442,7 +442,7 @@
       $count.parentNode.insertBefore(row, $count); row.appendChild($count);
       el = document.createElement('p'); el.id = 'run'; el.className = 'run'; row.appendChild(el);
     }
-    el.innerHTML = n < 2 ? '' : '<span aria-hidden="true">🔥</span><span><b>' + n + '-day</b> streak</span>';
+    el.innerHTML = n < 2 ? '' : '<span aria-hidden="true">🔥</span><span><b>' + n + '-day</b> daily streak</span>';
     el.hidden = n < 2;
   }
 

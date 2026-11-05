@@ -282,20 +282,14 @@ const endRev=()=>!!VR&&VR!==R;                  // reviewing a finished round fr
 function show(id){view=id;if(id!=='winModal')window.dnFinish.hide();for(const s of document.querySelectorAll('.scr'))s.classList.toggle('vis',s.id===id);}
 
 /* ---------- start ---------- */
-const ART='<svg viewBox="0 0 280 96" aria-hidden="true"><rect class="a-z3" x="86" y="22" width="118" height="36" rx="7"/><rect class="a-z2" x="108" y="22" width="74" height="36" rx="7"/>'+
- '<rect class="a-z1" x="122" y="22" width="46" height="36" rx="6"/><rect class="a-z0" x="134" y="22" width="22" height="36" rx="5"/><rect class="a-ink" x="6" y="34" width="268" height="12" rx="6"/>'+
- '<line class="a-pin" x1="145" y1="10" x2="145" y2="34"/><circle class="a-ink" cx="145" cy="10" r="9"/><circle class="a-hole" cx="145" cy="10" r="3.5"/><circle class="a-tom" cx="170" cy="40" r="14"/>'+
- '<line class="a-tk" x1="30" y1="62" x2="30" y2="74"/><line class="a-tm" x1="63" y1="62" x2="63" y2="69"/><line class="a-tm" x1="83" y1="62" x2="83" y2="69"/><line class="a-tk" x1="140" y1="62" x2="140" y2="74"/>'+
- '<line class="a-tm" x1="173" y1="62" x2="173" y2="69"/><line class="a-tm" x1="193" y1="62" x2="193" y2="69"/><line class="a-tk" x1="250" y1="62" x2="250" y2="74"/>'+
- '<text class="a-lab" x="30" y="90" text-anchor="middle">100</text><text class="a-lab" x="140" y="90" text-anchor="middle">1k</text><text class="a-lab" x="250" y="90" text-anchor="middle">10k</text></svg>';
 function renderHome(){
   show('home');
   $('dateLine').textContent='No. '+serial()+', '+longDate(P.date);
-  $('homeArt').innerHTML=ART;
+  $('homeArt').innerHTML='<img src="../assets/reckon-thumb.svg" width="132" height="132" alt="">';
   const hw=document.querySelectorAll('.how p')[1];
   if(hw&&P.r===2)hw.textContent='Within 20% of the answer scores 100; within 60%, 80; within 2.2 times, 60; within three times either way, 40; anything further, 20. Gaps are measured from the smaller number, so half the answer scores the same as double it.';
   const n=liveStreak();$('homeStreak').textContent=n>=1?n+'-day streak':'';
-  $('sStreak').textContent=n;$('sBest').textContent=bestScore();$('sPlayed').textContent=Object.keys(save.done||{}).length;
+  $('sStreak').textContent=n;$('sStreak').nextElementSibling.textContent='Reckon streak';$('sBest').textContent=bestScore();$('sPlayed').textContent=Object.keys(save.done||{}).length;
   const c=save.cur&&save.cur.id===P.id?save.cur:null;
   $('playStatus').textContent=c?'Question '+(c.i+1)+' of '+NQ+', '+score(c)+' points so far.':'Ten numbers to guess, each from a different topic. The closer you get, the more you score.';
   $('playCard').textContent=c?'Resume':'Play';
