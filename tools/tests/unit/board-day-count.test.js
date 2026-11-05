@@ -18,3 +18,13 @@ test('BOARD-COUNT: the day and week totals follow the 5 Nov change', () => {
   c.S.date = '2026-11-08'; assert.equal(c.weekDays({ week_from: '2026-11-02' }), 60);
   c.S.date = '2026-11-15'; assert.equal(c.weekDays({ week_from: '2026-11-09' }), 63);
 });
+
+test('BOARD-CROWN: the line that explains the crown shows only when a league has a champion', () => {
+  // GIVEN the page's two functions
+  const start = html.indexOf('function crowned'), end = html.indexOf('function nick(');
+  const c = { R0: () => ({ crown: ['Ann'] }) }; vm.createContext(c); vm.runInContext(html.slice(start, end), c);
+  // WHEN a league has a champion THEN the line shows; with none, or no records yet, it doesn't
+  assert.match(c.crownNote(), /👑 Last week’s champion/);
+  c.R0 = () => ({ crown: [] }); assert.equal(c.crownNote(), '');
+  c.R0 = () => null; assert.equal(c.crownNote(), '');
+});

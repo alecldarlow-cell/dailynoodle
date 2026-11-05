@@ -164,7 +164,7 @@
   .nk{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left;max-width:100%;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:underline dotted var(--hair);text-underline-offset:4px}
   .crown{margin-left:4px}
-  .reline{margin-top:10px;padding:10px 12px;border:1px solid var(--hair);border-radius:10px;font-size:14px;color:var(--muted)}
+  .reline,.crownline{margin-top:10px;padding:10px 12px;border:1px solid var(--hair);border-radius:10px;font-size:14px;color:var(--muted)}
   .reline b{color:var(--ink)}
   .row.rec{grid-template-columns:34px 1fr auto}
   .row.rec .rk{font-size:20px}
@@ -612,6 +612,7 @@
     }
     if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
       return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
+    h += crownNote();
     var R = recOf(T.id);
     if (R) h += '<p class="reline">🏅 League record <b>' + esc(result(T.id, R).big) + '</b>' +
                 (result(T.id, R).small ? ' (' + esc(result(T.id, R).small) + ')' : '') + ' · ' + esc(R.nick) + ' · ' + esc(shortDay(R.date)) + '</p>';
@@ -646,6 +647,7 @@
     else h += '<ol class="rows">' + d.day.map(function (r) { return allRow(r, dayCount(S.date)); }).join('') + '</ol>';
     if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
       return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
+    h += crownNote();
     h += '<p class="sub">This week · ' + esc(weekLabel(d)) + '</p>';
     if (!d.week.length) h += '<p class="bnote">No results yet this week.</p>';
     else h += '<ol class="rows">' + d.week.map(function (r) { return allRow(r, weekDays(d)); }).join('') + '</ol>';
@@ -680,6 +682,8 @@
   function recOf(t) { var r = R0(); return r && r.records && r.records[t] || null; }
   function isRecord(t, n) { var x = recOf(t); return !!x && x.nick === n && x.date === S.date; }
   function crowned(n) { var r = R0(); return !!r && (r.crown || []).indexOf(n) >= 0; }
+  // Says what the 👑 on a table means: it's last week's champion, not whoever is leading now.
+  function crownNote() { var r = R0(); return r && (r.crown || []).length ? '<p class="crownline">👑 Last week’s champion</p>' : ''; }
   function nick(n, plain) {   // plain: no 👑 (in lists of names, where it would repeat)
     return '<button type="button" class="nk" data-nick="' + esc(n) + '">' + esc(n) + '</button>' +
       (!plain && crowned(n) ? '<span class="crown" title="Last week’s champion" aria-label="last week’s champion">👑</span>' : '');
