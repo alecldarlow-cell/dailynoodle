@@ -1,9 +1,25 @@
 {
-  "built": "2026-11-05T08:37:13.666Z",
+  "built": "2026-11-05T09:25:12.285Z",
   "today": "2026-11-05",
   "timezone": "Europe/London",
-  "count": 801,
+  "count": 802,
   "items": [
+    {
+      "path": "reports/2026-11-05-arcade-inkline.html",
+      "kind": "game",
+      "topic": "Arcade",
+      "headline": "Inkline",
+      "standfirst": "One line. Lift your finger. Thirty contraptions that physics may or may not approve of.",
+      "date": "2026-11-05",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48ZGVmcz48cGF0dGVybiBpZD0iZyIgd2lkdGg9IjEyIiBoZWlnaHQ9IjEyIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNMTIgMEgwVjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiNjNmRjY2QiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIGZpbGw9IiNlOWYxZWEiLz48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0idXJsKCNnKSIvPjxwYXRoIGQ9Ik0tNCAzNEwzNCA1MCIgc3Ryb2tlPSIjMWMyYzRjIiBzdHJva2Utd2lkdGg9IjEwIi8+PHBhdGggZD0iTTc0IDcyTDEwMCA3NiIgc3Ryb2tlPSIjMWMyYzRjIiBzdHJva2Utd2lkdGg9IjEwIi8+PHBhdGggZD0iTTMwIDUwQzQ0IDU4IDU4IDY2IDgwIDcwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxYzJjNGMiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTkyIDkwdjE2aDIyVjc2IiBmaWxsPSIjZTdiNzVhIiBzdHJva2U9IiNhNDQzMmEiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0xMTQgNzZWNThsLTEyIDUgMTIgNSIgZmlsbD0iI2NmM2EyZSIgc3Ryb2tlPSIjMWMyYzRjIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxjaXJjbGUgY3g9IjQ2IiBjeT0iNDQiIHI9IjExIiBmaWxsPSIjZDkzYzMwIiBzdHJva2U9IiMxYzJjNGMiIHN0cm9rZS13aWR0aD0iMi41Ii8+PHBhdGggZD0iTTQxIDQwYTcgNyAwIDAgMSA2LTMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTY4IDQybDMtNGg2bDMgNC02IDh6IiBmaWxsPSIjZjZjNjJjIiBzdHJva2U9IiMxYzJjNGMiIHN0cm9rZS13aWR0aD0iMS41Ii8+PC9zdmc+",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "badge": "In development"
+    },
     {
       "path": "reports/2026-11-05-briefing.html",
       "kind": "report",
