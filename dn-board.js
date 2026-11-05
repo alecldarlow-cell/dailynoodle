@@ -439,6 +439,14 @@
     var p = location.pathname.split('/').filter(Boolean);
     return p.slice(-2).join('/');
   })();
+  if (/-astro-drop\.html$/.test(here)) {   // a game Daily: score, stars and biggest object, first go of the day stands
+    document.addEventListener('dn:game_end', function (e) {
+      var d = e.detail || {};
+      if (!inAny() || d.mode !== 'daily') return;
+      rpc('board_game_submit', { p_player: pid(), p_game: 'astro-drop', p_score: d.score || 0, p_stars: d.stars || 0, p_top: d.level || 0 }).catch(function () {});
+    });
+    return;
+  }
   var T = typeOfPath(here);
   if (!T || !/^reports\//.test(here)) return;
   var PDATE = dateOfPath(here);

@@ -39,7 +39,7 @@ a{color:inherit}
 .btn{display:block;width:100%;min-height:48px;padding:11px;border-radius:16px;font-weight:700;font-size:17px;background:var(--gold);color:#2b2148;margin-top:9px;text-decoration:none}
 .btn.alt{background:rgba(255,255,255,.14);color:var(--ink)}
 .btn small{display:block;font-weight:500;font-size:12px;opacity:.85}
-.btn[hidden]{display:none}.btn[disabled]{opacity:.65;cursor:default}
+.btn[hidden],.lnk[hidden]{display:none}.btn[disabled]{opacity:.65;cursor:default}
 .lnk{display:inline-block;padding:12px;font-size:14px;text-decoration:none}
 h2{margin:6px 0;font-size:24px}
 .row{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:50px;font-size:16px;border-bottom:1px solid var(--line)}
@@ -103,9 +103,9 @@ h2{margin:6px 0;font-size:24px}
 <div style="font-weight:700;font-size:18px" id="eTop"></div><div class="sub" id="eMeta"></div>
 <div style="width:100%;margin-top:6px"><div class="rw"><span>Merges</span><b id="r1"></b></div><div class="rw"><span>Chains and boosts</span><b id="r2"></b></div><div class="rw"><span id="r3l">Supernovas</span><b id="r3"></b></div></div>
 <div class="sub" style="width:100%;text-align:left;margin-top:6px" id="eRank"></div><div class="barw"><i id="eBar"></i></div>
-<button class="btn" id="again">Play again</button><div class="two"><button class="btn alt" id="eTry" hidden></button><button class="btn alt" id="eAtlas">Atlas</button><button class="btn alt" id="eHome">Home</button></div><a class="lnk" href="../games.html">← Noodle Games</a></div></section>
+<button class="btn" id="again">Play again</button><div class="two"><button class="btn alt" id="eTry" hidden></button><button class="btn alt" id="eAtlas">Atlas</button><button class="btn alt" id="eHome">Home</button></div><a class="lnk" id="eBoard" href="../board.html?p=astro" hidden>See today’s board</a><a class="lnk" href="../games.html">← Noodle Games</a></div></section>
 
-<section class="scr dim" id="atlasS" hidden><div class="wrap"><h2>Atlas</h2><div class="sub" id="aStats"></div><div class="gridA" id="aGrid"></div>
+<section class="scr dim" id="atlasS" hidden><div class="wrap"><h2>Atlas</h2><div class="sub" id="aStats"></div><div class="sub">Stars: 5,000 points or Saturn · 12,000 or Jupiter · 25,000 or the Sun. Two Suns make a supernova.</div><div class="gridA" id="aGrid"></div>
 <div class="sub" style="width:100%;text-align:left" id="aRank"></div><div class="barw"><i id="aBar"></i></div>
 <div class="sub" style="width:100%;text-align:left;margin-top:8px">Field look</div><div class="looks" id="aLooks"></div>
 <button class="btn alt" id="aBack">Back</button></div></section>
@@ -199,7 +199,7 @@ const RANKS=[['Cadet',0],['Pilot',1000],['Navigator',3000],['Commander',7000],['
 const LOOKS=[['Moonbeam','#b7d6ff',0],['Aurora','#8ff0c4',1],['Ember','#ffb27a',2],['Rose','#ffa8d4',3],['Gold','#ffd96b',4],['Eclipse','#d9c8ff',5],['Prism','#ffffff',6]];
 const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
 const rmDef=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
-const DEF={drun:null,streak:0,lastD:'',v:1,snd:true,pad:true,vib:true,fs:coarse,rm:rmDef,best:0,atlas:[],runs:0,novas:0,dust:0,look:0,hint:0,daily:{},run:null};
+const DEF={tips:0,drun:null,streak:0,lastD:'',v:1,snd:true,pad:true,vib:true,fs:coarse,rm:rmDef,best:0,atlas:[],runs:0,novas:0,dust:0,look:0,hint:0,daily:{},run:null};
 let save=Object.assign({},DEF);
 try{const j=JSON.parse(localStorage.getItem(KEY)||'null');if(j&&j.v)save=Object.assign({},DEF,j)}catch(e){}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
@@ -249,6 +249,7 @@ function starsNow(){return ST.filter(q=>score>=q[0]||topT>=q[1]).length}
 function starUI(){const n=starN,x=ST[n];$('starR').innerHTML=[0,1,2].map(i=>'<i class="'+(i<n?'on':'')+'">★</i>').join('')+(x?' next '+x[0].toLocaleString():'')}
 function checkStars(){const n=starsNow();while(starN<n){const i=starN;starN++;if(headless)continue;stars.push({t:0,x:W/2,y:sy(.2),i});[0,4,7,12].forEach(m=>bell(hz(m+12),.2,.05,1.8));buzz([14,40,20]);say('★ '+['First','Second','Third'][i]+' star')}if(!headless)starUI()}
 function say(txt){pops=pops.filter(q=>!q.huge);pops.push({x:W/2,y:sy(.34),t:0,txt,big:true,huge:true})}
+function tip(i,f){if(save.tips&(1<<i)||headless)return;save.tips|=1<<i;f()}
 function setB(b){if(banner)bq.push(b);else banner=b}
 function cometUI(){const c=$('cometB');c.hidden=banks<1&&cur>=0;c.classList.toggle('on',cur<0);$('cometN').textContent=banks;const q=c.firstChild.getContext('2d');q.clearRect(0,0,96,96);comet(q,48,62,17)}
 function useComet(){if(state!=='play'||sn)return;au();if(cur<0){cur=hold;hold=null}else if(banks>0){hold=cur;cur=-1;bell(hz(31),.14,0,.7);buzz(10)}heldT=0;cometUI()}
@@ -261,10 +262,10 @@ function orbLand(o){shown=Math.min(score,shown+o.v);const el=$('score');el.style
 function burst(x,y,c,n,s){if(headless)return;if(save.rm)n=Math.ceil(n/3);n=Math.min(n,300-parts.length);for(let i=0;i<n;i++){const a=Math.random()*6.28,v=s*(.3+Math.random());parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:.45+Math.random()*.5,t:0,c,s:.8+Math.random()*2})}}
 const TC=['#cdbfff','#ffd98a','#d0b090','#eef1ff','#ffb46a','#ff9a64','#7cc7ff','#7fb2ff','#ffe2a6','#ffc48c','#ffe27a'];
 function slow(s,t){if(save.rm)return;ts=s;slowT=t}
-function reach(k){if(k<=topT)return;topT=k;const fresh2=!save.atlas.includes(k);for(let i=0;i<=k;i++)if(!save.atlas.includes(i)&&(i<=4||i===k))save.atlas.push(i);if(headless){checkStars();return}bell(hz(19),.14,0,1);if(fresh2&&k>4){setB({t:0,k});slow(.45,.6);[0,4,9].forEach((n,i)=>bell(hz(n+12),.28,i*.13,1.6));buzz([12,50,18])}checkStars()}
+function reach(k){if(k<=topT)return;topT=k;const fresh2=!save.atlas.includes(k);for(let i=0;i<=k;i++)if(!save.atlas.includes(i)&&(i<=4||i===k))save.atlas.push(i);if(headless){checkStars();return}bell(hz(19),.14,0,1);if(fresh2&&k>4){setB({t:0,k});slow(.45,.6);[0,4,9].forEach((n,i)=>bell(hz(n+12),.28,i*.13,1.6));buzz([12,50,18])}if(k===5)tip(0,()=>setB({t:0,k:8,a:'Climb the ladder',n:'Bigger objects earn stars'}));checkStars()}
 function fx(n,k){const tri=(k+1)*(k+2)/2*3;if(save.hint<2)save.hint=2;chain=chainT>0?chain+1:0;chainT=.9;merges++;const mult=(1+chain*.5)*(boost>0?2:1),pts=Math.round(tri*mult);pM+=tri;pC+=pts-tri;meter+=1+chain;
  const px=sx(n.x),py=sy(n.y);addPts(pts,px,py,TC[k]);
- if(meter>=meterMax()&&banks<2){meter=0;cc++;banks++;if(!headless){setB({t:0,k:-1,a:'Comet banked',n:'Tap it when you want it'});[7,12,16,19].forEach((m,i)=>bell(hz(m+12),.2,i*.07,1.4));buzz([10,30,10,30,20]);cometUI()}}
+ if(meter>=meterMax()&&banks<2){meter=0;cc++;banks++;if(!headless){setB({t:0,k:-1,a:'Comet banked',n:'Tap it, it merges with anything'});[7,12,16,19].forEach((m,i)=>bell(hz(m+12),.2,i*.07,1.4));buzz([10,30,10,30,20]);cometUI()}}
  reach(k);checkStars();if(headless)return;
  if(chain>=2){say(['','','Great!','Stellar!','Cosmic!'][Math.min(4,chain)]);if(!save.rm)shake=Math.max(shake,.25)}
  burst(px,py,TC[k],10+k*3+chain*4,F.w*(.35+k*.03));rings.push({x:px,y:py,r:n.r*F.w,t:0,c:TC[k]});pops.push({x:px,y:py-n.r*F.w,t:0,txt:'+'+pts+(chain>0?' ×'+(chain+1):''),big:chain>0});
@@ -290,7 +291,7 @@ function step(dt){const G=3.4;for(const b of bodies){b.age+=dt;if(b.mg||b.gone)c
  for(const[a,b]of hits)if(!a.mg&&!b.mg){a.mg=b.mg=1;merg.push({a,b,t:0})}}
 function sim(dt){if(!headless)padTick(dt);if(rnd.open){rnd.secs+=dt;runT+=dt}heldT+=dt;if(qd!=null&&cool<=0&&!sn){const q=qd;qd=null;aimX=q;drop()}for(let i=0;i<4;i++)step(dt*ts/4);cool-=dt;chainT-=dt;boost=Math.max(0,boost-dt);if(slowT>0){slowT-=dt;if(slowT<=0&&!sn)ts=1}if(sn)novaTick(dt);
  for(const m of merg){m.t+=dt/.09;const{a,b}=m,M=a.m+b.m,cx=(a.x*a.m+b.x*b.m)/M,cy=(a.y*a.m+b.y*b.m)/M,k=Math.min(.5,dt*14);a.x+=(cx-a.x)*k;a.y+=(cy-a.y)*k;b.x+=(cx-b.x)*k;b.y+=(cy-b.y)*k}const done=merg.filter(m=>m.t>=1);merg=merg.filter(m=>m.t<1);done.forEach(finishMerge);
- let bad=false;if(!sn)for(const b of bodies)if(b.age>1.6&&!b.mg&&b.y-b.r<0)bad=true;overT=bad?overT+dt:0;if(overT>.3&&!headless){beat-=dt;if(beat<=0){const u=Math.min(1,overT/2);beat=.7-.42*u;thump(60+70*u,.2+.16*u,0,.26);buzz(12+Math.round(u*16))}}if(overT>2)finish()}
+ let bad=false;if(!sn)for(const b of bodies)if(b.age>1.6&&!b.mg&&b.y-b.r<0)bad=true;overT=bad?overT+dt:0;if(overT>.3&&!headless){tip(1,()=>say('Clear the top line!'));beat-=dt;if(beat<=0){const u=Math.min(1,overT/2);beat=.7-.42*u;thump(60+70*u,.2+.16*u,0,.26);buzz(12+Math.round(u*16))}}if(overT>2)finish()}
 function drop(){if(state!=='play'||sn)return;if(cool>0){qd=aimX;return}rndStart();cool=.4;heldT=0;const r=rad(cur),x=Math.min(1-r,Math.max(r,aimX));const b=add(cur,x,-r-.012,0,.15);b.trail=1;if(!headless)bell(hz(31),.05,0,.2);if(cur<0){cur=hold;hold=null;banks--;if(!headless)cometUI()}else{cur=nxt;nxt=pick();if(!headless)nextPrev()}if(save.hint<1)save.hint=1}
 /* ---------- end ---------- */
 function finish(force){if(state!=='play')return;state='over';if(force===true&&starsNow()<1)reach(8);const st=starsNow(),dust=Math.floor(score/10),win=force===undefined?st>0:!!force;
@@ -300,7 +301,7 @@ let endData=null,popT=0,endWait=0,popN=0,overFx=0;
 function endTick(dt){overFx+=dt;popT-=dt;if(popQ.length&&popT<=0){popT=.07;const b=popQ.shift();burst(sx(b.x),sy(b.y),TC[Math.max(0,b.t)],14,F.w*.5);rings.push({x:sx(b.x),y:sy(b.y),r:b.r*F.w,t:0,c:TC[Math.max(0,b.t)]});bell(hz(12+popN*2),.1,0,.6);popN++;bodies=bodies.filter(o=>o!==b)}endWait-=dt;if(endWait<=0&&state==='over')showEnd()}
 function fmtT(s){s=Math.round(s);return Math.floor(s/60)+' min '+String(s%60).padStart(2,'0')}
 function showEnd(){show('end');const e=endData,rows=[...document.querySelectorAll('.rw')];$('eHead').textContent=mode==='daily'?'Daily · '+date:'Field overflowed';$('eTop').textContent='You reached '+(topT>=0?T[topT].n:'nothing yet');$('eMeta').textContent=fmtT(runT)+' · '+merges+' merges';$('r1').textContent=pM.toLocaleString();$('r2').textContent=pC.toLocaleString();$('r3').textContent=pN.toLocaleString();$('r3l').textContent=novas===1?'1 supernova':novas+' supernovas';const hq=$('eArt').getContext('2d');hq.clearRect(0,0,360,360);if(topT>=0)art(hq,topT,180,180,T[topT].ring?104:150,.3);let nm='';const gap=save.best-score,nx=ST[e.st];if(mode==='daily'&&save.streak>0)nm='Daily streak '+save.streak+(gap>0&&gap<=save.best*.2?' · '+gap.toLocaleString()+' from your best':'');else if(!e.newBest&&gap>0&&gap<=save.best*.2)nm=gap.toLocaleString()+' points from your best';else if(nx&&nx[0]-score<=nx[0]*.25)nm=(nx[0]-score).toLocaleString()+' points from your next star';else if(topT<10&&topT>=0)nm='Next goal: '+T[topT+1].n;$('eBest').textContent=nm;
- const rk=rankOf(save.dust),nextR=RANKS[rk+1],base=RANKS[rk][1],rankTxt='Rank '+(rk+1)+' '+RANKS[rk][0]+' · +'+e.dust.toLocaleString()+' stardust'+(LOOKS[rk+1]?' · next: '+LOOKS[rk+1][0]+' field':'');$('eRank').textContent=rankTxt;$('eTry').hidden=true;$('eAtlas').hidden=false;const pct=nextR?Math.round((save.dust-base)/(nextR[1]-base)*100):100;$('again').textContent=mode==='daily'?'Play free run':'Play again';
+ const rk=rankOf(save.dust),nextR=RANKS[rk+1],base=RANKS[rk][1],rankTxt='Rank '+(rk+1)+' '+RANKS[rk][0]+' · +'+e.dust.toLocaleString()+' stardust'+(LOOKS[rk+1]?' · next: '+LOOKS[rk+1][0]+' field':'');$('eBoard').hidden=mode!=='daily';$('eRank').textContent=rankTxt;$('eTry').hidden=true;$('eAtlas').hidden=false;const pct=nextR?Math.round((save.dust-base)/(nextR[1]-base)*100):100;$('again').textContent=mode==='daily'?'Play free run':'Play again';
  ['s1','s2','s3'].forEach(i=>$(i).classList.remove('on'));$('eBar').style.width='0';$('eScore').textContent='0';rows.forEach((r,i)=>setTimeout(()=>{r.classList.add('on');bell(hz(19+i*4),.14,0,.5)},150+i*240));
  setTimeout(()=>{const t0=performance.now();let ln=0;(function f(n){const p=Math.min(1,(n-t0)/1200),q=1-Math.pow(1-p,3);$('eScore').textContent=Math.round(score*q).toLocaleString();if(n-ln>70&&p<1){ln=n;bell(hz(19+Math.floor(q*14)),.03,0,.1)}if(p<1)requestAnimationFrame(f);else{for(let k=0;k<e.st;k++)setTimeout(()=>{$('s'+(k+1)).classList.add('on');bell(hz(24+k*5),.26,0,1.6);buzz(16)},150+k*380);setTimeout(()=>{$('eBar').style.width=pct+'%';bell(hz(31),.16,0,1.2);const pr=rankOf(e.prev);if(rk>pr){$('eBest').textContent='Rank up! '+RANKS[rk][0]+(LOOKS[rk]?' · '+LOOKS[rk][0]+' field unlocked':'');[0,4,7,12,16,19].forEach((n,i)=>bell(hz(n+12),.22,i*.1,1.6));buzz([14,40,14,40,30]);if(LOOKS[rk]){const b=$('eTry');b.hidden=false;$('eAtlas').hidden=true;b.textContent='Use the '+LOOKS[rk][0]+' field';b.onclick=()=>{save.look=rk;persist();layout();b.hidden=true;$('eAtlas').hidden=false}}}else if(e.newBest&&save.runs>1){$('eBest').textContent='New best!';[0,4,7,12].forEach((n,i)=>bell(hz(n+12),.2,i*.09,1.4))}},300+e.st*380)}})(t0)},900)}
 /* ---------- drawing ---------- */

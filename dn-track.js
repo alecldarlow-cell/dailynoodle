@@ -550,6 +550,14 @@
     }
     track(ev, props, path);
   }
+  // Game Dailies on the leaderboard (5 Nov 2026): Astro Drop only, for players in a league.
+  if (KIND === 'game' && /-astro-drop\.html$/.test(location.pathname)) {
+    try {
+      var gb = document.createElement('script');
+      gb.src = SELF ? SELF.replace(/dn-track\.js(\?.*)?$/, 'dn-board.js') : '../dn-board.js';
+      gb.defer = true; document.head.appendChild(gb);
+    } catch (e) {}
+  }
   if (KIND === 'game') {
     try {
       var gs = document.createElement('script');
