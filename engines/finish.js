@@ -293,13 +293,14 @@
     loadToday(function (j) {
       var main = row.querySelector('.fin-next-main'), sub = row.querySelector('.fin-next-sub');
       row.classList.remove('fin-next-done');
-      if (!j) { main.textContent = 'Today’s puzzles'; sub.textContent = '\u00a0'; row.href = '../puzzles.html'; return; }
+      if (!j) { row.querySelector('.fin-next-ico').hidden = true; main.textContent = 'Today’s puzzles'; sub.textContent = '\u00a0'; row.href = '../puzzles.html'; return; }
       var items = j.items, playedN = 0, next = null, start = ORDER.indexOf(type);
       items.forEach(function (it) { if (done(it.type)[it.id]) playedN++; });
       for (var k = 1; k <= ORDER.length && !next; k++) {
         var t = ORDER[(start + k) % ORDER.length];
         items.forEach(function (it) { if (!next && it.type === t && !done(t)[it.id]) next = it; });
       }
+      var ico = row.querySelector('.fin-next-ico'); ico.hidden = !next; if (next) ico.src = '../assets/' + next.type + '-thumb.svg';
       if (next) { main.textContent = 'Play ' + next.name; sub.textContent = playedN + ' of ' + items.length + ' done today'; row.href = '../' + next.path; }
       else {   // AF-019: once all are done, a quiet line to the archive instead of a button
         row.classList.add('fin-next-done');
@@ -388,7 +389,7 @@
     (cfg.stats || []).forEach(function (s) { if (/day streak/i.test(s.label || '') && src == null) { src = s.id ? adopted[s.id] || null : null; val = s.value; } });
     function paint() {
       var n = parseInt(src ? src.textContent : val, 10) || 0;
-      p.textContent = n >= 1 ? '🔥 ' + n + '-day streak' : ''; p.hidden = n < 1;
+      p.textContent = n >= 1 ? '🔥 ' + n + '-day ' + cfg.type.charAt(0).toUpperCase() + cfg.type.slice(1) + ' streak' : ''; p.hidden = n < 1;
     }
     paint();
     if (src && 'MutationObserver' in window) new MutationObserver(paint).observe(src, { childList: true, characterData: true, subtree: true });
@@ -514,7 +515,7 @@
     f.appendChild(el('div', 'fin-board-slot'));
 
     // 4 PLAY MORE
-    var next = el('a', 'fin-next', '<span class="fin-next-main">Today’s puzzles</span><small class="fin-next-sub">\u00a0</small>');
+    var next = el('a', 'fin-next', '<img class="fin-next-ico" alt="" hidden><span class="fin-next-main">Today’s puzzles</span><small class="fin-next-sub">\u00a0</small>');
     next.href = '../puzzles.html'; f.appendChild(next); nextRow = next; nextType = cfg.type; fillNext(next, cfg.type);
 
     // 5 ANSWER, in its usual place

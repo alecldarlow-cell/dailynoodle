@@ -737,7 +737,7 @@ function resumeCard(){
   const p=document.querySelector(".dn-start-card h2+p");
   const n=["No groups","One group","Two groups","Three groups"][resumed.found]||"";
   if(p)p.textContent="Paused at "+dnTime(stamp())+". "+n+" found so far; your clock carries on from there.";
-  const h=document.querySelector(".dn-start-card h2"); if(h)h.textContent="Today’s Link, part-played";
+  const h=document.querySelector(".dn-start-card h2"); if(h)h.textContent="Part-played";
 }
 start();
 if(!doneGet(P.id))curRestore();

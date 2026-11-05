@@ -37,6 +37,12 @@ in `toolchain/site-sections-and-tracking.md`.
 - **How:** Borders, Reckon, Tally and Tangle pages carry `dn:thumb` as before. Mini, Doku, Path, Sweep and Link pages carry none: `FIXED_THUMBS` in `tools/build-feed.js` sets their card's `thumb` by type, so no page changed. Their `mask` stays in `feed.json` and `feed-lite.json` (installed apps read it). `front.js` still draws a mask tile for any puzzle card without a `thumb`.
 - `sw.js` precaches the nine icons. The app draws the same SVGs to PNG (`assets/images/tiles/` in the app repo): change an icon there too. Test: `tools/tests/build.js` (every released puzzle card has its type's icon). Visual baseline `puzzles-390-light.png` redrawn for this design. The app's PNGs are transparent too.
 
+## Start and finish pages (5 Nov 2026, Alec's list)
+- **Start:** the picture is the type's card icon at 132 px (`assets/<type>-thumb.svg`), never the day's grid. Play and Resume are one full-width green button (`--dn-go`, set in `engines/finish.css`, loaded on every puzzle). The top-right streak is gone. The heading says the state ("Ready to play", Link's "Part-played", Tangle's "Round paused"); Borders and Reckon keep "Today's ten". Borders, Reckon and Tangle pages build their own start, so `engines/<type>.js` swaps the art and labels at run time: no page changed. `#homeStreak` stays in Reckon's pages, hidden.
+- **Finish:** recap grids are centred. "Play Path 110" shows that puzzle's icon.
+- **Streak labels:** each game's own streak says so ("Mini streak", "🔥 5-day Mini streak"); the Puzzles page's overall one reads "22-day daily streak".
+- The app's start card and finish sheet match.
+
 ## Puzzle guides (20 Oct 2026)
 - `how-to-play.html` is the single guide page for all nine daily puzzles. Its hash links (`#mini`, `#doku`, `#sweep`, `#path`, `#link`, `#tangle`, `#borders`, `#reckon`, `#tally`) select matching pills in the same order and style as the puzzle hub. Every section is present in the HTML and readable without JavaScript.
 - On puzzle cards the category label is replaced by a muted **How to play** link, aligned bottom right. The publication date **and `dn:read` time/duration** remain. The play and guide links are siblings, never nested, so each has its own tap target. Other desks keep their categories.

@@ -6,6 +6,9 @@
 /* the sheet's faces, requested with the page's own CSS rather than by script after it has shown, and
    held (display=block) rather than drawn in a stand-in face first, which made the headline jump */
 @import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Serif:ital@0;1&display=block");
+:root{--dn-go:#0E7A4B;--dn-onGo:#FFFFFF}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"]){--dn-go:#4CC793;--dn-onGo:#0B0D12}}
+html[data-theme="dark"]{--dn-go:#4CC793;--dn-onGo:#0B0D12}
 .fin-box{
   --f-bg:#EDEEF2; --f-paper:#FFFFFF; --f-ink:#141726; --f-ink2:#545A6E; --f-line:#C6CAD6; --f-hair:#DCDFE7;
   --f-act:#2E5BFF; --f-onAct:#FFFFFF; --f-actInk:#1B3B9E; --f-actT:#DCE4FF;
@@ -95,7 +98,9 @@ html.fin-shown body{overflow:hidden}
 .fin-board-slot .nn-board-link .nn-go{color:var(--f-ink2);margin-left:2px}
 .fin-board-slot .nn-moment{margin:0 0 2px;font:600 15px/1.35 var(--f-sans);color:var(--f-ink)}
 /* PLAY MORE: a tonal button the same height as Share, its count under it */
-.fin-next{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;margin:10px 0 0;padding:8px 16px;border-radius:24px;background:var(--f-goT);color:var(--f-goInk)!important;text-decoration:none;font-weight:600;font-size:17px;text-align:center}
+.fin-next-ico{position:absolute;left:12px;top:50%;width:32px;height:32px;transform:translateY(-50%)}
+.fin-next.fin-next-done .fin-next-ico{display:none}
+.fin-next{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;margin:10px 0 0;padding:8px 16px;border-radius:24px;background:var(--f-goT);color:var(--f-goInk)!important;text-decoration:none;font-weight:600;font-size:17px;text-align:center}
 .fin-next small{display:block;font-weight:400;font-size:13px;color:var(--f-ink2)}
 .fin-next:active{filter:brightness(.95)}
 .fin-next.fin-next-done{background:none;min-height:48px;padding:0;align-items:flex-start;font-size:15px;color:var(--f-goInk)!important}
@@ -160,7 +165,7 @@ details.fin-rare p{font-size:14px;line-height:1.7;color:var(--f-ink2);margin:0 0
 .fin-b1{background:var(--f-g1);color:#fff}.fin-b2{background:var(--f-g2);color:#fff}.fin-b3{background:var(--f-g3);color:#141726}.fin-b4{background:var(--f-g4);color:var(--f-bg)}
 
 /* grid recaps: Mini, Doku, Sweep, Path */
-.fin-grid{display:grid;margin:14px 0 0;width:min(100%,300px);border:2px solid var(--f-frame);border-radius:6px;overflow:hidden;background:var(--f-block)}
+.fin-grid{display:grid;margin:14px auto 0;width:min(100%,300px);border:2px solid var(--f-frame);border-radius:6px;overflow:hidden;background:var(--f-block)}
 .fin-grid.g5{grid-template-columns:repeat(5,1fr)} .fin-grid.g6{grid-template-columns:repeat(6,1fr)}
 .fin-grid i{position:relative;aspect-ratio:1;display:grid;place-items:center;font-style:normal;background:var(--f-cell);color:var(--f-ink);font-weight:700;font-size:22px;box-shadow:inset 0 0 0 .5px var(--f-line)}
 .fin-grid i.blk{background:var(--f-block)}

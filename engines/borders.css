@@ -217,11 +217,12 @@ svg path[fill="#E9DCAE"]{fill:var(--wland);stroke:var(--land-edge)}
 #playCard{flex:0 0 auto;margin:22px 0 0;min-height:0;border:0;border-radius:18px;box-shadow:none;padding:0 0 20px;display:flex;flex-direction:column;overflow:hidden}
 #playCard::after{content:none}
 #playCard:active{transform:none;box-shadow:none;filter:brightness(.98)}
-#playCard .world{position:static;display:block;width:calc(100% - 28px);height:auto;margin:16px 14px 8px}
+#playCard .world{position:static;display:block;width:132px;height:132px;margin:22px auto 8px}
 #playCard .cardtxt{position:static;padding:8px 20px 0;background:none}
 .cardtxt b{font-size:32px}
 .cardtxt small{padding-right:0;margin-top:6px;font-size:16px;line-height:1.45}
 .cardtxt .go{position:static;display:inline-flex;align-items:center;min-height:44px;margin-top:16px;padding:0 22px;border-radius:24px;font-weight:600;font-stretch:100%;font-size:16px}
+.cardtxt .go{display:flex;width:100%;justify-content:center;min-height:52px;background:var(--dn-go);color:var(--dn-onGo);font-size:17px}
 .hstats{display:grid;grid-template-columns:repeat(3,1fr);margin:18px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .hstats div{display:flex;flex-direction:column;padding:10px 0 10px 14px;border-left:1px solid var(--line);min-width:0}
 .hstats div:first-child{border-left:0;padding-left:0}

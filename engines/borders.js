@@ -351,14 +351,14 @@ function homeExtras(){
     how.innerHTML='<summary>How to play</summary><p>Ten country outlines, easiest first. Pick the country from four names: 100 points for each right answer, up to 1,000.</p><p>Stuck? Show on map puts the outline on a world map, for half points. Every country you name goes into your atlas in Borderline.</p>';
     st.parentNode.insertBefore(how,st.nextSibling);}
   const best=Math.max(0,...Object.values(save.done||{}).map(d=>+d.p||0));
-  st.innerHTML='<div><b>'+liveStreak()+'</b><span>day streak</span></div><div><b>'+best+'</b><span>best score</span></div><div><b>'+Object.keys(save.done||{}).length+'</b><span>Borders played</span></div>';
+  st.innerHTML='<div><b>'+liveStreak()+'</b><span>Borders streak</span></div><div><b>'+best+'</b><span>best score</span></div><div><b>'+Object.keys(save.done||{}).length+'</b><span>Borders played</span></div>';
 }
 function renderHome(){
   show('home');
   $('numLabel').textContent='No. '+parseInt(P.id.slice(-4),10);
   $('dateLine').textContent='No. '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date).replace(/ \d{4}$/,'');
   homeExtras();
-  worldSVG($('homeWorld'),null);
+  $('homeWorld').outerHTML='<img class="world" id="homeWorld" src="../assets/borders-thumb.svg" width="132" height="132" alt="">';
   const c=save.cur&&save.cur.id===P.id?save.cur:null;
   $('playStatus').textContent=c?`Question ${Math.min(NQ,c.ans.length+1)} of ${NQ}, ${c.pts} points so far.`:'Ten country outlines, easiest first. Name them from four; 100 points each.';
   $('playGo').textContent=c?'Resume':'Play';
