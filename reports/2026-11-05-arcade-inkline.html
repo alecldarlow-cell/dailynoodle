@@ -74,6 +74,18 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 @media (prefers-reduced-motion:reduce){#card,#card .st span{animation:none}}
 @media (max-height:520px){#logo{font-size:52px;margin-top:0}#tag{display:none}.grow{display:none}#hb{grid-template-columns:1fr 1fr;width:min(520px,100%)}.scr{gap:8px;padding-top:calc(var(--st) + 10px);padding-bottom:calc(var(--sb) + 10px)}#tot{order:9}}
 </style>
+<!-- og:start (tools/og-tags.js — do not edit by hand) -->
+<meta property="og:site_name" content="The Daily Noodle">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Inkline">
+<meta property="og:description" content="One line. Lift your finger. Thirty contraptions that physics may or may not approve of.">
+<meta property="og:url" content="https://dailynoodle.co.uk/reports/2026-11-05-arcade-inkline.html">
+<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
+<meta name="twitter:card" content="summary_large_image">
+<!-- og:end -->
 </head>
 <body>
 <canvas id="c" aria-label="Sketchbook page. Draw one line with your finger."></canvas>
@@ -416,5 +428,6 @@ addEventListener('resize',fit);addEventListener('orientationchange',fit);addEven
 if(window.__DGTEST===true)window.__dg={end(w){if(scene=='home')startLevel(nextLevel());if(scene!='play'||!S||S.closed)return;if(w){cardDue=0;win()}else{rndStart();lost()}},state:()=>({scene,state:S&&S.state,idx,mode,open:save.open,stars:save.stars}),levels:()=>LEVELS,run:(l,p)=>testRun(l,p)};
 fit();openHome();requestAnimationFrame(t=>{last=t;frame(t)});
 </script>
+<script src="../dn-track.js" defer></script>
 </body>
 </html>
