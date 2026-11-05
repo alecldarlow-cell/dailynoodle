@@ -192,7 +192,7 @@ function buzz(p){try{if(save.vib&&navigator.vibrate)navigator.vibrate(p)}catch(e
    level = biggest object reached (1 dust ... 11 Sun). The world is simulated in field units
    (width 1, height H_F) so every phone plays the same game, and the Daily is fair. */
 const GAME='astro-drop',KEY='digi-astro-drop-v1',ORIENT='portrait';
-const $=i=>document.getElementById(i),H_F=1.42,R0=.05,GROW=1.2,METER=80,METER_STEP=60,ST=[[5000,8],[12000,9],[25000,10]],MERGE_GAP=1.08;
+const $=i=>document.getElementById(i),H_F=1.42,R0=.05,GROW=1.2,METER=60,METER_STEP=45,ST=[[5000,8],[12000,9],[25000,10]],MERGE_GAP=1.08;
 const meterMax=()=>METER+cc*METER_STEP;
 const rad=i=>R0*Math.pow(GROW,i);
 const RANKS=[['Cadet',0],['Pilot',1000],['Navigator',3000],['Commander',7000],['Captain',15000],['Admiral',30000],['Stargazer',60000]];
