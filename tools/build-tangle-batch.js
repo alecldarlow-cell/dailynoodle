@@ -141,7 +141,7 @@ function main() {
     for (const w of P.bonus) if (!dictBonus.includes(w) && (w.length >= P.star.length || !traceable(P.tiles, w))) err(f, 'extra word breaks the board: ' + w);
     if (j(wm) !== j(P.main.slice().sort())) err(f, 'main list != independent solver');
     if (j(wb) !== j(dictBonus.slice().sort())) err(f, 'bonus list != independent solver');
-    for (const w of P.main.concat(P.bonus)) if (blocked(w)) err(f, 'blocklisted word ' + w);
+    for (const w of P.main.concat(P.bonus)) if (blocked(w) && !EXTRA.includes(w)) err(f, 'blocklisted word ' + w);   // the reviewed extras outrank the kit's hand list
     if (NOSTAR.has(P.star)) err(f, 'star on the nostar list: ' + P.star);
     if (stars.has(P.star)) err(f, `star ${P.star} repeats ${stars.get(P.star)}`); else stars.set(P.star, f);
     const k = d4(P.tiles); if (boards.has(k)) err(f, 'board repeats ' + boards.get(k) + ' under D4'); else boards.set(k, f);

@@ -20,5 +20,6 @@ test('TANGLE-WORDS-01: forthcoming boards hold every extra word they can, and st
 });
 test('TANGLE-WORDS-02: the extra list keeps its hand review: real words in, abbreviations and crude words out', () => {
   for (const w of ['among', 'color', 'clays', 'dews', 'penne', 'dunno']) assert.ok(EXTRA.includes(w), w);
-  for (const w of ['ert', 'csc', 'hhd', 'arsing', 'perv', 'gun', 'kill']) assert.ok(!EXTRA.includes(w), w);
+  for (const w of ['hoe', 'gun', 'kill', 'arsenic']) assert.ok(EXTRA.includes(w), w);   // Alec, 5 Nov 2026: no slurs, innocent meanings are fine
+  for (const w of ['ert', 'csc', 'hhd', 'arsing', 'perv', 'bum', 'tart', 'slave', 'noose', 'nonce', 'goy', 'erection']) assert.ok(!EXTRA.includes(w), w);
 });
