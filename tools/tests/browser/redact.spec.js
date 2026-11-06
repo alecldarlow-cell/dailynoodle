@@ -21,7 +21,7 @@ test('REDACT-E2E-01: start card, taps, a wrong try, undo, clear, resume after a 
  for(const i of P.black.slice(0,-1))await H.tap(p,cell(p,i));
  await H.tap(p,cell(p,WRONG));
  await expect(p.locator('#count')).toHaveText(String(P.black.length));
- await expect(p.locator('#msg')).toContainText('Not yet');
+ await expect(p.locator('#msg')).toContainText(/Not yet|on its own|only two letters/);   // names the rule broken (6 Nov 2026)
  await H.tap(p,p.locator('#undoBtn'));await expect(cell(p,WRONG)).not.toHaveClass(/black/);
  // Clear empties the board; Undo brings the squares back
  await H.tap(p,p.locator('#clearBtn'));await expect(p.locator('#count')).toHaveText('0');
