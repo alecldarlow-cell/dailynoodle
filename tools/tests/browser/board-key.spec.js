@@ -228,23 +228,23 @@ test.describe('BOARD-KEY', () => {
       await H.tap(O.p, O.p.locator('[data-go="start"]'));
       await O.p.fill('input[name="lname"]', 'Family');
       await O.p.fill('input[name="nick"]', 'Alec');
-      await O.p.fill('input[name="pin"]', '1357');
       await H.tap(O.p, O.p.locator('#f .btn.go'));
       await expect(O.p.locator('.bcard h2').first()).toHaveText('Family is ready');
+      await expect(O.p.locator('input[name="pin"]')).toHaveCount(0);   // email replaced PINs (6 Nov 2026)
       await H.tap(O.p, O.p.locator('.bcard [data-act="invite"]'));
       const invite = new URL((await O.p.evaluate(() => window.__shared))[0].url);
 
-      // Jake joins in WhatsApp's browser with a PIN; Kim joins without one.
+      // Jake joins in WhatsApp's browser and has a PIN from before they were retired; Kim has none.
       await go(W, invite.pathname.slice(1) + invite.search);
       await W.p.fill('input[name="nick"]', 'Jake');
-      await W.p.fill('input[name="pin"]', '2468');
+      await expect(W.p.locator('input[name="pin"]')).toHaveCount(0);
       await H.tap(W.p, W.p.locator('#f .btn.go'));
       await expect(W.p.locator('.daybar')).toHaveCount(1);
+      await W.p.evaluate(() => window.noodleBoard.setPin('2468'));
       const jake = await boardPid(W);
       await join(K, invite, 'Kim');
-      await expect(K.p.locator('.bcard h2', { hasText: 'Set a PIN' })).toHaveCount(0);   // the "You're in" card comes first
       await go(K, 'board.html');
-      await expect(K.p.locator('.bcard h2', { hasText: 'Set a PIN' })).toHaveCount(1);
+      await expect(K.p.locator('.bcard h2', { hasText: 'Set a PIN' })).toHaveCount(0);
 
       // Safari: same invite, "Already in Family?", a wrong PIN, then the right one.
       await go(S, invite.pathname.slice(1) + invite.search);
@@ -262,7 +262,7 @@ test.describe('BOARD-KEY', () => {
       expect(submits(S)[0].body).toBe(true);
       expect((await q(db, 'select count(*)::int n from board.results where player=$1', [jake]))[0].n).toBe(1);
 
-      // Kim has no PIN: refused until Alec lets her back in, then she sets a new one.
+      // Kim has no PIN: refused until Alec lets her back in, then she's in with no PIN to set.
       await go(K2, invite.pathname.slice(1) + invite.search);
       await H.tap(K2.p, K2.p.locator('[data-go="claimjoin"]'));
       await K2.p.selectOption('select[name="nick"]', 'Kim');
@@ -273,10 +273,7 @@ test.describe('BOARD-KEY', () => {
       await H.tap(O.p, O.p.locator('[data-act="letback"][data-nick="Kim"]'));
       await expect(O.p.locator('#sm')).toContainText('Kim can join');
       await H.tap(K2.p, K2.p.locator('#f .btn.go'));
-      await expect(K2.p.locator('.bcard h2')).toHaveText('Set a new PIN');
-      await K2.p.fill('input[name="pin"]', '8642');
-      await H.tap(K2.p, K2.p.locator('#f .btn.go'));
-      await expect(K2.p.locator('.bcard h2').first()).toHaveText('PIN saved');
+      await expect(K2.p.locator('.bcard h2').first()).toHaveText('You’re playing as Kim here too');
       expect(await boardPid(K2)).toBe(await boardPid(K));
 
       // The All puzzles table: Jake's Mini is today's only result.
@@ -285,6 +282,15 @@ test.describe('BOARD-KEY', () => {
       await expect(O.p.locator('ol.rows').first()).toContainText('Jake');
       await expect(O.p.locator('ol.rows').first()).toContainText('0 pts');
       await expect(O.p.locator('.notyet')).toHaveText('Alec (you), Kim');
+      // Kim changes her nickname in League settings; the table follows.
+      await go(K2, 'board.html');
+      await K2.p.locator('details.set summary').click();
+      await H.tap(K2.p, K2.p.locator('[data-go="nick"]'));
+      await K2.p.fill('input[name="nick"]', 'Kimmy');
+      await H.tap(K2.p, K2.p.locator('#f .btn.go'));
+      await expect(K2.p.locator('.daybar')).toHaveCount(1);
+      await go(O, `board.html?p=all&d=${DAY}`);
+      await expect(O.p.locator('.notyet')).toHaveText('Alec (you), Kimmy');
       await H.tap(O.p, O.p.locator('[data-act="shareall"]'));
       const sh = (await O.p.evaluate(() => window.__shared)).pop();
       expect(sh.text).toContain('🥇 Jake 0 pts (1/8)');

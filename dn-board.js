@@ -229,6 +229,9 @@
       return leagues();
     });
   }
+  function setNick(code, nick) {   // this league's nickname (6 Nov 2026)
+    return rpc('board_set_nick', { p_player: pid(), p_code: code, p_nick: nick }).then(refresh);
+  }
   function create(name, nick) {
     return rpc('board_create', { p_player: pid(), p_name: name, p_nick: nick })
       .then(function (l) { return refresh().then(function () { setCurrent(l.code); return l; }); });
@@ -438,7 +441,7 @@
   window.noodleBoard = {
     TYPES: TYPES, BY_ID: BY_ID, typeOfPath: typeOfPath, dateOfPath: dateOfPath,
     pid: pid, leagues: leagues, inAny: inAny, refresh: refresh, create: create, join: join,
-    peek: peek, overall: overall, records: records, moment: moment, hasPin: hasPin, setPin: setPin, claim: claim, backfill: backfill, backfillDue: backfillDue, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
+    peek: peek, setNick: setNick, overall: overall, records: records, moment: moment, hasPin: hasPin, setPin: setPin, claim: claim, backfill: backfill, backfillDue: backfillDue, leave: leave, day: day, owner: owner, current: current, setCurrent: setCurrent,
     lastType: lastType, setLastType: setLastType, today: today, rpc: rpc,
     moveLink: moveLink, moved: moved, pending: pending, settlePending: settlePending, isIOS: isIOS
   };

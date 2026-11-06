@@ -106,3 +106,21 @@ test('APP-ERR-02: a malformed report stores nothing, and the hourly limit holds'
     assert.equal((await d.query('select count(*)::int n from insights.app_errors')).rows[0].n, 300);
   } finally { await d.close(); }
 });
+
+test('BOARD-NICK: a member can change their nickname, within the rules, keeping their results', async () => {
+  // GIVEN Ann, Bob and Cy in a league, with results
+  const d = await league(true);
+  try {
+    await d.exec(read('2026-11-06-board-set-nick.sql'));
+    const set = (p, n) => d.query(`select public.board_set_nick($1, 'ABCDEFGH', $2) v`, [p, n]);
+    // WHEN Ann renames THEN the board shows the new name with the same result
+    assert.equal((await set(P1, 'Annie')).rows[0].v, 'Annie');
+    assert.ok((await day(d)).ranked.some(r => r.nick === 'Annie' && r.score === 40));
+    // AND changing only the capitals of your own name is fine
+    assert.equal((await set(P1, 'ANNIE')).rows[0].v, 'ANNIE');
+    // AND someone else's name, a bad name or a non-member is refused
+    await assert.rejects(set(P2, 'annie'), /nick_taken/);
+    await assert.rejects(set(P2, 'x'), /bad_nick/);
+    await assert.rejects(set('00000000-0000-4000-8000-000000000009', 'Dee'), /not_member/);
+  } finally { await d.close(); }
+});

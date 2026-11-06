@@ -22,7 +22,7 @@ const { PGlite } = require('@electric-sql/pglite');
 
 const MIGRATIONS = ['2026-10-18-leaderboards.sql', '2026-10-18-leaderboards-hide-only.sql', '2026-10-20-reckon-board.sql',
                     '2026-10-24-board-pins-and-overall.sql', '2026-10-25-board-records.sql', '2026-11-04-tally-board.sql', '2026-11-05-game-daily-board.sql',
-                    '2026-11-04-points-players-beaten.sql'];
+                    '2026-11-04-points-players-beaten.sql', '2026-11-05-tangle-score-only.sql', '2026-11-06-board-set-nick.sql'];
 const HOSTING = `
   create role anon; create role authenticated; create role service_role;
   create schema auth;
