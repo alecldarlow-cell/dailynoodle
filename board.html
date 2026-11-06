@@ -310,25 +310,13 @@
   function keyGroup() {
     return '<div class="grp" id="keygrp"><h3>Play somewhere else too?</h3><p>Your leagues are kept in this browser. ' +
       (IOS ? 'On an iPhone, Safari, the home-screen app and links opened inside WhatsApp each keep their own. ' : '') +
-      'Where else you play, open the league’s invite link, tap <b>Already in this league?</b>, pick your nickname and enter your PIN.</p>' +
+      'Sign in with your email on this page and they follow you to your other phones and browsers.</p>' +
       '<p class="fine">Or send yourself your personal link, which also brings your streaks. It’s your key, so don’t post it in a group.</p>' +
       '<div class="acts"><button class="btn" data-act="key">Send me my link</button>' +
       '<button class="btn" data-go="paste">Paste a link</button></div></div>';
   }
-  /* ---------- PINs (24 Oct 2026; see dn-board.js claim) ---------- */
-  var PIN_FIELD = function (label, hint) {
-    return '<label class="field"><span>' + label + '</span><input name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" ' +
-      'autocomplete="off" placeholder="4 numbers"><small>' + hint + '</small></label>';
-  };
-  var PIN_HINT = 'Lets you join as yourself from another phone or app later. Optional, and you can set it later.';
-  function pinOk(v) { return /^[0-9]{4}$/.test(v); }
-  function afterJoinPin(f) {   // the optional PIN on the start and join forms; a failure here never undoes the join
-    var v = (f.elements.pin && f.elements.pin.value || '').trim();
-    if (!v) return Promise.resolve();
-    if (!pinOk(v)) return Promise.resolve();
-    return NB.setPin(v).then(function () { track('board_pin', { act: 'set', from: 'join' }); }, function () {});
-  }
-  function pinLater() { try { return localStorage.getItem('noodle-board-pinlater') === NB.today(); } catch (e) { return false; } }
+  /* ---------- PINs: email replaced them (6 Nov 2026). A player who set one can still use it on the
+     claim form; nobody is asked to set one. ---------- */
   function claimForm(info) {
     document.getElementById('pillbar').hidden = true;
     var known = !!(info && info.code);
@@ -350,26 +338,19 @@
       return NB.claim(code, f.elements.nick.value.trim(), f.elements.pin.value.trim()).then(function (r) {
         track('board_pin', { act: 'claim' });
         S.join = ''; S.filled = false; S.data = null;
-        if (r.pending) { S.needPin = r.needsPin; return pendForm(NB.pending()); }
-        if (r.needsPin) return pinForm(true);
+        if (r.pending) return pendForm(NB.pending());
         S.claimed = r.nick; loadBoard();
       });
     });
   }
-  function pinForm(fresh) {
+  function nickForm(L) {
     document.getElementById('pillbar').hidden = true;
     $app.innerHTML =
-      '<form class="bcard" id="f"><h2>' + (fresh ? 'Set a new PIN' : 'Set your PIN') + '</h2>' +
-      '<p>' + (fresh ? 'You’re back in. Choose a new PIN so you can do this yourself next time.'
-                     : 'Then you can join as yourself from another phone or app.') + '</p>' +
-      '<label class="field"><span>PIN</span><input name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required placeholder="4 numbers"></label>' +
-      '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Save PIN</button>' +
-      (fresh ? '' : '<button class="btn" type="button" data-go="back">Back</button>') + '</div></form>';
-    form(function (f) {
-      var v = f.elements.pin.value.trim();
-      if (!pinOk(v)) return Promise.reject(new Error('PINs are 4 numbers.'));
-      return NB.setPin(v).then(function () { track('board_pin', { act: fresh ? 'reset' : 'set', from: 'form' }); S.pinSaved = true; loadBoard(); });
-    });
+      '<form class="bcard" id="f"><h2>Change your nickname</h2><p>For ' + esc(L.name) + '. Your results stay yours.</p>' +
+      '<label class="field"><span>Nickname</span><input name="nick" maxlength="16" required value="' + esc(L.nick) + '"></label>' +
+      '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Save</button>' +
+      '<button class="btn" type="button" data-go="back">Back</button></div></form>';
+    form(function (f) { return NB.setNick(L.code, f.elements.nick.value.trim()).then(function () { track('board_nick'); loadBoard(); }); });
   }
   function pasteForm() {
     document.getElementById('pillbar').hidden = true;
@@ -406,31 +387,28 @@
     NB.settlePending(take); track('board_key', { act: take ? 'take' : 'keep' });
     if (take) S.moved = { n: 1 };
     S.filled = false; S.data = null;
-    var fresh = take && S.needPin; S.needPin = false;
-    NB.refresh().catch(function () {}).then(function () { fresh ? pinForm(true) : NB.inAny() ? loadBoard() : intro(); });
+    NB.refresh().catch(function () {}).then(function () { NB.inAny() ? loadBoard() : intro(); });
   });
   function startForm() {
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Start a league</h2>' +
       '<label class="field"><span>League name</span><input name="lname" maxlength="30" placeholder="e.g. Noodle family" required></label>' +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" placeholder="e.g. Alec" required><small>What everyone in the league sees.</small></label>' +
-      PIN_FIELD('PIN', PIN_HINT) +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Start league</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.create(f.elements.lname.value.trim(), f.elements.nick.value.trim()).then(function (l) {
       track('board_create', { from: S.startFrom || 'intro' }); S.startFrom = ''; S.created = l.code;
-      return afterJoinPin(f).then(loadBoard); }); });
+      return loadBoard(); }); });
   }
   function codeForm() {
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Join a league</h2><p>Ask someone in the league for its link or 8-letter code.</p>' +
       '<label class="field"><span>League code</span><input name="code" maxlength="12" autocapitalize="characters" required></label>' +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
-      PIN_FIELD('PIN', PIN_HINT) +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.join(f.elements.code.value.trim().toUpperCase(), f.elements.nick.value.trim()).then(function () {
-      track('board_join', { via: 'code' }); S.joined = NB.leagues().length; return afterJoinPin(f).then(loadBoard); }); });
+      track('board_join', { via: 'code' }); S.joined = NB.leagues().length; return loadBoard(); }); });
   }
   function joinForm(info) {
     document.getElementById('pillbar').hidden = true;
@@ -439,16 +417,15 @@
       '<p>' + info.members + (info.members === 1 ? ' player' : ' players') + ' so far. Pick a nickname and your ' +
       'results will appear on the league’s daily boards.</p>' +
       (IOS ? '<p class="tip">On an iPhone, join in the place you play the puzzles. If this opened inside WhatsApp or another app, ' +
-             'open it in Safari (or your Daily Noodle home-screen app) first. Set a PIN and you can join as yourself anywhere else too.</p>' : '') +
+             'open it in Safari (or your Daily Noodle home-screen app) first. Sign in with your email and your leagues follow you anywhere else.</p>' : '') +
       '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
-      PIN_FIELD('PIN', PIN_HINT) +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join league</button>' +
       (NB.inAny() ? '<button class="btn" type="button" data-go="board">Not now</button>' : '') + '</div>' +
       (info.members ? '<p class="also"><button class="lnk" type="button" data-go="claimjoin">Already in ' + esc(info.name) + '? Pick your name</button></p>' : '') +
       '</form>';
     S.peeked = info;
     form(function (f) { return NB.join(S.join, f.elements.nick.value.trim()).then(function () {
-      track('board_join', { via: 'link' }); S.join = ''; S.joined = NB.leagues().length; return afterJoinPin(f).then(loadBoard); }, function (err) {
+      track('board_join', { via: 'link' }); S.join = ''; S.joined = NB.leagues().length; return loadBoard(); }, function (err) {
         if (err.code === 'nick_taken') err.message += ' If that’s you, tap “Already in ' + info.name + '?” below.';
         throw err; }); });
   }
@@ -469,9 +446,8 @@
     else if (go === 'claim') claimForm(null);
     else if (go === 'claimjoin') claimForm({ code: S.join, name: S.peeked.name, players: S.peeked.players || [] });
     else if (go === 'joinback') joinForm(S.peeked);
-    else if (go === 'pin') pinForm(false);
+    else if (go === 'nick') nickForm(cur());
     else if (go === 'recapdone') { try { localStorage.setItem('noodle-board-recap-' + (cur() || {}).code, NB.today()); } catch (x) {} var rc = g.closest('.bcard'); if (rc) rc.remove(); }
-    else if (go === 'pinlater') { try { localStorage.setItem('noodle-board-pinlater', NB.today()); } catch (x) {} var c = g.closest('.bcard'); if (c) c.remove(); }
     else if (go === 'back') { NB.inAny() ? loadBoard() : intro(); } else if (go === 'board') { S.join = ''; loadBoard(); }
   });
 
@@ -587,17 +563,9 @@
       h += '<div class="bcard"><h2>You’re playing as ' + esc(S.claimed) + ' here too</h2><p>Puzzles you finish in this browser now go ' +
            'on your league’s boards, and the ones you’d already finished here have been added.</p></div>';
       S.claimed = '';
-    } else if (S.pinSaved) {
-      h += '<div class="bcard"><h2>PIN saved</h2><p>To play as yourself in another browser or app, open the league’s invite link there ' +
-           'and tap <b>Already in this league?</b></p></div>';
-      S.pinSaved = false;
     } else if (recapDue(L.code, NB.today())) {
       h += '<div id="recap"></div>';
       fillRecap(L);
-    } else if (!NB.hasPin() && !pinLater()) {
-      h += '<div class="bcard"><h2>Set a PIN</h2><p>Then you can join as yourself from another phone or app' +
-           (IOS ? ', like Safari and the home-screen app on an iPhone, which each keep their own leagues' : '') + '.</p>' +
-           '<div class="acts"><button class="btn go" data-go="pin">Set a PIN</button><button class="btn" data-go="pinlater">Later</button></div></div>';
     }
     return h;
   }
@@ -790,8 +758,8 @@
       '<div class="grp"><h3>Invite</h3><p>Code <span class="code">' + esc(L.code) + '</span> · ' + d.members + (d.members === 1 ? ' player' : ' players') + '</p></div>' +
       '<div class="grp"><h3>Another group?</h3><p>Start a separate league for friends, work or another chat. You can be in more than one.</p>' +
       '<div class="acts"><button class="btn" data-go="start" data-from="settings">Start another league</button></div></div>' +
-      '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b> · PIN ' + (NB.hasPin() ? 'set' : 'not set') + '</p>' +
-      '<div class="acts"><button class="btn" data-go="pin">' + (NB.hasPin() ? 'Change PIN' : 'Set a PIN') + '</button>' +
+      '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b></p>' +
+      '<div class="acts"><button class="btn" data-go="nick">Change nickname</button>' +
       '<button class="btn warn" data-act="leave">Leave league</button></div></div>' + keyGroup();
     if (L.owner) {
       h += '<div class="grp"><h3>League name</h3><div class="inline"><input id="rn" maxlength="30" value="' + esc(L.name) + '">' +
@@ -800,7 +768,7 @@
              return '<li><span>' + esc(p) + (p === L.nick ? ' (you)' : '') + '</span>' +
                (p === L.nick ? '' : '<span><button class="ok" data-act="letback" data-nick="' + esc(p) + '">Let back in</button>' +
                  '<button data-act="remove" data-nick="' + esc(p) + '">Remove</button></span>') + '</li>'; }).join('') + '</ul>' +
-             '<p class="fine">Let back in: for a day, that player can join as themselves from another phone or app without their PIN, then sets a new one.</p></div>' +
+             '<p class="fine">Let back in: for a day, that player can join as themselves from another phone or app without a PIN.</p></div>' +
            '<div class="grp"><h3>Join code</h3><p>A new code stops the old link and code working; everyone already in stays in.</p>' +
            '<div class="acts"><button class="btn" data-act="newcode">New join code</button></div></div>' +
            '<div class="grp"><h3>Close league</h3><p>Takes the league off everyone’s boards.</p>' +
