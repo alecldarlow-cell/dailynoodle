@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-section="puzzles">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>
+/* full-screen app only: hold the top and bottom insets and the screen height steady (dn-pin, 18 Oct 2026).
+   On every page load Android briefly brings its bars back, which changed these and made the page jump.
+   A value is taken up only once it has held for 0.7 s, and remembered per orientation for the next page. */
+(function(){try{
+  if(!window.__dnPinTest&&(!window.matchMedia||!matchMedia('(display-mode: fullscreen)').matches))return;   // __dnPinTest: tools/tests
+  var r=document.documentElement,K='dn-pin',saved={},cur=null,t=0;
+  var p=document.createElement('div');
+  p.style.cssText='position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none;height:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+  r.appendChild(p);
+  try{saved=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}
+  function key(){return innerWidth>innerHeight?'l':'p';}
+  function now(){var s=getComputedStyle(p);return {t:Math.round(parseFloat(s.height)||0),b:Math.round(parseFloat(s.paddingBottom)||0),h:innerHeight,w:innerWidth};}
+  function apply(v){r.style.setProperty('--dn-top',v.t+'px');r.style.setProperty('--dn-bot',v.b+'px');r.style.setProperty('--dn-vh',v.h+'px');}
+  var s0=saved[key()];cur=(s0&&s0.w===innerWidth)?s0:now();apply(cur);
+  function check(){clearTimeout(t);t=setTimeout(function(){var v=now();
+    if(v.t!==cur.t||v.b!==cur.b||v.h!==cur.h||v.w!==cur.w){cur=v;apply(v);}
+    saved[key()]=v;try{localStorage.setItem(K,JSON.stringify(saved));}catch(e){}},700);}
+  addEventListener('resize',check);if(window.visualViewport)visualViewport.addEventListener('resize',check);check();
+  setInterval(function(){if(document.hidden)return;var v=now();if(v.t!==cur.t||v.b!==cur.b||v.h!==cur.h||v.w!==cur.w)check();},1000);   // an inset can change without a resize
+}catch(e){}})();
+</script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#FCFCFB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11131A" media="(prefers-color-scheme: dark)">
+<title>Your puzzle stats — The Daily Noodle</title>
+<meta name="description" content="Your Daily Noodle puzzle stats: personal bests, runs and times, worked out on your own device.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://dailynoodle.co.uk/stats.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="front.css">
+<link rel="stylesheet" href="stats.css">
+</head>
+<body class="stats-page">
+<div class="wrap">
+  <header class="mast">
+    <div class="mono" aria-hidden="true">DP</div>
+    <div class="word">Noodle<b>Puzzles</b></div>
+    <div class="kick">Your stats<span class="k2">From this device</span></div>
+  </header>
+
+  <nav class="controls" aria-label="Sections">
+    <div class="bar">
+      <div class="sections" role="group" aria-label="Sections">
+        <a class="sec puzzles" href="puzzles.html" aria-current="page">Puzzles</a>
+        <a class="sec games" href="games.html">Games</a>
+        <a class="sec news" href="index.html">News</a>
+        <a class="sec lab" href="lab.html">Lab</a>
+      </div>
+    </div>
+  </nav>
+
+  <p class="ar-back st-back"><a href="puzzles.html">← Today’s puzzles</a> · <a href="archive.html?from=stats">Archive by month</a></p>
+  <h1 class="st-h1">Your stats</h1>
+  <p class="st-note">Worked out on this phone or browser from the puzzles you’ve finished. Nothing is sent anywhere.</p>
+  <div class="st-modes" id="st-modes" role="group" aria-label="Which plays" hidden>
+    <button type="button" data-m="all" aria-pressed="true">All</button>
+    <button type="button" data-m="day" aria-pressed="false">On the day</button>
+    <button type="button" data-m="archive" aria-pressed="false">Catch-ups</button>
+  </div>
+  <div id="st-body"></div>
+
+  <footer class="foot">
+    <p><b>The Daily Noodle · Puzzles</b> — your stats are free and need no account. Signed in, they include results synced from your other devices.</p>
+    <p class="privacy"><a href="puzzles.html">← All puzzles</a> · <a href="how-to-play.html">How to play</a></p>
+    <p class="privacy"><a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">contact@dailynoodle.co.uk</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
+  </footer>
+</div>
+<script src="dn-stats.js"></script>
+<script src="stats.js"></script>
+<script src="dn-track.js" defer></script>
+</body>
+</html>
