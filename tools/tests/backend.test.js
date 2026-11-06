@@ -451,3 +451,54 @@ test('TALLY-BOARD: a timed puzzle from its first daily, ranked by fastest time; 
     await assert.rejects(() => rpc('board_submit', [one, 'reports/2026-11-06-logic-tally-0013.html', 'solved', 2, null, null]), /bad_result/);
   } finally { await db.close(); }
 });
+
+// ADMIN-ARCHIVE-01: the admin page's Archive and stats panel (6 Nov 2026), on the live admin definitions.
+test('ADMIN-ARCHIVE-01: weekly archive and stats counts, admin only, excluded readers left out', async t => {
+  const db = new PGlite();
+  t.after(() => db.close());
+  await db.exec(`
+    create role anon; create role authenticated; create role service_role;
+    create schema auth;
+    create function auth.jwt() returns jsonb language sql stable as
+      $$ select coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb $$;
+    grant usage on schema auth to anon, authenticated, service_role;
+  `);
+  await db.exec(fs.readFileSync(path.join(__dirname, '../../toolchain/sql/2026-10-20-admin-live-definitions.sql'), 'utf8'));
+  await db.exec(fs.readFileSync(path.join(__dirname, '../../toolchain/sql/2026-11-06-admin-archive-stats.sql'), 'utf8'));
+  const q = async (sql, params = []) => (await db.query(sql, params)).rows;
+  await db.exec("insert into insights.admins values ('editor@example.test')");
+  const id = n => '00000000-0000-4000-8000-0000000000' + String(n).padStart(2, '0');
+  const ev = (anon, at, event, props = {}) => q(
+    "insert into public.events(occurred_at,anon_id,session_id,section,event,item_path,props) values ($1::timestamptz,$2,$2,'puzzles',$3,'archive.html',$4::jsonb)",
+    [at, anon, event, JSON.stringify(props)]);
+  // GIVEN two weeks of archive and stats use (Mon 2 Nov and Mon 9 Nov 2026), and an excluded reader
+  await ev(id(1), '2026-11-02T10:00:00Z', 'archive_open', { from: 'puzzles' });
+  await ev(id(1), '2026-11-02T10:01:00Z', 'archive_play', { type: 'mini', id: 'DP·MINI·0100' });
+  await ev(id(1), '2026-11-03T10:01:00Z', 'archive_play', { type: 'mini', id: 'DP·MINI·0101' });
+  await ev(id(2), '2026-11-08T23:30:00Z', 'archive_play', { type: 'link', id: 'DP·LINK·0090' });   // Sun 8 Nov, 23:30 London
+  await ev(id(1), '2026-11-04T10:00:00Z', 'stats_open');
+  await ev(id(1), '2026-11-05T10:00:00Z', 'stats_open');
+  await ev(id(2), '2026-11-09T00:10:00Z', 'stats_open');                                           // Mon 9 Nov
+  await ev(id(9), '2026-11-02T10:00:00Z', 'archive_play', { type: 'mini', id: 'x' });
+  await q("insert into insights.excluded_readers(anon_id, note) values ($1, 'test device')", [id(9)]);
+  const as = async (role, email) => {
+    await db.exec('reset role');
+    await q("select set_config('request.jwt.claims',$1,false)", [email === undefined ? '' : JSON.stringify({ email })]);
+    if (role) await db.exec('set role ' + role);
+  };
+  const call = () => q("select public.admin_archive_stats('2026-11-01','2026-11-15') as v").then(r => r[0].v);
+  // WHEN someone other than an admin asks THEN they are refused
+  await as('anon');
+  await assert.rejects(call, /permission denied/);
+  await as('authenticated', 'reader@example.test');
+  await assert.rejects(call, /not_admin/);
+  // WHEN the admin asks THEN each London week has its counts, by type, without the excluded reader
+  await as('authenticated', 'Editor@example.test');
+  const { weeks } = await call();
+  assert.deepEqual(weeks, [
+    { week: '2026-10-26', archive_opens: 0, archive_plays: 0, stats_opens: 0, stats_visitors: 0, by_type: {} },
+    { week: '2026-11-02', archive_opens: 1, archive_plays: 3, stats_opens: 2, stats_visitors: 1, by_type: { link: 1, mini: 2 } },
+    { week: '2026-11-09', archive_opens: 0, archive_plays: 0, stats_opens: 1, stats_visitors: 1, by_type: {} },
+  ].filter(w => w.archive_opens + w.archive_plays + w.stats_opens));
+  await assert.rejects(() => q("select public.admin_archive_stats('2026-11-15','2026-11-01')"), /bad_range/);
+});
