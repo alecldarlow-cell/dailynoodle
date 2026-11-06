@@ -14,6 +14,7 @@ Alec's standard (6 Nov 2026): every level must be solvable with a sensible drawi
 | `rig.js` | Runs the game's physics with strokes sampled like a finger, plus a wobbly-hand model. |
 | `check.js` | The bar every level must clear (below). |
 | `gems.js` | Places gems for the listed levels. |
+| `endtest.js` | How smoothly a rolling marble gets on to a line's end: speed kept and hop height, in four everyday cases. |
 | `viz.js` | Draws levels with the marble's paths (needs Playwright, already in the repo's dev tools). |
 | `assemble.js` | Writes the levels, gems, hints, chapters, Daily and home-screen demo line into the game file. |
 
@@ -37,7 +38,9 @@ Alec's standard (6 Nov 2026): every level must be solvable with a sensible drawi
 
 - **Energy budget:** a marble from the top reaches the bottom of a long chute at about 11 units. It slides more than it rolls on steep chutes, and spins up on curves, so some speed goes into spin.
 - **Ramps need a flat run-up:** a ramp whose foot sits on a curve costs about half the speed. A 35° ramp on flat ground keeps about two-thirds. Leave a margin: walls only 40–60 px above the run-up.
-- **Line ends settle onto surfaces within 9 px** (`settleEnds`), and taper over 28 px, so a marble rolls on smoothly.
+- **Line ends are wedges,** flat underneath, tapering on top over 56 px (a third of a short line), and they follow the line's bends. A short line's wedge is steeper, so a stick lying in the marble's path is a small kicker: check that levels with a jump cannot be won by dropping a stick (Ski Jump's wall had to rise for this).
+- **Ends seat themselves:** a free line heading into a surface just beyond its end is extended to touch it (`reachEnds`); a pegged line's end within 14 px bends onto the surface (`settleEnds`). Lines laid along a surface rest on it exactly (`clearOf`). `endtest.js` measures how smoothly a rolling marble gets on to a line.
+- **A pinned line resting on scenery holds its angle** until knocked; without that it crept off its support (Hinge).
 - **Lines are heavy** (density 0.008, about four times the marble), so a resting ramp is not shoved aside.
 - **Lines grip scenery** (friction 0.9). The marble's grip is 0.02, and a pair uses the lower, so the marble is not slowed.
 - **Pegs are pins in the paper:** the marble rolls over them, and they catch a line within 15 px (`PEGR`).

@@ -41,11 +41,11 @@ LV.push({n:'Hinge',h:'A peg holds one end, a ledge the other.',idea:'A peg holds
  sol:[[[270,236],[100,444]]]});
 /* 2.4 Swing: a line through one peg swings like a hammer and knocks the marble along its shelf. */
 LV.push({n:'Swing',h:'Through one peg, a line swings.',idea:'A line through one peg swings: hit the marble.',
- m:[168,250],s:[block(161,261,37,12),...run([[195,267],[290,300],[318,312]],12,40),plank(270,480,302,520,10),block(352,0,8,580)],p:[[148,140]],c:[328,560,1,1],
- sol:[[[148,140],[20,140]]],show:[[[148,140],[60,60]]]});
+ m:[168,250],s:[block(164,261,34,12),...run([[195,267],[290,300],[318,312]],12,40),plank(270,480,302,520,10),block(352,0,8,580)],p:[[128,138]],c:[328,560,1,1],
+ sol:[[[128,138],[0,138]]],show:[[[128,138],[40,58]]]});
 /* 2.5 Ski Jump: the halfpipe has no far side; draw the jump through both pegs and the marble flies the wall. */
 LV.push({n:'Ski Jump',h:'Finish the halfpipe.',idea:'Finish the halfpipe: a jump through both pegs.',
- m:on(0,60,50,250,30),s:[...run([[0,60],[50,250],[95,420],[140,480],[232,484]]),block(280,452,16,188),block(338,200,8,380)],p:[[230,465],[256,447]],c:[315,560,1,1],
+ m:on(0,60,50,250,30),s:[...run([[0,60],[50,250],[95,420],[140,480],[232,484]]),block(280,434,16,206),block(338,200,8,380)],p:[[230,465],[256,447]],c:[315,560,1,1],
  sol:[[[200,477],[268,438]]],show:[[[200,477],[240,462],[262,440],[270,425]]]});
 /* chapters, in order: name and number of levels */
 LV.CH=[{n:'Ledges',c:5},{n:'Pegs',c:5}];
