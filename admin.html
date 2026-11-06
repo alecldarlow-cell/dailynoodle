@@ -203,6 +203,7 @@
   .round{width:40px;height:40px;display:grid;place-content:center;border:1px solid var(--hair);border-radius:20px;background:var(--paper);color:var(--ink);flex:none}
   .round:disabled{opacity:.35;cursor:default}
   .prow{display:grid;grid-template-columns:minmax(0,1fr) 3.6em 5.6em;gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--hair);font-size:13.5px}
+  .prow.day{grid-template-columns:minmax(0,1fr) 3em 4.4em 3.4em}
   .prow.h{border-top:0;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding-top:12px}
   .prow > :nth-child(n+2){text-align:right}
   .prow .meta{display:block;font-size:12px;color:var(--muted)}
@@ -494,6 +495,7 @@
           <button type="button" class="round" id="dayNext" aria-label="Next day"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
         </div>
         <div id="dayRows"></div>
+        <p class="sub">Median: the middle solve time on timed puzzles, the middle score on scored rounds.</p>
       </div>
       <div class="card">
         <h2>Types in this period</h2>
@@ -1192,17 +1194,19 @@
     Object.keys(items).forEach(function(p){ if (!paths[p]) paths[p] = { path:p, headline:title(p) }; });
     var rows = Object.keys(paths).map(function(p){ return paths[p]; })
       .sort(function(a,b){ return TYPE_ORDER.indexOf(ptype(a.path)) - TYPE_ORDER.indexOf(ptype(b.path)); });
-    $('#dayRows').innerHTML = rows.length ? '<div class="prow h"><span>Puzzle</span><span>Players</span><span>Result</span></div>' + rows.map(function(f){
-      var it = items[f.path], t = ptype(f.path), line, res;
+    $('#dayRows').innerHTML = rows.length ? '<div class="prow day h"><span>Puzzle</span><span>Players</span><span>Median</span><span>Solved</span></div>' + rows.map(function(f){
+      var it = items[f.path], t = ptype(f.path), line, res, typical = '<span class="dash">–</span>';
       if (!it || !it.readers) { line = 'No plays'; res = '<span class="dash">–</span>'; }
       else if (isScoredType(t)) {
         line = n(it.starts)+' '+plural(it.starts,'round')+' started';
-        res = it.median_score != null ? n(it.median_score)+' pts' : it.median_got != null ? it.median_got+(it.of_n?'/'+it.of_n:'') : '<span class="dash">–</span>';
+        res = '<span class="dash">–</span>';
+        if (it.median_score != null) typical = n(it.median_score)+' pts'; else if (it.median_got != null) typical = it.median_got+(it.of_n?'/'+it.of_n:'');
       } else {
-        line = n(it.solved)+' of '+n(it.starts)+' solved'+(it.failed ? ', '+it.failed+' failed' : '')+(it.median_solve_secs != null ? ' · '+dur(it.median_solve_secs) : '');
+        line = n(it.solved)+' of '+n(it.starts)+' solved'+(it.failed ? ', '+it.failed+' failed' : '');
+        if (it.median_solve_secs != null) typical = dur(it.median_solve_secs);
         res = it.pct_solved == null ? '<span class="dash">–</span>' : '<span class="pill '+tone(it.pct_solved,60,40,true)+'">'+it.pct_solved+'%</span>';
       }
-      return '<div class="prow"><span><a href="'+esc(f.path)+'" target="_blank" rel="noopener">'+esc(f.headline || title(f.path))+'</a><span class="meta">'+line+'</span></span><span class="num">'+(it ? n(it.readers) : '0')+'</span><span>'+res+'</span></div>';
+      return '<div class="prow day"><span><a href="'+esc(f.path)+'" target="_blank" rel="noopener">'+esc(f.headline || title(f.path))+'</a><span class="meta">'+line+'</span></span><span class="num">'+(it ? n(it.readers) : '0')+'</span><span class="num">'+typical+'</span><span>'+res+'</span></div>';
     }).join('') : '<p class="empty">No puzzles found for this day.</p>';
   }
   $('#dayPrev').onclick = function(){ var d = dayList(), i = d.indexOf(S.day); if (i > 0) { S.day = d[i-1]; renderDay(); } };
