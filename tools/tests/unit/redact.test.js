@@ -13,7 +13,17 @@ test('REDACT-01: every Redact page passes the gate, is distinct and matches its 
   const list = B.existing();
   assert.ok(list.length >= 10, 'at least the ten Lab pages');
   assert.deepStrictEqual(B.check(), []);
-  for (const e of list) assert.strictEqual(B.readPage(e.file).n, 6, e.file);
+  // the first ten Lab boards are 6×6; the next ten 7×7 (Alec, 6 Nov 2026, after regulars finished 6×6 in under 30 s)
+  for (const e of list) assert.strictEqual(B.readPage(e.file).n, e.serial <= 10 ? 6 : e.serial <= 20 ? 7 : B.readPage(e.file).n, e.file);
+  assert.ok(list.filter(e => B.readPage(e.file).n === 7).length >= 10, 'ten 7×7 Lab pages');
+});
+
+test('REDACT-05: each size has its own effort band; 7×7 refuses one-round boards', () => {
+  assert.deepStrictEqual(R.band({ n: 6, effort: 180 }), []);
+  assert.deepStrictEqual(R.band({ n: 7, effort: 240 }), []);
+  assert.ok(R.band({ n: 7, effort: 140 }).length, 'a 7×7 that one round of line logic solves is too easy');
+  assert.ok(R.band({ n: 8, effort: 240 }).length, 'no 8×8 band yet');
+  for (const e of B.existing()) { const p = B.readPage(e.file), g = R.grade(p); assert.ok(g.effort >= R.BANDS[p.n][0] && g.effort <= R.BANDS[p.n][1], e.file); }
 });
 
 test('REDACT-02: the gate refuses what a player would call broken or unfair', () => {

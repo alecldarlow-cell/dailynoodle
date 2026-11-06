@@ -2,11 +2,13 @@
 /* Tumbler pages: a hidden word on four seven-letter wheels a day, from tools/tumbler.js (Lab, 6 Nov 2026).
 
      node tools/build-tumbler-batch.js --check                    # exit 1 if any page fails the gate, repeats a secret or differs from its seed
-     node tools/build-tumbler-batch.js --through D [--from D0]    # continue from the newest page to date D (from D0, serial 1, when there are none); never touches an existing page
-     add --lab to write pages with the "In development" badge
+     node tools/build-tumbler-batch.js --through D [--from D0]    # write days D0..D (default: the day after the newest page) as the next serials; never touches an existing page or day
+     add --lab to write pages with the "In development" badge, --updated D to give each new page dn:updated D
+     node tools/build-tumbler-batch.js --regen-lab                # rebuild every Lab page (badge "In development") whose board no longer passes the gate, from its own seed series: same file, id and date
 
    Each page records its seed ("tumbler-0001", then "tumbler-0001-<k>"); --check regenerates it.
-   No secret word is used twice. Boards are never changed once their day has passed. */
+   No secret word is used twice. Boards are never changed once their day has passed, except
+   in the Lab (--regen-lab: 6 Nov 2026, six of the first ten could spell DICK, SCAG and the like). */
 const fs = require('fs'), path = require('path');
 const T = require('./tumbler.js');
 const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports');
@@ -23,7 +25,7 @@ function boardFor(serial, used) {
   throw new Error('no board found for serial ' + serial);
 }
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-function page({ serial, date, board, lab }) {
+function page({ serial, date, board, lab, updated }) {
   const id = 'DP·TUMB·' + pad(serial), num = pad(serial);
   const stand = 'A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.';
   const data = '{type:"tumbler",id:"' + id + '",band:"medium",n:4,wheels:[' + board.wheels.map(w => '"' + w + '"').join(',') + '],secret:"' + board.secret +
@@ -33,7 +35,7 @@ function page({ serial, date, board, lab }) {
 <meta name="dn:headline"   content="Tumbler ${num}">
 <meta name="dn:standfirst" content="${esc(stand)}">
 <meta name="dn:topic"      content="Word">
-<meta name="dn:date"       content="${date}">
+<meta name="dn:date"       content="${date}">${updated ? '\n<meta name="dn:updated"    content="' + updated + '">' : ''}
 <meta name="dn:kind"       content="puzzle">
 <meta name="dn:read"       content="~1 min">
 <meta name="dn:thumb"      content="assets/tumbler-thumb.svg">${lab ? '\n<meta name="dn:badge"      content="In development">' : ''}
@@ -126,24 +128,50 @@ function writeThrough(through, opts) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(through)) throw new Error('--through needs a date, YYYY-MM-DD');
   const list = existing(), used = new Set(), out = [];
   for (const e of list) { const p = readPage(e.file), errs = T.check(p); if (errs.length) throw new Error(e.file + ': ' + errs.join('; ')); used.add(p.secret); }
-  let serial, date;
-  if (list.length) { const last = list[list.length - 1]; serial = last.serial + 1; date = addDay(last.date, 1); }
-  else { if (!/^\d{4}-\d{2}-\d{2}$/.test(opts.from || '')) throw new Error('no Tumbler pages yet: --from D0 names the first day'); serial = 1; date = opts.from; }
+  /* serials always continue; days continue from the newest page unless --from names a free run of days
+     (one Tumbler a day, no gaps: the second ten Lab boards fill 18–27 Oct, before the first) */
+  const taken = new Set(list.map(e => e.date));
+  let serial = list.length ? Math.max(...list.map(e => e.serial)) + 1 : 1, date;
+  if (opts.from) { if (!/^\d{4}-\d{2}-\d{2}$/.test(opts.from)) throw new Error('--from needs a date, YYYY-MM-DD'); date = opts.from; }
+  else if (list.length) date = addDay(list.map(e => e.date).sort().pop(), 1);
+  else throw new Error('no Tumbler pages yet: --from D0 names the first day');
+  if (opts.updated && !/^\d{4}-\d{2}-\d{2}$/.test(opts.updated)) throw new Error('--updated needs a date, YYYY-MM-DD');
   for (; date <= through; serial++, date = addDay(date, 1)) {
+    if (taken.has(date)) throw new Error('there is already a Tumbler on ' + date);
     const board = boardFor(serial, used), file = date + '-word-tumbler-' + pad(serial) + '.html';
-    fs.writeFileSync(path.join(REPORTS, file), page({ serial, date, board, lab: !!opts.lab }), { flag: 'wx' });
+    fs.writeFileSync(path.join(REPORTS, file), page({ serial, date, board, lab: !!opts.lab, updated: opts.updated }), { flag: 'wx' });
     out.push(file + ' ' + board.secret + ' everyday ' + board.grade.everyday + ' bot ' + board.grade.botMedian + '/' + board.grade.botP90 + ' (' + board.seed + ')');
+  }
+  return out;
+}
+/* Lab pages only: rebuild, in serial order, each board that its seed no longer makes (a rule changed) */
+function regenLab() {
+  const used = new Set(), out = [];
+  for (const e of existing()) {
+    const file = path.join(REPORTS, e.file), html = fs.readFileSync(file, 'utf8'), p = readPage(e.file);
+    const lab = /<meta name="dn:badge"\s+content="In development">/.test(html), upd = (html.match(/<meta name="dn:updated"\s+content="([^"]*)">/) || [])[1];
+    const board = boardFor(e.serial, used);
+    const same = board.secret === p.secret && board.wheels.join() === p.wheels.join() && board.words.join() === p.words.join();
+    if (same) continue;
+    if (!lab) throw new Error(e.file + ' is not a Lab page: published boards are never changed');
+    fs.writeFileSync(file, page({ serial: e.serial, date: e.date, board, lab, updated: upd }));
+    out.push(e.file + ' ' + (board.secret === p.secret && board.wheels.join() === p.wheels.join() ? 'same board, accepted words ' + p.words.length + ' → ' + board.words.length : p.secret + ' → ' + board.secret + ' (' + board.seed + ')'));
   }
   return out;
 }
 if (require.main === module) {
   const a = process.argv.slice(2);
   if (a.includes('--check')) { const errs = check(); if (errs.length) { console.error(errs.join('\n')); process.exit(1); } console.log('Tumbler: ' + existing().length + ' pages pass the gate and match their seeds'); }
+  else if (a.includes('--regen-lab')) {
+    const out = regenLab(); console.log(out.join('\n') + '\n' + out.length + ' Lab pages rewritten');
+    const errs = check(); if (errs.length) { console.error(errs.join('\n')); process.exit(1); }
+  }
   else if (a.includes('--through')) {
-    const out = writeThrough(a[a.indexOf('--through') + 1], { from: a.includes('--from') ? a[a.indexOf('--from') + 1] : null, lab: a.includes('--lab') });
+    const arg = k => a.includes(k) ? a[a.indexOf(k) + 1] : null;
+    const out = writeThrough(arg('--through'), { from: arg('--from'), lab: a.includes('--lab'), updated: arg('--updated') });
     console.log(out.join('\n') + '\n' + out.length + ' pages written');
     const errs = check(); if (errs.length) { console.error(errs.join('\n')); process.exit(1); }
   }
-  else { console.log('usage: --check | --through D [--from D0] [--lab]'); process.exit(2); }
+  else { console.log('usage: --check | --regen-lab | --through D [--from D0] [--lab] [--updated D]'); process.exit(2); }
 }
-module.exports = { boardFor, page, check, existing, readPage, writeThrough };
+module.exports = { boardFor, page, check, existing, readPage, writeThrough, regenLab };

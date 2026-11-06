@@ -27,8 +27,13 @@
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const ROOT = path.resolve(__dirname, '..');
 const K = { 5: [5, 8], 6: [7, 11], 7: [11, 16] };
-/* the Lab band (6×6, Alec 6 Nov 2026): effort from the model player, set so a regular lands near Path and Sweep */
-const BAND = { n: 6, effort: [150, 320] };
+/* the Lab bands, by size. Effort is the model player's work; in practice it counts the
+   rounds of line logic a board needs (one round ~130, two ~240, three ~350).
+   6×6 (Alec 6 Nov 2026): set so a regular lands near Path and Sweep. The first plays
+   (6 Nov) showed regulars finishing 6×6 in 11–30 s once learned, so 7×7 is the next
+   trial (Alec 6 Nov 2026): one-round boards are refused, two and three rounds allowed. */
+const BANDS = { 6: [150, 320], 7: [230, 420] };
+const BAND = { n: 6, effort: BANDS[6] };   // the first Lab size, kept for older callers
 
 /* ---------- words ---------- */
 let LISTS = null;
@@ -56,7 +61,9 @@ function lists() {
     answers[L] = pool.filter(w => /^[a-z]+$/.test(w) && !banned.has(w)).sort();
   }
   const offensive = new Set([...veto.BLOCKED, ...veto.SENSITIVE.filter(w => w.length >= 3)]);
-  LISTS = { answers, wide, banned, offensive };
+  /* the whole Mini bank (every tier), 3–5 letters: words a solver knows, used by Tumbler's accepted list */
+  const bank = {}; for (let L = 3; L <= 5; L++) bank[L] = new Set(Object.keys(W[L]).filter(w => /^[a-z]+$/.test(w) && w.length === L && !banned.has(w)));
+  LISTS = { answers, wide, banned, offensive, bank };
   return LISTS;
 }
 
@@ -345,9 +352,10 @@ function fingerprint(p) {
 }
 function band(g) {
   const e = [];
-  if (g.n !== BAND.n) e.push('size ' + g.n + ', the Lab size is ' + BAND.n);
-  if (g.effort < BAND.effort[0] || g.effort > BAND.effort[1]) e.push('effort ' + g.effort);
+  const b = BANDS[g.n];
+  if (!b) { e.push('size ' + g.n + ', the Lab sizes are ' + Object.keys(BANDS).join(' and ')); return e; }
+  if (g.effort < b[0] || g.effort > b[1]) e.push('effort ' + g.effort);
   return e;
 }
 function grade(p) { const pr = propagate(p.letters.toLowerCase(), p.n, p.black.length); return { n: p.n, k: p.black.length, rounds: pr.rounds, plaus: pr.plaus, effort: pr.effort, solved: pr.solved }; }
-module.exports = { K, BAND, band, fingerprint, lists, rng, hashSeed, geo, runs, lineMasks, connected, slots, solutions, propagate, pattern, fill, trap, visibleBanned, fair, generate, check, grade };
+module.exports = { K, BAND, BANDS, band, fingerprint, lists, rng, hashSeed, geo, runs, lineMasks, connected, slots, solutions, propagate, pattern, fill, trap, visibleBanned, fair, generate, check, grade };
