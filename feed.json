@@ -1,8 +1,8 @@
 {
-  "built": "2026-11-06T18:56:58.203Z",
+  "built": "2026-11-06T19:42:05.055Z",
   "today": "2026-11-06",
   "timezone": "Europe/London",
-  "count": 822,
+  "count": 832,
   "items": [
     {
       "path": "reports/2026-11-04-arcade-astro-drop.html",
@@ -215,6 +215,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0090"
+    },
+    {
+      "path": "reports/2026-11-06-word-redact-0010.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0010",
+      "standfirst": "Six by six, every square a letter. Black out the eight that don’t belong and the grid becomes a crossword.",
+      "date": "2026-11-06",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0010",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-11-06-word-tangle-0031.html",
@@ -447,6 +465,24 @@
       "id": "DP·LINK·0089"
     },
     {
+      "path": "reports/2026-11-05-word-redact-0009.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0009",
+      "standfirst": "Six by six, every square a letter. Black out the nine that don’t belong and the grid becomes a crossword.",
+      "date": "2026-11-05",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0009",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-05-word-tangle-0030.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -654,6 +690,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0088"
+    },
+    {
+      "path": "reports/2026-11-04-word-redact-0008.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0008",
+      "standfirst": "Six by six, every square a letter. Black out the eleven that don’t belong and the grid becomes a crossword.",
+      "date": "2026-11-04",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0008",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-11-04-word-tangle-0029.html",
@@ -890,6 +944,24 @@
       "id": "DP·LINK·0087"
     },
     {
+      "path": "reports/2026-11-03-word-redact-0007.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0007",
+      "standfirst": "Six by six, every square a letter. Black out the ten that don’t belong and the grid becomes a crossword.",
+      "date": "2026-11-03",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0007",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-03-word-tangle-0028.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -1092,6 +1164,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0086"
+    },
+    {
+      "path": "reports/2026-11-02-word-redact-0006.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0006",
+      "standfirst": "Six by six, every square a letter. Black out the nine that don’t belong and the grid becomes a crossword.",
+      "date": "2026-11-02",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0006",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-11-02-word-tangle-0027.html",
@@ -1313,6 +1403,24 @@
       "id": "DP·LINK·0085"
     },
     {
+      "path": "reports/2026-11-01-word-redact-0005.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0005",
+      "standfirst": "Six by six, every square a letter. Black out the ten that don’t belong and the grid becomes a crossword.",
+      "date": "2026-11-01",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0005",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-01-word-tangle-0026.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -1515,6 +1623,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0084"
+    },
+    {
+      "path": "reports/2026-10-31-word-redact-0004.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0004",
+      "standfirst": "Six by six, every square a letter. Black out the eleven that don’t belong and the grid becomes a crossword.",
+      "date": "2026-10-31",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0004",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-31-word-tangle-0025.html",
@@ -1751,6 +1877,24 @@
       "id": "DP·LINK·0083"
     },
     {
+      "path": "reports/2026-10-30-word-redact-0003.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0003",
+      "standfirst": "Six by six, every square a letter. Black out the ten that don’t belong and the grid becomes a crossword.",
+      "date": "2026-10-30",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0003",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-30-word-tangle-0024.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -1953,6 +2097,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0082"
+    },
+    {
+      "path": "reports/2026-10-29-word-redact-0002.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0002",
+      "standfirst": "Six by six, every square a letter. Black out the eleven that don’t belong and the grid becomes a crossword.",
+      "date": "2026-10-29",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0002",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-29-word-tangle-0023.html",
@@ -2172,6 +2334,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0081"
+    },
+    {
+      "path": "reports/2026-10-28-word-redact-0001.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0001",
+      "standfirst": "Six by six, every square a letter. Black out the eleven that don’t belong and the grid becomes a crossword.",
+      "date": "2026-10-28",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0001",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-28-word-tangle-0022.html",
