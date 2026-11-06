@@ -50,7 +50,8 @@ const TYPES = {
   "quiz-reckon":    { key: "reckon",  id: "RECK",  serial: true,  topic: "Quiz",      gridMask: false },
   "word-tangle":    { key: "tangle",  id: "TANG",  serial: true,  topic: "Word",      gridMask: true, gridChars: /^[.]*$/ },
   "logic-tally":    { key: "tally",   id: "TALLY", serial: true,  topic: "Logic",     gridMask: false },  // daily from 5 Nov 2026
-  "logic-tilt":     { key: "tilt",    id: "TILT",  serial: true,  topic: "Logic",     gridMask: false, lab: true }   // Lab from 6 Nov 2026
+  "logic-tilt":     { key: "tilt",    id: "TILT",  serial: true,  topic: "Logic",     gridMask: false, lab: true },  // Lab from 6 Nov 2026
+  "word-redact":    { key: "redact",  id: "REDA",  serial: true,  topic: "Word",      gridMask: false, lab: true }   // Lab from 6 Nov 2026
 };
 const PUZZLE_TOPICS = new Set(Object.values(TYPES).map(t => t.topic));
 const FNAME = new RegExp(`^(\\d{4}-\\d{2}-\\d{2})-(${Object.keys(TYPES).join("|")})(?:-(\\d{4}))?\\.html$`);
@@ -220,6 +221,8 @@ function extract(full, t) {
     rec.d4 = null;   // facts repeat by design (shared Ballpark bank, 100-day gap gated by build-reckon-batch.js)
   } else if (t.key === "tally") {
     rec.d4 = null;   // boards are deduped (D4 of cages and clues) by build-tally-batch.js, whose --check runs in the gates
+  } else if (t.key === "redact") {
+    rec.d4 = null;   // boards are deduped (D4, and no long answer twice) by build-redact-batch.js, whose --check runs in the gates
   } else if (t.key === "tilt") {
     rec.d4 = null;   // mazes are deduped (D4 of walls, start and exit) by build-tilt-batch.js, whose --check runs in the gates
   }
@@ -270,7 +273,7 @@ for (const f of files.sort()) {
   else if (!rec.id.includes(`·${t.id}·`) && !rec.id.includes(`-${t.id}-`)) note("ERROR", t.key, f, `puzzle id ${rec.id} is not a DP·${t.id}· id`);
   else if (t.serial && !rec.id.endsWith(String(serial))) note("ERROR", t.key, f, `visible id ${rec.id} disagrees with filename serial ${serial}`);
   else if (!t.serial && !rec.id.endsWith(date)) note("ERROR", t.key, f, `visible id ${rec.id} disagrees with filename date ${date}`);
-  if (t.key !== "borders" && t.key !== "reckon" && t.key !== "tally" && t.key !== "tilt" && !rec.d4) note("WARN", t.key, f, "could not compute a dedup key (solution literal unreadable)");
+  if (t.key !== "borders" && t.key !== "reckon" && t.key !== "tally" && t.key !== "tilt" && t.key !== "redact" && !rec.d4) note("WARN", t.key, f, "could not compute a dedup key (solution literal unreadable)");
   if (rec.hasGridLiteral && (t.key === "mini" || t.key === "doku") && badShape(r.grid))
     note("ERROR", t.key, f, "grid layout reads as a swastika (letters or black squares) — never ship");
   if (rec.hasGridLiteral && (t.key === "mini" || t.key === "doku") && spinning(r.grid)) {

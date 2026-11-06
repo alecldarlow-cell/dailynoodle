@@ -10,7 +10,8 @@ const cases=[
  {type:'borders',file:'geo-borders-0015',board:'#qmap',targets:'#opts .opt,#pauseBtn,#hintBtn'},
  {type:'reckon',page:'reports/2026-10-20-quiz-reckon-0001.html',board:'#slz',targets:'#slz,#minus,#act,#plus,#pauseBtn,.navb:not([disabled])'},
  {type:'tally',page:'reports/2026-11-03-logic-tally-0010.html',board:'#grid',targets:'#grid .cell,#keys button,#notesBtn,#eraseBtn,#undoBtn'},
- {type:'tilt',page:'reports/2026-11-06-logic-tilt-0010.html',board:'#maze',targets:'#leftBtn,#rightBtn,#undoBtn'}
+ {type:'tilt',page:'reports/2026-11-06-logic-tilt-0010.html',board:'#maze',targets:'#leftBtn,#rightBtn,#undoBtn'},
+ {type:'redact',page:'reports/2026-11-06-word-redact-0010.html',board:'#grid',targets:'#grid .cell,#undoBtn,#clearBtn'}
 ];
 async function reachable(p,selectors){
  const problems=await p.locator(selectors).evaluateAll(elements=>elements.flatMap(e=>{

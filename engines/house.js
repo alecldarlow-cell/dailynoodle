@@ -134,7 +134,7 @@
 (function () {
   'use strict';
   var P = window.DN_PUZZLE || {};
-  var TYPE = { mini: 'mini', lexi: 'doku', sweep: 'sweep', path: 'path', link: 'link', tally: 'tally', tilt: 'tilt' }[P.type];
+  var TYPE = { mini: 'mini', lexi: 'doku', sweep: 'sweep', path: 'path', link: 'link', tally: 'tally', tilt: 'tilt', redact: 'redact' }[P.type];
   if (!TYPE) return;
   var $ = function (id) { return document.getElementById(id); };
   var W = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen'];
@@ -142,11 +142,11 @@
   var meta = function (n) { var m = document.querySelector('meta[name="' + n + '"]'); return m ? m.content : ''; };
   function read(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
 
-  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tally: 'Tally', tilt: 'Tilt' }[TYPE];
+  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tally: 'Tally', tilt: 'Tilt', redact: 'Redact' }[TYPE];
   var NUM = parseInt((meta('dn:headline').match(/(\d+)\s*$/) || [])[1], 10) || '';
   var DATE = meta('dn:date');
-  var SAVE = { mini: 'digi-mini-v1', doku: 'digi-doku-v1', sweep: 'digi-sweep-v1', path: 'digi-path-v1', link: 'digi-link-v1', tally: 'digi-tally-v1', tilt: 'digi-tilt-v1' }[TYPE];
-  var STREAK = { mini: 'digi-mini-streak', doku: 'digi-doku-streak', sweep: 'digi-sweep-streak', path: 'digi-path-streak', link: 'digi-link-streak', tally: 'digi-tally-streak', tilt: 'digi-tilt-streak' }[TYPE];
+  var SAVE = { mini: 'digi-mini-v1', doku: 'digi-doku-v1', sweep: 'digi-sweep-v1', path: 'digi-path-v1', link: 'digi-link-v1', tally: 'digi-tally-v1', tilt: 'digi-tilt-v1', redact: 'digi-redact-v1' }[TYPE];
+  var STREAK = { mini: 'digi-mini-streak', doku: 'digi-doku-streak', sweep: 'digi-sweep-streak', path: 'digi-path-streak', link: 'digi-link-streak', tally: 'digi-tally-streak', tilt: 'digi-tilt-streak', redact: 'digi-redact-streak' }[TYPE];
 
   /* ---- fonts: Archivo for the interface, Instrument Serif for the big moments ---- */
   if (!document.querySelector('link[data-fin-fonts]')) {
@@ -188,7 +188,8 @@
     path: 'Join 1 to 36 in one unbroken path, through every given number.',   // "path", not "thread" (AF-026)
     link: 'Sixteen words, four hidden groups of four. Four mistakes and it’s over.',
     tally: 'Fill the grid with 1 to 4, no repeats in a row or column, so every cage makes its number.',
-    tilt: 'Turn the maze and the ball drops until it hits a wall. Get it out through the gap: the clock is the score.'
+    tilt: 'Turn the maze and the ball drops until it hits a wall. Get it out through the gap: the clock is the score.',
+    redact: cap(W[(P.black || []).length] || (P.black || []).length) + ' of these letters don’t belong. Black them out and the grid becomes a crossword.'
   }[TYPE];
   var HOW = {
     mini: ['Tap a square and type. Tap the clue bar to switch between across and down; the arrows either side step through the clues.', 'Check word and Check all mark wrong letters; Reveal word fills one in. The clock stops when the grid is right.'],
@@ -197,7 +198,8 @@
     path: ['Tap the marigold 1, then tap a touching square to place 2, and so on. Tap the 1 or the 36 to grow the path from either end.', 'Given numbers are checkpoints the path must pass through. Undo takes back a step; Hint shows a square that is forced.'],
     link: ['Tap four words you think belong together, then Submit. Three right gets a “one away”.', 'Groups run easiest to hardest: green, blue, yellow, then black. Guessing the same four twice costs nothing.'],
     tally: ['Tap a square, then a number. The number in a cage is the answer and the sign is how you get there: 12× multiplies to 12, 9+ adds to 9, 3÷ is the larger over the smaller, 2− the larger minus the smaller. A lone number is that digit.', 'Notes puts small candidates in a square; Undo takes back a move. Every board is solved by logic alone, so no guessing is ever needed. The clock starts when you tap Play.'],
-    tilt: ['Turn the maze a quarter at a time with the two buttons (or the arrow keys). After every turn the ball drops straight down until a wall stops it, or it rolls out through the gap in the outer wall.', 'The squares the ball has crossed are shaded, so you can see where you have been; Undo takes back a turn. Your time is the score, and the finish shows the shortest way out.']
+    tilt: ['Turn the maze a quarter at a time with the two buttons (or the arrow keys). After every turn the ball drops straight down until a wall stops it, or it rolls out through the gap in the outer wall.', 'The squares the ball has crossed are shaded, so you can see where you have been; Undo takes back a turn. Your time is the score, and the finish shows the shortest way out.'],
+    redact: ['Tap a letter to black it out; tap it again to bring it back. When the right squares are black, every run of letters across and down, three or more long, is a real word, and the white squares all join up.', 'The count shows how many to find. Undo takes back a tap and Clear starts again. Every board can be worked out from the rows and columns alone, so there is nothing to guess. The clock starts when you tap Play.']
   }[TYPE];
   var st = read(STREAK) || {}, played = save && save.done ? Object.keys(save.done).length : 0;
   var longDate = (function () { try { return new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(DATE + 'T12:00:00Z')).replace(',', ''); } catch (e) { return DATE; } })();
@@ -214,7 +216,7 @@
     '<h1 class="dn-start-title">' + NAME + '</h1><p class="dn-start-date">No. ' + NUM + ', ' + longDate + '</p>' +
     '<div class="dn-start-card"><div class="dn-start-art"><img src="../assets/' + TYPE + '-thumb.svg" width="132" height="132" alt=""></div><div><h2>Ready to play</h2><p>' + RULE + '</p></div>' +
     '<div><button type="button" class="dn-pill" id="dnPlay">Play</button></div></div>' +
-    '<div class="dn-start-stats"><div><b>' + liveStreak + '</b><span>' + NAME + ' streak</span></div><div><b>' + (st.best || 0) + '</b><span>best streak</span></div><div><b>' + played + '</b><span>' + (TYPE === 'tally' ? 'boards played' : TYPE === 'tilt' ? 'mazes played' : NAME + 's played') + '</span></div></div>' +
+    '<div class="dn-start-stats"><div><b>' + liveStreak + '</b><span>' + NAME + ' streak</span></div><div><b>' + (st.best || 0) + '</b><span>best streak</span></div><div><b>' + played + '</b><span>' + (TYPE === 'tally' ? 'boards played' : TYPE === 'tilt' ? 'mazes played' : TYPE === 'redact' ? 'boards played' : NAME + 's played') + '</span></div></div>' +
     '<details class="dn-how"><summary>How to play</summary>' + HOW.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</details>' +
     '<label class="dn-sound"><span>Sound<small>A short jingle when you solve it</small></span><input type="checkbox" role="switch" id="dnSound"></label></div>';
   document.body.appendChild(card);

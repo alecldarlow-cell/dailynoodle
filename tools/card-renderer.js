@@ -11,7 +11,7 @@
   }
 
   var PUZZLE_TYPES = [['mini','Mini'],['doku','Doku'],['sweep','Sweep'],['path','Path'],
-                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt']];
+                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt'],['redact','Redact']];
   var TYPE_LABEL = {}, TYPE_RANK = {};
   PUZZLE_TYPES.forEach(function(t, i){ TYPE_LABEL[t[0]] = t[1]; TYPE_RANK[t[1]] = i; });
   function puzzleType(it){
