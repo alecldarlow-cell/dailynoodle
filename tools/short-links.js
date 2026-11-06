@@ -21,7 +21,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ORIGIN = 'https://dailynoodle.co.uk';
-const TYPES = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally', tilt: 'Tilt', redact: 'Redact' };
+const TYPES = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally', tilt: 'Tilt', redact: 'Redact', tumbler: 'Tumbler' };
 
 function page(type, name) {
   const title = `Today's ${name} — Noodle Puzzles`;

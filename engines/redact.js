@@ -231,9 +231,27 @@ function tap(i){
   if(state.black.has(i))state.black.delete(i);else state.black.add(i);
   paint();setMsg("");
   if([...state.black].sort((a,b)=>a-b).join()===ANSWER)return finish();
-  if(state.black.size===K){state.misses++;setMsg("Not yet: a row or column doesn’t read as words.");gridEl.classList.remove("shake");void gridEl.offsetWidth;gridEl.classList.add("shake");}
+  if(state.black.size===K){state.misses++;setMsg(whyNot());gridEl.classList.remove("shake");void gridEl.offsetWidth;gridEl.classList.add("shake");}
   else if(state.black.size>K)setMsg("That’s more than "+K+".");
   saveCur();
+}
+/* at the full count, the first thing that breaks the crossword's rules, in words a player can act on */
+function whyNot(){
+  for(let li=0;li<LINES.length;li++){
+    const across=li<N,num=(across?li:li-N)+1;
+    for(const run of runsOf(LINES[li],state.black))if(run.length<3){
+      const letters=run.map(c=>PUZZLE.letters[c]).join("");
+      return (run.length===1?letters+" is on its own":letters+" is only two letters")+" in "+(across?"row ":"column ")+num+": every run needs three letters or more.";
+    }
+  }
+  if(!connectedNow())return "Not yet: the white squares must all join up.";
+  return "Not yet: a row or column doesn’t read as words.";
+}
+function connectedNow(){
+  const whites=[];for(let i=0;i<N*N;i++)if(!state.black.has(i))whites.push(i);
+  const seen=new Set([whites[0]]),stack=[whites[0]];
+  while(stack.length){const i=stack.pop(),r=Math.floor(i/N),c=i%N;for(const [dr,dc] of [[1,0],[-1,0],[0,1],[0,-1]]){const r2=r+dr,c2=c+dc,j=r2*N+c2;if(r2>=0&&r2<N&&c2>=0&&c2<N&&!state.black.has(j)&&!seen.has(j)){seen.add(j);stack.push(j);}}}
+  return seen.size===whites.length;
 }
 $("undoBtn").addEventListener("click",()=>{if(state.solved||!state.hist.length)return;state.black=new Set(state.hist.pop());paint();setMsg("");saveCur();});
 $("clearBtn").addEventListener("click",()=>{if(state.solved||!state.black.size)return;state.hist.push([...state.black]);state.black=new Set();paint();setMsg("");saveCur();});

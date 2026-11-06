@@ -128,7 +128,7 @@
   }
 
   var PUZZLE_TYPES = [['mini','Mini'],['doku','Doku'],['sweep','Sweep'],['path','Path'],
-                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt'],['redact','Redact']];
+                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt'],['redact','Redact'],['tumbler','Tumbler']];
   var TYPE_LABEL = {}, TYPE_RANK = {};
   PUZZLE_TYPES.forEach(function(t, i){ TYPE_LABEL[t[0]] = t[1]; TYPE_RANK[t[1]] = i; });
   function puzzleType(it){
@@ -504,6 +504,8 @@
       // Points since 26 Oct 2026 (100 a right answer, 50 with Show on map); the right answers after.
       case 'borders': return num(r.p) ? r.p + ' points' + (num(r.c) ? ' · ' + r.c + '/10' : '') : (num(r.c) ? 'Scored ' + r.c + '/10' : '');
       case 'reckon':  return num(r.p) ? r.p + ' points' : '';
+      case 'tumbler':
+        t = shownClock(r.t) || clock(r.s); return t ? 'Found in ' + t : '';
       case 'redact':
         t = shownClock(r.t) || clock(r.s); return t ? 'Solved in ' + t : '';
       case 'tilt':
