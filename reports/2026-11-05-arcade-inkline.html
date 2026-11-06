@@ -6,7 +6,7 @@
 <title>Inkline</title>
 <meta name="dn:kind" content="game">
 <meta name="dn:headline" content="Inkline">
-<meta name="dn:standfirst" content="One line. Lift your finger. Thirty-six contraptions that physics may or may not approve of.">
+<meta name="dn:standfirst" content="One line. Lift your finger. Bridges, ramps and swinging hammers that physics may or may not approve of.">
 <meta name="dn:topic" content="Arcade">
 <meta name="dn:date" content="2026-11-05">
 <meta name="dn:read" content="~1 min">
@@ -40,6 +40,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 .ico{width:46px;height:46px;display:grid;place-items:center;font-size:20px}
 #levels,#pause{background:var(--paper)}
 #levels{align-items:stretch}
+#more{margin:6px 0 0;text-align:center;font:400 20px var(--hand);color:var(--soft)}
 #levels h2,#pause h2{font:400 36px/1 var(--hand);margin:6px 0 0;text-align:center}
 .chap{display:grid;gap:8px;width:min(420px,100%);margin:0 auto}
 .chap h3{font:400 24px/1 var(--hand);margin:10px 0 0;display:flex;justify-content:space-between;align-items:baseline}
@@ -74,18 +75,6 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 @media (prefers-reduced-motion:reduce){#card,#card .st span{animation:none}}
 @media (max-height:520px){#logo{font-size:52px;margin-top:0}#tag{display:none}.grow{display:none}#hb{grid-template-columns:1fr 1fr;width:min(520px,100%)}.scr{gap:8px;padding-top:calc(var(--st) + 10px);padding-bottom:calc(var(--sb) + 10px)}#tot{order:9}}
 </style>
-<!-- og:start (tools/og-tags.js — do not edit by hand) -->
-<meta property="og:site_name" content="The Daily Noodle">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Inkline">
-<meta property="og:description" content="One line. Lift your finger. Thirty-six contraptions that physics may or may not approve of.">
-<meta property="og:url" content="https://dailynoodle.co.uk/reports/2026-11-05-arcade-inkline.html">
-<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
-<meta name="twitter:card" content="summary_large_image">
-<!-- og:end -->
 </head>
 <body>
 <canvas id="c" aria-label="Sketchbook page. Draw one line with your finger."></canvas>
@@ -99,7 +88,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
   <a class="lnk" href="../games.html">← Noodle Games</a>
 </section>
 <div class="top" id="hl" hidden></div>
-<section class="scr" id="levels" hidden><h2>Sketchbook</h2><div id="chaps" style="display:grid;gap:8px"></div><button class="btn" id="lvBack" type="button" style="align-self:center;margin-top:12px">Back</button></section>
+<section class="scr" id="levels" hidden><h2>Sketchbook</h2><div id="chaps" style="display:grid;gap:8px"></div><p id="more">More pages are being drawn.</p><button class="btn" id="lvBack" type="button" style="align-self:center;margin-top:12px">Back</button></section>
 <section class="scr" id="pause" hidden><h2>Paused</h2>
   <div class="box"><button class="sw" id="sSnd" type="button"></button><button class="sw" id="sVib" type="button"></button><button class="sw" id="sMot" type="button"></button><button class="sw" id="sRaise" type="button"></button><button class="sw" id="sFS" type="button" hidden></button><button class="sw" id="sReset" type="button"></button></div>
   <button class="btn main" id="resume" type="button">Resume</button><button class="btn" id="toLv" type="button">Levels</button>
@@ -118,21 +107,25 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 <script>
 /* ---------- Inkline physics. One fixed step, so a line always plays out the same way. ---------- */
 const {Engine,Bodies,Body,Composite,Constraint,Common,Events,Vertices}=Matter;
-const W=360,H=640,R=11,THICK=6,PAD=2.2,TAPER=16,DT=1000/120;
+const W=360,H=640,R=11,THICK=6,PAD=2.2,TAPER=28,DT=1000/120,PEGR=15;
 const CAT={marble:1,scenery:2,peg:4,line:8};
 const GRAV=1.3,TOP=20;
-const INKS={ink:{f:.35,e:.3,d:.0022},rubber:{f:.7,e:.92,d:.0016},ice:{f:0,e:.2,d:.002},glass:{f:.3,e:.25,d:.0022,breaks:4}};
-const cupParts=(c)=>{const[x,y,sd=1]=c;return[{x:x-sd*23,y,w:6,h:38,a:0,cup:1},{x:x+sd*23,y:y-26,w:6,h:90,a:0,cup:1},{x,y:y+18,w:52,h:6,a:0,cup:1}]};
+/* Lines grip scenery firmly, so a line leant or laid somewhere stays put. The marble's own grip is tiny, and a pair uses the lower of the two, so this never slows the marble. */
+/* Lines are heavy, like wooden planks next to a marble, so a ramp stays a ramp when the marble hits it. */
+const INKS={ink:{f:.9,e:.15,d:.008},rubber:{f:.9,e:.92,d:.006},ice:{f:0,e:.2,d:.008},glass:{f:.7,e:.25,d:.008,breaks:4}};
+/* The cup: a short front wall and a tall back wall on the far side (sd), or two short walls when it is sunk into a floor (low). */
+const cupParts=(c)=>{const[x,y,sd=1,low=0]=c;return[{x:x-sd*23,y,w:6,h:38,a:0,cup:1},low?{x:x+sd*23,y,w:6,h:38,a:0,cup:1}:{x:x+sd*23,y:y-26,w:6,h:90,a:0,cup:1},{x,y:y+18,w:52,h:6,a:0,cup:1}]};
 function makeSim(L){
   Common._nextId=0;Common.logLevel=0;
-  const e=Engine.create({positionIterations:10,velocityIterations:8});e.gravity.y=GRAV;
-  const parts=[...(L.s||[]).map(p=>({x:p[0],y:p[1],w:p[2],h:p[3],a:p[4]||0})),...cupParts(L.c)];
+  const e=Engine.create({positionIterations:10,velocityIterations:8,constraintIterations:16});e.gravity.y=GRAV;
+  const parts=[...(L.s||[]).map(p=>({x:p[0],y:p[1],w:p[2],h:p[3],a:p[4]||0,r:p[5]})),...cupParts(L.c)];
   (L.mv||[]).forEach(m=>parts.push({x:m.x,y:m.y,w:m.w,h:m.h,a:m.a||0,mv:m}));
   (L.sp||[]).forEach(q=>parts.push({x:q[0],y:q[1],w:q[2],h:10,a:q[3]||0,pow:q[4]||14}));
-  parts.forEach(p=>{p.b=Bodies.rectangle(p.x,p.y,p.w,p.h,{isStatic:true,angle:p.a,friction:p.mv&&p.mv.k=='belt'?1:.35,restitution:p.cup?.1:.34,collisionFilter:{category:CAT.scenery}})});
-  const pegs=(L.p||[]).map(p=>Bodies.circle(p[0],p[1],5,{isStatic:true,collisionFilter:{category:CAT.peg,mask:CAT.marble}}));
-  const marble=Bodies.circle(L.m[0],L.m[1],R,{isStatic:true,friction:.02,frictionAir:.0006,restitution:.42,density:.004,collisionFilter:{category:CAT.marble}});
-  Composite.add(e.world,[...parts.map(p=>p.b),...pegs,marble]);
+  /* rounded corners, so a fast marble glides across the joins in a curved run instead of catching on an edge */
+  parts.forEach(p=>{p.b=Bodies.rectangle(p.x,p.y,p.w,p.h,{isStatic:true,angle:p.a,chamfer:{radius:p.r?Math.max(.5,Math.min(p.w,p.h)/2-.5):2},friction:p.mv&&p.mv.k=='belt'?1:.9,restitution:p.cup?.05:.15,collisionFilter:{category:CAT.scenery}})});
+  /* Pegs are pins in the paper: they hold lines, but the marble rolls straight over them. */
+  const marble=Bodies.circle(L.m[0],L.m[1],R,{isStatic:true,friction:.02,frictionAir:.0006,restitution:.22,density:.004,collisionFilter:{category:CAT.marble}});
+  Composite.add(e.world,[...parts.map(p=>p.b),marble]);
   const S={L,e,parts,marble,pts:[],line:null,local:null,widths:null,mode:null,state:'draw',t:0,idle:0,got:new Set(),fx:[],ink:INKS[L.ink||'ink'],shards:null,closed:false,contact:0,kick:null,boosting:false};
   Events.on(e,'collisionStart',ev=>ev.pairs.forEach(p=>{
     const a=p.bodyA,b=p.bodyB,m=a.parent===marble||b.parent===marble,l=S.line&&(a.parent===S.line||b.parent===S.line);
@@ -161,19 +154,18 @@ const blocked=(S,x,y)=>!!obstacle(S,x,y);
 function addPoint(S,x,y){
   if(!S.pen){
     if(!blocked(S,x,y))S.pen=[x,y];
-    else for(let r=3;r<=42&&!S.pen;r+=3)for(let i=0;i<16;i++){const a=i*Math.PI/8,u=x+Math.cos(a)*r,v=y+Math.sin(a)*r;if(!blocked(S,u,v)){S.pen=[u,v];break}}
+    /* a finger put down on an object starts at its nearest free edge, the top side first */
+    else for(const set of [[0,1,-1,2,-2,3,-3],[4,-4,5,-5,6,-6,7,-7,8]])for(let r=3;r<=42&&!S.pen;r+=3)for(const i of set){if(S.pen)break;const a=-Math.PI/2+i*Math.PI/8,u=x+Math.cos(a)*r,v=y+Math.sin(a)*r;if(!blocked(S,u,v)){S.pen=[u,v];break}}
     if(!S.pen)return false;
     S.pts.push(S.pen.slice());
   }
-  const ST=2;let[p,q]=S.pen,slid=false;
-  for(let n=0;n<320;n++){
+  /* Each 2px step heads for the finger; if that is blocked, it takes the free direction closest to it, up to 80 degrees off. */
+  const ST=2,TRY=[0,.2,-.2,.4,-.4,.6,-.6,.8,-.8,1,-1,1.2,-1.2,1.4,-1.4];let[p,q]=S.pen,slid=false;
+  for(let n=0;n<400;n++){
     const dx=x-p,dy=y-q,d=Math.hypot(dx,dy);if(d<ST)break;
-    const ux=dx/d,uy=dy/d,nx=p+ux*ST,ny=q+uy*ST,o=obstacle(S,nx,ny);
-    if(!o){p=nx;q=ny;}
-    else{slid=true;const t=ux*-o[1]+uy*o[0];if(Math.abs(t)<.08)break;
-      const sg=t>0?1:-1,tx=-o[1]*sg,ty=o[0]*sg,sx=p+tx*ST,sy=q+ty*ST;
-      if(!blocked(S,sx,sy)){p=sx;q=sy}
-      else{const ax=p+(tx+o[0])*ST*.8,ay=q+(ty+o[1])*ST*.8;if(blocked(S,ax,ay))break;p=ax;q=ay}}
+    const base=Math.atan2(dy,dx);let moved=false;
+    for(const k of TRY){const nx=p+Math.cos(base+k)*ST,ny=q+Math.sin(base+k)*ST;if(!blocked(S,nx,ny)){p=nx;q=ny;moved=true;if(k)slid=true;break}}
+    if(!moved){slid=true;break}
     const last=S.pts[S.pts.length-1];if(Math.hypot(p-last[0],q-last[1])>=(slid?2:5))S.pts.push([p,q]);
   }
   S.pen=[p,q];
@@ -183,7 +175,7 @@ function addPoint(S,x,y){
 const lineLength=pts=>pts.slice(1).reduce((t,p,i)=>t+Math.hypot(p[0]-pts[i][0],p[1]-pts[i][1]),0);
 function pegHits(S){
   return (S.L.p||[]).filter(p=>S.pts.some((q,i)=>{const b=S.pts[i+1]||q,dx=b[0]-q[0],dy=b[1]-q[1],l=dx*dx+dy*dy||1,
-    t=Math.max(0,Math.min(1,((p[0]-q[0])*dx+(p[1]-q[1])*dy)/l));return Math.hypot(q[0]+t*dx-p[0],q[1]+t*dy-p[1])<11}));
+    t=Math.max(0,Math.min(1,((p[0]-q[0])*dx+(p[1]-q[1])*dy)/l));return Math.hypot(q[0]+t*dx-p[0],q[1]+t*dy-p[1])<PEGR}));
 }
 function simplify(pts,tol){ /* Douglas-Peucker */
   const keep=new Uint8Array(pts.length);keep[0]=keep[pts.length-1]=1;const st=[[0,pts.length-1]];
@@ -198,7 +190,7 @@ function smooth(S){
   for(let i=1;i<S.pts.length;i++){const a=S.pts[i-1],b=S.pts[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);acc+=l;if(acc>=4||i==S.pts.length-1){raw.push(b);acc=0}}
   const n=raw.length,fix=new Uint8Array(n);fix[0]=fix[n-1]=1;
   for(let i=0;i<n;i++){const[x,y]=raw[i];
-    if((S.L.p||[]).some(p=>Math.hypot(p[0]-x,p[1]-y)<14))fix[i]=1;
+    if((S.L.p||[]).some(p=>Math.hypot(p[0]-x,p[1]-y)<PEGR+3))fix[i]=1;
     if([[4.5,0],[-4.5,0],[0,4.5],[0,-4.5]].some(d=>obstacle(S,x+d[0],y+d[1])))fix[i]=1;
     const A=raw[Math.max(0,i-3)],B=raw[Math.min(n-1,i+3)],u=[x-A[0],y-A[1]],v=[B[0]-x,B[1]-y],lu=Math.hypot(...u),lv=Math.hypot(...v);
     if(lu>2&&lv>2&&(u[0]*v[0]+u[1]*v[1])/(lu*lv)<.55)fix[i]=1}
@@ -207,13 +199,24 @@ function smooth(S){
   for(let i=0;i<n;i++){const dx=p[i][0]-raw[i][0],dy=p[i][1]-raw[i][1],d=Math.hypot(dx,dy);if(d>2.5){p[i][0]=raw[i][0]+dx/d*2.5;p[i][1]=raw[i][1]+dy/d*2.5}if(blocked(S,p[i][0],p[i][1]))p[i]=raw[i].slice()}
   S.raw=raw;S.sm=p;return p;
 }
+/* The nearest point on any piece of scenery's surface, if one is within d. */
+function nearestSurface(S,x,y,d){let best=null;
+  for(const p of S.parts){const c=Math.cos(-p.a),s=Math.sin(-p.a),dx=x-p.x,dy=y-p.y,X=dx*c-dy*s,Y=dx*s+dy*c,hw=p.w/2,hh=p.h/2;
+    if(Math.abs(X)<hw&&Math.abs(Y)<hh)continue;
+    const cx=Math.max(-hw,Math.min(hw,X)),cy=Math.max(-hh,Math.min(hh,Y)),dd=Math.hypot(X-cx,Y-cy);
+    if(dd<=d&&(!best||dd<best.d)){const ca=Math.cos(p.a),sa=Math.sin(p.a),nx=(X-cx)/(dd||1),ny=(Y-cy)/(dd||1);best={d:dd,x:p.x+cx*ca-cy*sa,y:p.y+cx*sa+cy*ca,nx:nx*ca-ny*sa,ny:nx*sa+ny*ca}}}
+  return best}
+/* A line drawn to finish just above a surface is meant to touch it: its end settles on the surface, so the marble rolls straight on. */
+function settleEnds(S,pts){if(pts.length<2)return pts;const out=pts.map(p=>p.slice());
+  for(const k of [0,out.length-1]){const q=nearestSurface(S,out[k][0],out[k][1],9);if(q){out[k]=[q.x+q.nx*1.2,q.y+q.ny*1.2]}}
+  return out}
 function along(pts,d){ /* the point d along the line, and which segment it falls in */
   for(let i=0;i<pts.length-1;i++){const l=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);if(d<=l){const t=d/l;return{i,p:[pts[i][0]+(pts[i+1][0]-pts[i][0])*t,pts[i][1]+(pts[i+1][1]-pts[i][1])*t]}}d-=l}
   return null;
 }
 function release(S){
   const len=lineLength(S.pts);if(len<16){S.pts=[];return false}
-  const hits=pegHits(S),sm=smooth(S);let tol=.5,pts=simplify(sm,tol);while(pts.length>70){tol*=1.4;pts=simplify(sm,tol)}
+  const hits=pegHits(S),sm=settleEnds(S,smooth(S));S.sm=sm;let tol=.5,pts=simplify(sm,tol);while(pts.length>70){tol*=1.4;pts=simplify(sm,tol)}
   /* Pen-stroke ends: each end tapers, so a marble rolls up on to a line instead of stopping at a lip. */
   const tapered=lineLength(pts)>TAPER*2.5;
   if(tapered){const f=along(pts,TAPER),r=along([...pts].reverse(),TAPER);pts=[pts[0],f.p,...pts.slice(f.i+1,pts.length-1-r.i),r.p,pts[pts.length-1]]}
@@ -224,18 +227,17 @@ function release(S){
       parts.push(Bodies.fromVertices(c.x,c.y,[v],{collisionFilter:filter}))}
     else parts.push(Bodies.rectangle((a[0]+b[0])/2,(a[1]+b[1])/2,l+THICK*.5,THICK,{angle:Math.atan2(b[1]-a[1],b[0]-a[0]),chamfer:{radius:2.4},collisionFilter:filter}))}
   const I=S.ink;
-  const body=Body.create({parts,friction:I.f,frictionStatic:I.f?.5:0,frictionAir:.004,restitution:I.e,collisionFilter:filter});
+  const body=Body.create({parts,friction:I.f,frictionStatic:I.f?1:0,frictionAir:.004,restitution:I.e,collisionFilter:filter});
   Body.setDensity(body,I.d);
   /* Matter leaves out each part's offset in a compound, so long lines would otherwise spin far too easily. */
-  const dm=body.mass/parts.reduce((t,p)=>t+p.area,0);
-  Body.setInertia(body,parts.reduce((t,p)=>{const m=p.area*dm,w=p.bounds.max.x-p.bounds.min.x,h=p.bounds.max.y-p.bounds.min.y;return t+m*((p.position.x-body.position.x)**2+(p.position.y-body.position.y)**2+(w*w+h*h)/12)},0));
+  const own=body.parts.slice(1),dm=body.mass/own.reduce((t,p)=>t+p.area,0);
+  Body.setInertia(body,own.reduce((t,p)=>{const m=p.area*dm,w=p.bounds.max.x-p.bounds.min.x,h=p.bounds.max.y-p.bounds.min.y;return t+m*((p.position.x-body.position.x)**2+(p.position.y-body.position.y)**2+(w*w+h*h)/12)},0));
   S.local=pts.map(p=>[p[0]-body.position.x,p[1]-body.position.y]);
   S.widths=pts.map((_,i)=>tapered&&(i==0||i==n-1)?1:THICK);
   S.len=len;
   Composite.add(S.e.world,body);S.line=body;
   if(hits.length>=2){Body.setStatic(body,true);S.mode='locked'}
-  else if(hits.length==1){const p=hits[0];
-    Composite.add(S.e.world,Constraint.create({pointA:{x:p[0],y:p[1]},bodyB:body,pointB:{x:p[0]-body.position.x,y:p[1]-body.position.y},stiffness:1,length:0}));S.mode='pivot'}
+  else if(hits.length==1){const p=hits[0];S.pivot={x:p[0],y:p[1],lx:p[0]-body.position.x,ly:p[1]-body.position.y};S.mode='pivot'}
   else S.mode='free';
   Body.setStatic(S.marble,false);
   S.state='run';return true;
@@ -248,9 +250,17 @@ function moveScenery(S){
     else if(m.k=='belt')Body.setVelocity(p.b,{x:m.v,y:0});
   });
 }
+/* A line through one peg turns about it. After each step the line's motion becomes a pure turn about the peg,
+   keeping its momentum about the peg, so gravity and knocks swing it like a real hinge. (The physics library's own pin drifts for lines made of several pieces.) */
+function pin(S){const b=S.line,q=S.pivot,c=Math.cos(b.angle),s=Math.sin(b.angle),px=b.position.x+q.lx*c-q.ly*s,py=b.position.y+q.lx*s+q.ly*c;
+  Body.translate(b,{x:q.x-px,y:q.y-py});
+  const rx=b.position.x-q.x,ry=b.position.y-q.y,v=Body.getVelocity(b),w=Body.getAngularVelocity(b),m=b.mass,I=b.inertia;
+  const w2=(I*w+m*(rx*v.y-ry*v.x))/(I+m*(rx*rx+ry*ry));
+  Body.setAngularVelocity(b,w2);Body.setVelocity(b,{x:-w2*ry,y:w2*rx})}
 function step(S){
   if(S.state!='run'&&S.state!='won')return;
   moveScenery(S);Engine.update(S.e,DT);S.t+=DT;
+  if(S.pivot&&S.line)pin(S);
   if(S.broke&&S.line){const l=S.line,c=Math.cos(l.angle),w=Math.sin(l.angle);
     S.shards=S.local.map(q=>({x:l.position.x+q[0]*c-q[1]*w,y:l.position.y+q[0]*w+q[1]*c}));
     Composite.remove(S.e.world,Composite.allConstraints(S.e.world));Composite.remove(S.e.world,l);S.line=null;S.fx.push({k:'smash',v:6});S.mode='gone'}
@@ -276,10 +286,10 @@ function testRun(L,pts,track){
   return{state:S.state,gems:S.got.size,len:lineLength(S.pts),t:S.t,x:S.marble.position.x,y:S.marble.position.y,path};
 }
 
-const CH=[{n:'Ledges',c:6},{n:'Pegs',c:6},{n:'Big Air',c:6},{n:'Hands Off',c:6},{n:'Odd Inks',c:6},{n:'Clockwork',c:6}];
-const LEVELS=[{"n":"First Bridge","m":[26,232],"s":[[87,309,158,16,0.3],[243,337,130,16,0.1]],"c":[330,409],"h":"Draw one line across the gap. Lift to let go.","g":[[156,289],[215,294]]},{"n":"Back Again","m":[334,232],"s":[[284,271,158,16,-0.24313699155673385],[103,371,130,16,-0.14227952983230352]],"c":[30,410,-1],"g":[[171,283],[119,313]]},{"n":"Shelf Ramp","m":[64,120],"s":[[64,280,70,14],[176,352,70,14]],"c":[316,560],"h":"Lines rest on ledges.","g":[[275,386],[139,243]]},{"n":"Zigzag","m":[30,100],"s":[[77,142,150,14,0.28],[262,291,140,14,-0.20886691457033157],[78,375,130,14,0.2]],"c":[285,546],"bo":[[89,149,90,0.28,15]],"g":[[185,390],[249,393]]},{"n":"Long Way Down","m":[330,90],"s":[[302,154,120,12,-0.21015824481192977],[31,307,50,12],[304,489,50,12,0.048049477608874444]],"c":[47,600,-1],"g":[[155,220],[57,539]]},{"n":"Nudge","m":[150,300],"s":[[169,343,210,14,0.06000496604014188]],"c":[322,488],"h":"A falling line shoves things.","g":[[309,427],[315,359]]},{"n":"See-saw","m":[222,150],"p":[[176,330]],"c":[316,540],"h":"A line through a peg pivots.","g":[[222,227],[275,361]]},{"n":"Two Pegs","m":[64,150],"s":[[250,560,220,14]],"c":[330,520],"p":[[92,300],[226,392]],"h":"Through two pegs, a line locks.","g":[[143,283],[309,434]]},{"n":"Long Slide","m":[40,90],"p":[[38,218],[267,417]],"c":[330,496],"bo":[[120,245,80,0.5,18]],"g":[[40,167],[295,420]]},{"n":"Hammer","m":[196,416],"s":[[245,491,150,16,0.0663955645263195],[361,434,8,400]],"c":[330,600],"p":[[183,239]],"h":"Long lines are heavy. Swing one.","g":[[232,465],[294,469]]},{"n":"Tip Up","m":[120,160],"s":[[300,470,110,14,0.1]],"p":[[170,360]],"c":[60,560,-1],"g":[[120,237],[105,354]]},{"n":"Which Pegs?","m":[300,100],"p":[[256,253],[121,277],[172,423]],"c":[52,547,-1],"g":[[300,177],[84,260]]},{"n":"Ski Jump","m":[24,70],"s":[[85,204,190,14,0.6486167179960758]],"bo":[[97,176,120,0.62,19]],"c":[323,469],"h":"Strips add speed. Build a jump.","g":[[257,318],[309,410]]},{"n":"Speed Strip","m":[30,270],"s":[[63,386,180,14,0.14],[285,444,70,14,0.1]],"bo":[[97,298,130,0.14,18]],"c":[330,465],"g":[[201,385],[70,339]]},{"n":"Launch Pad","m":[60,150],"s":[[80,210,130,14,0.25]],"sp":[[170,560,70,0.22,17]],"c":[318,300],"h":"Red pads fire the marble.","g":[[182,335],[217,176]]},{"n":"Over the Wall","m":[30,260],"s":[[101,346,200,14,0.1],[192,493,14,240,0.01866838131286204]],"bo":[[129,293,130,0.1,18]],"c":[320,569],"g":[[310,519],[259,403]]},{"n":"Double Bounce","m":[70,110],"s":[[112,159,100,14,0.2]],"sp":[[155,600,70,0.35036810450255873,16],[269,410,60,-0.32,14.30547048151493]],"c":[30,333,-1],"g":[[40,282],[61,216]]},{"n":"Pinball","m":[180,70],"sp":[[50,420,70,0.5,15],[310,420,70,-0.5,15],[180,590,80,0,17]],"s":[[180,300,70,12]],"c":[60,210,-1],"g":[[180,147],[107,368]]},{"n":"Red Zone","m":[26,232],"s":[[51,310,158,16,0.34958971941284833],[226,454,130,14,0.03474385592527687]],"c":[317,454],"z":[[150,250,60,100]],"h":"You can't draw in the red zone.","g":[[203,361],[307,399]]},{"n":"Narrow Door","m":[330,110],"s":[[292,179,120,14,-0.25],[117,489,120,14,-0.1]],"c":[46,563,-1],"z":[[0,240,240,120]],"g":[[199,252],[174,321]]},{"n":"Hands Off","m":[30,250],"s":[[75,290,150,16,0.16],[120,440,60,14],[230,520,60,14]],"c":[325,590],"z":[[150,200,210,190]],"g":[[313,509],[254,468]]},{"n":"Peg Ban","m":[64,150],"c":[317,539],"p":[[88,315],[250,439]],"z":[[150,230,60,70],[150,440,210,60]],"g":[[139,313],[236,498]]},{"n":"Last Patch","m":[30,110],"s":[[66,189,150,14,0.3],[306,355,100,14,-0.21677867275942117],[121,451,110,14,0.130473862468265]],"c":[294,561],"z":[[170,180,190,120],[0,350,90,110]],"g":[[185,326],[251,446]]},{"n":"Under the Wire","m":[64,120],"s":[[65,244,80,14,0.2],[271,283,70,14,-0.06804980732500554]],"c":[330,555],"z":[[120,250,130,110]],"g":[[207,243],[153,263]]},{"n":"Handle With Care","m":[26,232],"ink":"glass","s":[[66,290,158,16,0.27003858918976037],[257,351,130,16,0.1]],"c":[330,435],"h":"Glass breaks if it lands hard.","g":[[81,270],[169,319]]},{"n":"Ice Slide","m":[40,100],"ink":"ice","p":[[67,261],[248,400]],"c":[330,511],"h":"Ice ink has no grip.","sp":[[50,540,60,0.3,14]],"g":[[129,283],[309,455]]},{"n":"Rubber","m":[90,110],"ink":"rubber","s":[[38,421,60,14],[152,463,60,14,-0.05614796931948513],[236,366,12,120]],"c":[285,540],"h":"Rubber ink bounces.","g":[[90,187],[193,319]]},{"n":"Glass","m":[64,120],"ink":"glass","s":[[69,326,70,14,0.024486644307151438],[192,387,70,14,0.015476524142548444]],"c":[37,570,-1],"g":[[71,437],[58,508]]},{"n":"Ice","m":[26,232],"ink":"ice","s":[[63,311,158,16,0.35879386013466863],[259,445,110,14,-0.05845938639249653]],"c":[89,589,-1],"g":[[162,456],[110,483]]},{"n":"Trampoline","m":[180,110],"ink":"rubber","s":[[93,453,50,14,0.051908322676084945],[291,474,50,14,-0.03896155086625368]],"c":[81,427,-1],"g":[[173,176],[114,353]]},{"n":"Going Up","m":[26,232],"s":[[72,270,158,16,0.36570139826741066]],"c":[320,404],"mv":[{"k":"lift","x":256,"y":347,"w":110,"h":14,"dy":30,"per":3}],"h":"Scenery moves once you lift.","bo":[[103,282,100,0.3,16]],"g":[[201,294],[292,300]]},{"n":"Belt","m":[64,120],"s":[[78,194,80,14,0.2]],"c":[47,574,-1],"mv":[{"k":"belt","x":180,"y":470,"w":220,"h":14,"v":-1.6}],"h":"Belts carry the marble.","g":[[164,426],[159,269]]},{"n":"Ferry","m":[26,232],"s":[[75,290,158,16,0.3]],"c":[332,500],"mv":[{"k":"lift","x":230,"y":390,"w":90,"h":14,"dx":50,"per":4}],"g":[[204,323],[305,363]]},{"n":"The Works","m":[30,100],"s":[[82,178,150,14,0.28]],"c":[324,594],"p":[[225,299],[92,401]],"mv":[{"k":"spin","x":209,"y":481,"w":120,"h":12,"rate":-1.2}],"bo":[[97,137,90,0.28,16]],"g":[[183,290],[188,370]]},{"n":"Up and Over","m":[330,120],"s":[[294,159,120,14,-0.25]],"c":[30,569,-1],"mv":[{"k":"lift","x":141,"y":425,"w":100,"h":14,"dy":40,"per":2.6},{"k":"belt","x":262,"y":475,"w":110,"h":12,"v":-1.2}],"g":[[203,244],[50,439]]},{"n":"Windmill","m":[60,130],"s":[[92,200,120,14,0.23097628061752767]],"c":[322,565],"mv":[{"k":"spin","x":211,"y":403,"w":150,"h":12,"rate":1.1}],"h":"Time your line.","sp":[[41,544,60,0.34425167329004036,15]],"g":[[199,229],[218,339]]}];
+const CH=[{"n":"Ledges","c":5},{"n":"Pegs","c":5}];
+const LEVELS=[{"n":"Mind the Gap","m":[34.52,68.35],"s":[[75,137.5,215.7,14,0.8,1],[110,307,60,14,0],[285,307,30,14,0],[293,477,14,326,0],[356,350,8,460,0]],"c":[329,560,1,1],"g":[[178,221],[337,312]],"h":"Draw one line across the gap. Lift to let go."},{"n":"Slide","m":[34.91,83.5],"s":[[72.94,119.18,157.13,14,0.38,1],[147.06,148.67,10.41,14,0.33,1],[153.19,150.49,10.41,14,0.24,1],[164.67,152.93,21.07,14,0.2,1],[322.5,307,45,14,0],[349,267,8,94,0],[90,477,60,14,0],[4,455,8,250,0],[88,514,52.15,10,2.57,1]],"c":[38,560,-1],"g":[[248,350],[138,397]],"h":"Lines rest on ledges. Build a slide."},{"n":"Backboard","m":[30.41,98.34],"s":[[68.24,216.47,305.16,14,1.11,1],[137.18,354.02,10.56,14,1.06,1],[140.63,359.56,10.53,14,0.97,1],[144.59,364.76,10.56,14,0.87,1],[157.29,378.77,35.27,14,0.83,1],[169.37,391.7,8.12,14,0.76,1],[172.48,394.32,8.02,14,0.63,1],[175.84,396.46,7.98,14,0.5,1],[179.46,398.13,8.02,14,0.36,1],[183.34,399.32,8.12,14,0.23,1],[187.89,400.24,9.15,14,0.17,1],[192.31,400.89,7.79,14,0.11,1],[196.05,401.04,7.72,14,-0.03,1],[199.74,400.7,7.72,14,-0.16,1],[203.39,399.85,7.79,14,-0.29,1],[208.66,398,11.4,14,-0.36,1],[283.5,455,33.54,10,2.96,1],[303.5,435,7,40,0],[319.5,435,7,40,0],[311.5,459,31,8,0]],"c":[245,470,1,1],"g":[[283,379],[317,340]],"h":"Stand a line up in the slot."},{"n":"Over the Wall","m":[25.18,85.04],"s":[[24.88,169.48,224.55,14,1.35,1],[49.69,278.5,7.06,14,1.33,1],[50.5,281.45,7.06,14,1.28,1],[71.35,346.43,137.42,14,1.26,1],[93,413.21,11,14,1.21,1],[95.79,419.61,10.97,14,1.11,1],[99.2,425.69,11,14,1.01,1],[107.66,438.08,27,14,0.96,1],[116.62,450.49,11.63,14,0.9,1],[121.6,456.02,11.28,14,0.77,1],[127.05,460.64,11.06,14,0.63,1],[132.99,464.37,10.99,14,0.49,1],[139.4,467.19,11.06,14,0.34,1],[146.29,469.11,11.28,14,0.2,1],[153.66,470.13,11.63,14,0.07,1],[208.73,471.19,106.55,14,0.02,1],[271,529,18,222,0],[291.5,535.5,27.46,14,0.58,1],[356,370,8,440,0]],"c":[326,560,1,1],"g":[[299,411],[311,471]],"h":"Lean a line on the wall to make a ramp."},{"n":"Gap and Wall","m":[28.32,81.42],"s":[[44.36,178.3,252.69,14,1.21,1],[89.11,297.32,9.61,14,1.17,1],[91.5,302.39,9.61,14,1.09,1],[106.05,328.09,57.46,14,1.05,1],[121.63,354.86,12.48,14,0.99,1],[126.59,361.6,12.3,14,0.88,1],[132.25,367.6,12.23,14,0.75,1],[138.61,372.86,12.3,14,0.63,1],[145.65,377.38,12.48,14,0.51,1],[161.28,385.29,30.55,14,0.45,1],[269,495,14,290,0],[332,385,8,370,0]],"c":[302,530,1,1],"g":[[121,311],[313,347]],"h":"One line, two jobs."},{"n":"Lock","m":[325.24,62.74],"s":[[282,99.25,166.6,14,2.78,1],[202.9,128.76,10.26,14,2.83,1],[196.87,130.43,10.26,14,2.92,1],[186.9,132.38,18.08,14,2.96,1],[356,455,8,250,0]],"c":[326,560,1,1],"g":[[333,494],[246,405]],"p":[[120,300],[230,380]],"h":"Through two pegs, a line is fixed in place."},{"n":"Pick Two","m":[33.55,58.38],"s":[[83.73,89.7,172.04,14,0.23,1],[167.77,109.4,8.6,14,0.2,1],[172.3,110.15,8.6,14,0.13,1],[181.3,111.13,17.49,14,0.1,1],[356,365,8,430,0]],"c":[326,560,1,1],"g":[[320,459],[264,336]],"p":[[180,255],[95,395],[270,335]],"h":"Which two pegs?"},{"n":"Hinge","m":[34.64,62.2],"s":[[68.54,94.48,145.55,14,0.34,1],[137.62,119.05,9.1,14,0.31,1],[142.53,120.41,9.1,14,0.23,1],[151.52,122.3,17.29,14,0.2,1],[105,457,70,14,0],[4,440,8,280,0],[356,365,8,430,0]],"c":[34,560,-1,1],"g":[[156,357],[104,391]],"p":[[250,250]],"h":"A peg holds one end, a ledge the other."},{"n":"Swing","m":[168,250],"s":[[179.5,267,37,12,0],[242.78,283.6,101.16,12,0.33,1],[289.33,299.78,5.41,12,0.35,1],[290.64,300.29,5.41,12,0.39,1],[303.73,305.88,31.05,12,0.4,1],[286,500,51.22,10,0.9,1],[356,290,8,580,0]],"c":[328,560,1,1],"g":[[233,259],[315,445]],"p":[[148,140]],"h":"Through one peg, a line swings."},{"n":"Ski Jump","m":[26.01,84.18],"s":[[25.25,155.94,198.42,14,1.31,1],[49.99,249.98,4.05,14,1.31,1],[50.01,250.02,4.05,14,1.31,1],[70.76,328.43,166.17,14,1.31,1],[92.93,411.09,13,14,1.25,1],[96.3,419.37,12.92,14,1.12,1],[100.71,427.15,13,14,0.99,1],[111.65,442.21,32.25,14,0.93,1],[123.1,457.03,13.23,14,0.87,1],[129.32,463.58,12.86,14,0.75,1],[136.08,469.11,12.63,14,0.62,1],[143.37,473.61,12.55,14,0.49,1],[151.21,477.09,12.63,14,0.35,1],[159.58,479.54,12.86,14,0.22,1],[168.5,480.98,13.23,14,0.1,1],[201.54,482.68,60.97,14,0.04,1],[288,546,16,188,0],[342,390,8,380,0]],"c":[315,560,1,1],"g":[[243,426],[291,401]],"p":[[230,465],[256,447]],"h":"Finish the halfpipe."}];
 
-const DAILY=[{"m":[26,232],"s":[[91,315,158,16,0.3],[239,329,130,16,0.1]],"c":[317,394],"n":"Daily","g":[[89,274],[144,278]],"par":80},{"m":[64,150],"s":[[245,556,220,14]],"c":[330,539],"p":[[98,297],[217,386]],"n":"Daily","g":[[70,222],[167,354]],"par":190},{"m":[196,416],"s":[[241,483,150,16,0.0663955645263195],[364,429,8,400]],"c":[330,600],"p":[[178,235]],"n":"Daily","g":[[335,519],[254,459]],"par":18},{"m":[180,110],"ink":"rubber","s":[[97,460,50,14,0.051908322676084945],[295,474,50,14,-0.03896155086625368]],"c":[82,437,-1],"n":"Daily","g":[[168,377],[116,366]],"par":244},{"m":[64,150],"s":[[246,564,220,14]],"c":[330,526],"p":[[86,311],[224,390]],"n":"Daily","g":[[285,413],[311,470]],"par":215},{"m":[334,232],"s":[[287,258,158,16,-0.24313699155673385],[103,381,130,16,-0.14227952983230352]],"c":[30,417,-1],"n":"Daily","g":[[176,275],[148,322]],"par":99},{"m":[90,110],"ink":"rubber","s":[[36,417,60,14],[158,471,60,14,-0.05614796931948513],[243,353,12,120]],"c":[281,528],"n":"Daily","g":[[90,187],[131,363]],"par":106},{"m":[30,250],"s":[[80,278,150,16,0.16],[115,426,60,14],[225,527,60,14]],"c":[330,600],"z":[[150,200,210,190]],"n":"Daily","g":[[185,380],[215,439]],"par":46},{"m":[60,130],"s":[[95,203,120,14,0.23097628061752767]],"c":[328,579],"mv":[{"k":"spin","x":211,"y":403,"w":150,"h":12,"rate":1.1}],"sp":[[41,544,60,0.34425167329004036,15]],"n":"Daily","g":[[207,349],[89,501]],"par":43},{"m":[30,270],"s":[[73,381,180,14,0.14],[291,453,70,14,0.1]],"bo":[[97,298,130,0.14,18]],"c":[330,483],"n":"Daily","g":[[208,390],[257,375]],"par":101},{"m":[26,232],"s":[[77,276,158,16,0.3]],"c":[322,506],"mv":[{"k":"lift","x":230,"y":390,"w":90,"h":14,"dx":50,"per":4}],"n":"Daily","g":[[198,315],[312,388]],"par":42},{"m":[26,232],"s":[[77,316,158,16,0.3],[253,347,130,16,0.1]],"c":[330,402],"n":"Daily","g":[[172,297],[319,315]],"par":52},{"m":[64,120],"s":[[70,274,70,14],[169,341,70,14]],"c":[322,549],"n":"Daily","g":[[64,197],[120,228]],"par":70},{"m":[30,250],"s":[[69,296,150,16,0.16],[115,434,60,14],[227,512,60,14]],"c":[330,591],"z":[[150,200,210,190]],"n":"Daily","g":[[293,506],[235,439]],"par":104},{"m":[334,232],"s":[[293,285,158,16,-0.24313699155673385],[113,358,130,16,-0.14227952983230352]],"c":[33,427,-1],"n":"Daily","g":[[113,317],[173,295]],"par":60},{"m":[120,160],"s":[[290,480,110,14,0.1]],"p":[[167,349]],"c":[52,543,-1],"n":"Daily","g":[[91,433],[101,363]],"par":52},{"m":[64,150],"c":[314,540],"p":[[89,320],[260,436]],"z":[[150,230,60,70],[150,440,210,60]],"n":"Daily","g":[[64,227],[194,492]],"par":286},{"m":[30,100],"s":[[74,139,150,14,0.28],[271,294,140,14,-0.20886691457033157],[88,384,130,14,0.2]],"c":[288,532],"bo":[[89,149,90,0.28,15]],"n":"Daily","g":[[189,254],[98,341]],"par":43},{"m":[30,110],"s":[[67,191,150,14,0.3],[307,362,100,14,-0.21677867275942117],[112,462,110,14,0.130473862468265]],"c":[307,558],"z":[[170,180,190,120],[0,350,90,110]],"n":"Daily","g":[[190,333],[216,479]],"par":30},{"m":[120,160],"s":[[296,474,110,14,0.1]],"p":[[161,368]],"c":[58,562,-1],"n":"Daily","g":[[120,226],[79,426]],"par":48},{"m":[26,232],"ink":"ice","s":[[66,312,158,16,0.35879386013466863],[251,445,110,14,-0.05845938639249653]],"c":[93,581,-1],"n":"Daily","g":[[169,348],[114,446]],"par":19},{"m":[222,150],"p":[[169,325]],"c":[311,553],"n":"Daily","g":[[222,227],[236,438]],"par":58},{"m":[70,110],"s":[[115,158,100,14,0.2]],"sp":[[155,600,70,0.35036810450255873,16],[269,410,60,-0.32,14.30547048151493]],"c":[30,337,-1],"n":"Daily","g":[[28,205],[41,265]],"par":18},{"m":[222,150],"p":[[166,327]],"c":[306,542],"n":"Daily","g":[[272,418],[251,338]],"par":64},{"m":[30,270],"s":[[55,385,180,14,0.14],[289,453,70,14,0.1]],"bo":[[97,298,130,0.14,18]],"c":[328,458],"n":"Daily","g":[[256,403],[73,335]],"par":119},{"m":[330,110],"s":[[300,183,120,14,-0.25],[117,498,120,14,-0.1]],"c":[45,547,-1],"z":[[0,240,240,120]],"n":"Daily","g":[[193,244],[155,299]],"par":37},{"m":[30,110],"s":[[65,191,150,14,0.3],[302,365,100,14,-0.21677867275942117],[115,443,110,14,0.130473862468265]],"c":[295,562],"z":[[170,180,190,120],[0,350,90,110]],"n":"Daily","g":[[193,341],[241,432]],"par":17},{"m":[40,100],"ink":"ice","p":[[65,263],[247,400]],"c":[330,529],"sp":[[50,540,60,0.3,14]],"n":"Daily","g":[[40,177],[40,397]],"par":65},{"m":[26,232],"s":[[74,258,158,16,0.36570139826741066]],"c":[330,388],"mv":[{"k":"lift","x":256,"y":347,"w":110,"h":14,"dy":30,"per":3}],"bo":[[103,282,100,0.3,16]],"n":"Daily","g":[[314,304],[194,270]],"par":52},{"m":[40,90],"p":[[28,217],[273,424]],"c":[330,490],"bo":[[120,245,80,0.5,18]],"n":"Daily","g":[[40,167],[277,408]],"par":52}];
+const DAILY=[{"n":"Daily","m":[34.52,68.35],"s":[[75,137.5,215.7,14,0.8,1],[110,307,60,14,0],[285,307,30,14,0],[293,477,14,326,0],[356,350,8,460,0]],"c":[329,560,1,1],"g":[[178,221],[337,312]],"par":141},{"n":"Daily","m":[28.32,81.42],"s":[[44.36,178.3,252.69,14,1.21,1],[89.11,297.32,9.61,14,1.17,1],[91.5,302.39,9.61,14,1.09,1],[106.05,328.09,57.46,14,1.05,1],[121.63,354.86,12.48,14,0.99,1],[126.59,361.6,12.3,14,0.88,1],[132.25,367.6,12.23,14,0.75,1],[138.61,372.86,12.3,14,0.63,1],[145.65,377.38,12.48,14,0.51,1],[161.28,385.29,30.55,14,0.45,1],[269,495,14,290,0],[332,385,8,370,0]],"c":[302,530,1,1],"g":[[121,311],[313,347]],"par":102},{"n":"Daily","m":[325.36,62.2],"s":[[291.46,94.48,145.55,14,-0.34,1],[222.38,119.05,9.1,14,-0.31,1],[217.47,120.41,9.1,14,-0.23,1],[208.48,122.3,17.29,14,-0.2,1],[255,457,70,14,0,null],[356,440,8,280,0,null],[4,365,8,430,0,null]],"c":[326,560,1,1],"g":[[204,357],[256,391]],"p":[[110,250]],"par":225},{"n":"Daily","m":[34.91,83.5],"s":[[72.94,119.18,157.13,14,0.38,1],[147.06,148.67,10.41,14,0.33,1],[153.19,150.49,10.41,14,0.24,1],[164.67,152.93,21.07,14,0.2,1],[322.5,307,45,14,0],[349,267,8,94,0],[90,477,60,14,0],[4,455,8,250,0],[88,514,52.15,10,2.57,1]],"c":[38,560,-1],"g":[[248,350],[138,397]],"par":244},{"n":"Daily","m":[325.24,62.74],"s":[[282,99.25,166.6,14,2.78,1],[202.9,128.76,10.26,14,2.83,1],[196.87,130.43,10.26,14,2.92,1],[186.9,132.38,18.08,14,2.96,1],[356,455,8,250,0]],"c":[326,560,1,1],"g":[[333,494],[246,405]],"p":[[120,300],[230,380]],"par":216},{"n":"Daily","m":[192,250],"s":[[180.5,267,37,12,0,null],[117.22,283.6,101.16,12,-0.33,1],[70.67000000000002,299.78,5.41,12,-0.35,1],[69.36000000000001,300.29,5.41,12,-0.39,1],[56.26999999999998,305.88,31.05,12,-0.4,1],[74,500,51.22,10,-0.9,1],[4,290,8,580,0,null]],"c":[32,560,-1,1],"g":[[127,259],[45,445]],"p":[[212,140]],"par":98},{"n":"Daily","m":[30.41,98.34],"s":[[68.24,216.47,305.16,14,1.11,1],[137.18,354.02,10.56,14,1.06,1],[140.63,359.56,10.53,14,0.97,1],[144.59,364.76,10.56,14,0.87,1],[157.29,378.77,35.27,14,0.83,1],[169.37,391.7,8.12,14,0.76,1],[172.48,394.32,8.02,14,0.63,1],[175.84,396.46,7.98,14,0.5,1],[179.46,398.13,8.02,14,0.36,1],[183.34,399.32,8.12,14,0.23,1],[187.89,400.24,9.15,14,0.17,1],[192.31,400.89,7.79,14,0.11,1],[196.05,401.04,7.72,14,-0.03,1],[199.74,400.7,7.72,14,-0.16,1],[203.39,399.85,7.79,14,-0.29,1],[208.66,398,11.4,14,-0.36,1],[283.5,455,33.54,10,2.96,1],[303.5,435,7,40,0],[319.5,435,7,40,0],[311.5,459,31,8,0]],"c":[245,470,1,1],"g":[[283,379],[317,340]],"par":126},{"n":"Daily","m":[33.55,58.38],"s":[[83.73,89.7,172.04,14,0.23,1],[167.77,109.4,8.6,14,0.2,1],[172.3,110.15,8.6,14,0.13,1],[181.3,111.13,17.49,14,0.1,1],[356,365,8,430,0]],"c":[326,560,1,1],"g":[[320,459],[264,336]],"p":[[180,255],[95,395],[270,335]],"par":152},{"n":"Daily","m":[333.99,84.18],"s":[[334.75,155.94,198.42,14,-1.31,1],[310.01,249.98,4.05,14,-1.31,1],[309.99,250.02,4.05,14,-1.31,1],[289.24,328.43,166.17,14,-1.31,1],[267.07,411.09,13,14,-1.25,1],[263.7,419.37,12.92,14,-1.12,1],[259.29,427.15,13,14,-0.99,1],[248.35,442.21,32.25,14,-0.93,1],[236.9,457.03,13.23,14,-0.87,1],[230.68,463.58,12.86,14,-0.75,1],[223.92,469.11,12.63,14,-0.62,1],[216.63,473.61,12.55,14,-0.49,1],[208.79,477.09,12.63,14,-0.35,1],[200.42,479.54,12.86,14,-0.22,1],[191.5,480.98,13.23,14,-0.1,1],[158.46,482.68,60.97,14,-0.04,1],[72,546,16,188,0,null],[18,390,8,380,0,null]],"c":[45,560,-1,1],"g":[[117,426],[69,401]],"p":[[130,465],[104,447]],"par":60},{"n":"Daily","m":[25.18,85.04],"s":[[24.88,169.48,224.55,14,1.35,1],[49.69,278.5,7.06,14,1.33,1],[50.5,281.45,7.06,14,1.28,1],[71.35,346.43,137.42,14,1.26,1],[93,413.21,11,14,1.21,1],[95.79,419.61,10.97,14,1.11,1],[99.2,425.69,11,14,1.01,1],[107.66,438.08,27,14,0.96,1],[116.62,450.49,11.63,14,0.9,1],[121.6,456.02,11.28,14,0.77,1],[127.05,460.64,11.06,14,0.63,1],[132.99,464.37,10.99,14,0.49,1],[139.4,467.19,11.06,14,0.34,1],[146.29,469.11,11.28,14,0.2,1],[153.66,470.13,11.63,14,0.07,1],[208.73,471.19,106.55,14,0.02,1],[271,529,18,222,0],[291.5,535.5,27.46,14,0.58,1],[356,370,8,440,0]],"c":[326,560,1,1],"g":[[299,411],[311,471]],"par":73},{"n":"Daily","m":[34.64,62.2],"s":[[68.54,94.48,145.55,14,0.34,1],[137.62,119.05,9.1,14,0.31,1],[142.53,120.41,9.1,14,0.23,1],[151.52,122.3,17.29,14,0.2,1],[105,457,70,14,0],[4,440,8,280,0],[356,365,8,430,0]],"c":[34,560,-1,1],"g":[[156,357],[104,391]],"p":[[250,250]],"par":235},{"n":"Daily","m":[325.48,68.35],"s":[[285,137.5,215.7,14,-0.8,1],[250,307,60,14,0,null],[75,307,30,14,0,null],[67,477,14,326,0,null],[4,350,8,460,0,null]],"c":[31,560,-1,1],"g":[[182,221],[23,312]],"p":[],"par":144},{"n":"Daily","m":[331.68,81.42],"s":[[315.64,178.3,252.69,14,-1.21,1],[270.89,297.32,9.61,14,-1.17,1],[268.5,302.39,9.61,14,-1.09,1],[253.95,328.09,57.46,14,-1.05,1],[238.37,354.86,12.48,14,-0.99,1],[233.41,361.6,12.3,14,-0.88,1],[227.75,367.6,12.23,14,-0.75,1],[221.39,372.86,12.3,14,-0.63,1],[214.35,377.38,12.48,14,-0.51,1],[198.72,385.29,30.55,14,-0.45,1],[91,495,14,290,0,null],[28,385,8,370,0,null]],"c":[58,530,-1,1],"g":[[239,311],[47,347]],"p":[],"par":98},{"n":"Daily","m":[168,250],"s":[[179.5,267,37,12,0],[242.78,283.6,101.16,12,0.33,1],[289.33,299.78,5.41,12,0.35,1],[290.64,300.29,5.41,12,0.39,1],[303.73,305.88,31.05,12,0.4,1],[286,500,51.22,10,0.9,1],[356,290,8,580,0]],"c":[328,560,1,1],"g":[[233,259],[315,445]],"p":[[148,140]],"par":97},{"n":"Daily","m":[325.09000000000003,83.5],"s":[[287.06,119.18,157.13,14,-0.38,1],[212.94,148.67,10.41,14,-0.33,1],[206.81,150.49,10.41,14,-0.24,1],[195.33,152.93,21.07,14,-0.2,1],[37.5,307,45,14,0,null],[11,267,8,94,0,null],[270,477,60,14,0,null],[356,455,8,250,0,null],[272,514,52.15,10,-2.57,1]],"c":[322,560,1,0],"g":[[112,350],[222,397]],"p":[],"par":259},{"n":"Daily","m":[34.75999999999999,62.74],"s":[[78,99.25,166.6,14,-2.78,1],[157.1,128.76,10.26,14,-2.83,1],[163.13,130.43,10.26,14,-2.92,1],[173.1,132.38,18.08,14,-2.96,1],[4,455,8,250,0,null]],"c":[34,560,-1,1],"g":[[27,494],[114,405]],"p":[[240,300],[130,380]],"par":212},{"n":"Daily","m":[26.01,84.18],"s":[[25.25,155.94,198.42,14,1.31,1],[49.99,249.98,4.05,14,1.31,1],[50.01,250.02,4.05,14,1.31,1],[70.76,328.43,166.17,14,1.31,1],[92.93,411.09,13,14,1.25,1],[96.3,419.37,12.92,14,1.12,1],[100.71,427.15,13,14,0.99,1],[111.65,442.21,32.25,14,0.93,1],[123.1,457.03,13.23,14,0.87,1],[129.32,463.58,12.86,14,0.75,1],[136.08,469.11,12.63,14,0.62,1],[143.37,473.61,12.55,14,0.49,1],[151.21,477.09,12.63,14,0.35,1],[159.58,479.54,12.86,14,0.22,1],[168.5,480.98,13.23,14,0.1,1],[201.54,482.68,60.97,14,0.04,1],[288,546,16,188,0],[342,390,8,380,0]],"c":[315,560,1,1],"g":[[243,426],[291,401]],"p":[[230,465],[256,447]],"par":55},{"n":"Daily","m":[329.59,98.34],"s":[[291.76,216.47,305.16,14,-1.11,1],[222.82,354.02,10.56,14,-1.06,1],[219.37,359.56,10.53,14,-0.97,1],[215.41,364.76,10.56,14,-0.87,1],[202.71,378.77,35.27,14,-0.83,1],[190.63,391.7,8.12,14,-0.76,1],[187.52,394.32,8.02,14,-0.63,1],[184.16,396.46,7.98,14,-0.5,1],[180.54,398.13,8.02,14,-0.36,1],[176.66,399.32,8.12,14,-0.23,1],[172.11,400.24,9.15,14,-0.17,1],[167.69,400.89,7.79,14,-0.11,1],[163.95,401.04,7.72,14,0.03,1],[160.26,400.7,7.72,14,0.16,1],[156.61,399.85,7.79,14,0.29,1],[151.34,398,11.4,14,0.36,1],[76.5,455,33.54,10,-2.96,1],[56.5,435,7,40,0,null],[40.5,435,7,40,0,null],[48.5,459,31,8,0,null]],"c":[115,470,-1,1],"g":[[77,379],[43,340]],"p":[],"par":124},{"n":"Daily","m":[326.45,58.38],"s":[[276.27,89.7,172.04,14,-0.23,1],[192.23,109.4,8.6,14,-0.2,1],[187.7,110.15,8.6,14,-0.13,1],[178.7,111.13,17.49,14,-0.1,1],[4,365,8,430,0,null]],"c":[34,560,-1,1],"g":[[40,459],[96,336]],"p":[[180,255],[265,395],[90,335]],"par":147}];
 
 /* ---------- Noodle site tracking (site contract §5) ---------- */
 const GAME='inkline';let LEVEL=1,rnd={armed:false,open:false,secs:0,how:'new'};
@@ -290,11 +300,12 @@ function rndEnd(win,x){if(!rnd.open)rndStart();if(!rnd.open)return;rnd.open=fals
 /* ---------- Save ---------- */
 const KEY='digi-inkline-v1',coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
 const quiet=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
-const blank={v:2,stars:{},open:0,fails:{},snd:true,vib:true,still:quiet,raised:false,fs:coarse,daily:{},streak:0,last:null};
+const blank={v:3,stars:{},open:0,fails:{},snd:true,vib:true,still:quiet,raised:false,fs:coarse,daily:{},streak:0,last:null};
 let save=(()=>{try{return Object.assign({},blank,JSON.parse(localStorage.getItem(KEY))||{})}catch(e){return Object.assign({},blank)}})();
 function keep(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
 /* Big Air went in as chapter 3, so older saves move up six places from level 13. */
-if(save.v!==2){const m={};Object.keys(save.stars).forEach(k=>{m[+k>=12?+k+6:k]=save.stars[k]});save.stars=m;if(save.open>=12)save.open+=6;save.fails={};save.v=2}
+/* 6 Nov 2026: the levels were redrawn by hand, so stars from the old levels no longer match. Daily bests are kept. */
+if(save.v!==3){save.stars={};save.open=0;save.fails={};save.v=3}
 keep();
 /* ---------- Full screen (contract §10) ---------- */
 const fsOK=(()=>{try{return !!(document.fullscreenEnabled||document.webkitFullscreenEnabled)}catch(e){return false}})();
@@ -337,10 +348,16 @@ const seedR=s=>()=>(s=(s*16807)%2147483647)/2147483647;
 function wobble(x,y,w,h,a,seed){const r=seedR(Math.abs(Math.round(x*7+y*13+w))+11),P=[],c=Math.cos(a),s=Math.sin(a),edge=(x0,y0,x1,y1)=>{const n=Math.max(1,Math.round(Math.hypot(x1-x0,y1-y0)/22));for(let i=0;i<n;i++){const t=i/n,u=x0+(x1-x0)*t+(i?(r()-.5)*1.5:0),v=y0+(y1-y0)*t+(i?(r()-.5)*1.5:0);P.push([x+u*c-v*s,y+u*s+v*c])}};
  edge(-w/2,-h/2,w/2,-h/2);edge(w/2,-h/2,w/2,h/2);edge(w/2,h/2,-w/2,h/2);edge(-w/2,h/2,-w/2,-h/2);return P}
 function spring(c,p){const n=[Math.sin(p.a),-Math.cos(p.a)],t=[Math.cos(p.a),Math.sin(p.a)];c.strokeStyle='#1c2c4c';c.lineWidth=2;c.beginPath();for(let i=0;i<=6;i++){const d=8+i*2.6,o=(i%2?1:-1)*p.w*.28;const x=p.x-n[0]*d+t[0]*o,y=p.y-n[1]*d+t[1]*o;i?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}
+/* does another piece of the same run carry on from this end of a rounded plank? */
+function joined(p,s){const ex=p.x+s*p.w/2*Math.cos(p.a),ey=p.y+s*p.w/2*Math.sin(p.a);return S.parts.some(q=>q!==p&&q.r&&[-1,1].some(t=>Math.hypot(q.x+t*q.w/2*Math.cos(q.a)-ex,q.y+t*q.w/2*Math.sin(q.a)-ey)<6))}
 function poly(c,P){c.beginPath();P.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath()}
 function drawPart(c,p,x,y,a){const col=p.cup?'#a4432a':'#1c2c4c',P=wobble(x,y,p.w,p.h,a);if(p.pow)spring(c,p);poly(c,P);c.fillStyle=p.pow?'#e0584c':p.cup?'#e7b75a':p.mv?'#ffe9a8':'#fbf7ea';c.fill();
  c.save();poly(c,P);c.clip();c.strokeStyle=p.cup?'rgba(164,67,42,.5)':'rgba(28,44,76,.5)';c.lineWidth=1.1;c.beginPath();const R2=Math.max(p.w,p.h);for(let i=-R2;i<R2;i+=7){const dx=Math.cos(a),dy=Math.sin(a);c.moveTo(x+dx*i-dy*-20+dx*-20,y+dy*i+dx*-20+dy*-20);c.lineTo(x+dx*(i+40)-dy*20,y+dy*(i+40)+dx*20)}c.stroke();c.restore();
- poly(c,P);c.strokeStyle=col;c.lineWidth=2;c.lineJoin='round';c.stroke()}
+ c.strokeStyle=col;c.lineWidth=2;c.lineJoin='round';c.lineCap='round';
+ /* a rounded plank is one piece of a run: outline only its long sides, so a curved chute reads as one smooth piece */
+ if(p.r&&!p.cup){const ca=Math.cos(a),sa=Math.sin(a),e=(u,v)=>[x+u*ca-v*sa,y+u*sa+v*ca],w2=p.w/2,h2=p.h/2;c.beginPath();for(const s of [-1,1]){const A=e(-w2,s*h2),B=e(w2,s*h2);c.moveTo(A[0],A[1]);c.lineTo(B[0],B[1])}
+  for(const s of [-1,1])if(!joined(p,s)){const A=e(s*w2,-h2),B=e(s*w2,h2);c.moveTo(A[0],A[1]);c.lineTo(B[0],B[1])}c.stroke()}
+ else{poly(c,P);c.stroke()}}
 function paintBg(){bg=document.createElement('canvas');bg.width=cv.width;bg.height=cv.height;const c=bg.getContext('2d'),[pa,gr]=tint();c.fillStyle=pa;c.fillRect(0,0,bg.width,bg.height);c.scale(dpr,dpr);
  const step=20*sc;c.strokeStyle=gr;c.lineWidth=1;c.beginPath();for(let x=ox%step;x<VW;x+=step){c.moveTo(x,0);c.lineTo(x,VH)}for(let y=oy%step;y<VH;y+=step){c.moveTo(0,y);c.lineTo(VW,y)}c.stroke();
  if(!S)return;c.translate(ox,oy);c.scale(sc,sc);
@@ -349,7 +366,7 @@ function paintBg(){bg=document.createElement('canvas');bg.width=cv.width;bg.heig
  S.parts.forEach(p=>{if(!p.mv)drawPart(c,p,p.x,p.y,p.a)});
  (S.L.bo||[]).forEach(q=>{c.save();c.translate(q[0],q[1]);c.rotate(q[3]||0);c.fillStyle='rgba(224,161,6,.2)';c.strokeStyle='rgba(164,67,42,.55)';c.lineWidth=1.5;c.setLineDash([5,4]);c.fillRect(-q[2]/2,-14,q[2],28);c.strokeRect(-q[2]/2,-14,q[2],28);c.restore()});
  (S.L.mv||[]).forEach(m=>{if(m.k=='lift'){c.strokeStyle='rgba(28,44,76,.35)';c.lineWidth=1.5;c.setLineDash([5,5]);c.beginPath();c.moveTo(m.x-(m.dx||0),m.y-(m.dy||0));c.lineTo(m.x+(m.dx||0),m.y+(m.dy||0));c.stroke();c.setLineDash([])}});
- const k=S.L.c,sd=k[2]||1;c.fillStyle='#cf3a2e';c.strokeStyle='#1c2c4c';c.lineWidth=1.6;c.beginPath();const fx=k[0]+sd*23,fy=k[1]-69;c.moveTo(fx,fy-14);c.lineTo(fx-sd*18,fy-7);c.lineTo(fx,fy);c.closePath();c.fill();c.stroke()}
+ const k=S.L.c,sd=k[2]||1;c.fillStyle='#cf3a2e';c.strokeStyle='#1c2c4c';c.lineWidth=1.6;c.beginPath();const fx=k[0]+sd*23,fy=k[3]?k[1]-17:k[1]-69;c.moveTo(fx,fy-14);c.lineTo(fx-sd*18,fy-7);c.lineTo(fx,fy);c.closePath();c.fill();c.stroke()}
 /* ---------- Drawing ---------- */
 function stroke(pts,wd,col,alpha){if(pts.length<1)return;g.save();g.globalAlpha=alpha==null?1:alpha;g.lineCap=g.lineJoin='round';g.strokeStyle=col;if(pts.length==1){g.fillStyle=col;g.beginPath();g.arc(pts[0][0],pts[0][1],3,0,7);g.fill()}
  else if(!wd){g.lineWidth=6.5;g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.stroke()}
@@ -402,11 +419,11 @@ function win(){ /* the marble is in the cup, or the test hook says so */
  let msg='';
  if(mode=='daily'){const d=save.daily[DAY],bt=len&&(!d||len<d.best);if(!d){save.streak=save.last===dayNo-1?save.streak+1:1;save.last=dayNo}
   save.daily[DAY]={best:bt?len:(d?d.best:len),stars:Math.max(stars,d?d.stars:0)};msg=(bt?'New best: ':'Your best: ')+cm(save.daily[DAY].best)+(L.par?` · The pencil's best: ${cm(L.par)}`:'')+` · ${save.streak} day streak`}
- else{const nw=(save.stars[idx]||0)<stars;save.stars[idx]=Math.max(save.stars[idx]||0,stars);delete save.fails[idx];const opened=save.open<=idx;save.open=Math.max(save.open,idx+1);
-  msg=stars==3?'Every gem collected.':'Gems are optional. Move on, or come back for them.';if(opened&&(idx+1)%6==0&&idx+1<LEVELS.length)msg=`${CH[chapOf(idx+1)].n} is open.`}
+ else{const end0=idx==LEVELS.length-1,nw=(save.stars[idx]||0)<stars;save.stars[idx]=Math.max(save.stars[idx]||0,stars);delete save.fails[idx];const opened=save.open<=idx;save.open=Math.max(save.open,idx+1);
+  msg=end0?'That is every page so far. More are on the way.':stars==3?'Every gem collected.':'Gems are optional. Move on, or come back for them.';if(opened&&(idx+1)%6==0&&idx+1<LEVELS.length)msg=`${CH[chapOf(idx+1)].n} is open.`}
  keep();
  const end=mode=='levels'&&idx==LEVELS.length-1,sts=[0,1,2].map(i=>`<span class="${i<stars?'':'o'}" style="animation-delay:${.15+i*.14}s">★</span>`).join('');
- const c=$('card');c.innerHTML=`<h2>${end?'Sketchbook full!':stars==3?'Beautiful.':'In the cup!'}</h2><div class="st">${sts}</div><p>${msg}</p><div class="acts"><button class="btn" id="cRep" type="button">Replay</button><button class="btn main" id="cNext" type="button">${mode=='daily'?'Try shorter':end?'Levels':'Next'}</button></div><a class="lnk" href="../games.html">← Noodle Games</a>`;
+ const c=$('card');c.innerHTML=`<h2>${end?'Last page!':stars==3?'Beautiful.':'In the cup!'}</h2><div class="st">${sts}</div><p>${msg}</p><div class="acts"><button class="btn" id="cRep" type="button">Replay</button><button class="btn main" id="cNext" type="button">${mode=='daily'?'Try shorter':end?'Levels':'Next'}</button></div><a class="lnk" href="../games.html">← Noodle Games</a>`;
  c.className=L.c[1]>330?'high':'';c.hidden=false;$('cRep').onclick=replay;
  $('cNext').onclick=()=>{goFS();if(mode=='daily'){ghost=S.pts.slice();load(L,'retry')}else if(end)openLevels();else startLevel(idx+1)};
  [0,1,2].forEach(i=>{if(i<stars)setTimeout(()=>{tone(523.25*[1,1.25,1.5][i],.35,.12);tone(1046.5*[1,1.25,1.5][i],.2,.04)},150+i*140)});buzz([20,40,30]);
@@ -442,7 +459,7 @@ function frame(t){requestAnimationFrame(frame);const dt=Math.min(t-last,50);last
  if(S.state=='lost'){S.state='ended';if(replaying){const k=replaying;replaying=false;S=k;paintBg();$('card').hidden=false}else lost()}
  render(t)}
 /* ---------- Home: the game draws its own line, for real ---------- */
-const DLINE=[[301.74112796770373,310.28940139489583],[279.30197414776495,304.45547230859944],[256.86282032782617,298.621543222303],[234.42366650788733,292.7876141360066],[211.98451268794855,286.95368504971015],[189.54535886800977,281.11975596341375],[167.10620504807096,275.2858268771173],[144.66705122813218,269.4518977908209],[122.22789740819337,263.6179687045245],[107.26846152823418,259.72868264699355]],DEMO=LEVELS[0];
+const DLINE=[[110,292],[290,292]],DEMO=LEVELS[0];
 function homeReset(){L=DEMO;mode='levels';idx=0;S=makeSim(DEMO);demo={t:0,i:0};paintBg()}
 function homeTick(dt){if(!S||!demo||save.still)return;demo.t+=dt;
  if(S.state=='draw'){const want=Math.min(DLINE.length-1,demo.t/260|0),k=(demo.t%260)/260,a=DLINE[want],b=DLINE[want+1]||a;addPoint(S,a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k);if(demo.t>(DLINE.length-1)*260){addPoint(S,...DLINE[DLINE.length-1]);release(S)}return}
@@ -465,6 +482,5 @@ addEventListener('resize',fit);addEventListener('orientationchange',fit);addEven
 if(window.__DGTEST===true)window.__dg={end(w){if(scene=='home')startLevel(nextLevel());if(scene!='play'||!S||S.closed)return;if(w){cardDue=0;win()}else{rndStart();lost()}},state:()=>({scene,state:S&&S.state,idx,mode,open:save.open,stars:save.stars}),levels:()=>LEVELS,run:(l,p)=>testRun(l,p)};
 fit();openHome();requestAnimationFrame(t=>{last=t;frame(t)});
 </script>
-<script src="../dn-track.js" defer></script>
 </body>
 </html>
