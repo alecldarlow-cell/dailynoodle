@@ -32,6 +32,20 @@ test('TUMBLER-03: the gate refuses broken boards', () => {
   assert.ok(T.check(q).length > 0);
 });
 
+test('TUMBLER-05: the line can never spell anything rude, and only words a solver knows are accepted', () => {
+  const L = T.lists();
+  for (const e of B.existing()) {
+    const p = B.readPage(e.file);
+    assert.strictEqual(T.spellsRude(p.wheels, L.offensive), null, e.file);
+    for (const w of p.words) assert.ok(L.known.has(w), e.file + ' accepts ' + w);
+  }
+  // the first boards could spell these: the check now covers every spelling, listed word or not
+  assert.strictEqual(T.spellsRude(['XD', 'I', 'C', 'K'], L.offensive), 'dick');
+  assert.strictEqual(T.spellsRude(['S', 'C', 'A', 'G'], L.offensive), 'scag');
+  for (const w of ['scag', 'fohn', 'froe', 'yean', 'yeld', 'yaar', 'york', 'erie']) assert.ok(!L.known.has(w), w + ' is not accepted');
+  for (const w of ['scar', 'pots', 'yarn', 'neon', 'loot']) assert.ok(L.known.has(w), w + ' is accepted');
+});
+
 test('TUMBLER-04: the pages are thin Lab puzzle pages on the engine', () => {
   for (const e of B.existing()) {
     const html = fs.readFileSync(path.join(ROOT, 'reports', e.file), 'utf8');

@@ -1,9 +1,10 @@
 'use strict';
-/* Redact pages: a 6×6 board a day, from tools/redact.js (Lab, 6 Nov 2026).
+/* Redact pages: a board a day, from tools/redact.js (Lab, 6 Nov 2026: ten 6×6, then ten 7×7).
 
      node tools/build-redact-batch.js --check                    # exit 1 if any Redact page fails the gate, repeats a board or differs from its seed
-     node tools/build-redact-batch.js --through D [--from D0]    # continue from the newest page to date D (from D0, serial 1, when there are none); never touches an existing page
-     add --lab to write pages with the "In development" badge
+     node tools/build-redact-batch.js --through D [--from D0]    # write days D0..D (default: the day after the newest page) as the next serials; never touches an existing page or day
+     add --lab to write pages with the "In development" badge, --size 7 for 7×7 (default 6),
+     --updated D to give each new page dn:updated D (so back-dated Lab boards sit at the top of Lab)
 
    Every board passes tools/redact.js's gate (crossword norms, everyday answers, no
    trap, one black set only, solved by line logic and the count, effort in band).
@@ -16,13 +17,13 @@ const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports')
 const pad = n => String(n).padStart(4, '0');
 const addDay = (d, k) => { const x = new Date(d + 'T12:00:00Z'); x.setUTCDate(x.getUTCDate() + k); return x.toISOString().slice(0, 10); };
 
-function fromSeed(seed) { const p = R.generate(seed, { n: R.BAND.n }); return p && !R.check(p).length ? p : null; }
+function fromSeed(seed, n) { const p = R.generate(seed, { n: n || R.BAND.n }); return p && !R.check(p).length ? p : null; }
 /* the board for a serial: the first seed in its series that passes the gate and repeats no earlier board */
 /* long answers (5+ letters) never come back: two boards sharing them read as the same puzzle */
 const longs = p => p.words.filter(w => w.length >= 5);
-function boardFor(serial, seen, used) {
+function boardFor(serial, seen, used, n) {
   for (let k = 0; k < 600; k++) {
-    const p = fromSeed('redact-' + pad(serial) + (k ? '-' + k : ''));
+    const p = fromSeed('redact-' + pad(serial) + (k ? '-' + k : ''), n);
     if (!p) continue;
     const fp = R.fingerprint(p); if (seen && seen.has(fp)) continue;
     if (used && longs(p).some(w => used.has(w))) continue;
@@ -33,10 +34,11 @@ function boardFor(serial, seen, used) {
   throw new Error('no board found for serial ' + serial);
 }
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const SIZE = { 5: 'Five by five', 6: 'Six by six', 7: 'Seven by seven' };
 const W = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen'];
-function page({ serial, date, board, lab }) {
+function page({ serial, date, board, lab, updated }) {
   const id = 'DP·REDA·' + pad(serial), num = pad(serial), k = board.black.length;
-  const stand = 'Six by six, every square a letter. Black out the ' + W[k] + ' that don’t belong and the grid becomes a crossword.';
+  const stand = SIZE[board.n] + ', every square a letter. Black out the ' + W[k] + ' that don’t belong and the grid becomes a crossword.';
   const data = '{type:"redact",id:"' + id + '",band:"medium",n:' + board.n + ',letters:"' + board.letters + '",black:[' + board.black.join(',') +
     '],words:[' + board.words.map(w => '"' + w + '"').join(',') + '],seed:"' + board.seed + '"}';
   return `<!doctype html><html lang="en"><head>
@@ -44,7 +46,7 @@ function page({ serial, date, board, lab }) {
 <meta name="dn:headline"   content="Redact ${num}">
 <meta name="dn:standfirst" content="${esc(stand)}">
 <meta name="dn:topic"      content="Word">
-<meta name="dn:date"       content="${date}">
+<meta name="dn:date"       content="${date}">${updated ? '\n<meta name="dn:updated"    content="' + updated + '">' : ''}
 <meta name="dn:kind"       content="puzzle">
 <meta name="dn:read"       content="~1 min">
 <meta name="dn:thumb"      content="assets/redact-thumb.svg">${lab ? '\n<meta name="dn:badge"      content="In development">' : ''}
@@ -140,13 +142,19 @@ function writeThrough(through, opts) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(through)) throw new Error('--through needs a date, YYYY-MM-DD');
   const list = existing(), seen = new Set(), used = new Set(), out = [];
   for (const e of list) { const p = readPage(e.file), errs = R.check(p); if (errs.length) throw new Error(e.file + ': ' + errs.join('; ')); seen.add(R.fingerprint(p)); longs(p).forEach(w => used.add(w)); }
-  let serial, date;
-  if (list.length) { const last = list[list.length - 1]; serial = last.serial + 1; date = addDay(last.date, 1); }
-  else { if (!/^\d{4}-\d{2}-\d{2}$/.test(opts.from || '')) throw new Error('no Redact pages yet: --from D0 names the first day'); serial = 1; date = opts.from; }
+  /* serials always continue; days continue from the newest page unless --from names a free run of days
+     (the 7×7 Lab boards fill 18–27 Oct, before the 6×6 ones: the registry wants one Redact a day, no gaps) */
+  const taken = new Set(list.map(e => e.date));
+  let serial = list.length ? Math.max(...list.map(e => e.serial)) + 1 : 1, date;
+  if (opts.from) { if (!/^\d{4}-\d{2}-\d{2}$/.test(opts.from)) throw new Error('--from needs a date, YYYY-MM-DD'); date = opts.from; }
+  else if (list.length) date = addDay(list.map(e => e.date).sort().pop(), 1);
+  else throw new Error('no Redact pages yet: --from D0 names the first day');
+  if (opts.updated && !/^\d{4}-\d{2}-\d{2}$/.test(opts.updated)) throw new Error('--updated needs a date, YYYY-MM-DD');
   for (; date <= through; serial++, date = addDay(date, 1)) {
-    const board = boardFor(serial, seen, used), file = date + '-word-redact-' + pad(serial) + '.html';
-    fs.writeFileSync(path.join(REPORTS, file), page({ serial, date, board, lab: !!opts.lab }), { flag: 'wx' });
-    out.push(file + ' k ' + board.black.length + ' effort ' + board.grade.effort + ' (' + board.seed + ') ' + board.words.join(','));
+    if (taken.has(date)) throw new Error('there is already a Redact on ' + date);
+    const board = boardFor(serial, seen, used, opts.size), file = date + '-word-redact-' + pad(serial) + '.html';
+    fs.writeFileSync(path.join(REPORTS, file), page({ serial, date, board, lab: !!opts.lab, updated: opts.updated }), { flag: 'wx' });
+    out.push(file + ' ' + board.n + '×' + board.n + ' k ' + board.black.length + ' effort ' + board.grade.effort + ' (' + board.seed + ') ' + board.words.join(','));
   }
   return out;
 }
@@ -154,7 +162,8 @@ if (require.main === module) {
   const a = process.argv.slice(2);
   if (a.includes('--check')) { const errs = check(); if (errs.length) { console.error(errs.join('\n')); process.exit(1); } console.log('Redact: ' + existing().length + ' pages pass the gate and match their seeds'); }
   else if (a.includes('--through')) {
-    const out = writeThrough(a[a.indexOf('--through') + 1], { from: a.includes('--from') ? a[a.indexOf('--from') + 1] : null, lab: a.includes('--lab') });
+    const arg = k => a.includes(k) ? a[a.indexOf(k) + 1] : null;
+    const out = writeThrough(arg('--through'), { from: arg('--from'), lab: a.includes('--lab'), size: arg('--size') ? +arg('--size') : 6, updated: arg('--updated') });
     console.log(out.join('\n') + '\n' + out.length + ' pages written');
     const errs = check(); if (errs.length) { console.error(errs.join('\n')); process.exit(1); }
   }

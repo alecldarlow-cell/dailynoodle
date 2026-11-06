@@ -12,6 +12,7 @@ const cases=[
  {type:'tally',page:'reports/2026-11-03-logic-tally-0010.html',board:'#grid',targets:'#grid .cell,#keys button,#notesBtn,#eraseBtn,#undoBtn'},
  {type:'tilt',page:'reports/2026-11-06-logic-tilt-0010.html',board:'#maze',targets:'#leftBtn,#rightBtn,#undoBtn'},
  {type:'redact',page:'reports/2026-11-06-word-redact-0010.html',board:'#grid',targets:'#grid .cell,#undoBtn,#clearBtn'},
+ {type:'redact',size:'7×7',page:'reports/2026-10-27-word-redact-0020.html',board:'#grid',targets:'#grid .cell,#undoBtn,#clearBtn'},
  {type:'tumbler',page:'reports/2026-11-06-word-tumbler-0010.html',board:'#board',targets:'.down,#submitBtn'}
 ];
 async function reachable(p,selectors){
@@ -25,7 +26,7 @@ async function reachable(p,selectors){
 }
 // Reckon: the question (and after Lock in, the verdict) must be on screen, not squeezed under the bar.
 const seen=(p,sel)=>p.locator(sel).evaluate(e=>{const b=e.getBoundingClientRect();if(!b.height)return false;const at=document.elementFromPoint(b.x+Math.min(b.width/2,40),b.y+Math.min(b.height/2,10));return !!at&&(at===e||e.contains(at));});
-for(const c of cases)test('MOBILE: '+c.type+' board and controls survive small phones and rotation',async({phone},testInfo)=>{
+for(const c of cases)test('MOBILE: '+c.type+(c.size?' '+c.size:'')+' board and controls survive small phones and rotation',async({phone},testInfo)=>{
  const {p}=phone;await p.setViewportSize({width:320,height:568});await goto(phone,c.page||'reports/2026-10-19-'+c.file+'.html');
  // Chromium cannot resize its OS window while fullscreen. Use the player's
  // real setting for this browser-window rotation check.
