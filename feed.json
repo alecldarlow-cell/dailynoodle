@@ -1,8 +1,8 @@
 {
-  "built": "2026-11-06T20:34:40.481Z",
+  "built": "2026-11-06T20:43:53.071Z",
   "today": "2026-11-06",
   "timezone": "Europe/London",
-  "count": 832,
+  "count": 842,
   "items": [
     {
       "path": "reports/2026-11-04-arcade-astro-drop.html",
@@ -250,6 +250,24 @@
       "mask": "",
       "type": "tangle",
       "id": "DP·TANG·0031"
+    },
+    {
+      "path": "reports/2026-11-06-word-tumbler-0010.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0010",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-11-06",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0010",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-11-05-arcade-inkline.html",
@@ -500,6 +518,24 @@
       "id": "DP·TANG·0030"
     },
     {
+      "path": "reports/2026-11-05-word-tumbler-0009.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0009",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-11-05",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0009",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-04-briefing.html",
       "kind": "report",
       "topic": "Briefing",
@@ -725,6 +761,24 @@
       "mask": "",
       "type": "tangle",
       "id": "DP·TANG·0029"
+    },
+    {
+      "path": "reports/2026-11-04-word-tumbler-0008.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0008",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-11-04",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0008",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-15-quiz-ballpark.html",
@@ -979,6 +1033,24 @@
       "id": "DP·TANG·0028"
     },
     {
+      "path": "reports/2026-11-03-word-tumbler-0007.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0007",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-11-03",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0007",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-02-briefing.html",
       "kind": "report",
       "topic": "Briefing",
@@ -1199,6 +1271,24 @@
       "mask": "",
       "type": "tangle",
       "id": "DP·TANG·0027"
+    },
+    {
+      "path": "reports/2026-11-02-word-tumbler-0006.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0006",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-11-02",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0006",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-24-quiz-yarn.html",
@@ -1438,6 +1528,24 @@
       "id": "DP·TANG·0026"
     },
     {
+      "path": "reports/2026-11-01-word-tumbler-0005.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0005",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-11-01",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0005",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-31-briefing.html",
       "kind": "report",
       "topic": "Briefing",
@@ -1658,6 +1766,24 @@
       "mask": "",
       "type": "tangle",
       "id": "DP·TANG·0025"
+    },
+    {
+      "path": "reports/2026-10-31-word-tumbler-0004.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0004",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-10-31",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0004",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-17-arcade-paper-planes.html",
@@ -1912,6 +2038,24 @@
       "id": "DP·TANG·0024"
     },
     {
+      "path": "reports/2026-10-30-word-tumbler-0003.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0003",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-10-30",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0003",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-29-briefing.html",
       "kind": "report",
       "topic": "Briefing",
@@ -2132,6 +2276,24 @@
       "mask": "",
       "type": "tangle",
       "id": "DP·TANG·0023"
+    },
+    {
+      "path": "reports/2026-10-29-word-tumbler-0002.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0002",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-10-29",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0002",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-28-briefing.html",
@@ -2369,6 +2531,24 @@
       "mask": "",
       "type": "tangle",
       "id": "DP·TANG·0022"
+    },
+    {
+      "path": "reports/2026-10-28-word-tumbler-0001.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Tumbler 0001",
+      "standfirst": "A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.",
+      "date": "2026-10-28",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tumbler-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tumbler",
+      "id": "DP·TUMB·0001",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-27-briefing.html",
