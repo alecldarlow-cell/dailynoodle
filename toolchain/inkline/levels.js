@@ -43,6 +43,10 @@ LV.push({n:'Lock',h:'Through two pegs, a line is fixed in place.',idea:'Through 
 LV.push({n:'Pick Two',h:'Which two pegs?',idea:'Choose the pair of pegs that leads to the cup.',
  m:on(0,70,170,110,30),s:[...run([[0,70],[170,110],[190,112]]),block(352,150,8,430)],p:[[180,255],[95,395],[270,335]],c:[326,560,1,1],
  sol:[[[150,228],[300,362]]],show:[[[70,435],[205,215]],[[60,407],[300,325]]]});
+/* P6 Sky Slide: no ledges to rest on this time. Two pegs hold the slide up in the air. */
+LV.push({n:'Sky Slide',h:'Nothing to rest on? Lock it.',idea:'With nothing to rest on, run the slide through both pegs so it locks in mid-air.',
+ m:on(0,90,150,150,30),s:[...run([[0,90],[150,150],[175,155]]),block(345,150,8,200),block(0,330,8,250),plank(110,500,66,528,10)],p:[[290,320],[160,420]],c:[38,560,-1],
+ sol:[[[330,290],[110,460]]],show:[[[330,290],[200,320]]]});
 /* 2.3 Hinge: a peg holds one end and a ledge the other, so the line stays put. */
 LV.push({n:'Hinge',h:'A peg holds one end, a ledge the other.',idea:'A peg holds one end, the ledge the other.',
  m:on(0,70,140,120,30),s:[...run([[0,70],[140,120],[160,124]]),block(70,450,70,14),block(0,300,8,280),block(352,150,8,430)],p:[[250,250]],c:[34,560,-1,1],
@@ -85,6 +89,10 @@ LV.push({n:'Drop It',h:'Can\'t draw there? Drop it in.',idea:'Draw the bridge ab
 LV.push({n:'Drop the Ramp',h:'Drop a ramp against the wall.',idea:'Draw the ramp above the red; it drops and leans on the wall.',
  m:on(0,60,50,280,30),s:[...run([[0,60],[50,280],[95,420],[130,470],[262,472]]),block(262,418,18,222),plank(280,528,303,543),block(352,150,8,440)],z:[[140,380,150,100]],c:[326,560,1,1],
  sol:[[[180,372],[262,322],[290,306]]]});
+/* H7 Red Peak: the peak is red. Drop a line on to it from above, with more of it to the right, so it tips that way. */
+LV.push({n:'Red Peak',h:'Drop it so it tips the right way.',idea:'Draw the line above the red with most of it right of the peak: it lands tipped towards the cup.',
+ m:[160,40],s:[block(130,20,8,90),block(182,20,8,90),plank(70,330,170,280,14),plank(170,280,290,330,14),block(0,520,100,14),block(290,560,70,14),block(352,200,8,360)],z:[[40,200,280,160]],c:[322,539,1,1],
+ sol:[[[110,190],[300,190]]],show:[[[40,190],[230,190]]]});
 /* H3 Drawbridge: the gap is red, but the peg at its edge isn't. Draw the line straight up from the peg: it falls across like a drawbridge. */
 LV.push({n:'Drawbridge',h:'Draw it up. Let it fall.',idea:'A line up from the peg falls across the red gap like a drawbridge.',
  m:on(0,280,140,410,30),s:[...run([[0,280],[140,410],[160,420],[175,420]],14,60),block(150,420,30,14),block(288,445,24,14),block(312,540,48,100),block(352,300,8,240)],p:[[175,415]],z:[[198,0,92,500]],c:[334,519,1,1],
@@ -115,5 +123,5 @@ LV.push({n:'Glass Steps',ink:'glass',h:'Glass breaks if hit hard.',idea:'One gla
  m:on(0,84,140,108,40),s:[plank(0,84,140,108),block(185,112,16,528),block(250,116,50,14),block(352,60,8,560),block(270,622,90,18)],c:[324,600,1,1],
  sol:[[[118,97],[290,108]]],show:[[[118,130],[290,130]]]});
 /* chapters, in order: name and number of levels */
-LV.CH=[{n:'Ledges',c:7},{n:'Pegs',c:5},{n:'Big Air',c:4},{n:'Hands Off',c:6},{n:'Odd Inks',c:4}];
+LV.CH=[{n:'Ledges',c:7},{n:'Pegs',c:6},{n:'Big Air',c:4},{n:'Hands Off',c:7},{n:'Odd Inks',c:4}];
 module.exports=LV;
