@@ -26,7 +26,7 @@ Alec's standard (6 Nov 2026): every level must be solvable with a sensible drawi
 4. `node toolchain/inkline/gems.js 0,1`.
 5. `node toolchain/inkline/assemble.js`, then play the game file, then run the site tests.
 
-Drafts can live outside `levels.js` while they are tuned, as long as they use the same helpers; add them to `levels.js` and `LV.CH` when they pass.
+Levels can be inserted mid-chapter (the game keeps saves by name), but `gems.json` is keyed by position: move its entries when you insert. Drafts can live outside `levels.js` while they are tuned, as long as they use the same helpers; add them to `levels.js` and `LV.CH` when they pass.
 
 ## The bar
 

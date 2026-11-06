@@ -24,6 +24,14 @@ LV.push({n:'Over the Wall',h:'Lean a line on the wall to make a ramp.',idea:'Lea
 LV.push({n:'Gap and Wall',h:'One line, two jobs.',idea:'One line bridges the gap and ramps over the wall.',
  m:on(0,60,90,300,30),s:[...run([[0,60],[90,300],[130,370],[175,392]]),block(262,350,14,290),block(328,200,8,370)],c:[302,530,1,1],
  sol:[[[160,382],[264,348],[272,344]]]});
+/* L6 Two Gaps: two gaps and a pillar between them. One long line rests on all three and spans both. */
+LV.push({n:'Two Gaps',h:'One line can cross more than one gap.',idea:'A long line rests on both ledges and the pillar, bridging both gaps.',
+ m:on(0,80,70,300,30),s:[...run([[0,80],[70,300],[100,330],[120,332]],14,70),block(100,332,20,14),block(190,318,16,322),block(270,307,30,14),block(286,321,14,319),block(352,150,8,490)],c:[328,560,1,1],
+ sol:[[[105,324],[290,298]]],show:[[[105,324],[198,314]]]});
+/* L8 Peak: the marble lands on the peak and rolls off the wrong side. Lay a line over the peak, sloping the other way. */
+LV.push({n:'Peak',h:'Which way will it roll?',idea:'A line laid over the peak, sloping down to the right, turns the marble towards the cup.',
+ m:[160,40],s:[block(130,20,8,90),block(182,20,8,90),plank(70,330,170,280,14),plank(170,280,290,330,14),block(0,520,100,14),block(290,560,70,14),block(352,200,8,360)],c:[322,539,1,1],
+ sol:[[[90,250],[290,280]]],show:[[[50,280],[240,250]]]});
 
 
 /* ---------- Chapter 2: pegs ---------- */
@@ -81,6 +89,14 @@ LV.push({n:'Drop the Ramp',h:'Drop a ramp against the wall.',idea:'Draw the ramp
 LV.push({n:'Drawbridge',h:'Draw it up. Let it fall.',idea:'A line up from the peg falls across the red gap like a drawbridge.',
  m:on(0,280,140,410,30),s:[...run([[0,280],[140,410],[160,420],[175,420]],14,60),block(150,420,30,14),block(288,445,24,14),block(312,540,48,100),block(352,300,8,240)],p:[[175,415]],z:[[198,0,92,500]],c:[334,519,1,1],
  sol:[[[175,415],[187,280]]],show:[[[175,415],[160,280]]]});
+/* H5 Hang Down: you can't draw under the peg, but a line through it swings down by itself. Draw it sideways. */
+LV.push({n:'Hang Down',h:'Lines through one peg swing.',idea:'Draw the line through the peg sideways, above the red: it swings down into a curtain that stops the marble.',
+ m:on(0,80,90,400,30),s:[...run([[0,80],[90,400],[130,500],[170,512]]),block(230,420,14,220),block(244,622,116,18),plank(244,520,272,575,10),plank(366,520,328,575,10)],sp:[[200,512,50,-.1,15]],p:[[318,150]],z:[[200,160,160,300]],c:[300,600,1,1],
+ sol:[[[318,150],[200,150]]],show:[[[318,150],[318,100]]]});
+/* H6 Landing Drop: the pad throws the marble over the shaft, but the shaft is red. Draw the landing above it and drop it on. */
+LV.push({n:'Landing Drop',h:'Drop the landing in.',idea:'Draw the landing above the red; it drops across the shaft before the marble arrives.',
+ m:on(0,80,90,400,30),s:[...run([[0,80],[90,400],[130,500],[170,512]]),block(230,340,14,300),block(310,340,12,300),block(322,622,38,18),block(352,200,8,422)],sp:[[195,512,50,-.15,14]],z:[[214,250,120,140]],c:[337,600,1,1],
+ sol:[[[232,238],[319,238]]],show:[[[236,238],[290,238]]]});
 /* Chapter 5, Odd Inks: rubber bounces, glass breaks if hit hard (7 Nov). */
 /* O1 Trampoline: rubber ink bounces. Lock a rubber line under the drop, tilted towards the cup, and the marble bounces over the wall. */
 LV.push({n:'Trampoline',ink:'rubber',h:'Rubber ink bounces.',idea:'Lock rubber under the drop, tilted towards the cup: the marble bounces over the wall.',
@@ -94,6 +110,10 @@ LV.push({n:'Bank Shot',ink:'rubber',h:'Bounce it back.',idea:'Lock a rubber wall
 LV.push({n:'Handle With Care',ink:'glass',h:'Glass breaks if hit hard.',idea:'Lay the glass bridge flush with the shelf: the marble rolls on gently instead of dropping on it.',
  m:on(0,84,140,108,40),s:[plank(0,84,140,108),block(230,120,60,14),block(352,60,8,560),block(270,622,90,18),plank(282,520,292,600,8)],c:[324,600,1,1],
  sol:[[[118,97],[256,112]]],show:[[[118,140],[256,140]]]});
+/* O4 Glass Steps: two gaps, glass ink. Lay one glass line flush across both so the marble never drops on it. */
+LV.push({n:'Glass Steps',ink:'glass',h:'Glass breaks if hit hard.',idea:'One glass line, flush with the shelf, crosses both gaps on the pillar.',
+ m:on(0,84,140,108,40),s:[plank(0,84,140,108),block(185,112,16,528),block(250,116,50,14),block(352,60,8,560),block(270,622,90,18)],c:[324,600,1,1],
+ sol:[[[118,97],[290,108]]],show:[[[118,130],[290,130]]]});
 /* chapters, in order: name and number of levels */
-LV.CH=[{n:'Ledges',c:5},{n:'Pegs',c:5},{n:'Big Air',c:4},{n:'Hands Off',c:4},{n:'Odd Inks',c:3}];
+LV.CH=[{n:'Ledges',c:7},{n:'Pegs',c:5},{n:'Big Air',c:4},{n:'Hands Off',c:6},{n:'Odd Inks',c:4}];
 module.exports=LV;
