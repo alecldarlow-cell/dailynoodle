@@ -199,7 +199,7 @@ function heroStat(html) {
 // digi-doku-0004) predate the naming pattern. A new type needs a line here and
 // a label in front.js's PUZZLE_TYPES, or its cards show under All puzzles only.
 const TYPE_OF_ID = { MINI: 'mini', LEXI: 'doku', SWEEP: 'sweep', PATH: 'path',
-                     LINK: 'link', TANG: 'tangle', BORD: 'borders', RECK: 'reckon', TALLY: 'tally' };
+                     LINK: 'link', TANG: 'tangle', BORD: 'borders', RECK: 'reckon', TALLY: 'tally', TILT: 'tilt' };
 function puzzleType(html, rel, warnings) {
   const m = html.match(/\bid\s*:\s*"DP·([A-Z]+)·/) || html.match(/DP·([A-Z]+)·[0-9]/);
   const type = m && TYPE_OF_ID[m[1]];
@@ -236,6 +236,8 @@ function puzzleMask(html, rel, warnings) {
   // every Reckon file carries (assets/reckon-thumb.svg: the scale, never a day's numbers).
   // Tally: a 4×4 calcudoku. Its card uses the fixed dn:thumb every Tally file carries (assets/tally-thumb.svg, never a day's board); this mask is what the feed's mask field holds.
   if (/\bwindow\.DN_PUZZLE=\{type:"tally"/.test(html)) return '.'.repeat(16);
+  // Tilt (Lab, 6 Nov 2026): a rolling-ball maze. Its card uses the fixed dn:thumb every Tilt file carries (assets/tilt-thumb.svg, never a day's maze).
+  if (/\bwindow\.DN_PUZZLE=\{type:"tilt"/.test(html)) return '';
   if (/\bwindow\.DN_PUZZLE=\{id:"DP\u00b7RECK\u00b7/.test(html)) {
     const qs = (html.match(/"lo":/g) || []).length;
     if (qs !== 10) warnings.push(`${rel} — Reckon puzzle parsed as ${qs} question(s), expected 10`);

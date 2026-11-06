@@ -1,0 +1,107 @@
+/* Digi Puzzles — tilt engine. One copy serves every tilt page in reports/.
+   Tilt is a rolling-ball maze, built 6 Nov 2026 for Lab on the house chrome
+   (engines/house.js, engines/finish.js). The page supplies its puzzle as
+   window.DN_PUZZLE before loading engines/tilt.js.
+   Edit here to change every tilt; keep element ids and localStorage keys
+   stable (dn-track.js and players' saved progress depend on them). */
+/* shared sheets first, so dark mode and the finish sheet are right from the first paint */
+@import url("finish.css");
+@import url("house.css");
+
+:root{
+  --paper:#EDEEF2; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
+  --line:#141726; --line-soft:#D3D6E0; --brand:#2E5BFF; --brand-deep:#1B3B9E;
+  --active:#FFD54A; --active-word:#FFF0B8; --good:#1F9E6B; --bad:#E4483B;
+  --floor:#FFFFFF; --trail:#E8EDFF; --exit:#FFF0B8; --exit-mark:#9A6B00; --wall:#141726;
+  --radius:14px;
+  --mono:"Space Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Space Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+/* dark mode: house.css sets the shared tokens on html.dn-house; these are Tilt's own */
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]){--floor:#1E2230;--trail:#2A3250;--exit:#4A4220;--exit-mark:#E0A92E;--wall:#ECEEF4}}
+html.dn-house[data-theme="dark"]{--floor:#1E2230;--trail:#2A3250;--exit:#4A4220;--exit-mark:#E0A92E;--wall:#ECEEF4}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.45;font-variant-numeric:tabular-nums;
+  display:flex;justify-content:center;padding:max(10px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));min-height:100dvh}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.app{width:100%;max-width:560px;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:2px solid var(--ink);padding-bottom:11px}
+.masthead{display:flex;align-items:center;gap:10px}
+.mono-mark{font-family:var(--mono);font-weight:700;font-size:13px;background:var(--ink);color:var(--paper);border-radius:8px;padding:6px 7px;line-height:1}
+.mh-name{font-weight:700;font-size:18px}.mh-name .accent{color:var(--brand)}
+.mh-eyebrow{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase}
+.streakbox{font-family:var(--mono);font-size:13px}
+.meta{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.meta #timer{margin-left:auto;color:var(--ink);font-weight:700}
+#timer.waiting{color:var(--ink-soft)}
+main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:0;padding-bottom:3dvh}
+
+/* ---- the play area: the maze takes every pixel the controls don't need ----
+   portrait: the maze centred in the space left by the bar (~62px), the controls
+   (64px) and the Undo/message line (~52px), the controls low, where thumbs are */
+.play{width:100%;flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3.5dvh,32px);min-height:0}
+.mazewrap{width:min(100%,calc(100dvh - 228px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)));min-width:240px;aspect-ratio:1;position:relative}
+.maze{width:100%;height:100%;transition:transform .28s cubic-bezier(.3,.7,.3,1);transform-origin:50% 50%;will-change:transform}
+.maze svg{width:100%;height:100%;display:block;overflow:visible}
+.maze .floor{fill:var(--floor)}
+.maze .cell{fill:transparent;transition:fill .25s}
+.maze .cell.trail{fill:var(--trail)}
+.maze .exitmat{fill:var(--exit)}
+.maze .exitmark{stroke:var(--exit-mark);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.maze .wall{stroke:var(--wall);stroke-width:3;stroke-linecap:round}
+.maze .rim{stroke:var(--wall);stroke-width:4.4;stroke-linecap:round;fill:none}
+.maze .ball{fill:var(--brand)}
+.maze .shine{fill:#fff;opacity:.7}
+@media (prefers-reduced-motion:reduce){.maze{transition:none}.maze .cell{transition:none}}
+
+.controls{display:grid;grid-template-columns:72px 1fr 72px;align-items:center;gap:12px;width:min(100%,380px)}
+.controls button{width:72px;height:72px;border-radius:50%;border:1px solid var(--line-soft);background:var(--card);display:grid;place-items:center;color:var(--ink);box-shadow:0 1px 0 rgba(20,23,38,.06)}
+.controls button:active{background:var(--active);color:#141726}
+.turns{text-align:center;line-height:1}
+.turns b{display:block;font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:40px}
+.turns span{display:block;font-size:13px;color:var(--ink-soft);margin-top:2px}
+/* Undo is a quiet text button under the count, the message beside the board's foot */
+.tools{display:flex;flex-direction:column;align-items:center;gap:2px;width:min(100%,380px);min-height:52px}
+.tools button{min-height:40px;padding:0 18px;border-radius:20px;border:0;background:transparent;font-weight:600;font-size:15px;color:var(--brand)}
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .tools button{color:#8EA6FF}}
+html.dn-house[data-theme="dark"] .tools button{color:#8EA6FF}
+.tools button[disabled]{color:var(--ink-soft);opacity:.45;cursor:default}
+.msg{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.3;text-align:center;min-height:1.3em}
+body.win .controls button,body.win #undoBtn{visibility:hidden}
+
+/* short landscape: the maze on the left at full height, the controls stacked beside it */
+@media (orientation:landscape) and (max-height:520px){
+  .app{max-width:none}
+  main{flex-direction:row;justify-content:center;align-items:center;gap:20px}
+  .play{flex-direction:row;width:auto;flex:none;gap:24px}
+  .mazewrap{width:calc(100dvh - 104px);min-width:200px;margin:0}
+  .controls{grid-template-columns:64px;grid-template-rows:64px auto 64px;width:auto;gap:10px}
+  .controls button{width:64px;height:64px}
+  .tools{width:min(26vw,180px)}
+}
+
+/* ---- the result box the finish sheet is built in ---- */
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(20,23,38,.42)}
+.modal.on{display:flex}
+.modalcard{width:100%;max-width:340px;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:22px 20px;text-align:center}
+.modalcard h2{font-size:25px;margin:0 0 3px}
+.modalcard .sub{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-bottom:15px}
+.statrow{display:flex;justify-content:center;gap:18px;margin:8px 0 14px}
+.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--ink-soft);text-transform:uppercase}
+.modalbtns{display:flex;gap:8px;justify-content:center}
+.modalbtns button{min-height:44px;border-radius:12px;border:1px solid var(--line-soft);background:var(--card);padding:0 16px;font-weight:600}
+.modalbtns .primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+footer{display:none}
+
+/* the answer on the finish sheet: the maze with the shortest way out drawn on it */
+.fin-tilt{width:min(100%,260px);aspect-ratio:1;margin:8px 0 0}
+.fin-tilt svg{width:100%;height:100%;display:block}
+.fin-tilt .floor{fill:var(--floor)}.fin-tilt .exitmat{fill:var(--exit)}
+.fin-tilt .wall{stroke:var(--wall);stroke-width:3.2;stroke-linecap:round}
+.fin-tilt .rim{stroke:var(--wall);stroke-width:4.4;stroke-linecap:round;fill:none}
+.fin-tilt .route{stroke:var(--brand);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.fin-tilt .ball{fill:var(--brand)}
+.fin-tilt .exitmark{stroke:var(--exit-mark);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
