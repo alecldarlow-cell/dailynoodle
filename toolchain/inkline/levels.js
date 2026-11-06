@@ -47,6 +47,53 @@ LV.push({n:'Swing',h:'Through one peg, a line swings.',idea:'A line through one 
 LV.push({n:'Ski Jump',h:'Finish the halfpipe.',idea:'Finish the halfpipe: a jump through both pegs.',
  m:on(0,60,50,250,30),s:[...run([[0,60],[50,250],[95,420],[140,480],[232,484]]),block(280,434,16,206),block(338,200,8,380)],p:[[230,465],[256,447]],c:[315,560,1,1],
  sol:[[[200,477],[268,438]]],show:[[[200,477],[240,462],[262,440],[270,425]]]});
+/* Chapter 3, Big Air: speed strips and red launch pads (7 Nov). */
+/* B1 Launch Pad: the pad throws the marble high; it would fall down the shaft. Lay a line across the shaft for it to land on. */
+LV.push({n:'Launch Pad',h:'Red pads fire the marble. Give it a landing.',idea:'The pad throws the marble over the shaft: bridge it so it lands and rolls to the cup.',
+ m:on(0,80,90,400,30),s:[...run([[0,80],[90,400],[130,500],[170,512]]),block(230,340,14,300),block(310,340,12,300),block(322,622,38,18),block(352,200,8,422)],sp:[[195,512,50,-.15,14]],c:[337,600,1,1],
+ sol:[[[234,333],[318,333]]],show:[[[200,300],[330,300]]]});
+/* B2 Updraft: a strip pointing up lifts whatever rolls into it. Turn the marble back into the updraft and it rides up to the cup. */
+LV.push({n:'Updraft',h:'Strips push. Ride this one up.',idea:'Catch the marble and slide it back into the upward strip, which carries it up to the high cup.',
+ m:on(360,90,250,190,30),s:[...run([[360,90],[250,190],[215,200]],14,80),block(0,330,60,14),block(300,330,60,270),block(352,210,8,120),block(150,600,210,40)],bo:[[272,465,270,-Math.PI/2+.1,11]],c:[332,309,1,1],
+ sol:[[[40,322],[255,588]]],show:[[[40,322],[150,590]]]});
+/* B4 Against the Flow: a strip on the floor pushes back and stops the marble. Draw a hump over it. */
+LV.push({n:'Against the Flow',h:'This strip pushes back. Go over it.',idea:'An arch over the strip keeps the marble out of its push.',
+ m:on(0,80,70,450,30),s:[...run([[0,80],[40,400],[120,566],[305,566]],14,160),block(352,380,8,260),block(305,622,55,18)],bo:[[245,550,100,Math.PI,17]],c:[331,600,1,1],
+ sol:[[[165,556],[200,537],[245,532],[290,537],[304,552]]],show:[[[170,552],[302,552]]]});
+/* B3 Curtain: the pad throws the marble clean over the cup. Hang a line from the peg and it stops the marble dead. */
+LV.push({n:'Curtain',h:'Too far! Hang a line from the peg.',idea:'A line through one peg hangs straight down: a curtain that stops the flying marble over the cup.',
+ m:on(0,80,90,400,30),s:[...run([[0,80],[90,400],[130,500],[170,512]]),block(230,420,14,220),block(244,622,116,18),plank(244,520,272,575,10),plank(366,560,328,575,10)],sp:[[200,512,50,-.1,15]],p:[[318,150]],c:[300,600,1,1],
+ sol:[[[318,150],[318,330]]],show:[[[318,150],[200,150]]]});
+/* Chapter 4, Hands Off: red zones where you cannot draw (7 Nov). */
+/* H1 Red Zone: the top gap is all red, so bridge the gap below it instead. */
+LV.push({n:'Red Zone',h:'No drawing in the red zone.',idea:'The top gap is red: let the marble fall through and bridge the lower gap.',
+ m:on(0,60,150,215,30),s:[plank(0,60,150,215),block(80,300,60,14),block(270,300,30,100),block(40,420,110,14),block(274,455,24,185),block(298,560,62,80),block(352,120,8,440)],z:[[60,230,260,90]],c:[325,540,1,1],
+ sol:[[[90,412],[292,447]]],show:[[[90,412],[230,430]]]});
+/* H2 Drop It: the gap is all red. Draw the bridge above the red and let it fall into place. */
+LV.push({n:'Drop It',h:'Can\'t draw there? Drop it in.',idea:'Draw the bridge above the red zone; it falls across the gap.',
+ m:on(0,60,150,215,30),s:[plank(0,60,150,215),block(80,330,60,14),block(270,330,30,14),block(286,344,14,296),block(352,120,8,460)],z:[[60,250,240,140]],c:[329,560,1,1],
+ sol:[[[110,238],[290,238]]],show:[[[110,238],[200,238]]]});
+/* H4 Drop the Ramp: red round the wall's foot. Draw the ramp above it, sloping up to the wall: it falls and leans on the wall. */
+LV.push({n:'Drop the Ramp',h:'Drop a ramp against the wall.',idea:'Draw the ramp above the red; it drops and leans on the wall.',
+ m:on(0,60,50,280,30),s:[...run([[0,60],[50,280],[95,420],[130,470],[262,472]]),block(262,418,18,222),plank(280,528,303,543),block(352,150,8,440)],z:[[140,380,150,100]],c:[326,560,1,1],
+ sol:[[[180,372],[262,322],[290,306]]]});
+/* H3 Drawbridge: the gap is red, but the peg at its edge isn't. Draw the line straight up from the peg: it falls across like a drawbridge. */
+LV.push({n:'Drawbridge',h:'Draw it up. Let it fall.',idea:'A line up from the peg falls across the red gap like a drawbridge.',
+ m:on(0,280,140,410,30),s:[...run([[0,280],[140,410],[160,420],[175,420]],14,60),block(150,420,30,14),block(288,445,24,14),block(312,540,48,100),block(352,300,8,240)],p:[[175,415]],z:[[198,0,92,500]],c:[334,519,1,1],
+ sol:[[[175,415],[187,280]]],show:[[[175,415],[160,280]]]});
+/* Chapter 5, Odd Inks: rubber bounces, glass breaks if hit hard (7 Nov). */
+/* O1 Trampoline: rubber ink bounces. Lock a rubber line under the drop, tilted towards the cup, and the marble bounces over the wall. */
+LV.push({n:'Trampoline',ink:'rubber',h:'Rubber ink bounces.',idea:'Lock rubber under the drop, tilted towards the cup: the marble bounces over the wall.',
+ m:[110,60],s:[block(76,20,8,200),block(136,20,8,200),block(200,300,14,340),plank(214,430,262,500,10),plank(360,420,318,500,10),block(264,540,52,100),block(352,150,8,270)],p:[[70,480],[150,490],[150,450]],c:[290,519,1,1],
+ sol:[[[50,477],[170,492]]],show:[[[50,485],[170,445]],[[150,420],[150,520]]]});
+/* O2 Bank Shot: the marble flies off its ledge, over the cup. A rubber wall through the pegs bounces it back down into the cup. */
+LV.push({n:'Bank Shot',ink:'rubber',h:'Bounce it back.',idea:'Lock a rubber wall in its path: the marble bounces back into the cup below.',
+ m:on(0,70,120,260,30),s:[...run([[0,70],[120,260],[160,280],[175,280]],14,60),block(0,290,175,14),plank(0,520,72,592,10),plank(230,500,128,592,10),block(60,622,100,18),block(0,304,8,216)],p:[[300,290],[300,400]],c:[100,600,1,1],
+ sol:[[[300,250],[300,440]]],show:[[[270,290],[330,290]]]});
+/* O3 Handle With Care: glass breaks if it's hit hard. Lay the bridge flush with both ledges so the marble rolls on gently. */
+LV.push({n:'Handle With Care',ink:'glass',h:'Glass breaks if hit hard.',idea:'Lay the glass bridge flush with the shelf: the marble rolls on gently instead of dropping on it.',
+ m:on(0,84,140,108,40),s:[plank(0,84,140,108),block(230,120,60,14),block(352,60,8,560),block(270,622,90,18),plank(282,520,292,600,8)],c:[324,600,1,1],
+ sol:[[[118,97],[256,112]]],show:[[[118,140],[256,140]]]});
 /* chapters, in order: name and number of levels */
-LV.CH=[{n:'Ledges',c:5},{n:'Pegs',c:5}];
+LV.CH=[{n:'Ledges',c:5},{n:'Pegs',c:5},{n:'Big Air',c:4},{n:'Hands Off',c:4},{n:'Odd Inks',c:3}];
 module.exports=LV;

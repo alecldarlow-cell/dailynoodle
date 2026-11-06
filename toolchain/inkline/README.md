@@ -26,6 +26,8 @@ Alec's standard (6 Nov 2026): every level must be solvable with a sensible drawi
 4. `node toolchain/inkline/gems.js 0,1`.
 5. `node toolchain/inkline/assemble.js`, then play the game file, then run the site tests.
 
+Drafts can live outside `levels.js` while they are tuned, as long as they use the same helpers; add them to `levels.js` and `LV.CH` when they pass.
+
 ## The bar
 
 - **The level never finishes by itself:** tiny harmless lines, and the marble nudged by fractions of a pixel.
@@ -40,7 +42,11 @@ Alec's standard (6 Nov 2026): every level must be solvable with a sensible drawi
 - **Ramps need a flat run-up:** a ramp whose foot sits on a curve costs about half the speed. A 35° ramp on flat ground keeps about two-thirds. Leave a margin: walls only 40–60 px above the run-up.
 - **Line ends are wedges,** flat underneath, tapering on top over 56 px (a third of a short line), and they follow the line's bends. A short line's wedge is steeper, so a stick lying in the marble's path is a small kicker: check that levels with a jump cannot be won by dropping a stick (Ski Jump's wall had to rise for this).
 - **Ends seat themselves:** a free line heading into a surface just beyond its end is extended to touch it (`reachEnds`); a pegged line's end within 14 px bends onto the surface (`settleEnds`). Lines laid along a surface rest on it exactly (`clearOf`). `endtest.js` measures how smoothly a rolling marble gets on to a line.
-- **A pinned line resting on scenery holds its angle** until knocked; without that it crept off its support (Hinge).
+- **A pinned line resting on scenery holds its angle** until knocked; without that it crept off its support (Hinge). The support must be over 30 px from the peg, so a line drawn upright from a peg still falls like a drawbridge.
+- **Inks:** locked lines keep their ink (from 7 Nov). Free rubber barely bounces (the heavy line gives under the marble), so lock rubber with two pegs. Glass breaks on any first touch faster than 4: the marble must roll on gently, or be dropped only a few pixels. Ice was tried (7 Nov) and set aside: an ice line slides off anything sloping and the marble knocks it away.
+- **Pads and strips:** a pad fires along its normal plus 60% of the marble's speed along it, so feed it with scenery (a fixed chute) for a repeatable arc, then design the line around that arc. A strip only acts within 20 px of its centre line, and also works sideways or upwards (an updraft); a backward strip stops a marble rolling on the floor, so lift the marble over it.
+- **Chutes:** a steep chute into a tight bend throws the marble into the air. Use a bend radius of 150 or more, or drop the marble down a shaft, when the next part needs it rolling.
+- **Falling lines** keep their angle as they fall, and a flat line landing on two supports at different heights becomes a slope, so "draw it above and drop it" works wherever drawing is forbidden.
 - **Lines are heavy** (density 0.008, about four times the marble), so a resting ramp is not shoved aside.
 - **Lines grip scenery** (friction 0.9). The marble's grip is 0.02, and a pair uses the lower, so the marble is not slowed.
 - **Pegs are pins in the paper:** the marble rolls over them, and they catch a line within 15 px (`PEGR`).
