@@ -502,6 +502,11 @@
         <p class="sub">Shares of puzzles started. Tangle, Borders and Reckon are scored rounds, so they show a typical score.</p>
         <div class="tscroll"><table id="tTypes"></table></div>
       </div>
+      <div class="card" id="archStats">
+        <h2>Archive and stats</h2>
+        <p class="sub">By week in this period: archive opens and plays started from the archive (website and app), and Your stats opens. Anonymous events only.</p>
+        <div class="tscroll"><table id="tArch"></table></div>
+      </div>
       <details class="more">
         <summary>What happened to each opened puzzle</summary>
         <div class="inner"><div class="chartbox"><canvas id="chFunnel" role="img" aria-label="Puzzle outcomes by type"></canvas></div></div>
@@ -956,6 +961,28 @@
       render();
       loadLeagues();
       loadSources(seq);
+      loadArchiveStats(seq);
+    });
+  }
+
+  /* ---------------- archive and stats (6 Nov 2026) ----------------
+     admin_archive_stats: per London week, archive_open, archive_play (by type) and stats_open. */
+  var TYPE_NAMES = { mini:'Mini', doku:'Doku', sweep:'Sweep', path:'Path', link:'Link', tangle:'Tangle', borders:'Borders', reckon:'Reckon', tally:'Tally' };
+  function loadArchiveStats(seq){
+    return sb.rpc('admin_archive_stats', { p_from: S.from, p_to: S.to }).then(function(r){ return r; }, function(e){ return { error: e }; }).then(function(r){
+      if (seq != null && seq !== loadSeq) return;
+      var el = $('#tArch');
+      if (!r || r.error || !r.data) { el.innerHTML = '<tbody><tr><td class="empty">'+(r && r.error && /admin_archive_stats|PGRST202|42883/.test(JSON.stringify(r.error)) ? 'Not set up yet: apply migration admin_archive_stats.' : 'Couldn’t load these figures.')+'</td></tr></tbody>'; return; }
+      var weeks = r.data.weeks || [];
+      if (!weeks.length) { el.innerHTML = '<tbody><tr><td class="empty">No archive or stats use in this period yet.</td></tr></tbody>'; return; }
+      table(el, [
+        {key:'week', label:'Week of', left:true, sort:function(w){ return w.week; }, fmt:function(w){ return '<span class="hl">'+esc(fmtDay(w.week))+'</span>'; }},
+        {key:'archive_opens', label:'Archive opens', fmt:function(w){ return n(w.archive_opens); }},
+        {key:'archive_plays', label:'Archive plays', fmt:function(w){
+          var t = w.by_type || {}, parts = Object.keys(t).sort(function(a,b){ return t[b]-t[a]; }).map(function(k){ return esc(TYPE_NAMES[k]||k)+' '+t[k]; });
+          return n(w.archive_plays) + (parts.length ? '<span class="meta">'+parts.join(' · ')+'</span>' : ''); }},
+        {key:'stats_opens', label:'Stats opens', fmt:function(w){ return n(w.stats_opens) + '<span class="meta">'+n(w.stats_visitors)+' '+plural(w.stats_visitors,'visitor')+'</span>'; }}
+      ], weeks, { sortKey:'week', sortDir:'desc' });
     });
   }
 
