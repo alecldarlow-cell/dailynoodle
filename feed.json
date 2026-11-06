@@ -1,8 +1,8 @@
 {
-  "built": "2026-11-06T18:19:41.378Z",
+  "built": "2026-11-06T18:33:46.159Z",
   "today": "2026-11-06",
   "timezone": "Europe/London",
-  "count": 812,
+  "count": 822,
   "items": [
     {
       "path": "reports/2026-11-04-arcade-astro-drop.html",
@@ -163,6 +163,24 @@
       "mask": "................",
       "type": "tally",
       "id": "DP·TALLY·0013"
+    },
+    {
+      "path": "reports/2026-11-06-logic-tilt-0010.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0010",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-11-06",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0010",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-11-06-quiz-reckon-0018.html",
@@ -377,6 +395,24 @@
       "id": "DP·TALLY·0012"
     },
     {
+      "path": "reports/2026-11-05-logic-tilt-0009.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0009",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-11-05",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0009",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-05-quiz-reckon-0017.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -566,6 +602,24 @@
       "mask": "................",
       "type": "tally",
       "id": "DP·TALLY·0011"
+    },
+    {
+      "path": "reports/2026-11-04-logic-tilt-0008.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0008",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-11-04",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0008",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-11-04-quiz-reckon-0016.html",
@@ -769,6 +823,24 @@
       "id": "DP·TALLY·0010"
     },
     {
+      "path": "reports/2026-11-03-logic-tilt-0007.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0007",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-11-03",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0007",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-03-quiz-reckon-0015.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -968,6 +1040,24 @@
       "mask": "................",
       "type": "tally",
       "id": "DP·TALLY·0009"
+    },
+    {
+      "path": "reports/2026-11-02-logic-tilt-0006.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0006",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-11-02",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0006",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-11-02-quiz-reckon-0014.html",
@@ -1171,6 +1261,24 @@
       "id": "DP·TALLY·0008"
     },
     {
+      "path": "reports/2026-11-01-logic-tilt-0005.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0005",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-11-01",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0005",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-11-01-quiz-reckon-0013.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -1355,6 +1463,24 @@
       "mask": "................",
       "type": "tally",
       "id": "DP·TALLY·0007"
+    },
+    {
+      "path": "reports/2026-10-31-logic-tilt-0004.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0004",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-10-31",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0004",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-31-quiz-reckon-0012.html",
@@ -1558,6 +1684,24 @@
       "id": "DP·TALLY·0006"
     },
     {
+      "path": "reports/2026-10-30-logic-tilt-0003.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0003",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-10-30",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0003",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-30-quiz-reckon-0011.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -1759,6 +1903,24 @@
       "id": "DP·TALLY·0005"
     },
     {
+      "path": "reports/2026-10-29-logic-tilt-0002.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0002",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-10-29",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0002",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-29-quiz-reckon-0010.html",
       "kind": "puzzle",
       "topic": "Quiz",
@@ -1958,6 +2120,24 @@
       "mask": "................",
       "type": "tally",
       "id": "DP·TALLY·0004"
+    },
+    {
+      "path": "reports/2026-10-28-logic-tilt-0001.html",
+      "kind": "puzzle",
+      "topic": "Logic",
+      "headline": "Tilt 0001",
+      "standfirst": "A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.",
+      "date": "2026-10-28",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/tilt-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "tilt",
+      "id": "DP·TILT·0001",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-28-quiz-reckon-0009.html",
