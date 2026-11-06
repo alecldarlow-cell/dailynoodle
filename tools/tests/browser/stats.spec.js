@@ -5,9 +5,13 @@ const H=require('../harness');
 const feed=require('../../../feed.json');
 const items=(feed.items||[]).filter(it=>it.kind==='puzzle'&&!it.badge&&it.type&&it.date&&it.date<'2026-10-19');
 const minis=items.filter(it=>it.type==='mini').slice(-6);   // six Minis before 19 Oct
+// Stats are switched off as published (features.json, 6 Nov 2026); these tests switch them on, so the
+// feature stays proven for when it comes back.
+async function statsOn(ctx){await ctx.route('**/features.json',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({archive:true,stats:true})}));}
 async function seed(ctx,map){await ctx.addInitScript(s=>{const o=JSON.parse(s);for(const k in o)try{localStorage.setItem(k,JSON.stringify(o[k]));}catch(e){}},JSON.stringify(map));}
 
 test('STATS-WEB-01: GIVEN no saves WHEN the page opens THEN it invites a first puzzle and shows no figures',async({phone})=>{
+ await statsOn(phone.ctx);
  await goto(phone,'stats.html');
  await expect(phone.p.locator('.st-empty')).toContainText('Finish a puzzle');
  await expect(phone.p.locator('.st-tile')).toHaveCount(0);
@@ -15,6 +19,7 @@ test('STATS-WEB-01: GIVEN no saves WHEN the page opens THEN it invites a first p
 });
 
 test('STATS-WEB-02: GIVEN Minis on the day and one catch-up WHEN shown THEN bests, medians and the split are right and nothing is written',async({phone})=>{
+ await statsOn(phone.ctx);
  const done={};minis.forEach((it,i)=>{done[it.id]={s:60+i*10,d:i===5?'2026-10-18':it.date};});
  if(minis[5].date==='2026-10-18')done[minis[5].id].d='2026-10-19';
  await seed(phone.ctx,{'digi-mini-v1':{v:1,done}});
@@ -36,7 +41,7 @@ test('STATS-WEB-02: GIVEN Minis on the day and one catch-up WHEN shown THEN best
 });
 
 test('STATS-WEB-03: GIVEN December WHEN 10+ results this year THEN the year card shows and shares one line with no link',async({browser})=>{
- const ctx=await H.newPhone(browser);const p=await ctx.newPage();
+ const ctx=await H.newPhone(browser);await statsOn(ctx);const p=await ctx.newPage();
  const done={};for(let i=1;i<=12;i++)done['DP·MINI·9'+String(i).padStart(3,'0')]={s:50+i,d:'2026-11-'+String(i).padStart(2,'0')};
  await seed(ctx,{'digi-mini-v1':{v:1,done}});
  await ctx.addInitScript(()=>{Object.defineProperty(navigator,'clipboard',{value:{writeText:t=>{window.__copied=t;return Promise.resolve();}},configurable:true});});
@@ -52,6 +57,7 @@ test('STATS-WEB-03: GIVEN December WHEN 10+ results this year THEN the year card
 });
 
 test('STATS-WEB-04: GIVEN saves WHEN Puzzles opens THEN a Your stats link shows; with none it stays hidden',async({phone})=>{
+ await statsOn(phone.ctx);
  await goto(phone,'puzzles.html');
  await expect(phone.p.locator('#statslink')).toBeHidden();
  await phone.p.evaluate(m=>localStorage.setItem('digi-mini-v1',JSON.stringify({v:1,done:{[m]:{s:40,d:'2026-10-18'}}})),minis[0].id);
@@ -61,7 +67,7 @@ test('STATS-WEB-04: GIVEN saves WHEN Puzzles opens THEN a Your stats link shows;
 });
 
 test('STATS-WEB-05: GIVEN a small phone in dark mode WHEN stats open THEN stats_open is sent, nothing spills and no errors show',async({browser})=>{
- const events=[];const ctx=await H.newPhone(browser,{width:320,height:568,scheme:'dark',events});const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ const events=[];const ctx=await H.newPhone(browser,{width:320,height:568,scheme:'dark',events});await statsOn(ctx);const p=await ctx.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));
  const done={};minis.forEach((it,i)=>{done[it.id]={s:60+i*25,d:it.date};});
  await seed(ctx,{'digi-mini-v1':{v:1,done},'digi-tangle-v1':{v:1,done:{x:{o:'played',s:40,w:12,st:true,d:'2026-10-10'}}}});
  await p.clock.install({time:new Date('2026-10-19T12:00:00+01:00')});
@@ -76,8 +82,10 @@ test('STATS-WEB-05: GIVEN a small phone in dark mode WHEN stats open THEN stats_
 });
 
 test('FEATURES-01: GIVEN features.json switches archive and stats off WHEN the pages open THEN their links hide and the pages go to Puzzles',async({phone})=>{
- // As published both are on.
- expect(require('../../../features.json')).toEqual({archive:true,stats:true});
+ // As published: two on/off switches (stats off since 6 Nov 2026, Alec).
+ const pub=require('../../../features.json');
+ expect(Object.keys(pub).sort()).toEqual(['archive','stats']);
+ for(const v of Object.values(pub))expect(typeof v).toBe('boolean');
  await phone.ctx.route('**/features.json',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({archive:false,stats:false})}));
  await phone.ctx.addInitScript(m=>localStorage.setItem('digi-mini-v1',JSON.stringify({v:1,done:{[m]:{s:40,d:'2026-10-18'}}})),minis[0].id);
  await goto(phone,'puzzles.html');
