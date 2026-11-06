@@ -304,7 +304,7 @@
       if (next) { main.textContent = 'Play ' + next.name; sub.textContent = playedN + ' of ' + items.length + ' done today'; row.href = '../' + next.path; }
       else {   // AF-019: once all are done, a quiet line to the archive instead of a button
         row.classList.add('fin-next-done');
-        main.textContent = 'All ' + items.length + ' done today. Try the archive ›'; sub.textContent = ''; row.href = '../puzzles.html';
+        main.textContent = 'All ' + items.length + ' done today. Try the archive ›'; sub.textContent = ''; row.href = '../archive.html?from=finish';
       }
     });
   }
