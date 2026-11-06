@@ -1,0 +1,52 @@
+/* Your stats (stats.html, 6 Nov 2026). Front-page tokens only, so dark mode follows.
+   --st-mark: the one chart hue, the Puzzles green, stepped for dark (validated: dataviz
+   lightness band and 3:1 against the card in each mode). Text never wears it. */
+:root{--st-mark:#0E7A4B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--st-mark:#34A673}}
+:root[data-theme="dark"]{--st-mark:#34A673}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.st-back{margin:14px 0 4px;font-size:13px;font-weight:600;color:var(--faint)}
+.st-back a{color:var(--muted);text-decoration:none}
+.st-back a:hover{text-decoration:underline}
+.st-h1{font-family:var(--display);font-size:26px;font-weight:800;letter-spacing:-.015em;margin:10px 0 2px}
+.st-note{font-size:13px;color:var(--muted);margin:0 0 12px}
+.st-modes{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--hair);border-radius:999px;background:var(--paper);margin-bottom:12px}
+.st-modes[hidden]{display:none}
+.st-modes button{font:600 12.5px var(--body);padding:8px 14px;min-height:40px;border-radius:999px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.st-modes button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.st-year{background:var(--accent-soft);border-radius:14px;padding:16px;margin-bottom:14px}
+.st-year h2{font-family:var(--display);font-size:20px;font-weight:800;margin:0 0 4px;color:var(--ink)}
+.st-year p{font-size:14px;line-height:1.5;margin:0;color:var(--ink)}
+.st-year .st-yb{margin-top:8px;font-size:12px;font-weight:600;color:var(--muted)}
+.st-bests{list-style:none;margin:2px 0 10px;padding:0;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;font-variant-numeric:tabular-nums}
+.st-share{font:700 13px var(--body);padding:9px 18px;min-height:40px;border-radius:999px;border:1px solid var(--accent);background:var(--paper);color:var(--accent);cursor:pointer}
+.st-shared{margin-left:10px;font-size:12.5px;color:var(--muted)}
+.st-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.st-tile{background:var(--paper);border:1px solid var(--hair);border-radius:12px;padding:10px 12px}
+.st-tile span{display:block;font-size:12px;color:var(--muted)}
+.st-tile b{font-family:var(--display);font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+.st-tile i{font-style:normal;font-size:12px;color:var(--muted);margin-left:5px}
+.st-fav{font-size:13px;color:var(--muted);margin:8px 2px 4px}
+.st-fav b{color:var(--ink)}
+.st-card{background:var(--paper);border:1px solid var(--hair);border-radius:14px;padding:12px 14px;margin-top:10px}
+.st-cardhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.st-cardhead h3{font-family:var(--display);font-size:17px;font-weight:800;margin:0}
+.st-cardhead span{font-size:12.5px;color:var(--muted)}
+.st-kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px;margin:8px 0 2px}
+.st-kv div{display:flex;gap:6px;align-items:baseline;font-size:14px}
+.st-kv dt{color:var(--muted);font-size:12.5px}
+.st-kv dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
+.st-small{font-size:12.5px;color:var(--faint);margin:8px 2px 0}
+.st-fig{margin:12px 0 2px}
+.st-fig figcaption{font-size:11.5px;font-weight:600;color:var(--faint);margin-bottom:6px}
+.st-bars{display:flex;align-items:flex-end;gap:2px;height:58px;border-bottom:1px solid var(--hair)}
+.st-col{flex:1;display:flex;justify-content:center;align-items:flex-end;height:100%}
+.st-col i{display:block;width:100%;max-width:24px;background:var(--st-mark);border-radius:4px 4px 0 0}
+.st-axis{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:3px;font-variant-numeric:tabular-nums}
+.st-trend{display:block;width:100%;height:auto;overflow:visible}
+.st-trend polyline{fill:none;stroke:var(--st-mark);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.st-trend circle{fill:var(--st-mark);stroke:var(--paper);stroke-width:2}
+.st-trend .st-base{stroke:var(--hair);stroke-width:1}
+.st-trend text{font:600 11px var(--body);fill:var(--muted)}
+.st-empty{padding:28px 16px;text-align:center;border:1px dashed var(--hair);border-radius:14px;color:var(--muted)}
+.st-go{display:inline-block;margin-top:10px;font:700 14px var(--body);padding:10px 20px;border-radius:999px;background:var(--play);color:var(--on-play);text-decoration:none}

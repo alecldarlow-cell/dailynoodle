@@ -156,6 +156,10 @@
   }
   status.addEventListener('click', function (e) { if (e.target.closest('.ar-retry')) load(); });
   addEventListener('online', function () { if (!state.items.length) load(); });
+  /* Switch (Alec, 6 Nov 2026): "archive": false in features.json turns this page off; it then sends
+     anyone who opens it to Puzzles. Unknown or unreachable counts as on. */
+  fetch('features.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (f) { if (f && f.archive === false) location.replace('puzzles.html'); }).catch(function () {});
   load();
   // dn-track.js is deferred, so it is ready by DOMContentLoaded.
   document.addEventListener('DOMContentLoaded', function () { track('archive_open', { from: (new URLSearchParams(location.search).get('from') || '').replace(/[^a-z_-]/g, '').slice(0, 24) }); });

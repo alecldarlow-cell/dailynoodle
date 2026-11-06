@@ -443,8 +443,24 @@
       el = document.createElement('p'); el.id = 'run'; el.className = 'run'; row.appendChild(el);
     }
     el.innerHTML = n < 2 ? '' : '<span aria-hidden="true">🔥</span><span><b>' + n + '-day</b> daily streak</span>';
-    el.hidden = n < 2;
+    el.hidden = n < 2;    // Your stats (6 Nov 2026): a quiet link on the count row once anything is finished here.
+    // With no saves (a first visit, the screenshot baselines) the row is exactly as before.
+    var sl = document.getElementById('statslink');
+    if (!sl) { sl = document.createElement('a'); sl.id = 'statslink'; sl.className = 'statslink'; sl.href = 'stats.html?from=puzzles'; sl.textContent = 'Your stats ›'; el.parentNode.appendChild(sl); }
+    sl.hidden = !Object.keys(days).length || !!(FEATURE_OFF && FEATURE_OFF.stats);
   }
+
+  /* Feature switches (Alec, 6 Nov 2026): features.json {"archive": true, "stats": true}; false hides
+     that feature's links here (data-feature="…", and the count row's Your stats). Unknown = on. */
+  var FEATURE_OFF = {};
+  try { if (document.documentElement.getAttribute('data-section') === 'puzzles')
+    fetch('features.json', { cache: 'no-cache' }).then(function(r){ return r.ok ? r.json() : null; }).then(function(f){
+      if (!f) return;
+      ['archive','stats'].forEach(function(k){ FEATURE_OFF[k] = f[k] === false; });
+      [].forEach.call(document.querySelectorAll('[data-feature]'), function(el){ el.hidden = !!FEATURE_OFF[el.getAttribute('data-feature')]; });
+      var sl = document.getElementById('statslink'); if (sl && FEATURE_OFF.stats) sl.hidden = true;
+    }).catch(function(){});
+  } catch (e) {}
 
   /* ---------- played marks on puzzle cards (21 Oct 2026) ----------
      Alec's call, from a player's request and mock A: a card you've finished
