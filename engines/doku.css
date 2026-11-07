@@ -218,3 +218,7 @@ html.app-mode .bank{padding:6px;gap:5px;min-height:0}
   html.app-mode .msg{grid-area:message;margin:0;white-space:normal}
   html.app-mode .controls{grid-area:tools;margin:0;flex-wrap:wrap}
 }
+
+/* Desktop and tablet (7 Nov 2026, web alignment): when the window is wide the board is sized by
+   height and sits centred, narrower than the column, so the tool row centres under it too. */
+@media (min-width:600px) and (hover:hover){html.dn-house:not(.app-mode) .controls{justify-content:safe center}}

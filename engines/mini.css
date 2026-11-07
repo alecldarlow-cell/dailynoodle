@@ -221,3 +221,7 @@ html.app-mode .controls #fs{margin-left:auto}
 }
 /* Labels may wrap when the phone enlarges text; keep every action in reach. */
 html.app-mode .controls button{white-space:normal;overflow-wrap:anywhere}
+
+/* Desktop and tablet (7 Nov 2026, web alignment): when the window is wide the board is sized by
+   height and sits centred, narrower than the column, so the tool row centres under it too. */
+@media (min-width:600px) and (hover:hover){html.dn-house:not(.app-mode) .controls{justify-content:safe center}}
