@@ -10,7 +10,7 @@
 @media (prefers-color-scheme:dark){html:not([data-theme="light"]){--dn-go:#4CC793;--dn-onGo:#0B0D12}}
 html[data-theme="dark"]{--dn-go:#4CC793;--dn-onGo:#0B0D12}
 .fin-box{
-  --f-bg:#EDEEF2; --f-paper:#FFFFFF; --f-ink:#141726; --f-ink2:#545A6E; --f-line:#C6CAD6; --f-hair:#DCDFE7;
+  --f-bg:#FCFCFB; --f-paper:#F1F0EC; --f-ink:#141726; --f-ink2:#545A6E; --f-line:#C6CAD6; --f-hair:#DCDFE7;
   --f-act:#2E5BFF; --f-onAct:#FFFFFF; --f-actInk:#1B3B9E; --f-actT:#DCE4FF;
   --f-gold:#E0A100; --f-goldT:#FFEFB8; --f-goldInk:#5C4300;
   --f-ok:#157A52; --f-bad:#C2362B; --f-block:#141726; --f-frame:#141726; --f-cell:#FFFFFF; --f-cellAlt:#DCDFE7;

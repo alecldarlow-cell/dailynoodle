@@ -5,7 +5,7 @@
 @import url("house.css");
 
 :root{
-  --paper:#EDEEF2; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
+  --paper:#FCFCFB; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
   --line:#141726; --line-soft:#D3D6E0; --brand:#2E5BFF; --brand-deep:#1B3B9E;
   --active:#FFD54A; --active-word:#FFF0B8; --good:#157A52; --amber:#E0A92E; --miss:#B9BECB; --bad:#E4483B;
   --mono:"Space Mono",ui-monospace,Menlo,Consolas,monospace;
