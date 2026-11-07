@@ -23,6 +23,10 @@
    crossword's bank, every tier, less the banned, unkind and proper-noun words. The
    wide British list let players submit FOHN, FROE or YEAN and get clues from words
    nobody would try; the everyday tiers alone refused SCAR and POTS.
+   Widened (Alec, 7 Nov 2026, after OBOE and DEAD were refused): plus the hand-screened
+   tools/tumbler-extra-words.json (dictionary words with wordfreq Zipf >= 2.3), and the
+   UNKIND screen now keeps those words out of secrets only: a player may submit DEAD,
+   SICK or HATE, except the few in GUESS_NO (US spellings, slang, lynch, nazi).
 
    Puzzle record (the page's window.DN_PUZZLE, plain data):
      { type:"tumbler", id, band, n:4, wheels:["7 capitals" ×4], secret:"word",
@@ -37,6 +41,9 @@ const UNKIND = new Set(['hate', 'kill', 'dead', 'gun', 'guns', 'drug', 'die', 'd
 const NAMES = new Set(['erie', 'laos', 'york', 'etna', 'exec', 'yeah', 'iowa', 'ohio', 'oslo', 'peru', 'rome', 'mali', 'chad', 'cuba', 'fiji', 'iran', 'iraq', 'nile', 'utah', 'asia', 'bali', 'java', 'eric', 'alan', 'jane', 'john', 'mary', 'paul', 'otto', 'nato', 'sars', 'rbis', 'soli', 'ness', 'deco', 'yuan', 'july', 'june', 'nuke', 'blah']);
 /* spelt on the line, these read as rude or as drug slang even when they aren't accepted words */
 const NASTY = new Set(['scag', 'skag', 'turd', 'piss', 'crap', 'smut', 'puke', 'shag', 'knob', 'cock', 'toke', 'wank', 'slut', 'twat', 'jizz', 'bums', 'poof', 'spaz', 'homo', 'fags', 'muff', 'pube', 'pimp', 'porn', 'meth', 'coke', 'damn', 'hell', 'fag', 'nazi', 'kkk', 'dong']);
+/* UNKIND words a player still can't submit: the rest are ordinary words, only kept out of secrets */
+const GUESS_NO = new Set(['lynch', 'prof', 'papa', 'mama', 'nope', 'yeah', 'okay', 'nazi', 'tire', 'mold', 'plow', 'curb', 'mom', 'moms']);
+const EXTRA = require('./tumbler-extra-words.json').words;
 const FREQ = 'eeeeeeaaaaarrrriiiooootttnnnsssllcuudpmhgbfywkvxzjq';
 
 let CACHE = null;
@@ -45,7 +52,8 @@ function lists() {
   const L = R.lists(), ok = w => !L.banned.has(w) && !UNKIND.has(w) && !NAMES.has(w) && !NASTY.has(w) && !L.offensive.has(w);
   /* secrets are drawn from the list as it stood for the first boards, so their seeds still make them; generate() skips any the screens now refuse */
   const base = L.answers[N].filter(w => !L.banned.has(w) && !UNKIND.has(w));
-  const everyday = new Set(base.filter(ok)), known = new Set([...L.bank[N]].filter(ok));
+  const guess = w => !L.banned.has(w) && !GUESS_NO.has(w) && !NAMES.has(w) && !NASTY.has(w) && !L.offensive.has(w);
+  const everyday = new Set(base.filter(ok)), known = new Set([...L.bank[N], ...EXTRA].filter(w => w.length === N && guess(w)));
   for (const w of everyday) known.add(w);
   const offensive = new Set([...L.offensive, ...NASTY]);
   CACHE = { wide: L.wide[N], everyday, known, offensive, secrets: base.filter(w => new Set(w).size === N).sort() };
