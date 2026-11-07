@@ -19,7 +19,8 @@ const topCard=p=>p.evaluate(()=>{
 
 // Puzzles has no filter row from 7 Nov 2026 (the puzzles nav replaced it; filtering lives in the
 // Archive), so it is checked on its whole list (topic "all"); News still checks a topic.
-for(const [page,topic,nth] of [['puzzles.html','all',14],['index.html','Science',9]])
+// Puzzles lists the day's set only from 7 Nov 2026 (about nine cards), so its card is nearer the top.
+for(const [page,topic,nth] of [['puzzles.html','all',2],['index.html','Science',9]])
 test('FRONT-BACK: '+page+' keeps topic "'+topic+'" and the top card across Back with no back-forward cache',async({phone})=>{
  const {ctx,p}=phone;
  // the page from disk, as the harness serves it, plus no-store (never route.fetch: that goes to the network)
@@ -35,7 +36,7 @@ test('FRONT-BACK: '+page+' keeps topic "'+topic+'" and the top card across Back 
   await expect(p.locator('#chips .chip[data-topic="'+topic+'"]')).toHaveAttribute('aria-pressed','true');
  }
  const n=await p.locator('#feed a.card').count();
- expect(n,'cards in '+topic).toBeGreaterThan(nth+5);
+ expect(n,'cards in '+topic).toBeGreaterThan(nth+(page==='puzzles.html'?3:5));   // Puzzles: one day's set
  // scroll so card nth sits part-way under the controls (an offset, not a card edge)
  // (repeated: cards below the screen are laid out lazily, so one jump lands short)
  for(let i=0;i<6;i++){
@@ -45,7 +46,7 @@ test('FRONT-BACK: '+page+' keeps topic "'+topic+'" and the top card across Back 
  }
  const before=await topCard(p);
  expect(before.href).toBe(await p.locator('#feed a.card').nth(nth).getAttribute('href'));
- expect(await p.evaluate(()=>window.scrollY)).toBeGreaterThan(400);
+ expect(await p.evaluate(()=>window.scrollY)).toBeGreaterThan(page==='puzzles.html'?200:400);
  await p.evaluate(()=>{window.__mark='kept';});
  // open the next card down, as a reader would
  const target=await p.locator('#feed a.card').nth(nth+1).getAttribute('href');

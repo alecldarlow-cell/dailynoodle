@@ -399,7 +399,7 @@
   }
   function visible(lead){
     var q = state.q.trim().toLowerCase(), day = SEC.kind === 'puzzle' && !LAB ? setDay() : '';
-    return state.items.filter(function(it){
+    var out = state.items.filter(function(it){
       if(!mine(it)) return false;
       if(day && it.date !== day) return false;
       if(it === lead) return false;   // the lead block already shows it
@@ -407,6 +407,9 @@
       if(q && (it.headline+' '+it.standfirst+' '+it.topic+' '+(it.stories||[]).map(function(s){ return s.h; }).join(' ')).toLowerCase().indexOf(q)===-1) return false;
       return true;
     });
+    // the day's set in the daily order (Mini, Doku, Sweep, Path, Link, Tangle, Borders, Reckon, Tally), as the app's Today
+    if(day) out.sort(function(a, b){ return facetOrder(facet(a), facet(b)); });
+    return out;
   }
 
   // Shared with the static build: cards have identical markup before and after scripts.

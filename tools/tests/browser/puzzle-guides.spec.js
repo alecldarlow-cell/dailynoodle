@@ -16,11 +16,14 @@ test('GUIDES: card date, no duration and separate help target at '+width+' '+sch
  // Include a long archive date and an old feed without a type field.
  const items=fixture.items.map(x=>({...x}));items[3].date='2026-09-03';items[3].read='~10 min';delete items[3].type;
  await feed(phone,items);await goto(phone,'puzzles.html');
- await expect(p.locator('#feed .card-guide')).toHaveCount(9);
- for(let i=0;i<types.length;i++){
-  const row=p.locator('#feed > li').nth(i);
+ // Puzzles shows the day's set only from 7 Nov 2026 (as the app's Today): the older Path is in the Archive.
+ await expect(p.locator('#feed .card-guide')).toHaveCount(8);
+ await expect(p.locator('#feed .card-guide[href="how-to-play.html#path"]')).toHaveCount(0);
+ for(let i=0,r=0;i<types.length;i++){
+  if(i===3)continue;
+  const row=p.locator('#feed > li').nth(r++);
   await expect(row.locator('.card-time')).toHaveCount(0);   // no reading time on puzzle cards from 7 Nov 2026 (as the app)
-  await expect(row.locator('.card-date')).toHaveText(i===3?'3 Sept 2026':'Today');
+  await expect(row.locator('.card-date')).toHaveText('Today');
   await expect(row.locator('.meta .t')).toHaveCount(0);
   await expect(row.locator('.card-guide')).toHaveAttribute('href','how-to-play.html#'+types[i]);
   await expect(row.locator('a.card .card-guide')).toHaveCount(0);
