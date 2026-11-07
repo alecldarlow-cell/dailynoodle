@@ -15,6 +15,7 @@ const fs = require('fs');
 const path = require('path');
 
 const TEXT = {
+  mini: 'A crossword small enough for a coffee break. Fill every square from the clues.',
   doku: 'A crossword with no clues. Place every letter so each line spells a word.',
   sweep: 'Find the mines with logic alone. Flag them, then tread carefully to clear the grid.',
   path: 'One unbroken trail from 1 to 36. Tap square by square to build it.',
@@ -33,10 +34,10 @@ function link(n) {
   if (!n) return base;
   return `${base} Today, ${n === 1 ? 'one tile is' : `${WORD[n].toLowerCase()} tiles are`} bluffing.`;
 }
-/* Mini keeps its two-clue teaser; the difficulty ("Medium.") said nothing, as every Mini had it. */
-function mini(sf) {
-  // only a whole closing sentence that is the difficulty: "… edge. Medium." -> "… edge."
-  return String(sf).replace(/\.\s+(?:An?\s+)?(?:easy|medium|hard)\b[^.]*\.\s*$/i, '.').trim();
+/* Mini: one fixed line like every other type (Alec, 7 Nov 2026, evening: the daily two-clue
+   teaser didn't match the others). Whatever a clue tool passes in, the card gets the house line. */
+function mini() {
+  return TEXT.mini;
 }
 
 const TYPE_OF = [
@@ -51,7 +52,6 @@ const typeOf = f => (TYPE_OF.find(([re]) => re.test(f)) || [])[1] || null;
 const SF_RE = /(<meta name="dn:standfirst"\s+content=")([^"]*)(")/;
 const OG_RE = /(<meta property="og:description"\s+content=")([^"]*)(")/;
 const attr = s => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const unattr = s => s.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
 function trapCount(s) {
   const i = s.indexOf('window.DN_PUZZLE'); if (i < 0) return null;
   const m = s.slice(i).match(/traps:\s*\[([\s\S]*?)\n\s*\]/);
@@ -60,7 +60,7 @@ function trapCount(s) {
 /* The new standfirst for one page's source, or null if the type isn't covered. */
 function forPage(file, s) {
   const t = typeOf(file); if (!t) return null;
-  if (t === 'mini') { const m = s.match(SF_RE); return m ? mini(unattr(m[2])) : null; }
+  if (t === 'mini') return SF_RE.test(s) ? TEXT.mini : null;
   if (t === 'link') { const n = trapCount(s); return n == null ? null : link(n); }
   return TEXT[t];
 }

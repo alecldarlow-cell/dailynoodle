@@ -2,13 +2,13 @@
 
 For editors working a batch prepared by `tools/mini-clue-batch.js --prep`. The rules come from the puzzle-quality framework (Mini clue rules, Phase 3, agreed 19 Oct 2026).
 
-The Mini is a 5×5 daily crossword for a small British audience (friends and family who compare times on WhatsApp). Every grid is a steady "medium": a plain definition with at most a slight angle, solved in about a minute and a half. You change clue text and, when needed, the standfirst. You never change the grid.
+The Mini is a 5×5 daily crossword for a small British audience (friends and family who compare times on WhatsApp). Every grid is a steady "medium": a plain definition with at most a slight angle, solved in about a minute and a half. You change clue text only. You never change the grid.
 
 ## Light touch: what to change
 
 - **Every clue marked ⚑ MUST CHANGE.** If a `BANK` clue is listed and it is good (it passes the tests below and suits this grid), use it word for word: that's the cheapest fix. Otherwise write a new clue.
 - **Any other clue that fails a test below.** Read every clue, but if it passes, leave it alone. Don't rewrite good clues for taste.
-- **New grids** (marked `NEW GRID`): write every clue and a standfirst.
+- **New grids** (marked `NEW GRID`): write every clue.
 
 ## The tests
 
@@ -25,20 +25,18 @@ The Mini is a 5×5 daily crossword for a small British audience (friends and fam
 
 ## Standfirst
 
-`<phrase>, and <phrase>.`: two of the grid's final clues as noun phrases. Leave it alone unless it quotes a clue you changed (the validator tells you), or the grid is new. It must not contain any answer from the grid.
+Don't write one. Since 7 Nov 2026 every Mini's card line is the fixed house line ("A crossword small enough for a coffee break. Fill every square from the clues.", `tools/standfirst.js`); any `standfirst` you send is ignored.
 
 ## Output: changes only
 
 ```json
 [{"file":"2027-01-20-crossword-mini-0193.html",
   "clues":{"order":"…","die":"Perish"},
-  "md":["order"],
-  "standfirst":"…, and …."}]
+  "md":["order"]}]
 ```
 
 - `clues`: only the answers you changed (every answer for a new grid).
 - `md`: always, the grid's one or two misdirection/double-definition answers.
-- `standfirst`: only when it changes.
 - Include every puzzle in your sheet, even one where you changed nothing (just `file` and `md`).
 
 Run `node tools/mini-clue-batch.js --validate <batch dir> <your output>` until it reports 0 problems, then re-read your changes once as a solver.

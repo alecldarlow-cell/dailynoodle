@@ -10,10 +10,12 @@ test('STANDFIRST-02: GIVEN a Link THEN the trap count stays the daily twist, wor
  assert.equal(S.link(1),'Four hidden groups. Can you find the links? Today, one tile is bluffing.');
  assert.equal(S.link(3),'Four hidden groups. Can you find the links? Today, three tiles are bluffing.');
 });
-test('STANDFIRST-03: GIVEN a Mini teaser THEN only a closing difficulty sentence is dropped',()=>{
- assert.equal(S.mini("Profit's opposite, and the water's edge. Medium."),"Profit's opposite, and the water's edge.");
- assert.equal(S.mini('A rock, and something hard.'),'A rock, and something hard.');
- assert.equal(S.mini('A rock, and a pebble. A medium 5x5.'),'A rock, and a pebble.');
+test('STANDFIRST-03: GIVEN any Mini (Alec, 7 Nov 2026, evening) THEN its card line is the one house line, whatever a clue tool passes in',()=>{
+ assert.equal(S.TEXT.mini,'A crossword small enough for a coffee break. Fill every square from the clues.');
+ assert.equal(S.mini("Profit's opposite, and the water's edge. Medium."),S.TEXT.mini);
+ assert.equal(S.mini(''),S.TEXT.mini);
+ const s='<meta name="dn:standfirst" content="A rock, and a pebble.">\n<meta property="og:description" content="A rock, and a pebble.">';
+ assert.equal(S.rewrite('2026-12-01-crossword-mini-0150.html',s),s.replace(/A rock, and a pebble\./g,S.TEXT.mini));
 });
 test('STANDFIRST-04: GIVEN a page WHEN it is rewritten THEN only dn:standfirst and og:description change, kept equal',()=>{
  const s='<meta name="dn:standfirst" content="Old.">\n<meta property="og:description" content="Old.">\n<p>Old.</p>\nwindow.DN_PUZZLE={id:"x"};';
