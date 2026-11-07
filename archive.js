@@ -42,18 +42,21 @@
   function shown(t) { var m = /^(\d+):(\d\d)(?::(\d\d))?$/.exec(String(t || '')); return m ? clock(m[3] ? (+m[1] * 3600 + +m[2] * 60 + +m[3]) : (+m[1] * 60 + +m[2])) : ''; }
   function num(x) { return typeof x === 'number' && isFinite(x); }
   // The same words as the Puzzles page's played marks, kept short.
+  // The result in the Puzzles cards' words (7 Nov 2026, as the app's cards): "Solved in 2:20", "650 points".
   function result(it) {
     var r = state.saves[it.type] && state.saves[it.type][it.id]; if (!r) return '';
+    function solved(t) { return t ? 'Solved in ' + t : 'Played'; }
     switch (it.type) {
-      case 'sweep': return r.o === 'win' ? clock(r.s) : r.o === 'gave' ? 'Gave up' : 'Hit a mine';
-      case 'link': return r.o === 'win' ? (num(r.m) ? r.m + ' mistake' + (r.m === 1 ? '' : 's') : 'Solved') : 'Out of mistakes';
-      case 'path': return shown(r.t) || 'Done';
-      case 'tally': return num(r.s) ? clock(r.s) : shown(r.t) || 'Done';
-      case 'tangle': case 'reckon': return num(r.s) || num(r.p) ? (num(r.p) ? r.p : r.s) + ' pts' : 'Done';
-      case 'borders': return num(r.p) ? r.p + ' pts · ' + r.c + '/10' : num(r.c) ? r.c + '/10' : 'Done';
-      default: return num(r.s) ? clock(r.s) : 'Done';
+      case 'sweep': return r.o === 'win' ? 'Cleared in ' + clock(r.s) : r.o === 'gave' ? 'Gave up' : 'Hit a mine';
+      case 'link': return r.o === 'win' ? (num(r.m) ? 'Solved, ' + r.m + ' mistake' + (r.m === 1 ? '' : 's') : 'Solved') : 'Out of mistakes';
+      case 'path': return solved(shown(r.t));
+      case 'tally': return solved(num(r.s) ? clock(r.s) : shown(r.t));
+      case 'tangle': case 'reckon': return num(r.s) || num(r.p) ? (num(r.p) ? r.p : r.s) + ' points' : 'Played';
+      case 'borders': return num(r.p) ? r.p + ' points · ' + r.c + '/10' : num(r.c) ? 'Scored ' + r.c + '/10' : 'Played';
+      default: return solved(num(r.s) ? clock(r.s) : '');
     }
   }
+
   function monthOf(d) { return d.slice(0, 7); }
   function addMonth(m, k) { var y = +m.slice(0, 4), n = +m.slice(5, 7) - 1 + k; y += Math.floor(n / 12); n = ((n % 12) + 12) % 12; return y + '-' + String(n + 1).padStart(2, '0'); }
   function longDay(d) {
@@ -91,13 +94,20 @@
     if (n > 1 && n < 7) return n + 'd ago';
     return new Date(d + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
   }
+  /* A puzzle card, as on Puzzles and in the app (7 Nov 2026): the tile, then a column the tile's height with the
+     headline, the description in two lines and the callout row on the tile's foot: when on the left, one thing on the
+     right, your result once there is one, else How to play (a sibling link, never inside the card's). */
   function row(it, when) {
     var ok = done(it), res = result(it);
-    return '<li><a class="ar-row' + (ok ? ' ok' : '') + '" href="' + esc(it.path) + '?via=archive" data-type="' + esc(it.type) + '" data-id="' + esc(it.id || '') + '">' +
-      '<img src="' + esc(it.thumb || 'assets/' + it.type + '-thumb.svg') + '" alt="" width="36" height="36" loading="lazy">' +
-      '<span class="ar-name">' + esc(it.headline) + (when ? '<small class="ar-when">' + esc(when) + '</small>' : '') + '</span>' +
-      (ok ? '<span class="ar-res"><span class="ar-tick">' + TICK + '</span>' + esc(res) + '</span>' : '<span class="ar-play">Play</span>') +
-      '</a></li>';
+    return '<li class="ar-item"><a class="ar-row' + (ok ? ' ok' : '') + '" href="' + esc(it.path) + '?via=archive" data-type="' + esc(it.type) + '" data-id="' + esc(it.id || '') + '">' +
+      '<span class="ar-tile"><img src="' + esc(it.thumb || 'assets/' + it.type + '-thumb.svg') + '" alt="" width="96" height="96" loading="lazy">' +
+      (ok ? '<span class="ar-tick" aria-hidden="true">' + TICK + '</span>' : '') + '</span>' +
+      '<span class="ar-txt"><span class="ar-name">' + esc(it.headline) + '</span>' +
+      (it.standfirst ? '<span class="ar-sf">' + esc(it.standfirst) + '</span>' : '') +
+      '<span class="ar-meta">' + (when ? '<small class="ar-when">' + esc(when) + '</small>' : '') +
+      (ok ? '<span class="ar-res">' + esc(res) + '</span>' : '') + '</span></span>' +
+      '</a>' + (ok || !LABEL[it.type] ? '' : '<a class="ar-how" href="how-to-play.html#' + esc(it.type) + '" aria-label="How to play ' + esc(LABEL[it.type]) + '">How to play</a>') +
+      '</li>';
   }
   // Every released puzzle before today, newest first, in month sections (the app's list view).
   function renderList() {
