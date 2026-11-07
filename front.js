@@ -390,10 +390,18 @@
       + '</ol><a class="brief-all" href="'+esc(it.path)+'">Read the briefing →</a></li>';
   }
 
+  // Puzzles shows the day's set only (7 Nov 2026, as the app's Today): the newest released day up to today;
+  // every earlier puzzle is in the Archive, one tab away.
+  function setDay(){
+    var t = londonDay(), d = '';
+    state.items.forEach(function(it){ if(mine(it) && it.date && it.date <= t && it.date > d) d = it.date; });
+    return d;
+  }
   function visible(lead){
-    var q = state.q.trim().toLowerCase();
+    var q = state.q.trim().toLowerCase(), day = SEC.kind === 'puzzle' && !LAB ? setDay() : '';
     return state.items.filter(function(it){
       if(!mine(it)) return false;
+      if(day && it.date !== day) return false;
       if(it === lead) return false;   // the lead block already shows it
       if(state.topic!=='all' && facet(it)!==state.topic) return false;
       if(q && (it.headline+' '+it.standfirst+' '+it.topic+' '+(it.stories||[]).map(function(s){ return s.h; }).join(' ')).toLowerCase().indexOf(q)===-1) return false;
@@ -544,6 +552,11 @@
       if(guide) guide.hidden = true;
       var label = st.done ? st.text : 'Continue';
       meta.insertAdjacentHTML('beforeend', '<span class="card-result ' + (st.done ? (st.lost ? 'done lost' : 'done') : 'started') + '">' + esc(label) + '</span>');
+    }
+    // "9 puzzles · 3 played" (7 Nov 2026, as the app's Today)
+    if(SEC.kind === 'puzzle' && !LAB && !state.q && $count.textContent){
+      var n = $feed.querySelectorAll('li.puzzle-card').length, m = $feed.querySelectorAll('li.puzzle-card.is-played').length;
+      $count.textContent = n + ' ' + SEC.noun[n === 1 ? 0 : 1] + (m ? ' · ' + m + ' played' : '');
     }
   }
 
