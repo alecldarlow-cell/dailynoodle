@@ -33,7 +33,8 @@ test('SEO/FRONT: static cards and the enhanced list have identical markup',async
  await expect(phone.p.locator('#feed a.card')).toHaveCount(items.length);
  const before=await phone.p.locator('#feed > li').evaluateAll(es=>es.map(e=>e.outerHTML));
  const links=await phone.p.locator('#feed a.card').evaluateAll(es=>es.map(e=>e.getAttribute('href')));
- expect(links).toEqual(items.map(it=>it.path));
+ // the day's set first in the daily order, then older cards (hidden) in feed order (7 Nov 2026)
+ expect(links).toEqual(require('../../card-renderer').daySet(items,feed.today).items.map(it=>it.path));
  await phone.ctx.unroute('**/front.js');
  await Promise.all([phone.p.waitForResponse('**/feed.json'),phone.p.reload()]);
  await phone.p.waitForFunction(()=>document.getElementById('feed').innerHTML.startsWith('<li'));

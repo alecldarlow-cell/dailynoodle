@@ -344,3 +344,5 @@
 .card-guide{bottom:20px}
 .card-guide[hidden]{display:none}
 @media(min-width:560px){.puzzle-card .card>div{min-height:120px}}
+/* Puzzles: older cards stay in the page for crawlers but hidden (the day's set shows, 7 Nov 2026) */
+#feed > li[hidden]{display:none}
