@@ -28,7 +28,18 @@
    so the maze reads as a maze; the state graph, and so the play, is unchanged. */
 
 const DIRS = { 0: [1, 0, 4, 1], 1: [0, -1, 8, 2], 2: [-1, 0, 1, 4], 3: [0, 1, 2, 8] };   // dr, dc, wall bit this side, wall bit the far side
-const BAND = { n: 10, par: [12, 14], states: [50, 100], avgSlide: 2.2, oneFrac: 0.35, tease: 5, rndMult: 5, look: [1.2, 3.5], openness: [0.35, 0.6] };
+/* Bands by serial. Tilt 1–10 (the first Lab set) keep the band they were made under. From Tilt 11 (the
+   two-week Lab daily run, 7 Nov 2026) the shortest way out is 17–20 turns, from a less open maze: the
+   first ten took players a median of about 2 s per turn of the shortest route (median ~26 s at par
+   12–13, 21 finishes, 6–7 Nov 2026), so par 17–20 aims at a 45–60 s median on the same 10×10 grid,
+   inside Alec's limits (no bigger maze, no sprawl past 100 positions, no near miss far from the exit). */
+const BANDS = [
+  { upTo: 10, n: 10, par: [12, 14], states: [50, 100], avgSlide: 2.2, oneFrac: 0.35, tease: 5, rndMult: 5, look: [1.2, 3.5], openness: [0.35, 0.6] },
+  { upTo: Infinity, n: 10, par: [17, 20], states: [50, 100], avgSlide: 2.2, oneFrac: 0.35, tease: 5, rndMult: 5, look: [1.2, 3.5], openness: [0.2, 0.4] }
+];
+const serialOf = x => { const m = String(x || '').match(/(\d{4})(?!.*\d{4})/); return m ? +m[1] : Infinity; };
+const bandFor = serial => BANDS.find(b => serial <= b.upTo);
+const BAND = BANDS[BANDS.length - 1];   // the current band, for new pages
 
 /* ---------- seeded randomness (as tools/tally.js) ---------- */
 function rng(seed) {
@@ -239,7 +250,8 @@ function grade(p) {
   const look3 = median(Array.from({ length: 60 }, () => lookPlay(walls, n, start, exit, r, 3, 300)));
   return { par: sol.par, states: g.states.size, avgSlide: +rs.avgSlide.toFixed(2), zero: rs.zero, one: rs.one, tease: exitTouch(walls, n, start, exit), rnd, look3 };
 }
-function band(gr, p) {
+function band(gr, p, BAND) {
+  BAND = BAND || bandFor(serialOf(p && p.id));
   const errs = [];
   if (!gr) return ['no way out'];
   if (gr.par < BAND.par[0] || gr.par > BAND.par[1]) errs.push('shortest route ' + gr.par + ' turns');
@@ -254,11 +266,12 @@ function band(gr, p) {
   return errs;
 }
 /* the gate: structure, then the band */
-function check(p) {
+function check(p, serial) {
+  const BAND = bandFor(serial || serialOf(p.id));
   const errs = structure(p);
   if (errs.length) return errs;
   if (p.n !== BAND.n) errs.push('size ' + p.n + ', the Lab size is ' + BAND.n);
-  return errs.concat(band(grade(p), p));
+  return errs.concat(band(grade(p), p, BAND));
 }
 
 /* ---------- D4: the same maze turned or mirrored is the same maze ---------- */
@@ -286,6 +299,7 @@ function fingerprint(p) {
 /* ---------- generate: one candidate per seed, or null when it fails the gate ---------- */
 function generate(seed, opts) {
   opts = opts || {};
+  const BAND = bandFor(opts.serial || serialOf(String(seed).match(/^tilt-(\d{4})/) ? String(seed).match(/^tilt-(\d{4})/)[1] : null));
   const n = opts.n || BAND.n, r = rng(hashSeed(seed));
   const walls = genMaze(r, n, BAND.openness[0] + r() * (BAND.openness[1] - BAND.openness[0]));
   const start = [Math.floor(n / 2), Math.floor(n / 2)];
@@ -313,7 +327,7 @@ function generate(seed, opts) {
     const q = { n, walls: w, start, exit };
     if (structure(q).length) continue;
     const g = grade(q);
-    if (!g || band(g, q).length) continue;
+    if (!g || band(g, q, BAND).length) continue;
     p = q; gr = g; break;
   }
   if (!p) return null;
@@ -321,9 +335,9 @@ function generate(seed, opts) {
   p.par = gr.par;
   fillWalls(W, n, start, exit, r, 0.55, 3);
   const after = grade(p);
-  if (!after || band(after, p).length || after.par !== gr.par) return null;   // the inert walls are checked, not trusted
+  if (!after || band(after, p, BAND).length || after.par !== gr.par) return null;   // the inert walls are checked, not trusted
   p.seed = seed; p.grade = after;
   return p;
 }
 
-module.exports = { DIRS, BAND, rng, hashSeed, genMaze, slide, graph, solve, routeStats, exitTouch, randomPlay, lookPlay, fillWalls, structure, grade, band, check, fingerprint, generate };
+module.exports = { DIRS, BAND, BANDS, bandFor, rng, hashSeed, genMaze, slide, graph, solve, routeStats, exitTouch, randomPlay, lookPlay, fillWalls, structure, grade, band, check, fingerprint, generate };

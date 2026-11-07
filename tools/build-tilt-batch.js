@@ -20,8 +20,8 @@ const addDay = (d, k) => { const x = new Date(d + 'T12:00:00Z'); x.setUTCDate(x.
 
 /* the maze for a serial: the first seed in its series that passes the gate and repeats no earlier maze */
 function mazeFor(serial, seen) {
-  for (let k = 0; k < 4000; k++) {
-    const p = T.generate('tilt-' + pad(serial) + (k ? '-' + k : ''));
+  for (let k = 0; k < (serial <= 10 ? 4000 : 40000); k++) {
+    const p = T.generate('tilt-' + pad(serial) + (k ? '-' + k : ''), { serial });
     if (!p) continue;
     const fp = T.fingerprint(p); if (seen && seen.has(fp)) continue;
     if (seen) seen.add(fp);
@@ -126,7 +126,7 @@ function check() {
   if (!list.length) errs.push('no Tilt pages');
   for (const e of list) {
     const p = readPage(e.file);
-    for (const x of T.check(p)) errs.push(e.file + ': ' + x);
+    for (const x of T.check(p, e.serial)) errs.push(e.file + ': ' + x);
     if (p.id !== 'DP·TILT·' + pad(e.serial)) errs.push(e.file + ' id ' + p.id);
     const fp = T.fingerprint(p); if (seen.has(fp)) errs.push(e.file + ' repeats an earlier maze'); seen.add(fp);
     const want = mazeFor(e.serial, wanted);   // in serial order, so a seed skipped as a repeat is skipped here too
@@ -143,7 +143,7 @@ function writeThrough(through, opts) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(through)) throw new Error('--through needs a date, YYYY-MM-DD');
   const list = existing(), seen = new Set(), out = [];
   for (const e of list) {
-    const p = readPage(e.file), errs = T.check(p);
+    const p = readPage(e.file), errs = T.check(p, e.serial);
     if (errs.length) throw new Error(e.file + ': ' + errs.join('; '));
     seen.add(T.fingerprint(p));
   }
@@ -152,7 +152,7 @@ function writeThrough(through, opts) {
   else { if (!/^\d{4}-\d{2}-\d{2}$/.test(opts.from || '')) throw new Error('no Tilt pages yet: --from D0 names the first day'); serial = 1; date = opts.from; }
   for (; date <= through; serial++, date = addDay(date, 1)) {
     const maze = mazeFor(serial, seen), file = date + '-logic-tilt-' + pad(serial) + '.html';
-    const errs = T.check(maze); if (errs.length) throw new Error(file + ': ' + errs.join('; '));
+    const errs = T.check(maze, serial); if (errs.length) throw new Error(file + ': ' + errs.join('; '));
     fs.writeFileSync(path.join(REPORTS, file), page({ serial, date, maze, lab: !!opts.lab }), { flag: 'wx' });
     const g = maze.grade;
     out.push(file + ' par ' + g.par + ' states ' + g.states + ' slide ' + g.avgSlide + ' tease ' + g.tease + ' rnd ' + g.rnd + ' look3 ' + g.look3 + ' (' + maze.seed + ')');
