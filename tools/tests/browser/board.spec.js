@@ -129,7 +129,7 @@ test.describe('BOARD-E2E', () => {
       await expect(A.p.locator('.fin-board-slot .nn-board-link svg')).toHaveCount(1);
 
       // 4. Each opens the board from the result sheet and sees both rows, faster first.
-      const want = [['🥇', 'Ada', mmss(secsA)], ['🥈', 'Bea', mmss(secsB)]];
+      const want = [['1', 'Ada', mmss(secsA)], ['2', 'Bea', mmss(secsB)]];   // podium discs show the number (7 Nov 2026)
       for (const P of [A, B]) {
         const link = P.p.locator('.fin-board-slot .nn-board-link');
         await expect(link).toHaveAttribute('href', `../board.html?p=mini&d=${DAY}&from=result`);
@@ -270,7 +270,7 @@ test.describe('BOARD-E2E', () => {
       await H.wait(A.p, 300);
       expect(A.calls.filter(c => c.fn === 'board_game_submit').map(c => c.body)).toEqual([true, false]);
       await go(A, 'board.html?p=astro');
-      expect(await rows(A.p)).toEqual([['🥇', 'Ada', '13,500 pts']]);
+      expect(await rows(A.p)).toEqual([['1', 'Ada', '13,500 pts']]);   // podium disc
       await go(A, 'board.html?p=all');
       await expect(A.p.locator('ol.rows li.row')).toHaveCount(0);
       expect(A.p.errs).toEqual([]);
