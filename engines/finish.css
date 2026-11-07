@@ -218,3 +218,6 @@ html.fin-ready:not(.dn-fonts) .fin-box.fin-open{visibility:hidden!important}
 /* A touch can leave :hover active. The old engines' generic button:hover
    must not turn the Share pill pale while its text stays white. */
 .fin .fin-primary:hover{background:var(--f-go);color:var(--f-onGo)}
+
+/* Animations off on account.html (7 Nov 2026): the engines set html.dn-reduce; motion stops as under prefers-reduced-motion */
+html.dn-reduce *,html.dn-reduce *::before,html.dn-reduce *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}

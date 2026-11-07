@@ -42,8 +42,8 @@ test('SAVE-NOTICE: a real result failure is quiet, retryable and clears only aft
 
 test('SAVE-NOTICE: timed play keeps running without notices; recovery before the end stays quiet',async({phone},testInfo)=>{
  const {p}=phone;await block(phone);await goto(phone,'reports/2026-10-19-word-tangle-0013.html');
- // A failed settings write alone is not a failed game save. (WebKit has no Full screen switch: Sound is the settings write there.)
- if(!(await fullScreenOff(p,testInfo)))await p.getByRole('switch',{name:'Sound',exact:true}).click();
+ // A failed settings write alone is not a failed game save. (WebKit has no Full screen switch, and Sound left the home page: no settings write there.)
+ await fullScreenOff(p,testInfo);   // on WebKit there is no home-page settings switch left (Sound moved to account.html, 7 Nov 2026)
  expect(await p.evaluate(()=>dnCore.saveIssues())).toBe(0);
  await p.evaluate(()=>dnCore.onSaveChange(()=>window.saveChanges++));
  await p.locator('#playCard').click();await H.wait(p,4500);
@@ -74,8 +74,7 @@ test('SAVE-NOTICE: a Tally result that can\'t be saved shows the one quiet notic
 test('SAVE-NOTICE: Reckon answers continue through failed saves; one result notice retries the latest state',async({phone},testInfo)=>{
  const {p}=phone;await block(phone);await p.clock.setSystemTime(new Date('2026-10-20T12:00:00Z'));
  await goto(phone,'reports/2026-10-20-quiz-reckon-0001.html');
- await fullScreenOff(p,testInfo);
- await p.getByRole('switch',{name:'Sound',exact:true}).click();
+ await fullScreenOff(p,testInfo);   // the settings write (Sound left the home page on 7 Nov 2026)
  expect(await p.evaluate(()=>dnCore.saveIssues())).toBe(0);
  await p.evaluate(()=>dnCore.onSaveChange(()=>window.saveChanges++));
  await play.reckon(p,{stop:2,wrong:[]});

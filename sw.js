@@ -149,7 +149,7 @@
 'use strict';
 
 const OFF = false;
-const VERSION = 'nn-7-tabs';
+const VERSION = 'nn-8-account';
 const PAGES = 'nn-pages-' + VERSION;      // this site's files
 const FONTS = 'nn-fonts-' + VERSION;      // Google Fonts (stylesheets and font files)
 const MAX_ENTRIES = 400;                  // pages cache trimmed past this, oldest first
@@ -158,7 +158,7 @@ const API = 'https://gnehttjheoyutrfsvslq.supabase.co/rest/v1/rpc/';
 const KEY = 'sb_publishable_dEMntRNiElpGHn3Hd5Ef1Q_HvLa2wTB';   // public by design
 
 const CORE = [
-  '/', '/index.html', '/puzzles.html', '/games.html', '/lab.html', '/board.html', '/privacy.html',
+  '/', '/index.html', '/puzzles.html', '/games.html', '/lab.html', '/board.html', '/privacy.html', '/account.html', '/account.css', '/account.js',
   '/front.css', '/front.js', '/dn-nav.js', '/dn-track.js', '/dn-board.js', '/dn-sync.js',
   '/feed.json', '/puzzles-today.json', '/manifest.webmanifest',
   '/icons/favicon.svg', '/icons/favicon-32.png', '/icons/icon-192.png',

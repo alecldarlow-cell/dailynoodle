@@ -119,6 +119,11 @@
  return {londonDay,dayBefore,getDone,putDone,mergeProgress,saveProgress,saveStreak,saveIssues,onSaveChange,retrySaves};
 });
 /* dn-core:end */
+/* Animations off on account.html (dn-motion = "reduced", 7 Nov 2026): this page behaves as if the phone asked
+   for reduced motion: matchMedia's reduced-motion query answers yes, and html.dn-reduce stills CSS motion (finish.css). */
+(function(){if(window.__dnMotion)return;window.__dnMotion=1;try{if(localStorage.getItem('dn-motion')!=='reduced')return;
+  var mm=window.matchMedia;document.documentElement.classList.add('dn-reduce');if(!mm)return;
+  window.matchMedia=function(q){return /prefers-reduced-motion:\s*reduce/.test(q)?{matches:true,media:q,onchange:null,addListener:function(){},removeListener:function(){},addEventListener:function(){},removeEventListener:function(){},dispatchEvent:function(){return false}}:mm.call(window,q)};}catch(e){}})();
 
 /* ================= THE PUZZLE =================
    Authored object. Groups are ranked 1 (easiest) → 4 (hardest); the rank drives
@@ -297,7 +302,7 @@ function toggle(w){
 }
 function setMsg(t,tone){const m=$("#msg"); m.className="msg"+(tone?" "+tone:""); m.textContent=t||"";}
 /* haptics, where the device offers them — silent no-op everywhere else */
-function buzz(pattern){try{if(navigator.vibrate)navigator.vibrate(pattern);}catch(e){}}
+function buzz(pattern){try{if(navigator.vibrate&&localStorage.getItem('dn-vibrate')!=='0')navigator.vibrate(pattern);}catch(e){}}   // Vibration: account.html (7 Nov 2026)
 
 function submit(){
   if(over||busy||sel.size!==4)return;

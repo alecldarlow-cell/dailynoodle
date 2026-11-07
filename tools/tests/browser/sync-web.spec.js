@@ -124,10 +124,12 @@ async function solveMini(D, file) {
   await play.grid(D.p);
   await expect(D.p.locator('#winModal.on')).toHaveCount(1);
 }
-/* Open a sign-in link as it arrives from the email: board.html#access_token=…&refresh_token=… */
+/* Open a sign-in link as it arrives from the email: board.html#access_token=…&refresh_token=…, which goes
+   straight on to account.html (the card's page from 7 Nov 2026) */
 async function signIn(D, token) {
   await open(D, SITE + 'board.html#access_token=' + token + '&refresh_token=r-' + token + '&expires_in=3600&token_type=bearer&type=magiclink');
-  await expect(card(D)).toContainText('Signed in as ' + token + '@example.test', { timeout: 10000 });
+  await expect(card(D).locator('.ac-email')).toHaveText(token + '@example.test', { timeout: 10000 });
+  expect(new URL(D.p.url()).pathname).toBe('/account.html');
   expect(new URL(D.p.url()).hash, 'the tokens leave the address bar at once').toBe('');
   await settled(D);
 }
@@ -141,12 +143,14 @@ test.describe('SYNC-WEB', () => {
   test.beforeEach(async () => { dbs.board = await boardDb({ today: DAY }); dbs.sync = await syncDb(); dbs.hooks = {}; dbs.log = []; });
   test.afterEach(async () => { await dbs.board.close(); await dbs.sync.close(); });
 
-  test('SYNC-WEB-01: switched on (as published), the board offers sign-in and puzzle pages stay as they were', async ({ browser }) => {
-    // The board page, for a visitor who has never signed in: the card under the board asks
-    // for an email, and supabase-js isn't fetched until they use it (no stand-in here).
+  test('SYNC-WEB-01: switched on (as published), Account offers sign-in, the board has no card and puzzle pages stay as they were', async ({ browser }) => {
+    // The Account page, for a visitor who has never signed in: the card asks for an email, and
+    // supabase-js isn't fetched until they use it (no stand-in here). The board no longer has the card.
     const B = await device(browser, dbs, 'board', { sync: false });
     try {
       await go(B, 'board.html');
+      await expect(card(B)).toHaveCount(0);
+      await go(B, 'account.html');
       await expect(card(B)).toBeVisible();
       await expect(card(B).locator('h2')).toHaveText('Sign in or create an account');
       await expect(card(B)).toContainText('Enter your email and we’ll send you a link. It signs you in, or sets up a free account if you’re new.');
@@ -207,7 +211,7 @@ test.describe('SYNC-WEB', () => {
   test('SYNC-WEB-03: signing in asks for an email, checks it, and sends a link back to the board page', async ({ browser }) => {
     const D = await device(browser, dbs, 'new');
     try {
-      await go(D, 'board.html');
+      await go(D, 'account.html');
       await expect(card(D)).toBeVisible();
       await expect(card(D).locator('h2')).toHaveText('Sign in or create an account');
       expect(await D.p.evaluate(() => window.__opts), 'no client until the player signs in').toBeUndefined();
@@ -261,7 +265,7 @@ test.describe('SYNC-WEB', () => {
 
       // Signing in on the laptop sends its saves and league identity to the account.
       await signIn(A, 'alec');
-      await expect(A.p.locator('#dnsyncLast')).toHaveText('Synced just now');
+      await expect(A.p.locator('#dnsyncLast')).toHaveText('Just now');
       let acc = await held(dbs.sync, 'alec@example.test');
       expect(Object.keys(acc['digi-mini-v1'].done)).toEqual(['DP·MINI·0098']);
       expect(acc['noodle-board-v1'].pid).toBe(pid);
@@ -269,6 +273,7 @@ test.describe('SYNC-WEB', () => {
       // Signing in on the phone brings them in, and the board reloads as Alec in Family.
       await signIn(B, 'alec');
       await expect.poll(() => doneIds(B), { timeout: 10000 }).toEqual(['DP·MINI·0098', 'DP·MINI·0099']);
+      await settled(B); await go(B, 'board.html');
       await expect(B.p.locator('#app .bcard').first()).toContainText('Alec', { timeout: 10000 });
       expect((await store(B, 'noodle-board-v1')).pid, 'the phone now plays as Alec').toBe(pid);
       expect((await store(B, 'digi-mini-v1')).done['DP·MINI·0098'], 'first result kept: the phone’s own').toMatchObject({ s: 999, phone: true });
@@ -276,7 +281,7 @@ test.describe('SYNC-WEB', () => {
       expect(Object.keys(acc['digi-mini-v1'].done).sort()).toEqual(['DP·MINI·0098', 'DP·MINI·0099']);
 
       // Sync now on the laptop brings the phone's 18th across; its own 17th stays as it was.
-      await go(A, 'board.html');
+      await go(A, 'account.html');
       await H.tap(A.p, card(A).locator('[data-sync="now"]'));
       await expect.poll(() => doneIds(A), { timeout: 10000 }).toEqual(['DP·MINI·0098', 'DP·MINI·0099']);
       expect((await store(A, 'digi-mini-v1')).done['DP·MINI·0098'].phone).toBeUndefined();
@@ -311,6 +316,7 @@ test.describe('SYNC-WEB', () => {
       expect((await store(B, 'noodle-board-v1')).pid, 'still this browser’s own player until it chooses').toBe(mine);
       const jo = (await store(A, 'noodle-board-v1')).pid;
       expect((await held(dbs.sync, 'jo@example.test'))['noodle-board-v1'].pid, 'the account keeps its player meanwhile').toBe(jo);
+      await go(B, 'board.html');
       await expect(B.p.locator('#app')).toContainText('Jo', { timeout: 10000 });
     } finally { await A.ctx.close(); await B.ctx.close(); }
   });
@@ -329,13 +335,15 @@ test.describe('SYNC-WEB', () => {
       await signIn(D, 'alec');
       const dialogs = []; D.p.on('dialog', d => dialogs.push(d.type()));
       // The first tap only asks, on the page; Keep it goes back with nothing deleted.
-      await H.tap(D.p, card(D).getByRole('button', { name: 'Delete my saved data' }));
+      // Account's Delete my data opens in place; its Delete my saved copy asks in the card
+      await H.tap(D.p, D.p.locator('#ac-del'));
+      await H.tap(D.p, D.p.locator('#ac-forget'));
       await expect(D.p.locator('#dnsyncConfirm')).toContainText('This browser’s results stay here.');
       await H.tap(D.p, card(D).locator('[data-sync="cancel"]'));
       await expect(D.p.locator('#dnsyncConfirm')).toHaveCount(0);
       expect(Object.keys(await held(dbs.sync, 'alec@example.test'))).toContain('digi-mini-v1');
       // The second tap, in the confirm block, deletes.
-      await H.tap(D.p, card(D).locator('[data-sync="forget"]'));
+      await H.tap(D.p, D.p.locator('#ac-forget'));
       await H.tap(D.p, card(D).locator('[data-sync="forget-yes"]'));
       await expect(D.p.locator('#dnsyncMsg')).toHaveText('Your saved data is deleted. This browser’s results are still here.');
       await expect(D.p.locator('#dnsyncEmail')).toBeVisible();
@@ -390,6 +398,10 @@ test.describe('SYNC-WEB', () => {
         expect(r.data.ok).toBe(true);
         dbs.hooks.sync_push_rev = async () => { refused = 'retried'; };
       };
+      // The phone has opened Leagues, so it has a board identity to send (until 7 Nov 2026 the sign-in
+      // link opened the board page, which made one; it now goes on to Account, which doesn't). Without a
+      // document that still differs after the merge, a refused push has nothing left to retry.
+      await go(B, 'board.html');
       await signIn(B, 'alec');
       await expect.poll(() => refused, { timeout: 10000 }).toBe('retried');
       const calls = syncCalls(dbs, 'phone');

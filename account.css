@@ -1,0 +1,60 @@
+/* Account (account.html, 7 Nov 2026): the app's Account tab on the web. Your account / Settings /
+   Help & privacy, each a card of rows, label left and action right. Front-page tokens only, so
+   dark mode follows. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:root{--switch-off:#80858F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--switch-off:#6B7186}}
+:root[data-theme="dark"]{--switch-off:#6B7186}
+.ac-label{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:26px 2px 8px}
+.ac-card{background:var(--paper);border:1px solid var(--hair);border-radius:14px;padding:0 16px}
+.ac-card[hidden]{display:none}
+.ac-row{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:56px;width:100%;
+  border:0;border-bottom:1px solid var(--hair);background:none;padding:0;margin:0;
+  font:600 16.5px var(--body);color:var(--ink);text-align:left;text-decoration:none;cursor:default}
+.ac-card > .ac-row:last-child,.ac-row.ac-last,.ac-card > .ac-row:has(+ .ac-delete[hidden]){border-bottom:0}
+.ac-go{cursor:pointer}
+.ac-chev{flex:none;width:22px;height:22px;margin-right:-4px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ac-go:hover > span:first-child{text-decoration:underline;text-underline-offset:3px}
+.ac-go:disabled{opacity:.5;cursor:default}
+.ac-who{justify-content:flex-start;min-height:72px}
+.ac-av{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font:800 19px var(--display)}
+.ac-email{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.ac-end{display:inline-flex;align-items:center;gap:6px;font-weight:500;font-size:15px;color:var(--muted)}
+.ac-ref{flex:none;width:44px;height:44px;margin-left:6px;border:1px solid var(--hair);border-radius:50%;background:none;color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.ac-ref svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ac-ref:disabled{opacity:.5;cursor:default}
+/* switches: the app's (white thumb, switchOff track) */
+.ac-sw{cursor:pointer}
+.ac-sw input{appearance:none;-webkit-appearance:none;flex:none;width:48px;height:28px;border-radius:14px;background:var(--switch-off);position:relative;margin:0;cursor:pointer;transition:background .15s}
+.ac-sw input::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.ac-sw input:checked{background:var(--accent)}
+.ac-sw input:checked::after{transform:translateX(20px)}
+.ac-sw input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ac-sw[hidden]{display:none}
+@media (prefers-reduced-motion:reduce){.ac-sw input,.ac-sw input::after{transition:none}}
+/* the sign-in card's own parts (dn-sync.js), in this page's card */
+.ac-card.synccard{padding:4px 16px 2px}
+.synccard p{margin:12px 0 0;font-size:15px;color:var(--muted);line-height:1.5}
+.synccard p b{color:var(--ink)}
+.synccard p.fine{font-size:13px;color:var(--faint);margin-top:4px}
+.synccard .flab{display:block;margin-top:14px;font-size:14px;font-weight:600;color:var(--ink)}
+.synccard .inline{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.synccard .inline input{flex:1 1 200px;min-width:0;min-height:44px;font:500 16px var(--body);padding:8px 10px;border-radius:8px;background:var(--canvas);color:var(--ink);border:1.5px solid var(--muted)}
+.synccard .inline input:focus{outline:none;border-color:var(--accent)}
+.synccard p.msg{font-size:14px;color:var(--bad);margin:8px 0 12px}
+.synccard p.msg.ok{color:var(--accent)}
+.synccard p.msg:empty{display:none}
+.synccard .confirm p{margin-top:0}
+.acts,.ac-acts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:9px 16px;
+  border-radius:999px;border:1px solid var(--hair);background:var(--paper);color:var(--ink);font:600 14px var(--body);cursor:pointer;text-decoration:none}
+.btn.go{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.warn{color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:default}
+.synccard .acts .btn{flex:1 1 140px}
+/* Delete my data, opened in place */
+.ac-delete{padding:4px 0 6px;border-bottom:0}
+.ac-delete p{font-size:14.5px;line-height:1.5;color:var(--muted);margin:10px 0 0}
+.ac-delete p b{color:var(--ink)}
+.ac-delete .ac-acts{margin:10px 0 4px}
+.ac-note{font-size:14px;color:var(--muted)}

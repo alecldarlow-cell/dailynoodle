@@ -335,14 +335,13 @@
      Web Audio, no files. Each note is the same tone() the Tangle/Borders/Reckon engines use:
      an oscillator of `type` at f Hz from t s, gain 0.0001 → g over 12 ms, → 0.0001 at t + dur, stopped
      50 ms later. The app renders exactly these notes to a file (scripts/make-sounds.js), so keep them in step.
-     One switch for the six, "Sound" on their start card and this sheet, saved as dn-sound ("0" = off;
-     on by default). Tangle, Borders and Reckon keep their own sounds and switches. */
+     One setting, dn-sound ("0" = off; on by default), set by the Sound switch on account.html (7 Nov 2026;
+     it was on the start card and this sheet). Tangle, Borders and Reckon take it too (it overrides their own). */
   var JINGLE_TYPES = { mini: 1, doku: 1, sweep: 1, path: 1, link: 1, tally: 1, tilt: 1, redact: 1, tumbler: 1 };
   var JINGLE = [[523.25, 0, 0.16, 'triangle', 0.12], [659.25, 0.09, 0.16, 'triangle', 0.12], [783.99, 0.18, 0.16, 'triangle', 0.12],
                 [1046.5, 0.27, 0.6, 'triangle', 0.13], [783.99, 0.27, 0.6, 'triangle', 0.08], [1318.51, 0.36, 0.5, 'sine', 0.05]];
   var SOUND_KEY = 'dn-sound';
   function soundOn() { try { return localStorage.getItem(SOUND_KEY) !== '0'; } catch (e) { return true; } }
-  function setSound(on) { try { localStorage.setItem(SOUND_KEY, on ? '1' : '0'); } catch (e) {} }
   var actx = null;
   function jingle() {
     if (!soundOn()) return false;
@@ -367,13 +366,6 @@
     check(); if (played || !('MutationObserver' in window)) return;
     mo = new MutationObserver(check); mo.observe(box, { attributes: true, attributeFilter: ['class'] });
     setTimeout(function () { if (mo) mo.disconnect(); }, 1500);
-  }
-  function soundSwitch() {
-    var b = el('button', 'fin-sound'); b.type = 'button';
-    function paint() { var on = soundOn(); b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.textContent = on ? 'Sound on' : 'Sound off'; }
-    b.addEventListener('click', function () { setSound(!soundOn()); paint(); try { document.dispatchEvent(new CustomEvent('dn:sound')); } catch (e) {} });
-    document.addEventListener('dn:sound', paint);
-    paint(); return b;
   }
 
   /* was this round solved? Engines say so (cfg.solved); otherwise it's read from the type's own save, and
@@ -528,7 +520,7 @@
     var clock = el('p', 'fin-clock'); foot.appendChild(clock);
     if (cfg.lab) clock.textContent = 'In development: a Lab puzzle, not yet daily.'; else fillClock(clock, NAME[cfg.type]);
     if (cfg.date) foot.appendChild(el('p', 'fin-day', esc(NAME[cfg.type] + ' ' + cfg.n + ', ' + longDate(cfg.date))));
-    if (JINGLE_TYPES[cfg.type]) foot.appendChild(soundSwitch());
+    // Sound moved to account.html (7 Nov 2026, as the app's Account settings); dn-sound still decides the jingle
     // How to play <Type> (7 Nov 2026, as the app's finish sheet): once a card shows a result it has no
     // How to play link, so the rules stay one tap away here. Daily types only; the guide has no Lab panels.
     if (GUIDE_TYPES[cfg.type] && !cfg.lab) {

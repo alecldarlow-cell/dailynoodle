@@ -197,6 +197,12 @@ const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){r
 function defaults(){return {v:1,done:{},streak:{last:null,n:0,best:0},best:0,cur:null,snd:true,hap:true,rm:null,fs:coarse,tip:0};}
 let save=defaults();
 try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s&&s.v===1)save=Object.assign(defaults(),s);}}catch(e){}
+/* Account settings (7 Nov 2026): account.html's site-wide switches (dn-sound, dn-motion, dn-vibrate) win over
+   this game's own, which stay saved as before; the pause sheet's switches write both. */
+function globalSettings(){try{const s=localStorage.getItem('dn-sound'),m=localStorage.getItem('dn-motion'),h=localStorage.getItem('dn-vibrate');
+  if(s!==null)save.snd=s!=='0';if(m==='reduced')save.rm=true;else if(m==='phone')save.rm=null;if(h!==null&&'hap' in save)save.hap=h!=='0';}catch(e){}}
+function setGlobal(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+globalSettings();
 if(!save.done||typeof save.done!=='object')save.done={};
 function persist(progress=true){
   const playing=!!(P&&(save.done[P.id]||(save.cur&&save.cur.id===P.id)));
@@ -234,13 +240,14 @@ const SND={
     else if(z===3)tone(520,0,0.2,'triangle',0.07);else tone(150,0,0.25,'sine',0.14)},
   done(){[523,659,784,1047].forEach((f,i)=>tone(f,i*0.11,0.35,'triangle',0.09))}   // one chime: there is no pass mark
 };
-function toggles(host){
+function toggles(host,fsOnly){
   host.innerHTML='';
-  const items=[['Sound',()=>!!save.snd,v=>{save.snd=v;if(!v&&AC){try{AC.suspend()}catch(_){}}else ac();}]];
-  if(hapOK)items.push(['Vibration',()=>!!save.hap,v=>{save.hap=v;if(v)buzz(20);}]);
-  items.push(['Reduced motion',()=>isRM(),v=>{save.rm=v;applyRM();}]);
+  const items=[['Sound',()=>!!save.snd,v=>{save.snd=v;setGlobal('dn-sound',v?'1':'0');if(!v&&AC){try{AC.suspend()}catch(_){}}else ac();}]];
+  if(hapOK)items.push(['Vibration',()=>!!save.hap,v=>{save.hap=v;setGlobal('dn-vibrate',v?'1':'0');if(v)buzz(20);}]);
+  items.push(['Reduced motion',()=>isRM(),v=>{save.rm=v;setGlobal('dn-motion',v?'reduced':'phone');applyRM();}]);
   if(fsOK)items.push(['Full screen',()=>!!save.fs,v=>{save.fs=v;if(v)goFS();else exitFS();}]);
-  for(const [label,get,set] of items){const b=document.createElement('button');b.type='button';b.className='tog';b.setAttribute('role','switch');
+  const list=fsOnly?items.filter(i=>i[0]==='Full screen'):items;host.hidden=!list.length;
+  for(const [label,get,set] of list){const b=document.createElement('button');b.type='button';b.className='tog';b.setAttribute('role','switch');
     b.innerHTML='<i></i><span></span>';b.querySelector('span').textContent=label;b.setAttribute('aria-checked',String(get()));
     b.addEventListener('click',()=>{set(!get());b.setAttribute('aria-checked',String(get()));persist(false);});host.appendChild(b);}
 }
@@ -293,7 +300,7 @@ function renderHome(){
   const c=save.cur&&save.cur.id===P.id?save.cur:null;
   $('playStatus').textContent=c?'Question '+(c.i+1)+' of '+NQ+', '+score(c)+' points so far.':'Ten numbers to guess, each from a different topic. The closer you get, the more you score.';
   $('playCard').textContent=c?'Resume':'Play';
-  toggles($('homeTogs'));
+  toggles($('homeTogs'),true);   // only Full screen here (web-only); Sound and motion live on account.html (7 Nov 2026)
 }
 
 /* ---------- the round ---------- */

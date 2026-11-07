@@ -330,7 +330,8 @@ const TESTS = {
     await shareNative(b, F.link, p2 => play.link(p2, { wrong: 0 }), 'link');
   },
   /* the celebration jingle (AF-013, 29 Oct 2026): a fresh win on the five grid types plays it once; a loss,
-     a reopened puzzle and Sound off play nothing; the Sound switch is on the start card and the sheet */
+     a reopened puzzle and Sound off play nothing. From 7 Nov 2026 the Sound switch is on account.html
+     (dn-sound), not on the start card or the sheet */
   async 'finish:jingle'(b) {
     const stub = () => { window.__notes = 0; const A = function () { return { state: 'running', currentTime: 0, destination: {}, resume: () => Promise.resolve(),
       createOscillator: () => { window.__notes++; return { type: '', frequency: { setValueAtTime() {} }, connect: x => x, start() {}, stop() {} }; },
@@ -338,18 +339,15 @@ const TESTS = {
       window.AudioContext = A; window.webkitAudioContext = A; };
     const jingles = p => p.evaluate(() => +(document.documentElement.getAttribute('data-dn-jingle') || 0));
     let { ctx, p } = await open(b, F.mini, {}); await ctx.addInitScript(stub); await p.reload(); await wait(p, 800);
-    ok(await p.locator('#dnSound').count() === 1 && await p.locator('#dnSound').isChecked(), 'jingle: the Mini start card has a Sound switch, on by default');
+    ok(await p.locator('#dnSound').count() === 0 && await p.locator('.dn-sound').count() === 0, 'jingle: no Sound switch on the Mini start card (Account settings)');
     await play.grid(p); await wait(p, 600);
     ok(await jingles(p) === 1 && await p.evaluate(() => window.__notes) === 6, `jingle: a fresh Mini win plays the jingle once (${await jingles(p)})`);
-    ok(await text(p, '.fin-sound') === 'Sound on', 'jingle: the sheet shows the Sound switch');
+    ok(await p.locator('.fin-sound').count() === 0, 'jingle: no Sound switch on the sheet (Account settings)');
     await p.reload(); await wait(p, 1500);
     ok(await jingles(p) === 0, 'jingle: reopening the finished Mini plays nothing');
-    await tap(p, p.locator('.fin-sound')); await wait(p, 100);
-    ok(await text(p, '.fin-sound') === 'Sound off' && await p.evaluate(() => localStorage.getItem('dn-sound')) === '0', 'jingle: the sheet switch turns Sound off (dn-sound)');
     await ctx.close();
     ({ ctx, p } = await open(b, F.link, {})); await ctx.addInitScript(stub);
     await ctx.addInitScript(() => { try { localStorage.setItem('dn-sound', '0'); } catch (e) {} }); await p.reload(); await wait(p, 800);
-    ok(!(await p.locator('#dnSound').isChecked()), 'jingle: the start card follows dn-sound');
     await play.link(p, { wrong: 0 }); await wait(p, 600);
     ok(await jingles(p) === 0, 'jingle: with Sound off a Link win plays nothing');
     await ctx.close();
@@ -926,8 +924,9 @@ const TESTS = {
   /* ---------- the five fixes of 18 Oct ---------- */
   async 'fix:tangle-yesterday'(b) {
     const { ctx, p } = await open(b, F.tangle);
-    await tap(p, p.locator('#yBtn')); await p.waitForTimeout(600); await wait(p, 500);
-    ok(/Longest word/.test(await text(p, '#yList')), "tangle: Yesterday's answers load");
+    // Yesterday's answers left the Tangle home page on 7 Nov 2026 (as the app); the link stays hidden
+    await wait(p, 800);
+    ok(await p.locator('#yBtn').isHidden() && await p.locator('#homeToggles [role=switch]', { hasText: 'Sound' }).count() === 0, "tangle: no Yesterday's answers link or Sound switch on the home page");
     await ctx.close();
   },
   async 'fix:path-streak'(b) {

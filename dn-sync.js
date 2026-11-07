@@ -45,6 +45,8 @@
   var SYNC_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon|tally)-(v1|streak)$/;
   var BOARD = 'noodle-board-v1';
   var ON_BOARD = /\/board\.html$/.test(location.pathname);
+  // account.html (7 Nov 2026) shows the same card, laid out as the app's rows; the sign-in link still lands on board.html
+  var ON_ACCOUNT = /\/account\.html$/.test(location.pathname);
 
   function isObj(x){ return !!x && typeof x === 'object' && !Array.isArray(x); }
   function parse(s){ try { return JSON.parse(s); } catch (e) { return undefined; } }
@@ -68,7 +70,10 @@
     if (q.get('access_token') && q.get('refresh_token')) return { access_token: q.get('access_token'), refresh_token: q.get('refresh_token') };
     return null;
   }
-  var link = ON_BOARD ? readLink(location.hash) : null;
+  var link = (ON_BOARD || ON_ACCOUNT) ? readLink(location.hash) : null;
+  // The link lands on board.html (the redirect URL Supabase allows); the card lives on account.html
+  // from 7 Nov 2026, so take the link there at once (replace: no history entry with the tokens).
+  if (link && ON_BOARD) { try { location.replace('account.html' + location.hash); return; } catch (e) {} }
   if (link) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
 
   /* ---------- the client: supabase-js, fetched only when needed ---------- */
@@ -227,7 +232,7 @@
      app, another browser) before this puzzle is finished: the page's own save writes then
      merge with it (dnCore.saveProgress). A round in progress here is kept (the import
      keeps this browser's fields). */
-  if (!ON_BOARD) {
+  if (!ON_BOARD && !ON_ACCOUNT) {
     sync().then(settled, settled);
     document.addEventListener('dn:puzzle_end', function () {
       // Let the page finish writing its save first.
@@ -252,8 +257,55 @@
   var ui = { sent: '', msg: '', bad: false, busy: false, confirm: '' };
   var box = null;
 
+  // "Just now" / "54 min ago", as the app's Sync row (agoShort)
+  function agoShort(){
+    var l = parse(get(LAST)), at = isObj(l) ? +l.at : 0;
+    if (!at) return 'Not yet';
+    var m = Math.round((Date.now() - at) / 60000);
+    if (m < 1) return 'Just now';
+    if (m < 60) return m + ' min ago';
+    var h = Math.round(m / 60);
+    return h < 24 ? h + ' h ago' : Math.round(h / 24) + ' d ago';
+  }
+  function confirmBlock(){
+    return '<div class="confirm" id="dnsyncConfirm" role="group" aria-labelledby="dnsyncConfirmQ" ' +
+      'style="margin-top:14px;padding:12px 14px;border:1px solid var(--bad);border-radius:10px">' +
+      '<p id="dnsyncConfirmQ"><b>Delete your saved data?</b> This deletes the copy of your results, streaks and leagues ' +
+      'kept for your email, and signs you out. This browser’s results stay here.</p>' +
+      '<div class="acts"><button class="btn warn" type="button" data-sync="forget-yes"' + (ui.busy ? ' disabled' : '') + '>Delete my saved data</button>' +
+      '<button class="btn" type="button" data-sync="cancel"' + (ui.busy ? ' disabled' : '') + '>Keep it</button></div></div>';
+  }
+  /* account.html: label left, action right, as the app's Your account card (7 Nov 2026) */
+  function renderRows(s){
+    var h = '';
+    if (s) {
+      var email = (s.user && s.user.email) || '';
+      h += '<div class="ac-row ac-who"><span class="ac-av" aria-hidden="true">' + esc((email.charAt(0) || '?').toUpperCase()) + '</span>' +
+        '<span class="ac-email">' + esc(email) + '</span></div>' +
+        '<div class="ac-row"><span>Sync</span><span class="ac-end"><span id="dnsyncLast">' + esc(ui.busy ? 'Syncing…' : agoShort()) + '</span>' +
+        '<button class="ac-ref" type="button" data-sync="now" aria-label="Sync now"' + (ui.busy ? ' disabled' : '') + '>' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5v4h-4"/></svg></button></span></div>' +
+        '<button class="ac-row ac-go ac-last" type="button" data-sync="out"' + (ui.busy ? ' disabled' : '') + '><span>Sign out</span><svg class="ac-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5.5 15.5 12 9 18.5"/></svg></button>';
+      if (ui.confirm === 'forget') h += confirmBlock();
+    } else if (ui.sent) {
+      h += '<p id="dnsyncSent">Check your email: we sent a sign-in link to <b>' + esc(ui.sent) + '</b>. Open it on this device.</p>' +
+        '<div class="acts"><button class="btn" type="button" data-sync="again">Use a different email</button></div>';
+    } else {
+      h += '<p>Sign in or create an account. Enter your email and we’ll send you a link. No password.</p>' +
+        '<p class="fine">Optional. Keeps your results, streaks and leagues on every phone, browser and the app.</p>' +
+        '<form id="dnsyncForm" novalidate><label class="flab" for="dnsyncEmail">Your email</label>' +
+        '<div class="inline"><input id="dnsyncEmail" type="email" autocomplete="email" inputmode="email" ' +
+        'placeholder="you@example.com" required>' +
+        '<button class="btn go" type="submit"' + (ui.busy ? ' disabled' : '') + '>Email me a sign-in link</button></div></form>';
+    }
+    h += '<p class="msg' + (ui.msg && !ui.bad ? ' ok' : '') + '" id="dnsyncMsg" role="status">' + esc(ui.msg) + '</p>';
+    box.innerHTML = h;
+    box.hidden = false;
+    box.setAttribute('data-signed-in', s ? 'yes' : 'no');
+  }
   function render(s){
     if (!box) return;
+    if (s && box.getAttribute('data-layout') === 'rows') return renderRows(s);   // signed out: the same form as before
     var h = '<h2>' + (s ? 'Your account' : 'Sign in or create an account') + '</h2>';
     if (s) {
       h += '<p>Signed in as <b>' + esc(s.user && s.user.email) + '</b></p>' +
@@ -261,13 +313,7 @@
         '<div class="acts"><button class="btn" type="button" data-sync="now"' + (ui.busy ? ' disabled' : '') + '>Sync now</button>' +
         '<button class="btn" type="button" data-sync="out"' + (ui.busy ? ' disabled' : '') + '>Sign out</button></div>';
       if (ui.confirm === 'forget') {
-        // Confirmed on the page, never with a browser pop-up.
-        h += '<div class="confirm" id="dnsyncConfirm" role="group" aria-labelledby="dnsyncConfirmQ" ' +
-          'style="margin-top:14px;padding:12px 14px;border:1px solid var(--bad);border-radius:10px">' +
-          '<p id="dnsyncConfirmQ"><b>Delete your saved data?</b> This deletes the copy of your results, streaks and leagues ' +
-          'kept for your email, and signs you out. This browser’s results stay here.</p>' +
-          '<div class="acts"><button class="btn warn" type="button" data-sync="forget-yes"' + (ui.busy ? ' disabled' : '') + '>Delete my saved data</button>' +
-          '<button class="btn" type="button" data-sync="cancel"' + (ui.busy ? ' disabled' : '') + '>Keep it</button></div></div>';
+        h += confirmBlock();   // confirmed on the page, never with a browser pop-up
       } else {
         h += '<p><button class="lnk warn" type="button" data-sync="forget"' + (ui.busy ? ' disabled' : '') + '>Delete my saved data</button></p>';
       }
@@ -285,6 +331,7 @@
     h += '<p class="msg' + (ui.msg && !ui.bad ? ' ok' : '') + '" id="dnsyncMsg" role="status">' + esc(ui.msg) + '</p>';
     box.innerHTML = h;
     box.hidden = false;
+    box.setAttribute('data-signed-in', s ? 'yes' : 'no');
   }
   function refresh(){
     if (!known()) { render(null); return Promise.resolve(); }
@@ -308,7 +355,16 @@
 
   function start(){
     box = document.getElementById('dnsync');
-    if (!box) return;
+    if (!box) {
+      // board.html without the card (7 Nov 2026): still sync a signed-in player as the page opens, and
+      // reload once if results or a league came in, as before
+      if (!known()) return settled();
+      client().then(session).then(function (s) {
+        if (!s) return settled();
+        return sync().then(afterSync, settled);
+      }).catch(settled);
+      return;
+    }
     box.addEventListener('submit', function (e) {
       if (e.target.id !== 'dnsyncForm') return;
       e.preventDefault();
@@ -337,6 +393,11 @@
       }
     });
 
+    // account.html's Delete my data asks for the same on-page confirm
+    document.addEventListener('dn:sync-forget', function () {
+      ui.confirm = 'forget'; ui.msg = ''; refresh().then(function () {
+        var y = box.querySelector('[data-sync="forget-yes"]'); if (y) { y.focus(); try { y.scrollIntoView({ block: 'center' }); } catch (e) {} } });
+    });
     var first;
     if (link && link.error) { ui.msg = 'That sign-in link didn’t work: ' + link.error + '. Ask for a new one.'; ui.bad = true; first = refresh(); }
     else if (link) first = act(function (sb) {
