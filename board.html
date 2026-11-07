@@ -83,11 +83,11 @@
   .pg-arrow:hover:not(:disabled){background:var(--accent-soft)}
   .pg-arrow:disabled{opacity:.3;cursor:default}
   .pg-mid{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:12px}
-  .pg-ico{flex:none;width:36px;height:36px;display:grid;place-content:center}
-  .pg-ico img{width:36px;height:36px;display:block}
+  .pg-ico{flex:none;width:48px;height:48px;display:grid;place-content:center}
+  .pg-ico img{width:48px;height:48px;display:block}
   .pg-ico.mono{border-radius:8px}
   .pg-txt{min-width:0}
-  .pg-title{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.01em;line-height:1.2;
+  .pg-title{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.01em;line-height:1.2;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .pg-day{position:relative;display:inline-flex;align-items:center;gap:5px;font:500 13.5px var(--body);color:var(--muted);
     background:none;border:0;padding:0;cursor:pointer}
@@ -101,8 +101,8 @@
   .dot:hover i{background:var(--muted)}
   .dot[aria-pressed="true"]:hover i{background:var(--accent)}
   .notes{margin-top:12px;font-size:13.5px;color:var(--muted)}
-  .acts.share{justify-content:center;margin:24px 0 32px}
-  .btn.quiet{min-height:44px;padding:8px 18px;background:var(--accent-soft);border-color:transparent;color:var(--accent);font-size:14px}
+  .acts.share{justify-content:flex-start;margin:24px 0 32px}
+  .btn.quiet{min-height:48px;padding:8px 20px;background:var(--accent-soft);border-color:transparent;color:var(--accent);font:700 15px var(--display)}   /* the app's tonal Button */
   .setcard .done{margin-top:16px}
   .toast{position:fixed;left:50%;bottom:calc(84px + var(--dn-bot,env(safe-area-inset-bottom,0px)));transform:translateX(-50%);z-index:60;
     padding:10px 16px;border-radius:999px;background:var(--ink);color:var(--on-ink);font:600 14px var(--body);box-shadow:0 6px 18px rgba(0,0,0,.2)}
@@ -123,16 +123,23 @@
   .rows{list-style:none;margin-top:10px;border-top:1px solid var(--hair)}
   /* one rule between the masthead and the table (7 Nov 2026, as the app): the first table has no top rule */
   #app > ol.rows:first-of-type{border-top:0}
-  .row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:11px 2px;
+  .row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:14px 2px;min-height:58px;
     border-bottom:1px solid var(--hair)}
   .row .rk{font-family:var(--display);font-weight:800;font-size:16px;text-align:center;color:var(--muted)}
-  .row .rk.medal{font-size:20px}
-  .row .who{min-width:0;font-weight:600;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .who{min-width:0;font-weight:600;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .row .who .you{font:700 10.5px var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-left:6px}
   .row .who .st{display:block;font-weight:500;font-size:12.5px;color:var(--faint)}
-  .row .res{font-family:var(--display);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums;text-align:right}
+  .row .res{font-family:var(--display);font-weight:700;font-size:19px;font-variant-numeric:tabular-nums;text-align:right}
   .row .res small{display:block;font:500 12px var(--body);color:var(--faint)}
   .row.me{background:var(--accent-soft)}
+  /* podium discs and your row's tint (7 Nov 2026, as the app's PlaceMedal: gold, silver, bronze with a darker rim and a highlight) */
+  .disc{position:relative;display:grid;place-content:center;width:28px;height:28px;margin:0 auto;border-radius:50%;border:2px solid;
+    overflow:hidden;font:800 14px/1 var(--display);font-style:normal}
+  .disc::before{content:"";position:absolute;top:3px;left:5px;width:9px;height:5px;border-radius:3px;opacity:.85;transform:rotate(-30deg)}
+  .disc.d1{background:#E8B931;border-color:#B88A12;color:#5A4300} .disc.d1::before{background:#FFF1B8}
+  .disc.d2{background:#C3CAD6;border-color:#8C95A6;color:#2B3140} .disc.d2::before{background:#F4F6FA}
+  .disc.d3{background:#C9874A;border-color:#94592A;color:#3D2310} .disc.d3::before{background:#F2C9A0}
+  .row.me.p1{background:#E8B93122} .row.me.p2{background:#C3CAD622} .row.me.p3{background:#C9874A22}
   .row.dim .res,.row.dim .who{color:var(--muted)}
   .sub{margin-top:18px;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
   .notyet{margin-top:6px;font-size:14.5px;color:var(--muted)}
@@ -232,6 +239,16 @@
     <a href="stats.html?from=tabs" data-tab="stats" data-feature="stats" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20v-6M12 20V6M18 20v-9M3.5 20h17"/></svg><span>Stats</span></a>
     <a href="board.html?from=tabs#account" data-tab="account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.2a6.5 6.5 0 0 1 11 0"/></svg><span>Account</span></a>
   </nav>
+  <nav class="controls" aria-label="Sections">
+    <div class="bar">
+      <div class="sections" role="group" aria-label="Sections">
+        <a class="sec puzzles" href="puzzles.html" aria-current="page">Puzzles</a>
+        <a class="sec games" href="games.html">Games</a>
+        <a class="sec news" href="index.html">News</a>
+        <a class="sec lab" href="lab.html">Lab</a>
+      </div>
+    </div>
+  </nav>
   <section class="pager" id="pillbar" aria-label="Puzzle" hidden></section>
 
   <main id="app"><p class="loading">Loading…</p></main>
@@ -290,7 +307,14 @@
     var small = t === 'link' ? (r.mistakes === 1 ? '1 mistake' : (r.mistakes || 0) + ' mistakes') : '';
     return { big: mmss(r.secs), small: small };
   }
-  var MEDAL = { 1: '🥇', 2: '🥈', 3: '🥉' };
+  var MEDAL = { 1: '🥇', 2: '🥈', 3: '🥉' };   // share texts only; the board shows discs (rankCell)
+  /* a podium place as a struck-metal disc, 4th on a plain number (7 Nov 2026, as the app's PlaceMedal) */
+  function rankCell(rank, dim) {
+    if (dim) return '<span class="rk">–</span>';
+    return rank >= 1 && rank <= 3 ? '<span class="rk"><i class="disc d' + rank + '" aria-label="' + ['', '1st', '2nd', '3rd'][rank] + '">' + rank + '</i></span>'
+      : '<span class="rk">' + rank + '</span>';
+  }
+  function rowCls(r, dim) { return 'row' + (r.me ? ' me' + (!dim && r.rank >= 1 && r.rank <= 3 ? ' p' + r.rank : '') : '') + (dim ? ' dim' : ''); }
   // v= is the link-preview version. WhatsApp keeps the preview it first made for a link,
   // so bump it when the share image changes (assets/share-card.png; see SITE.md).
   var PREVIEW_V = '2';
@@ -646,7 +670,7 @@
     if (!played && S.date === NB.today()) h += '<div class="play"><span>You haven’t played today’s Daily yet.</span><a href="reports/2026-11-04-arcade-astro-drop.html">Play Astro Drop →</a></div>';
     if (!d.ranked.length) h += '<p class="nobody">Nobody in ' + esc(L.name) + ' has played the Daily ' + (S.date === NB.today() ? 'yet today' : 'on this day') + '.</p>';
     else h += '<ol class="rows">' + d.ranked.map(function (r) {
-      return '<li class="row' + (r.me ? ' me' : '') + '"><span class="rk' + (MEDAL[r.rank] ? ' medal' : '') + '">' + (MEDAL[r.rank] || r.rank) + '</span>' +
+      return '<li class="' + rowCls(r) + '">' + rankCell(r.rank) +
         '<span class="who">' + nick(r.nick) + (r.me ? '<span class="you">you</span>' : '') + '</span>' +
         '<span class="res">' + Number(r.score).toLocaleString('en-GB') + ' pts<small>' + '★'.repeat(r.stars) + '</small></span></li>';
     }).join('') + '</ol>';
@@ -681,7 +705,7 @@
   /* the one action under a board: a quiet Share (Invite and League settings are in the league menu) */
   function shareBtn(act) { return '<div class="acts share"><button class="btn quiet" data-act="' + act + '">Share leaderboard</button></div>'; }
   function allRow(r, of) {
-    return '<li class="row' + (r.me ? ' me' : '') + '"><span class="rk' + (MEDAL[r.rank] ? ' medal' : '') + '">' + (MEDAL[r.rank] || r.rank) + '</span>' +
+    return '<li class="' + rowCls(r) + '">' + rankCell(r.rank) +
       '<span class="who">' + nick(r.nick) + (r.me ? '<span class="you">you</span>' : '') + '</span>' +
       '<span class="res">' + pts(r.points) + '<small>' + r.completed + ' of ' + of + ' done' + '</small></span></li>';
   }
@@ -713,9 +737,7 @@
   }
   function row(r, T, dim) {
     var res = result(T.id, r);
-    var rk = dim ? '–' : (MEDAL[r.rank] || r.rank);
-    return '<li class="row' + (r.me ? ' me' : '') + (dim ? ' dim' : '') + '">' +
-      '<span class="rk' + (!dim && MEDAL[r.rank] ? ' medal' : '') + '">' + rk + '</span>' +
+    return '<li class="' + rowCls(r, dim) + '">' + rankCell(r.rank, dim) +
       '<span class="who">' + nick(r.nick) + (r.me ? '<span class="you">you</span>' : '') +
       (!dim && isRecord(T.id, r.nick) ? '<span class="st">🏆 New league record</span>' : '') +
       (r.streak > 1 ? '<span class="st">🔥 ' + r.streak + '-day streak</span>' : '') + '</span>' +
