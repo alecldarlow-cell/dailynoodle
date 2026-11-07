@@ -29,11 +29,14 @@ test('ARCHIVE-01: GIVEN a day finished in full WHEN its month opens THEN the day
  expect(phone.errors).toEqual([]);expect(phone.missing).toEqual([]);
 });
 
-test('ARCHIVE-02: GIVEN a type pill WHEN chosen THEN the calendar and the day show only that type',async({phone})=>{
+test('ARCHIVE-02: GIVEN a type chosen in the picker WHEN chosen THEN the calendar and the day show only that type',async({phone})=>{
  const minis=day('2026-10-10').filter(it=>it.type==='mini');
  await seed(phone,saveAll(minis));
  await goto(phone,'archive.html?m=2026-10');
- await H.tap(phone.p,phone.p.locator('#ar-types button[data-t="mini"]'));await H.wait(phone.p,100);
+ // 7 Nov 2026: the type chips became one picker (a sheet of tiles), as the app's Archive.
+ await H.tap(phone.p,phone.p.locator('#ar-pick'));await H.wait(phone.p,100);
+ await H.tap(phone.p,phone.p.locator('#ar-sheet .ar-tile[data-t="mini"]'));await H.wait(phone.p,100);
+ await expect(phone.p.locator('#ar-pick-name')).toHaveText('Mini');
  await expect(phone.p.locator('button.ar-c[data-d="2026-10-10"] small svg.ar-tk')).toHaveCount(1);
  await expect(phone.p.locator('button.ar-c[data-d="2026-10-11"] small')).toHaveText('');
  await H.tap(phone.p,phone.p.locator('button.ar-c[data-d="2026-10-10"]'));await H.wait(phone.p,100);
@@ -84,4 +87,59 @@ test('ARCHIVE-05: GIVEN every puzzle of the day finished WHEN a finished one reo
  const row=phone.p.locator('.fin-next-done');
  await expect(row).toContainText('Try the archive');
  await expect(row).toHaveAttribute('href','../archive.html?from=finish');
+});
+
+test('ARCHIVE-06: GIVEN the archive opens WHEN nothing is chosen THEN it is a list, newest first by month, with one row of controls',async({phone})=>{
+ await goto(phone,'archive.html');
+ const p=phone.p;
+ await expect(p.locator('#ar-listview')).toBeVisible();await expect(p.locator('#ar-cal')).toBeHidden();
+ const past=items.filter(it=>it.date<TODAY);
+ await expect(p.locator('#ar-listview a.ar-row')).toHaveCount(past.length);
+ await expect(p.locator('#ar-listview .ar-sec').first()).toHaveText('October 2026');
+ const first=await p.locator('#ar-listview a.ar-row').first().getAttribute('href');
+ expect(first).toContain('2026-10-18');
+ await expect(p.locator('#ar-listview a.ar-row').first()).toContainText('Yesterday');
+ // the controls: picker, Hide done, calendar; every one at least 44 px tall
+ for(const id of ['#ar-pick','#ar-hide','#ar-view']){const b=await p.locator(id).boundingBox();expect(b.height,id).toBeGreaterThanOrEqual(44);}
+ await expect(p.locator('#ar-pick-name')).toHaveText('All');
+ expect(await p.locator('#ar-pick-ico .ar-mark svg').count()).toBe(1);
+ expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ expect(phone.errors).toEqual([]);
+});
+
+test('ARCHIVE-07: GIVEN puzzles finished WHEN Hide done is on THEN they leave the list, the address keeps it, and the calendar hides the switch',async({phone})=>{
+ const done=day('2026-10-18');
+ await seed(phone,saveAll(done));
+ await goto(phone,'archive.html?t=mini');
+ const p=phone.p;
+ const minis=items.filter(it=>it.type==='mini'&&it.date<TODAY);
+ await expect(p.locator('#ar-listview a.ar-row')).toHaveCount(minis.length);
+ await expect(p.locator('#ar-listview a.ar-row.ok')).toHaveCount(1);
+ await H.tap(p,p.locator('#ar-hide'));await H.wait(p,100);
+ await expect(p.locator('#ar-hide')).toHaveAttribute('aria-checked','true');
+ await expect(p.locator('#ar-listview a.ar-row')).toHaveCount(minis.length-1);
+ expect(new URL(p.url()).search).toBe('?t=mini&h=1');
+ await H.tap(p,p.locator('#ar-view'));await H.wait(p,100);
+ await expect(p.locator('#ar-cal')).toBeVisible();await expect(p.locator('#ar-hide')).toBeHidden();
+ await expect(p.locator('#ar-view')).toHaveAttribute('aria-pressed','true');
+ await H.tap(p,p.locator('#ar-view'));await H.wait(p,100);
+ await expect(p.locator('#ar-listview')).toBeVisible();
+ expect(phone.errors).toEqual([]);
+});
+
+test('ARCHIVE-08: GIVEN the picker sheet WHEN opened THEN it is titled "Choose a puzzle", focus is on the current tile, and Escape or the scrim closes it',async({phone})=>{
+ await goto(phone,'archive.html');
+ const p=phone.p;
+ await H.tap(p,p.locator('#ar-pick'));await H.wait(p,100);
+ await expect(p.locator('#ar-sheet')).toBeVisible();
+ await expect(p.locator('#ar-sheet-title')).toHaveText('Choose a puzzle');
+ await expect(p.locator('#ar-sheet .ar-tile')).toHaveCount(10);
+ await expect(p.locator('#ar-sheet .ar-tile[data-t=""]')).toBeFocused();
+ await expect(p.locator('#ar-pick')).toHaveAttribute('aria-expanded','true');
+ await p.keyboard.press('Escape');
+ await expect(p.locator('#ar-sheet')).toBeHidden();await expect(p.locator('#ar-pick')).toBeFocused();
+ await H.tap(p,p.locator('#ar-pick'));await H.wait(p,100);
+ await p.mouse.click(10,10);await H.wait(p,100);
+ await expect(p.locator('#ar-sheet')).toBeHidden();
+ expect(phone.errors).toEqual([]);
 });

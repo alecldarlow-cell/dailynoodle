@@ -46,7 +46,7 @@
 <div class="wrap">
   <header class="mast">
     <div class="mono" aria-hidden="true"><svg class="noodle" viewBox="292 220 462 600" width="18" height="23" focusable="false"><path d="M352 760V360a80 80 0 0 1 160 0v320a80 80 0 0 0 160 0V298" fill="none" stroke="currentColor" stroke-width="96" stroke-linecap="round"/><circle cx="672" cy="298" r="66" fill="none" stroke="currentColor" stroke-width="20"/><circle cx="672" cy="298" r="66" fill="#FFD54A"/></svg></div>
-    <div class="word">Daily<b>Noodle</b></div>
+    <h1 class="word">Daily<b>Noodle</b></h1>
     <div class="kick">Archive</div>
   </header>
   <nav class="tabs" aria-label="Puzzles">
@@ -66,13 +66,20 @@
         <a class="sec lab" href="lab.html">Lab</a>
       </div>
     </div>
-    <div class="chips" id="ar-types" role="group" aria-label="Puzzle type"></div>
   </nav>
 
-  <section class="ar-cal" aria-labelledby="ar-month">
+  <div class="ar-bar" id="ar-bar" role="group" aria-label="Show">
+    <button type="button" class="ar-pick" id="ar-pick" aria-haspopup="dialog" aria-expanded="false" aria-controls="ar-sheet"><span class="ar-ico" id="ar-pick-ico" aria-hidden="true"></span><span class="ar-pick-name" id="ar-pick-name">All</span><svg class="ar-chev" viewBox="0 0 12 8" aria-hidden="true" focusable="false"><path d="M1.5 1.5L6 6l4.5-4.5"/></svg></button>
+    <button type="button" class="ar-hide" id="ar-hide" role="switch" aria-checked="false"><span class="ar-hide-tk" aria-hidden="true"><svg viewBox="0 0 16 16" focusable="false"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Hide done</button>
+    <button type="button" class="ar-view" id="ar-view" aria-pressed="false" aria-label="Show as a calendar"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg></button>
+  </div>
+
+  <section class="ar-listview" id="ar-listview" aria-label="Past puzzles" hidden></section>
+
+  <section class="ar-cal" id="ar-cal" aria-labelledby="ar-month" hidden>
     <div class="ar-head">
       <button type="button" class="ar-nav" id="ar-prev" aria-label="Previous month">‹</button>
-      <h1 class="ar-month" id="ar-month" aria-live="polite">Archive</h1>
+      <h2 class="ar-month" id="ar-month" aria-live="polite">Archive</h2>
       <button type="button" class="ar-nav" id="ar-next" aria-label="Next month">›</button>
     </div>
     <div class="ar-dow" aria-hidden="true"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
@@ -87,6 +94,14 @@
     <p class="privacy"><a href="how-to-play.html">How to play</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">Contact us</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
   </footer>
 </div>
+
+<div class="ar-scrim" id="ar-scrim" hidden></div>
+<div class="ar-sheet" id="ar-sheet" role="dialog" aria-modal="true" aria-labelledby="ar-sheet-title" hidden>
+  <div class="ar-grab" aria-hidden="true"></div>
+  <h2 class="ar-sheet-title" id="ar-sheet-title">Choose a puzzle</h2>
+  <div class="ar-tiles" id="ar-tiles" role="radiogroup" aria-labelledby="ar-sheet-title"></div>
+</div>
+<template id="ar-mark"><svg viewBox="292 220 462 600" focusable="false"><path d="M352 760V360a80 80 0 0 1 160 0v320a80 80 0 0 0 160 0V298" fill="none" stroke="currentColor" stroke-width="96" stroke-linecap="round"/><circle cx="672" cy="298" r="66" fill="#FFD54A"/></svg></template>
 <script src="archive.js"></script>
 <script src="dn-nav.js" defer></script>
 <script src="dn-track.js" defer></script>
