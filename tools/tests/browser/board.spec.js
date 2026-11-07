@@ -162,7 +162,7 @@ test.describe('BOARD-E2E', () => {
 
       // 6. B leaves: B's row is hidden from the board, not deleted.
       await go(B, `board.html?p=mini&d=${DAY}`);
-      await B.p.locator('details.set summary').click();
+      await H.tap(B.p, B.p.locator('#lgbtn')); await H.tap(B.p, B.p.locator('[data-menu="settings"]'));   // League settings: in the league menu since 7 Nov 2026
       await H.tap(B.p, B.p.locator('[data-act="leave"]'));
       await expect(B.p.locator('[data-go="start"]')).toHaveCount(1);   // back to the intro: in no league
       expect(await q(db, `select m.left_at is not null as gone, m.left_by, m.left_nick, r.secs from board.members m
@@ -175,7 +175,7 @@ test.describe('BOARD-E2E', () => {
       await go(B, invite.pathname.slice(1) + invite.search);
       await B.p.fill('input[name="nick"]', 'Bea');
       await H.tap(B.p, B.p.locator('#f .btn.go'));
-      await expect(B.p.locator('.daybar')).toHaveCount(1);
+      await expect(B.p.locator('.pager .pg')).toHaveCount(1);
       await go(B, `board.html?p=mini&d=${DAY}`);   // a board opened with no puzzle shows All puzzles since 24 Oct 2026
       await expect(B.p.locator('ol.rows li.row')).toHaveCount(2);
       expect(await rows(B.p)).toEqual(want);
@@ -199,7 +199,7 @@ test.describe('BOARD-E2E', () => {
     }
   });
 
-  test('BOARD-REC-E2E: Records tab, honours, a player card, the record line and last week’s crown', async ({ browser }) => {
+  test('BOARD-REC-E2E: Records stop (Honours, Players, League records), a player card, no record line or crown on boards', async ({ browser }) => {
     test.setTimeout(60000);
     const A = await phone(browser, db, 'A');
     try {
@@ -220,28 +220,31 @@ test.describe('BOARD-E2E', () => {
         values ($1, $2, 'mini', $3, 'solved', $4)`, [who, `reports/${d}-crossword-mini-0${d.slice(8)}.html`, d, secs]);
       // DAY is Sun 18 Oct, so last week is Mon 5 to Sun 11 Oct: Bea's
       await go(A, 'board.html?p=records');
-      await expect(A.p.locator('.chip[data-p="records"]')).toHaveAttribute('aria-pressed', 'true');
-      const recRow = A.p.locator('ol.rows').first().locator('li.row');
+      await expect(A.p.locator('.dot[data-p="records"]')).toHaveAttribute('aria-pressed', 'true');
+      await expect(A.p.locator('.pg-title')).toHaveText('Records');
+      // 7 Nov 2026 (as the app): Honours, then Players, then League records
+      await expect(A.p.locator('.sub')).toHaveText(['Honours', 'Players', 'League records']);
+      const recRow = A.p.locator('ol.rows').nth(2).locator('li.row');
       await expect(recRow).toHaveCount(1);
       await expect(recRow).toContainText('Mini'); await expect(recRow).toContainText('Ada'); await expect(recRow).toContainText('0:30');
       await expect(recRow).toContainText('🏆 today');
-      const honours = A.p.locator('ol.rows').nth(1);
+      const honours = A.p.locator('ol.rows').first();
       await expect(honours.locator('li', { hasText: 'Daily wins' })).toContainText('Bea');
       await expect(honours.locator('li', { hasText: 'Daily wins' }).locator('.res')).toHaveText('2');
       await expect(honours.locator('li', { hasText: 'Weekly titles' })).toContainText('Bea');
-      await expect(A.p.locator('.crown')).not.toHaveCount(0);   // 👑 next to Bea, last week's champion
+      await expect(A.p.locator('.crown')).toHaveCount(0);   // last week's champion is no longer marked (7 Nov 2026)
       // a player card from a tapped name, and back
-      await H.tap(A.p, A.p.locator('ol.rows').nth(2).locator('.nk', { hasText: 'Bea' }));
-      await expect(A.p.locator('.bcard h2')).toContainText('Bea 👑');
+      await H.tap(A.p, A.p.locator('ol.rows').nth(1).locator('.nk', { hasText: 'Bea' }));
+      await expect(A.p.locator('.bcard h2')).toHaveText('Bea');
       await expect(A.p.locator('.hgrid')).toContainText('Daily wins');
       await expect(A.p.locator('.bcard ol.rows li', { hasText: 'Mini' }).locator('.res')).toContainText('0:38');
       await H.tap(A.p, A.p.locator('[data-act="cardback"]'));
       await expect(A.p.locator('.hgrid')).toHaveCount(0);
-      // the Mini's daily board: the record line, the trophy on today's record row and the crown by Bea
+      // the Mini's daily board: the trophy on today's record row; no standing record line and no crown (7 Nov 2026)
       await go(A, `board.html?p=mini&d=${DAY}`);
-      await expect(A.p.locator('.reline')).toContainText('League record 0:30 · Ada');
+      await expect(A.p.locator('.reline')).toHaveCount(0);
       await expect(A.p.locator('li.row', { hasText: 'Ada' })).toContainText('🏆 New league record');
-      await expect(A.p.locator('li.row', { hasText: 'Bea' }).locator('.crown')).toHaveCount(1);
+      await expect(A.p.locator('li.row', { hasText: 'Bea' })).not.toContainText('👑');
       expect(A.calls.filter(c => c.status !== 200), 'failed board calls').toEqual([]);
       expect(A.p.errs, 'page errors').toEqual([]);
     } finally { await A.ctx.close(); }
@@ -293,12 +296,71 @@ test.describe('BOARD-E2E', () => {
       await go(A, `board.html?p=tangle&d=${DAY}`);
       const row = A.p.locator('ol.rows li.row', { hasText: 'Ada' });
       await expect(row.locator('.res')).toHaveText('29 pts');
+      // 7 Nov 2026 (as the app): the pager names the puzzle and the day; tapping the day opens the earlier-days line
+      await expect(A.p.locator('.pg-day')).toContainText('Today · Sun 18 Oct');
+      await expect(A.p.locator('.daybar')).toHaveCount(0);
+      await H.tap(A.p, A.p.locator('.pg-day'));
       await expect(A.p.locator('.daylabel')).toHaveText('Today · Sun 18 Oct');
       await expect(A.p.locator('#lgslot .lgk')).toHaveCount(0);
       await expect(A.p.locator('#lgslot .lgn')).toContainText('Slim');
       const tap = await A.p.locator('.daybtn').first().evaluate(e => { const r = e.getBoundingClientRect(), a = getComputedStyle(e, '::after');
         return { h: r.height, inset: a.inset || a.top }; });
       expect(tap.h).toBe(32); expect(tap.inset).toContain('-6px');   // 32 px drawn, 44 px to tap
+      expect(A.p.errs, 'page errors').toEqual([]);
+    } finally { await A.ctx.close(); }
+  });
+
+  // 7 Nov 2026 (as the app's Leagues): the pager steps All puzzles → each puzzle → Astro Drop → Records; the league's name
+  // is the masthead kicker and opens the menu (Invite people, League settings, Start, Join); Share is the board's one action.
+  test('BOARD-PAGER-01: pager arrows and dots, the league menu, settings as a card with Done, one quiet Share', async ({ browser }) => {
+    test.setTimeout(60000);
+    const A = await phone(browser, db, 'A');
+    try {
+      await go(A, 'board.html');
+      await H.tap(A.p, A.p.locator('[data-go="start"]'));
+      await A.p.fill('input[name="lname"]', 'Noodlers');
+      await A.p.fill('input[name="nick"]', 'Ada');
+      await H.tap(A.p, A.p.locator('#f .btn.go'));
+      await expect(A.p.locator('.bcard h2')).toHaveText('Noodlers is ready');
+      const ada = (await q(db, "select player from board.members where nickname = 'Ada'"))[0].player;
+      await q(db, `insert into board.results (player, puzzle_path, ptype, puzzle_date, outcome, secs)
+        values ($1, $2, 'mini', $3, 'solved', 42)`, [ada, `reports/${DAY}-crossword-mini-0099.html`, DAY]);
+      await go(A, `board.html?p=mini&d=${DAY}`);
+      // the kicker and its menu
+      await expect(A.p.locator('#lgbtn .lgn')).toHaveText('Noodlers');
+      await expect(A.p.locator('#lgmenu')).toBeHidden();
+      await H.tap(A.p, A.p.locator('#lgbtn'));
+      await expect(A.p.locator('#lgmenu button')).toHaveText(['Noodlers', 'Invite people', 'League settings', '＋ Start a new league', '＋ Join with a code']);
+      await H.tap(A.p, A.p.locator('[data-menu="invite"]'));
+      await expect(A.p.locator('#lgmenu')).toBeHidden();
+      const sh = (await A.p.evaluate(() => window.__shared)).pop();
+      expect(sh.text).toContain('Join Noodlers on Daily Noodle:');
+      // the board: one quiet Share, no Invite, no settings at the foot; the pager names the puzzle with its tile
+      await expect(A.p.locator('#app [data-act]')).toHaveCount(1);
+      await expect(A.p.locator('#app [data-act="share"]')).toHaveText('Share leaderboard');
+      await expect(A.p.locator('details.set')).toHaveCount(0);
+      await expect(A.p.locator('.pg-ico img')).toHaveAttribute('src', 'assets/mini-thumb.svg');
+      await expect(A.p.locator('.dot')).toHaveCount(12);
+      await expect(A.p.locator('.dot[data-p="mini"]')).toHaveAttribute('aria-pressed', 'true');
+      // the arrows step along the stops; the last stop is Records, which has no next
+      await H.tap(A.p, A.p.locator('.pg-arrow').nth(1)); await H.wait(A.p, 400);
+      await expect(A.p.locator('.dot[data-p="doku"]')).toHaveAttribute('aria-pressed', 'true');
+      await expect(A.p).toHaveURL(/p=doku/);
+      await H.tap(A.p, A.p.locator('.pg-arrow').first()); await H.tap(A.p, A.p.locator('.pg-arrow').first()); await H.wait(A.p, 400);
+      await expect(A.p.locator('.pg-title')).toHaveText('All puzzles');
+      await expect(A.p.locator('.pg-arrow').first()).toBeDisabled();
+      await H.tap(A.p, A.p.locator('.dot[data-p="records"]')); await H.wait(A.p, 400);
+      await expect(A.p.locator('.pg-title')).toHaveText('Records');
+      await expect(A.p.locator('.pg-arrow').nth(1)).toBeDisabled();
+      // League settings: a card at the top, closed with Done
+      await H.tap(A.p, A.p.locator('.dot[data-p="mini"]')); await H.wait(A.p, 400);
+      await H.tap(A.p, A.p.locator('#lgbtn')); await H.tap(A.p, A.p.locator('[data-menu="settings"]'));
+      await expect(A.p.locator('#setcard h2')).toHaveText('League settings');
+      await expect(A.p.locator('#app > *').first()).toHaveId('setcard');
+      await H.tap(A.p, A.p.locator('[data-act="setdone"]'));
+      await expect(A.p.locator('#setcard')).toHaveCount(0);
+      // no crown note, no record line, no Monday card; who hasn't played is one line
+      await expect(A.p.locator('.crownline, .reline, [data-recap]')).toHaveCount(0);
       expect(A.p.errs, 'page errors').toEqual([]);
     } finally { await A.ctx.close(); }
   });
@@ -318,7 +380,7 @@ test.describe('BOARD-E2E', () => {
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       for (const p of ['all', 'mini', 'link']) {
         await go(A, `board.html?p=${p}&d=${DAY}`);
-        await expect(A.p.locator('.daybar')).toHaveCount(1);
+        await expect(A.p.locator('.pager .pg')).toHaveCount(1);
         await expect(A.p.locator('.loading')).toHaveCount(0);
       }
       await go(A, 'board.html?p=records');

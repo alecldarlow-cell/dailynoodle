@@ -251,7 +251,7 @@ test.describe('SYNC-WEB', () => {
       await A.p.fill('input[name="lname"]', 'Family');
       await A.p.fill('input[name="nick"]', 'Alec');
       await H.tap(A.p, A.p.locator('#f .btn.go'));
-      await expect(A.p.locator('.daybar')).toHaveCount(1);
+      await expect(A.p.locator('.pager .pg')).toHaveCount(1);
       await solveMini(A, MINI17);
       const pid = (await store(A, 'noodle-board-v1')).pid;
 
@@ -297,14 +297,14 @@ test.describe('SYNC-WEB', () => {
       await A.p.fill('input[name="lname"]', 'Work');
       await A.p.fill('input[name="nick"]', 'Jo');
       await H.tap(A.p, A.p.locator('#f .btn.go'));
-      await expect(A.p.locator('.daybar')).toHaveCount(1);
+      await expect(A.p.locator('.pager .pg')).toHaveCount(1);
       await signIn(A, 'jo');
       await go(B, 'board.html');
       await H.tap(B.p, B.p.locator('[data-go="start"]'));
       await B.p.fill('input[name="lname"]', 'Family');
       await B.p.fill('input[name="nick"]', 'Alec');
       await H.tap(B.p, B.p.locator('#f .btn.go'));
-      await expect(B.p.locator('.daybar')).toHaveCount(1);
+      await expect(B.p.locator('.pager .pg')).toHaveCount(1);
       const mine = (await store(B, 'noodle-board-v1')).pid;
       await signIn(B, 'jo');
       await expect.poll(async () => !!(await store(B, 'noodle-board-v1')).pend, { timeout: 10000 }).toBe(true);
