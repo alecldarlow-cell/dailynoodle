@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ==== DN FEED META (the site front page reads these) ==== -->
+<meta name="dn:headline"   content="The briefing: Saturday 7 November">
+<meta name="dn:standfirst" content="London shares fall 1% as a global sell-off in AI stocks spreads from Wall Street · House prices fall 0.6% in October, the biggest annual drop since 2023, says Lloyds · Iran weighs a Qatari plan to end the war as Trump says a decision on strikes is near · Burnham promises…">
+<meta name="dn:topic"      content="Briefing">
+<meta name="dn:date"       content="2026-11-07">
+<meta name="dn:kind"       content="report">
+<meta name="dn:format"     content="briefing">
+<meta name="dn:read"       content="~3 min">
+
+<title>The briefing: Saturday 7 November — Noodle News</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canvas:#FCFCFB; --paper:#FFFFFF; --ink:#15171C; --muted:#5F636B;
+    --faint:#9AA0A6; --hair:#E6E6E2; --accent:#1C46C2; --accent-soft:#ECF0FC;
+    --contrast:#E0312A;
+    --display:'Archivo','Helvetica Neue',Arial,sans-serif;
+    --body:'Inter','Helvetica Neue',Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--canvas);color:var(--ink);font-family:var(--body);line-height:1.6;
+    -webkit-font-smoothing:antialiased;font-size:17px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px 72px}
+  a{color:inherit}
+
+  /* ---------- masthead ---------- */
+  .mast{display:flex;align-items:center;gap:11px;padding:22px 0 14px;border-bottom:2px solid var(--ink)}
+  .mono{width:30px;height:30px;background:var(--accent);color:#fff;font-family:var(--display);
+    font-weight:800;font-size:17px;display:grid;place-content:center;border-radius:4px;letter-spacing:-1px}
+  .word{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.02em}
+  .word b{color:var(--accent)}
+  .mast .kick{margin-left:auto;font-family:var(--body);font-weight:600;font-size:11px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--faint);text-align:right;line-height:1.5}
+
+  /* ---------- headline ---------- */
+  .head{padding:30px 0 8px}
+  .topic{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(31px,7vw,46px);line-height:1.05;letter-spacing:-.02em}
+  .standfirst{font-size:clamp(17px,2.6vw,20px);color:var(--muted);margin-top:16px;line-height:1.45}
+  .dateline{margin-top:18px;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--faint);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:11px 0}
+
+  /* ---------- hero stats ---------- */
+  .herostats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);
+    border:1px solid var(--hair);margin:26px 0 8px}
+  .hs{background:var(--canvas);padding:18px 14px}
+  .hs .n{font-family:var(--display);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:.95;
+    font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .hs .n small{font-size:.36em;font-weight:600;color:var(--muted);letter-spacing:0}
+  .hs .l{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.4}
+  @media(max-width:540px){.herostats{grid-template-columns:1fr 1fr}.hs:last-child{grid-column:1/-1}}
+
+  /* ---------- sections ---------- */
+  .section{margin-top:40px}
+  .eyebrow{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:9px;display:flex;align-items:center;gap:9px}
+  .eyebrow::before{content:"";width:18px;height:2px;background:var(--accent)}
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,4.4vw,28px);line-height:1.12;letter-spacing:-.01em}
+  .section p{margin-top:14px}
+  .section p + p{margin-top:12px}
+
+  /* ---------- exhibit ---------- */
+  .exhibit{margin:26px 0;border:1px solid var(--hair);background:var(--paper);border-radius:6px;overflow:hidden}
+  .ex-head{padding:16px 18px 4px}
+  .ex-num{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  .ex-title{font-family:var(--display);font-weight:700;font-size:17px;margin-top:4px;line-height:1.25}
+  .ex-chart{padding:10px 14px 4px}
+  .ex-cap{padding:4px 18px 16px;font-size:12.5px;color:var(--muted);line-height:1.5;
+    border-top:1px solid var(--hair);margin-top:6px;padding-top:12px}
+  .ex-cap b{color:var(--ink);font-weight:600}
+
+  /* ---------- DN chart library styling (real-px responsive SVG) ---------- */
+  .dn-fig{margin:0}
+  .dn-svg{display:block;width:100%;height:auto;overflow:visible}
+  .dn-ax{font-family:var(--body);font-weight:500;fill:var(--faint);font-size:11px}
+  .dn-axlabel{font-family:var(--body);font-weight:600;fill:var(--muted);font-size:11px;letter-spacing:.02em}
+  .dn-clabel{font-family:var(--body);font-weight:600;fill:var(--ink);font-size:12px}
+  .dn-vlabel{font-family:var(--display);font-weight:700;fill:var(--ink);font-size:12.5px;font-variant-numeric:tabular-nums}
+  .dn-endlab{font-family:var(--display);font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
+  .dn-anno{font-family:var(--body);font-weight:600;fill:var(--ink);font-size:11.5px}
+  .dn-annosub{font-family:var(--body);font-weight:500;fill:var(--faint);font-size:10.5px;letter-spacing:.02em}
+  .dn-strip-name{font-family:var(--body);font-weight:600}
+  .dn-legend{display:flex;flex-wrap:wrap;gap:7px 16px;padding:10px 4px 2px;
+    font-family:var(--body);font-size:12px;color:var(--muted)}
+  .dn-key{display:inline-flex;align-items:center;gap:7px}
+  .dn-key i{width:12px;height:12px;border-radius:2px;display:inline-block;flex:0 0 auto}
+  .dn-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  /* sankey: labels keep a paper halo so they stay legible over flow ribbons */
+  .dn-nodelabel{paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+  .dn-flow{transition:fill-opacity .15s ease}
+  .dn-flow:hover{fill-opacity:.72}
+  @media(prefers-reduced-motion:reduce){.dn-flow{transition:none}}
+
+  /* ---------- callout ---------- */
+  .callout{margin:24px 0;background:var(--accent-soft);border-left:3px solid var(--accent);
+    padding:16px 18px;border-radius:0 6px 6px 0;font-size:16px}
+  .callout b{font-weight:700}
+
+  /* ---------- inline citation + source tiers ---------- */
+  sup.cite{font-family:var(--body);font-weight:700;font-size:.64em;line-height:0;margin-left:1px}
+  sup.cite a{color:var(--accent);text-decoration:none;padding:0 1px}
+  sup.cite a:hover{text-decoration:underline}
+  .tier{display:inline-block;font-family:var(--body);font-weight:700;font-size:10px;letter-spacing:.04em;
+    padding:1px 5px;border-radius:3px;vertical-align:middle;margin-right:7px}
+  .tier.t1{background:#E6EDFB;color:#1740A6}
+  .tier.t2{background:#EAF3EC;color:#1C6B3A}
+  .tier.t3{background:#F1EEE6;color:#7A6A36}
+
+  /* ---------- "what we don't know" ---------- */
+  .unknowns{margin:24px 0;border:1px dashed var(--faint);border-radius:6px;padding:15px 18px;background:#fff}
+  .unknowns .h{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .unknowns p{font-size:14.5px;color:var(--muted);margin:0}
+
+  /* ---------- positions (contested only) ---------- */
+  .positions{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+  @media(max-width:560px){.positions{grid-template-columns:1fr}}
+  .pos{border:1px solid var(--hair);border-radius:6px;padding:16px;background:var(--paper)}
+  .pos .tag{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .pos.case .tag{color:var(--accent)} .pos.counter .tag{color:var(--contrast)}
+  .pos p{font-size:14.5px;color:var(--ink)}
+  .pos .kind{font-size:11px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
+
+  /* ---------- stat band ---------- */
+  .statband{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair);margin-top:24px}
+  .statband .c{background:var(--paper);padding:16px 14px}
+  .statband .c .n{font-family:var(--display);font-weight:800;font-size:clamp(22px,5vw,30px);line-height:.95;font-variant-numeric:tabular-nums}
+  .statband .c .l{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.35}
+  @media(max-width:560px){.statband{grid-template-columns:1fr 1fr}}
+
+  /* ---------- caveat card ---------- */
+  .caveat{margin-top:18px;border:1px solid var(--hair);border-left:3px solid var(--faint);
+    border-radius:0 6px 6px 0;padding:14px 16px;background:#fff;font-size:14px;color:var(--muted)}
+  .caveat b{color:var(--ink);font-weight:600}
+
+  /* ---------- appendix table ---------- */
+  .appx{margin-top:18px;border:1px solid var(--hair);border-radius:6px;overflow-x:auto}
+  table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:460px}
+  table.tbl th{text-align:left;font-family:var(--body);font-weight:700;font-size:10.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--accent);padding:11px 12px;border-bottom:1px solid var(--hair);background:#fbfbfa}
+  table.tbl td{padding:9px 12px;border-bottom:1px solid var(--hair)}
+  table.tbl td.num{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+  table.tbl tr:last-child td{border-bottom:none}
+
+  /* ---------- go deeper ---------- */
+  .more{margin-top:18px;list-style:none;border-top:1px solid var(--hair)}
+  .more li{padding:13px 0;border-bottom:1px solid var(--hair);display:flex;gap:12px;align-items:baseline;font-size:15px;color:var(--muted)}
+  .more li::before{content:"\2192";color:var(--accent);font-weight:700}
+  .more li b{color:var(--ink);font-weight:600}
+
+  /* ---------- footer ---------- */
+  .foot{margin-top:46px;border-top:2px solid var(--ink);padding-top:16px;font-size:12px;line-height:1.7;color:var(--muted)}
+  .foot b{color:var(--ink);font-weight:700}
+  .foot .fm{margin-bottom:9px}
+  .foot ol{margin:4px 0 9px 0;padding-left:20px}
+  .foot ol li{margin-bottom:4px}
+  .foot .ver{font-size:11px;color:var(--faint);letter-spacing:.03em}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+  /* the briefing (toolchain/dn-briefing.js) */
+  .bi{margin-top:30px;padding-top:22px;border-top:1px solid var(--hair)}
+  .bi:first-of-type{border-top:0;padding-top:0}
+  .bi h2{font-family:var(--display);font-weight:800;font-size:clamp(21px,4.6vw,25px);line-height:1.2;letter-spacing:-.01em;margin:6px 0 10px}
+  .bi p{margin-top:10px}
+  .bi .bnew{color:var(--accent)}
+  .bi .bdeep a{font-weight:700;color:var(--accent);text-decoration:none}
+  .bi .bsrc{font-size:13.5px;color:var(--muted)}
+  .bi .bsrc a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mono">DN</div>
+    <div class="word">Noodle<b>News</b></div>
+    <div class="kick">BRIEFING<br>7 NOV 2026</div>
+  </header>
+
+  <div class="head">
+    <div class="topic">Briefing &middot; 5 stories</div>
+    <h1>The briefing: Saturday 7 November</h1>
+    <p class="standfirst">Five stories worth knowing today, in plain English: what happened, why it matters and what comes next.</p>
+    <div class="dateline">Noodle News desk &middot; reading time ~3 min</div>
+  </div>
+
+  <section class="section bi" id="ai-stocks-selloff" data-story="ai-stocks-selloff">
+    <div class="eyebrow">1 · Economy</div>
+    <h2>London shares fall 1% as a global sell-off in AI stocks spreads from Wall Street</h2>
+    <p>The FTSE 100 closed 1% lower on Friday at 10,674, after falling as much as 2.35% in the morning. It followed Thursday's 5.5% drop in America's tech-heavy Nasdaq, its worst day since April 2025. Japan's Nikkei fell 6% on Friday.</p>
+    <p><b>Why it matters:</b> Investors fear AI data-centre spending will slow, and that the Democrats' midterm wins bring tighter rules for big tech. Two big UK technology investment trusts have lost over a fifth of their value in a month.</p>
+    <p><b>What next:</b> A strong US jobs report has raised the chance of a US interest rate rise in December.</p>
+    <p class="bsrc">Sources: <a href="https://uk.finance.yahoo.com/news/ftse-100-index-falls-amid-183834726.html">Yahoo Finance UK</a> · <a href="https://www.share-talk.com/ftse-100-falls-109-points-despite-recovery-from-earlier-losses/">Share Talk</a> · <a href="https://quoteddata.com/2026/11/tech-trusts-tumble-in-global-ai-sell-off-as-nasdaq-crashes-5-5-and-japans-nikkei-slides-6-into-a-bear-market/">QuotedData</a></p>
+  </section>
+
+  <section class="section bi" id="uk-house-prices" data-story="uk-house-prices">
+    <div class="eyebrow">2 · Economy</div>
+    <h2>House prices fall 0.6% in October, the biggest annual drop since 2023, says Lloyds</h2>
+    <p>Lloyds says the average UK home cost £296,285 in October, down 0.6% in a month. Prices are 1.2% lower than a year ago, the biggest annual fall since October 2023. London fell most, down 3.1% over the year.</p>
+    <p><b>Why it matters:</b> Lloyds blames higher mortgage rates and the squeeze from energy and other household costs. Prices are falling across southern England but still rising in Scotland, Wales, Northern Ireland and parts of the north.</p>
+    <p><b>What next:</b> Lloyds' mortgages director expects subdued conditions in the near term, but not a prolonged fall in prices.</p>
+    <p class="bsrc">Sources: <a href="https://www.mortgagesolutions.co.uk/mortgage-news/2026/11/06/house-prices-fall-for-second-consecutive-month-as-market-suffers-distinct-lack-of-momentum-lloyds/">Mortgage Solutions, on the Lloyds index</a></p>
+  </section>
+
+  <section class="section bi" id="iran-war" data-story="iran-war">
+    <div class="eyebrow">3 · World</div>
+    <h2>Iran weighs a Qatari plan to end the war as Trump says a decision on strikes is near</h2>
+    <p class="bnew"><b>New today:</b> Iran is reviewing Qatari proposals on its nuclear programme, and Trump says he will decide soon.</p>
+    <p>Two Middle East officials told AP that Iran is reviewing Qatari proposals on its nuclear programme. In a first step, the US would lift its blockade of Iran's ports and Iran would let UN inspectors into bombed sites. Trump said he would rather not “destroy the rest of the country”.</p>
+    <p><b>Why it matters:</b> Iran says it will not reopen the Strait of Hormuz, a key oil route, until its seven conditions are met. AP says the war and high fuel prices helped cost Republicans control of Congress.</p>
+    <p><b>What next:</b> Trump has not announced a decision. Fox News reports that no order to resume strikes has been given.</p>
+    <p class="bsrc">Sources: <a href="https://www.wpxi.com/news/politics/iran-is-reviewing/DCKLGLLBZAYXHPUEJTEFOOS6FY/">AP, via WPXI</a> · <a href="https://www.thenationalnews.com/news/mena/2026/11/06/youll-know-soon-enough-trump-considers-iran-options/">The National</a></p>
+  </section>
+
+  <section class="section bi" id="uk-youth-inactivity" data-story="uk-youth-inactivity">
+    <div class="eyebrow">4 · UK politics</div>
+    <h2>Burnham promises “radical change” for young people out of work, including benefit rules</h2>
+    <p>Andy Burnham said on Friday that the government aims for “quite radical change” in support for young people, possibly including tougher benefit rules. He spoke ahead of Alan Milburn's report on young people and work. About 946,000 young people are not in education, work or training.</p>
+    <p><b>Why it matters:</b> Burnham says spending on support for young people must rise first, and the overall benefits bill will fall in time. Milburn is expected to recommend limiting some benefits for those who refuse help.</p>
+    <p><b>What next:</b> Milburn's second report is due this month, with no exact date yet.</p>
+    <p class="bsrc">Sources: <a href="https://britbrief.co.uk/politics/westminster/burnham-vows-radical-change-in-support-for-young-people.html">BritBrief</a> · <a href="https://www.gov.uk/government/news/alan-milburn-calls-for-a-movement-to-address-lost-generation-of-young-people-not-earning-or-learning-as-investigation-opens">GOV.UK, on the Milburn review</a></p>
+  </section>
+
+  <section class="section bi" id="russell-brand-trial" data-story="russell-brand-trial">
+    <div class="eyebrow">5 · Society</div>
+    <h2>Russell Brand found guilty of rape and three sexual assaults, with sentencing on Monday</h2>
+    <p>A jury at Southwark Crown Court convicted Russell Brand on Thursday of one rape and three sexual assaults. He was cleared of two other rape charges and one of attempted indecent assault. Six women gave evidence about events between 1999 and 2009.</p>
+    <p><b>Why it matters:</b> Brand denied all the charges and was taken into custody. The Metropolitan Police praised the “extraordinary courage” of the women who came forward.</p>
+    <p><b>What next:</b> Judge Joel Bennathan will sentence Brand on Monday 9 November, and has said he faces a lengthy prison term.</p>
+    <p class="bsrc">Sources: <a href="https://www.aljazeera.com/news/2026/11/5/russell-brand-found-guilty-of-rape-and-sexual-assault-by-uk-court">Al Jazeera</a> · <a href="https://www.staradvertiser.com/2026/11/05/photo-gallery/comedian-russell-brand-found-guilty-of-rape-and-3-sexual-assaults/">Reuters, via the Star-Advertiser</a></p>
+  </section>
+
+  <div class="foot">
+    <div class="fm"><b>How this is made.</b> Each item is drawn from the sources linked under it, published on the record; nothing here is our own reporting. Our full pieces, where linked, carry the detail and the method.</div>
+    <div class="fm">Researched, written and checked by an AI system working to the Noodle News standards; edited and published by the Noodle News editor.</div>
+    <div class="fm"><b>Corrections.</b> None. Material corrections will be logged here with date.</div>
+  </div>
+
+</div>
+</body>
+</html>
