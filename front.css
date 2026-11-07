@@ -334,3 +334,16 @@
   .tabs svg{width:20px;height:20px}
 }
 @media(max-width:719px){html:has(body.has-tabs){scroll-padding-bottom:64px}}
+
+/* Puzzle cards within the tile's height (7 Nov 2026, as the app's cards): the text column is
+   as tall as the tile, the headline, a two-line description, then the callout row on the
+   tile's foot: when on the left (faint), one thing on the right (How to play, or your
+   result once there is one, which hides How to play). 20 px above and below each card. */
+.puzzle-card .card{padding:20px 0}
+.puzzle-card .card>div{display:flex;flex-direction:column;min-height:96px}
+.puzzle-card .sf{-webkit-line-clamp:2;margin-top:4px}
+.puzzle-card .meta{margin-top:auto;padding-top:6px;padding-right:0;min-height:24px;flex-wrap:nowrap}
+.puzzle-card .card-result{margin-left:auto;white-space:nowrap}
+.card-guide{bottom:20px}
+.card-guide[hidden]{display:none}
+@media(min-width:560px){.puzzle-card .card>div{min-height:120px}}

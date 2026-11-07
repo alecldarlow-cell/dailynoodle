@@ -97,9 +97,10 @@
       var label = puzzleType(it);
       PUZZLE_TYPES.forEach(function(t){ if(t[1]===label) guide=t[0]; });
     }
+    // Puzzle cards (7 Nov 2026, as the app): when on the left, one thing on the right (How to play,
+    // or your result once there is one: front.js showPlayed). No reading time.
     var meta = guide
       ? (when ? '<span class="card-date">'+esc(when)+'</span>' : '')
-        + (it.read ? (when ? '<span class="dot">·</span>' : '')+'<span class="card-time">'+esc(it.read)+'</span>' : '')
       : '<span class="t">'+esc(it.topic)+'</span>'
         + (when ? '<span class="dot">·</span><span>'+esc(when)+'</span>' : '')
         + (it.read ? '<span class="dot">·</span><span>'+esc(it.read)+'</span>' : '');

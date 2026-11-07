@@ -11,7 +11,7 @@ async function feed(phone,items=fixture.items){
  await phone.ctx.route('**/feed.json',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({...fixture,items})}));
 }
 for(const width of [320,390])for(const scheme of ['light','dark'])
-test('GUIDES: card date, duration and separate help target at '+width+' '+scheme,async({phone})=>{
+test('GUIDES: card date, no duration and separate help target at '+width+' '+scheme,async({phone})=>{
  const p=phone.p;await p.setViewportSize({width,height:844});await p.emulateMedia({colorScheme:scheme});
  // Include a long archive date and an old feed without a type field.
  const items=fixture.items.map(x=>({...x}));items[3].date='2026-09-03';items[3].read='~10 min';delete items[3].type;
@@ -19,7 +19,7 @@ test('GUIDES: card date, duration and separate help target at '+width+' '+scheme
  await expect(p.locator('#feed .card-guide')).toHaveCount(9);
  for(let i=0;i<types.length;i++){
   const row=p.locator('#feed > li').nth(i);
-  await expect(row.locator('.card-time')).toHaveText(i===3?'~10 min':'~3 min');
+  await expect(row.locator('.card-time')).toHaveCount(0);   // no reading time on puzzle cards from 7 Nov 2026 (as the app)
   await expect(row.locator('.card-date')).toHaveText(i===3?'3 Sept 2026':'Today');
   await expect(row.locator('.meta .t')).toHaveCount(0);
   await expect(row.locator('.card-guide')).toHaveAttribute('href','how-to-play.html#'+types[i]);
@@ -52,7 +52,7 @@ test('GUIDES: matching pill, history, reload and the play link remain independen
  await p.goBack();await H.wait(p,200);await expect(p.locator('#path')).toBeVisible();
  await p.reload();await H.wait(p,300);await expect(p.locator('#path')).toBeVisible();
  await p.goBack();await H.wait(p,600);
- await expect(card.locator('.card-time')).toHaveText('~3 min');
+ await expect(card.locator('.card-date')).toHaveText('Today');
  await ctx.route('**/reports/guide-fixture-*.html',r=>r.fulfill({status:200,contentType:'text/html',body:'<!doctype html><title>Puzzle</title><p>Opened the puzzle</p>'}));
  await card.locator('.hl').click();await p.waitForURL('**/'+target);
  expect(phone.errors).toEqual([]);
