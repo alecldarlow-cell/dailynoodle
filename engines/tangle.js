@@ -178,6 +178,12 @@ function persist(progress=true){
   window.dnCore.saveProgress(KEY,save,P&&P.id,undefined,progress&&playing);
 }
 load();
+/* Account settings (7 Nov 2026): account.html's site-wide switches (dn-sound, dn-motion, dn-vibrate) win over
+   this game's own, which stay saved as before; the pause sheet's switches write both. */
+function globalSettings(){try{const s=localStorage.getItem('dn-sound'),m=localStorage.getItem('dn-motion'),h=localStorage.getItem('dn-vibrate');
+  if(s!==null)save.snd=s!=='0';if(m==='reduced')save.rm=true;else if(m==='phone')save.rm=null;if(h!==null&&'hap' in save)save.hap=h!=='0';}catch(e){}}
+function setGlobal(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+globalSettings();
 
 /* ---------- settings: motion, sound, full screen ---------- */
 const sysRM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
@@ -206,11 +212,12 @@ const sfx={
   star(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.08,.5,'triangle',.11));},
   done(){[784,659,523,392].forEach((f,i)=>tone(f,i*.12,.5,'triangle',.12));}
 };
-function toggles(host){
+function toggles(host,fsOnly){
   host.innerHTML='';
-  const items=[['Sound',()=>save.snd,v=>{save.snd=v;if(v)audio();}],['Reduced motion',()=>reduced(),v=>{save.rm=v;applyRM();}]];
+  const items=[['Sound',()=>save.snd,v=>{save.snd=v;setGlobal('dn-sound',v?'1':'0');if(v)audio();}],['Reduced motion',()=>reduced(),v=>{save.rm=v;setGlobal('dn-motion',v?'reduced':'phone');applyRM();}]];
   if(fsOK)items.push(['Full screen',()=>!!save.fs,v=>{save.fs=v;if(v)goFS();else exitFS();setTimeout(paintFS,300);}]);
-  for(const [label,get,set] of items){const b=document.createElement('button');b.className='tog';b.setAttribute('role','switch');
+  const list=fsOnly?items.filter(i=>i[0]==='Full screen'):items;host.hidden=!list.length;
+  for(const [label,get,set] of list){const b=document.createElement('button');b.className='tog';b.setAttribute('role','switch');
     b.textContent=label;b.setAttribute('aria-checked',String(get()));
     b.addEventListener('click',()=>{set(!get());b.setAttribute('aria-checked',String(get()));persist(false);});host.appendChild(b);}
 }
@@ -256,10 +263,10 @@ function renderHome(){
   if(D.state==='done'){$('playHead').textContent=plural(D.score,'point','points');$('playStatus').textContent=`${plural(D.found.length,'word','words')} today. See the answers; a new board arrives at midnight.`;$('playGo').textContent='View';}
   else if(D.state==='playing'){$('playHead').textContent='Round paused';$('playStatus').textContent=`${mmss(D.left)} left, ${plural(D.score,'point','points')} so far.`;$('playGo').textContent='Resume';}
   else{const t=today();$('playHead').textContent=!P.date||P.date>=t?'Ready to play':P.date===dayBefore(t)?'Yesterday\u2019s Tangle':'From the archive';$('playStatus').textContent=`90 seconds. Longer words score more; the ${num(P.star.length)}-letter word scores double.`;$('playGo').textContent='Play';}
-  $('yBtn').hidden=P.n<=1;
+  $('yBtn').hidden=true;   // Yesterday's answers: not on the home page from 7 Nov 2026, as the app
   $('hStreak').textContent=liveStreak();$('hStreak').nextElementSibling.textContent='Tangle streak';$('hBest').textContent=save.best||0;
   homeExtras();
-  toggles($('homeToggles'));
+  toggles($('homeToggles'),true);   // only Full screen here (web-only); Sound and motion live on account.html (7 Nov 2026)
 }
 
 /* ---------- board ---------- */

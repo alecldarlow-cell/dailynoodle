@@ -5,8 +5,7 @@
    - puts the London date in Today's kicker ("Today · Sat 7 Nov"), as the app's masthead does;
    - shows Archive and Stats by features.json (false hides; can't be read = on, as front.js does).
      Stats starts hidden so a switched-off tab doesn't flash in and out;
-   - on board.html#account, marks Account as the current tab and brings the sign-in card into
-     view once dn-sync.js has drawn it (the site's Account page comes later).
+   - sends an old board.html#account link to account.html (the Account page, 7 Nov 2026).
    No storage, no tracking of its own. */
 (function () {
   'use strict';
@@ -31,27 +30,8 @@
       .then(apply, function () { apply(null); });
   } catch (e) { apply(null); }
 
-  // Account, for now: the sign-in card on the board page
-  function account() {
-    if (location.hash !== '#account') return;
-    each('.tabs a', function (a) { if (a.getAttribute('data-tab') === 'account') a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-    var box = doc.getElementById('dnsync');
-    if (!box) return;
-    // The board above it is drawn after the card, so keep the card at the top while the page
-    // settles (3 s), and stop as soon as the player scrolls or taps.
-    var stop = false, end = Date.now() + 3000;
-    function quit() { stop = true; }
-    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (e) { window.addEventListener(e, quit, { once: true, passive: true }); });
-    function align() { if (!stop && !box.hidden && Date.now() < end) box.scrollIntoView({ block: 'start' }); }
-    align();
-    if (!('MutationObserver' in window)) return;
-    var mo = new MutationObserver(align);
-    mo.observe(doc.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
-    setTimeout(function () { mo.disconnect(); }, 3000);
+  // Account has its own page from 7 Nov 2026 (account.html); an old board.html#account link goes there
+  if (location.hash === '#account' && /\/board\.html$/.test(location.pathname)) {
+    try { location.replace('account.html' + location.search); } catch (e) {}
   }
-  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', account); else account();
-  if (doc.getElementById('dnsync')) window.addEventListener('hashchange', function () {
-    if (location.hash === '#account') account();
-    else each('.tabs a', function (a) { if (a.getAttribute('data-tab') === 'leagues') a.setAttribute('aria-current', 'page'); else if (a.getAttribute('data-tab') === 'account') a.removeAttribute('aria-current'); });
-  });
 })();

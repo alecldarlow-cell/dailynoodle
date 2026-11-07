@@ -170,20 +170,7 @@
   .field small{display:block;margin-top:5px;font-size:12.5px;color:var(--faint)}
   .msg{margin-top:10px;font-size:14px;color:var(--bad);min-height:1em}
   .msg.ok{color:var(--accent)}
-  /* sign-in sync card (dn-sync.js, 25 Oct 2026; hidden until it is switched on) */
-  .synccard{margin-top:26px;padding:18px 16px;background:var(--paper);border:1px solid var(--accent);border-radius:12px}
-  .synccard h2{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1.25}
-  .synccard p{margin-top:8px;font-size:15px;color:var(--muted);line-height:1.5}
-  .synccard p b{color:var(--ink)}
-  .synccard .acts .btn{flex:1 1 140px}
-  .synccard .inline{flex-wrap:wrap}
-  .synccard .flab{display:block;margin-top:14px;font-size:14px;font-weight:600;color:var(--ink)}
-  .synccard .inline input{flex:1 1 200px;min-height:44px;font-size:16px;background:var(--canvas);color:var(--ink);border:1.5px solid var(--muted)}
-  .synccard .inline input:focus{border-color:var(--accent)}
-  .synccard p.fine{font-size:13px;color:var(--faint);margin-top:4px}
-  .synccard p.msg{font-size:14px;color:var(--bad)}
-  .synccard p.msg.ok{color:var(--accent)}
-  .synccard p.msg:empty{display:none}
+  /* the sign-in card moved to account.html (7 Nov 2026); dn-sync.js still runs here to forward sign-in links and sync */
   .lnk{font:inherit;font-size:14px;background:none;border:0;padding:6px 0;color:var(--muted);text-decoration:underline;cursor:pointer}
   .lnk.warn{color:var(--bad)}
   details.set{margin-top:26px;border-top:1px solid var(--hair);padding-top:12px}
@@ -237,7 +224,7 @@
     <a href="board.html?from=tabs" data-tab="leagues" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5v1.5A3 3 0 0 0 7.5 10.5M17 6h2.5v1.5a3 3 0 0 1-3 3"/><path d="M12 14v3.5M8.5 20h7M9.5 17.5h5"/></svg><span>Leagues</span></a>
     <a href="archive.html?from=tabs" data-tab="archive" data-feature="archive"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg><span>Archive</span></a>
     <a href="stats.html?from=tabs" data-tab="stats" data-feature="stats" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20v-6M12 20V6M18 20v-9M3.5 20h17"/></svg><span>Stats</span></a>
-    <a href="board.html?from=tabs#account" data-tab="account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.2a6.5 6.5 0 0 1 11 0"/></svg><span>Account</span></a>
+    <a href="account.html?from=tabs" data-tab="account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.2a6.5 6.5 0 0 1 11 0"/></svg><span>Account</span></a>
   </nav>
   <nav class="controls" aria-label="Sections">
     <div class="bar">
@@ -252,13 +239,12 @@
   <section class="pager" id="pillbar" aria-label="Puzzle" hidden></section>
 
   <main id="app"><p class="loading">Loading…</p></main>
-  <section class="synccard" id="dnsync" aria-label="Sign in" hidden></section>
 
   <footer class="foot">
     <p class="privacy"><a href="how-to-play.html">How to play</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">Contact us</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
   </footer>
 </div>
-<script src="dn-sync.js?v=2026-10-25"></script>
+<script src="dn-sync.js?v=2026-11-07"></script>
 <script src="dn-board.js?v=2026-10-25"></script>
 <script>
 (function () {
@@ -406,7 +392,7 @@
   function keyGroup() {
     return '<div class="grp" id="keygrp"><h3>Play somewhere else too?</h3><p>Your leagues are kept in this browser. ' +
       (IOS ? 'On an iPhone, Safari, the home-screen app and links opened inside WhatsApp each keep their own. ' : '') +
-      'Sign in with your email on this page and they follow you to your other phones and browsers.</p>' +
+      '<a href="account.html?from=board">Sign in with your email</a> on Account and they follow you to your other phones and browsers.</p>' +
       '<p class="fine">Or send yourself your personal link, which also brings your streaks. It’s your key, so don’t post it in a group.</p>' +
       '<div class="acts"><button class="btn" data-act="key">Send me my link</button>' +
       '<button class="btn" data-go="paste">Paste a link</button></div></div>';
@@ -419,7 +405,8 @@
     var names = known && info.players && info.players.length;
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>' + (known ? 'Already in ' + esc(info.name) + '?' : 'Already in a league?') + '</h2>' +
-      '<p>Play as yourself in this browser too: ' + (known ? 'pick' : 'enter the league’s code and') + ' your nickname, and the PIN you set.</p>' +
+      '<p class="tip">Signed in on the app or another browser? <a href="account.html?from=board">Sign in on Account</a> and your leagues come with you.</p>' +
+      '<p>Or play as yourself in this browser too: ' + (known ? 'pick' : 'enter the league’s code and') + ' your nickname, and the PIN you set.</p>' +
       (known ? '' : '<label class="field"><span>League code</span><input name="code" maxlength="12" autocapitalize="characters" required></label>') +
       (names ? '<label class="field"><span>Your nickname</span><select name="nick" required><option value="">Choose…</option>' +
                  info.players.map(function (n) { return '<option>' + esc(n) + '</option>'; }).join('') + '</select></label>'

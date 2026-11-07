@@ -170,6 +170,12 @@ function persist(progress=true){
   window.dnCore.saveProgress(KEY,save,P&&P.id,undefined,progress&&playing);
 }
 load();
+/* Account settings (7 Nov 2026): account.html's site-wide switches (dn-sound, dn-motion, dn-vibrate) win over
+   this game's own, which stay saved as before; the pause sheet's switches write both. */
+function globalSettings(){try{const s=localStorage.getItem('dn-sound'),m=localStorage.getItem('dn-motion'),h=localStorage.getItem('dn-vibrate');
+  if(s!==null)save.snd=s!=='0';if(m==='reduced')save.rm=true;else if(m==='phone')save.rm=null;if(h!==null&&'hap' in save)save.hap=h!=='0';}catch(e){}}
+function setGlobal(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+globalSettings();
 /* the shared atlas lives in Borderline's own save; read-modify-write so nothing else in it is touched */
 const slug=n=>n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 function atlasRead(){try{const s=JSON.parse(localStorage.getItem(ATLAS_KEY)||'null');return s&&s.v===1&&s.found&&typeof s.found==='object'?s:null;}catch(e){return null}}
@@ -201,11 +207,12 @@ const sfx={
   pass(){[523,659,784,1047].forEach((f,i)=>tone(f,i*.11,.6,'triangle',.13));},
   fail(){[392,330,262].forEach((f,i)=>tone(f,i*.14,.5,'sine',.13));}
 };
-function toggles(host){
+function toggles(host,fsOnly){
   host.innerHTML='';
-  const items=[['Sound',()=>save.snd,v=>{save.snd=v;if(v)audio();}],['Reduced motion',()=>reduced(),v=>{save.rm=v;applyRM();}]];
+  const items=[['Sound',()=>save.snd,v=>{save.snd=v;setGlobal('dn-sound',v?'1':'0');if(v)audio();}],['Reduced motion',()=>reduced(),v=>{save.rm=v;setGlobal('dn-motion',v?'reduced':'phone');applyRM();}]];
   if(fsOK)items.push(['Full screen',()=>!!save.fs,v=>{save.fs=v;if(v)goFS();else exitFS();}]);
-  for(const [label,get,set] of items){const b=document.createElement('button');b.className='tog';b.setAttribute('role','switch');
+  const list=fsOnly?items.filter(i=>i[0]==='Full screen'):items;host.hidden=!list.length;
+  for(const [label,get,set] of list){const b=document.createElement('button');b.className='tog';b.setAttribute('role','switch');
     b.textContent=label;b.setAttribute('aria-checked',String(get()));
     b.addEventListener('click',()=>{set(!get());b.setAttribute('aria-checked',String(get()));persist(false);});host.appendChild(b);}
 }
@@ -362,7 +369,7 @@ function renderHome(){
   const c=save.cur&&save.cur.id===P.id?save.cur:null;
   $('playStatus').textContent=c?`Question ${Math.min(NQ,c.ans.length+1)} of ${NQ}, ${c.pts} points so far.`:'Ten country outlines, easiest first. Name them from four; 100 points each.';
   $('playGo').textContent=c?'Resume':'Play';
-  toggles($('homeToggles'));
+  toggles($('homeToggles'),true);   // only Full screen here (web-only); Sound and motion live on account.html (7 Nov 2026)
 }
 
 /* ---------- quiz flow ---------- */
@@ -406,7 +413,7 @@ function answer(k){
   $('hintBtn').hidden=true;$('nextBtn').hidden=false;$('nextBtn').textContent=cur.i===NQ-1?'See result':'Next';
   buildTicks();updatePts();
   (ok?sfx.right:sfx.wrong)();
-  try{if(!ok&&navigator.vibrate&&!reduced())navigator.vibrate(30);}catch(e){}
+  try{if(!ok&&navigator.vibrate&&!reduced()&&localStorage.getItem('dn-vibrate')!=='0')navigator.vibrate(30);}catch(e){}
   setTimeout(()=>{try{$('nextBtn').focus({preventScroll:true});}catch(e){}},50);
   if(!ok){const at=cur.i;bigT=setTimeout(()=>{if(locked&&cur&&cur.i===at&&view==='quiz')bigMap(q,true,true);},reduced()?0:700);}
 }
