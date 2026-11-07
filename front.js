@@ -214,9 +214,10 @@
       var label = puzzleType(it);
       PUZZLE_TYPES.forEach(function(t){ if(t[1]===label) guide=t[0]; });
     }
+    // Puzzle cards (7 Nov 2026, as the app): when on the left, one thing on the right (How to play,
+    // or your result once there is one: front.js showPlayed). No reading time.
     var meta = guide
       ? (when ? '<span class="card-date">'+esc(when)+'</span>' : '')
-        + (it.read ? (when ? '<span class="dot">·</span>' : '')+'<span class="card-time">'+esc(it.read)+'</span>' : '')
       : '<span class="t">'+esc(it.topic)+'</span>'
         + (when ? '<span class="dot">·</span><span>'+esc(when)+'</span>' : '')
         + (it.read ? '<span class="dot">·</span><span>'+esc(it.read)+'</span>' : '');
@@ -531,25 +532,25 @@
     var byPath = {}, saves = {}, lis = $feed.querySelectorAll('li.puzzle-card');
     state.items.forEach(function(it){ if(it.kind === 'puzzle') byPath[it.path] = it; });
     for(var i = 0; i < lis.length; i++){
-      var li = lis[i], a = li.querySelector('a.card'), meta = a && a.querySelector('.meta');
+      var li = lis[i], a = li.querySelector('a.card'), meta = a && a.querySelector('.meta'), guide = li.querySelector('.card-guide');
       if(!a || !meta) continue;
       // Start from the card as drawn, so a re-check (back from a puzzle) never doubles up.
       var old = a.querySelectorAll('.played-mark, .card-result');
       for(var j = 0; j < old.length; j++) old[j].parentNode.removeChild(old[j]);
-      var time = meta.querySelector('.card-time');
-      if(time) time.hidden = false;
+      if(guide) guide.hidden = false;
       li.classList.remove('is-played', 'is-started');
       var st = playedState(byPath[a.getAttribute('href')], saves);
       if(!st) continue;
       li.classList.add(st.done ? 'is-played' : 'is-started');
       a.insertAdjacentHTML('afterbegin', '<span class="played-mark' + (st.done ? '' : ' started') + '" aria-hidden="true">' + (st.done ? CHECK : DOTS) + '</span>');
-      if(time) time.hidden = true;
-      // The words carry the state for screen readers, as part of the card's link.
-      var label = st.done ? st.text : 'In progress';
-      var dot = meta.querySelector('.card-date') ? '<span class="dot card-result">·</span>' : '';
-      meta.insertAdjacentHTML('beforeend', (time ? '' : dot) + '<span class="card-result ' + (st.done ? (st.lost ? 'done lost' : 'done') : 'started') + '">' + esc(label) + '</span>');
+      // One thing on the right (7 Nov 2026, as the app): the result replaces How to play, which
+      // lives on the finish sheet once played. The words are part of the card's link for screen readers.
+      if(guide) guide.hidden = true;
+      var label = st.done ? st.text : 'Continue';
+      meta.insertAdjacentHTML('beforeend', '<span class="card-result ' + (st.done ? (st.lost ? 'done lost' : 'done') : 'started') + '">' + esc(label) + '</span>');
     }
   }
+
   // A puzzle finished in another tab marks its card here too.
   window.addEventListener('storage', function(e){ if(!e.key || /^digi-[a-z]+-v1$/.test(e.key)) showPlayed(); });
 
