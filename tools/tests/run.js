@@ -558,7 +558,7 @@ const TESTS = {
     const m = await text(p, '#msg');
     ok(!/thread/i.test(m), `path: no "thread" in "${m}"`);
     const meta = await p.evaluate(() => [document.querySelector('meta[name="dn:standfirst"]').content, document.querySelector('meta[property="og:description"]').content]);
-    ok(meta.every(t => /one thread/.test(t)), 'path: a released day (18 Oct) keeps its published blurb');
+    ok(meta.every(t => t === require('../standfirst').TEXT.path), 'path: the card line is the house blurb, released days too (7 Nov 2026)');
     ok(!p.errs.length, 'path: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },
