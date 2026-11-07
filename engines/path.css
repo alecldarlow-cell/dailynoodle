@@ -8,7 +8,7 @@
 @import url("house.css");
 
 :root{
-  --paper:#EDEEF2; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
+  --paper:#FCFCFB; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
   --line:#141726; --brand:#2E5BFF; --brand-deep:#1B3B9E;
   --active:#FFD54A; --active-word:#FFF0B8; --good:#1F9E6B; --bad:#E4483B;
   --radius:14px;
