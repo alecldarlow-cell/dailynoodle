@@ -85,6 +85,8 @@
   .mast .kick .k2{display:block}
   /* phones: one kicker line, so the masthead is one row tall */
   @media(max-width:479px){.mast .kick .k2{display:none}}
+  .mast .kick:has(#kickdate){text-align:right}
+  .mast .kick #kickdate{display:block}   /* Today's date on its own line, as the app (7 Nov 2026) */
 
   /* ---------- controls ---------- */
   .controls{position:sticky;top:0;z-index:20;background:var(--canvas);

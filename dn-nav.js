@@ -16,7 +16,7 @@
   var k = doc.getElementById('kickdate');
   if (k) {
     try {
-      k.textContent = ' · ' + new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Europe/London' });
+      k.textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Europe/London' });
     } catch (e) {}
   }
 
