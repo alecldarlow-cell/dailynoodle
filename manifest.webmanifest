@@ -2,7 +2,7 @@
   "id": "./",
   "name": "The Daily Noodle",
   "short_name": "Daily Noodle",
-  "description": "News, daily puzzles and games. Fresh every morning.",
+  "description": "Daily puzzles and leagues with friends, plus news and games. Fresh every morning.",
   "start_url": "puzzles.html",
   "scope": "./",
   "display": "standalone",
