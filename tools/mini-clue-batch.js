@@ -35,7 +35,7 @@
    Edits format (changes only): [{ "file": "...html", "clues": { "ans": "new clue" },
      "md": ["ans"], "standfirst": "..., and ...." }]  — "standfirst" only
    when it changes; "md" = the grid's one or two misdirection/double-definition
-   answers. For a regenerated grid every clue and the standfirst are required.
+   answers. For a regenerated grid every clue is required (the standfirst is the fixed house line, tools/standfirst.js).
 */
 "use strict";
 const fs = require("fs"), path = require("path");
@@ -94,7 +94,7 @@ function prep(from, to, dir, planFile, sheets) {
   for (let b = 0; b < sheets; b++) {
     let t = "";
     for (const p of pkg.slice(b * size, (b + 1) * size)) {
-      t += `\n=== ${p.file}  (${p.id}, ${p.date})${p.regenerated ? "  NEW GRID: write every clue and a standfirst" : ""}\n`;
+      t += `\n=== ${p.file}  (${p.id}, ${p.date})${p.regenerated ? "  NEW GRID: write every clue" : ""}\n`;
       t += p.grid.map(r => "   " + r.split("").join(" ")).join("\n") + "\n";
       for (const e of p.entries) {
         t += `  ${e.n}${e.dir} ${e.ans.toUpperCase()}: ${e.current ? JSON.stringify(e.current) : "(new)"}${e.flags.length ? "   ⚑ MUST CHANGE — " + e.flags.join("; ") : ""}\n`;
@@ -139,17 +139,8 @@ function problemsFor(pkg, byFile, files) {
     }
     if (t.md.length < 1 || t.md.length > 2) say(p.file, `md lists ${t.md.length} misdirection/double-definition answers; need 1 or 2`);
     for (const a of t.md) if (!ans.includes(a)) say(p.file, `md answer not in grid: ${a}`);
-    const sf = t.standfirst || "";
-    // Alec, 7 Nov 2026: the teaser alone; the "Medium." every Mini carried said nothing
-    if (!/^[A-Z‘'].*, and [^.]+\.$/.test(sf) || /\.\s+(?:an?\s+)?(?:easy|medium|hard)\b[^.]*\.$/i.test(sf)) say(p.file, `STANDFIRST format "<phrase>, and <phrase>." (no difficulty): "${sf}"`);
-    const sw = sf.replace(/, and /, " , ").replace(/ Medium\.$/, "").toLowerCase().match(/[a-z]+/g) || [];
-    for (const a of ans) if (sw.includes(a) || sw.includes(a + "s")) say(p.file, `STANDFIRST contains the answer ${a.toUpperCase()}`);
-    if (/["{}<>&\\]/.test(sf)) say(p.file, "STANDFIRST: no double quotes, braces, <, >, & or backslashes");
-    // a standfirst left as it was must not quote a clue that changed
-    if (!p.regenerated && sf === p.standfirst) for (const e of p.entries) if (t.changed.has(e.ans) && e.current) {
-      const old = norm(e.current).replace(/^(a|an|the) /, "");
-      if (old.length > 8 && norm(sf).includes(old)) say(p.file, `STANDFIRST still quotes the old ${e.ans.toUpperCase()} clue; write a new one`);
-    }
+    // Alec, 7 Nov 2026 (evening): every Mini's card line is the house line in tools/standfirst.js,
+    // so editors no longer write a standfirst; any they send is ignored (replaced downstream).
   }
   return out;
 }

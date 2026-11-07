@@ -61,8 +61,7 @@ function apply(file, dry) {
     }
     s = s.replace(CLUES_RE, () => block);
     if (ed.standfirst !== undefined) {
-      if (!ed.standfirst.trim()) problems.push(`${f}: empty standfirst`);
-      const v = htmlAttr(require('./standfirst').mini(ed.standfirst));   // no difficulty sentence (7 Nov 2026)
+      const v = htmlAttr(require('./standfirst').mini(ed.standfirst));   // the fixed house line (7 Nov 2026)
       if (!/<meta name="dn:standfirst" content="[^"]*">/.test(s)) problems.push(`${f}: standfirst meta not found`);
       s = s.replace(/<meta name="dn:standfirst" content="[^"]*">/, `<meta name="dn:standfirst" content="${v}">`);
       s = s.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${v}">`);

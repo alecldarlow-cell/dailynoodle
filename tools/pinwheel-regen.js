@@ -17,7 +17,7 @@
      node tools/pinwheel-regen.js --plan OUT.json (--until YYYY-MM-DD | --next N) [--seed S]
          generate replacement grids (engine filler + engine validator, plus
          layout ban, blocklist, answer-reuse gaps and D4 dedup) and write them
-         to OUT.json for clue authoring. Minis need clues + a standfirst.
+         to OUT.json for clue authoring. Minis need clues (the standfirst is the fixed house line).
      node tools/pinwheel-regen.js --plan OUT.json --gaps --from YYYY-MM-DD --until YYYY-MM-DD [--secs S]
          (added 19 Oct 2026) target Minis instead of layouts: the fewest Minis
          dated in the range whose replacement clears every answer that comes
@@ -313,12 +313,11 @@ function apply(planFile) {
     if (p.type === "mini") {
       const words = [...p.across, ...p.down];
       for (const w of words) if (!p.clues[w] || !p.clues[w].trim()) problems.push(`${p.file}: no clue for ${w}`);
-      if (!p.standfirst || !p.standfirst.trim()) problems.push(`${p.file}: no standfirst`);
       const order = []; // clue block in the house order: across then down
       for (const w of words) order.push(`    ${w}:"${esc(p.clues[w] || "")}"`);
       swap(/clues:\{[^\n]*\n[\s\S]*?\n\s*\}/, "clues:{ // keyed by answer (unique within a puzzle)\n" + order.join(",\n") + "\n  }", "clues");
       if (!/<meta name="dn:standfirst" content="[^"]*">/.test(s)) problems.push(`${p.file}: standfirst meta not found`);
-      // Alec, 7 Nov 2026: the teaser alone, no difficulty sentence (tools/standfirst.js)
+      // Alec, 7 Nov 2026: the fixed house line for every Mini (tools/standfirst.js)
       const msf = require("./standfirst").mini(p.standfirst || "");
       s = s.replace(/<meta name="dn:standfirst" content="[^"]*">/, `<meta name="dn:standfirst" content="${htmlAttr(msf)}">`);
       // link preview: tools/og-tags.js copies the standfirst on the next build; keep them equal now
