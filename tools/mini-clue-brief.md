@@ -25,7 +25,7 @@ The Mini is a 5×5 daily crossword for a small British audience (friends and fam
 
 ## Standfirst
 
-`<phrase>, and <phrase>. Medium.`: two of the grid's final clues as noun phrases. Leave it alone unless it quotes a clue you changed (the validator tells you), or the grid is new. It must not contain any answer from the grid.
+`<phrase>, and <phrase>.`: two of the grid's final clues as noun phrases. Leave it alone unless it quotes a clue you changed (the validator tells you), or the grid is new. It must not contain any answer from the grid.
 
 ## Output: changes only
 
@@ -33,7 +33,7 @@ The Mini is a 5×5 daily crossword for a small British audience (friends and fam
 [{"file":"2027-01-20-crossword-mini-0193.html",
   "clues":{"order":"…","die":"Perish"},
   "md":["order"],
-  "standfirst":"…, and …. Medium."}]
+  "standfirst":"…, and …."}]
 ```
 
 - `clues`: only the answers you changed (every answer for a new grid).

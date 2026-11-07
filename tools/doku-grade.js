@@ -319,6 +319,7 @@ if (has("--fix")) {
     s = s.replace(LOCK_RE, (m, a, b, c) => a + fmt(locked) + c);
     s = s.replace(BANK_RE, (m, a, b, c) => a + fmt(bank) + c);
     s = s.replace(BLURB_RE, (m, a, t, c) => {
+      if (!/\d/.test(t)) return m;   // the house wording (7 Nov 2026) states no counts
       const k = blurbCounts(t);
       if (!k || k.L !== oldL || k.B !== oldB) { why = why || "blurb counts don't match the page (" + t.slice(0, 50) + "...)"; return m; }
       return a + setBlurbCounts(t, newL, newB) + c;
@@ -337,7 +338,7 @@ if (has("--fix")) {
     const p = parsePage(path.join(REPORTS, x.f)), pz = pzOf(p);
     const g = GATE.validateLexi(pz), alts = broadAlts(pz), gr = grade(pz);
     const counts = blurbs(p.s).map(blurbCounts);
-    const blurbOK = counts.length >= 1 && counts.every(k => k && k.L === p.locked.length && k.B === p.bank.length);
+    const blurbOK = counts.length >= 1 && blurbs(p.s).every((t, i) => !/\d/.test(t) || (counts[i] && counts[i].L === p.locked.length && counts[i].B === p.bank.length));
     if (!g.pass || alts || !fits(pz, gr, false) || !blurbOK) { bad++; console.error("RECHECK FAILED", x.f, JSON.stringify(g.checks), "alts " + alts, "stalls " + gr.stalls, "t1only " + gr.t1only, "blurbs " + blurbOK); }
   }
   for (const x of fixed) console.log("fixed", x.f.slice(0, 10), x.id, x.band, "locks " + x.locks, x.before.t1only ? "T1-only" : "stalls " + x.before.stalls, "->",

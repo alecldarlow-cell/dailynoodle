@@ -37,7 +37,7 @@ function boardFor(serial, seen) {
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 function page({ serial, date, board }) {
   const id = 'DP·TALLY·' + pad(serial), num = pad(serial);
-  const stand = 'Four by four, 1 to 4 in every row and column, and each cage must make its number. No guessing needed.';
+  const stand = require('./standfirst').TEXT.tally;   // Alec, 7 Nov 2026: tools/standfirst.js
   // a JS literal with bare keys, like every other type's DN_PUZZLE (the registry and feed read `id:"DP·…"`)
   const data = '{type:"tally",id:"' + id + '",band:"medium",n:' + board.n + ',cages:[' +
     board.cages.map(c => '{c:[' + c.c.join(',') + '],op:"' + c.op + '",t:' + c.t + '}').join(',') + '],sol:"' + board.sol + '"}';

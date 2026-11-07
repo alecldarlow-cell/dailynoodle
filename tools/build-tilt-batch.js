@@ -32,7 +32,7 @@ function mazeFor(serial, seen) {
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 function page({ serial, date, maze, lab }) {
   const id = 'DP·TILT·' + pad(serial), num = pad(serial);
-  const stand = 'A ball in a maze. Turn the maze a quarter at a time and the ball drops until it hits a wall: get it out through the gap. The clock is the score.';
+  const stand = require('./standfirst').TEXT.tilt;   // Alec, 7 Nov 2026: tools/standfirst.js
   // a JS literal with bare keys, like every other type's DN_PUZZLE (the registry and feed read `id:"DP·…"`)
   const data = '{type:"tilt",id:"' + id + '",band:"medium",n:' + maze.n + ',walls:[' + maze.walls.map(r => '[' + r.join(',') + ']').join(',') +
     '],start:[' + maze.start.join(',') + '],exit:[' + maze.exit.join(',') + '],par:' + maze.par + '}';

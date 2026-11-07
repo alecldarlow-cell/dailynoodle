@@ -22,12 +22,13 @@ test('PATH-01: dedup recognises rotation, mirror and reversal',()=>{
  const seq=seqOf(data('2026-11-01-logic-path-0106.html').solution),key=threadKey(seq);
  for(const s of [seq.slice().reverse(),seq.map(i=>(i%6)*6+5-Math.floor(i/6)),seq.map(i=>Math.floor(i/6)*6+5-i%6)])assert.equal(threadKey(s),key);
 });
-test('PATH-02: GIVEN the blurb rule (AF-026) THEN forthcoming days say "one path", released days keep theirs, and new days are written with it',()=>{
- const {BLURB,blurb}=require('../../build-path-batch');
- assert.match(BLURB,/one path\./);assert.doesNotMatch(BLURB,/thread/);
+test('PATH-02: GIVEN the blurb rules (AF-026; the card voice, 7 Nov 2026) THEN forthcoming days carry the house blurb, released days keep theirs, and new days are written with it',()=>{
+ const {BLURB,PATH_BLURB_2026_11,blurb}=require('../../build-path-batch');
+ assert.equal(BLURB,require('../../standfirst').TEXT.path);assert.doesNotMatch(BLURB,/thread/);assert.match(PATH_BLURB_2026_11,/one path\./);
  const files=fs.readdirSync(path.join(ROOT,'reports')).filter(f=>/^\d{4}-\d{2}-\d{2}-logic-path-\d{4}\.html$/.test(f));
  const meta=f=>{const s=fs.readFileSync(path.join(ROOT,'reports',f),'utf8');return [s.match(/name="dn:standfirst"\s+content="([^"]*)"/)[1],s.match(/property="og:description"\s+content="([^"]*)"/)[1]];};
- for(const f of files.filter(f=>f>='2026-11-01'))assert.deepEqual(meta(f),[BLURB,BLURB],f);
+ for(const f of files.filter(f=>f>='2026-11-01'&&f<'2026-11-08'))assert.deepEqual(meta(f),[PATH_BLURB_2026_11,PATH_BLURB_2026_11],f);
+ for(const f of files.filter(f=>f>='2026-11-08'))assert.deepEqual(meta(f),[BLURB,BLURB],f);
  assert.match(meta('2026-10-18-logic-path-0092.html')[0],/one thread/,'a released day is never edited');
  const tpl='<meta name="dn:standfirst" content="Old words.">\n<meta property="og:description" content="Old words.">\n<p>one thread</p>';
  assert.equal(blurb(tpl),tpl.replace(/Old words\./g,BLURB),'only the two meta lines change');

@@ -10,7 +10,7 @@
      node tools/mini-reclue.js --apply EDITS.json [--dry]
    EDITS.json: [{ "file": "2026-10-24-crossword-mini-0105.html",
                   "clues": { "more": "...", ... },      // every answer, or just the changed ones
-                  "standfirst": "..., and .... Medium." }]   // optional
+                  "standfirst": "..., and ...." }]   // optional
 
    Refuses (and writes nothing) if: a file is dated today or earlier (London),
    a clue key isn't an answer in the grid, a clue holds a double quote, brace,
@@ -62,7 +62,7 @@ function apply(file, dry) {
     s = s.replace(CLUES_RE, () => block);
     if (ed.standfirst !== undefined) {
       if (!ed.standfirst.trim()) problems.push(`${f}: empty standfirst`);
-      const v = htmlAttr(ed.standfirst);
+      const v = htmlAttr(require('./standfirst').mini(ed.standfirst));   // no difficulty sentence (7 Nov 2026)
       if (!/<meta name="dn:standfirst" content="[^"]*">/.test(s)) problems.push(`${f}: standfirst meta not found`);
       s = s.replace(/<meta name="dn:standfirst" content="[^"]*">/, `<meta name="dn:standfirst" content="${v}">`);
       s = s.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${v}">`);

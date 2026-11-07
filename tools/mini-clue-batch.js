@@ -33,7 +33,7 @@
         the new clues and standfirst showing; plays three to the end)
 
    Edits format (changes only): [{ "file": "...html", "clues": { "ans": "new clue" },
-     "md": ["ans"], "standfirst": "..., and .... Medium." }]  — "standfirst" only
+     "md": ["ans"], "standfirst": "..., and ...." }]  — "standfirst" only
    when it changes; "md" = the grid's one or two misdirection/double-definition
    answers. For a regenerated grid every clue and the standfirst are required.
 */
@@ -140,7 +140,8 @@ function problemsFor(pkg, byFile, files) {
     if (t.md.length < 1 || t.md.length > 2) say(p.file, `md lists ${t.md.length} misdirection/double-definition answers; need 1 or 2`);
     for (const a of t.md) if (!ans.includes(a)) say(p.file, `md answer not in grid: ${a}`);
     const sf = t.standfirst || "";
-    if (!/^[A-Z‘'].*, and .+\. Medium\.$/.test(sf)) say(p.file, `STANDFIRST format "<phrase>, and <phrase>. Medium.": "${sf}"`);
+    // Alec, 7 Nov 2026: the teaser alone; the "Medium." every Mini carried said nothing
+    if (!/^[A-Z‘'].*, and [^.]+\.$/.test(sf) || /\.\s+(?:an?\s+)?(?:easy|medium|hard)\b[^.]*\.$/i.test(sf)) say(p.file, `STANDFIRST format "<phrase>, and <phrase>." (no difficulty): "${sf}"`);
     const sw = sf.replace(/, and /, " , ").replace(/ Medium\.$/, "").toLowerCase().match(/[a-z]+/g) || [];
     for (const a of ans) if (sw.includes(a) || sw.includes(a + "s")) say(p.file, `STANDFIRST contains the answer ${a.toUpperCase()}`);
     if (/["{}<>&\\]/.test(sf)) say(p.file, "STANDFIRST: no double quotes, braces, <, >, & or backslashes");
