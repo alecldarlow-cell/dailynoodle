@@ -177,14 +177,21 @@
   [hidden]{display:none!important}
 </style>
 </head>
-<body>
+<body class="has-tabs">
 <div class="wrap">
   <header class="mast">
-    <a class="home" href="puzzles.html" aria-label="Back to Puzzles">
-      <span class="mono" aria-hidden="true"><svg class="noodle" viewBox="292 220 462 600" width="18" height="23" focusable="false"><path d="M352 760V360a80 80 0 0 1 160 0v320a80 80 0 0 0 160 0V298" fill="none" stroke="currentColor" stroke-width="96" stroke-linecap="round"/><circle cx="672" cy="298" r="66" fill="none" stroke="currentColor" stroke-width="20"/><circle cx="672" cy="298" r="66" fill="#FFD54A"/></svg></span><span class="word">Noodle<b>Puzzles</b></span>
+    <a class="home" href="puzzles.html">
+      <span class="mono" aria-hidden="true"><svg class="noodle" viewBox="292 220 462 600" width="18" height="23" focusable="false"><path d="M352 760V360a80 80 0 0 1 160 0v320a80 80 0 0 0 160 0V298" fill="none" stroke="currentColor" stroke-width="96" stroke-linecap="round"/><circle cx="672" cy="298" r="66" fill="none" stroke="currentColor" stroke-width="20"/><circle cx="672" cy="298" r="66" fill="#FFD54A"/></svg></span><h1 class="word">Daily<b>Noodle</b></h1>
     </a>
-    <div class="lgslot" id="lgslot"><span class="lgk">Leaderboard</span></div>
+    <div class="lgslot" id="lgslot"><span class="lgk">Leagues</span></div>
   </header>
+  <nav class="tabs" aria-label="Puzzles">
+    <a href="puzzles.html" data-tab="today"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span>Today</span></a>
+    <a href="board.html?from=tabs" data-tab="leagues" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5v1.5A3 3 0 0 0 7.5 10.5M17 6h2.5v1.5a3 3 0 0 1-3 3"/><path d="M12 14v3.5M8.5 20h7M9.5 17.5h5"/></svg><span>Leagues</span></a>
+    <a href="archive.html?from=tabs" data-tab="archive" data-feature="archive"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg><span>Archive</span></a>
+    <a href="stats.html?from=tabs" data-tab="stats" data-feature="stats" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20v-6M12 20V6M18 20v-9M3.5 20h17"/></svg><span>Stats</span></a>
+    <a href="board.html?from=tabs#account" data-tab="account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.2a6.5 6.5 0 0 1 11 0"/></svg><span>Account</span></a>
+  </nav>
   <nav class="controls pillbar" id="pillbar" aria-label="Puzzle" hidden>
     <div class="chips" id="pills" role="group" aria-label="Puzzle"></div>
   </nav>
@@ -193,9 +200,7 @@
   <section class="synccard" id="dnsync" aria-label="Sign in" hidden></section>
 
   <footer class="foot">
-    <p><b>The Daily Noodle · Leaderboard</b> — private leagues for friends and family. Only people in a
-    league see its board.</p>
-    <p class="privacy"><a href="puzzles.html">← Puzzles</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">contact@dailynoodle.co.uk</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
+    <p class="privacy"><a href="how-to-play.html">How to play</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">Contact us</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
   </footer>
 </div>
 <script src="dn-sync.js?v=2026-10-25"></script>
@@ -455,7 +460,7 @@
   /* the league in the masthead: a name, or a switcher when there's more than one */
   var $slot = document.getElementById('lgslot');
   function renderLeague(L) {
-    var ls = NB.leagues(), h = L ? '' : '<span class="lgk">Leaderboard</span>';
+    var ls = NB.leagues(), h = L ? '' : '<span class="lgk">Leagues</span>';
     if (L) {
       // Always a menu: switch league, or start / join another. The phone's own picker opens it.
       h += '<span class="lgn">' + esc(L.name) + '<span class="car" aria-hidden="true">▼</span></span>';
@@ -867,6 +872,7 @@
   }
 })();
 </script>
+<script src="dn-nav.js" defer></script>
 <script src="dn-track.js" defer></script>
 </body>
 </html>

@@ -121,9 +121,6 @@
   .chip{white-space:nowrap;font-weight:600;font-size:12.5px;padding:6px 12px;border:1px solid var(--hair);
     background:var(--paper);color:var(--muted);border-radius:999px;cursor:pointer}
   .chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
-  /* Puzzles: the leaderboard link leading the topic row, filled so it doesn't read as a filter */
-  .chip.boardpill{background:var(--accent);border-color:var(--accent);color:var(--on-accent);margin-right:6px;position:relative}
-  .chip.boardpill::after{content:"";position:absolute;right:-7px;top:6px;bottom:6px;width:1px;background:var(--hair)}
   .count{font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
     color:var(--faint);padding:8px 0 0}
   /* Puzzles: your run as a chip on the count row (19 Oct 2026). Celebration
@@ -313,3 +310,27 @@
 .card-guide::before{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
 .foot .privacy a,.foot .optout{position:relative}
 .foot .privacy a::after,.foot .optout::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:44px;transform:translateY(-50%)}
+
+/* The puzzles nav (7 Nov 2026, Alec: the website takes the app's tabs): Today · Leagues · Archive
+   (· Stats) · Account on puzzles, board, archive and stats. Phones: a bar fixed to the bottom, clear
+   of the home indicator, every label shown, the current tab in the accent (icon) and ink (label),
+   no animation. From 720 px: the same links as a row under the masthead. */
+.tabs{display:flex;background:var(--canvas)}
+.tabs a{flex:1 1 0;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-family:var(--display);font-weight:600;font-size:11.5px;letter-spacing:.01em;color:var(--muted)}
+.tabs a[hidden]{display:none}
+.tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabs a[aria-current="page"]{color:var(--ink)}
+.tabs a[aria-current="page"] svg{color:var(--accent);stroke-width:2.1}
+.tabs a:hover{color:var(--ink)}
+@media(max-width:719px){
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:40;border-top:1px solid var(--hair);
+    padding:4px max(8px,env(safe-area-inset-left,0px)) var(--dn-bot,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-right,0px))}
+  .has-tabs .wrap{padding-bottom:calc(72px + 57px + var(--dn-bot,env(safe-area-inset-bottom,0px)))}
+}
+@media(min-width:720px){
+  .tabs{justify-content:flex-start;gap:4px;border-bottom:1px solid var(--hair);padding:2px 0}
+  .tabs a{flex:none;flex-direction:row;gap:7px;min-height:44px;padding:0 12px;font-size:14px}
+  .tabs svg{width:20px;height:20px}
+}
+@media(max-width:719px){html:has(body.has-tabs){scroll-padding-bottom:64px}}

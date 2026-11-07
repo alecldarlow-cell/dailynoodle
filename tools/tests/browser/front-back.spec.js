@@ -17,8 +17,9 @@ const topCard=p=>p.evaluate(()=>{
  return null;
 });
 
-// Puzzles filters by type from 20 Oct 2026 (its topic pills, "Word" among them, are gone).
-for(const [page,topic,nth] of [['puzzles.html','Link',14],['index.html','Science',9]])
+// Puzzles has no filter row from 7 Nov 2026 (the puzzles nav replaced it; filtering lives in the
+// Archive), so it is checked on its whole list (topic "all"); News still checks a topic.
+for(const [page,topic,nth] of [['puzzles.html','all',14],['index.html','Science',9]])
 test('FRONT-BACK: '+page+' keeps topic "'+topic+'" and the top card across Back with no back-forward cache',async({phone})=>{
  const {ctx,p}=phone;
  // the page from disk, as the harness serves it, plus no-store (never route.fetch: that goes to the network)
@@ -29,8 +30,10 @@ test('FRONT-BACK: '+page+' keeps topic "'+topic+'" and the top card across Back 
   window.addEventListener('pageshow',e=>{window.__persisted=e.persisted;});
  });
  await goto(phone,page);
- await p.locator('#chips .chip[data-topic="'+topic+'"]').click();await H.wait(p,300);
- await expect(p.locator('#chips .chip[data-topic="'+topic+'"]')).toHaveAttribute('aria-pressed','true');
+ if(topic!=='all'){
+  await p.locator('#chips .chip[data-topic="'+topic+'"]').click();await H.wait(p,300);
+  await expect(p.locator('#chips .chip[data-topic="'+topic+'"]')).toHaveAttribute('aria-pressed','true');
+ }
  const n=await p.locator('#feed a.card').count();
  expect(n,'cards in '+topic).toBeGreaterThan(nth+5);
  // scroll so card nth sits part-way under the controls (an offset, not a card edge)
@@ -54,8 +57,10 @@ test('FRONT-BACK: '+page+' keeps topic "'+topic+'" and the top card across Back 
  expect(fresh.mark,'Back must load a fresh document, not the back-forward cache').toBeUndefined();
  expect(fresh.persisted).toBe(false);
  expect(fresh.state&&fresh.state.topic).toBe(topic);
- await expect(p.locator('#chips .chip[data-topic="'+topic+'"]')).toHaveAttribute('aria-pressed','true');
- await expect(p.locator('#chips .chip[data-topic="all"]')).toHaveAttribute('aria-pressed','false');
+ if(topic!=='all'){
+  await expect(p.locator('#chips .chip[data-topic="'+topic+'"]')).toHaveAttribute('aria-pressed','true');
+  await expect(p.locator('#chips .chip[data-topic="all"]')).toHaveAttribute('aria-pressed','false');
+ }else await expect(p.locator('#chips')).toBeHidden();
  expect(await p.locator('#feed a.card').count()).toBe(n);
  const after=await topCard(p);
  expect(after.href,'the same card is at the top').toBe(before.href);
