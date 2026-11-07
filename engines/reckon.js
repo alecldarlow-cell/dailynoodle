@@ -468,11 +468,13 @@ function loop(t){const dt=Math.min(0.25,Math.max(0,(t-last)/1000));last=t;
   $('prevB').addEventListener('click',()=>goTo(Q-1));
   $('fwdB').addEventListener('click',()=>goTo(Q+1));
   $('pips').addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(b)goTo(+b.dataset.k);});
-  const slz=$('slz');
-  slz.addEventListener('pointerdown',e=>{if(!live()||R.ph!=='g'||paused)return;first();dragging=true;slz.classList.add('drag');
-    try{slz.setPointerCapture(e.pointerId)}catch(_){}setIdx(fromX(e.clientX));e.preventDefault()});
-  slz.addEventListener('pointermove',e=>{if(dragging)setIdx(fromX(e.clientX))});
-  slz.addEventListener('pointerup',endDrag);slz.addEventListener('pointercancel',endDrag);slz.addEventListener('lostpointercapture',endDrag);
+  // Only the track band (#trk and its ::before, 46px tall) picks a value (7 Nov 2026): a touch on the label strip
+  // below it, or in the gap above Lock in, does nothing, so a thumb that lands high on the button can't move the guess.
+  const slz=$('slz'),trk=$('trk');
+  trk.addEventListener('pointerdown',e=>{if(!live()||R.ph!=='g'||paused)return;first();dragging=true;slz.classList.add('drag');
+    try{trk.setPointerCapture(e.pointerId)}catch(_){}setIdx(fromX(e.clientX));e.preventDefault()});
+  trk.addEventListener('pointermove',e=>{if(dragging)setIdx(fromX(e.clientX))});
+  trk.addEventListener('pointerup',endDrag);trk.addEventListener('pointercancel',endDrag);trk.addEventListener('lostpointercapture',endDrag);
   ['minus','plus'].forEach((id,k)=>{const b=$(id),d=k?1:-1;
     b.addEventListener('pointerdown',()=>{held=false;stopHold();holdT=setTimeout(()=>{held=true;holdI=setInterval(()=>step(d),75)},380)});
     ['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>{stopHold();persist()}));
