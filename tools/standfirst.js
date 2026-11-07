@@ -17,7 +17,7 @@ const path = require('path');
 const TEXT = {
   mini: 'A crossword small enough for a coffee break. Fill every square from the clues.',
   doku: 'A crossword with no clues. Place every letter so each line spells a word.',
-  sweep: 'Find the mines with logic alone. Flag them, then tread carefully to clear the grid.',
+  sweep: 'Find the mines with logic alone. Flag them, then clear the grid.',
   path: 'One unbroken trail from 1 to 36. Tap square by square to build it.',
   tangle: 'Search for words before the clock runs out. The longer, the better.',
   borders: 'Name the country from its outline. Size, sea and shape are your clues.',
