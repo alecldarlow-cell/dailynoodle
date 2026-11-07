@@ -62,10 +62,51 @@
   .lgk{display:block;font-weight:600;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
   .lgn{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
     font-family:var(--display);font-weight:700;font-size:14.5px;color:var(--ink)}
-  .lgn .car{color:var(--accent);font-size:11px;margin-left:4px}
-  .lgslot select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
-  .pillbar{padding:6px 0 8px}
-  .pillbar .chips{padding-top:2px}
+  /* the league as the masthead's kicker, "NOODLERS ▾", opening the league menu (7 Nov 2026, as the app) */
+  .lgbtn{position:relative;display:inline-flex;align-items:center;gap:6px;max-width:100%;min-height:44px;padding:0;margin:-7px 0;
+    background:none;border:0;cursor:pointer;color:var(--ink);font:inherit}
+  .lgbtn .lgn{font:700 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+  .lgbtn .car{flex:none;display:block;color:var(--ink)}
+  .lgmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:50;min-width:230px;max-width:min(320px,calc(100vw - 32px));text-align:left;
+    background:var(--paper);border:1px solid var(--hair);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.14);overflow:hidden}
+  .lgmenu button{display:flex;align-items:center;width:100%;min-height:48px;padding:0 16px;border:0;border-top:1px solid var(--hair);
+    background:none;color:var(--ink);font:600 15px var(--body);text-align:left;cursor:pointer}
+  .lgmenu button:first-child{border-top:0}
+  .lgmenu button[aria-checked="true"]{background:var(--accent-soft);font-weight:700}
+  .lgmenu button.acc{color:var(--accent)}
+  .lgmenu button:hover,.lgmenu button:focus-visible{background:var(--accent-soft)}
+  /* the puzzle pager: ‹ [tile] Mini 119 / Today · Sat 7 Nov ▾ ›, a dot for each stop (7 Nov 2026, as the app) */
+  .pager{padding:14px 0 0}
+  .pg{display:flex;align-items:center;gap:6px}
+  .pg-arrow{flex:none;width:44px;height:44px;display:grid;place-content:center;border:0;border-radius:999px;background:none;
+    color:var(--ink);font-size:26px;line-height:1;cursor:pointer}
+  .pg-arrow:hover:not(:disabled){background:var(--accent-soft)}
+  .pg-arrow:disabled{opacity:.3;cursor:default}
+  .pg-mid{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:12px}
+  .pg-ico{flex:none;width:36px;height:36px;display:grid;place-content:center}
+  .pg-ico img{width:36px;height:36px;display:block}
+  .pg-ico.mono{border-radius:8px}
+  .pg-txt{min-width:0}
+  .pg-title{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.01em;line-height:1.2;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pg-day{position:relative;display:inline-flex;align-items:center;gap:5px;font:500 13.5px var(--body);color:var(--muted);
+    background:none;border:0;padding:0;cursor:pointer}
+  button.pg-day::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}
+  span.pg-day{cursor:default}
+  .chev{display:block;flex:none}
+  .dots{display:flex;justify-content:center;flex-wrap:wrap;margin:2px 0 0}
+  .dot{width:24px;height:32px;display:grid;place-content:center;border:0;background:none;padding:0;cursor:pointer}
+  .dot i{display:block;width:6px;height:6px;border-radius:3px;background:var(--hair)}
+  .dot[aria-pressed="true"] i{width:16px;background:var(--accent)}
+  .dot:hover i{background:var(--muted)}
+  .dot[aria-pressed="true"]:hover i{background:var(--accent)}
+  .notes{margin-top:12px;font-size:13.5px;color:var(--muted)}
+  .acts.share{justify-content:center;margin:24px 0 32px}
+  .btn.quiet{min-height:44px;padding:8px 18px;background:var(--accent-soft);border-color:transparent;color:var(--accent);font-size:14px}
+  .setcard .done{margin-top:16px}
+  .toast{position:fixed;left:50%;bottom:calc(84px + var(--dn-bot,env(safe-area-inset-bottom,0px)));transform:translateX(-50%);z-index:60;
+    padding:10px 16px;border-radius:999px;background:var(--ink);color:var(--on-ink);font:600 14px var(--body);box-shadow:0 6px 18px rgba(0,0,0,.2)}
+  .row .rk img.tile{width:26px;height:26px;display:block;margin:0 auto}
   /* the day: one slim line, "‹ Today · Wed 28 Oct ›" (AF-017, 29 Oct 2026, as the app); 32 px buttons with 44 px tap areas */
   .daybar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px}
   .daybtn{position:relative;flex:none;width:32px;height:32px;display:grid;place-content:center;border:1px solid var(--hair);
@@ -80,6 +121,8 @@
     background:var(--accent-soft);border-radius:10px;font-size:14.5px}
   .play a{font-weight:700;color:var(--accent);white-space:nowrap}
   .rows{list-style:none;margin-top:10px;border-top:1px solid var(--hair)}
+  /* one rule between the masthead and the table (7 Nov 2026, as the app): the first table has no top rule */
+  #app > ol.rows:first-of-type{border-top:0}
   .row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:11px 2px;
     border-bottom:1px solid var(--hair)}
   .row .rk{font-family:var(--display);font-weight:800;font-size:16px;text-align:center;color:var(--muted)}
@@ -163,9 +206,6 @@
   /* records and honours (25 Oct 2026) */
   .nk{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left;max-width:100%;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:underline dotted var(--hair);text-underline-offset:4px}
-  .crown{margin-left:4px}
-  .reline,.crownline{margin-top:10px;padding:10px 12px;border:1px solid var(--hair);border-radius:10px;font-size:14px;color:var(--muted)}
-  .reline b{color:var(--ink)}
   .row.rec{grid-template-columns:34px 1fr auto}
   .row.rec .rk{font-size:20px}
   .row .who .st b{font-weight:700;color:var(--muted)}
@@ -192,9 +232,7 @@
     <a href="stats.html?from=tabs" data-tab="stats" data-feature="stats" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20v-6M12 20V6M18 20v-9M3.5 20h17"/></svg><span>Stats</span></a>
     <a href="board.html?from=tabs#account" data-tab="account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.2a6.5 6.5 0 0 1 11 0"/></svg><span>Account</span></a>
   </nav>
-  <nav class="controls pillbar" id="pillbar" aria-label="Puzzle" hidden>
-    <div class="chips" id="pills" role="group" aria-label="Puzzle"></div>
-  </nav>
+  <section class="pager" id="pillbar" aria-label="Puzzle" hidden></section>
 
   <main id="app"><p class="loading">Loading…</p></main>
   <section class="synccard" id="dnsync" aria-label="Sign in" hidden></section>
@@ -208,14 +246,14 @@
 <script>
 (function () {
   var NB = window.noodleBoard, TYPES = NB.TYPES;
-  var $app = document.getElementById('app'), $pills = document.getElementById('pills');
+  var $app = document.getElementById('app'), $pager = document.getElementById('pillbar');
   var Q = new URLSearchParams(location.search);
   var S = {
     type: (NB.BY_ID[Q.get('p')] || Q.get('p') === 'all' || Q.get('p') === 'records' || Q.get('p') === 'astro') ? Q.get('p') : (NB.lastType() || 'all'),
     date: /^\d{4}-\d{2}-\d{2}$/.test(Q.get('d') || '') ? Q.get('d') : NB.today(),
     join: (Q.get('join') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12),
     from: Q.get('from') || (Q.get('join') ? 'join' : 'direct'),
-    feed: null, data: null, rec: null, card: ''
+    feed: null, data: null, rec: null, card: '', dayOpen: false, settings: false
   };
   if (S.date > NB.today()) S.date = NB.today();
 
@@ -262,7 +300,12 @@
     var all = text + '\n' + url;
     (navigator.clipboard ? navigator.clipboard.writeText(all) : Promise.reject()).then(function () {
       if (btn) { var o = btn.textContent; btn.textContent = 'Copied — paste into WhatsApp'; setTimeout(function () { btn.textContent = o; }, 2500); }
+      else toast('Copied — paste into WhatsApp');
     }, function () { window.prompt('Copy this:', all); });
+  }
+  function toast(msg) {
+    var t = document.createElement('p'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg;
+    document.body.appendChild(t); setTimeout(function () { t.remove(); }, 2500);
   }
   function syncUrl() {
     var u = new URL(location.href);
@@ -271,20 +314,44 @@
     try { history.replaceState(null, '', u.pathname + u.search); } catch (e) {}
   }
 
-  /* ---------- puzzle pills ---------- */
-  var PILLS = [{ id: 'all', emoji: '🏆', name: 'All puzzles' }, { id: 'records', emoji: '🏅', name: 'Records' }].concat(TYPES, [{ id: 'astro', emoji: '🪐', name: 'Astro Drop' }]);   // All: the 24 Oct 2026 table across the eight; Records: 25 Oct 2026
-  function renderPills() {
-    $pills.innerHTML = PILLS.map(function (t) {
-      return '<button class="chip" type="button" data-p="' + t.id + '" aria-pressed="' + (t.id === S.type) + '">' +
-        t.emoji + ' ' + t.name + '</button>';
-    }).join('');
-    document.getElementById('pillbar').hidden = !NB.inAny();
-    var on = $pills.querySelector('[aria-pressed="true"]');
-    if (on && on.scrollIntoView) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+  /* ---------- the puzzle pager (7 Nov 2026, as the app; was a row of emoji pills) ----------
+     ‹ [tile] Mini 119 / Today · Sat 7 Nov ▾ › and a dot for each stop: All puzzles, each puzzle, then Records.
+     Astro Drop (a game's Daily, website only) sits before Records. The date opens the earlier days. */
+  var STOPS = ['all'].concat(TYPES.map(function (t) { return t.id; }), ['astro', 'records']);
+  function stopName(v) { return v === 'all' ? 'All puzzles' : v === 'records' ? 'Records' : v === 'astro' ? 'Astro Drop' : NB.BY_ID[v].name; }
+  var MARK = (document.querySelector('.mast .mono') || {}).innerHTML || '';
+  function stopIcon(v) {
+    return NB.BY_ID[v] ? '<span class="pg-ico"><img src="assets/' + v + '-thumb.svg" width="36" height="36" alt=""></span>'
+                       : '<span class="pg-ico mono" aria-hidden="true">' + MARK + '</span>';
   }
-  $pills.addEventListener('click', function (e) {
+  function chev(up) { return '<svg class="chev" viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="' + (up ? 'M1 5l4-4 4 4' : 'M1 1l4 4 4-4') + '" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
+  function dayText(iso) { var d = dayName(iso), l = longDay(iso); return d === l ? d : d + ' · ' + l; }
+  function renderPills() {
+    var at = STOPS.indexOf(S.type), prev = at > 0 ? STOPS[at - 1] : null, next = at < STOPS.length - 1 ? STOPS[at + 1] : null;
+    if (at < 0) { prev = null; next = STOPS[0]; }
+    var it = NB.BY_ID[S.type] ? puzzleItem(S.type, S.date) : null, open = S.dayOpen || S.date !== NB.today();
+    function arrow(to, dir) {
+      return '<button type="button" class="pg-arrow" ' + (to ? 'data-p="' + to + '" aria-label="' + (dir < 0 ? 'Previous' : 'Next') + ' puzzle: ' + esc(stopName(to)) + '"'
+        : 'disabled aria-label="' + (dir < 0 ? 'Previous' : 'Next') + ' puzzle"') + '>' + (dir < 0 ? '‹' : '›') + '</button>';
+    }
+    $pager.innerHTML = '<div class="pg">' + arrow(prev, -1) +
+      '<div class="pg-mid">' + stopIcon(S.type) + '<div class="pg-txt"><h2 class="pg-title">' + esc(it ? it.headline : stopName(S.type)) + '</h2>' +
+      (S.type === 'records' ? '<span class="pg-day">' + esc(dayText(S.date)) + '</span>'
+        : '<button type="button" class="pg-day" data-dayopen aria-expanded="' + open + '" aria-label="' + esc(dayText(S.date)) + ', ' +
+          (open ? 'back to today' : 'choose an earlier day') + '">' + esc(dayText(S.date)) + chev(open) + '</button>') +
+      '</div></div>' + arrow(next, 1) + '</div>' +
+      '<div class="dots" role="group" aria-label="Puzzles">' + STOPS.map(function (v) {
+        return '<button type="button" class="dot" data-p="' + v + '" aria-pressed="' + (v === S.type) + '" aria-label="' + esc(stopName(v)) + '"><i></i></button>';
+      }).join('') + '</div>';
+    $pager.hidden = !NB.inAny();
+  }
+  $pager.addEventListener('click', function (e) {
+    if (e.target.closest('[data-dayopen]')) {
+      if (S.dayOpen || S.date !== NB.today()) { S.dayOpen = false; S.date = NB.today(); } else S.dayOpen = true;
+      return loadBoard();
+    }
     var b = e.target.closest('[data-p]'); if (!b) return;
-    S.type = b.getAttribute('data-p'); S.card = ''; NB.setLastType(S.type); renderPills(); loadBoard();
+    S.type = b.getAttribute('data-p'); S.card = ''; NB.setLastType(S.type); loadBoard();
   });
 
   /* ---------- feed (puzzle numbers and links) ---------- */
@@ -395,6 +462,7 @@
     NB.refresh().catch(function () {}).then(function () { NB.inAny() ? loadBoard() : intro(); });
   });
   function startForm() {
+    $pager.hidden = true; S.settings = false;   // a form: no pager, so the minute's refresh leaves it alone
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Start a league</h2>' +
       '<label class="field"><span>League name</span><input name="lname" maxlength="30" placeholder="e.g. Noodle family" required></label>' +
@@ -406,6 +474,7 @@
       return loadBoard(); }); });
   }
   function codeForm() {
+    $pager.hidden = true; S.settings = false;   // a form: no pager, so the minute's refresh leaves it alone
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Join a league</h2><p>Ask someone in the league for its link or 8-letter code.</p>' +
       '<label class="field"><span>League code</span><input name="code" maxlength="12" autocapitalize="characters" required></label>' +
@@ -452,7 +521,6 @@
     else if (go === 'claimjoin') claimForm({ code: S.join, name: S.peeked.name, players: S.peeked.players || [] });
     else if (go === 'joinback') joinForm(S.peeked);
     else if (go === 'nick') nickForm(cur());
-    else if (go === 'recapdone') { try { localStorage.setItem('noodle-board-recap-' + (cur() || {}).code, NB.today()); } catch (x) {} var rc = g.closest('.bcard'); if (rc) rc.remove(); }
     else if (go === 'back') { NB.inAny() ? loadBoard() : intro(); } else if (go === 'board') { S.join = ''; loadBoard(); }
   });
 
@@ -460,28 +528,43 @@
   /* the league in the masthead: a name, or a switcher when there's more than one */
   var $slot = document.getElementById('lgslot');
   function renderLeague(L) {
-    var ls = NB.leagues(), h = L ? '' : '<span class="lgk">Leagues</span>';
-    if (L) {
-      // Always a menu: switch league, or start / join another. The phone's own picker opens it.
-      h += '<span class="lgn">' + esc(L.name) + '<span class="car" aria-hidden="true">▼</span></span>';
-      h += '<select id="lg" aria-label="League: switch, start or join">' + ls.map(function (l) {
-        return '<option value="' + esc(l.code) + '"' + (l.code === L.code ? ' selected' : '') + '>' + esc(l.name) + '</option>'; }).join('') +
-        '<option disabled>──────────</option>' +
-        '<option value="+start">＋ Start a new league</option><option value="+join">＋ Join with a code</option></select>';
-    }
-    $slot.innerHTML = h;
+    var ls = NB.leagues();
+    if (!L) { $slot.innerHTML = '<span class="lgk">Leagues</span>'; return; }
+    // "NOODLERS ▾" (7 Nov 2026, as the app): the league's name is the masthead's kicker; it opens the league menu:
+    // your leagues, Invite people, League settings, Start a new league, Join with a code.
+    $slot.innerHTML = '<button type="button" class="lgbtn" id="lgbtn" aria-haspopup="menu" aria-expanded="false" aria-controls="lgmenu" ' +
+      'aria-label="League: ' + esc(L.name) + '. Choose a league, invite people or settings"><span class="lgn">' + esc(L.name) + '</span>' +
+      '<span class="car">' + chev(false) + '</span></button>' +
+      '<div class="lgmenu" id="lgmenu" role="menu" hidden>' + ls.map(function (l) {
+        return '<button type="button" role="menuitemradio" aria-checked="' + (l.code === L.code) + '" data-lg="' + esc(l.code) + '">' + esc(l.name) + '</button>'; }).join('') +
+      '<button type="button" role="menuitem" class="acc" data-menu="invite">Invite people</button>' +
+      '<button type="button" role="menuitem" class="acc" data-menu="settings">League settings</button>' +
+      '<button type="button" role="menuitem" class="acc" data-menu="start">＋ Start a new league</button>' +
+      '<button type="button" role="menuitem" class="acc" data-menu="join">＋ Join with a code</button></div>';
   }
-  $slot.addEventListener('change', function (e) {
-    if (e.target.id !== 'lg') return;
-    var v = e.target.value, L = cur();
-    if (v === '+start' || v === '+join') {
-      e.target.value = L ? L.code : '';               // the picker keeps showing the current league
-      document.getElementById('pillbar').hidden = true;
-      v === '+start' ? startForm() : codeForm();
-      return;
-    }
-    NB.setCurrent(v); loadBoard();
+  function menu(open) {
+    var m = document.getElementById('lgmenu'), b = document.getElementById('lgbtn'); if (!m || !b) return;
+    m.hidden = !open; b.setAttribute('aria-expanded', String(open));
+    b.querySelector('.car').innerHTML = chev(open);
+    if (open) { var f = m.querySelector('[aria-checked="true"]') || m.querySelector('button'); if (f) f.focus(); }
+  }
+  $slot.addEventListener('click', function (e) {
+    if (e.target.closest('#lgbtn')) { var m = document.getElementById('lgmenu'); return menu(m && m.hidden); }
+    var lg = e.target.closest('[data-lg]'), it = e.target.closest('[data-menu]'), L = cur();
+    if (!lg && !it) return;
+    menu(false);
+    if (lg) { S.settings = false; S.card = ''; NB.setCurrent(lg.getAttribute('data-lg')); return loadBoard(); }
+    var v = it.getAttribute('data-menu');
+    if (v === 'invite') { share(inviteText(L), link(L.code), null); track('board_invite', {}); }
+    else if (v === 'settings') { S.settings = true; S.card = ''; loadBoard(); try { window.scrollTo(0, 0); } catch (x) {} }
+    else { $pager.hidden = true; v === 'start' ? startForm() : codeForm(); }
   });
+  document.addEventListener('click', function (e) { if (!e.target.closest('#lgslot')) menu(false); });
+  document.addEventListener('keydown', function (e) {
+    var m = document.getElementById('lgmenu'); if (e.key !== 'Escape' || !m || m.hidden) return;
+    menu(false); document.getElementById('lgbtn').focus();
+  });
+  function inviteText(L) { return 'Join ' + L.name + ' on Daily Noodle: tap the link, pick a nickname, and your results go on our daily leaderboards.'; }
   function cur() {
     var ls = NB.leagues(), c = NB.current();
     for (var i = 0; i < ls.length; i++) if (ls[i].code === c) return ls[i];
@@ -499,7 +582,7 @@
       return;
     }
     if (S.filling) return;
-    NB.setCurrent(L.code); renderPills(); renderLeague(L); syncUrl();
+    NB.setCurrent(L.code); renderLeague(L); renderPills(); syncUrl();
     if (!S.data || S.data.code !== L.code || S.data.type !== S.type || S.data.date !== S.date) $app.innerHTML = '<p class="loading">Loading…</p>';
     var want = [L.code, S.type, S.date].join('|');
     var recs = loadRecords(L.code), recsOnly = S.type === 'records';
@@ -521,29 +604,6 @@
   // Person-with-plus, drawn in the button's text colour.
   var INVITE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
     '<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3.1-6.5 7-6.5s7 2.5 7 6.5"/><path d="M19 8v6M16 11h6"/></svg>';
-  /* ---------- the Monday card (5 Nov 2026): last week's top three, to share ---------- */
-  function recapDue(code, today) {
-    if (new Date(today + 'T12:00:00Z').getUTCDay() !== 1) return false;
-    try { return localStorage.getItem('noodle-board-recap-' + code) !== today; } catch (e) { return true; }
-  }
-  function recapRows(week) { return (week || []).filter(function (r) { return r.rank <= 3; }).slice(0, 5); }
-  function recapLines(name, label, week) {
-    var rows = recapRows(week), lines = ['🏆 ' + name + ' · ' + label];
-    rows.forEach(function (r) { lines.push((MEDAL[r.rank] || r.rank + '.') + ' ' + r.nick + ' ' + pts(r.points)); });
-    if (week.length > rows.length) lines.push('+' + (week.length - rows.length) + ' more');
-    return lines;
-  }
-  function fillRecap(L) {
-    var sun = addDays(NB.today(), -1);
-    (S.recap && S.recap.key === L.code + sun ? Promise.resolve(S.recap.d) : NB.overall(L.code, sun)).then(function (d) {
-      S.recap = { key: L.code + sun, d: d, sun: sun };
-      var box = document.getElementById('recap');
-      if (!box || !d || (d.week || []).length < 2) return;
-      box.innerHTML = '<div class="bcard" data-recap="1"><h2>🏆 Last week in ' + esc(L.name) + '</h2>' +
-        '<p>' + recapRows(d.week).map(function (r) { return (MEDAL[r.rank] || r.rank + '.') + ' ' + esc(r.nick) + ' · ' + pts(r.points); }).join('<br>') + '</p>' +
-        '<div class="acts"><button class="btn go" data-act="recapshare">Share</button><button class="btn" data-go="recapdone">Close</button></div></div>';
-    }, function () {});
-  }
   function topCard(L) {
     var h = '';
     if (S.created === L.code) {
@@ -568,13 +628,12 @@
       h += '<div class="bcard"><h2>You’re playing as ' + esc(S.claimed) + ' here too</h2><p>Puzzles you finish in this browser now go ' +
            'on your league’s boards, and the ones you’d already finished here have been added.</p></div>';
       S.claimed = '';
-    } else if (recapDue(L.code, NB.today())) {
-      h += '<div id="recap"></div>';
-      fillRecap(L);
     }
-    return h;
+    return setTop(L) + h;
   }
   function dayBar(label, first) {
+    // the earlier-days line: only while looking back (the pager's date opens it; 7 Nov 2026, as the app)
+    if (!S.dayOpen && S.date === NB.today()) return '';
     return '<div class="daybar"><button class="daybtn" data-day="-1" aria-label="Previous day"' + (S.date <= first ? ' disabled' : '') + '>‹</button>' +
          '<label class="daylabel" aria-label="' + esc(label) + '">' + esc(dayName(S.date)) + (dayName(S.date) === longDay(S.date) ? '' : ' · ' + esc(longDay(S.date))) +
          '<input type="date" id="pick" value="' + S.date + '" min="' + first + '" max="' + NB.today() + '" aria-label="Pick a day"></label>' +
@@ -591,10 +650,8 @@
         '<span class="who">' + nick(r.nick) + (r.me ? '<span class="you">you</span>' : '') + '</span>' +
         '<span class="res">' + Number(r.score).toLocaleString('en-GB') + ' pts<small>' + '★'.repeat(r.stars) + '</small></span></li>';
     }).join('') + '</ol>';
-    if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) { return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
+    h += notes(d.not_yet);
     h += '<p class="bnote how">Scores here don’t count towards All puzzles.</p>';
-    h += '<div class="acts main"><button class="btn go" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
-    h += settings(L, d);
     $app.innerHTML = h;
   }
   function renderBoard(L, d) {
@@ -610,19 +667,19 @@
       h += '<ol class="rows">' + d.ranked.map(function (r) { return row(r, T, false); }).join('') +
            d.unranked.map(function (r) { return row(r, T, true); }).join('') + '</ol>';
     }
-    if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
-      return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
-    h += crownNote();
-    var R = recOf(T.id);
-    if (R) h += '<p class="reline">🏅 League record <b>' + esc(result(T.id, R).big) + '</b>' +
-                (result(T.id, R).small ? ' (' + esc(result(T.id, R).small) + ')' : '') + ' · ' + esc(R.nick) + ' · ' + esc(shortDay(R.date)) + '</p>';
-    h += '<div class="acts main">' + (d.ranked.length ? '<button class="btn go" data-act="share">Share leaderboard</button>' : '') +
-         '<button class="btn ' + (d.ranked.length ? 'alt' : 'go') + '" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
-    h += settings(L, d);
+    h += notes(d.not_yet);
+    if (d.ranked.length) h += shareBtn('share');
     $app.innerHTML = h;
   }
   /* ---------- all nine puzzles (24 Oct 2026): the day and its Monday-to-Sunday week ---------- */
   function pts(n) { return n + (n === 1 ? ' pt' : ' pts'); }
+  /* under a board, one small line (7 Nov 2026, as the app): who hasn't played yet */
+  function notes(rows) {
+    return rows && rows.length ? '<p class="notes">Not played yet: <span class="notyet">' + rows.map(function (r) {
+      return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</span></p>' : '';
+  }
+  /* the one action under a board: a quiet Share (Invite and League settings are in the league menu) */
+  function shareBtn(act) { return '<div class="acts share"><button class="btn quiet" data-act="' + act + '">Share leaderboard</button></div>'; }
   function allRow(r, of) {
     return '<li class="row' + (r.me ? ' me' : '') + '"><span class="rk' + (MEDAL[r.rank] ? ' medal' : '') + '">' + (MEDAL[r.rank] || r.rank) + '</span>' +
       '<span class="who">' + nick(r.nick) + (r.me ? '<span class="you">you</span>' : '') + '</span>' +
@@ -645,17 +702,13 @@
     h += dayBar('🏆 All nine puzzles · ' + longDay(S.date), d.first || S.date);
     if (!d.day.length) h += '<p class="nobody">Nobody in ' + esc(L.name) + ' has played ' + (S.date === NB.today() ? 'yet today' : 'on this day') + '.</p>';
     else h += '<ol class="rows">' + d.day.map(function (r) { return allRow(r, dayCount(S.date)); }).join('') + '</ol>';
-    if (d.not_yet.length) h += '<p class="sub">Not played yet</p><p class="notyet">' + d.not_yet.map(function (r) {
-      return esc(r.nick) + (r.me ? ' (you)' : ''); }).join(', ') + '</p>';
-    h += crownNote();
+    h += notes(d.not_yet);
     h += '<p class="sub">This week · ' + esc(weekLabel(d)) + '</p>';
     if (!d.week.length) h += '<p class="bnote">No results yet this week.</p>';
     else h += '<ol class="rows">' + d.week.map(function (r) { return allRow(r, weekDays(d)); }).join('') + '</ol>';
     h += '<p class="bnote how">Each puzzle you finish scores 1 point for every player you beat. ' +
          'Equal points: more puzzles finished goes first.</p>';
-    h += '<div class="acts main">' + (d.day.length ? '<button class="btn go" data-act="shareall">Share leaderboard</button>' : '') +
-         '<button class="btn ' + (d.day.length ? 'alt' : 'go') + '" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
-    h += settings(L, d);
+    if (d.day.length) h += shareBtn('shareall');
     $app.innerHTML = h;
   }
   function row(r, T, dim) {
@@ -681,13 +734,9 @@
   function R0() { return S.rec && S.rec.code === (cur() || {}).code ? S.rec.d : null; }
   function recOf(t) { var r = R0(); return r && r.records && r.records[t] || null; }
   function isRecord(t, n) { var x = recOf(t); return !!x && x.nick === n && x.date === S.date; }
-  function crowned(n) { var r = R0(); return !!r && (r.crown || []).indexOf(n) >= 0; }
-  // Says what the 👑 on a table means: it's last week's champion, not whoever is leading now.
-  function crownNote() { var r = R0(); return r && (r.crown || []).length ? '<p class="crownline">👑 Last week’s champion</p>' : ''; }
-  function nick(n, plain) {   // plain: no 👑 (in lists of names, where it would repeat)
-    return '<button type="button" class="nk" data-nick="' + esc(n) + '">' + esc(n) + '</button>' +
-      (!plain && crowned(n) ? '<span class="crown" title="Last week’s champion" aria-label="last week’s champion">👑</span>' : '');
-  }
+  // Last week's champion is no longer marked anywhere (7 Nov 2026, Alec, as the app); board_records still returns it.
+  function nick(n) { return '<button type="button" class="nk" data-nick="' + esc(n) + '">' + esc(n) + '</button>'; }
+  function tile(id) { return '<img class="tile" src="assets/' + id + '-thumb.svg" width="26" height="26" alt="">'; }
   function shortDay(iso) { return new Date(iso + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }); }
   var HONOURS = [
     { k: 'longest', e: '🔥', name: 'Longest streak', unit: function (n) { return n + (n === 1 ? ' day' : ' days'); } },
@@ -699,24 +748,14 @@
     { k: 'completed', e: '📚', name: 'Puzzles finished', unit: String }
   ];
   function renderRecords(L, d) {
+    // Honours, then Players, then League records (7 Nov 2026, as the app)
     var h = topCard(L), any = false;
-    h += '<p class="sub">League records</p><ol class="rows">';
-    TYPES.forEach(function (T) {
-      var r = d.records && d.records[T.id]; if (!r) return; any = true;
-      var res = result(T.id, r);
-      h += '<li class="row rec' + (r.me ? ' me' : '') + '"><span class="rk" aria-hidden="true">' + T.emoji + '</span>' +
-        '<span class="who">' + esc(T.name) + '<span class="st">' + nick(r.nick, true) + ' · ' + esc(shortDay(r.date)) +
-        (r.date === d.today ? ' · 🏆 today' : '') + '</span></span>' +
-        '<span class="res">' + esc(res.big) + (res.small ? '<small>' + esc(res.small) + '</small>' : '') + '</span></li>';
-    });
-    h += '</ol>';
-    if (!any) h += '<p class="bnote">No records yet: finish a puzzle to set the first.</p>';
     h += '<p class="sub">Honours</p><ol class="rows">';
     HONOURS.forEach(function (H) {
       var top = 0; (d.players || []).forEach(function (p) { top = Math.max(top, p[H.k] || 0); });
       var who = (d.players || []).filter(function (p) { return top > 0 && p[H.k] === top; });
       h += '<li class="row rec"><span class="rk" aria-hidden="true">' + H.e + '</span><span class="who">' + esc(H.name) +
-        '<span class="st">' + (who.length ? who.map(function (p) { return nick(p.nick, true); }).join(', ') : 'Nobody yet') + '</span></span>' +
+        '<span class="st">' + (who.length ? who.map(function (p) { return nick(p.nick); }).join(', ') : 'Nobody yet') + '</span></span>' +
         '<span class="res">' + (top ? esc(H.unit(top)) : '–') + '</span></li>';
     });
     h += '</ol>';
@@ -725,26 +764,34 @@
         '<span class="who">' + nick(p.nick) + (p.me ? '<span class="you">you</span>' : '') +
         '<span class="st">' + p.wins + (p.wins === 1 ? ' win' : ' wins') + ' · ' + p.titles + (p.titles === 1 ? ' title' : ' titles') + ' · best streak ' + p.longest + '</span></span>' +
         '<span class="res">' + p.completed + '<small>finished</small></span></li>'; }).join('') + '</ol>';
+    h += '<p class="sub">League records</p><ol class="rows">';
+    TYPES.forEach(function (T) {
+      var r = d.records && d.records[T.id]; if (!r) return; any = true;
+      var res = result(T.id, r);
+      h += '<li class="row rec' + (r.me ? ' me' : '') + '"><span class="rk" aria-hidden="true">' + tile(T.id) + '</span>' +
+        '<span class="who">' + esc(T.name) + '<span class="st">' + nick(r.nick) + ' · ' + esc(shortDay(r.date)) +
+        (r.date === d.today ? ' · 🏆 today' : '') + '</span></span>' +
+        '<span class="res">' + esc(res.big) + (res.small ? '<small>' + esc(res.small) + '</small>' : '') + '</span></li>';
+    });
+    h += '</ol>';
+    if (!any) h += '<p class="bnote">No records yet: finish a puzzle to set the first.</p>';
     h += '<p class="bnote how">Records count finished puzzles only; on a tie, whoever set it first keeps it. A daily win needs at least one ' +
          'other player to have finished that puzzle, and a weekly title (the All puzzles week) at least two players. A perfect day is every ' +
          'puzzle that day finished; a clean sweep is a perfect day winning all of them. A streak is days in a row with a puzzle finished. ' +
-         '👑 marks last week’s champion. Tap a name to see their card.</p>';
-    h += '<div class="acts main"><button class="btn go" data-act="invite">' + INVITE_ICON + 'Invite people</button></div>';
-    h += settings(L, S.data);
+         'Tap a name to see their card.</p>';
     $app.innerHTML = h;
   }
   function renderCard(L, n) {
     var d = R0(), p = d && (d.players || []).filter(function (x) { return x.nick === n; })[0];
     if (!p) { S.card = ''; return loadBoard(); }
-    var h = '<div class="bcard"><h2>' + esc(p.nick) + (crowned(p.nick) ? ' 👑' : '') + (p.me ? ' <span class="lgk" style="display:inline">you</span>' : '') + '</h2>' +
-      (crowned(p.nick) ? '<p>Last week’s champion.</p>' : '') +
+    var h = '<div class="bcard"><h2>' + esc(p.nick) + (p.me ? ' <span class="lgk" style="display:inline">you</span>' : '') + '</h2>' +
       '<div class="hgrid">' + HONOURS.map(function (H) {
         return '<div><b>' + String(p[H.k] || 0) + '</b><span>' + H.e + ' ' + esc(H.name) +
           (H.k === 'longest' || H.k === 'current' ? ' (days)' : '') + '</span></div>'; }).join('') + '</div>' +
       '<p class="sub">Bests</p><ol class="rows">' + TYPES.map(function (T) {
         var b = p.bests && p.bests[T.id], st = p.streaks && p.streaks[T.id] || 0;
         var res = b ? result(T.id, b) : null, rec = recOf(T.id), holds = rec && rec.nick === p.nick;
-        return '<li class="row rec"><span class="rk" aria-hidden="true">' + T.emoji + '</span><span class="who">' + esc(T.name) +
+        return '<li class="row rec"><span class="rk" aria-hidden="true">' + tile(T.id) + '</span><span class="who">' + esc(T.name) +
           '<span class="st">' + (b ? esc(shortDay(b.date)) + (holds ? ' · 🏅 league record' : '') : 'Not finished yet') +
           (st > 1 ? ' · best streak ' + st : '') + '</span></span>' +
           '<span class="res">' + (res ? esc(res.big) + (res.small ? '<small>' + esc(res.small) + '</small>' : '') : '–') + '</span></li>'; }).join('') + '</ol>' +
@@ -758,8 +805,10 @@
     S.card = b.getAttribute('data-nick'); renderCard(L, S.card);
     track('board_card', { type: S.type });
   });
+  /* League settings (7 Nov 2026, as the app): opened from the league menu as a card at the top of the board, with Done */
+  function setTop(L) { return S.settings && S.data && S.data.code === L.code ? settings(L, S.data) : ''; }
   function settings(L, d) {
-    var h = '<details class="set"><summary>League settings</summary>' +
+    var h = '<section class="bcard setcard set" id="setcard" aria-label="League settings"><h2>League settings</h2>' +
       '<div class="grp"><h3>Invite</h3><p>Code <span class="code">' + esc(L.code) + '</span> · ' + d.members + (d.members === 1 ? ' player' : ' players') + '</p></div>' +
       '<div class="grp"><h3>Another group?</h3><p>Start a separate league for friends, work or another chat. You can be in more than one.</p>' +
       '<div class="acts"><button class="btn" data-go="start" data-from="settings">Start another league</button></div></div>' +
@@ -779,7 +828,7 @@
            '<div class="grp"><h3>Close league</h3><p>Takes the league off everyone’s boards.</p>' +
            '<div class="acts"><button class="btn warn" data-act="close">Close league</button></div></div>';
     }
-    return h + '<p class="msg" id="sm"></p></details>';
+    return h + '<p class="msg" id="sm"></p><div class="acts done"><button class="btn go" data-act="setdone">Done</button></div></section>';
   }
   $app.addEventListener('change', function (e) {
     if (e.target.id === 'pick' && e.target.value) { S.date = e.target.value > NB.today() ? NB.today() : e.target.value; loadBoard(); }
@@ -792,11 +841,8 @@
     function fail(err) { if (sm) { sm.className = 'msg'; sm.textContent = err.message; } }
     function done(msg) { return NB.refresh().then(function () { loadBoard(); }); }
     if (act === 'cardback') { S.card = ''; loadBoard(); return; }
-    if (act === 'recapshare') {
-      var rd = S.recap.d;
-      share(recapLines(L.name, weekLabel(rd), rd.week).concat([L.name + ' leaderboard:']).join('\n'), link(L.code) + '&p=all&d=' + S.recap.sun, a);
-      track('board_share', { type: 'recap' });
-    } else if (act === 'share') {
+    if (act === 'setdone') { S.settings = false; loadBoard(); return; }
+    if (act === 'share') {
       var T = NB.BY_ID[S.type], it = puzzleItem(S.type, S.date), D = S.data;
       var lines = ['🏆 ' + T.emoji + ' ' + (it ? it.headline : T.name) + ' · ' + longDay(S.date)];
       D.ranked.slice(0, 5).forEach(function (r) {
@@ -824,18 +870,18 @@
       share(KEY_TEXT, NB.moveLink(), a);
       track('board_key', { act: 'send' });
     } else if (act === 'invite') {
-      share('Join ' + L.name + ' on Daily Noodle: tap the link, pick a nickname, and your results go on our daily leaderboards.', link(L.code), a);
+      share(inviteText(L), link(L.code), a);
       track('board_invite', {});
     } else if (act === 'leave') {
       if (!confirm('Leave ' + L.name + '? You’ll come off its boards. You can rejoin with the link.')) return;
-      NB.leave(L.code).then(function () { S.data = null; NB.setCurrent(''); loadBoard(); }, fail);
+      NB.leave(L.code).then(function () { S.data = null; S.settings = false; NB.setCurrent(''); loadBoard(); }, fail);
     } else if (act === 'remove') {
       var who = a.getAttribute('data-nick');
       if (!confirm('Remove ' + who + ' from ' + L.name + '? They come off its boards. They could rejoin with the link unless you make a new join code.')) return;
       NB.owner('remove', L.code, { p_nick: who }).then(done, fail);
     } else if (act === 'close') {
       if (!confirm('Close ' + L.name + ' for everyone? It comes off all its players’ boards.')) return;
-      NB.owner('close', L.code).then(function () { NB.setCurrent(''); S.data = null; return done(); }, fail);
+      NB.owner('close', L.code).then(function () { NB.setCurrent(''); S.data = null; S.settings = false; return done(); }, fail);
     } else if (act === 'rename') {
       NB.owner('rename', L.code, { p_name: document.getElementById('rn').value.trim() }).then(done, fail);
     } else if (act === 'newcode') {
@@ -865,6 +911,18 @@
     }
     NB.inAny() ? loadBoard() : intro();
   });
+
+  /* Boards keep themselves fresh (7 Nov 2026, as the app; no pull-to-refresh): again when the page comes back into
+     view, and every minute while it is showing. Only a board is redrawn: never a form, a player card, League
+     settings (it has a text box) or the league menu while open. */
+  function quietRefresh() {
+    if (document.hidden || $pager.hidden || S.card || S.settings || S.filling || !cur()) return;
+    var m = document.getElementById('lgmenu'); if (m && !m.hidden) return;
+    if (document.activeElement && $app.contains(document.activeElement) && /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
+    S.rec = null; loadBoard();
+  }
+  setInterval(quietRefresh, 60000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) quietRefresh(); });
 
   // Notifications are switched off; ?push=test loads the hidden test panel (dn-push.js).
   if (/[?&]push=test\b/.test(location.search)) {

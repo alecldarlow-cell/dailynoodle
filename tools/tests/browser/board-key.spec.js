@@ -60,12 +60,12 @@ async function join(P, invite, nick) {
   await go(P, invite.pathname.slice(1) + invite.search);
   await P.p.fill('input[name="nick"]', nick);
   await H.tap(P.p, P.p.locator('#f .btn.go'));
-  await expect(P.p.locator('.daybar')).toHaveCount(1);
+  await expect(P.p.locator('.pager .pg')).toHaveCount(1);
 }
-/* the link a player gets from League settings › Send me my link */
+/* the link a player gets from League settings › Send me my link (settings open from the league menu since 7 Nov 2026) */
 async function myLink(P) {
   await go(P, `board.html?p=mini&d=${DAY}`);
-  await P.p.locator('details.set summary').click();
+  await H.tap(P.p, P.p.locator('#lgbtn')); await H.tap(P.p, P.p.locator('[data-menu="settings"]'));
   const before = (await P.p.evaluate(() => window.__shared)).length;
   await H.tap(P.p, P.p.locator('#keygrp [data-act="key"]'));
   const shared = await P.p.evaluate(() => window.__shared);
@@ -193,10 +193,10 @@ test.describe('BOARD-KEY', () => {
       await expect(T.p.locator('.bcard')).toContainText('Family as Thea');
       await expect(T.p.locator('.bcard')).toContainText('Family as Jake');
       await H.tap(T.p, T.p.locator('[data-pend="keep"]'));
-      await expect(T.p.locator('.daybar')).toHaveCount(1);
+      await expect(T.p.locator('.pager .pg')).toHaveCount(1);
       expect(await boardPid(T)).toBe(thea);
       await go(T, `board.html?p=mini&d=${DAY}`);   // the question doesn't come back
-      await expect(T.p.locator('.daybar')).toHaveCount(1);
+      await expect(T.p.locator('.pager .pg')).toHaveCount(1);
 
       // Asked again, she takes the link this time.
       await T.p.goto(key); await T.p.waitForURL(u => !u.hash, { timeout: 10000 }); await H.wait(T.p, 1200);
@@ -239,7 +239,7 @@ test.describe('BOARD-KEY', () => {
       await W.p.fill('input[name="nick"]', 'Jake');
       await expect(W.p.locator('input[name="pin"]')).toHaveCount(0);
       await H.tap(W.p, W.p.locator('#f .btn.go'));
-      await expect(W.p.locator('.daybar')).toHaveCount(1);
+      await expect(W.p.locator('.pager .pg')).toHaveCount(1);
       await W.p.evaluate(() => window.noodleBoard.setPin('2468'));
       const jake = await boardPid(W);
       await join(K, invite, 'Kim');
@@ -269,7 +269,7 @@ test.describe('BOARD-KEY', () => {
       await H.tap(K2.p, K2.p.locator('#f .btn.go'));
       await expect(K2.p.locator('#m')).toContainText('Let back in');
       await go(O, `board.html?p=mini&d=${DAY}`);
-      await O.p.locator('details.set summary').click();
+      await H.tap(O.p, O.p.locator('#lgbtn')); await H.tap(O.p, O.p.locator('[data-menu="settings"]'));
       await H.tap(O.p, O.p.locator('[data-act="letback"][data-nick="Kim"]'));
       await expect(O.p.locator('#sm')).toContainText('Kim can join');
       await H.tap(K2.p, K2.p.locator('#f .btn.go'));
@@ -284,11 +284,11 @@ test.describe('BOARD-KEY', () => {
       await expect(O.p.locator('.notyet')).toHaveText('Alec (you), Kim');
       // Kim changes her nickname in League settings; the table follows.
       await go(K2, 'board.html');
-      await K2.p.locator('details.set summary').click();
+      await H.tap(K2.p, K2.p.locator('#lgbtn')); await H.tap(K2.p, K2.p.locator('[data-menu="settings"]'));
       await H.tap(K2.p, K2.p.locator('[data-go="nick"]'));
       await K2.p.fill('input[name="nick"]', 'Kimmy');
       await H.tap(K2.p, K2.p.locator('#f .btn.go'));
-      await expect(K2.p.locator('.daybar')).toHaveCount(1);
+      await expect(K2.p.locator('.pager .pg')).toHaveCount(1);
       await go(O, `board.html?p=all&d=${DAY}`);
       await expect(O.p.locator('.notyet')).toHaveText('Alec (you), Kimmy');
       await H.tap(O.p, O.p.locator('[data-act="shareall"]'));
