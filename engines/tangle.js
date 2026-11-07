@@ -255,7 +255,7 @@ function renderHome(){
   $('homeArt').innerHTML='<image href="../assets/tangle-thumb.svg" width="120" height="120"/>';
   if(D.state==='done'){$('playHead').textContent=plural(D.score,'point','points');$('playStatus').textContent=`${plural(D.found.length,'word','words')} today. See the answers; a new board arrives at midnight.`;$('playGo').textContent='View';}
   else if(D.state==='playing'){$('playHead').textContent='Round paused';$('playStatus').textContent=`${mmss(D.left)} left, ${plural(D.score,'point','points')} so far.`;$('playGo').textContent='Resume';}
-  else{$('playHead').textContent='Ready to play';$('playStatus').textContent=`90 seconds. Longer words score more; the ${num(P.star.length)}-letter word scores double.`;$('playGo').textContent='Play';}
+  else{const t=today();$('playHead').textContent=!P.date||P.date>=t?'Ready to play':P.date===dayBefore(t)?'Yesterday\u2019s Tangle':'From the archive';$('playStatus').textContent=`90 seconds. Longer words score more; the ${num(P.star.length)}-letter word scores double.`;$('playGo').textContent='Play';}
   $('yBtn').hidden=P.n<=1;
   $('hStreak').textContent=liveStreak();$('hStreak').nextElementSibling.textContent='Tangle streak';$('hBest').textContent=save.best||0;
   homeExtras();
