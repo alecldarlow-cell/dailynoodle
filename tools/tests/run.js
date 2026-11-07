@@ -430,6 +430,18 @@ const TESTS = {
     ok(/^Archivo/.test(s.font) && s.scrollW <= s.vw, 'reckon: Archivo, no sideways scroll');
     const small = await p.evaluate(() => [...document.querySelectorAll('#home button, #home summary, #home a')].filter(e => { const r = e.getBoundingClientRect(); return r.width && r.height && r.height < 44; }).map(e => (e.id || e.className || e.tagName) + ' ' + Math.round(e.getBoundingClientRect().height)));
     ok(!small.length, 'reckon: start-screen controls are at least 44px tall ' + small.join(', '));
+    /* Only the track band picks a value (7 Nov 2026): a thumb that lands on the label strip, or just above Lock in,
+       must leave the guess alone; a press on the track itself still picks the nearest step. */
+    await tap(p, p.locator('#playCard')); await wait(p, 800);
+    const press = async (x, y) => { await p.mouse.move(x, y); await p.mouse.down(); await p.mouse.move(x + 1.5, y - 1); await p.mouse.move(x + 1, y + 1); await p.mouse.up(); await wait(p, 150); };
+    const trk = await p.locator('#trk').boundingBox(), labs = await p.locator('#labs').boundingBox(), act = await p.locator('#act').boundingBox();
+    const was = await text(p, '#rv'), px = act.x + act.width * 0.8;           // where a right thumb lands on Lock in
+    await press(px, labs.y + labs.height * 0.65);                               // on the label strip
+    await press(px, act.y - 2);                                                 // just above Lock in
+    ok(await text(p, '#rv') === was, `reckon: a press on the label strip or just above Lock in leaves the guess at ${was} (${await text(p, '#rv')})`);
+    ok(act.y - (trk.y + trk.height) >= 44, `reckon: ${Math.round(act.y - trk.y - trk.height)}px between the scale and Lock in`);
+    await press(trk.x + trk.width * 0.9, trk.y + trk.height / 2);
+    ok(await text(p, '#rv') !== was, `reckon: a press on the track still picks a value (${await text(p, '#rv')})`);
     await play.reckon(p, { wrong: [], stop: 3 });
     await p.evaluate(() => { document.dispatchEvent(new Event('visibilitychange')); window.dispatchEvent(new Event('pagehide')); }); await wait(p, 600);
     ok(ev.filter(e => e.ev === 'puzzle_start').length === 1, 'reckon: Play starts the round once');
