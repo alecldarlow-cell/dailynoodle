@@ -17,8 +17,9 @@ test('GUIDES: card date, no duration and separate help target at '+width+' '+sch
  const items=fixture.items.map(x=>({...x}));items[3].date='2026-09-03';items[3].read='~10 min';delete items[3].type;
  await feed(phone,items);await goto(phone,'puzzles.html');
  // Puzzles shows the day's set only from 7 Nov 2026 (as the app's Today): the older Path is in the Archive.
- await expect(p.locator('#feed .card-guide')).toHaveCount(8);
- await expect(p.locator('#feed .card-guide[href="how-to-play.html#path"]')).toHaveCount(0);
+ await expect(p.locator('#feed > li:not([hidden]) .card-guide')).toHaveCount(8);
+ await expect(p.locator('#feed > li:not([hidden]) .card-guide[href="how-to-play.html#path"]')).toHaveCount(0);
+ await expect(p.locator('#feed > li[hidden] .card-guide[href="how-to-play.html#path"]')).toHaveCount(1);   // still in the page
  for(let i=0,r=0;i<types.length;i++){
   if(i===3)continue;
   const row=p.locator('#feed > li').nth(r++);

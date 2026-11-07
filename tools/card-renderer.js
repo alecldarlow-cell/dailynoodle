@@ -104,7 +104,10 @@
       : '<span class="t">'+esc(it.topic)+'</span>'
         + (when ? '<span class="dot">·</span><span>'+esc(when)+'</span>' : '')
         + (it.read ? '<span class="dot">·</span><span>'+esc(it.read)+'</span>' : '');
-    return '<li data-kind="'+esc(it.kind)+'"'+(guide?' class="puzzle-card"':'')+'><a class="card" href="'+esc(it.path)+'">'
+    // Puzzles shows the day's set only (7 Nov 2026, as the app's Today): older cards stay in the page,
+    // so every puzzle link is still crawlable, but hidden; the Archive is where players find them.
+    var off = options && options.day && it.kind==='puzzle' && it.date!==options.day;
+    return '<li data-kind="'+esc(it.kind)+'"'+(guide?' class="puzzle-card"':'')+(off?' hidden':'')+'><a class="card" href="'+esc(it.path)+'">'
       + thumb
       + '<div>'
       +   '<h2 class="hl">'+esc(it.headline)+'</h2>'
@@ -115,5 +118,17 @@
       + '</li>';
   }
 
-  return {card:card,types:PUZZLE_TYPES};
+  /* Puzzles' order (7 Nov 2026): the day's set first, in the daily order (Mini, Doku, Sweep, Path, Link,
+     Tangle, Borders, Reckon, Tally), then every older card in feed order. The day is the newest released
+     day up to today, so before today's build it is still yesterday's. Shared by the build and front.js. */
+  function daySet(items, today){
+    var day = '';
+    items.forEach(function(it){ if(it.kind==='puzzle' && it.date && it.date<=today && it.date>day) day = it.date; });
+    var rank = function(it){ var r = TYPE_RANK[puzzleType(it)]; return r==null ? 99 : r; };
+    var first = items.filter(function(it){ return it.date===day; }).map(function(it, i){ return [it, i]; })
+      .sort(function(a, b){ return rank(a[0]) - rank(b[0]) || a[1] - b[1]; }).map(function(x){ return x[0]; });
+    return { day: day, items: first.concat(items.filter(function(it){ return it.date!==day; })) };
+  }
+
+  return {card:card,types:PUZZLE_TYPES,daySet:daySet};
 });

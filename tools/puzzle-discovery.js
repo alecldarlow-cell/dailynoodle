@@ -1,14 +1,16 @@
 'use strict';
 // Publish the existing cards as HTML; the browser enhances the same markup.
-const fs=require('node:fs'),path=require('node:path'),{card}=require('./card-renderer');
+const fs=require('node:fs'),path=require('node:path'),{card,daySet}=require('./card-renderer');
 function write(out){
  const feed=JSON.parse(fs.readFileSync(path.join(out,'feed.json'),'utf8'));
  const items=(feed.items||[]).filter(it=>it.kind==='puzzle'&&!/^\s*in development\s*$/i.test(it.badge||'')&&(!feed.today||it.date<=feed.today));
  const hub=path.join(out,'puzzles.html');
  if(fs.existsSync(hub)){
   let html=fs.readFileSync(hub,'utf8');
-  html=html.replace(/(<ul\b[^>]*\bid="feed"[^>]*>)[\s\S]*?(<\/ul>)/i,(_,open,close)=>open+'\n'+items.map(it=>card(it,{today:feed.today})).join('\n')+'\n  '+close);
-  html=html.replace(/(<p\b[^>]*\bid="count"[^>]*>)[\s\S]*?(<\/p>)/i,(_,open,close)=>open+(items.length?items.length+' '+(items.length===1?'puzzle':'puzzles'):'')+close);
+  // the day's set shows; every older card is in the page too (crawlable), hidden (card-renderer daySet)
+  const set=daySet(items,feed.today||'9999'),shown=set.items.filter(it=>it.date===set.day).length;
+  html=html.replace(/(<ul\b[^>]*\bid="feed"[^>]*>)[\s\S]*?(<\/ul>)/i,(_,open,close)=>open+'\n'+set.items.map(it=>card(it,{today:feed.today,day:set.day})).join('\n')+'\n  '+close);
+  html=html.replace(/(<p\b[^>]*\bid="count"[^>]*>)[\s\S]*?(<\/p>)/i,(_,open,close)=>open+(shown?shown+' '+(shown===1?'puzzle':'puzzles'):'')+close);
   fs.writeFileSync(hub,html);
  }
  const guide=path.join(out,'how-to-play.html');

@@ -221,7 +221,10 @@
       : '<span class="t">'+esc(it.topic)+'</span>'
         + (when ? '<span class="dot">·</span><span>'+esc(when)+'</span>' : '')
         + (it.read ? '<span class="dot">·</span><span>'+esc(it.read)+'</span>' : '');
-    return '<li data-kind="'+esc(it.kind)+'"'+(guide?' class="puzzle-card"':'')+'><a class="card" href="'+esc(it.path)+'">'
+    // Puzzles shows the day's set only (7 Nov 2026, as the app's Today): older cards stay in the page,
+    // so every puzzle link is still crawlable, but hidden; the Archive is where players find them.
+    var off = options && options.day && it.kind==='puzzle' && it.date!==options.day;
+    return '<li data-kind="'+esc(it.kind)+'"'+(guide?' class="puzzle-card"':'')+(off?' hidden':'')+'><a class="card" href="'+esc(it.path)+'">'
       + thumb
       + '<div>'
       +   '<h2 class="hl">'+esc(it.headline)+'</h2>'
@@ -232,7 +235,19 @@
       + '</li>';
   }
 
-  return {card:card,types:PUZZLE_TYPES};
+  /* Puzzles' order (7 Nov 2026): the day's set first, in the daily order (Mini, Doku, Sweep, Path, Link,
+     Tangle, Borders, Reckon, Tally), then every older card in feed order. The day is the newest released
+     day up to today, so before today's build it is still yesterday's. Shared by the build and front.js. */
+  function daySet(items, today){
+    var day = '';
+    items.forEach(function(it){ if(it.kind==='puzzle' && it.date && it.date<=today && it.date>day) day = it.date; });
+    var rank = function(it){ var r = TYPE_RANK[puzzleType(it)]; return r==null ? 99 : r; };
+    var first = items.filter(function(it){ return it.date===day; }).map(function(it, i){ return [it, i]; })
+      .sort(function(a, b){ return rank(a[0]) - rank(b[0]) || a[1] - b[1]; }).map(function(x){ return x[0]; });
+    return { day: day, items: first.concat(items.filter(function(it){ return it.date!==day; })) };
+  }
+
+  return {card:card,types:PUZZLE_TYPES,daySet:daySet};
 });
 /* dn-cards:end */
 /* ==========================================================================
@@ -390,30 +405,24 @@
       + '</ol><a class="brief-all" href="'+esc(it.path)+'">Read the briefing →</a></li>';
   }
 
-  // Puzzles shows the day's set only (7 Nov 2026, as the app's Today): the newest released day up to today;
-  // every earlier puzzle is in the Archive, one tab away.
-  function setDay(){
-    var t = londonDay(), d = '';
-    state.items.forEach(function(it){ if(mine(it) && it.date && it.date <= t && it.date > d) d = it.date; });
-    return d;
-  }
   function visible(lead){
-    var q = state.q.trim().toLowerCase(), day = SEC.kind === 'puzzle' && !LAB ? setDay() : '';
+    var q = state.q.trim().toLowerCase();
     var out = state.items.filter(function(it){
       if(!mine(it)) return false;
-      if(day && it.date !== day) return false;
       if(it === lead) return false;   // the lead block already shows it
       if(state.topic!=='all' && facet(it)!==state.topic) return false;
       if(q && (it.headline+' '+it.standfirst+' '+it.topic+' '+(it.stories||[]).map(function(s){ return s.h; }).join(' ')).toLowerCase().indexOf(q)===-1) return false;
       return true;
     });
-    // the day's set in the daily order (Mini, Doku, Sweep, Path, Link, Tangle, Borders, Reckon, Tally), as the app's Today
-    if(day) out.sort(function(a, b){ return facetOrder(facet(a), facet(b)); });
+    // Puzzles: the day's set first in the daily order, older cards after it, hidden (as the app's Today;
+    // the same order and markup as the build, tools/card-renderer.js daySet)
+    if(SEC.kind === 'puzzle' && !LAB){ var set = window.dnCards.daySet(out, londonDay()); state.setDay = set.day; out = set.items; }
+    else state.setDay = '';
     return out;
   }
 
   // Shared with the static build: cards have identical markup before and after scripts.
-  function card(it){ return window.dnCards.card(it,{today:londonDay(),lab:LAB}); }
+  function card(it){ return window.dnCards.card(it,{today:londonDay(),lab:LAB,day:state.setDay}); }
 
   function render(){
     renderChips();
@@ -422,8 +431,9 @@
       ? v.map(card).join('')
       : '<li class="empty">'+esc(state.items.some(mine)
           ? 'Nothing matches that filter yet.' : SEC.empty)+'</li>');
-    $count.textContent = v.length
-      ? v.length + ' ' + SEC.noun[v.length===1?0:1] + (state.q?' matching':'')
+    var shown = state.setDay ? v.filter(function(it){ return it.date === state.setDay; }).length : v.length;
+    $count.textContent = shown
+      ? shown + ' ' + SEC.noun[shown===1?0:1] + (state.q?' matching':'')
       : '';
     if (SEC.kind === 'puzzle') showRun();
     showPlayed();
@@ -558,7 +568,7 @@
     }
     // "9 puzzles · 3 played" (7 Nov 2026, as the app's Today)
     if(SEC.kind === 'puzzle' && !LAB && !state.q && $count.textContent){
-      var n = $feed.querySelectorAll('li.puzzle-card').length, m = $feed.querySelectorAll('li.puzzle-card.is-played').length;
+      var n = $feed.querySelectorAll('li.puzzle-card:not([hidden])').length, m = $feed.querySelectorAll('li.puzzle-card.is-played:not([hidden])').length;
       $count.textContent = n + ' ' + SEC.noun[n === 1 ? 0 : 1] + (m ? ' · ' + m + ' played' : '');
     }
   }
