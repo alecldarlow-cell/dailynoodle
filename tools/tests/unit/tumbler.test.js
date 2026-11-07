@@ -42,8 +42,8 @@ test('TUMBLER-05: the line can never spell anything rude, and only words a solve
   // the first boards could spell these: the check now covers every spelling, listed word or not
   assert.strictEqual(T.spellsRude(['XD', 'I', 'C', 'K'], L.offensive), 'dick');
   assert.strictEqual(T.spellsRude(['S', 'C', 'A', 'G'], L.offensive), 'scag');
-  for (const w of ['scag', 'fohn', 'froe', 'yean', 'yeld', 'yaar', 'york', 'erie']) assert.ok(!L.known.has(w), w + ' is not accepted');
-  for (const w of ['scar', 'pots', 'yarn', 'neon', 'loot']) assert.ok(L.known.has(w), w + ' is accepted');
+  for (const w of ['scag', 'fohn', 'froe', 'yean', 'yeld', 'yaar', 'york', 'erie', 'nazi', 'tire']) assert.ok(!L.known.has(w), w + ' is not accepted');
+  for (const w of ['scar', 'pots', 'yarn', 'neon', 'loot', 'oboe', 'dead', 'sick', 'yurt']) assert.ok(L.known.has(w), w + ' is accepted');   // oboe, dead: refused until 7 Nov 2026
 });
 
 test('TUMBLER-04: the pages are thin Lab puzzle pages on the engine', () => {
