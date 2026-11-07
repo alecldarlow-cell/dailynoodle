@@ -76,6 +76,8 @@
   .mast{display:flex;align-items:center;gap:11px;padding:14px 0 10px;border-bottom:2px solid var(--ink)}
   .mono{width:30px;height:30px;background:var(--mono-bg);color:var(--mono-ink);font-family:var(--display);
     font-weight:800;font-size:17px;display:grid;place-content:center;border-radius:4px;letter-spacing:-1px}
+  /* The noodle n (7 Nov 2026): the app's mark drawn in the tile's ink, its marigold dot ringed in the same ink. */
+  .mono .noodle{display:block;width:18px;height:23px}
   .word{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.02em}
   .word b{color:var(--accent)}
   .mast .kick{margin-left:auto;font-weight:600;font-size:11px;letter-spacing:.08em;

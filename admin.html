@@ -66,6 +66,7 @@
   .mast{display:flex;align-items:center;gap:10px;padding:10px 0 6px}
   .mono{width:30px;height:30px;background:var(--ink);color:var(--on-ink);font-family:var(--display);font-weight:800;
     font-size:13px;letter-spacing:-.02em;display:grid;place-content:center;border-radius:6px;flex:none}
+  .mono .noodle{display:block;width:18px;height:23px}
   .word{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em}
   .word b{color:var(--muted);font-weight:700}
   .icon-btn{margin-left:auto;width:44px;height:44px;display:grid;place-content:center;border:0;background:none;border-radius:22px;color:var(--ink);flex:none}
@@ -317,7 +318,7 @@
 
   <header>
     <div class="mast">
-      <div class="mono" aria-hidden="true">DN</div>
+      <div class="mono" aria-hidden="true"><svg class="noodle" viewBox="292 220 462 600" width="18" height="23" focusable="false"><path d="M352 760V360a80 80 0 0 1 160 0v320a80 80 0 0 0 160 0V298" fill="none" stroke="currentColor" stroke-width="96" stroke-linecap="round"/><circle cx="672" cy="298" r="66" fill="none" stroke="currentColor" stroke-width="20"/><circle cx="672" cy="298" r="66" fill="#FFD54A"/></svg></div>
       <div class="word">Noodle<b>Admin</b></div>
       <button class="icon-btn" id="gear" type="button" aria-label="Settings" hidden>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
