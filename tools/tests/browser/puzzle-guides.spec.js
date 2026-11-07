@@ -39,9 +39,10 @@ test('GUIDES: card date, duration and separate help target at '+width+' '+scheme
 });
 test('GUIDES: matching pill, history, reload and the play link remain independent',async({phone})=>{
  const {p,ctx}=phone;await feed(phone);await goto(phone,'puzzles.html');
- await p.locator('#chips [data-topic="Path"]').click();
- const target=await p.locator('#feed a.card').getAttribute('href');
- await p.locator('#feed .card-guide').click();await p.waitForURL('**/how-to-play.html#path');await H.wait(p,300);
+ // no filter row on Puzzles from 7 Nov 2026: the Path card is found in the list
+ const card=p.locator('#feed li').filter({has:p.locator('.card-guide[href$="#path"]')}).first();
+ const target=await card.locator('a.card').getAttribute('href');
+ await card.locator('.card-guide').click();await p.waitForURL('**/how-to-play.html#path');await H.wait(p,300);
  await expect(p.locator('.guide-panel:visible')).toHaveCount(1);
  await expect(p.locator('#path')).toBeVisible();
  await expect(p.locator('#guide-pills [href="#path"]')).toHaveAttribute('aria-current','true');
@@ -51,10 +52,9 @@ test('GUIDES: matching pill, history, reload and the play link remain independen
  await p.goBack();await H.wait(p,200);await expect(p.locator('#path')).toBeVisible();
  await p.reload();await H.wait(p,300);await expect(p.locator('#path')).toBeVisible();
  await p.goBack();await H.wait(p,600);
- await expect(p.locator('#chips [data-topic="Path"]')).toHaveAttribute('aria-pressed','true');
- await expect(p.locator('#feed .card-time')).toHaveText('~3 min');
+ await expect(card.locator('.card-time')).toHaveText('~3 min');
  await ctx.route('**/reports/guide-fixture-*.html',r=>r.fulfill({status:200,contentType:'text/html',body:'<!doctype html><title>Puzzle</title><p>Opened the puzzle</p>'}));
- await p.locator('#feed .hl').click();await p.waitForURL('**/'+target);
+ await card.locator('.hl').click();await p.waitForURL('**/'+target);
  expect(phone.errors).toEqual([]);
 });
 test('GUIDES: all pills work on phones in both themes, including direct links and keyboard activation',async({phone},testInfo)=>{

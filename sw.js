@@ -149,7 +149,7 @@
 'use strict';
 
 const OFF = false;
-const VERSION = 'nn-6-noodle-icon';
+const VERSION = 'nn-7-tabs';
 const PAGES = 'nn-pages-' + VERSION;      // this site's files
 const FONTS = 'nn-fonts-' + VERSION;      // Google Fonts (stylesheets and font files)
 const MAX_ENTRIES = 400;                  // pages cache trimmed past this, oldest first
@@ -159,7 +159,7 @@ const KEY = 'sb_publishable_dEMntRNiElpGHn3Hd5Ef1Q_HvLa2wTB';   // public by des
 
 const CORE = [
   '/', '/index.html', '/puzzles.html', '/games.html', '/lab.html', '/board.html', '/privacy.html',
-  '/front.css', '/front.js', '/dn-track.js', '/dn-board.js', '/dn-sync.js',
+  '/front.css', '/front.js', '/dn-nav.js', '/dn-track.js', '/dn-board.js', '/dn-sync.js',
   '/feed.json', '/puzzles-today.json', '/manifest.webmanifest',
   '/icons/favicon.svg', '/icons/favicon-32.png', '/icons/icon-192.png',
   '/assets/borders-thumb.svg', '/assets/tangle-thumb.svg', '/assets/reckon-thumb.svg', '/assets/tally-thumb.svg',

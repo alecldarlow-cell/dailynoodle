@@ -352,17 +352,18 @@
   }
 
   function renderChips(){
+    // Puzzles has no filter row from 7 Nov 2026 (Alec: the website takes the app's tabs; Leagues is a
+    // tab, filtering by type lives in the Archive). The list is always All; a saved type falls back to it.
+    if(SEC.kind==='puzzle'){ state.topic='all'; $chips.innerHTML=''; $chips.hidden=true; return; }
     var list = topics();
     if(state.topic!=='all' && list.indexOf(state.topic)===-1) state.topic='all';
     var html = [];
-    // Puzzles only: the leaderboard link leads the row. A link, not a filter.
-    if(SEC.kind==='puzzle') html.push('<a class="chip boardpill" href="board.html?from=pill">🏆 Board</a>');
     html.push('<button class="chip" data-topic="all" aria-pressed="'+(state.topic==='all')+'">'+(LAB?'Everything':SEC.kind==='puzzle'?'All puzzles':'All topics')+'</button>');
     list.forEach(function(t){
       html.push('<button class="chip" data-topic="'+esc(t)+'" aria-pressed="'+(state.topic===t)+'">'+esc(t)+'</button>');
     });
     $chips.innerHTML = html.join('');
-    $chips.hidden = list.length < 2 && SEC.kind!=='puzzle';   // a lone chip filters nothing (the Board pill keeps Puzzles' row)
+    $chips.hidden = list.length < 2;   // a lone chip filters nothing
   }
 
   /* ---------- the daily briefing (News, 24 Oct 2026) ----------
