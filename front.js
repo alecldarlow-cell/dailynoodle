@@ -414,7 +414,7 @@
       : '';
     if (SEC.kind === 'puzzle') showRun();
     showPlayed();
-    $built.textContent = state.built
+    if ($built) $built.textContent = state.built
       ? 'Index rebuilt ' + new Date(state.built).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})
       : '';
   }

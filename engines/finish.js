@@ -167,6 +167,7 @@
   var ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon', 'tally', 'tilt', 'redact', 'tumbler'];
   var SAVE = { mini: 'digi-mini-v1', doku: 'digi-doku-v1', sweep: 'digi-sweep-v1', path: 'digi-path-v1',
                link: 'digi-link-v1', tangle: 'digi-tangle-v1', borders: 'digi-borders-v1', reckon: 'digi-reckon-v1', tally: 'digi-tally-v1', tilt: 'digi-tilt-v1', redact: 'digi-redact-v1', tumbler: 'digi-tumbler-v1' };
+  var GUIDE_TYPES = { mini: 1, doku: 1, sweep: 1, path: 1, link: 1, tangle: 1, borders: 1, reckon: 1, tally: 1 };   // panels in how-to-play.html
   var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally', tilt: 'Tilt', redact: 'Redact', tumbler: 'Tumbler' };
   var SHARE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>';
   var TICK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
@@ -528,6 +529,12 @@
     if (cfg.lab) clock.textContent = 'In development: a Lab puzzle, not yet daily.'; else fillClock(clock, NAME[cfg.type]);
     if (cfg.date) foot.appendChild(el('p', 'fin-day', esc(NAME[cfg.type] + ' ' + cfg.n + ', ' + longDate(cfg.date))));
     if (JINGLE_TYPES[cfg.type]) foot.appendChild(soundSwitch());
+    // How to play <Type> (7 Nov 2026, as the app's finish sheet): once a card shows a result it has no
+    // How to play link, so the rules stay one tap away here. Daily types only; the guide has no Lab panels.
+    if (GUIDE_TYPES[cfg.type] && !cfg.lab) {
+      var how = el('a', 'fin-how', esc('How to play ' + NAME[cfg.type]) + ' \u203a');
+      how.href = '../how-to-play.html?via=finish#' + cfg.type; foot.appendChild(how);
+    }
     f.appendChild(foot);
 
     (cfg.keep || []).forEach(function (id) { var e = $(id); if (e) keep.appendChild(e); });

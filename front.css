@@ -302,3 +302,14 @@
 .card-result.lost{color:var(--muted)}   /* a lost Sweep or Link: played, not a win */
 .card-result.started{color:var(--started-ink);font-weight:700}
 @media(min-width:560px){.played-mark{left:101px}}
+
+/* Tap targets of at least 44 px (7 Nov 2026, as the app's tests enforce). The look is
+   unchanged: an invisible layer widens what a finger can hit. The section pills and the
+   card's How to play reach 44 px tall; footer links get the same height around their text.
+   The Puzzles filter chips are left as they are: they sit in a scrolling row that would
+   clip the layer, and they are due to go when the Puzzles nav arrives. */
+.sec{position:relative}
+.sec::after{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+.card-guide::before{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+.foot .privacy a,.foot .optout{position:relative}
+.foot .privacy a::after,.foot .optout::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:44px;transform:translateY(-50%)}
