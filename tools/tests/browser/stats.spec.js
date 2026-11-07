@@ -56,14 +56,14 @@ test('STATS-WEB-03: GIVEN December WHEN 10+ results this year THEN the year card
  await ctx.close();
 });
 
-test('STATS-WEB-04: GIVEN saves WHEN Puzzles opens THEN a Your stats link shows; with none it stays hidden',async({phone})=>{
+test('STATS-WEB-04: GIVEN saves WHEN Puzzles opens THEN Stats is reached from the nav tab, not a count-row link',async({phone})=>{
+ // 7 Nov 2026: the count row's "Your stats ›" went when the puzzles nav arrived (its Stats tab, when stats is on).
  await statsOn(phone.ctx);
- await goto(phone,'puzzles.html');
- await expect(phone.p.locator('#statslink')).toBeHidden();
- await phone.p.evaluate(m=>localStorage.setItem('digi-mini-v1',JSON.stringify({v:1,done:{[m]:{s:40,d:'2026-10-18'}}})),minis[0].id);
- await phone.p.reload();await H.wait(phone.p,1500);
- await expect(phone.p.locator('#statslink')).toBeVisible();
- await expect(phone.p.locator('#statslink')).toHaveAttribute('href','stats.html?from=puzzles');
+ await phone.ctx.addInitScript(m=>localStorage.setItem('digi-mini-v1',JSON.stringify({v:1,done:{[m]:{s:40,d:'2026-10-18'}}})),minis[0].id);
+ await goto(phone,'puzzles.html');await H.wait(phone.p,1500);
+ await expect(phone.p.locator('#statslink')).toHaveCount(0);
+ await expect(phone.p.locator('[data-tab="stats"]')).toBeVisible();
+ await expect(phone.p.locator('[data-tab="stats"]')).toHaveAttribute('href',/^stats\.html/);
 });
 
 test('STATS-WEB-05: GIVEN a small phone in dark mode WHEN stats open THEN stats_open is sent, nothing spills and no errors show',async({browser})=>{
