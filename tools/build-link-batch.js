@@ -50,11 +50,8 @@ const PZ_RE = /window\.DN_PUZZLE=\{[\s\S]*?\n\};/;
 function parse(s) { return Function('return ' + s.match(PZ_RE)[0].replace(/^window\.DN_PUZZLE=/, '').replace(/;$/, ''))(); }
 
 /* ---- formatting, matched to the live pages ---- */
-const WORD = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
-function standfirst(n) {
-  return 'Sixteen tiles, four hidden groups, four mistakes. ' +
-    (n === 1 ? 'One of them is lying to you about which group it\'s in.' : `${WORD[n]} of them are lying to you about which group they're in.`);
-}
+// Alec, 7 Nov 2026: the card's voice lives in tools/standfirst.js; the trap count stays the daily twist
+function standfirst(n) { return require('./standfirst').link(n); }
 function block(p) {
   const nw = Math.max(...p.groups.map(g => JSON.stringify(g.name).length + 1));
   const gl = p.groups.map(g => `    {rank:${g.rank}, name:${(JSON.stringify(g.name) + ',').padEnd(nw)} members:[${g.members.map(m => JSON.stringify(m)).join(',')}]}`);

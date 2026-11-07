@@ -222,8 +222,10 @@ function stamp(tpl, p) {
   if (!PZ_RE.test(s)) throw new Error('DN_PUZZLE line not found in template');
   return s.replace(PZ_RE, () => pzLine(p));
 }
-// everything but the headline, date and puzzle line must match the template exactly
+// everything but the headline, date, card text and puzzle line must match the template exactly
+// (the card text, dn:standfirst, changed voice on 7 Nov 2026; released days keep theirs)
 const MASK = s => s.replace(/(name="dn:headline"\s+content=")[^"]*(")/, '$1H$2').replace(/(name="dn:date"\s+content=")[^"]*(")/, '$1D$2')
+  .replace(/(name="dn:standfirst"\s+content=")[^"]*(")/, '$1S$2')
   .replace(PZ_RE, 'PZ').replace(/<!-- og:start[\s\S]*?<!-- og:end -->\n?/, '').replace(/<script src="\.\.\/dn-track\.js" defer><\/script>\n?/, '');
 
 /* ---- the gate: one day on its own (the engine runs the same checks on load) ---- */

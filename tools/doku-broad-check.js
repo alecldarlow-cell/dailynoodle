@@ -169,7 +169,8 @@ if (has("--fix")) {
     const fmt = a => "[" + a.map(v => Array.isArray(v) ? "[" + v.join(",") + "]" : JSON.stringify(v)).join(",") + "]";
     s = s.replace(LOCK_RE, (m, a, b, c) => a + fmt(locked) + c);
     s = s.replace(BANK_RE, (m, a, b, c) => a + fmt(bank) + c);
-    if (oldL === oldB && oldL !== newL) { stuck.push({ f: x.f, id: p.id, why: "standfirst counts equal (" + oldL + "); edit by hand" }); continue; }
+    const sfNow = (s.match(/<meta name="dn:standfirst"\s+content="([^"]*)"/) || [])[1] || "";
+    if (/\d/.test(sfNow) && oldL === oldB && oldL !== newL) { stuck.push({ f: x.f, id: p.id, why: "standfirst counts equal (" + oldL + "); edit by hand" }); continue; }
     let blurbs = 0;
     s = s.replace(/(<meta (?:name="dn:standfirst"|property="og:description"|name="twitter:description")\s+content=")([^"]*)(")/g, (m, a, t, c) => {
       blurbs++;

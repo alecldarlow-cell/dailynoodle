@@ -29,7 +29,6 @@ const arg = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] :
 const HOUSE = ["anal","anus","arse","bastard","bitch","boob","boobs","cunt","cunts","dick","dicks","dildo","fuck","fucks","heroin","homo","jihad","meth","nazi","nazis","negro","nude","nudes","opium","orgy","penis","pimp","porn","porno","pussy","rape","raped","rapes","semen","sex","sexy","sperm","twat","whore",
   // 19 Oct 2026 (Alec's call): stripped from every Tangle from 21 Oct 2026; also in the kit's blocklist
   "barf","bum","cig","cigs","pee","peed","pees","pleb","plebs","poo","poop","poos","ricin","sod","sods","tart","tarts","wees"];
-const NUM = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen'];
 const live = () => fs.readdirSync(REPORTS).filter(f => /^\d{4}-\d{2}-\d{2}-word-tangle-\d{4}\.html$/.test(f)).sort();
 const PZ_RE = /window\.DN_PUZZLE=(\{.*\});/;
 const OG_RE = /<!-- og:start[^>]*-->[\s\S]*?<!-- og:end -->\n?/;
@@ -37,7 +36,8 @@ const parse = s => { const m = s.match(PZ_RE) || s.match(/\nconst PUZZLE=(\{.*\}
 
 const j = v => JSON.stringify(v);
 const pzLine = d => `window.DN_PUZZLE={id:${j(d.id)},date:${j(d.date)},n:${d.n},band:"standard",grid:${j([['.', '.', '.', '.'], ['.', '.', '.', '.'], ['.', '.', '.', '.'], ['.', '.', '.', '.']])},tiles:${j(d.tiles)},star:${j(d.star)},starPath:${j(d.starPath)},main:${j(d.main)},bonus:${j(d.bonus)}};`;
-const standfirst = d => `Ninety seconds, sixteen tiles, ${d.main.length} common words to find. Longer words score more, and the ${NUM[d.star.length]}-letter longest word scores double.`;
+// Alec, 7 Nov 2026: no counts on the card (tools/standfirst.js); the board's numbers are in the game
+const standfirst = () => require('./standfirst').TEXT.tangle;
 const fileOf = d => `${d.date}-word-tangle-${String(d.n).padStart(4, '0')}.html`;
 function stamp(tpl, d) {
   let s = tpl;
@@ -134,7 +134,7 @@ function main() {
     const md = (s.match(/name="dn:date"\s+content="([^"]*)"/) || [])[1];
     const g = GATE(P, md); if (g.length) err(f, 'engine GATE: ' + g.join('; '));
     if (!s.includes(`content="Tangle ${String(P.n).padStart(4, '0')}"`)) err(f, 'headline');
-    if (!s.includes(`${P.main.length} common words`) || !s.includes(`${NUM[P.star.length]}-letter longest word`)) err(f, 'standfirst disagrees with the board');
+    if (!s.includes(`content="${standfirst(P)}"`)) err(f, 'standfirst is not the house wording (tools/standfirst.js)');
     const traced = ALL.filter(w => !blocked(w) && traceable(P.tiles, w));   // blocked words are left out of the lists, not required in them
     const dictBonus = P.bonus.filter(w => !EXTRA.includes(w) || BONUSSET.has(w));
     const wm = traced.filter(w => MAINSET.has(w)).sort(), wb = traced.filter(w => BONUSSET.has(w)).sort();

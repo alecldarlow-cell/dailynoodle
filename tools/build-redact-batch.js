@@ -38,7 +38,7 @@ const SIZE = { 5: 'Five by five', 6: 'Six by six', 7: 'Seven by seven' };
 const W = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen'];
 function page({ serial, date, board, lab, updated }) {
   const id = 'DP·REDA·' + pad(serial), num = pad(serial), k = board.black.length;
-  const stand = SIZE[board.n] + ', every square a letter. Black out the ' + W[k] + ' that don’t belong and the grid becomes a crossword.';
+  const stand = require('./standfirst').TEXT.redact;   // Alec, 7 Nov 2026: tools/standfirst.js (no counts)
   const data = '{type:"redact",id:"' + id + '",band:"medium",n:' + board.n + ',letters:"' + board.letters + '",black:[' + board.black.join(',') +
     '],words:[' + board.words.map(w => '"' + w + '"').join(',') + '],seed:"' + board.seed + '"}';
   return `<!doctype html><html lang="en"><head>

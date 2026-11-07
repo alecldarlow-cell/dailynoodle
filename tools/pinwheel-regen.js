@@ -318,9 +318,11 @@ function apply(planFile) {
       for (const w of words) order.push(`    ${w}:"${esc(p.clues[w] || "")}"`);
       swap(/clues:\{[^\n]*\n[\s\S]*?\n\s*\}/, "clues:{ // keyed by answer (unique within a puzzle)\n" + order.join(",\n") + "\n  }", "clues");
       if (!/<meta name="dn:standfirst" content="[^"]*">/.test(s)) problems.push(`${p.file}: standfirst meta not found`);
-      s = s.replace(/<meta name="dn:standfirst" content="[^"]*">/, `<meta name="dn:standfirst" content="${htmlAttr(p.standfirst || "")}">`);
+      // Alec, 7 Nov 2026: the teaser alone, no difficulty sentence (tools/standfirst.js)
+      const msf = require("./standfirst").mini(p.standfirst || "");
+      s = s.replace(/<meta name="dn:standfirst" content="[^"]*">/, `<meta name="dn:standfirst" content="${htmlAttr(msf)}">`);
       // link preview: tools/og-tags.js copies the standfirst on the next build; keep them equal now
-      s = s.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${htmlAttr(p.standfirst || "")}">`);
+      s = s.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${htmlAttr(msf)}">`);
       // clue screens
       for (const w of words) {
         const c = (p.clues[w] || "").toLowerCase(), toks = c.match(/[a-z]+/g) || [];
@@ -333,9 +335,12 @@ function apply(planFile) {
     } else {
       swap(/locked:\s*\[[\s\S]*?\]\s*\],?\s*\n/, "locked: " + JSON.stringify(p.locked).replace(/,/g, ",") + ",\n", "locked");
       swap(/bank:\s*\[[^\]]*\]/, "bank: " + JSON.stringify(p.bank), "bank");
+      // Alec, 7 Nov 2026: the card no longer states the counts (tools/standfirst.js); an older page
+      // that still does keeps its wording with the counts brought up to date
       const cur = (s.match(/<meta name="dn:standfirst" content="([^"]*)">/) || [])[1] || "";
-      const tpl = (DOKU_SF.find(([re]) => re.test(cur)) || DOKU_SF[0])[1];
-      s = s.replace(/<meta name="dn:standfirst" content="[^"]*">/, `<meta name="dn:standfirst" content="${htmlAttr(tpl(p.locked.length, p.bank.length))}">`);
+      const old = DOKU_SF.find(([re]) => re.test(cur));
+      const sf = old ? old[1](p.locked.length, p.bank.length) : require("./standfirst").TEXT.doku;
+      s = s.replace(/<meta name="dn:standfirst" content="[^"]*">/, `<meta name="dn:standfirst" content="${htmlAttr(sf)}">`);
     }
     if (s === o) problems.push(`${p.file}: unchanged`);
     fs.writeFileSync(path.join(REPORTS, p.file), s);

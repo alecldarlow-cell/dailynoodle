@@ -27,7 +27,7 @@ function boardFor(serial, used) {
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 function page({ serial, date, board, lab, updated }) {
   const id = 'DP·TUMB·' + pad(serial), num = pad(serial);
-  const stand = 'A four-letter word hidden in four wheels of letters. Turn them to make words, submit for clues, and close in on it.';
+  const stand = require('./standfirst').TEXT.tumbler;   // Alec, 7 Nov 2026: tools/standfirst.js
   const data = '{type:"tumbler",id:"' + id + '",band:"medium",n:4,wheels:[' + board.wheels.map(w => '"' + w + '"').join(',') + '],secret:"' + board.secret +
     '",words:[' + board.words.map(w => '"' + w + '"').join(',') + '],seed:"' + board.seed + '"}';
   return `<!doctype html><html lang="en"><head>
