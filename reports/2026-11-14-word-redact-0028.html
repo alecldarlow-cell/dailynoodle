@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="dn:headline"   content="Redact 0028">
+<meta name="dn:standfirst" content="Seven by seven, every square a letter. Black out the fourteen that don’t belong and the grid becomes a crossword.">
+<meta name="dn:topic"      content="Word">
+<meta name="dn:date"       content="2026-11-14">
+<meta name="dn:kind"       content="puzzle">
+<meta name="dn:read"       content="~1 min">
+<meta name="dn:thumb"      content="assets/redact-thumb.svg">
+<meta name="dn:badge"      content="In development">
+<meta name="theme-color" content="#2E5BFF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Redact">
+<title>Redact — Noodle Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../engines/redact.css">
+</head>
+<body>
+<div class="app" id="app">
+<header>
+  <div class="masthead">
+    <div class="mono-mark">DP</div>
+    <div class="mh-text">
+      <div class="mh-name">Noodle<span class="accent">Puzzles</span></div>
+      <div class="mh-eyebrow">Redact</div>
+    </div>
+  </div>
+  <div class="streakbox">🔥 <b id="streakn">0</b></div>
+</header>
+<div class="meta">
+  <span class="tag">Redact</span>
+  <span id="pid">DP·REDA·0028</span>
+  <span>·</span>
+  <span id="pband">medium</span>
+  <span id="timer">0:00</span>
+</div>
+<main>
+  <div class="grid" id="grid" role="grid" aria-label="Redact board"></div>
+  <div class="tools">
+    <div class="count"><b id="count">0</b> of <span id="target">14</span> blacked out</div>
+    <button id="undoBtn" type="button" disabled>Undo</button>
+    <button id="clearBtn" type="button" disabled>Clear</button>
+  </div>
+  <p class="msg" id="msg">Tap a letter to black it out. Every row and column must read as words.</p>
+</main>
+<footer>SHELL — Redact v1 · DP·REDA·0028 · verified in code, not by eye</footer>
+</div>
+
+<div class="modal" id="modal"><div class="modalcard">
+  <h2>Solved</h2>
+  <div class="sub" id="modalsub">DP·REDA·0028 · MEDIUM</div>
+  <div class="statrow">
+    <div class="stat"><b id="statTime">0:00</b><span>Time</span></div>
+    <div class="stat"><b id="statStreak">0</b><span>Streak</span></div>
+  </div>
+  <div class="modalbtns">
+    <button id="shareBtn">Share result</button>
+    <button class="primary" id="closeBtn">Nice</button>
+  </div>
+</div></div>
+
+<script>
+/* This puzzle's data. The player is ../engines/redact.js, shared by every redact. */
+window.DN_PUZZLE={type:"redact",id:"DP·REDA·0028",band:"medium",n:7,letters:"GASATIPALLIACECOASTERRAILCBAENDORSEROEPEERHAMEVER",black:[0,1,2,3,10,25,26,27,35,36,37,42,43,44],words:["tip","all","ace","coaster","rail","endorse","peer","ever","acre","loan","laid","slope","tat","rev","ice","see","per","err"],seed:"redact-0028-19"};
+</script>
+<script src="../engines/redact.js"></script>
+</body></html>
