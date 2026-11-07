@@ -9,7 +9,7 @@ html.dn-house{
   --serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
   --good:#157A52;                 /* was #1F9E6B: 2.4-3.4:1 on the grid; now 5.2:1 on white */
   --g1:#157A52;                   /* Link's first group, the same green */
-  --hidden-cell:#DDE1EA; --line-soft:#D3D6E0; --cell-edge:#cfd3dc; --cell-given:#e3e6ee;
+  --hidden-cell:#DDE1EA; --line-soft:#D3D6E0; --switch-off:#80858F; --cell-edge:#cfd3dc; --cell-given:#e3e6ee;
   --cell-locked:#dfe3ec; --hidden-hover:#E7EAF1; --n1:var(--brand); --n2:var(--good); --n3:var(--bad); --n4:var(--brand-deep); --n5:#9A6B00;
   --btn-edge:rgba(20,23,38,.16); --btn-edge-hi:rgba(20,23,38,.34); --btn-off:rgba(20,23,38,.42); --pip-off:rgba(20,23,38,.18);
 }
@@ -32,7 +32,7 @@ html[data-theme="dark"],html[data-theme="dark"] body{background:#11131A}
   --paper:#11131A; --card:#2E3344; --ink:#ECEEF4; --ink-soft:#A6ABBD; --line:#4A5066; --brand:#3D63FF; --brand-deep:#A9BBFF;
   --active:#FFD54A; --active-word:#4A4220; --good:#4CC793; --bad:#FF7A6E; --block:#050608;
   --g1:#157A52; --g2:#2E5BFF; --g3:#FFD54A; --g4:#ECEEF4;
-  --hidden-cell:#4A5068; --line-soft:#3A3F52; --cell-edge:#1C1F2A; --cell-given:#1E2230;
+  --hidden-cell:#4A5068; --line-soft:#3A3F52; --switch-off:#6B7186; --cell-edge:#1C1F2A; --cell-given:#1E2230;
   --sh-rest:0 0 0 1px rgba(255,255,255,.06); --sh-hover:0 0 0 1px rgba(255,255,255,.12);
   --cell-locked:#1E2230; --hidden-hover:#565D77; --n1:#8EA6FF; --n2:#4CC793; --n3:#FF7A6E; --n4:#C9D3FF; --n5:#E0A92E;
   --btn-edge:rgba(236,238,244,.18); --btn-edge-hi:rgba(236,238,244,.40); --btn-off:rgba(236,238,244,.45); --pip-off:rgba(236,238,244,.28);
@@ -41,7 +41,7 @@ html.dn-house[data-theme="dark"]{
   --paper:#11131A; --card:#2E3344; --ink:#ECEEF4; --ink-soft:#A6ABBD; --line:#4A5066; --brand:#3D63FF; --brand-deep:#A9BBFF;
   --active:#FFD54A; --active-word:#4A4220; --good:#4CC793; --bad:#FF7A6E; --block:#050608;
   --g1:#157A52; --g2:#2E5BFF; --g3:#FFD54A; --g4:#ECEEF4;
-  --hidden-cell:#4A5068; --line-soft:#3A3F52; --cell-edge:#1C1F2A; --cell-given:#1E2230;
+  --hidden-cell:#4A5068; --line-soft:#3A3F52; --switch-off:#6B7186; --cell-edge:#1C1F2A; --cell-given:#1E2230;
   --sh-rest:0 0 0 1px rgba(255,255,255,.06); --sh-hover:0 0 0 1px rgba(255,255,255,.12);
   --cell-locked:#1E2230; --hidden-hover:#565D77; --n1:#8EA6FF; --n2:#4CC793; --n3:#FF7A6E; --n4:#C9D3FF; --n5:#E0A92E;
   --btn-edge:rgba(236,238,244,.18); --btn-edge-hi:rgba(236,238,244,.40); --btn-off:rgba(236,238,244,.45); --pip-off:rgba(236,238,244,.28);
@@ -132,7 +132,8 @@ details.dn-how p{font-size:15px;line-height:1.5;color:var(--ink-soft);margin:0 0
 /* the Sound switch (AF-013): a native checkbox drawn as a switch, 48 tall */
 .dn-sound{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px;border-bottom:1px solid var(--line-soft);font-weight:600;font-size:16px;color:var(--ink);cursor:pointer}
 .dn-sound small{display:block;font-weight:400;font-size:13px;color:var(--ink-soft);margin-top:2px}
-.dn-sound input{appearance:none;-webkit-appearance:none;flex:none;width:48px;height:28px;border-radius:14px;background:var(--line-soft);position:relative;margin:0;cursor:pointer;transition:background .15s}
+.dn-sound input{appearance:none;-webkit-appearance:none;flex:none;width:48px;height:28px;border-radius:14px;background:var(--switch-off);  /* the app's switchOff, 3:1+ (7 Nov 2026) */
+position:relative;margin:0;cursor:pointer;transition:background .15s}
 .dn-sound input::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
 .dn-sound input:checked{background:#0E7A4B}
 .dn-sound input:checked::after{transform:translateX(20px)}
