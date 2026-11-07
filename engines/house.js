@@ -212,11 +212,20 @@
     } catch (e) { return st.streak || 0; }
   })();
 
+  /* the heading names the day when it isn't today's (7 Nov 2026, as the app's startHead): "Ready to play",
+     "Yesterday's Mini", else "From the archive", so an older puzzle doesn't read as today's */
+  var startHead = (function () {
+    try {
+      var t = window.dnCore.londonDay();
+      if (!DATE || DATE >= t) return 'Ready to play';
+      return DATE === window.dnCore.dayBefore(t) ? 'Yesterday\u2019s ' + NAME : 'From the archive';
+    } catch (e) { return 'Ready to play'; }
+  })();
   var card = document.createElement('section'); card.className = 'dn-start'; card.setAttribute('aria-label', NAME + ' ' + NUM);
   card.innerHTML = '<div class="dn-start-in">' +
     '<div class="dn-start-top"><a class="dn-back-text" href="../puzzles.html"><span aria-hidden="true">←</span> Puzzles</a>' + '</div>' +
     '<h1 class="dn-start-title">' + NAME + '</h1><p class="dn-start-date">No. ' + NUM + ', ' + longDate + '</p>' +
-    '<div class="dn-start-card"><div class="dn-start-art"><img src="../assets/' + TYPE + '-thumb.svg" width="132" height="132" alt=""></div><div><h2>Ready to play</h2><p>' + RULE + '</p></div>' +
+    '<div class="dn-start-card"><div class="dn-start-art"><img src="../assets/' + TYPE + '-thumb.svg" width="132" height="132" alt=""></div><div><h2>' + startHead + '</h2><p>' + RULE + '</p></div>' +
     '<div><button type="button" class="dn-pill" id="dnPlay">Play</button></div></div>' +
     '<div class="dn-start-stats"><div><b>' + liveStreak + '</b><span>' + NAME + ' streak</span></div><div><b>' + (st.best || 0) + '</b><span>best streak</span></div><div><b>' + played + '</b><span>' + (TYPE === 'tally' ? 'boards played' : TYPE === 'tilt' ? 'mazes played' : TYPE === 'redact' ? 'boards played' : TYPE === 'tumbler' ? 'words found' : NAME + 's played') + '</span></div></div>' +
     '<details class="dn-how"><summary>How to play</summary>' + HOW.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</details>' +
