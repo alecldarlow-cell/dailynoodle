@@ -20,10 +20,12 @@ test('STANDFIRST-04: GIVEN a page WHEN it is rewritten THEN only dn:standfirst a
  const out=S.rewrite('2026-12-01-logic-tally-0040.html',s);
  assert.equal(out,s.replace(/content="Old\."/g,'content="'+S.TEXT.tally+'"'));
 });
-test('STANDFIRST-05: GIVEN the forthcoming puzzles THEN from 8 Nov 2026 each carries the house wording; 7 Nov and before keep theirs',()=>{
- const files=fs.readdirSync(path.join(ROOT,'reports')).filter(f=>S.typeOf(f)&&/^\d{4}-\d{2}-\d{2}-/.test(f));
- const sf=s=>(s.match(/name="dn:standfirst"\s+content="([^"]*)"/)||[])[1];
- let n=0;for(const f of files.filter(f=>f>='2026-11-08')){const s=fs.readFileSync(path.join(ROOT,'reports',f),'utf8');assert.equal(S.rewrite(f,s),s,f+' is not in the house wording');n++;}
- assert.ok(n>1000);
- assert.match(sf(fs.readFileSync(path.join(ROOT,'reports','2026-11-07-logic-path-0112.html'),'utf8')),/one path\./,'a released day is never edited');
+test('STANDFIRST-05: GIVEN every daily puzzle page, released ones too (Alec, 7 Nov 2026: the Archive matches) THEN each carries the house wording',()=>{
+ // pages pinned by hash as reviewed legacy (registry-debt.json) keep their text: editing them needs a re-review
+ const pinned=new Set(require('../fixtures/registry-debt.json').filter?.(e=>e&&e.sha256).map(e=>e.file)||[]);
+ const files=fs.readdirSync(path.join(ROOT,'reports')).filter(f=>S.typeOf(f)&&!pinned.has(f));
+ let n=0;for(const f of files){const s=fs.readFileSync(path.join(ROOT,'reports',f),'utf8');assert.equal(S.rewrite(f,s),s,f+' is not in the house wording');n++;}
+ assert.ok(n>5500);
+ const feed=require('../../../feed.json'),path_=feed.items.find(i=>i.type==='path');
+ assert.equal(path_.standfirst,S.TEXT.path,'the feed is rebuilt from the pages');
 });

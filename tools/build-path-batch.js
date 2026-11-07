@@ -277,7 +277,6 @@ function fmtLocked(locked) {
    calls its line a path ("thread" is Tangle's word). New days always get this
    wording, whatever the template day said; --blurb rewrites forthcoming days. */
 const BLURB = require('./standfirst').TEXT.path;   // Alec, 7 Nov 2026 (tools/standfirst.js)
-const PATH_BLURB_2026_11 = 'Thirty-six cells, one path. Place 1 through 36 so every consecutive pair sits next door.';   // 1-7 Nov 2026 as published
 const OLD_BLURB = 'Thirty-six cells, one thread. Place 1 through 36 so every consecutive pair sits next door.';
 function blurb(s) {
   return s.replace(/(<meta (?:name="dn:standfirst"|property="og:description")\s+content=")[^"]*(")/g, (m, a, b) => a + BLURB + b);
@@ -307,7 +306,7 @@ function maskedSame(before, after) {
   return null;
 }
 
-module.exports = { G, RULES, MIX, BLURB, PATH_BLURB_2026_11, blurb, frontier, grade, threadKey, maxStraight, readPaths, generate, restamp, maskedSame, parseBlock, seqOf };
+module.exports = { G, RULES, MIX, BLURB, blurb, frontier, grade, threadKey, maxStraight, readPaths, generate, restamp, maskedSame, parseBlock, seqOf };
 if (require.main === module) main();
 
 /* ================= main ================= */

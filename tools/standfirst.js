@@ -6,9 +6,11 @@
 
      node tools/standfirst.js --apply [--from YYYY-MM-DD] [--dry]
        rewrites the two meta lines (dn:standfirst, og:description) of every forthcoming
-       puzzle from --from (default tomorrow, London) in the new voice. Released days keep
-       what they were published with. Nothing else in a file changes (masked diff), and
-       ids, dates and paths never do. */
+       puzzle from --from (default tomorrow, London) in the new voice.
+     node tools/standfirst.js --apply --all [--dry]
+       the same for every daily puzzle page, released ones included (Alec, 7 Nov 2026:
+       the Archive should match). Then rebuild the feed (node tools/build-feed.js).
+     Nothing else in a file changes (masked diff), and ids, dates and paths never do. */
 const fs = require('fs');
 const path = require('path');
 
@@ -42,6 +44,8 @@ const TYPE_OF = [
   [/-logic-path-\d+\.html$/, 'path'], [/-word-link-\d+\.html$/, 'link'], [/-word-tangle-\d+\.html$/, 'tangle'],
   [/-geo-borders-\d+\.html$/, 'borders'], [/-quiz-reckon-\d+\.html$/, 'reckon'], [/-logic-tally-\d+\.html$/, 'tally'],
   [/-logic-tilt-\d+\.html$/, 'tilt'], [/-word-redact-\d+\.html$/, 'redact'], [/-word-tumbler-\d+\.html$/, 'tumbler'],
+  // three July 2026 pages from before the dated names
+  [/^digi-path-\d+\.html$/, 'path'], [/^digi-doku-\d+\.html$/, 'doku'], [/^DP-SWEEP-\d{4}-\d{2}-\d{2}\.html$/, 'sweep'],
 ];
 const typeOf = f => (TYPE_OF.find(([re]) => re.test(f)) || [])[1] || null;
 const SF_RE = /(<meta name="dn:standfirst"\s+content=")([^"]*)(")/;
@@ -81,10 +85,11 @@ module.exports = { TEXT, link, mini, forPage, rewrite, typeOf };
 if (require.main === module) {
   const args = process.argv.slice(2), val = k => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
   if (!args.includes('--apply')) { console.log('usage: node tools/standfirst.js --apply [--from YYYY-MM-DD] [--dry]'); process.exit(2); }
-  const from = val('--from') || londonDay(1), dry = args.includes('--dry');
-  if (from <= londonDay(0)) { console.error('refusing: ' + from + ' is today or earlier; released days keep their published text'); process.exit(2); }
+  const all = args.includes('--all'), from = val('--from') || londonDay(1), dry = args.includes('--dry');
+  if (!all && from <= londonDay(0)) { console.error('refusing: ' + from + ' is today or earlier (use --all to include released days)'); process.exit(2); }
   const REPORTS = path.join(__dirname, '..', 'reports'), counts = {};
-  for (const f of fs.readdirSync(REPORTS).filter(f => /^\d{4}-\d{2}-\d{2}-/.test(f) && f.slice(0, 10) >= from).sort()) {
+  const pick = f => all ? !!typeOf(f) : /^\d{4}-\d{2}-\d{2}-/.test(f) && f.slice(0, 10) >= from;
+  for (const f of fs.readdirSync(REPORTS).filter(pick).sort()) {
     const t = typeOf(f); if (!t) continue;
     const p = path.join(REPORTS, f), s = fs.readFileSync(p, 'utf8'), out = rewrite(f, s);
     if (out === s) continue;
@@ -95,5 +100,5 @@ if (require.main === module) {
     }
     counts[t] = (counts[t] || 0) + 1;
   }
-  console.log((dry ? 'would rewrite ' : 'rewrote ') + JSON.stringify(counts) + ' from ' + from);
+  console.log((dry ? 'would rewrite ' : 'rewrote ') + JSON.stringify(counts) + (all ? ' (every page)' : ' from ' + from));
 }
