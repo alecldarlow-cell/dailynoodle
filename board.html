@@ -364,6 +364,26 @@
     S.type = b.getAttribute('data-p'); S.card = ''; NB.setLastType(S.type); loadBoard();
   });
 
+  /* sideways swipe steps through the stops anywhere on the page, empty boards included (8 Nov 2026, as the app;
+     Alec: on the web it only seemed to work over a full board). Not over a form, the menu, a player card,
+     the section row or the tab bar; mostly-sideways moves of 60 px or more only. */
+  (function () {
+    var x0 = null, y0 = 0;
+    function skip(t) { return !t || !t.closest || t.closest('input,textarea,select,form,.sections,.tabs,.lgmenu,[role="dialog"]'); }
+    document.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1 || $pager.hidden || S.settings || S.card || skip(e.target)) { x0 = null; return; }
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
+      if (Math.abs(dx) < 60 || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      var at = STOPS.indexOf(S.type), to = STOPS[at + (dx < 0 ? 1 : -1)];
+      if (at < 0 || !to) return;
+      S.type = to; S.card = ''; NB.setLastType(S.type); loadBoard();
+    }, { passive: true });
+  })();
+
   /* ---------- feed (puzzle numbers and links) ---------- */
   function puzzleItem(type, date) {
     if (!S.feed) return null;
