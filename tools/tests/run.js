@@ -540,6 +540,39 @@ const TESTS = {
     ok(r.l >= 0 && r.r <= r.vw && r.b <= r.vh, `borders: on a 320×568 phone the big map and its button fit (${JSON.stringify(r)})`);
     await d.ctx.close();
   },
+  async 'start:house-line'(b) {
+    // Alec, 8 Nov 2026: GIVEN a puzzle you haven't started, WHEN its open page shows, THEN the card says the house line
+    // (tools/standfirst.js) and the old rule sentence, counts and all, leads How to play; a paused round keeps its progress line
+    const fs = require('node:fs'), path = require('node:path'), S = require('../standfirst'), { parseDnPuzzle } = require('../puzzle-json');
+    const src = f => fs.readFileSync(path.join(__dirname, '..', '..', 'reports', f), 'utf8');
+    const grid = { mini: [F.mini, /^Ten clues, across and down\./], doku: [F.doku, /^Place the \w+ letter tiles/], sweep: [F.sweep, /^Clear the board without hitting one of the seven mines\./],
+      path: [F.path, /^Join 1 to 36/], link: [F.link, /^Sixteen words, four hidden groups of four\./], tally: [F.tally, /^Fill the grid with 1 to 4/],
+      doku32: ['2026-08-14-logic-doku-0032.html', /^Place the \w+ letter tiles/] };
+    for (const [k, [file, rule]] of Object.entries(grid)) {
+      const t = k === 'doku32' ? 'doku' : k, P = parseDnPuzzle(src(file), file);
+      const want = t === 'link' ? S.link((P.traps || []).length) : S.TEXT[t];
+      const { ctx, p } = await open(b, file);
+      const r = await p.evaluate(() => ({ line: (document.querySelector('.dn-start-card h2+p') || {}).textContent, how: [...document.querySelectorAll('.dn-how p')].map(e => e.textContent) }));
+      ok(r.line === want && rule.test(r.how[0] || '') && r.how.length >= 3, `start: ${k} opens on "${r.line}", How to play starts "${(r.how[0] || '').slice(0, 50)}…"`);
+      await ctx.close();
+    }
+    const own = { tangle: [F.tangle, /^90 seconds\. Longer words score more; the \w+-letter word scores double\.$/], borders: [F.borders, /^Ten country outlines, easiest first\./], reckon: [F.reckon, /^Ten numbers to guess/] };
+    for (const [t, [file, rule]] of Object.entries(own)) {
+      const { ctx, p } = await open(b, file); await wait(p, 800);
+      const r = await p.evaluate(() => ({ line: (document.getElementById('playStatus') || {}).textContent, how: [...document.querySelectorAll('.how p')].map(e => e.textContent) }));
+      ok(r.line === S.TEXT[t] && rule.test(r.how[0] || '') && r.how.length >= 3, `start: ${t} opens on "${r.line}", How to play starts "${(r.how[0] || '').slice(0, 50)}…"`);
+      if (t === 'reckon') ok(!/^Ten numbers/.test(r.how[2] || '') && r.how.length === 4, `start: reckon keeps its three own How to play paragraphs after the rule (${r.how.length})`);
+      await ctx.close();
+    }
+    // a Borders round part-played keeps its progress line, not the house line
+    const { ctx, p } = await open(b, F.borders);
+    const id = await p.evaluate(() => window.DN_PUZZLE.id);
+    await ctx.addInitScript(id => { if (sessionStorage.getItem('seeded')) return; sessionStorage.setItem('seeded', '1');
+      localStorage.setItem('digi-borders-v1', JSON.stringify({ v: 1, done: {}, cur: { id, i: 2, ans: [{ ok: true }, { ok: true }], pts: 200, run: 2, secs: 20 } })); }, id);
+    await p.reload(); await wait(p, 1200);
+    ok(await text(p, '#playStatus') === 'Question 3 of 10, 200 points so far.' && await text(p, '#playGo') === 'Resume', `start: a paused Borders keeps its progress line ("${await text(p, '#playStatus')}")`);
+    await ctx.close();
+  },
   async 'path:words'(b) {
     // AF-026: GIVEN a Path, WHEN it is read and played, THEN its words call the line a path; "thread" is left to Tangle
     const { ctx, p } = await open(b, F.path);

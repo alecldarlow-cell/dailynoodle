@@ -14,7 +14,9 @@ test('TILT-E2E-01: start card, turns with a trail, undo, resume after a reload, 
  const p=phone.p;await goto(phone,FILE);
  await expect(p.locator('.dn-start')).toBeVisible();
  await expect(p.locator('.dn-start-title')).toHaveText('Tilt');
- await expect(p.locator('.dn-start-card p')).toContainText('the clock is the score');
+ // the open page says the house line; the rule sentence leads How to play (Alec, 8 Nov 2026)
+ await expect(p.locator('.dn-start-card h2+p')).toHaveText("Turn the maze and the ball rolls. Get it out as fast as you can.");
+ await expect(p.locator('.dn-how p').first()).toContainText('the clock is the score');
  await expect(p.locator('#timer')).toHaveText('0:00');
  await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
  await expect(p.locator('.dn-start')).toBeHidden();

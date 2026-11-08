@@ -15,7 +15,9 @@ async function open(phone){
 test('TALLY-E2E-01: start card, real taps, notes, a conflict, resume after a reload, finish sheet, saves, reopen',async({phone})=>{
  const p=phone.p;await open(phone);
  await expect(p.locator('.dn-start-title')).toHaveText('Tally');
- await expect(p.locator('.dn-start-card p')).toContainText('1 to 4');
+ // the open page says the house line; the rule sentence leads How to play (Alec, 8 Nov 2026)
+ await expect(p.locator('.dn-start-card h2+p')).toHaveText("Sudoku with a maths twist. Can you make every cage hit its number?");
+ await expect(p.locator('.dn-how p').first()).toContainText('1 to 4');
  await expect(p.locator('#timer')).toHaveText('0:00');
  await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
  await expect(p.locator('.dn-start')).toBeHidden();
