@@ -13,7 +13,9 @@ test('REDACT-E2E-01: start card, taps, a wrong try, undo, clear, resume after a 
  const p=phone.p;await goto(phone,FILE);
  await expect(p.locator('.dn-start')).toBeVisible();
  await expect(p.locator('.dn-start-title')).toHaveText('Redact');
- await expect(p.locator('.dn-start-card p')).toContainText('becomes a crossword');
+ // the open page says the house line; the rule sentence leads How to play (Alec, 8 Nov 2026)
+ await expect(p.locator('.dn-start-card h2+p')).toHaveText("There's a crossword hiding in here. Black out the letters that don't belong to find it.");
+ await expect(p.locator('.dn-how p').first()).toContainText('becomes a crossword');
  await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
  await expect(p.locator('.dn-name #pid')).toHaveText('Redact 10');
  await expect(p.locator('#grid .cell')).toHaveCount(P.n*P.n);
