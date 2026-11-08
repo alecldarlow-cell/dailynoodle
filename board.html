@@ -185,6 +185,11 @@
   .plist li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--hair);font-size:15px}
   .plist button{font:600 13px var(--body);color:var(--bad);background:none;border:0;cursor:pointer;padding:6px}
   .inline{display:flex;gap:8px;margin-top:6px}
+  /* league rules, Report and Hide (8 Nov 2026, Google Play's user-generated content policy) */
+  .rules{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14px;line-height:1.4}
+  .rules input{width:20px;height:20px;margin-top:1px;flex:none;accent-color:var(--accent)}
+  .rules a{color:var(--accent)}
+  .plist button.quiet{color:var(--faint)}
   .inline input{flex:1;min-width:0;font:500 15px var(--body);padding:8px 10px;border:1px solid var(--hair);border-radius:8px}
   .loading{padding:40px 0;text-align:center;color:var(--faint);font-size:14px}
   /* your leagues somewhere else (21 Oct 2026) */
@@ -446,11 +451,36 @@
       });
     });
   }
+  /* League rules (8 Nov 2026): every form that sets a name or joins carries this tick; it's required. */
+  var RULES = '<label class="rules"><input type="checkbox" name="rules" required> ' +
+    '<span>I’ll keep names friendly: nothing rude, hateful or about someone else. <a href="privacy.html#league-rules" target="_blank" rel="noopener">League rules</a></span></label>';
+  /* Hide (8 Nov 2026): players this browser has hidden, per league, by nickname. Only boards here change. */
+  var HIDE_KEY = 'noodle-board-hidden-v1';
+  function hiddenAll() { try { var h = JSON.parse(localStorage.getItem(HIDE_KEY) || '{}'); return h && typeof h === 'object' ? h : {}; } catch (e) { return {}; } }
+  function hidden(code) { var h = hiddenAll()[code]; return Array.isArray(h) ? h : []; }
+  function setHidden(code, nick, on) {
+    var all = hiddenAll(), h = (Array.isArray(all[code]) ? all[code] : []).filter(function (n) { return n !== nick; });
+    if (on) h.push(nick);
+    if (h.length) all[code] = h; else delete all[code];
+    try { localStorage.setItem(HIDE_KEY, JSON.stringify(all)); } catch (e) {}
+  }
+  /* drop hidden players' rows from a board's data (any list of {nick} rows; your own row always stays) */
+  function unhide(d, code) {
+    var h = hidden(code); if (!h.length || !d) return d;
+    Object.keys(d).forEach(function (k) {
+      if (Array.isArray(d[k])) d[k] = d[k].filter(function (r) { return !(r && typeof r === 'object' && !r.me && h.indexOf(r.nick) >= 0); });
+    });
+    return d;
+  }
+  function reportUrl(L, nick) {
+    var b = 'League: ' + L.name + ' (code ' + L.code + ')\n' + (nick ? 'Name I’m reporting: ' + nick + '\n' : 'What I’m reporting: \n') + 'Why: \n';
+    return 'mailto:contact@dailynoodle.co.uk?subject=' + encodeURIComponent('Report a name in ' + L.name) + '&body=' + encodeURIComponent(b);
+  }
   function nickForm(L) {
     document.getElementById('pillbar').hidden = true;
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Change your nickname</h2><p>For ' + esc(L.name) + '. Your results stay yours.</p>' +
-      '<label class="field"><span>Nickname</span><input name="nick" maxlength="16" required value="' + esc(L.nick) + '"></label>' +
+      '<label class="field"><span>Nickname</span><input name="nick" maxlength="16" required value="' + esc(L.nick) + '"></label>' + RULES +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Save</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.setNick(L.code, f.elements.nick.value.trim()).then(function () { track('board_nick'); loadBoard(); }); });
@@ -497,7 +527,7 @@
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Start a league</h2>' +
       '<label class="field"><span>League name</span><input name="lname" maxlength="30" placeholder="e.g. Noodle family" required></label>' +
-      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" placeholder="e.g. Alec" required><small>What everyone in the league sees.</small></label>' +
+      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" placeholder="e.g. Alec" required><small>What everyone in the league sees.</small></label>' + RULES +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Start league</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.create(f.elements.lname.value.trim(), f.elements.nick.value.trim()).then(function (l) {
@@ -509,7 +539,7 @@
     $app.innerHTML =
       '<form class="bcard" id="f"><h2>Join a league</h2><p>Ask someone in the league for its link or 8-letter code.</p>' +
       '<label class="field"><span>League code</span><input name="code" maxlength="12" autocapitalize="characters" required></label>' +
-      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
+      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' + RULES +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join</button>' +
       '<button class="btn" type="button" data-go="back">Back</button></div></form>';
     form(function (f) { return NB.join(f.elements.code.value.trim().toUpperCase(), f.elements.nick.value.trim()).then(function () {
@@ -523,7 +553,7 @@
       'results will appear on the league’s daily boards.</p>' +
       (IOS ? '<p class="tip">On an iPhone, join in the place you play the puzzles. If this opened inside WhatsApp or another app, ' +
              'open it in Safari (or your Daily Noodle home-screen app) first. Sign in with your email and your leagues follow you anywhere else.</p>' : '') +
-      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' +
+      '<label class="field"><span>Your nickname</span><input name="nick" maxlength="16" required></label>' + RULES +
       '<p class="msg" id="m"></p><div class="acts"><button class="btn go">Join league</button>' +
       (NB.inAny() ? '<button class="btn" type="button" data-go="board">Not now</button>' : '') + '</div>' +
       (info.members ? '<p class="also"><button class="lnk" type="button" data-go="claimjoin">Already in ' + esc(info.name) + '? Pick your name</button></p>' : '') +
@@ -623,8 +653,9 @@
       if (want !== [cur().code, S.type, S.date].join('|')) return;
       if (recsOnly) { S.data = { code: L.code, type: S.type, date: S.date, members: (d.players || []).length,
                                  players: (d.players || []).map(function (p) { return p.nick; }) };
+                      unhide(d, L.code);
                       return S.card ? renderCard(L, S.card) : renderRecords(L, d); }
-      d.code = L.code; d.type = S.type; d.date = S.date; S.data = d;
+      d.code = L.code; d.type = S.type; d.date = S.date; S.data = unhide(d, L.code);
       if (S.card) return renderCard(L, S.card);
       S.type === 'all' ? renderOverall(L, d) : S.type === 'astro' ? renderAstro(L, d) : renderBoard(L, d);
     }).catch(function (err) {
@@ -844,6 +875,17 @@
       '<div class="grp"><h3>You</h3><p>Playing as <b>' + esc(L.nick) + '</b></p>' +
       '<div class="acts"><button class="btn" data-go="nick">Change nickname</button>' +
       '<button class="btn warn" data-act="leave">Leave league</button></div></div>' + keyGroup();
+    var others = (d.players || []).filter(function (p) { return p !== L.nick; }), hid = hidden(L.code);
+    if (!L.owner && others.length) {
+      h += '<div class="grp"><h3>Players</h3><ul class="plist">' + others.map(function (p) {
+             var off = hid.indexOf(p) >= 0;
+             return '<li><span>' + esc(p) + (off ? ' (hidden)' : '') + '</span><span>' +
+               '<button class="quiet" data-act="hide" data-nick="' + esc(p) + '" data-on="' + (off ? '0' : '1') + '">' + (off ? 'Show' : 'Hide') + '</button>' +
+               '<a class="lnk" href="' + esc(reportUrl(L, p)) + '" data-report="1">Report</a></span></li>'; }).join('') + '</ul>' +
+           '<p class="fine">Hide takes a player off your boards in this browser only. Report emails us; we read every report.</p></div>';
+    }
+    h += '<div class="grp"><h3>Something not right?</h3><p>A rude name or league name? <a class="lnk" href="' + esc(reportUrl(L, '')) + '" data-report="1">Report it to us</a>' +
+         (L.owner ? ', or remove the player below.' : '.') + '</p></div>';
     if (L.owner) {
       h += '<div class="grp"><h3>League name</h3><div class="inline"><input id="rn" maxlength="30" value="' + esc(L.name) + '">' +
            '<button class="btn" data-act="rename">Save</button></div></div>' +
@@ -871,6 +913,11 @@
     function done(msg) { return NB.refresh().then(function () { loadBoard(); }); }
     if (act === 'cardback') { S.card = ''; loadBoard(); return; }
     if (act === 'setdone') { S.settings = false; loadBoard(); return; }
+    if (act === 'hide') {
+      var hn = a.getAttribute('data-nick'), on = a.getAttribute('data-on') === '1';
+      setHidden(L.code, hn, on); track('board_hide', { on: on ? 1 : 0 });
+      S.data = null; loadBoard(); return;
+    }
     if (act === 'share') {
       var T = NB.BY_ID[S.type], it = puzzleItem(S.type, S.date), D = S.data;
       var lines = ['🏆 ' + T.emoji + ' ' + (it ? it.headline : T.name) + ' · ' + longDay(S.date)];
