@@ -938,8 +938,8 @@
     "rank": 4,
     "name": "Lose the first letter for an instrument",
     "members": [
-     "THORN",
-     "SHARP",
+     "SHORN",
+     "FLUTE",
      "GLUTE",
      "MORGAN"
     ]
@@ -953,10 +953,6 @@
    {
     "tile": "GLUTE",
     "not": "Muscles"
-   },
-   {
-    "tile": "SHARP",
-    "not": "On a sheet of music"
    }
   ],
   "from": "draft-153"
