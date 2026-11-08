@@ -6,7 +6,10 @@
    form-filling:
      easy          must need at least one crossing deduction (not solvable by
                    T1 alone);
-     medium, hard  at most ONE stall.
+     medium        at most ONE stall;
+     hard          NO stall (8 Nov 2026: the one-stall hards took players
+                   4-6 minutes, about 4x a medium, and a quarter gave up;
+                   hard now comes from deduction work, never a forced guess).
 
    The solver knows the engine word list plus tools/doku-check-words.json (an
    everyday British vocabulary), and repeats these techniques until the grid is
@@ -200,10 +203,11 @@ function grade(pz) {
   const full = solve(pz);
   return { t1only: t1.solved, stalls: full.moves.stall, moves: full.moves, firstStall: full.firstStall, t1min: t1.solved ? t1.t1min : 0 };
 }
-// The rule (Alec, 19 Oct 2026). medium/hard: at most one stall. easy: at least
-// one crossing deduction (not T1 alone); and no band may need trial and error,
-// so an easy one with 2+ stalls breaks it too (none did when this was written).
-const breaks = (band, g) => g.stalls > 1 || (band === "easy" && g.t1only);
+// The rule (Alec, 19 Oct 2026; hard tightened 8 Nov 2026). medium: at most one
+// stall. hard: no stall. easy: at least one crossing deduction (not T1 alone);
+// and no band may need trial and error, so an easy one with 2+ stalls breaks it
+// too (none did when this was written).
+const breaks = (band, g) => g.stalls > (band === "hard" ? 0 : 1) || (band === "easy" && g.t1only);
 function ruleOK(pz) { try { return !breaks(pz.band, grade(pz)); } catch (e) { return false; } }
 // What new or repaired locks must also do (--fix, pinwheel-regen.js lockFor):
 // an easy one needs no stall at all; a medium or hard one starts with a way in
@@ -359,8 +363,8 @@ console.error("usage: --check | --fix (see header)"); process.exit(2);
    must also give a way in (the first move is a deduction, not a stall); only if
    no lock set does is that dropped. Among the tries that meet the rule at the
    first depth that has any, keep the band's feel: an easy one with the fewest
-   crossing moves; a medium one with no stall, a hard one with exactly one
-   (still a real think, never a guess), then the most crossing moves. The first
+   crossing moves; a medium one with no stall, then the most crossing moves; a
+   hard one (no stall allowed from 8 Nov 2026) with the most crossing moves. The first
    of those that passes the engine gate and the broad second-fill check is used. */
 function repair(p) {
   return repairWith(p, true) || repairWith(p, false);
@@ -406,8 +410,7 @@ function repairWith(p, wayIn) {
   }
   const work = e => e.g.moves.t2 + e.g.moves.t3;
   const pref = e => p.band === "easy" ? [work(e)]
-    : p.band === "medium" ? [e.g.t1only ? 1 : 0, e.g.stalls, -work(e)]
-    : [e.g.t1only ? 1 : 0, e.g.stalls === 1 ? 0 : 1, -work(e)];
+    : [e.g.t1only ? 1 : 0, e.g.stalls, -work(e)];
   const cmp = (a, b) => { const x = pref(a), y = pref(b); for (let i = 0; i < x.length; i++) if (x[i] !== y[i]) return x[i] - y[i]; return key(a.S) < key(b.S) ? -1 : 1; };
   function pick(level) {
     const good = level.map(evalS).filter(e => e.ok).sort(cmp);
