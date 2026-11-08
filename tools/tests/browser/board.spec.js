@@ -312,6 +312,34 @@ test.describe('BOARD-E2E', () => {
 
   // 7 Nov 2026 (as the app's Leagues): the pager steps All puzzles → each puzzle → Astro Drop → Records; the league's name
   // is the masthead kicker and opens the menu (Invite people, League settings, Start, Join); Share is the board's one action.
+  test('BOARD-SWIPE-01: a sideways swipe steps the stops even on an empty board, and not over the section row', async ({ browser }) => {
+    test.setTimeout(60000);
+    const A = await phone(browser, db, 'A');
+    try {
+      await go(A, 'board.html');
+      await H.tap(A.p, A.p.locator('[data-go="start"]'));
+      await A.p.fill('input[name="lname"]', 'Swipers');
+      await A.p.fill('input[name="nick"]', 'Bo');
+      await H.tap(A.p, A.p.locator('#f .btn.go'));
+      await expect(A.p.locator('.bcard h2')).toHaveText('Swipers is ready');
+      await go(A, `board.html?p=mini&d=${DAY}`);
+      await expect(A.p.locator('.dot[data-p="mini"]')).toHaveAttribute('aria-pressed', 'true');
+      const swipe = (sel, dx) => A.p.evaluate(([sel, dx]) => {
+        const el = document.querySelector(sel), r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + Math.min(r.height / 2, 40);
+        const T = (cx) => new Touch({ identifier: 1, target: el, clientX: cx, clientY: y });
+        el.dispatchEvent(new TouchEvent('touchstart', { bubbles: true, touches: [T(x)], changedTouches: [T(x)] }));
+        el.dispatchEvent(new TouchEvent('touchend', { bubbles: true, touches: [], changedTouches: [T(x + dx)] }));
+      }, [sel, dx]);
+      await swipe('#app', -120);                  // left: next stop (Doku), over the empty board
+      await expect(A.p.locator('.dot[data-p="doku"]')).toHaveAttribute('aria-pressed', 'true');
+      await swipe('#app', 120);                   // right: back to Mini
+      await expect(A.p.locator('.dot[data-p="mini"]')).toHaveAttribute('aria-pressed', 'true');
+      await swipe('.sections', -120);             // the section row scrolls sideways: no step
+      await A.p.waitForTimeout(300);
+      await expect(A.p.locator('.dot[data-p="mini"]')).toHaveAttribute('aria-pressed', 'true');
+    } finally { await A.ctx.close(); }
+  });
+
   test('BOARD-PAGER-01: pager arrows and dots, the league menu, settings as a card with Done, one quiet Share', async ({ browser }) => {
     test.setTimeout(60000);
     const A = await phone(browser, db, 'A');
