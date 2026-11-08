@@ -59,6 +59,7 @@ async function solveMini(P, path) {
 async function join(P, invite, nick) {
   await go(P, invite.pathname.slice(1) + invite.search);
   await P.p.fill('input[name="nick"]', nick);
+  { const r = P.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
   await H.tap(P.p, P.p.locator('#f .btn.go'));
   await expect(P.p.locator('.pager .pg')).toHaveCount(1);
 }
@@ -91,6 +92,7 @@ test.describe('BOARD-KEY', () => {
       await H.tap(O.p, O.p.locator('[data-go="start"]'));
       await O.p.fill('input[name="lname"]', 'Family');
       await O.p.fill('input[name="nick"]', 'Alec');
+      { const r = O.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(O.p, O.p.locator('#f .btn.go'));
       await H.tap(O.p, O.p.locator('.bcard [data-act="invite"]'));
       const invite = new URL((await O.p.evaluate(() => window.__shared))[0].url);
@@ -160,6 +162,7 @@ test.describe('BOARD-KEY', () => {
       await H.tap(O.p, O.p.locator('[data-go="start"]'));
       await O.p.fill('input[name="lname"]', 'Family');
       await O.p.fill('input[name="nick"]', 'Alec');
+      { const r = O.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(O.p, O.p.locator('#f .btn.go'));
       await H.tap(O.p, O.p.locator('.bcard [data-act="invite"]'));
       const invite = new URL((await O.p.evaluate(() => window.__shared))[0].url);
@@ -228,6 +231,7 @@ test.describe('BOARD-KEY', () => {
       await H.tap(O.p, O.p.locator('[data-go="start"]'));
       await O.p.fill('input[name="lname"]', 'Family');
       await O.p.fill('input[name="nick"]', 'Alec');
+      { const r = O.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(O.p, O.p.locator('#f .btn.go'));
       await expect(O.p.locator('.bcard h2').first()).toHaveText('Family is ready');
       await expect(O.p.locator('input[name="pin"]')).toHaveCount(0);   // email replaced PINs (6 Nov 2026)
@@ -237,6 +241,7 @@ test.describe('BOARD-KEY', () => {
       // Jake joins in WhatsApp's browser and has a PIN from before they were retired; Kim has none.
       await go(W, invite.pathname.slice(1) + invite.search);
       await W.p.fill('input[name="nick"]', 'Jake');
+      { const r = W.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await expect(W.p.locator('input[name="pin"]')).toHaveCount(0);
       await H.tap(W.p, W.p.locator('#f .btn.go'));
       await expect(W.p.locator('.pager .pg')).toHaveCount(1);
@@ -287,6 +292,7 @@ test.describe('BOARD-KEY', () => {
       await H.tap(K2.p, K2.p.locator('#lgbtn')); await H.tap(K2.p, K2.p.locator('[data-menu="settings"]'));
       await H.tap(K2.p, K2.p.locator('[data-go="nick"]'));
       await K2.p.fill('input[name="nick"]', 'Kimmy');
+      { const r = K2.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(K2.p, K2.p.locator('#f .btn.go'));
       await expect(K2.p.locator('.pager .pg')).toHaveCount(1);
       await go(O, `board.html?p=all&d=${DAY}`);

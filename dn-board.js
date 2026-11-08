@@ -187,8 +187,8 @@
   var MESSAGES = {
     no_league: 'That league code doesn’t exist, or the league has closed.',
     nick_taken: 'Someone in that league already uses that nickname.',
-    bad_nick: 'Nicknames are 2–16 letters or numbers.',
-    bad_name: 'League names are 2–30 letters or numbers.',
+    bad_nick: 'Nicknames are 2–16 letters or numbers, and kept friendly (see League rules).',
+    bad_name: 'League names are 2–30 letters or numbers, and kept friendly (see League rules).',
     league_full: 'That league is full (50 players).',
     too_many_owned: 'You can run up to 3 leagues.',
     too_many_joined: 'You can be in up to 10 leagues.',

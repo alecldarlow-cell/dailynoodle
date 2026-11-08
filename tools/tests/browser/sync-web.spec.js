@@ -254,6 +254,7 @@ test.describe('SYNC-WEB', () => {
       await H.tap(A.p, A.p.locator('[data-go="start"]'));
       await A.p.fill('input[name="lname"]', 'Family');
       await A.p.fill('input[name="nick"]', 'Alec');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       await expect(A.p.locator('.pager .pg')).toHaveCount(1);
       await solveMini(A, MINI17);
@@ -301,6 +302,7 @@ test.describe('SYNC-WEB', () => {
       await H.tap(A.p, A.p.locator('[data-go="start"]'));
       await A.p.fill('input[name="lname"]', 'Work');
       await A.p.fill('input[name="nick"]', 'Jo');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       await expect(A.p.locator('.pager .pg')).toHaveCount(1);
       await signIn(A, 'jo');
@@ -308,6 +310,7 @@ test.describe('SYNC-WEB', () => {
       await H.tap(B.p, B.p.locator('[data-go="start"]'));
       await B.p.fill('input[name="lname"]', 'Family');
       await B.p.fill('input[name="nick"]', 'Alec');
+      { const r = B.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(B.p, B.p.locator('#f .btn.go'));
       await expect(B.p.locator('.pager .pg')).toHaveCount(1);
       const mine = (await store(B, 'noodle-board-v1')).pid;

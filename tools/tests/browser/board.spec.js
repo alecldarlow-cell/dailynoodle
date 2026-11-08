@@ -69,6 +69,57 @@ test.describe('BOARD-E2E', () => {
   test.beforeEach(async () => { db = await boardDb({ today: DAY }); });
   test.afterEach(async () => { await db.close(); db = null; });
 
+  test('BOARD-UGC-01: league rules tick is required; a member can hide and report a player; rude names are refused (8 Nov 2026)', async ({ browser }) => {
+    test.setTimeout(90000);
+    const A = await phone(browser, db, 'A'), B = await phone(browser, db, 'B');
+    try {
+      // GIVEN A starting a league WHEN the rules aren't ticked THEN the form doesn't send
+      await go(A, 'board.html');
+      await H.tap(A.p, A.p.locator('[data-go="start"]'));
+      await A.p.fill('input[name="lname"]', 'Rules');
+      await A.p.fill('input[name="nick"]', 'Ada');
+      await expect(A.p.locator('#f .rules a')).toHaveAttribute('href', 'privacy.html#league-rules');
+      await H.tap(A.p, A.p.locator('#f .btn.go')); await H.wait(A.p, 500);
+      expect(await q(db, 'select count(*)::int n from board.leagues')).toEqual([{ n: 0 }]);
+      // WHEN they tick it THEN the league starts
+      await A.p.check('#f input[name="rules"]');
+      await H.tap(A.p, A.p.locator('#f .btn.go'));
+      await expect(A.p.locator('.bcard h2')).toHaveText('Rules is ready');
+      await H.tap(A.p, A.p.locator('.bcard [data-act="invite"]'));
+      const invite = new URL((await A.p.evaluate(() => window.__shared))[0].url);
+      // AND B joins with the tick
+      await go(B, invite.pathname.slice(1) + invite.search);
+      await B.p.fill('input[name="nick"]', 'Bea');
+      await B.p.check('#f input[name="rules"]');
+      await H.tap(B.p, B.p.locator('#f .btn.go'));
+      await expect(B.p.locator('.notyet')).toHaveText('Ada, Bea (you)');
+      // WHEN B opens League settings THEN Ada is listed with Hide and a Report email naming the league and Ada
+      await H.tap(B.p, B.p.locator('#lgbtn')); await H.tap(B.p, B.p.locator('[data-menu="settings"]'));
+      const li = B.p.locator('.plist li').filter({ hasText: 'Ada' });
+      const rep = decodeURIComponent(await li.locator('[data-report]').getAttribute('href'));
+      expect(rep.startsWith('mailto:contact@dailynoodle.co.uk?subject=Report a name in Rules')).toBe(true);
+      expect(rep).toContain('Name I’m reporting: Ada');
+      // WHEN B hides Ada THEN Ada is off B's board (only in this browser), and Show brings her back
+      await H.tap(B.p, li.locator('[data-act="hide"]'));
+      await expect(B.p.locator('.plist li').filter({ hasText: 'Ada' })).toContainText('(hidden)');
+      await H.tap(B.p, B.p.locator('[data-act="setdone"]'));
+      await expect(B.p.locator('.notyet')).toHaveText('Bea (you)');
+      expect(await B.p.evaluate(() => JSON.parse(localStorage.getItem('noodle-board-hidden-v1')))).toEqual({ [invite.searchParams.get('join')]: ['Ada'] });
+      await go(A, 'board.html'); await expect(A.p.locator('.notyet')).toHaveText('Ada (you), Bea');
+      await H.tap(B.p, B.p.locator('#lgbtn')); await H.tap(B.p, B.p.locator('[data-menu="settings"]'));
+      await H.tap(B.p, B.p.locator('.plist li').filter({ hasText: 'Ada' }).locator('[data-act="hide"]'));
+      await H.tap(B.p, B.p.locator('[data-act="setdone"]'));
+      await expect(B.p.locator('.notyet')).toHaveText('Ada, Bea (you)');
+      // WHEN B tries a rude nickname THEN the server refuses it with the friendly-names message
+      await H.tap(B.p, B.p.locator('#lgbtn')); await H.tap(B.p, B.p.locator('[data-menu="settings"]'));
+      await H.tap(B.p, B.p.locator('[data-go="nick"]'));
+      await B.p.fill('input[name="nick"]', 'tosser');
+      await B.p.check('#f input[name="rules"]');
+      await H.tap(B.p, B.p.locator('#f .btn.go'));
+      await expect(B.p.locator('#m')).toContainText('kept friendly');
+    } finally { await A.ctx.close(); await B.ctx.close(); }
+  });
+
   test('BOARD-E2E-01: create, invite, join, both finish the Mini, both boards rank it; replay, leave and rejoin', async ({ browser }) => {
     test.setTimeout(90000);
     const A = await phone(browser, db, 'A'), B = await phone(browser, db, 'B');
@@ -78,6 +129,7 @@ test.describe('BOARD-E2E', () => {
       await H.tap(A.p, A.p.locator('[data-go="start"]'));
       await A.p.fill('input[name="lname"]', 'Noodle Testers');
       await A.p.fill('input[name="nick"]', 'Ada');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       await expect(A.p.locator('.bcard h2')).toHaveText('Noodle Testers is ready');
       await H.tap(A.p, A.p.locator('.bcard [data-act="invite"]'));
@@ -94,6 +146,7 @@ test.describe('BOARD-E2E', () => {
       await expect(B.p.locator('#f h2')).toHaveText('Join Noodle Testers');
       await expect(B.p.locator('#f p').first()).toContainText('1 player so far');
       await B.p.fill('input[name="nick"]', 'Bea');
+      { const r = B.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(B.p, B.p.locator('#f .btn.go'));
       await expect(B.p.locator('.notyet')).toHaveText('Ada, Bea (you)');
       expect(await q(db, `select m.nickname from board.members m join board.leagues l on l.id = m.league_id
@@ -174,6 +227,7 @@ test.describe('BOARD-E2E', () => {
       // 7. B rejoins from the same link: the row and the result come back.
       await go(B, invite.pathname.slice(1) + invite.search);
       await B.p.fill('input[name="nick"]', 'Bea');
+      { const r = B.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(B.p, B.p.locator('#f .btn.go'));
       await expect(B.p.locator('.pager .pg')).toHaveCount(1);
       await go(B, `board.html?p=mini&d=${DAY}`);   // a board opened with no puzzle shows All puzzles since 24 Oct 2026
@@ -207,6 +261,7 @@ test.describe('BOARD-E2E', () => {
       await H.tap(A.p, A.p.locator('[data-go="start"]'));
       await A.p.fill('input[name="lname"]', 'Recs');
       await A.p.fill('input[name="nick"]', 'Ada');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       await expect(A.p.locator('.bcard h2')).toHaveText('Recs is ready');
       const code = (await q(db, 'select code from board.leagues'))[0].code;
@@ -260,6 +315,7 @@ test.describe('BOARD-E2E', () => {
       await H.tap(A.p, A.p.locator('[data-go="start"]'));
       await A.p.fill('input[name="lname"]', 'Orbit');
       await A.p.fill('input[name="nick"]', 'Ada');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       await expect(A.p.locator('.bcard h2')).toHaveText('Orbit is ready');
       await go(A, 'reports/2026-11-04-arcade-astro-drop.html');
@@ -284,6 +340,7 @@ test.describe('BOARD-E2E', () => {
       await H.tap(A.p, A.p.locator('[data-go="start"]'));
       await A.p.fill('input[name="lname"]', 'Slim');
       await A.p.fill('input[name="nick"]', 'Ada');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       await expect(A.p.locator('.bcard h2')).toHaveText('Slim is ready');
       await H.tap(A.p, A.p.locator('.bcard [data-act="invite"]'));
@@ -320,6 +377,7 @@ test.describe('BOARD-E2E', () => {
       await H.tap(A.p, A.p.locator('[data-go="start"]'));
       await A.p.fill('input[name="lname"]', 'Swipers');
       await A.p.fill('input[name="nick"]', 'Bo');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       await expect(A.p.locator('.bcard h2')).toHaveText('Swipers is ready');
       await go(A, `board.html?p=mini&d=${DAY}`);
@@ -348,6 +406,7 @@ test.describe('BOARD-E2E', () => {
       await H.tap(A.p, A.p.locator('[data-go="start"]'));
       await A.p.fill('input[name="lname"]', 'Noodlers');
       await A.p.fill('input[name="nick"]', 'Ada');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       await expect(A.p.locator('.bcard h2')).toHaveText('Noodlers is ready');
       const ada = (await q(db, "select player from board.members where nickname = 'Ada'"))[0].player;
@@ -405,6 +464,7 @@ test.describe('BOARD-E2E', () => {
       await H.tap(A.p, A.p.locator('[data-go="start"]'));
       await A.p.fill('input[name="lname"]', 'Stale');
       await A.p.fill('input[name="nick"]', 'Ada');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(A.p, A.p.locator('#f .btn.go'));
       for (const p of ['all', 'mini', 'link']) {
         await go(A, `board.html?p=${p}&d=${DAY}`);
