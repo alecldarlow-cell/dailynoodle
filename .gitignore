@@ -12,3 +12,6 @@ test-results/
 playwright-report/
 registry.json
 published.json
+
+# Claude Code local settings: can hold commands (and any passwords in them) approved with "don't ask again"
+.claude/settings.local.json
