@@ -66,6 +66,7 @@ in `toolchain/site-sections-and-tracking.md`.
 - **Final touches from Alec's app screenshots** (7 Nov 2026): the wordmark reads "Daily Noodle" with a space, as the app; Today's kicker puts the date on its own line; Leagues player names (buttons that open a player card) lose their dotted underline. `puzzles-390-light` redrawn.
 - **Leagues swipe** (8 Nov 2026, Alec): a sideways swipe anywhere on board.html steps the pager's stops, as the app's, so it works on an empty board too; not over a form, the league menu, settings, a player card, the section row or the tab bar (BOARD-SWIPE-01).
 - **Tab bar on iPhone** (8 Nov 2026): Alec's home-screen app showed a white band under the bottom tabs in dark mode; the bar's background now carries on below it (`.tabs::after` in `front.css`).
+- **Frozen masthead** (8 Nov 2026, Alec: match the app): on the puzzle pages (`body.has-tabs`) the masthead sticks under the status bar while the page scrolls; Leagues' pager and Archive's controls row stick under it (`--mast-h`, kept by `dn-nav.js`). The section row and everything else scroll. Side strips use `--side-pad` so they never widen the page.
 - **Deliberately different from the app:** the site icons stay blue (see Site icons) and the masthead tile follows the section colour; the "Today's puzzles are out · Reload" line keeps its Reload link.
 
 ## Account page (7 Nov 2026, Alec's call: the app's Account tab on the web)
