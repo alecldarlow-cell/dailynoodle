@@ -352,3 +352,19 @@
 @media(min-width:560px){.puzzle-card .card>div{min-height:120px}}
 /* Puzzles: older cards stay in the page for crawlers but hidden (the day's set shows, 7 Nov 2026) */
 #feed > li[hidden]{display:none}
+
+/* side strips reach the page edge exactly, so they never widen it (--side-pad is minus the wrap's side padding) */
+.has-tabs{--side-pad:calc(-1 * max(16px,env(safe-area-inset-left,0px)))}
+@media(min-width:560px){.has-tabs{--side-pad:calc(-1 * max(20px,env(safe-area-inset-left,0px)))}}
+/* Frozen masthead on the puzzle pages (8 Nov 2026, Alec: as the app, where every tab keeps its header
+   while the content scrolls). It sticks under the status bar; a strip of page colour above it hides what
+   scrolls behind the notch. Leagues also freezes its pager, Archive its controls row (board.html,
+   archive.css), under the masthead: --mast-h is the masthead's height, kept by dn-nav.js. */
+.has-tabs .mast{position:sticky;top:var(--dn-top,env(safe-area-inset-top,0px));z-index:35;background:var(--canvas)}
+.has-tabs .mast::before{content:"";position:absolute;left:var(--side-pad);right:var(--side-pad);bottom:100%;
+  height:calc(var(--dn-top,env(safe-area-inset-top,0px)) + 2px);background:var(--canvas)}
+.has-tabs .mast::after{content:"";position:absolute;left:var(--side-pad);right:var(--side-pad);top:0;bottom:0;background:var(--canvas);z-index:-1}
+.has-tabs .pager,.has-tabs .ar-bar{position:sticky;top:calc(var(--dn-top,env(safe-area-inset-top,0px)) + var(--mast-h,64px));z-index:34;background:var(--canvas);
+  box-shadow:var(--side-pad) 0 0 var(--canvas),calc(-1 * var(--side-pad)) 0 0 var(--canvas)}
+.has-tabs .pager{padding-bottom:6px}
+.has-tabs .ar-bar{padding:6px 0}

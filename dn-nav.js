@@ -20,6 +20,14 @@
     } catch (e) {}
   }
 
+  // the masthead's height, for what freezes under it (Leagues pager, Archive controls; 8 Nov 2026)
+  var mast = doc.querySelector('.has-tabs .mast');
+  if (mast) {
+    var setH = function () { doc.documentElement.style.setProperty('--mast-h', mast.getBoundingClientRect().height + 'px'); };
+    setH();
+    if (window.ResizeObserver) new ResizeObserver(setH).observe(mast); else addEventListener('resize', setH);
+  }
+
   // feature switches
   function apply(f) {
     each('.tabs [data-feature]', function (el) { el.hidden = !!f && f[el.getAttribute('data-feature')] === false; });
