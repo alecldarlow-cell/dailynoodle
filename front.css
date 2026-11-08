@@ -326,6 +326,10 @@
   .tabs{position:fixed;left:0;right:0;bottom:0;z-index:40;border-top:1px solid var(--hair);
     padding:4px max(8px,env(safe-area-inset-left,0px)) var(--dn-bot,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-right,0px))}
   .has-tabs .wrap{padding-bottom:calc(72px + 57px + var(--dn-bot,env(safe-area-inset-bottom,0px)))}
+  /* iPhone home-screen app (8 Nov 2026, Alec's screenshot): iOS can leave the strip under a bar fixed
+     at the bottom unpainted, so a white band showed below the tabs in dark mode. The bar's own colour
+     carries on below it, off screen when there is nothing to fill. */
+  .tabs::after{content:"";position:absolute;left:0;right:0;top:100%;height:160px;background:var(--canvas);pointer-events:none}
 }
 @media(min-width:720px){
   .tabs{justify-content:flex-start;gap:4px;border-bottom:1px solid var(--hair);padding:2px 0}
