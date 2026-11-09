@@ -80,3 +80,26 @@ test('YARN-DATA-03: each board\'s star is its unique longest common word; levels
   }
   assert.strictEqual(crypto.createHash('sha256').update(old.join('|')).digest('hex'), FROZEN_COMMON, 'common words on levels 1-360 changed, which moves their star scores');
 });
+
+test('YARN-DATA-05: No clock boards (9 Nov 2026) follow the level rules, repeat no level or daily board or longest word, and hold 52-70 common words', () => {
+  const NC = vm.runInNewContext('(' + html.match(/\nconst NOCLOCK=(\[[\s\S]*?\]);\n/)[1] + ')');
+  const NOSTAR = new Set(JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/word-blocklist.json'), 'utf8')).nostar);
+  const solveMain = solveWith(ROOT_TRIE(MAIN)), solveAll = solveWith(ROOT_TRIE([...ALL]));
+  const stars = new Set(daily.map(P => P.star).concat(LEVELS.map(L => L.s)));
+  const boards = new Set(daily.map(P => d4(P.tiles.map(t => t.toLowerCase()))).concat(LEVELS.map(L => d4(tiles(L.t)))));
+  const seenS = new Set(), seenB = new Set();
+  assert.ok(NC.length >= 100);
+  for (const [i, B] of NC.entries()) {
+    const n = 'no clock board ' + (i + 1), T = tiles(B.t);
+    assert.ok(/^[a-z]{16}$/.test(B.t), n);
+    assert.ok(T.filter(t => t === 'qu').length <= 1 && T.filter(t => /^[jxz]$/.test(t)).length <= 1, 'rare letters ' + n);
+    assert.ok(MAINSET.has(B.s) && B.s.length >= 7 && !NOSTAR.has(B.s), 'longest word ' + n);
+    assert.ok(!stars.has(B.s) && !seenS.has(B.s), 'longest word repeats ' + n); seenS.add(B.s);
+    const k = d4(T); assert.ok(!boards.has(k) && !seenB.has(k), 'board repeats ' + n); seenB.add(k);
+    const main = solveMain(T);
+    assert.ok(main.includes(B.s) && traceable(T, B.s), 'longest word not on ' + n);
+    assert.deepStrictEqual(main.filter(w => w !== B.s && w.length >= B.s.length), [], n + ' has another common word as long as its longest');
+    assert.deepStrictEqual(solveAll(T).filter(w => w.length > B.s.length), [], n + ' has a rarer word longer than its longest');
+    assert.ok(main.length >= 52 && main.length <= 70, n + ' has ' + main.length + ' common words');
+  }
+});
