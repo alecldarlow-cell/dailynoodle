@@ -268,14 +268,30 @@ function finish(){
   stopTimer();state.solved=true;document.body.classList.add("win");
   const secs=Math.round(state.secs),t=fmt(secs);
   timerEl.textContent=t;
-  cells.forEach((c,i)=>{if(!state.black.has(i))setTimeout(()=>c.classList.add("good"),30*(Math.floor(i/N)+i%N));});
   state.streak=streakBump();$("streakn").textContent=state.streak;
   $("statTime").textContent=t;$("statStreak").textContent=state.streak;
-  window.dnCore.putDone(DONE_KEY,PUZZLE.id,{t,s:secs,m:state.misses});clearCur();
+  window.dnCore.putDone(DONE_KEY,PUZZLE.id,{t,s:secs,m:state.misses});clearCur();   // saved at once: leaving mid-beat loses nothing
   paint();setMsg("Solved in "+t+".");
-  finishSheet(true);
-  try{document.documentElement.setAttribute("data-dn-done","");}catch(e){}
-  $("modal").classList.add("on");   // the tracker reads the result box once it opens
+  winBeat(()=>{
+    finishSheet(true);
+    try{document.documentElement.setAttribute("data-dn-done","");}catch(e){}
+    $("modal").classList.add("on");   // the tracker reads the result box once it opens
+  });
+}
+/* the win beat (Alec, 9 Nov 2026: the last tap went straight to the sheet): the crossword's
+   letters pop and turn green in a wave from the top left, then a short hold so the solved grid
+   is seen, then the sheet, about 1.6 s in all, as Mini and Doku pause before theirs */
+const REDUCE_MOTION=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches);
+function winBeat(done){
+  const whites=cells.filter((c,i)=>!state.black.has(i));
+  if(REDUCE_MOTION){whites.forEach(c=>c.classList.add("good"));done();return;}
+  const step=Math.min(90,Math.round(840/(2*N-2))),POP=600,HOLD=250;   // the wave takes ~0.84 s whatever the size
+  cells.forEach((c,i)=>{if(state.black.has(i))return;const d=step*(Math.floor(i/N)+i%N);
+    c.style.animationDelay=d+"ms";setTimeout(()=>c.classList.add("good"),d+POP*0.35);});
+  gridEl.classList.remove("shake");gridEl.classList.add("celebrate");
+  const end=step*(2*N-2)+POP;
+  setTimeout(()=>{gridEl.classList.remove("celebrate");cells.forEach(c=>c.style.animationDelay="");whites.forEach(c=>c.classList.add("good"));},end);
+  setTimeout(done,end+HOLD);
 }
 function recapNode(){
   const wrap=document.createElement("div"),g=document.createElement("div");g.className="fin-redact";g.style.setProperty("--n",N);

@@ -67,3 +67,26 @@ test('REDACT-E2E-02: the tracker records one start on the first tap and one solv
  expect(puz).toEqual([['puzzle_start','word-redact',undefined,undefined],['puzzle_end','word-redact','solved',undefined]]);
  expect(errors).toEqual([]);await ctx.close();
 });
+test('REDACT-E2E-03: GIVEN the last right tap WHEN the board is solved THEN the letters wave and hold before the sheet; reduced motion opens it at once',async({phone})=>{
+ const p=phone.p;await goto(phone,FILE);
+ await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
+ for(const i of P.black)await H.tap(p,cell(p,i));
+ // the beat (Alec, 9 Nov 2026): the solved grid is seen first, the sheet follows
+ const t0=Date.now();
+ expect(await p.evaluate(()=>document.getElementById('modal').classList.contains('on'))).toBe(false);
+ await expect(p.locator('#grid.celebrate')).toHaveCount(1);
+ expect(await p.evaluate(()=>!!JSON.parse(localStorage.getItem('digi-redact-v1')).done['DP·REDA·0010'])).toBe(true);   // saved before the beat
+ await expect(p.locator('.fin-box.fin-open')).toBeVisible({timeout:5000});
+ expect(Date.now()-t0).toBeGreaterThan(900);
+ await expect(p.locator('#grid.celebrate')).toHaveCount(0);
+ await expect(p.locator('#grid .cell:not(.black)')).toHaveClass(Array(P.n*P.n-P.black.length).fill(/good/));
+ expect(await p.locator('#grid .cell.black.good').count()).toBe(0);   // the decoys stay blacked out
+ // reduced motion: no wave, the sheet opens on the last tap
+ await p.evaluate(()=>localStorage.clear());await p.emulateMedia({reducedMotion:'reduce'});
+ await p.reload();await H.wait(p,1500);
+ await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
+ for(const i of P.black)await H.tap(p,cell(p,i));
+ await expect(p.locator('.fin-box.fin-open')).toBeVisible({timeout:400});
+ await expect(p.locator('#grid.celebrate')).toHaveCount(0);
+ expect(phone.errors).toEqual([]);
+});
