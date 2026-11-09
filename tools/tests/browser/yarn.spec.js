@@ -118,3 +118,46 @@ test('YARN-06: plurals and other real words score; saved three-star levels get t
  expect(await p.evaluate(()=>window.__yev.map(e=>e.x.mode))).toEqual(['skein','skein']);
  expect(phone.errors).toEqual([]);
 });
+
+test('YARN-07: No clock (9 Nov 2026): its own board, no clock or stars; words count, Done needs a second tap and shows the misses; a hunt left half-way resumes',async({phone})=>{
+ await open(phone);const p=phone.p;
+ await expect(p.locator('#ncStatus')).toHaveText('Find every common word, at your own pace');
+ await H.tap(p,p.locator('#hNoClock'));await live(p);
+ await expect(p.locator('#clock')).toBeHidden();await expect(p.locator('#starbar')).toBeHidden();await expect(p.locator('#ncDone')).toBeVisible();
+ await expect(p.locator('#lvPill')).toHaveText('No clock · board 1');
+ const B=await p.evaluate(()=>__dg.noclock.board(1));
+ expect(B.main.length).toBeGreaterThanOrEqual(52);
+ const lv=await p.evaluate(()=>__dg.level(1).tiles.join(''));expect(B.tiles.join('')).not.toBe(lv);
+ const [a,b]=B.main.filter(w=>w!==B.star);
+ const left=await p.evaluate(()=>__dg.state().R.left);
+ await p.evaluate(w=>__dg.submitWord(w),a);
+ await expect(p.locator('#score')).toHaveText('1');await expect(p.locator('#nWords')).toHaveText(`of ${B.main.length} common words`);
+ await p.waitForTimeout(1200);
+ expect(await p.evaluate(()=>__dg.state().R.left)).toBe(left);   // no clock runs
+ // leave half-way: the hunt waits on the home screen and comes back after a reload
+ await H.tap(p,p.locator('#pauseBtn'));await expect(p.locator('#pRestart')).toBeHidden();
+ await H.tap(p,p.locator('#pLevels'));await expect(p.locator('#home')).toBeVisible();
+ await expect(p.locator('#ncStatus')).toHaveText('Board 1 waiting: 1 word found so far');
+ await p.reload();await H.tap(p,p.locator('#hNoClock'));await live(p);
+ expect(await p.evaluate(()=>__dg.state().R.found)).toEqual([a]);
+ await p.evaluate(w=>__dg.submitWord(w),b);
+ // Done: the first tap only asks
+ await H.tap(p,p.locator('#ncDone'));await expect(p.locator('#ncDone')).toHaveText('Sure?');
+ expect(await p.evaluate(()=>__dg.state().R.state)).toBe('playing');
+ await H.tap(p,p.locator('#ncDone'));
+ await expect(p.locator('#result')).toBeVisible();
+ await expect(p.locator('#rBig')).toContainText('2');await expect(p.locator('#rBig')).toContainText(`of ${B.main.length} common words`);
+ await expect(p.locator('#rStars')).toBeHidden();await expect(p.locator('#rRetry')).toBeHidden();await expect(p.locator('#rNext')).toHaveText('Next board');
+ await expect(p.locator('#rList .w.miss')).toHaveCount(B.main.length-2);
+ const s=await p.evaluate(()=>__dg.state().save);
+ expect(s.nc).toMatchObject({next:2,cur:null,done:1});expect(s.nc.b[1]).toBe(2);
+ expect(s.lv).toEqual({});expect(s.words).toEqual(expect.arrayContaining([a,b]));   // no stars or stripe; words still count
+ await H.tap(p,p.locator('#rNext'));await live(p);await expect(p.locator('#lvPill')).toHaveText('No clock · board 2');
+ // a timed level afterwards looks as before
+ await p.evaluate(()=>{});await H.tap(p,p.locator('#pauseBtn'));await H.tap(p,p.locator('#pLevels'));
+ await H.tap(p,p.locator('#hPlay'));await live(p);await expect(p.locator('#clock')).toBeVisible();await expect(p.locator('#ncDone')).toBeHidden();
+ const e=await p.evaluate(()=>window.__yev.map(e=>[e.ev,e.x.mode,e.x.level,e.x.start||e.x.win,e.x.found]));
+ expect(e).toEqual([['game_start','noclock',1,'new',undefined],['game_start','noclock',1,'resume',undefined],['game_end','noclock',1,false,2],['game_start','noclock',2,'new',undefined],['game_start','skein',1,'new',undefined]]);
+ const end=await p.evaluate(()=>window.__yev.find(e=>e.ev==='game_end').x);expect(Number.isFinite(end.secs)).toBe(true);
+ expect(phone.errors).toEqual([]);
+});

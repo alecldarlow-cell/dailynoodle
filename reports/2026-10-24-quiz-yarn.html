@@ -9,7 +9,7 @@
 <meta name="dn:standfirst" content="The daily Tangle without the wait: 720 boards, five stars each, and a scarf to knit as you win.">
 <meta name="dn:topic"      content="Quiz">
 <meta name="dn:date"       content="2026-10-24">
-<meta name="dn:updated"    content="2026-11-01">
+<meta name="dn:updated"    content="2026-11-09">
 <meta name="dn:read"       content="~2 min">
 <meta name="dn:thumb"      content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI0Y1RUZFNiIvPjxnIGZpbGw9IiNGRkZERjkiIHN0cm9rZT0iIzJBMjExOCIgc3Ryb2tlLXdpZHRoPSIxLjgiPjxyZWN0IHg9IjU4IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9IjU4IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIgZmlsbD0iI0VDRTNENiIgc3Ryb2tlPSIjQjlBQTk2Ii8+PC9nPjxwYXRoIGQ9Ik01OCA2MkM2MiA0NiA2NiAyNiA3MCAyMlM5NiAyMCA5OCAyMiA5OCA0NiA5OCA1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQzA1MzJBIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iODQiIHI9IjI5IiBmaWxsPSIjQzA1MzJBIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEUzQTFDIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNMTYgNzRjMTQgNiAzNCA0IDUwLTEwIi8+PHBhdGggZD0iTTE0IDg4YzE4IDQgMzgtMiA1NC0xOCIvPjxwYXRoIGQ9Ik0yMCAxMDJjMTYgMCAzNC04IDQ2LTI0Ii8+PHBhdGggZD0iTTMwIDU5Yy02IDE0LTYgMzQgNCA1MiIvPjxwYXRoIGQ9Ik00NiA1NmMtOCAxNi04IDM4IDIgNTYiLz48L2c+PGNpcmNsZSBjeD0iMzEiIGN5PSI3MSIgcj0iNSIgZmlsbD0iI0U1ODI2MCIgb3BhY2l0eT0iLjciLz48L3N2Zz4=">
 <meta name="theme-color" content="#F5EFE6" id="themeColor">
@@ -72,6 +72,12 @@ a{color:inherit}
 #hPlay b{display:block;font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.02}
 #hPlay small{display:block;margin-top:4px;font-size:15px;color:var(--ink2)}
 #hPlay .go{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;padding:0 22px;border-radius:24px;background:var(--primary);color:var(--onPrimary);font-weight:600}
+.nclink{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;width:100%;min-height:44px;margin:-2px 0 0;padding:4px 18px;border:0;background:none;text-align:left;cursor:pointer;color:var(--ink2);font-size:15px}
+.nclink b{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;text-decoration-thickness:2px}
+.ncdone{min-width:80px;min-height:44px;padding:0 18px;border-radius:22px;border:1.5px solid var(--primary);background:var(--primary);color:var(--onPrimary);font:inherit;font-weight:700;font-size:17px;cursor:pointer}
+#play.nc #clock,#play.nc #starbar{display:none}
+.ncdone.sure{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+#play.nc .timebar i{background:var(--sk)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tile2{display:flex;flex-direction:column;justify-content:center;min-height:72px;padding:10px 14px;border-radius:14px;background:var(--paper);border:0;text-align:left;cursor:pointer;text-decoration:none;color:var(--ink)}
 .tile2 b{font-weight:600;font-size:16px}
@@ -241,6 +247,7 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
   <div id="scarfBox"><svg id="scarf" aria-hidden="true"></svg><p id="scarfNote"></p></div>
   <button id="hPlay" type="button"><svg class="ball" viewBox="0 0 64 64" aria-hidden="true" id="hBall"></svg>
    <span class="txt"><b id="hHead">Level 1</b><small id="hStatus"></small><span class="go" id="hGo">Play</span></span></button>
+  <button class="nclink" id="hNoClock" type="button"><b>No clock</b><span id="ncStatus">Find every common word, at your own pace</span></button>
   <div class="row2">
    <button class="tile2" id="hLevels" type="button"><b>Levels</b><small id="hLvNote">720 boards in skeins of ten</small></button>
    <a class="tile2" id="dailyCard" href="../puzzles.html"><b id="dailyTitle">Today’s Tangle</b><small id="dailyStatus">The daily board, the same for everyone</small></a>
@@ -251,6 +258,7 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
    <p>Each level is one board and 90 seconds. Drag through touching letters, across, up, down or diagonally, to spell a word, or tap letters one by one and tap the last one again to enter. Each tile is used once per word; QU counts as two letters.</p>
    <p>A word scores its length minus two: 1 point for three letters, 2 for four, 3 for five. The board’s longest common word scores double. Any real word counts, plurals included: rarer words score just the same.</p>
    <p>The bar above the board shows the level’s five star scores. One star clears the level, knits a stripe into your scarf and opens the next. Replay any level for more stars.</p>
+   <p><b>No clock</b> boards have no timer and no stars: find every common word at your own pace, then tap Done to see any you missed. They are boards of their own, so they never give a level away.</p>
    <p>Words you find here and in the daily Tangle all count towards your words found.</p>
   </details>
   <div class="toggles" id="homeToggles"></div>
@@ -270,8 +278,8 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
  <div class="wrap">
   <div class="ptop">
    <button class="iconbtn" id="pauseBtn" aria-label="Pause"><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M6 4v10M12 4v10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
-   <div class="scorebox"><b id="score">0</b><span>pts · <span id="nWords">0 words</span></span></div>
-   <div class="pright"><span id="clock">1:30</span></div>
+   <div class="scorebox"><b id="score">0</b><span><span id="ptsLbl">pts · </span><span id="nWords">0 words</span></span></div>
+   <div class="pright"><span id="clock">1:30</span><button class="ncdone" id="ncDone" type="button" hidden>Done</button></div>
   </div>
   <div class="timebar" aria-hidden="true"><i id="timeFill"></i></div>
   <div id="starbar" aria-label="Star scores"><div class="rail"></div><div class="fill" id="sbFill"></div></div>
@@ -318,7 +326,8 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
    M, common words: every word in the daily Tangle boards' main lists (680 boards to Aug 2028), plus
      (1 Nov 2026) very common long words (SCOWL 10/20) that no level 1-360 board can trace, used as stars.
    B, rarer words: the daily lists' rarer words plus (1 Nov 2026) every SCOWL size-70 word, British and
-     American, so plurals and any real word a player knows score. Blocklists: house list, LDNOOBW, crude terms.
+     American, so plurals and any real word a player knows score. Blocklists: house list, LDNOOBW, crude terms;
+     since 9 Nov 2026 both lists also follow the daily Tangle's word rule (tools/word-rules.js, tools/yarn-words.js).
    Only common words set star scores, so widening the rarer list left levels 1-360's star scores unchanged.
    Levels: 4x4 boards (q = the Qu tile) with their longest common word, made for Yarn: no board or longest
    word repeats a daily Tangle. 1-60 in six skeins, 61-360 odds and ends, 361-720 in 36 more skeins
@@ -1044,6 +1053,106 @@ const LEVELS=[{"t":"gkwaosnrgleaeuts","s":"wrestle"},
 {"t":"lntdtoetrpcelsdr","s":"protected"},
 {"t":"nintsarimcniredg","s":"remaining"},
 {"t":"ddercngteoieires","s":"recognise"}];
+const NOCLOCK=[{"t":"otfmiaescngeirpa","s":"pricing"},
+{"t":"tesgpfatiadgsnin","s":"finding"},
+{"t":"rvimetoeturwnefe","s":"overtime"},
+{"t":"oeexdrrptolatiet","s":"explored"},
+{"t":"infesieetevdrohe","s":"defensive"},
+{"t":"tireiacfectssiar","s":"criticise"},
+{"t":"sarsatiknddearil","s":"standard"},
+{"t":"tdeqsoracledgrep","s":"cleared"},
+{"t":"sllrfiaeoottyoon","s":"footnote"},
+{"t":"dardngmilerdectr","s":"neglect"},
+{"t":"feitforlialfciet","s":"official"},
+{"t":"raciginhudtghaxi","s":"arguing"},
+{"t":"facotnepgksyniah","s":"shaking"},
+{"t":"eoteewolngrenife","s":"frowning"},
+{"t":"snoiemlpeuealcrm","s":"molecule"},
+{"t":"jfyeeoengmlespat","s":"employee"},
+{"t":"kngtdeisnbneetoe","s":"nesting"},
+{"t":"iawangraleneetiu","s":"unaware"},
+{"t":"bredsuiltyplamuo","s":"builders"},
+{"t":"tfynyripelalhycv","s":"clarify"},
+{"t":"noeigiicfsafetrm","s":"raising"},
+{"t":"issrdsusatceplon","s":"discuss"},
+{"t":"miavadlnchirttaf","s":"invalid"},
+{"t":"setsthiudurrnogl","s":"surround"},
+{"t":"salrntteannobega","s":"tangent"},
+{"t":"pendegeikolybsda","s":"delaying"},
+{"t":"peteyhrinwdeaoni","s":"anywhere"},
+{"t":"erwlemairggtinol","s":"emerging"},
+{"t":"ttunieirenrasgng","s":"returning"},
+{"t":"itdriveemnotosrs","s":"invited"},
+{"t":"tsarwswpordeeial","s":"password"},
+{"t":"rpslgriuntrhieea","s":"hurting"},
+{"t":"ertmosiehgystnie","s":"eyesight"},
+{"t":"nghweiositpkysip","s":"skipping"},
+{"t":"etrcnseetpieasiv","s":"perceive"},
+{"t":"eyltdkiliecuhsar","s":"luckily"},
+{"t":"aaoyhuredivetelt","s":"delivery"},
+{"t":"irnsodeicmtrclpc","s":"comprised"},
+{"t":"nippgrseknotkctr","s":"stepping"},
+{"t":"ieeprsescmtnbsoe","s":"screens"},
+{"t":"nstyigaleotnrnim","s":"instantly"},
+{"t":"talfagessumncodt","s":"document"},
+{"t":"xetientsrbdaoaec","s":"broadcast"},
+{"t":"fpegseaoaatlonem","s":"peasant"},
+{"t":"iggangrdteifdecn","s":"dragging"},
+{"t":"lgatgnihtrepangi","s":"gathering"},
+{"t":"mirsfskonatemuct","s":"mistake"},
+{"t":"pllsidepdnlttavt","s":"splendid"},
+{"t":"nrtioenyetseetfo","s":"eternity"},
+{"t":"dngweoinbanpryer","s":"banning"},
+{"t":"isnoimncsekataet","s":"mistaken"},
+{"t":"uandalrtloabdwel","s":"allowable"},
+{"t":"orauydegiesfinaw","s":"safeguard"},
+{"t":"etooaglmynosddec","s":"cosmology"},
+{"t":"stenmsntcoetempf","s":"competent"},
+{"t":"iatsnonewnumelco","s":"unwelcome"},
+{"t":"ineyckgdroinblet","s":"blocking"},
+{"t":"nigrioentdliugow","s":"glowing"},
+{"t":"hoyeaowtstryreiw","s":"writers"},
+{"t":"aaeawirlgnsdmtiu","s":"awarding"},
+{"t":"onratwiiunevgeks","s":"viewing"},
+{"t":"lymilafreeaooptb","s":"formally"},
+{"t":"ordtfemylnesitei","s":"informed"},
+{"t":"rdicdnahhltehemq","s":"ethical"},
+{"t":"tsaneipeiuhylglt","s":"lightly"},
+{"t":"espflwamhinereno","s":"meanwhile"},
+{"t":"neetadrusrrciheo","s":"recorder"},
+{"t":"tocluegalftrraih","s":"grateful"},
+{"t":"naeadsbmcoeonedv","s":"abandoned"},
+{"t":"jrucaacrnteieodo","s":"accurate"},
+{"t":"nrayinowghtroenv","s":"warning"},
+{"t":"odalnspeabusrpah","s":"husband"},
+{"t":"akebitcrediardau","s":"bracketed"},
+{"t":"olirnwdbveelseit","s":"believed"},
+{"t":"nrthreuaoppsacht","s":"approach"},
+{"t":"eagiwrhnocsadnwp","s":"washing"},
+{"t":"oiscddioteaoyres","s":"society"},
+{"t":"ietelreseuinwtpr","s":"sterile"},
+{"t":"negoeiatdloiewlo","s":"allowed"},
+{"t":"tlmfiyaioornnmso","s":"morality"},
+{"t":"pdoayorcrnsteyeo","s":"postcard"},
+{"t":"stngtpsihouesncl","s":"housing"},
+{"t":"ladreeenrhvrsaol","s":"overhead"},
+{"t":"pngeiaurisovdale","s":"pausing"},
+{"t":"endtrecipfnsonio","s":"precision"},
+{"t":"ataktnecsdrecrot","s":"attacked"},
+{"t":"kliascbnieuntpot","s":"publicise"},
+{"t":"detinubstclaricr","s":"circular"},
+{"t":"deaaaelyndeansmt","s":"delayed"},
+{"t":"edryfocrhneiedif","s":"horrified"},
+{"t":"gusrnitetrivbuti","s":"intuitive"},
+{"t":"atcnehuonrmootnm","s":"uncommon"},
+{"t":"keslomstapielngy","s":"spokesman"},
+{"t":"dteblnooamekeptl","s":"booklet"},
+{"t":"engtrawepeyeoivi","s":"preview"},
+{"t":"aorntsuthlehougm","s":"thought"},
+{"t":"oendeginalsihtoc","s":"coining"},
+{"t":"ayrypeltbalhesgi","s":"slightly"},
+{"t":"wlaenabeedeallis","s":"labelled"},
+{"t":"ouolhtwlonaryshd","s":"shallow"}];
 const SKEINS=[
   {name:'Oatmeal', c:['#B08A52','#D2AE78'], t:[11,22,32]},
   {name:'Heather', c:['#8A63AE','#B595D6'], t:[12,23,33]},
@@ -1079,13 +1188,13 @@ const ROUND=90, MINLEN=3, N=4;
 /* ---------- Noodle site tracking (site contract §5) ---------- */
 const GAME='yarn';
 const modeOf=n=>n>60&&n<FIRST2?'odds':'skein';
-let rnd={armed:false,open:false,secs:0,how:'new',lv:1};
+let rnd={armed:false,open:false,secs:0,how:'new',lv:1,mode:''};
 function trk(ev,x){try{if(window.digi&&window.digi.track)window.digi.track(ev,Object.assign({game:GAME},x));}catch(e){}}
-function rndArm(how,lv){rnd={armed:true,open:false,secs:0,how:how||'new',lv};}
+function rndArm(how,lv,mode){rnd={armed:true,open:false,secs:0,how:how||'new',lv,mode:mode||''};}
 function rndStart(){if(!rnd.armed||rnd.open)return;rnd.armed=false;rnd.open=true;
-  trk('game_start',{level:rnd.lv,start:rnd.how,mode:modeOf(rnd.lv)});}
+  trk('game_start',{level:rnd.lv,start:rnd.how,mode:rnd.mode||modeOf(rnd.lv)});}
 function rndEnd(win,x){if(!rnd.open)rndStart();if(!rnd.open)return;rnd.open=false;
-  trk('game_end',Object.assign({win:!!win,level:rnd.lv,secs:Math.round(rnd.secs),mode:modeOf(rnd.lv)},x));}
+  trk('game_end',Object.assign({win:!!win,level:rnd.lv,secs:Math.round(rnd.secs),mode:rnd.mode||modeOf(rnd.lv)},x));}
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1122,17 +1231,34 @@ function level(n){
   for(const u of UP)targets.push(Math.max(targets[targets.length-1]+1,Math.round(u*targets[2])));
   return cache[n]={n,tiles,star,main,bonus,MAIN:new Set(main),ALL:new Set(words),total,targets,skein:S,pts};
 }
+/* ---------- No clock (Alec, 9 Nov 2026) ----------
+   Boards of their own (NOCLOCK, made by tools/yarn-noclock-boards.js), never a level's, so playing without
+   the clock can't give a level's words away. No timer, no stars, no stripe: find every common word, then Done
+   shows the ones missed. Words found still count towards words found. */
+const NCN=NOCLOCK.length, NC_SK={name:'No clock',c:['#7A6A58','#B9A68F'],t:[]};
+const ncCache={};
+function ncBoard(i){
+  if(ncCache[i])return ncCache[i];
+  const B=NOCLOCK[i-1],tiles=B.t.split('').map(c=>c==='q'?'qu':c),star=B.s;
+  const words=solve(tiles),main=words.filter(w=>MAINSET.has(w)).sort(),bonus=words.filter(w=>!MAINSET.has(w)).sort();
+  const pts=w=>(w.length-2)*(w===star?2:1);
+  return ncCache[i]={n:i,nc:true,tiles,star,main,bonus,MAIN:new Set(main),ALL:new Set(words),total:main.reduce((a,w)=>a+pts(w),0),targets:[],skein:NC_SK,pts};
+}
 function where(n){if(n>60&&n<FIRST2)return ODDS.name;const S=skeinOf(n);return S.name+' '+((n-1)%10+1)+' of 10';}
 
 /* ---------- save ---------- */
 const KEY='digi-yarn-v1';
 const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
-function defaults(){return {v:1,lv:{},cur:null,words:[],best:0,snd:true,vib:true,rm:null,fs:coarse};}
+function defaults(){return {v:1,lv:{},cur:null,words:[],best:0,snd:true,vib:true,rm:null,fs:coarse,nc:{next:1,cur:null,done:0,b:{}}};}
 let save=defaults();
 try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.v===1)save=Object.assign(defaults(),s);}catch(e){}
 if(!save.lv||typeof save.lv!=='object')save.lv={};
 if(!Array.isArray(save.words))save.words=[];
 let WORDS=new Set(save.words);
+/* No clock progress: next board, a board left mid-hunt {i, found}, boards finished, best common words per board */
+function ncSave(){const d={next:1,cur:null,done:0,b:{}};if(!save.nc||typeof save.nc!=='object')save.nc=d;const s=save.nc;
+  if(!(s.next>=1&&s.next<=NCN))s.next=1;if(!s.b||typeof s.b!=='object')s.b={};if(s.cur&&!(NOCLOCK[s.cur.i-1]&&Array.isArray(s.cur.found)))s.cur=null;return s;}
+const ncGot=()=>L.main.filter(w=>R.found.includes(w)).length;
 function persist(){try{save.words=[...WORDS];localStorage.setItem(KEY,JSON.stringify(save));}catch(e){}}
 const starsOf=n=>(save.lv[n]&&save.lv[n].s)||0;
 const cleared=n=>starsOf(n)>0;
@@ -1262,6 +1388,8 @@ function renderHome(){
   $('hLvNote').textContent=cl?`${cl} cleared, ${plural(ts,'star','stars')}`:'720 boards in skeins of ten';
   if(isNew()&&cl)$('hLvNote').innerHTML=`<span class="new">New</span> ${SKEINS2.length} more skeins · ${cl} cleared`;
   $('sStars').textContent=fmt(ts);$('sBest').textContent=fmt(save.best||0);$('sWords').textContent=fmt(wordsFound());
+  const ns=ncSave();
+  $('ncStatus').textContent=ns.cur?`Board ${ns.cur.i} waiting: ${plural(ns.cur.found.length,'word','words')} found so far`:ns.done?`Board ${ns.next} of ${NCN}: find every common word`:'Find every common word, at your own pace';
   paintDaily();paintScarf();toggles($('homeToggles'));paintFS();
 }
 function renderLevels(){
@@ -1382,6 +1510,11 @@ function submit(p){
   const {g,up}=addWord(w);
   flashTiles(p,w===L.star?'bonus':'good');   // as the daily Tangle (AF-027, 30 Oct 2026): green for every accepted word, gold only for the longest
   renderList(w);renderScore();saveCur();
+  if(L.nc){const all=L.MAIN.has(w)&&ncGot()===L.main.length;
+    if(all){toast('Every common word found!','gold');sfx.star();buzz([30,40,30]);}
+    else if(w===L.star){toast('Longest word!','gold');sfx.star();buzz([30,40,30]);}
+    else{toast(w.toUpperCase()+(L.MAIN.has(w)?'':' · rarer word'),'good');sfx.word(w.length);buzz(18);}
+    return {r:L.MAIN.has(w)?'main':'bonus',w,pts:g};}
   if(w===L.star){toast('Longest word! +'+g,'gold');sfx.star();buzz([30,40,30]);}
   else if(up){const s=starCount(R.score);toast('★'.repeat(s)+'  +'+g+' '+w.toUpperCase(),'star');sfx.target();buzz([20,30,20]);}
   else{toast('+'+g+' '+w.toUpperCase()+(L.MAIN.has(w)?'':' · rarer word'),'good');sfx.word(w.length);buzz(18);}
@@ -1395,7 +1528,7 @@ function renderList(fresh){
   const lens=[...new Set(Object.keys(gm).concat(Object.keys(gf)).map(Number))].sort((a,b)=>b-a);
   for(const n of lens){const found=(gf[n]||[]).slice().sort(),common=(gm[n]||[]).length,got=(gm[n]||[]).filter(w=>R.found.includes(w)).length;
     if(!found.length)continue;
-    h+=`<div class="grp"><h3><span>${n} letters · ${plural(n-2,'pt','pts')} each</span><span>${common?got+' of '+common:''}</span></h3><div class="ws">`;
+    h+=`<div class="grp"><h3><span>${n} letters${L.nc?'':' · '+plural(n-2,'pt','pts')+' each'}</span><span>${common?got+' of '+common:''}</span></h3><div class="ws">`;
     for(const w of found)h+=`<span class="w${w===L.star?' star':''}${L.MAIN.has(w)?'':' bon'}${w===fresh?' new':''}" data-w="${w}">${esc(w)}</span>`;
     h+='</div></div>';}
   host.innerHTML=h;
@@ -1410,9 +1543,13 @@ function buildStarbar(){
 /* the bar's markers sit at even steps; the fill runs straight between them */
 const barAt=k=>(k*(96/NSTAR)).toFixed(1);
 function barFill(sc){const T=[0].concat(L.targets);for(let k=1;k<T.length;k++)if(sc<T[k])return k-1+(sc-T[k-1])/(T[k]-T[k-1]);return NSTAR+Math.min(1,(sc-T[NSTAR])/Math.max(4,T[NSTAR]*.1))*(4/(96/NSTAR));}
-function renderClock(){const left=Math.max(0,R?R.left:ROUND),c=$('clock');c.textContent=mmss(Math.ceil(left-1e-9));
+function renderClock(){if(L&&L.nc)return;const left=Math.max(0,R?R.left:ROUND),c=$('clock');c.textContent=mmss(Math.ceil(left-1e-9));
   c.classList.toggle('low',left<=10&&R&&R.state==='playing');$('timeFill').style.transform='scaleX('+(left/ROUND)+')';}
 function renderScore(){
+  $('ptsLbl').hidden=!!L.nc;
+  if(L.nc){const got=ncGot();$('score').textContent=got;$('nWords').textContent='of '+L.main.length+' common words';
+    $('timeFill').style.transform='scaleX('+(got/Math.max(1,L.main.length))+')';
+    const gs=R.found.includes(L.star);$('starPill').textContent=gs?'★ '+L.star.toUpperCase():'Longest common word: '+num(L.star.length)+' letters';$('starPill').classList.toggle('got',gs);return;}
   $('score').textContent=R.score;$('nWords').textContent=plural(R.found.length,'word','words');
   $('sbFill').style.width=Math.min(100,barFill(R.score)*96/NSTAR).toFixed(1)+'%';
   $('starbar').querySelectorAll('.mk').forEach((m,i)=>m.classList.toggle('got',R.score>=L.targets[i]));
@@ -1435,10 +1572,10 @@ window.addEventListener('popstate',()=>{if(ignorePop){ignorePop=false;return;}
    A round is one attempt at one level: from the Play tap to time running out. Restarting, choosing
    another level or leaving mid-round sends nothing (abandoned). A round paused and then reloaded
    comes back as a new round (start: resume). */
-function saveCur(){if(R&&R.state==='playing'){save.cur={n:L.n,found:R.found.slice(),score:R.score,left:Math.max(0,Math.round(R.left*10)/10)};}persist();}
+function saveCur(){if(L&&L.nc){if(R&&R.state==='playing')ncSave().cur={i:L.n,found:R.found.slice()};persist();return;}if(R&&R.state==='playing'){save.cur={n:L.n,found:R.found.slice(),score:R.score,left:Math.max(0,Math.round(R.left*10)/10)};}persist();}
 function startLevel(n,how){
   if(!LEVELS[n-1]||!unlocked(n))return;
-  closePause();stopCount();
+  closePause();stopCount();ncLook(false);
   L=level(n);setSkein(n);low=L.tiles.slice();
   const cur=save.cur&&save.cur.n===n&&how==='resume'?save.cur:null;
   R={state:'playing',found:cur?cur.found.filter(w=>L.ALL.has(w)):[],score:0,left:cur?Math.min(ROUND,Math.max(1,cur.left)):ROUND};
@@ -1452,6 +1589,7 @@ function startLevel(n,how){
   armBack();counting=true;requestAnimationFrame(()=>{measure();countIn();});   // closed from now, not from the next frame
 }
 function resumeRound(){                             // back to a round paused in this page load
+  if(L&&L.nc&&R&&R.state==='playing'){resumeNC();return;}
   if(!R||R.state!=='playing'){startLevel(nextLevel(),'new');return;}
   show('play');closePause();paused=false;armBack();counting=true;requestAnimationFrame(()=>{measure();countIn();});   // closed from now, not from the next frame
 }
@@ -1463,7 +1601,8 @@ function setPaused(on){
 function openPause(){
   if(view!=='play'||!R||R.state!=='playing')return;
   setPaused(true);
-  $('pSub').textContent=`Level ${L.n}: ${mmss(R.left)} left, ${plural(R.score,'point','points')}.`;
+  $('pSub').textContent=L.nc?`No clock board ${L.n}: ${ncGot()} of ${L.main.length} common words.`:`Level ${L.n}: ${mmss(R.left)} left, ${plural(R.score,'point','points')}.`;
+  $('pRestart').hidden=!!L.nc;$('pLevels').textContent=L.nc?'Yarn home':'Levels';$('pRestart').parentNode.style.gridTemplateColumns=L.nc?'1fr':'';
   toggles($('pauseToggles'));$('pauseSheet').hidden=false;
   try{$('pResume').focus({preventScroll:true});}catch(e){}
 }
@@ -1489,6 +1628,7 @@ function tick(){
   const now=performance.now(),dt=Math.min(1,Math.max(0,(now-last)/1000));last=now;
   if(!live()||document.hidden)return;
   rnd.secs+=dt;
+  if(L.nc)return;
   const before=Math.ceil(R.left);R.left=Math.max(0,R.left-dt);const after=Math.ceil(R.left);
   if(after!==before){renderClock();if(after<=5&&after>0)sfx.tick();if(after%5===0)saveCur();}
   if(R.left<=0)endRound();
@@ -1507,8 +1647,62 @@ function endRound(){
   const res={n,score:R.score,stars,prevStars:prev.s||0,prevBest:prev.b||0,found:R.found.slice(),first};
   setTimeout(()=>showResult(res),reduced()?100:650);
 }
+function ncLook(on){$('play').classList.toggle('nc',on);$('ncDone').hidden=!on;ncArm(false);}
+let ncSureT=0;
+function ncArm(on){clearTimeout(ncSureT);const b=$('ncDone');b.textContent=on?'Sure?':'Done';b.classList.toggle('sure',on);if(on)ncSureT=setTimeout(()=>ncArm(false),3000);}
+function startNC(i,how){
+  if(!NOCLOCK[i-1])return;
+  closePause();stopCount();
+  L=ncBoard(i);document.documentElement.style.setProperty('--sk',NC_SK.c[dark()?1:0]);low=L.tiles.slice();
+  const s=ncSave(),cur=s.cur&&s.cur.i===i?s.cur:null;
+  R={state:'playing',found:cur?cur.found.filter(w=>L.ALL.has(w)):[],score:0,left:ROUND};
+  R.score=R.found.reduce((a,w)=>a+L.pts(w),0);
+  s.cur={i,found:R.found.slice()};persist();
+  rndArm(cur?'resume':(how||'new'),i,'noclock');rndStart();
+  buildBoard();buildStarbar();ncLook(true);
+  $('lvPill').textContent='No clock · board '+i;
+  path=[];kb='';show('play');$('play').classList.remove('locked');$('board').classList.remove('hide');
+  paused=false;counting=false;renderList();renderScore();paint();last=performance.now();
+  armBack();requestAnimationFrame(measure);
+}
+function resumeNC(){show('play');closePause();paused=false;$('board').classList.remove('hide');armBack();last=performance.now();requestAnimationFrame(()=>{measure();paint();});}
+function ncFinish(){
+  if(!R||R.state!=='playing'||!L||!L.nc)return;
+  R.state='done';stopCount();closePause();paused=false;disarmBack();ncArm(false);
+  if(drag)drag=null;path=[];kb='';paint();
+  $('play').classList.add('locked');
+  const s=ncSave(),got=ncGot(),all=got===L.main.length;
+  s.cur=null;s.done=(s.done|0)+1;s.next=L.n>=NCN?1:L.n+1;s.b[L.n]=Math.max(s.b[L.n]|0,got);persist();
+  rndEnd(all,{found:got,total:L.main.length,words:R.found.length});
+  sfx.done();buzz(40);
+  const res={n:L.n,got,total:L.main.length,found:R.found.slice(),all};
+  setTimeout(()=>showNCResult(res),reduced()?100:400);
+}
+function answers(found){
+  const g=groups(L.main);let h='';
+  for(const n of Object.keys(g).map(Number).sort((a,b)=>b-a)){
+    h+=`<div class="grp"><h3><span>${n} letters</span><span>${g[n].filter(w=>found.includes(w)).length}/${g[n].length}</span></h3><div class="ws">`;
+    for(const w of g[n].slice().sort())h+=`<span class="w${w===L.star?' star':''}${found.includes(w)?'':' miss'}">${esc(w)}</span>`;
+    h+='</div></div>';}
+  $('rList').innerHTML=h;
+  const bf=found.filter(w=>!L.MAIN.has(w));
+  // the rarer list is every real word, so show the ones found rather than every obscure one on the board
+  $('bonSum').textContent=`Rarer words: you found ${bf.length}`+(L.bonus.length>bf.length?` (${L.bonus.length} on this board)`:'');
+  $('bonList').textContent=bf.length?bf.slice().sort().join('  '):'None this time: any real word counts, plurals included.';
+}
+function resultLook(nc){$('rStars').hidden=nc;$('rLevels').hidden=nc;$('rRetry').hidden=nc;$('rNext').textContent=nc?'Next board':'Next level';}
+function showNCResult(r){
+  show('result');resultLook(true);
+  $('rKick').textContent='No clock · board '+r.n;
+  $('rBig').innerHTML=r.got+'<small>of '+r.total+' common words</small>';
+  $('rVerdict').textContent=r.all?'Every common word found!':`${plural(r.total-r.got,'common word','common words')} still hiding: they're dotted below.`;
+  const sw=L.star.toUpperCase();
+  $('rStar').textContent=r.found.includes(L.star)?`You found the longest common word, ${sw}.`:`The longest common word was ${sw}.`;
+  $('rNext').hidden=false;$('rNext').className='btn primary';$('rRetry').parentNode.style.gridTemplateColumns='1fr';
+  answers(r.found);
+}
 function showResult(r){
-  show('result');
+  show('result');resultLook(false);$('rNext').className='btn primary';
   $('rKick').textContent='Level '+r.n+' · '+where(r.n);
   $('rBig').innerHTML=r.score+'<small>'+(r.score===1?'point':'points')+'</small>';
   const st=$('rStars').children;for(let i=0;i<NSTAR;i++){st[i].className=i<r.stars?'got':'';if(i<r.stars&&!reduced()){st[i].classList.add('pop');st[i].style.animationDelay=(.15+i*.22)+'s';}}
@@ -1525,16 +1719,7 @@ function showResult(r){
   $('rNext').hidden=!canNext;$('rRetry').textContent=r.stars?'Play again':'Try again';
   $('rRetry').className='btn'+(canNext?'':' primary');
   $('rRetry').parentNode.style.gridTemplateColumns=canNext?'1fr 1fr':'1fr';
-  const g=groups(L.main);let h='';
-  for(const n of Object.keys(g).map(Number).sort((a,b)=>b-a)){
-    h+=`<div class="grp"><h3><span>${n} letters</span><span>${g[n].filter(w=>r.found.includes(w)).length}/${g[n].length}</span></h3><div class="ws">`;
-    for(const w of g[n].slice().sort())h+=`<span class="w${w===L.star?' star':''}${r.found.includes(w)?'':' miss'}">${esc(w)}</span>`;
-    h+='</div></div>';}
-  $('rList').innerHTML=h;
-  const bf=r.found.filter(w=>!L.MAIN.has(w));
-  // the rarer list is every real word, so show the ones found rather than every obscure one on the board
-  $('bonSum').textContent=`Rarer words: you found ${bf.length}`+(L.bonus.length>bf.length?` (${L.bonus.length} on this board)`:'');
-  $('bonList').textContent=bf.length?bf.slice().sort().join('  '):'None this time: any real word counts, plurals included.';
+  answers(r.found);
   if(r.stars)setTimeout(()=>{if(r.stars>=3)sfx.star();},reduced()?0:700);
 }
 
@@ -1548,21 +1733,25 @@ function showResult(r){
   b.addEventListener('contextmenu',e=>e.preventDefault());
   const go=fn=>()=>{goFS();audio();fn();};
   $('hPlay').addEventListener('click',go(()=>{
-    if(R&&R.state==='playing'&&save.cur&&save.cur.n===L.n){resumeRound();return;}
+    if(R&&R.state==='playing'&&L&&!L.nc&&save.cur&&save.cur.n===L.n){resumeRound();return;}
     if(save.cur&&LEVELS[save.cur.n-1]){startLevel(save.cur.n,'resume');return;}
     startLevel(nextLevel(),'new');}));
   $('hLevels').addEventListener('click',renderLevels);
+  $('hNoClock').addEventListener('click',go(()=>{
+    if(R&&R.state==='playing'&&L&&L.nc){resumeNC();return;}
+    const s=ncSave();startNC(s.cur?s.cur.i:s.next,s.cur?'resume':'new');}));
+  $('ncDone').addEventListener('click',()=>{if(!R||R.state!=='playing'||!L||!L.nc)return;if($('ncDone').classList.contains('sure'))ncFinish();else ncArm(true);});
   $('lvBack').addEventListener('click',renderHome);
   $('lvList').addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.lv');if(!t||t.disabled)return;goFS();audio();
     const n=+t.dataset.lv;
-    if(R&&R.state==='playing'&&L&&L.n===n){resumeRound();return;}
+    if(R&&R.state==='playing'&&L&&!L.nc&&L.n===n){resumeRound();return;}
     startLevel(n,save.cur&&save.cur.n===n?'resume':'new');});
   $('pauseBtn').addEventListener('click',openPause);
   $('pResume').addEventListener('click',go(()=>{closePause();resumeRound();}));
   $('pRestart').addEventListener('click',go(()=>{const n=L.n;save.cur=null;R=null;startLevel(n,'retry');}));
-  $('pLevels').addEventListener('click',()=>{renderLevels();});
+  $('pLevels').addEventListener('click',()=>{if(L&&L.nc)renderHome();else renderLevels();});
   $('pauseSheet').addEventListener('click',e=>{if(e.target===$('pauseSheet')){closePause();resumeRound();}});
-  $('rNext').addEventListener('click',go(()=>startLevel(L.n+1,'new')));
+  $('rNext').addEventListener('click',go(()=>{if(L&&L.nc)startNC(ncSave().next,'new');else startLevel(L.n+1,'new');}));
   $('rRetry').addEventListener('click',go(()=>startLevel(L.n,'retry')));
   $('rLevels').addEventListener('click',renderLevels);
   $('rHome').addEventListener('click',renderHome);
@@ -1577,7 +1766,7 @@ function showResult(r){
     else if(/^[a-z]$/i.test(e.key)){e.preventDefault();if(!kb&&path.length)kb=wordOf(path);typeKey(e.key.toLowerCase());}
   });
   // hidden: pause (the letters hide, so the board can't be studied off the clock)
-  document.addEventListener('visibilitychange',()=>{if(document.hidden){if(view==='play'&&R&&R.state==='playing'&&$('pauseSheet').hidden)openPause();saveCur();}else last=performance.now();});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){if(view==='play'&&R&&R.state==='playing'&&!(L&&L.nc)&&$('pauseSheet').hidden)openPause();saveCur();}else last=performance.now();});
   window.addEventListener('pagehide',saveCur);
   let rsT=0;function remeasure(){clearTimeout(rsT);rsT=setTimeout(()=>{measure();if(view==='home')paintScarf();},80);}
   window.addEventListener('resize',remeasure);window.addEventListener('orientationchange',remeasure);
@@ -1602,7 +1791,8 @@ function showResult(r){
     submitWord:w=>{const p=findPath(w);return p?submit(p):{r:'nopath'};},
     pathOf:w=>findPath(w),
     level:n=>{const x=level(n);return {targets:x.targets,total:x.total,main:x.main,bonus:x.bonus,star:x.star,tiles:x.tiles};},
-    give:s=>{save=Object.assign(defaults(),s);WORDS=new Set(save.words);persist();renderHome();}
+    give:s=>{save=Object.assign(defaults(),s);WORDS=new Set(save.words);persist();renderHome();},
+    noclock:{start:i=>startNC(i||ncSave().next,'new'),done:()=>ncFinish(),board:i=>{const x=ncBoard(i);return {main:x.main,bonus:x.bonus,star:x.star,tiles:x.tiles};},count:()=>NCN}
   };
 })();
 </script>
