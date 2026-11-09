@@ -71,3 +71,25 @@ test('TUMBLER-E2E-02: the tracker records one start on the first turn and one so
  expect(puz).toEqual([['puzzle_start','word-tumbler',undefined,undefined],['puzzle_end','word-tumbler','solved',undefined]]);
  expect(errors).toEqual([]);await ctx.close();
 });
+test('TUMBLER-E2E-03: GIVEN the solving submit WHEN the word is found THEN the line pops green and holds before the sheet; reduced motion opens it at once',async({phone})=>{
+ const p=phone.p;await goto(phone,FILE);
+ await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
+ await make(p,P.secret);
+ // the beat (Alec, 9 Nov 2026): the found word is seen first, the sheet follows
+ const t0=Date.now();await H.tap(p,p.locator('#submitBtn'));
+ expect(await p.evaluate(()=>document.getElementById('modal').classList.contains('on'))).toBe(false);
+ await expect(p.locator('.tile.read.pop')).toHaveCount(4);
+ expect(await p.evaluate(()=>!!JSON.parse(localStorage.getItem('digi-tumbler-v1')).done['DP·TUMB·0010'])).toBe(true);   // saved before the beat
+ await expect(p.locator('.fin-box.fin-open')).toBeVisible({timeout:5000});
+ expect(Date.now()-t0).toBeGreaterThan(900);
+ await expect(p.locator('.tile.read.won')).toHaveCount(4);await expect(p.locator('.tile.pop')).toHaveCount(0);
+ await expect(p.locator('.tile.won:not(.read)')).toHaveCount(0);
+ // reduced motion: no pop, the sheet opens on the submit
+ await p.evaluate(()=>localStorage.clear());await p.emulateMedia({reducedMotion:'reduce'});
+ await p.reload();await H.wait(p,1500);
+ await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
+ await make(p,P.secret);await H.tap(p,p.locator('#submitBtn'));
+ await expect(p.locator('.fin-box.fin-open')).toBeVisible({timeout:400});
+ await expect(p.locator('.tile.read.pop')).toHaveCount(0);
+ expect(phone.errors).toEqual([]);
+});

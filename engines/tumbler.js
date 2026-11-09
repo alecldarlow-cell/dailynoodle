@@ -277,10 +277,26 @@ function finish(){
   state.streak=streakBump();$("streakn").textContent=state.streak;
   $("statTime").textContent=t;$("statStreak").textContent=state.streak;
   window.dnCore.putDone(DONE_KEY,PUZZLE.id,{t,s:secs,n:state.tries.length,w:state.tries});clearCur();
-  setMsg("Solved in "+t+".");
-  finishSheet(true);
-  try{document.documentElement.setAttribute("data-dn-done","");}catch(e){}
-  $("modal").classList.add("on");   // the tracker reads the result box once it opens
+  setMsg("Solved in "+t+".");   // saved at once: leaving mid-beat loses nothing
+  winBeat(()=>{
+    finishSheet(true);
+    try{document.documentElement.setAttribute("data-dn-done","");}catch(e){}
+    $("modal").classList.add("on");   // the tracker reads the result box once it opens
+  });
+}
+/* the win beat (Alec, 9 Nov 2026: the solving submit went straight to the sheet): the other
+   letters fade back, the four on the line pop and turn green left to right, then a short hold
+   on the word, then the sheet, about 1.5 s in all, as Mini, Doku and Redact pause before theirs */
+const REDUCE_MOTION=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches);
+function winBeat(done){
+  const line=wheels.map(w=>w.children[READ]);
+  document.body.classList.add("won");
+  if(REDUCE_MOTION){line.forEach(c=>c.classList.add("won"));done();return;}
+  const STEP=160,POP=600,HOLD=350;
+  line.forEach((c,k)=>{c.style.animationDelay=STEP*k+"ms";c.classList.add("pop");setTimeout(()=>c.classList.add("won"),STEP*k+POP*0.35);});
+  const end=STEP*(N-1)+POP;
+  setTimeout(()=>line.forEach(c=>{c.classList.remove("pop");c.style.animationDelay="";c.classList.add("won");}),end);
+  setTimeout(done,end+HOLD);
 }
 function recapNode(tries){
   const wrap=document.createElement("div");wrap.className="fin-tumbler";
@@ -308,7 +324,7 @@ function restoreDone(){
   state.solved=true;state.tries=Array.isArray(rec.w)?rec.w:[SECRET];
   for(let k=0;k<N;k++){const i=PUZZLE.wheels[k].indexOf(SECRET[k].toUpperCase());state.off[k]=((i-READ)%P+P)%P;}
   stopTimer();timerEl.textContent=t;timerEl.classList.remove("waiting");$("statTime").textContent=t;$("statStreak").textContent=state.streak;
-  paint();document.body.classList.add("win");setMsg("Solved in "+t+".");
+  paint();document.body.classList.add("win","won");wheels.forEach(w=>w.children[READ].classList.add("won"));setMsg("Solved in "+t+".");
   try{document.documentElement.setAttribute("data-dn-done","");}catch(e){}
   finishSheet(false);
   return true;
