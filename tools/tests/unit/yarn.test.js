@@ -46,6 +46,11 @@ test('YARN-DATA-01: the lists hold every daily word in the same list, plurals an
   assert.ok(MAIN.length > 8000 && BONUS.length > 100000);
 });
 
+test('YARN-DATA-04: Yarn accepts the same words as the daily Tangle (tools/word-rules.js; Alec, 9 Nov 2026)', () => {
+  const { refused } = require('../../word-rules.js');
+  for (const w of ALL) assert.strictEqual(refused(w), '', 'refused word in Yarn: ' + w);
+});
+
 test('YARN-DATA-02: boards are valid and distinct, levels 1-360 are frozen, and none gives a daily board or longest word away', () => {
   const stars = new Set(daily.map(P => P.star)), boards = new Set(daily.map(P => d4(P.tiles.map(t => t.toLowerCase())))), seen = new Set(), used = new Set();
   assert.strictEqual(LEVELS.length, 720);
