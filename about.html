@@ -49,6 +49,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="front.css">
 <style>
+  /* About is a puzzles page in the puzzles' green; data-section stays "site" so visits aren't counted as puzzle readers. */
+  html{--accent:var(--puzzles);--accent-soft:var(--puzzles-soft)}
   .doc{padding:22px 0 8px}
   .doc h1{font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:-.02em;line-height:1.15}
   .doc .lede{color:var(--muted);margin-top:8px}
@@ -58,7 +60,7 @@
   .doc a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
   .doc .go{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:16px;border-radius:12px;
     background:var(--accent);color:var(--on-accent);font-weight:700;text-decoration:none}
-  .nine{list-style:none;padding:0;margin-top:12px;border:1px solid var(--hair);border-radius:12px;background:var(--paper)}
+  .doc ul.nine{list-style:none;padding:0;margin-top:12px;border:1px solid var(--hair);border-radius:12px;background:var(--paper)}
   .nine li{margin:0}
   .nine li+li{border-top:1px solid var(--hair)}
   .nine a{display:flex;align-items:center;gap:12px;min-height:48px;padding:6px 14px;color:var(--ink);text-decoration:none}
