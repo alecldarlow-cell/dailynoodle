@@ -9,7 +9,7 @@ function check(site){
  const feed=JSON.parse(fs.readFileSync(path.join(site,'feed.json'),'utf8')),xml=fs.readFileSync(path.join(site,'sitemap.xml'),'utf8');
  const urls=Array.from(xml.matchAll(/<loc>([^<]+)<\/loc>/g),m=>decode(m[1]));
  if(!urls.length)fail('empty sitemap');
- const expected=['', 'puzzles.html','games.html'];
+ const expected=['puzzles.html','index.html','games.html'];   // the bare address opens Puzzles (10 Nov 2026) and is not listed
  if(fs.existsSync(path.join(site,'how-to-play.html')))expected.push('how-to-play.html');
  const guidePages=require('./guide-pages');
  for(const page of [...Object.keys(guidePages.PAGES).map(guidePages.rel),'about.html'])if(fs.existsSync(path.join(site,page)))expected.push(page);

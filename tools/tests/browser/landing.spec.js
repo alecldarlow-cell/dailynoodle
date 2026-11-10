@@ -1,8 +1,8 @@
 'use strict';
-// LANDING (24 Oct 2026): players start on Puzzles. The bare address "/" sends the installed app and any
-// browser that has played (a digi-*-v1 or noodle-board-v1 save) to puzzles.html, keeping the query and
-// fragment; a first visit (and so a search engine) still gets the News home page, and /index.html (the
-// News tab and the pieces' "← News") never moves. See SITE.md, Sections.
+// LANDING: the bare address "/" opens Puzzles for everyone (10 Nov 2026, Alec's call in the distribution
+// review), keeping the query and fragment. Before that only the installed app and browsers that had played
+// were sent on (24 Oct 2026) and a first visit stayed on News. /index.html (the News tab and the pieces'
+// "← News") never moves. See SITE.md, Sections.
 const { test, expect, H } = require('./support');
 const SITE = 'https://dailynoodle.co.uk';
 
@@ -20,10 +20,14 @@ async function open(browser, url, { saves = {}, app = false } = {}) {
 }
 
 test.describe('LANDING', () => {
-  test('LANDING-01: a first visit to the bare address stays on the News home page', async ({ browser }) => {
+  test('LANDING-01: a first visit to the bare address opens Puzzles, keeping the query and fragment', async ({ browser }) => {
     const r = await open(browser, '/');
-    expect([r.url, r.section]).toEqual([SITE + '/', 'news']);
-    expect(r.errs).toEqual([]);
+    expect([r.url, r.section]).toEqual([SITE + '/puzzles.html', 'puzzles']);
+    const q = await open(browser, '/?via=reddit#top');
+    expect(q.url).toBe(SITE + '/puzzles.html?via=reddit#top');
+    const n = await open(browser, '/index.html');
+    expect([n.url, n.section]).toEqual([SITE + '/index.html', 'news']);   // the News tab's own address never moves
+    expect([...r.errs, ...q.errs, ...n.errs]).toEqual([]);
   });
   test('LANDING-02: a browser that has played opens Puzzles, keeping the query and fragment', async ({ browser }) => {
     const r = await open(browser, '/?via=share#x', { saves: { 'digi-mini-v1': JSON.stringify({ v: 1, done: {} }) } });

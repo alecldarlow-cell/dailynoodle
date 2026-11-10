@@ -17,7 +17,10 @@ test('sitemap: lists front pages and published feed items only, never held or La
   assert.strictEqual(write(site), 4);
   const xml = fs.readFileSync(path.join(site, 'sitemap.xml'), 'utf8');
   assert.match(xml, /<loc>https:\/\/dailynoodle.co.uk\/reports\/a.html<\/loc><lastmod>2026-10-20<\/lastmod>/);
-  assert.match(xml, /<loc>https:\/\/dailynoodle.co.uk\/<\/loc>/);
+  // the bare address opens Puzzles from 10 Nov 2026: Puzzles leads the list, News is /index.html and "/" is not listed
+  assert.match(xml, /<urlset[^>]*>\s*<url><loc>https:\/\/dailynoodle.co.uk\/puzzles.html<\/loc>/);
+  assert.match(xml, /<loc>https:\/\/dailynoodle.co.uk\/index.html<\/loc>/);
+  assert.doesNotMatch(xml, /<loc>https:\/\/dailynoodle.co.uk\/<\/loc>/);
   assert.doesNotMatch(xml, /held\.html|lab\.html/);
   assert.match(fs.readFileSync(path.join(site, 'robots.txt'), 'utf8'), /^Sitemap: https:\/\/dailynoodle.co.uk\/sitemap.xml$/m);
 });

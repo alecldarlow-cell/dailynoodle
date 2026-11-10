@@ -41,7 +41,9 @@ const clean = o => { for (const k of Object.keys(o)) if (o[k] === '' || o[k] == 
 function home() {
   return { '@context': 'https://schema.org', '@graph': [
     { '@type': 'WebSite', '@id': ORIGIN + '/#site', name: NAME, alternateName: 'Daily Noodle', url: ORIGIN + '/', description: ABOUT, inLanguage: 'en-GB', publisher: PUBLISHER },
-    ORG
+    ORG,
+    // "/" opens Puzzles (10 Nov 2026); this page's own address is /index.html, the News front page.
+    { '@type': 'CollectionPage', '@id': ORIGIN + '/index.html#page', name: 'Noodle News', url: ORIGIN + '/index.html', inLanguage: 'en-GB', isPartOf: { '@id': ORIGIN + '/#site' } }
   ] };
 }
 function list(name, url, items) {

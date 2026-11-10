@@ -4,15 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <script>
-/* Players start on Puzzles (24 Oct 2026, Alec's call after the site review: the regulars opened this page
-   184 times in four weeks and read 3 articles). The bare address "/" goes to puzzles.html for the installed
-   app and for any browser that has played (a puzzle, game or league save); everyone else, search engines
-   included, still gets this page. /index.html (the News tab, "← News" in pieces) always stays here. */
+/* The bare address opens Puzzles (10 Nov 2026, Alec's call in the distribution review: Search Console showed
+   every search click arriving here by the site's name, and the puzzles are what the site is for). Until then
+   only the installed app and browsers that had played were sent on (24 Oct 2026); now every visit to "/" goes
+   to puzzles.html, keeping the query and fragment. /index.html (the News tab, "← News" in pieces) always
+   stays here, and is this page's own address for search engines. */
 (function(){try{
-  if(location.pathname!=='/')return;
-  var app=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true,played=false;
-  if(!app){for(var i=0;i<localStorage.length;i++){if(/^(digi-[a-z0-9-]+-v1|noodle-board-v1)$/.test(localStorage.key(i)||'')){played=true;break;}}}
-  if(app||played)location.replace('/puzzles.html'+location.search+location.hash);
+  if(location.pathname==='/')location.replace('/puzzles.html'+location.search+location.hash);
 }catch(e){}})();
 </script>
 <script>
