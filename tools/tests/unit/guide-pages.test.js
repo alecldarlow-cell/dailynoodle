@@ -49,5 +49,5 @@ test('GUIDE-PAGES-05 the About page names every type page and makes no claim the
  assert.equal((about.match(/<h1\b/g)||[]).length,1);assert.ok(about.includes('<link rel="canonical" href="https://dailynoodle.co.uk/about.html">'));
  assert.doesNotMatch(about,/noindex|TODO|\[YOUR/);
  // the puzzles' green without being counted as a puzzles page; the list's rows and dividers run the full width
- assert.match(about,/<html lang="en" data-section="site">/);assert.match(about,/html\{--accent:var\(--puzzles\)/);assert.match(about,/\.doc ul\.nine\{[^}]*padding:0/);
+ assert.match(about,/<html lang="en" data-section="site">/);assert.match(about,/html:root\{--accent:var\(--puzzles\)/);   // front.css sets --accent on :root, which a bare html rule can't outrankassert.match(about,/\.doc ul\.nine\{[^}]*padding:0/);
 });
