@@ -81,6 +81,9 @@ test('SEO/TYPE-PAGES: each puzzle type has its own readable guide page, linked b
  await p.addInitScript(()=>{window.__DN_APP=0;});
  await goto(phone,'about.html');
  await expect(p.locator('h1')).toHaveCount(1);await expect(p.locator('.nine a')).toHaveCount(types.length);
+ // rows and their dividers run the full width of the box, and the page wears the puzzles' green (not the News blue)
+ expect(await p.locator('.nine').evaluate(el=>[getComputedStyle(el).paddingLeft,el.querySelector('li').getBoundingClientRect().left-el.getBoundingClientRect().left<2])).toEqual(['0px',true]);
+ expect(await p.evaluate(()=>{const s=getComputedStyle(document.documentElement);return s.getPropertyValue('--accent').trim()===s.getPropertyValue('--puzzles').trim();})).toBe(true);
  expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await testInfo.attach('about',{body:await p.screenshot({fullPage:true,scale:'css'}),contentType:'image/png'});
  await p.locator('.nine a').last().click();await p.waitForURL('**/'+rel(types[types.length-1]));
