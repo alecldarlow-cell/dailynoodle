@@ -42,7 +42,7 @@ test('archive numbers that were reused get dates; future and Lab content are exc
  assert.equal(new Set(pages.map(([,m])=>m.title)).size,5);
  assert.match(pages[3][1].title,/Doku 4 \(2026-07-16\)/);
  assert.match(pages[4][1].title,/Doku 4 \(2026-07-17\)/);
- assert.equal(pages[0][1].canonical,'https://dailynoodle.co.uk/');
+ assert.equal(pages[0][1].canonical,'https://dailynoodle.co.uk/index.html');   // "/" opens Puzzles from 10 Nov 2026
 });
 
 test('head metadata is escaped, unique and idempotent; page, saves and social/card copy stay intact',()=>{

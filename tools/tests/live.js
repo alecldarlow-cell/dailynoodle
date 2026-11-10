@@ -13,7 +13,7 @@ function searchTags(html,meta,canonical){
  const base='https://dailynoodle.co.uk';
  for(const file of ['index.html','admin.html','admin-health.js','puzzles.html','games.html','how-to-play.html','front.js','engines/finish.js','sw.js','manifest.webmanifest','join.html']){
   const r=await fetch(base+'/'+file,{signal:AbortSignal.timeout(20000),cache:'no-cache'});assert.equal(r.status,200,file);const html=await r.text();assert.ok(html.length>20,file);
-  if(HUBS[file])searchTags(html,HUBS[file],base+'/'+(file==='index.html'?'':file));console.log('LIVE '+file+' OK');
+  if(HUBS[file])searchTags(html,HUBS[file],base+'/'+file);console.log('LIVE '+file+' OK');
  }
  // App links: Android only opens join.html links in the app if this answers 200 with JSON, without a redirect.
  {const r=await fetch(base+'/.well-known/assetlinks.json',{signal:AbortSignal.timeout(20000),cache:'no-cache',redirect:'manual'});

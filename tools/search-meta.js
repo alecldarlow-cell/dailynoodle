@@ -15,7 +15,9 @@ const TYPES={
  tally:{name:'Tally',title:'Daily Number Logic Puzzle',rules:'Fill the four by four grid with 1 to 4 so no row or column repeats and each cage makes its number.'}
 };
 const HUBS={
- 'index.html':{title:'Daily Noodle | News, Daily Puzzles & Browser Games',description:'Read sourced data journalism, play nine daily word, logic and geography puzzles, and explore quick browser games at The Daily Noodle.'},
+ // The bare address opens Puzzles (10 Nov 2026), so this page's own address is /index.html and its tags lead with the puzzles:
+ // a crawler that runs no scripts still reads this page at "/".
+ 'index.html':{title:'Daily Noodle | Daily Puzzles, News & Browser Games',description:'Play nine free daily word, logic, number and geography puzzles at The Daily Noodle, then read sourced data journalism and explore quick browser games.'},
  'puzzles.html':{title:'Daily Puzzles: Crosswords, Words & Logic | Daily Noodle',description:'Play Mini crosswords, Doku, Sweep, Path, Link, Tangle, Borders, Reckon and Tally. Nine daily word, logic, geography and number puzzles, with a how-to guide.'},
  'games.html':{title:'Browser Games: Arcade, Puzzles & Quizzes | Daily Noodle',description:'Play quick, replayable browser games at The Daily Noodle. Browse arcade games, puzzles and quizzes, and find a new favourite.'}
 };
@@ -35,7 +37,7 @@ function entries(feed){
  const counts=new Map();
  for(const it of items){const title=puzzleMeta(it).title;counts.set(title,(counts.get(title)||0)+1);}
  return [...Object.entries(HUBS),...items.map(it=>[it.path,puzzleMeta(it,counts.get(puzzleMeta(it).title)>1)])]
-  .map(([file,meta])=>[file,{...meta,canonical:ORIGIN+'/'+(file==='index.html'?'':file)}]);
+  .map(([file,meta])=>[file,{...meta,canonical:ORIGIN+'/'+file}]);
 }
 function escapeHtml(value){return String(value).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function attribute(tag,name){
