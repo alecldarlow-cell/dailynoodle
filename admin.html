@@ -1308,12 +1308,15 @@
   var HOSTS = { 'reddit.com':'Reddit', 'news.ycombinator.com':'Hacker News', 't.co':'X (Twitter)', 'x.com':'X (Twitter)', 'twitter.com':'X (Twitter)',
     'facebook.com':'Facebook', 'instagram.com':'Instagram', 'linkedin.com':'LinkedIn', 'lnkd.in':'LinkedIn', 'mumsnet.com':'Mumsnet', 'producthunt.com':'Product Hunt',
     'bsky.app':'Bluesky', 'threads.net':'Threads', 'mastodon.social':'Mastodon', 'lobste.rs':'Lobsters', 'duckduckgo.com':'DuckDuckGo', 'bing.com':'Bing',
-    'alecldarlow-cell.github.io':'Old address (github.io)', 'dailynoodle.co.uk':'The site itself' };
+    'alecldarlow-cell.github.io':'Old address (github.io)', 'dailynoodle.co.uk':'The site itself',
+    /* AI answer engines (10 Nov 2026): as a referring host, or as the utm_source they add to links (kept as a tag) */
+    'chatgpt.com':'ChatGPT', 'chat.openai.com':'ChatGPT', 'openai.com':'ChatGPT', 'perplexity.ai':'Perplexity', 'gemini.google.com':'Gemini',
+    'copilot.microsoft.com':'Copilot', 'copilot.com':'Copilot', 'claude.ai':'Claude', 'chat.mistral.ai':'Mistral', 'meta.ai':'Meta AI', 'grok.com':'Grok', 'you.com':'You.com' };
   function linkByTag(t){ return LINKS.filter(function(l){ return l.tag === t; })[0]; }
   function srcName(src){
     if (src === 'direct') return 'Direct';
     var k = src.slice(0, src.indexOf(':')), v = src.slice(src.indexOf(':') + 1);
-    if (k === 'via') { if (v === 'share') return 'Shared from the site'; var l = linkByTag(v); return l ? l.label : 'Tag: ' + v; }
+    if (k === 'via') { if (v === 'share') return 'Shared from the site'; var l = linkByTag(v); return l ? l.label : HOSTS[v] ? HOSTS[v] + ' (link tag)' : 'Tag: ' + v; }
     if (k === 'app') return v.charAt(0).toUpperCase() + v.slice(1) + ' app';
     if (/^google\./.test(v)) return 'Google search';
     return HOSTS[v] || v;
