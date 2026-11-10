@@ -49,6 +49,9 @@
   refreshPlayLinks();
   window.addEventListener('pageshow',function(e){if(e.persisted)refreshPlayLinks();});
   document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')refreshPlayLinks();});
+  // Inside the Daily Noodle app the guide is one pushed screen: the links out to each type's own page
+  // (added to the built page by tools/guide-pages.js) would leave the app for the browser, so hide them.
+  if(window.__DN_APP===2)document.documentElement.classList.add('dn-in-app');
   document.body.classList.add('guide-enhanced');
   select(false);
 })();

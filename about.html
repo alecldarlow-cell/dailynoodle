@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-section="site">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>
+/* full-screen app only: hold the top and bottom insets and the screen height steady (dn-pin, 18 Oct 2026).
+   On every page load Android briefly brings its bars back, which changed these and made the page jump.
+   A value is taken up only once it has held for 0.7 s, and remembered per orientation for the next page. */
+(function(){try{
+  if(!window.__dnPinTest&&(!window.matchMedia||!matchMedia('(display-mode: fullscreen)').matches))return;   // __dnPinTest: tools/tests
+  var r=document.documentElement,K='dn-pin',saved={},cur=null,t=0;
+  var p=document.createElement('div');
+  p.style.cssText='position:fixed;left:0;top:0;width:0;visibility:hidden;pointer-events:none;height:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+  r.appendChild(p);
+  try{saved=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}
+  function key(){return innerWidth>innerHeight?'l':'p';}
+  function now(){var s=getComputedStyle(p);return {t:Math.round(parseFloat(s.height)||0),b:Math.round(parseFloat(s.paddingBottom)||0),h:innerHeight,w:innerWidth};}
+  function apply(v){r.style.setProperty('--dn-top',v.t+'px');r.style.setProperty('--dn-bot',v.b+'px');r.style.setProperty('--dn-vh',v.h+'px');}
+  var s0=saved[key()];cur=(s0&&s0.w===innerWidth)?s0:now();apply(cur);
+  function check(){clearTimeout(t);t=setTimeout(function(){var v=now();
+    if(v.t!==cur.t||v.b!==cur.b||v.h!==cur.h||v.w!==cur.w){cur=v;apply(v);}
+    saved[key()]=v;try{localStorage.setItem(K,JSON.stringify(saved));}catch(e){}},700);}
+  addEventListener('resize',check);if(window.visualViewport)visualViewport.addEventListener('resize',check);check();
+  setInterval(function(){if(document.hidden)return;var v=now();if(v.t!==cur.t||v.b!==cur.b||v.h!==cur.h||v.w!==cur.w)check();},1000);   // an inset can change without a resize
+}catch(e){}})();
+</script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#FCFCFB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#11131A" media="(prefers-color-scheme: dark)">
+<title>About The Daily Noodle: nine free daily puzzles</title>
+<meta name="description" content="A free set of nine daily puzzles in British English: a mini crossword, word and logic grids, a geography quiz and number puzzles. New every morning, no adverts.">
+<meta property="og:site_name" content="The Daily Noodle">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About The Daily Noodle">
+<meta property="og:description" content="A free set of nine daily puzzles in British English: a mini crossword, word and logic grids, a geography quiz and number puzzles. New every morning, no adverts.">
+<meta property="og:url" content="https://dailynoodle.co.uk/about.html">
+<link rel="canonical" href="https://dailynoodle.co.uk/about.html">
+<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="front.css">
+<style>
+  .doc{padding:22px 0 8px}
+  .doc h1{font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:-.02em;line-height:1.15}
+  .doc .lede{color:var(--muted);margin-top:8px}
+  .doc h2{font-family:var(--display);font-weight:700;font-size:18px;margin-top:26px}
+  .doc p,.doc li{font-size:16px;margin-top:8px}
+  .doc ul{padding-left:20px}
+  .doc a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .doc .go{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:16px;border-radius:12px;
+    background:var(--accent);color:var(--on-accent);font-weight:700;text-decoration:none}
+  .nine{list-style:none;padding:0;margin-top:12px;border:1px solid var(--hair);border-radius:12px;background:var(--paper)}
+  .nine li{margin:0}
+  .nine li+li{border-top:1px solid var(--hair)}
+  .nine a{display:flex;align-items:center;gap:12px;min-height:48px;padding:6px 14px;color:var(--ink);text-decoration:none}
+  .nine b{font-family:var(--display);flex:0 0 68px}
+  .nine span{color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mono" aria-hidden="true"><svg class="noodle" viewBox="292 220 462 600" width="18" height="23" focusable="false"><path d="M352 760V360a80 80 0 0 1 160 0v320a80 80 0 0 0 160 0V298" fill="none" stroke="currentColor" stroke-width="96" stroke-linecap="round"/><circle cx="672" cy="298" r="66" fill="none" stroke="currentColor" stroke-width="20"/><circle cx="672" cy="298" r="66" fill="#FFD54A"/></svg></div>
+    <div class="word">Daily <b>Noodle</b></div>
+    <div class="kick">About</div>
+  </header>
+
+  <nav class="controls" aria-label="Sections">
+    <div class="bar">
+      <div class="sections">
+        <a class="sec puzzles" href="puzzles.html">Puzzles</a>
+        <a class="sec games" href="games.html">Games</a>
+        <a class="sec news" href="index.html">News</a>
+        <a class="sec lab" href="lab.html">Lab</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="doc">
+    <h1>Nine small puzzles, new every morning</h1>
+    <p class="lede">The Daily Noodle is a free set of nine daily puzzles in British English. Each takes a few minutes, everyone gets the same ones, and there are no adverts.</p>
+    <a class="go" href="puzzles.html?via=about">Play today’s puzzles</a>
+
+    <h2>The nine</h2>
+    <ul class="nine">
+      <li><a href="how-to-play/mini.html"><b>Mini</b><span>A small crossword</span></a></li>
+      <li><a href="how-to-play/doku.html"><b>Doku</b><span>A crossword with no clues</span></a></li>
+      <li><a href="how-to-play/sweep.html"><b>Sweep</b><span>Minesweeper you can always solve without guessing</span></a></li>
+      <li><a href="how-to-play/path.html"><b>Path</b><span>One unbroken trail from 1 to 36</span></a></li>
+      <li><a href="how-to-play/link.html"><b>Link</b><span>Four hidden groups of four words</span></a></li>
+      <li><a href="how-to-play/tangle.html"><b>Tangle</b><span>A 90-second word grid</span></a></li>
+      <li><a href="how-to-play/borders.html"><b>Borders</b><span>Name the country from its outline</span></a></li>
+      <li><a href="how-to-play/reckon.html"><b>Reckon</b><span>Estimate ten numbers</span></a></li>
+      <li><a href="how-to-play/tally.html"><b>Tally</b><span>Sudoku with a maths twist</span></a></li>
+    </ul>
+
+    <h2>What makes it different</h2>
+    <ul>
+      <li><b>Fair.</b> Doku, Sweep, Path and Tally have one answer each and never need a guess.</li>
+      <li><b>The same for everyone.</b> One set a day, so you can compare results with the people you know.</li>
+      <li><b>British English.</b> Spellings, clues and general knowledge are written for players in the UK.</li>
+      <li><b>No adverts and no account.</b> Sign in with your email only if you want your results on every device.</li>
+      <li><b>Leagues.</b> A private daily leaderboard for family, friends or colleagues.</li>
+      <li><b>Kept for you.</b> Streaks and personal bests for every puzzle, and an archive of every past day.</li>
+    </ul>
+
+    <h2>More than puzzles</h2>
+    <p>The site also carries <a href="index.html">Noodle News</a>, sourced data journalism with the figures shown, and a room of quick <a href="games.html">browser games</a>.</p>
+
+    <h2>On your phone</h2>
+    <p>The Daily Noodle works in any browser, and you can add it to your home screen. An Android app, Daily Noodle, is in testing.</p>
+
+    <h2>Contact</h2>
+    <p>Questions, corrections and ideas are welcome at <a href="mailto:contact@dailynoodle.co.uk">contact@dailynoodle.co.uk</a>. How visits are counted, and how to switch that off, is on the <a href="privacy.html">privacy page</a>.</p>
+  </main>
+
+  <footer class="foot">
+    <p class="privacy"><a href="puzzles.html">← All puzzles</a> · <a href="how-to-play.html">How to play</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">Contact us</a></p>
+  </footer>
+</div>
+<script src="dn-track.js" defer></script>
+</body>
+</html>
