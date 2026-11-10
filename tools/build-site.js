@@ -84,6 +84,8 @@ for (const rel of held) {
 require('./short-links').write(OUT);
 // Initial HTML uses the same cards as the interactive list; no extra UI.
 require('./puzzle-discovery').write(OUT);
+// One guide page per puzzle type (how-to-play/<type>.html) from the guide's own sections; see tools/guide-pages.js.
+require('./guide-pages').write(OUT);
 // Search titles, descriptions and self-canonicals; source puzzle/card data stays intact.
 require('./search-meta').write(OUT);
 // Puzzle data for the app (reports/<page>.json, feed-lite.json) from released pages only; see tools/puzzle-json.js.

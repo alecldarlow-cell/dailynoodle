@@ -26,3 +26,20 @@
 /* A selected guide needs only the shared footer divider. Without scripts,
    keep separators between the nine consecutive sections. */
 .guide-enhanced .guide-panel{border-bottom:0;padding-bottom:0;margin-bottom:0}
+
+/* One page per puzzle type (how-to-play/<type>.html, written by tools/guide-pages.js, 10 Nov 2026):
+   the same section under its own <h1>, then a short facts list and onward links. */
+.guide-heading h1{font:700 24px/1.25 var(--display);letter-spacing:-.02em}
+.guide-solo{border-bottom:0;padding-bottom:0;margin-top:24px}
+.guide-more{border-top:1px solid var(--hair);padding-top:22px}
+.guide-more h2{font:700 17px/1.3 var(--display);margin:0 0 12px}
+.guide-facts{border:1px solid var(--hair);border-radius:12px;background:var(--paper);margin:0 0 14px}
+.guide-facts div{display:flex;justify-content:space-between;gap:16px;padding:11px 14px;font-size:14px}
+.guide-facts div+div{border-top:1px solid var(--hair)}
+.guide-facts dt{color:var(--muted)}
+.guide-facts dd{margin:0;font-weight:600;text-align:right}
+.guide-links{font-size:15px;font-weight:600;margin-top:4px}
+.guide-links a{display:inline-flex;align-items:center;min-height:44px;color:var(--accent)}
+.guide-links a:hover{text-decoration:underline;text-underline-offset:3px}
+@media(min-width:560px){.guide-heading h1{font-size:26px}}
+.dn-in-app .guide-links{display:none}

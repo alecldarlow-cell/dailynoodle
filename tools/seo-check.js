@@ -11,6 +11,8 @@ function check(site){
  if(!urls.length)fail('empty sitemap');
  const expected=['', 'puzzles.html','games.html'];
  if(fs.existsSync(path.join(site,'how-to-play.html')))expected.push('how-to-play.html');
+ const guidePages=require('./guide-pages');
+ for(const page of [...Object.keys(guidePages.PAGES).map(guidePages.rel),'about.html'])if(fs.existsSync(path.join(site,page)))expected.push(page);
  for(const it of feed.items||[])if(!it.badge&&(!feed.today||it.date<=feed.today))expected.push(it.path);
  const wanted=new Set(expected.map(file=>ORIGIN+'/'+file)),seen=new Set(),titles=new Map();
  for(const loc of urls){
@@ -56,6 +58,16 @@ function check(site){
    if(!guide.includes('id="'+type+'"'))fail('missing guide section '+type);
   }
   if(!guide.includes('href="puzzles.html"'))fail('guide has no archive/hub link');
+  // Each type has a page of its own, linked from its guide section and carrying one <h1> and today's direct link.
+  for(const type of Object.keys(guidePages.PAGES)){
+   const rel=guidePages.rel(type);
+   if(!fs.existsSync(path.join(site,rel)))fail('missing guide page '+rel);
+   if(!guide.includes('href="'+rel+'"'))fail('guide does not link to '+rel);
+   const doc=fs.readFileSync(path.join(site,rel),'utf8');
+   if((doc.match(/<h1\b/g)||[]).length!==1)fail('guide page needs exactly one h1 '+rel);
+   const latest=(feed.items||[]).find(it=>it.kind==='puzzle'&&!it.badge&&it.type===type&&it.date===feed.today);
+   if(latest&&!doc.includes('href="/'+latest.path+'?via=how-to-play"'))fail('guide page has no direct daily link '+rel);
+  }
  }
  console.log('SEO: '+urls.length+' sitemap pages checked; titles, snippets, canonicals, structured data, indexing and static puzzle links OK');
  return urls.length;

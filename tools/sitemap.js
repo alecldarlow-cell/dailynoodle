@@ -27,6 +27,9 @@ function entries(site) {
   const today = day(feed.today);
   const out = FRONT.map(p => ({ loc: ORIGIN + '/' + p, lastmod: today }));
   if (fs.existsSync(path.join(site, 'how-to-play.html'))) out.push({ loc: ORIGIN + '/how-to-play.html' });
+  // One guide page per puzzle type (tools/guide-pages.js) and the About page, when published.
+  for (const page of [...Object.keys(require('./guide-pages').PAGES).map(require('./guide-pages').rel), 'about.html'])
+    if (fs.existsSync(path.join(site, page))) out.push({ loc: ORIGIN + '/' + page });
   for (const it of feed.items || []) {
     if (!it || !it.path || it.badge || (today && day(it.date) > today)) continue;
     const rel = String(it.path).replace(/^\/+/, '');

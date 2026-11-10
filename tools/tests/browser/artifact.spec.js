@@ -49,3 +49,40 @@ test('SEO/GUIDES: static guide buttons point directly to the published daily fil
   expect(fs.existsSync(path.join(H.REPO,it.path)),it.path).toBe(true);
  }
 });
+// One guide page per puzzle type and the About page (tools/guide-pages.js, 10 Nov 2026; SITE.md › Type guide pages and About).
+test('SEO/TYPE-PAGES: each puzzle type has its own readable guide page, linked both ways, and About opens them',async({phone},testInfo)=>{
+ test.skip(!process.env.DN_TEST_ROOT,'Published artifact is checked in the artifact group');
+ const {PAGES,rel}=require('../../guide-pages'),p=phone.p,types=Object.keys(PAGES);
+ for(const width of [320,390]){
+  await p.setViewportSize({width,height:844});
+  for(const type of types){
+   await goto(phone,rel(type));
+   await expect(p.locator('h1')).toHaveCount(1);await expect(p.locator('h1')).toHaveText(PAGES[type].h1);
+   await expect(p.locator('#'+type+' ol li')).toHaveCount(3);
+   await expect(p.locator('.guide-facts div')).toHaveCount(PAGES[type].facts.length+3);
+   await expect(p.locator('#guide-pills [aria-current="true"]')).toHaveCount(1);
+   await expect(p.locator('#guide-pills [aria-current="true"]')).toHaveAttribute('href',rel(type));
+   await expect(p.locator('link[rel="canonical"]')).toHaveAttribute('href','https://dailynoodle.co.uk/'+rel(type));
+   await expect(p.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(0);
+   // the shared styles arrived (a broken relative path would leave the page unstyled)
+   expect(await p.locator('.guide-play').evaluate(el=>getComputedStyle(el).borderRadius)).not.toBe('0px');
+   expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  }
+ }
+ await p.evaluate(()=>document.fonts.ready);
+ await testInfo.attach('type-page-tally',{body:await p.screenshot({fullPage:true,scale:'css'}),contentType:'image/png'});
+ // pills move between the nine pages; the full guide links to each page and back
+ await p.locator('#guide-pills a',{hasText:'Mini'}).click();await p.waitForURL('**/'+rel('mini'));
+ await p.getByRole('link',{name:'How to play every puzzle ›'}).click();await p.waitForURL('**/how-to-play.html');
+ await p.locator('#mini .guide-links a').click();await p.waitForURL('**/'+rel('mini'));
+ // inside the app (window.__DN_APP = 2) the guide hides the links that would leave for the browser
+ await p.addInitScript(()=>{window.__DN_APP=2;});await goto(phone,'how-to-play.html#path');
+ await expect(p.locator('#path')).toBeVisible();await expect(p.locator('#path .guide-links')).toBeHidden();
+ await p.addInitScript(()=>{window.__DN_APP=0;});
+ await goto(phone,'about.html');
+ await expect(p.locator('h1')).toHaveCount(1);await expect(p.locator('.nine a')).toHaveCount(types.length);
+ expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await testInfo.attach('about',{body:await p.screenshot({fullPage:true,scale:'css'}),contentType:'image/png'});
+ await p.locator('.nine a').last().click();await p.waitForURL('**/'+rel(types[types.length-1]));
+ expect(phone.errors).toEqual([]);expect(phone.missing).toEqual([]);
+});
