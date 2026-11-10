@@ -30,6 +30,14 @@ function check(site){
   if(titles.has(title))fail('duplicate title '+file+' and '+titles.get(title));titles.set(title,file);
   const descriptions=tags.filter(tag=>/^description$/i.test(attr(tag,'name')));
   if(descriptions.length!==1||!decode(attr(descriptions[0],'content')).trim())fail('missing/duplicate description '+file);
+  // Structured data: at most one block, valid JSON, naming this page; required on Home and on every feed item.
+  const blocks=Array.from(head.matchAll(/<script type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi));
+  if(blocks.length>1)fail('duplicate structured data '+file);
+  if(blocks.length){
+   let data;try{data=JSON.parse(blocks[0][1]);}catch(e){fail('structured data is not valid JSON '+file);}
+   const nodes=data['@graph']||[data];
+   if(data['@context']!=='https://schema.org'||!nodes.some(node=>node.url===loc))fail('structured data does not describe '+file);
+  }else if(file==='index.html'||file.startsWith('reports/'))fail('missing structured data '+file);
   const canonicals=(head.match(/<link\b[^>]*>/gi)||[]).filter(tag=>attr(tag,'rel').split(/\s+/).some(s=>/^canonical$/i.test(s)));
   if(canonicals.length!==1||decode(attr(canonicals[0],'href'))!==loc)fail('wrong/duplicate canonical '+file);
  }
@@ -49,7 +57,7 @@ function check(site){
   }
   if(!guide.includes('href="puzzles.html"'))fail('guide has no archive/hub link');
  }
- console.log('SEO: '+urls.length+' sitemap pages checked; titles, snippets, canonicals, indexing and static puzzle links OK');
+ console.log('SEO: '+urls.length+' sitemap pages checked; titles, snippets, canonicals, structured data, indexing and static puzzle links OK');
  return urls.length;
 }
 module.exports={check};

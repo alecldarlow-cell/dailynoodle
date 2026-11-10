@@ -6,7 +6,7 @@ function fixture(t){
  fs.mkdirSync(path.join(site,'reports'));
  for(const file of ['index.html','puzzles.html','games.html','reports/path.html'])fs.writeFileSync(path.join(site,file),'<html><head><title>Original</title></head><body><p id="count"></p><ul id="feed"></ul></body></html>');
  fs.writeFileSync(path.join(site,'feed.json'),JSON.stringify({today:'2026-10-20',items:[{kind:'puzzle',type:'path',headline:'Path 94',date:'2026-10-20',read:'~3 min',path:'reports/path.html'}]}));
- require('../../puzzle-discovery').write(site);require('../../search-meta').write(site);require('../../sitemap').write(site);
+ require('../../puzzle-discovery').write(site);require('../../search-meta').write(site);require('../../structured-data').write(site);require('../../sitemap').write(site);
  return site;
 }
 function edit(site,file,change){const p=path.join(site,file);fs.writeFileSync(p,change(fs.readFileSync(p,'utf8')));}
@@ -19,6 +19,10 @@ for(const [label,mutate,error] of [
  ['omitted sitemap page',s=>edit(s,'sitemap.xml',h=>h.replace(/<url><loc>[^<]*reports\/path.html<\/loc>[\s\S]*?<\/url>/,'')),/missing sitemap URL/],
  ['tracking canonical',s=>edit(s,'puzzles.html',h=>h.replace('href="https://dailynoodle.co.uk/puzzles.html"','href="https://dailynoodle.co.uk/puzzles.html?via=reddit"')),/canonical/],
  ['missing static puzzle link',s=>edit(s,'puzzles.html',h=>h.replace('href="reports/path.html"','href="#"')),/initial HTML/],
+ ['missing structured data',s=>edit(s,'reports/path.html',h=>h.replace(/<script type="application\/ld\+json"[\s\S]*?<\/script>/,'')),/missing structured data/],
+ ['broken structured data',s=>edit(s,'index.html',h=>h.replace('data-dn="ld">{','data-dn="ld">{,')),/not valid JSON/],
+ ['structured data for another page',s=>edit(s,'reports/path.html',h=>h.replace('"url":"https://dailynoodle.co.uk/reports/path.html"','"url":"https://dailynoodle.co.uk/reports/other.html"')),/does not describe/],
+ ['duplicate structured data',s=>edit(s,'index.html',h=>h.replace('</head>','<script type="application/ld+json">{}</script></head>')),/duplicate structured data/],
  ['blocked robots',s=>edit(s,'robots.txt',h=>h+'\nDisallow: /\n'),/robots/]
 ])test('SEO gate rejects '+label,t=>{const s=fixture(t);mutate(s);assert.throws(()=>check(s),error);});
 test('news keeps its editorial title and gets a missing description and clean canonical',t=>{
@@ -26,7 +30,7 @@ test('news keeps its editorial title and gets a missing description and clean ca
  feed.items.push({kind:'report',path:'reports/news.html',headline:'A sourced story',standfirst:'The figures and what they mean.',date:feed.today});
  fs.writeFileSync(path.join(site,'feed.json'),JSON.stringify(feed));
  fs.writeFileSync(path.join(site,'reports/news.html'),'<head><title>A sourced story — Noodle News</title></head><body>Unchanged editorial text.</body>');
- require('../../search-meta').write(site);require('../../sitemap').write(site);
+ require('../../search-meta').write(site);require('../../structured-data').write(site);require('../../sitemap').write(site);
  const output=fs.readFileSync(path.join(site,'reports/news.html'),'utf8');
  assert.match(output,/<title>A sourced story — Noodle News<\/title>/);assert.match(output,/content="The figures and what they mean."/);
  assert.ok(output.endsWith('<body>Unchanged editorial text.</body>'));assert.equal(check(site),5);

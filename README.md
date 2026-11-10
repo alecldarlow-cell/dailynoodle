@@ -1,7 +1,15 @@
 # The Daily Noodle
 
-News, daily puzzles and games for a small group of friends and family, at
-**https://dailynoodle.co.uk**. A static site on GitHub Pages, deployed from `main` by the Build feed workflow.
+**Nine free daily puzzles in British English, new every morning**, at
+**https://dailynoodle.co.uk**: Mini (a small crossword), Doku (letter logic), Sweep (minesweeper
+you can always solve without guessing), Path (a number trail), Link (four hidden word groups),
+Tangle (a 90-second word grid), Borders (name the country from its outline), Reckon (estimate ten
+numbers) and Tally (a small calcudoku). Everyone gets the same puzzles each day, with streaks,
+an archive and private leagues for friends and family. No adverts, and no account needed to play.
+The site also carries sourced data journalism (Noodle News) and a room of quick browser games.
+There is an Android app, [Daily Noodle](https://github.com/alecldarlow-cell/Daily-noodle-app), in testing.
+
+A static site on GitHub Pages, deployed from `main` by the Build feed workflow.
 
 Start with **[SITE.md](SITE.md)**: names, addresses, sections, publishing,
 and the rules that keep players' streaks and saved progress safe.
