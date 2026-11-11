@@ -508,6 +508,11 @@
         <p class="sub">By week in this period: archive opens and plays started from the archive (website and app), and Your stats opens. Anonymous events only.</p>
         <div class="tscroll"><table id="tArch"></table></div>
       </div>
+      <div class="card" id="labStats">
+        <h2>Lab trial</h2>
+        <p class="sub">Each Lab puzzle in this period (website and app): players, finishes and abandons next to the one-tap votes (“Should it go daily?”). Read the votes with the abandons: a high Yes from the few who finished isn’t the whole story. Votes are each voter’s latest answer, anonymous.</p>
+        <div class="tscroll"><table id="tLab"></table></div>
+      </div>
       <details class="more">
         <summary>What happened to each opened puzzle</summary>
         <div class="inner"><div class="chartbox"><canvas id="chFunnel" role="img" aria-label="Puzzle outcomes by type"></canvas></div></div>
@@ -963,6 +968,7 @@
       loadLeagues();
       loadSources(seq);
       loadArchiveStats(seq);
+      loadLabStats(seq);
     });
   }
 
@@ -984,6 +990,27 @@
           return n(w.archive_plays) + (parts.length ? '<span class="meta">'+parts.join(' · ')+'</span>' : ''); }},
         {key:'stats_opens', label:'Stats opens', fmt:function(w){ return n(w.stats_opens) + '<span class="meta">'+n(w.stats_visitors)+' '+plural(w.stats_visitors,'visitor')+'</span>'; }}
       ], weeks, { sortKey:'week', sortDir:'desc' });
+    });
+  }
+
+  /* ---------------- Lab trial (11 Nov 2026) ----------------
+     admin_lab: per Lab type, plays (players, starts, finishes, abandons, median time) and the votes. */
+  var LAB_NAMES = { tilt:'Tilt', redact:'Redact', tumbler:'Tumbler' };
+  function loadLabStats(seq){
+    return sb.rpc('admin_lab', { p_from: S.from, p_to: S.to }).then(function(r){ return r; }, function(e){ return { error: e }; }).then(function(r){
+      if (seq != null && seq !== loadSeq) return;
+      var el = $('#tLab');
+      if (!r || r.error || !r.data) { el.innerHTML = '<tbody><tr><td class="empty">'+(r && r.error && /admin_lab|PGRST202|42883/.test(JSON.stringify(r.error)) ? 'Not set up yet: apply migration lab_votes.' : 'Couldn’t load these figures.')+'</td></tr></tbody>'; return; }
+      var types = r.data.types || [];
+      var secs = function(x){ return x == null ? '–' : Math.floor(x/60)+':'+String(x%60).padStart(2,'0'); };
+      table(el, [
+        {key:'type', label:'Puzzle', left:true, sort:function(t){ return t.type; }, fmt:function(t){ return '<span class="hl">'+esc(LAB_NAMES[t.type]||t.type)+'</span>'; }},
+        {key:'players', label:'Players', fmt:function(t){ return n(t.players) + '<span class="meta">'+n(t.finishers)+' finished</span>'; }},
+        {key:'starts', label:'Starts', fmt:function(t){ return n(t.starts); }},
+        {key:'abandons', label:'Abandoned', fmt:function(t){ return n(t.abandons) + (t.pct_abandoned != null ? '<span class="meta">'+t.pct_abandoned+'% of starts</span>' : ''); }},
+        {key:'median_solve_secs', label:'Median time', fmt:function(t){ return secs(t.median_solve_secs); }},
+        {key:'yes', label:'Votes', fmt:function(t){ var v=(t.yes||0)+(t.no||0); return v ? n(t.yes)+' yes · '+n(t.no)+' no<span class="meta">'+t.pct_yes+'% yes · app '+n(t.app.yes)+'/'+n(t.app.no)+' · web '+n(t.web.yes)+'/'+n(t.web.no)+'</span>' : '–'; }}
+      ], types, { sortKey:'type', sortDir:'asc' });
     });
   }
 

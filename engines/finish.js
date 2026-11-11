@@ -175,6 +175,55 @@
 
   function $(id) { return document.getElementById(id); }
   function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  /* Lab vote (11 Nov 2026, Alec): after a Lab puzzle, one question, "Should <Name> go daily?",
+     Yes or No, one tap. The answer is kept here (noodle-lab-votes-v1: {type: {v, at}}, the app's
+     shape) and sent to public.lab_vote with this browser's own voter code (noodle-lab-voter, never
+     the tracker's visitor code), so the vote is linked to nothing else. Tapping again changes it. */
+  var LAB_VOTES = 'noodle-lab-votes-v1', LAB_VOTER = 'noodle-lab-voter';
+  var LAB_API = 'https://gnehttjheoyutrfsvslq.supabase.co/rest/v1/rpc/lab_vote';
+  var LAB_KEY = 'sb_publishable_dEMntRNiElpGHn3Hd5Ef1Q_HvLa2wTB';   // public by design
+  function labVotes() { try { var o = JSON.parse(localStorage.getItem(LAB_VOTES) || 'null'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
+  function labVoter() {
+    try {
+      var v = localStorage.getItem(LAB_VOTER);
+      if (!/^[0-9a-f-]{36}$/.test(v || '')) {
+        v = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, function () { return (Math.random() * 16 | 0).toString(16); });
+        localStorage.setItem(LAB_VOTER, v);
+      }
+      return v;
+    } catch (e) { return null; }
+  }
+  function labSend(type, yes) {
+    var anon = labVoter(); if (!anon) return;
+    try {
+      fetch(LAB_API, { method: 'POST', keepalive: true,
+        headers: { 'apikey': LAB_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_anon: anon, p_type: type, p_vote: !!yes, p_source: /[?&]via=app\b/.test(location.search) ? 'app' : 'web' }) }).catch(function () {});
+    } catch (e) {}
+  }
+  function labVote(cfg) {
+    var sec = el('section', 'fin-vote'), name = NAME[cfg.type] || 'it';
+    sec.setAttribute('aria-labelledby', 'finVoteQ');
+    sec.innerHTML = '<h3 id="finVoteQ">Should ' + esc(name) + ' go daily?</h3>' +
+      '<div class="fin-vote-row"><button type="button" class="fin-vote-btn" data-v="yes" aria-pressed="false">Yes</button>' +
+      '<button type="button" class="fin-vote-btn" data-v="no" aria-pressed="false">No</button></div>' +
+      '<p class="fin-vote-note" role="status" aria-live="polite">Your vote helps decide if it stays.</p>';
+    var btns = sec.querySelectorAll('.fin-vote-btn'), note = sec.querySelector('.fin-vote-note');
+    function paint(v) { [].forEach.call(btns, function (b) { var on = b.getAttribute('data-v') === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }); }
+    var had = labVotes()[cfg.type]; if (had && (had.v === 'yes' || had.v === 'no')) { paint(had.v); note.textContent = 'Thanks: you can change it any time.'; }
+    [].forEach.call(btns, function (b) {
+      b.addEventListener('click', function () {
+        var v = b.getAttribute('data-v'), all = labVotes();
+        if (all[cfg.type] && all[cfg.type].v === v) return;
+        all[cfg.type] = { v: v, at: Date.now() };
+        try { localStorage.setItem(LAB_VOTES, JSON.stringify(all)); } catch (e) {}
+        paint(v); note.textContent = 'Thanks: you can change it any time.';
+        labSend(cfg.type, v === 'yes');
+        try { window.dispatchEvent(new CustomEvent('dn:lab_vote', { detail: { type: cfg.type, vote: v } })); } catch (e) {}
+      });
+    });
+    return sec;
+  }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function read(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
 
@@ -479,6 +528,7 @@
     res.appendChild(streakLine(cfg, adopted));
     if (cfg.note) res.appendChild(el('p', 'fin-note', cfg.note));
     f.appendChild(res);
+    if (cfg.lab) f.appendChild(labVote(cfg));   // the Lab's one question, straight after the result
 
     // 5 ANSWER, first when the round wasn't solved (AF-015)
     var rc = null;

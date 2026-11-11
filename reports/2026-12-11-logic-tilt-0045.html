@@ -1,0 +1,75 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="dn:headline"   content="Tilt 0045">
+<meta name="dn:standfirst" content="Turn the maze and the ball rolls. Get it out as fast as you can.">
+<meta name="dn:topic"      content="Logic">
+<meta name="dn:date"       content="2026-12-11">
+<meta name="dn:kind"       content="puzzle">
+<meta name="dn:read"       content="~1 min">
+<meta name="dn:thumb"      content="assets/tilt-thumb.svg">
+<meta name="dn:badge"      content="In development">
+<meta name="theme-color" content="#2E5BFF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tilt">
+<title>Tilt — Noodle Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../engines/tilt.css">
+</head>
+<body>
+<div class="app" id="app">
+<header>
+  <div class="masthead">
+    <div class="mono-mark">DP</div>
+    <div class="mh-text">
+      <div class="mh-name">Noodle<span class="accent">Puzzles</span></div>
+      <div class="mh-eyebrow">Tilt</div>
+    </div>
+  </div>
+  <div class="streakbox">🔥 <b id="streakn">0</b></div>
+</header>
+<div class="meta">
+  <span class="tag">Tilt</span>
+  <span id="pid">DP·TILT·0045</span>
+  <span>·</span>
+  <span id="pband">medium</span>
+  <span id="timer">0:00</span>
+</div>
+<main>
+  <div class="play" id="board">
+    <div class="mazewrap"><div class="maze" id="maze" role="img" aria-label="Tilt maze"></div></div>
+    <div class="controls">
+      <button id="leftBtn" type="button" aria-label="Turn the maze left"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v5h5"/></svg></button>
+      <div class="turns"><b id="turns">0</b><span>turns</span></div>
+      <button id="rightBtn" type="button" aria-label="Turn the maze right"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg></button>
+    </div>
+  </div>
+  <div class="tools">
+    <button id="undoBtn" type="button" disabled>Undo</button>
+    <p class="msg" id="msg">Turn the maze; the ball drops until it hits a wall.</p>
+  </div>
+</main>
+<footer>SHELL — Tilt v1 · DP·TILT·0045 · verified in code, not by eye</footer>
+</div>
+
+<div class="modal" id="modal"><div class="modalcard">
+  <h2>Out</h2>
+  <div class="sub" id="modalsub">DP·TILT·0045 · MEDIUM</div>
+  <div class="statrow">
+    <div class="stat"><b id="statTime">0:00</b><span>Time</span></div>
+    <div class="stat"><b id="statStreak">0</b><span>Streak</span></div>
+  </div>
+  <div class="modalbtns">
+    <button id="shareBtn">Share result</button>
+    <button class="primary" id="closeBtn">Nice</button>
+  </div>
+</div></div>
+
+<script>
+/* This puzzle's data. The player is ../engines/tilt.js, shared by every tilt. */
+window.DN_PUZZLE={type:"tilt",id:"DP·TILT·0045",band:"medium",n:10,walls:[[9,5,1,3,9,5,5,5,5,3],[8,1,2,14,10,11,13,7,11,10],[10,12,4,1,2,10,13,7,14,10],[14,9,5,2,10,10,13,7,11,10],[9,2,13,2,10,8,5,1,4,0],[10,12,5,2,10,12,3,10,13,2],[10,9,5,0,4,1,2,12,5,6],[10,8,1,4,7,8,6,9,5,3],[8,6,14,13,7,10,11,10,13,2],[12,5,5,5,5,4,4,4,5,6]],start:[5,5],exit:[4,9,3],par:17};
+</script>
+<script src="../engines/tilt.js"></script>
+<script src="../dn-track.js" defer></script>
+</body></html>
