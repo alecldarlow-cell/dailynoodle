@@ -995,7 +995,7 @@
 
   /* ---------------- Lab trial (11 Nov 2026) ----------------
      admin_lab: per Lab type, plays (players, starts, finishes, abandons, median time) and the votes. */
-  var LAB_NAMES = { tilt:'Tilt', redact:'Redact', tumbler:'Tumbler' };
+  var LAB_NAMES = { tilt:'Tilt', redact:'Redact', tumbler:'Tumbler', pixel:'Pixel' };
   function loadLabStats(seq){
     return sb.rpc('admin_lab', { p_from: S.from, p_to: S.to }).then(function(r){ return r; }, function(e){ return { error: e }; }).then(function(r){
       if (seq != null && seq !== loadSeq) return;

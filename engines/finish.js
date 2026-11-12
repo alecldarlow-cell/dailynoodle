@@ -164,11 +164,11 @@
   'use strict';
   var queued = (window.dnFinish && window.dnFinish.q) || [];
 
-  var ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon', 'tally', 'tilt', 'redact', 'tumbler', 'reach'];
+  var ORDER = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon', 'tally', 'tilt', 'redact', 'tumbler', 'reach', 'pixel'];
   var SAVE = { mini: 'digi-mini-v1', doku: 'digi-doku-v1', sweep: 'digi-sweep-v1', path: 'digi-path-v1',
-               link: 'digi-link-v1', tangle: 'digi-tangle-v1', borders: 'digi-borders-v1', reckon: 'digi-reckon-v1', tally: 'digi-tally-v1', tilt: 'digi-tilt-v1', redact: 'digi-redact-v1', tumbler: 'digi-tumbler-v1', reach: 'digi-reach-v1' };
+               link: 'digi-link-v1', tangle: 'digi-tangle-v1', borders: 'digi-borders-v1', reckon: 'digi-reckon-v1', tally: 'digi-tally-v1', tilt: 'digi-tilt-v1', redact: 'digi-redact-v1', tumbler: 'digi-tumbler-v1', reach: 'digi-reach-v1', pixel: 'digi-pixel-v1' };
   var GUIDE_TYPES = { mini: 1, doku: 1, sweep: 1, path: 1, link: 1, tangle: 1, borders: 1, reckon: 1, tally: 1 };   // panels in how-to-play.html
-  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally', tilt: 'Tilt', redact: 'Redact', tumbler: 'Tumbler', reach: 'Reach' };
+  var NAME = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally', tilt: 'Tilt', redact: 'Redact', tumbler: 'Tumbler', reach: 'Reach', pixel: 'Pixel' };
   var SHARE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>';
   var TICK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   var CHEVRON = '<svg width="10" height="16" viewBox="0 0 10 16" aria-hidden="true"><path d="M2 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -254,7 +254,7 @@
   function overallRun() {
     var days = {};
     ORDER.forEach(function (t) { var d = done(t); for (var id in d) { var day = d[id] && (d[id].d || d[id].on); if (day) days[day] = 1; } });   // Borders records its day as "on"
-    ['digi-mini-streak', 'digi-doku-streak', 'digi-link-streak', 'digi-sweep-streak', 'digi-path-streak', 'digi-tally-streak', 'digi-tilt-streak', 'digi-redact-streak', 'digi-tumbler-streak', 'digi-reach-streak'].forEach(function (k) {
+    ['digi-mini-streak', 'digi-doku-streak', 'digi-link-streak', 'digi-sweep-streak', 'digi-path-streak', 'digi-tally-streak', 'digi-tilt-streak', 'digi-redact-streak', 'digi-tumbler-streak', 'digi-reach-streak', 'digi-pixel-streak'].forEach(function (k) {
       var s = read(k); if (s && Array.isArray(s.dates)) s.dates.forEach(function (d) { days[d] = 1; });
     });
     var t = londonDate(), d = days[t] ? t : dayBefore(t), n = 0;
@@ -390,7 +390,7 @@
      50 ms later. The app renders exactly these notes to a file (scripts/make-sounds.js), so keep them in step.
      One setting, dn-sound ("0" = off; on by default), set by the Sound switch on account.html (7 Nov 2026;
      it was on the start card and this sheet). Tangle, Borders and Reckon take it too (it overrides their own). */
-  var JINGLE_TYPES = { mini: 1, doku: 1, sweep: 1, path: 1, link: 1, tally: 1, tilt: 1, redact: 1, tumbler: 1, reach: 1 };
+  var JINGLE_TYPES = { mini: 1, doku: 1, sweep: 1, path: 1, link: 1, tally: 1, tilt: 1, redact: 1, tumbler: 1, reach: 1, pixel: 1 };
   var JINGLE = [[523.25, 0, 0.16, 'triangle', 0.12], [659.25, 0.09, 0.16, 'triangle', 0.12], [783.99, 0.18, 0.16, 'triangle', 0.12],
                 [1046.5, 0.27, 0.6, 'triangle', 0.13], [783.99, 0.27, 0.6, 'triangle', 0.08], [1318.51, 0.36, 0.5, 'sine', 0.05]];
   var SOUND_KEY = 'dn-sound';

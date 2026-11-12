@@ -1,0 +1,114 @@
+/* Digi Puzzles — pixel engine. One copy serves every Pixel page in reports/.
+   Pixel: a nonogram; fill the squares the clues call for and a picture appears.
+   Built 12 Nov 2026 for Lab on the house chrome (engines/house.js, engines/finish.js).
+   Keep element ids and localStorage keys stable. */
+@import url("finish.css");
+@import url("house.css");
+
+:root{
+  --paper:#FCFCFB; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
+  --line:#141726; --line-soft:#D3D6E0; --brand:#2E5BFF; --brand-deep:#1B3B9E;
+  --active:#FFD54A; --active-word:#FFF0B8; --tint:#EEF2FF; --good:#157A52; --bad:#E4483B; --block:#141726;
+  --cross:#9AA0B4; --clue-done:#B4B8C6;
+  --mono:"Space Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Space Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --cell:30px; --rw:60px; --ch:60px;
+}
+/* filled squares are the ink: near-black on paper, near-white in dark mode (house.css loads after this file, so the
+   pixel colours have their own names and never collide with the house tokens) */
+:root{--px-fill:var(--ink)}
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]){--tint:#262B3B;--cross:#7A8096;--clue-done:#5A5F73}}
+html.dn-house[data-theme="dark"]{--tint:#262B3B;--cross:#7A8096;--clue-done:#5A5F73}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.45;font-variant-numeric:tabular-nums;
+  display:flex;justify-content:center;padding:max(10px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));min-height:100dvh}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.app{width:100%;max-width:560px;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:2px solid var(--ink);padding-bottom:11px}
+.masthead{display:flex;align-items:center;gap:10px}
+.mono-mark{font-family:var(--mono);font-weight:700;font-size:13px;background:var(--ink);color:var(--paper);border-radius:8px;padding:6px 7px;line-height:1}
+.mh-name{font-weight:700;font-size:18px}.mh-name .accent{color:var(--brand)}
+.mh-eyebrow{font-family:var(--mono);font-size:11px;color:var(--ink-soft);text-transform:uppercase}
+.streakbox{font-family:var(--mono);font-size:13px}
+.meta{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.meta #timer{margin-left:auto;color:var(--ink);font-weight:700}
+#timer.waiting{color:var(--ink-soft)}
+
+/* ---- the board: column clues above, row clues to the left, the squares (engines/pixel.js fit() sets --cell) ---- */
+main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:0;padding-bottom:3dvh}
+.board{display:grid;grid-template-columns:var(--rw) calc(var(--cell) * var(--n));grid-template-rows:var(--ch) calc(var(--cell) * var(--n));
+}
+.corner{grid-column:1;grid-row:1}
+.colclues{grid-column:2;grid-row:1;display:grid;grid-template-columns:repeat(var(--n),var(--cell));align-items:end}
+.rowclues{grid-column:1;grid-row:2;display:grid;grid-template-rows:repeat(var(--n),var(--cell));justify-items:end}
+.clue{font-weight:700;font-size:calc(var(--cell) * .46);line-height:1.08;color:var(--ink);transition:color .15s,background .15s;border-radius:6px}
+.cclue{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 0 3px;line-height:1;font-size:calc(var(--cell) * .44)}
+.rclue{display:flex;align-items:center;justify-content:flex-end;gap:calc(var(--cell) * .2);padding:0 6px 0 2px;height:100%;width:100%}
+.clue.rc{background:var(--tint)}
+.clue.done{color:var(--clue-done)}
+.grid{grid-column:2;grid-row:2;display:grid;grid-template-columns:repeat(var(--n),var(--cell));grid-template-rows:repeat(var(--n),var(--cell));
+  border:2.5px solid var(--line);border-radius:6px;background:var(--line);overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.cell{position:relative;min-width:0;min-height:0;padding:0;border:0;border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);background:var(--card);transition:background .1s}
+html.dn-house .cell{border-color:var(--line-soft)}
+.cell.vr{border-right:2px solid var(--line)}
+.cell.hr{border-bottom:2px solid var(--line)}
+html.dn-house .cell.vr{border-right-color:var(--line)} html.dn-house .cell.hr{border-bottom-color:var(--line)}
+.cell.rc{background:var(--tint)}
+.cell.sel{background:var(--active)}
+.cell.on{background:var(--px-fill)}
+.cell.on.sel{background:var(--px-fill);box-shadow:inset 0 0 0 3px var(--active)}
+.cell.x::before,.cell.x::after{content:"";position:absolute;left:24%;right:24%;top:50%;height:2px;border-radius:2px;background:var(--cross);transform:rotate(45deg)}
+.cell.x::after{transform:rotate(-45deg)}
+.cell.wrong{animation:dn-pixel-wrong 1.6s ease}
+@keyframes dn-pixel-wrong{0%,70%{box-shadow:inset 0 0 0 3px var(--bad);background:color-mix(in srgb,var(--bad) 30%,var(--card))}100%{box-shadow:none}}
+/* the reveal: each filled square takes its picture colour */
+.cell.shown{background:var(--pc,var(--px-fill));transition:background .35s ease}
+.grid.celebrate .cell.shown{animation:dn-pixel-pop .45s ease both}
+@keyframes dn-pixel-pop{0%{transform:scale(1)}45%{transform:scale(1.12)}100%{transform:scale(1)}}
+body.win .grid{border-color:var(--line)}
+body.win .cell{border-color:transparent}
+body.win .cell:not(.shown){background:#FFFFFF}   /* the picture is shown on white in both themes, as on the finish sheet */
+@media (prefers-reduced-motion:reduce){.cell,.clue,.cell.shown{transition:none}.grid.celebrate .cell.shown,.cell.wrong{animation:none}}
+html.dn-reduce .grid.celebrate .cell.shown{animation:none}
+
+.tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.tools button{min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--line-soft);background:var(--card);font-weight:600;font-size:15px}
+.tools button[disabled]{opacity:.4;cursor:default}
+.mode{display:flex;border:1px solid var(--line-soft);border-radius:12px;overflow:hidden}
+.mode button{border:0;border-radius:0;display:flex;align-items:center;gap:7px}
+.mode button+button{border-left:1px solid var(--line-soft)}
+.mode button[aria-pressed="true"],.tools .mode button[aria-pressed="true"]:hover{background:var(--ink);color:var(--paper)}
+.sw-x{width:13px;height:13px;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;fill:none}
+.sw-fill{display:inline-block;width:13px;height:13px;border-radius:2px;background:currentColor}
+.progress{margin:0;font-size:15px;color:var(--ink-soft)}
+.progress b{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:28px;color:var(--ink);margin-right:2px;vertical-align:-3px}
+.msg{margin:0;min-height:1.4em;font-size:14px;color:var(--ink-soft);text-align:center;max-width:38ch}
+body.win .tools{visibility:hidden}
+
+@media (orientation:landscape) and (max-height:520px){
+  .app{max-width:none}
+  main{flex-direction:row;flex-wrap:wrap;align-content:center;gap:16px}
+  .board{margin-left:0}
+  .tools{flex-direction:column;align-items:stretch;width:200px}
+  .progress,.msg{width:200px;text-align:left}
+}
+
+/* ---- the result box the finish sheet is built in ---- */
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(20,23,38,.42)}
+.modal.on{display:flex}
+.modalcard{width:100%;max-width:340px;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:22px 20px;text-align:center}
+.modalcard h2{font-size:25px;margin:0 0 3px}
+.modalcard .sub{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-bottom:15px}
+.statrow{display:flex;justify-content:center;gap:18px;margin:8px 0 14px}
+.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--ink-soft);text-transform:uppercase}
+.modalbtns{display:flex;gap:8px;justify-content:center}
+.modalbtns button{min-height:44px;border-radius:12px;border:1px solid var(--line-soft);background:var(--card);padding:0 16px;font-weight:600}
+.modalbtns .primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+footer{display:none}
+
+/* the answer on the finish sheet: the picture in colour */
+.fin-pixel{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));width:min(100%,200px);aspect-ratio:1;margin:8px 0 6px;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px var(--line-soft)}
+.fin-pixel i{min-width:0;min-height:0}

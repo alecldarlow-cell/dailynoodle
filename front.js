@@ -128,7 +128,7 @@
   }
 
   var PUZZLE_TYPES = [['mini','Mini'],['doku','Doku'],['sweep','Sweep'],['path','Path'],
-                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt'],['redact','Redact'],['tumbler','Tumbler'],['reach','Reach']];
+                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt'],['redact','Redact'],['tumbler','Tumbler'],['reach','Reach'],['pixel','Pixel']];
   var TYPE_LABEL = {}, TYPE_RANK = {};
   PUZZLE_TYPES.forEach(function(t, i){ TYPE_LABEL[t[0]] = t[1]; TYPE_RANK[t[1]] = i; });
   function puzzleType(it){
@@ -531,6 +531,8 @@
         t = shownClock(r.t) || clock(r.s); return t ? 'Out in ' + t : '';
       case 'reach':   // Lab, 12 Nov 2026: a revealed round ("Show a way") isn't solved
         if(r.r) return 'Shown a way';
+        t = shownClock(r.t) || clock(r.s); return t ? 'Solved in ' + t : '';
+      case 'pixel':
         t = shownClock(r.t) || clock(r.s); return t ? 'Solved in ' + t : '';
     }
     return '';

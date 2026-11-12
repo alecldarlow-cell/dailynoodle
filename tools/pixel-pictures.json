@@ -1,0 +1,655 @@
+{
+ "note": "Pixel pictures (Lab, 12 Nov 2026). Hand-designed originals: everyday objects, animals, food, transport and weather; no logos, characters or brand shapes; plain child-friendly names. Each picture: id (subject-size), subject (the 90-day no-repeat key), name as shown on the finish (\"A teapot\"), size 8 or 10, rows of colour letters (. = empty; any letter = a filled square, its colour on the reveal), optional season (MM-DD..MM-DD, for dated days). Alec can add pictures: node tools/build-pixel-batch.js --pictures re-checks the whole library against the gate.",
+ "palette": {
+  "k": "#2B2D3A",
+  "s": "#9AA1B1",
+  "w": "#C9D6E6",
+  "r": "#E4483B",
+  "o": "#F28C28",
+  "y": "#F5C518",
+  "g": "#3FA34D",
+  "G": "#2E7D32",
+  "b": "#2E7DD7",
+  "c": "#8EC9F0",
+  "n": "#8B5A2B",
+  "p": "#F49AC1",
+  "u": "#7B4FC9",
+  "t": "#D9A066"
+ },
+ "pictures": [
+  {
+   "id": "heart-8",
+   "subject": "heart",
+   "name": "A heart",
+   "size": 8,
+   "rows": [
+    ".rr..rr.",
+    "rrrrrrrr",
+    "rrrrrrrr",
+    "rrrrrrrr",
+    ".rrrrrr.",
+    "..rrrr..",
+    "...rr...",
+    "........"
+   ]
+  },
+  {
+   "id": "apple-8",
+   "subject": "apple",
+   "name": "An apple",
+   "size": 8,
+   "rows": [
+    "....nGG.",
+    "....n...",
+    ".rrrnrr.",
+    "rrrrrrrr",
+    "rrrrrrrr",
+    ".rrrrrr.",
+    ".rrrrrr.",
+    "..rr.rr."
+   ]
+  },
+  {
+   "id": "mug-8",
+   "subject": "mug",
+   "name": "A mug",
+   "size": 8,
+   "rows": [
+    "..s..s..",
+    ".bbbbb..",
+    ".bbbbbbb",
+    ".bbbbb.b",
+    ".bbbbb.b",
+    ".bbbbbbb",
+    ".bbbbb..",
+    "..bbb..."
+   ]
+  },
+  {
+   "id": "house-8",
+   "subject": "house",
+   "name": "A house",
+   "size": 8,
+   "rows": [
+    "...rr...",
+    "..rrrr..",
+    ".rrrrrr.",
+    "rrrrrrrr",
+    ".tttttt.",
+    ".t.tnnt.",
+    ".tttnnt.",
+    ".tttnnt."
+   ]
+  },
+  {
+   "id": "tree-8",
+   "subject": "tree",
+   "name": "A fir tree",
+   "size": 8,
+   "rows": [
+    "...gg...",
+    "..gggg..",
+    ".gggggg.",
+    "..gggg..",
+    ".gggggg.",
+    "gggggggg",
+    "...nn...",
+    "...nn..."
+   ],
+   "season": "12-01..12-31"
+  },
+  {
+   "id": "fish-8",
+   "subject": "fish",
+   "name": "A fish",
+   "size": 8,
+   "rows": [
+    "........",
+    "..bbbb.b",
+    ".bbbbbbb",
+    "b.bbbbb.",
+    "bbbbbbb.",
+    ".bbbbbbb",
+    "..bbbb.b",
+    "........"
+   ]
+  },
+  {
+   "id": "umbrella-8",
+   "subject": "umbrella",
+   "name": "An umbrella",
+   "size": 8,
+   "rows": [
+    "...rr...",
+    ".rrrrrr.",
+    "rrrrrrrr",
+    "rrrrrrrr",
+    "...k....",
+    "...k....",
+    "...k.k..",
+    "....k..."
+   ]
+  },
+  {
+   "id": "sun-8",
+   "subject": "sun",
+   "name": "The sun",
+   "size": 8,
+   "rows": [
+    "...y....",
+    ".y.y.y..",
+    "..yyy...",
+    "yyyyyyy.",
+    "..yyy...",
+    ".y.y.y..",
+    "...y....",
+    "........"
+   ]
+  },
+  {
+   "id": "boat-8",
+   "subject": "boat",
+   "name": "A sailing boat",
+   "size": 8,
+   "rows": [
+    "...r....",
+    "...rr...",
+    "...rrr..",
+    "...rrrr.",
+    "...k....",
+    "nnnnnnnn",
+    ".nnnnnn.",
+    "..nnnn.."
+   ]
+  },
+  {
+   "id": "car-8",
+   "subject": "car",
+   "name": "A car",
+   "size": 8,
+   "rows": [
+    "........",
+    "..bbbb..",
+    ".bb..bb.",
+    "bbbbbbbb",
+    "bbbbbbbb",
+    ".kk..kk.",
+    ".kk..kk.",
+    "........"
+   ]
+  },
+  {
+   "id": "mushroom-8",
+   "subject": "mushroom",
+   "name": "A mushroom",
+   "size": 8,
+   "rows": [
+    "..rrrr..",
+    ".rr.rrr.",
+    "rrrrr.rr",
+    "rrrrrrrr",
+    "..tttt..",
+    "..tttt..",
+    "..tttt..",
+    ".tttttt."
+   ]
+  },
+  {
+   "id": "key-8",
+   "subject": "key",
+   "name": "A key",
+   "size": 8,
+   "rows": [
+    "........",
+    "yyy.....",
+    "y.y.....",
+    "yyyyyyyy",
+    "y.y...yy",
+    "yyy...y.",
+    "........",
+    "........"
+   ]
+  },
+  {
+   "id": "icecream-8",
+   "subject": "icecream",
+   "name": "An ice cream",
+   "size": 8,
+   "rows": [
+    "..pppp..",
+    ".pppppp.",
+    ".pppppp.",
+    "tttttttt",
+    ".tttttt.",
+    "..tttt..",
+    "..tttt..",
+    "...tt..."
+   ]
+  },
+  {
+   "id": "bulb-8",
+   "subject": "bulb",
+   "name": "A light bulb",
+   "size": 8,
+   "rows": [
+    "..yyyy..",
+    ".yyyyyy.",
+    ".yyyyyy.",
+    ".yyyyyy.",
+    "..yyyy..",
+    "...ss...",
+    "..ssss..",
+    "...ss..."
+   ]
+  },
+  {
+   "id": "snowman-8",
+   "subject": "snowman",
+   "name": "A snowman",
+   "size": 8,
+   "rows": [
+    "..kkkk..",
+    ".kkkkkk.",
+    "..wwww..",
+    "..wwww..",
+    ".wwwwww.",
+    "wwwwwwww",
+    ".wwwwww.",
+    "..wwww.."
+   ],
+   "season": "12-01..02-28"
+  },
+  {
+   "id": "pumpkin-8",
+   "subject": "pumpkin",
+   "name": "A pumpkin",
+   "size": 8,
+   "rows": [
+    "...G....",
+    "...GG...",
+    ".oooooo.",
+    "oo.oo.oo",
+    "oooooooo",
+    "oo....oo",
+    "ooo..ooo",
+    ".oooooo."
+   ],
+   "season": "10-20..11-05"
+  },
+  {
+   "id": "star-8",
+   "subject": "star",
+   "name": "A star",
+   "size": 8,
+   "rows": [
+    "...yy...",
+    "...yy...",
+    "yyyyyyyy",
+    ".yyyyyy.",
+    "..yyyy..",
+    ".yy..yy.",
+    "yy....yy",
+    "........"
+   ]
+  },
+  {
+   "id": "cat-8",
+   "subject": "cat",
+   "name": "A cat",
+   "size": 8,
+   "rows": [
+    "k......k",
+    "kk....kk",
+    "kkkkkkkk",
+    "k.kkkk.k",
+    "kkkkkkkk",
+    "kk.kk.kk",
+    ".kkkkkk.",
+    "..kkkk.."
+   ]
+  },
+  {
+   "id": "storm-8",
+   "subject": "storm",
+   "name": "A storm cloud",
+   "size": 8,
+   "rows": [
+    "..ss....",
+    ".ssss.s.",
+    "ssssssss",
+    ".ssssss.",
+    "...yy...",
+    "..yy....",
+    ".yyyy...",
+    "...y...."
+   ]
+  },
+  {
+   "id": "heart-10",
+   "subject": "heart",
+   "name": "A heart",
+   "size": 10,
+   "rows": [
+    ".rrr..rrr.",
+    "rrrrrrrrrr",
+    "rrrrrrrrrr",
+    "rrrrrrrrrr",
+    "rrrrrrrrrr",
+    ".rrrrrrrr.",
+    "..rrrrrr..",
+    "...rrrr...",
+    "....rr....",
+    ".........."
+   ]
+  },
+  {
+   "id": "apple-10",
+   "subject": "apple",
+   "name": "An apple",
+   "size": 10,
+   "rows": [
+    ".....nGG..",
+    ".....nGGG.",
+    "..rrrnrrr.",
+    ".rrrrrrrr.",
+    "rrrrrrrrrr",
+    "rrrrrrrrrr",
+    "rrrrrrrrr.",
+    ".rrrrrrrr.",
+    "..rrrrrr..",
+    "...rr.rr.."
+   ]
+  },
+  {
+   "id": "teapot-10",
+   "subject": "teapot",
+   "name": "A teapot",
+   "size": 10,
+   "rows": [
+    "....bb....",
+    "..bbbbbb..",
+    ".bbbbbbbb.",
+    "b.bbbbbb.b",
+    "b.bbbbbbbb",
+    "b.bbbbbbb.",
+    ".bbbbbbbb.",
+    "..bbbbbb..",
+    "...bbbb...",
+    ".........."
+   ]
+  },
+  {
+   "id": "house-10",
+   "subject": "house",
+   "name": "A house",
+   "size": 10,
+   "rows": [
+    "....rr..k.",
+    "...rrrr.k.",
+    "..rrrrrr..",
+    ".rrrrrrrr.",
+    "rrrrrrrrrr",
+    ".tttttttt.",
+    ".t..tt..t.",
+    ".t..tt..t.",
+    ".tttnnttt.",
+    ".tttnnttt."
+   ]
+  },
+  {
+   "id": "tree-10",
+   "subject": "tree",
+   "name": "A fir tree",
+   "size": 10,
+   "rows": [
+    "....gg....",
+    "...gggg...",
+    "..gggggg..",
+    "...gggg...",
+    "..gggggg..",
+    ".gggggggg.",
+    "..gggggg..",
+    ".gggggggg.",
+    "gggggggggg",
+    "....nn...."
+   ],
+   "season": "12-01..12-31"
+  },
+  {
+   "id": "fish-10",
+   "subject": "fish",
+   "name": "A fish",
+   "size": 10,
+   "rows": [
+    "..........",
+    "...bbbb...",
+    ".bbbbbbb.b",
+    "bb.bbbbbbb",
+    "bbbbbbbbb.",
+    "bbbbbbbbb.",
+    ".bbbbbbbbb",
+    "..bbbbbb.b",
+    "...bbb....",
+    ".........."
+   ]
+  },
+  {
+   "id": "umbrella-10",
+   "subject": "umbrella",
+   "name": "An umbrella",
+   "size": 10,
+   "rows": [
+    "....rr....",
+    "..rrrrrr..",
+    ".rrrrrrrr.",
+    "rrrrrrrrrr",
+    "rr..rr..rr",
+    "....k.....",
+    "....k.....",
+    "....k.....",
+    "..k.k.....",
+    "...k......"
+   ]
+  },
+  {
+   "id": "boat-10",
+   "subject": "boat",
+   "name": "A sailing boat",
+   "size": 10,
+   "rows": [
+    "....r.....",
+    "...br.....",
+    "..bbrr....",
+    ".bbbrrr...",
+    "bbbbrrrr..",
+    "....k.....",
+    "nnnnnnnnnn",
+    ".nnnnnnnn.",
+    "..nnnnnn..",
+    ".........."
+   ]
+  },
+  {
+   "id": "car-10",
+   "subject": "car",
+   "name": "A car",
+   "size": 10,
+   "rows": [
+    "..........",
+    "...bbbb...",
+    "..b.bb.b..",
+    ".bbbbbbbb.",
+    "bbbbbbbbbb",
+    "bbbbbbbbbb",
+    ".kkk..kkk.",
+    "..k....k..",
+    "..........",
+    ".........."
+   ]
+  },
+  {
+   "id": "mushroom-10",
+   "subject": "mushroom",
+   "name": "A mushroom",
+   "size": 10,
+   "rows": [
+    "...rrrr...",
+    ".rr.rrrrr.",
+    "rrrrrr.rrr",
+    "rr.rrrrrrr",
+    "rrrrrrrrrr",
+    "...tttt...",
+    "...tttt...",
+    "...tttt...",
+    "..tttttt..",
+    ".........."
+   ]
+  },
+  {
+   "id": "key-10",
+   "subject": "key",
+   "name": "A key",
+   "size": 10,
+   "rows": [
+    "..........",
+    ".yyyy.....",
+    "yy..yy....",
+    "y....yyyyy",
+    "y....yyyyy",
+    "yy..yy.y.y",
+    ".yyyy..y.y",
+    ".......y..",
+    "..........",
+    ".........."
+   ]
+  },
+  {
+   "id": "icecream-10",
+   "subject": "icecream",
+   "name": "An ice cream",
+   "size": 10,
+   "rows": [
+    "...pppp...",
+    "..pppppp..",
+    ".pppppppp.",
+    ".pppppppp.",
+    "tttttttttt",
+    ".tttttttt.",
+    "..tttttt..",
+    "...tttt...",
+    "...tttt...",
+    "....tt...."
+   ]
+  },
+  {
+   "id": "bulb-10",
+   "subject": "bulb",
+   "name": "A light bulb",
+   "size": 10,
+   "rows": [
+    "...yyyy...",
+    "..yyyyyy..",
+    ".yyyyyyyy.",
+    ".yyy..yyy.",
+    ".yyyyyyyy.",
+    "..yyyyyy..",
+    "...yyyy...",
+    "...ssss...",
+    "...ssss...",
+    "....ss...."
+   ]
+  },
+  {
+   "id": "snowman-10",
+   "subject": "snowman",
+   "name": "A snowman",
+   "size": 10,
+   "rows": [
+    "...kkkk...",
+    "...kkkk...",
+    "..kkkkkk..",
+    "...wwww...",
+    "...wwww...",
+    "..wwwwww..",
+    ".wwwwwwww.",
+    ".www..www.",
+    ".wwwwwwww.",
+    "..wwwwww.."
+   ],
+   "season": "12-01..02-28"
+  },
+  {
+   "id": "pumpkin-10",
+   "subject": "pumpkin",
+   "name": "A pumpkin",
+   "size": 10,
+   "rows": [
+    "....G.....",
+    "....GG....",
+    "..oooooo..",
+    ".oooooooo.",
+    "oo..oo..oo",
+    "oooooooooo",
+    "oooooooooo",
+    "ooo....ooo",
+    ".oooooooo.",
+    "..oooooo.."
+   ],
+   "season": "10-20..11-05"
+  },
+  {
+   "id": "star-10",
+   "subject": "star",
+   "name": "A star",
+   "size": 10,
+   "rows": [
+    "....yy....",
+    "...yyyy...",
+    "...yyyy...",
+    "yyyyyyyyyy",
+    ".yyyyyyyy.",
+    "..yyyyyy..",
+    "..yyyyyy..",
+    ".yyyyyyyy.",
+    ".yyy..yyy.",
+    ".yy....yy."
+   ]
+  },
+  {
+   "id": "cat-10",
+   "subject": "cat",
+   "name": "A cat",
+   "size": 10,
+   "rows": [
+    ".k......k.",
+    "kkk....kkk",
+    "kkkkkkkkkk",
+    "kk.kkkk.kk",
+    "kk.kkkk.kk",
+    "kkkkkkkkkk",
+    "kkkk..kkkk",
+    ".kkk..kkk.",
+    "..kkkkkk..",
+    ".........."
+   ]
+  },
+  {
+   "id": "storm-10",
+   "subject": "storm",
+   "name": "A storm cloud",
+   "size": 10,
+   "rows": [
+    "...ss.....",
+    "..ssss.ss.",
+    ".sssssssss",
+    "ssssssssss",
+    ".ssssssss.",
+    "....yy....",
+    "...yy.....",
+    "..yyyy....",
+    "....yy....",
+    "...yy....."
+   ]
+  }
+ ]
+}

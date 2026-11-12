@@ -14,7 +14,8 @@ const cases=[
  {type:'redact',page:'reports/2026-11-06-word-redact-0010.html',board:'#grid',targets:'#grid .cell,#undoBtn,#clearBtn'},
  {type:'redact',size:'7×7',page:'reports/2026-10-27-word-redact-0020.html',board:'#grid',targets:'#grid .cell,#undoBtn,#clearBtn'},
  {type:'tumbler',page:'reports/2026-11-06-word-tumbler-0010.html',board:'#board',targets:'.down,#submitBtn'},
- {type:'reach',page:'reports/2026-11-12-logic-reach-0010.html',board:'#board',targets:'#tiles .tile,#ops button,#wayBtn'}
+ {type:'reach',page:'reports/2026-11-12-logic-reach-0010.html',board:'#board',targets:'#tiles .tile,#ops button,#wayBtn'},
+ {type:'pixel',page:'reports/2026-11-12-logic-pixel-0010.html',board:'#grid',targets:'#grid .cell,#fillMode,#crossMode,#undoBtn,#checkBtn'}
 ];
 async function reachable(p,selectors){
  const problems=await p.locator(selectors).evaluateAll(elements=>elements.flatMap(e=>{
