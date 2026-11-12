@@ -201,12 +201,16 @@
         body: JSON.stringify({ p_anon: anon, p_type: type, p_vote: !!yes, p_source: /[?&]via=app\b/.test(location.search) ? 'app' : 'web' }) }).catch(function () {});
     } catch (e) {}
   }
+  /* Thumbs up and down on the two answers (Alec, 12 Nov 2026), drawn in the button's colour. */
+  var THUMB_PATH = 'M7 11v9H4v-9h3zm0 0 4-8c1.7 0 2.7 1.3 2.3 3L12.8 9H18a2 2 0 0 1 2 2.3l-1.3 7A2 2 0 0 1 16.7 20H7';
+  var THUMB_UP = '<svg class="fin-thumb" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="' + THUMB_PATH + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+  var THUMB_DOWN = THUMB_UP.replace('class="fin-thumb"', 'class="fin-thumb" style="transform:rotate(180deg)"');
   function labVote(cfg) {
     var sec = el('section', 'fin-vote'), name = NAME[cfg.type] || 'it';
     sec.setAttribute('aria-labelledby', 'finVoteQ');
     sec.innerHTML = '<h3 id="finVoteQ">Should ' + esc(name) + ' go daily?</h3>' +
-      '<div class="fin-vote-row"><button type="button" class="fin-vote-btn" data-v="yes" aria-pressed="false">Yes</button>' +
-      '<button type="button" class="fin-vote-btn" data-v="no" aria-pressed="false">No</button></div>' +
+      '<div class="fin-vote-row"><button type="button" class="fin-vote-btn" data-v="yes" aria-pressed="false">' + THUMB_UP + '<span>Yes</span></button>' +
+      '<button type="button" class="fin-vote-btn" data-v="no" aria-pressed="false">' + THUMB_DOWN + '<span>No</span></button></div>' +
       '<p class="fin-vote-note" role="status" aria-live="polite">Your vote helps decide if it stays.</p>';
     var btns = sec.querySelectorAll('.fin-vote-btn'), note = sec.querySelector('.fin-vote-note');
     function paint(v) { [].forEach.call(btns, function (b) { var on = b.getAttribute('data-v') === v; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }); }
