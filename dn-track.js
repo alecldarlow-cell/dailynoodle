@@ -263,7 +263,7 @@
     } catch (e) { return ''; }
   }
   var PATH = pathOf(location.href);
-  var PTYPE = (PATH.match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|geo-borders|word-tangle|quiz-reckon|logic-tally|logic-tilt|word-redact|word-tumbler|digi-doku|digi-path)/) || [])[1] || '';
+  var PTYPE = (PATH.match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|geo-borders|word-tangle|quiz-reckon|logic-tally|logic-tilt|word-redact|word-tumbler|logic-reach|digi-doku|digi-path)/) || [])[1] || '';
   if (PTYPE === 'digi-doku') PTYPE = 'logic-doku';
   if (PTYPE === 'digi-path') PTYPE = 'logic-path';
 

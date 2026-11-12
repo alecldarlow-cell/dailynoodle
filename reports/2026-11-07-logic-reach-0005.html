@@ -1,0 +1,82 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="dn:headline"   content="Reach 0005">
+<meta name="dn:standfirst" content="Six numbers and a target. Add, take away, multiply and divide your way to it.">
+<meta name="dn:topic"      content="Logic">
+<meta name="dn:date"       content="2026-11-07">
+<meta name="dn:kind"       content="puzzle">
+<meta name="dn:read"       content="~1 min">
+<meta name="dn:thumb"      content="assets/reach-thumb.svg">
+<meta name="dn:badge"      content="In development">
+<meta name="theme-color" content="#2E5BFF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Reach">
+<title>Reach — Noodle Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../engines/reach.css">
+</head>
+<body>
+<div class="app" id="app">
+<header>
+  <div class="masthead">
+    <div class="mono-mark">DP</div>
+    <div class="mh-text">
+      <div class="mh-name">Noodle<span class="accent">Puzzles</span></div>
+      <div class="mh-eyebrow">Reach</div>
+    </div>
+  </div>
+  <div class="streakbox">🔥 <b id="streakn">0</b></div>
+</header>
+<div class="meta">
+  <span class="tag">Reach</span>
+  <span id="pid">DP·REACH·0005</span>
+  <span>·</span>
+  <span id="pband">medium</span>
+  <span id="timer">0:00</span>
+</div>
+<main>
+  <div class="play" id="board">
+    <div class="target"><span>Target</span><b id="target">612</b></div>
+    <div class="tiles" id="tiles" role="group" aria-label="Number tiles"></div>
+    <div class="ops" id="ops" role="group" aria-label="Operations">
+      <button type="button" id="opAdd" data-op="+" aria-label="Add" aria-pressed="false">+</button>
+      <button type="button" id="opSub" data-op="-" aria-label="Subtract" aria-pressed="false">−</button>
+      <button type="button" id="opMul" data-op="*" aria-label="Multiply" aria-pressed="false">×</button>
+      <button type="button" id="opDiv" data-op="/" aria-label="Divide" aria-pressed="false">÷</button>
+    </div>
+    <ol class="working" id="working" aria-label="Your working" aria-live="polite"></ol>
+  </div>
+  <div class="tools">
+    <div class="toolrow">
+      <button id="undoBtn" type="button" disabled>Undo</button>
+      <button id="resetBtn" type="button" disabled>Reset</button>
+      <button id="wayBtn" type="button">Show a way</button>
+      <button id="revealAll" type="button" hidden>Yes, show it</button>
+    </div>
+    <p class="msg" id="msg">Pick a tile, a sign, then another tile.</p>
+  </div>
+</main>
+<footer>SHELL — Reach v1 · DP·REACH·0005 · verified in code, not by eye</footer>
+</div>
+
+<div class="modal" id="modal"><div class="modalcard">
+  <h2>Solved</h2>
+  <div class="sub" id="modalsub">DP·REACH·0005 · MEDIUM</div>
+  <div class="statrow">
+    <div class="stat"><b id="statTime">0:00</b><span>Time</span></div>
+    <div class="stat"><b id="statStreak">0</b><span>Streak</span></div>
+  </div>
+  <div class="modalbtns">
+    <button id="shareBtn">Share result</button>
+    <button class="primary" id="closeBtn">Nice</button>
+  </div>
+</div></div>
+
+<script>
+/* This puzzle's data. The player is ../engines/reach.js, shared by every reach. */
+window.DN_PUZZLE={type:"reach",id:"DP·REACH·0005",band:"medium",tiles:[75,8,1,4,5,7],target:612,way:[[75,"*",8,600],[7,"+",5,12],[600,"+",12,612]]};
+</script>
+<script src="../engines/reach.js"></script>
+</body></html>

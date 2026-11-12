@@ -46,7 +46,7 @@ try {
   const perm=debt.filter(d=>d.permanent).length;
   console.log('Registry: no new errors; '+errors.length+' exact archive exceptions ('+perm+' accepted history, '+(debt.length-perm)+' dated; see test-results/registry.log).');
   const {G:link}=require('../build-link-batch'),{G:pg,grade}=require('../build-path-batch'),sweep=require('../build-sweep-batch');
-  const {broadAlts}=require('../doku-broad-check'),reckon=require('../build-reckon-batch'),tally=require('../tally'),tilt=require('../tilt'),redact=require('../redact'),tumbler=require('../tumbler');
+  const {broadAlts}=require('../doku-broad-check'),reckon=require('../build-reckon-batch'),tally=require('../tally'),tilt=require('../tilt'),redact=require('../redact'),tumbler=require('../tumbler'),reach=require('../reach');
   const veto=require('../word-veto'),banned=new Set([...veto.BLOCKED,...veto.SENSITIVE,...veto.VETO]);
   const gates={};
   for(const type of ['mini','doku']) {
@@ -63,7 +63,7 @@ try {
   let through=today;const n=new Date(today+'T12:00Z');n.setUTCDate(n.getUTCDate()+7);through=n.toISOString().slice(0,10);
   let checked=0;
   for(const file of fs.readdirSync(path.join(ROOT,'reports')).sort()){
-    if(!/^\d{4}-\d{2}-\d{2}-(crossword-mini|logic-(doku|sweep|path|tally|tilt)|word-(link|tangle|redact|tumbler)|geo-borders|quiz-reckon)/.test(file))continue;
+    if(!/^\d{4}-\d{2}-\d{2}-(crossword-mini|logic-(doku|sweep|path|tally|tilt|reach)|word-(link|tangle|redact|tumbler)|geo-borders|quiz-reckon)/.test(file))continue;
     const day=file.slice(0,10);if(day<today||(!all&&day>through))continue;
     const p=read(path.join(ROOT,'reports',file));let gate;
     if(file.includes('crossword-mini')){
@@ -82,6 +82,7 @@ try {
     else if(file.includes('word-tumbler')){const errs=tumbler.check(p);gate={pass:!errs.length,checks:errs};}   // Tumbler (Lab, 6 Nov 2026): tools/tumbler.js
     else if(file.includes('word-redact')){const errs=redact.check(p);gate={pass:!errs.length,checks:errs};}   // Redact (Lab, 6 Nov 2026): tools/redact.js
     else if(file.includes('logic-tilt')){const errs=tilt.check(p);gate={pass:!errs.length,checks:errs};}   // Tilt (Lab, 6 Nov 2026): tools/tilt.js
+    else if(file.includes('logic-reach')){const errs=reach.check(p);gate={pass:!errs.length,checks:errs};}   // Reach (Lab build, 12 Nov 2026): tools/reach.js
     else {assert.equal(p.qs.length,10,file);for(const q of p.qs)assert.ok(q.o.includes(q.n),file+' has no correct answer');gate={pass:true};}
     assert.ok(gate&&gate.pass,file+' fails its ship gate: '+JSON.stringify(gate?.checks));checked++;
   }

@@ -1,0 +1,123 @@
+/* Digi Puzzles — reach engine. One copy serves every reach page in reports/.
+   Reach (working name) is a numbers-target puzzle, built 12 Nov 2026 for Lab on the house chrome
+   (engines/house.js, engines/finish.js). The page supplies its puzzle as window.DN_PUZZLE
+   before loading engines/reach.js.
+   Edit here to change every reach; keep element ids and localStorage keys
+   stable (dn-track.js and players' saved progress depend on them). */
+/* shared sheets first, so dark mode and the finish sheet are right from the first paint */
+@import url("finish.css");
+@import url("house.css");
+
+:root{
+  --paper:#FCFCFB; --card:#FFFFFF; --ink:#141726; --ink-soft:#5A5F73;
+  --line:#141726; --line-soft:#D3D6E0; --brand:#2E5BFF; --brand-deep:#1B3B9E;
+  --active:#FFD54A; --active-word:#FFF0B8; --good:#1F9E6B; --bad:#E4483B;
+  --tile:#FFFFFF; --tile-edge:#C9CEDB; --gone:#EEF0F4; --made-ink:#FFFFFF; --chip:#EEF1FA;
+  --radius:14px;
+  --mono:"Space Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Space Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+/* dark mode: house.css sets the shared tokens on html.dn-house; these are Reach's own */
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]){--tile:#2E3344;--tile-edge:#4A5066;--gone:#1A1D27;--chip:#232838}}
+html.dn-house[data-theme="dark"]{--tile:#2E3344;--tile-edge:#4A5066;--gone:#1A1D27;--chip:#232838}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.45;font-variant-numeric:tabular-nums;
+  display:flex;justify-content:center;padding:max(10px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));min-height:100dvh}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.app{width:100%;max-width:560px;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;border-bottom:2px solid var(--ink);padding-bottom:11px}
+.masthead{display:flex;align-items:center;gap:10px}
+.mono-mark{font-family:var(--mono);font-weight:700;font-size:13px;background:var(--ink);color:var(--paper);border-radius:8px;padding:6px 7px;line-height:1}
+.mh-name{font-weight:700;font-size:18px}.mh-name .accent{color:var(--brand)}
+.mh-eyebrow{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.08em;text-transform:uppercase}
+.streakbox{font-family:var(--mono);font-size:13px}
+.meta{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.meta #timer{margin-left:auto;color:var(--ink);font-weight:700}
+#timer.waiting{color:var(--ink-soft)}
+main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:0;padding-bottom:3dvh}
+
+/* ---- the play area: target, six tiles, the four signs, the working ---- */
+.play{width:min(100%,400px);display:flex;flex-direction:column;align-items:stretch;gap:clamp(12px,2.6dvh,22px)}
+.target{text-align:center;line-height:1}
+.target span{display:block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:2px}
+.target b{display:block;font-family:var(--serif,"Instrument Serif"),Georgia,serif;font-weight:400;font-size:clamp(64px,12dvh,92px);letter-spacing:.01em}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{height:clamp(58px,10dvh,78px);border-radius:14px;border:1.5px solid var(--tile-edge);background:var(--tile);color:var(--ink);
+  font-weight:800;font-size:clamp(26px,4.4dvh,34px);font-stretch:110%;display:grid;place-items:center;
+  box-shadow:0 2px 0 var(--tile-edge);transition:transform .22s cubic-bezier(.3,.7,.3,1),opacity .22s,background .15s,box-shadow .15s}
+.tile:active{transform:translateY(1px);box-shadow:0 1px 0 var(--tile-edge)}
+.tile.made{background:var(--brand);border-color:var(--brand);color:var(--made-ink);box-shadow:0 2px 0 var(--brand-deep)}
+.tile.sel{background:var(--active);border-color:#C9A21F;color:#141726;box-shadow:0 2px 0 #C9A21F}
+.tile.gone{background:var(--gone);border-color:transparent;box-shadow:none;transform:scale(.82) translateY(6px);opacity:.55;cursor:default}
+.tile.hit{background:var(--good);border-color:var(--good);color:#fff;box-shadow:0 2px 0 #0E5C3D}
+.tile.pop{animation:rc-pop .32s cubic-bezier(.3,1.6,.5,1)}
+.tile.shake{animation:rc-shake .34s}
+@keyframes rc-pop{0%{transform:scale(.7)}100%{transform:scale(1)}}
+@keyframes rc-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+body.win:not(.shown) .tile.hit{animation:rc-win .9s ease-in-out}
+@keyframes rc-win{0%,100%{transform:scale(1)}40%{transform:scale(1.12)}}
+.ops{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ops button{height:56px;border-radius:28px;border:1.5px solid var(--tile-edge);background:var(--card);font-size:28px;font-weight:700;line-height:1;color:var(--ink)}
+.ops button.on{background:var(--active);border-color:#C9A21F;color:#141726}
+.ops button[disabled]{opacity:.45;cursor:default}
+.working{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-height:30px}
+.working li{background:var(--chip);border-radius:15px;padding:4px 11px;font-size:14px;font-weight:600;white-space:nowrap}
+.working.empty::before{content:"Your working shows here";color:var(--ink-soft);font-size:13px;padding:5px 0}
+/* house.css gives every button a hover (sticky after a tap on phones) and a disabled look; the tiles and signs
+   keep their own states, so these win outright */
+html.dn-house .app .tile:not(.made):not(.sel):not(.hit):not(.gone):hover{background:var(--tile)!important}
+html.dn-house .app .tile.made{background:var(--brand)!important;color:#fff!important;border-color:var(--brand)!important}
+html.dn-house .app .tile.sel,html.dn-house .app .ops button.on{background:var(--active)!important;color:#141726!important;border-color:#C9A21F!important}
+html.dn-house .app .tile.hit{background:var(--good)!important;border-color:var(--good)!important;color:#fff!important}
+html.dn-house .app .tile.gone{background:var(--gone)!important;border-color:transparent!important;color:transparent!important}
+html.dn-house .app .tile[disabled]:not(.gone):not(.hit):not(.made){color:var(--ink);background:var(--tile)}
+@media (prefers-reduced-motion:reduce){.tile{transition:none}.tile.pop,.tile.shake,body.win .tile.hit{animation:none}}
+
+/* Undo, Reset and Show a way are quiet text buttons under the board */
+.tools{display:flex;flex-direction:column;align-items:center;gap:2px;width:min(100%,400px);min-height:62px}
+.toolrow{display:flex;justify-content:center;gap:2px;flex-wrap:wrap}
+.tools button{min-height:40px;padding:0 14px;border-radius:20px;border:0;background:transparent;font-weight:600;font-size:15px;color:var(--brand)}
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .tools button{color:#8EA6FF}}
+html.dn-house[data-theme="dark"] .tools button{color:#8EA6FF}
+.tools #revealAll{color:var(--bad)}
+.tools button[disabled]{color:var(--ink-soft);opacity:.45;cursor:default}
+.msg{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.3;text-align:center;min-height:1.3em}
+body.win .ops,body.win .toolrow{visibility:hidden}
+
+/* short screens (320×568 and smaller): tighter, so nothing scrolls */
+@media (max-height:600px) and (orientation:portrait){
+  .target b{font-size:58px}.tile{height:54px}.ops button{height:48px}.play{gap:10px}
+}
+/* short landscape: target and tiles on the left, signs and working on the right */
+@media (orientation:landscape) and (max-height:520px){
+  .app{max-width:none}
+  main{flex-direction:row;gap:20px;align-items:center}
+  .play{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-areas:"t o" "g o" "g w";width:min(100%,720px);gap:10px 20px;align-items:center}
+  .target{grid-area:t}.tiles{grid-area:g}.ops{grid-area:o;align-self:end}.working{grid-area:w;align-self:start;justify-content:flex-start}
+  .target b{font-size:min(64px,17dvh)}.tile{height:min(68px,20dvh)}.ops button{height:min(56px,16dvh)}
+  .tools{width:min(26vw,200px)}
+}
+
+/* ---- the result box the finish sheet is built in ---- */
+.modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(20,23,38,.42)}
+.modal.on{display:flex}
+.modalcard{width:100%;max-width:340px;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:22px 20px;text-align:center}
+.modalcard h2{font-size:25px;margin:0 0 3px}
+.modalcard .sub{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-bottom:15px}
+.statrow{display:flex;justify-content:center;gap:18px;margin:8px 0 14px}
+.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--ink-soft);text-transform:uppercase}
+.modalbtns{display:flex;gap:8px;justify-content:center}
+.modalbtns button{min-height:44px;border-radius:12px;border:1px solid var(--line-soft);background:var(--card);padding:0 16px;font-weight:600}
+.modalbtns .primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+footer{display:none}
+
+/* the answer on the finish sheet: your route and a shortest way */
+.fin-reach{text-align:left;width:min(100%,320px);margin:6px 0 0}
+.fin-reach-t{margin:0 0 6px;font-size:14px;color:var(--ink-soft)}
+.fin-reach-t b{color:var(--ink);font-size:17px}
+.fin-reach h4{margin:10px 0 4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.fin-route{margin:0;padding-left:22px;font-size:16px;font-weight:600;line-height:1.6}
+.fin-route.way li:last-child{color:var(--good)}
