@@ -13,7 +13,8 @@ const cases=[
  {type:'tilt',page:'reports/2026-11-06-logic-tilt-0010.html',board:'#maze',targets:'#leftBtn,#rightBtn,#undoBtn'},
  {type:'redact',page:'reports/2026-11-06-word-redact-0010.html',board:'#grid',targets:'#grid .cell,#undoBtn,#clearBtn'},
  {type:'redact',size:'7×7',page:'reports/2026-10-27-word-redact-0020.html',board:'#grid',targets:'#grid .cell,#undoBtn,#clearBtn'},
- {type:'tumbler',page:'reports/2026-11-06-word-tumbler-0010.html',board:'#board',targets:'.down,#submitBtn'}
+ {type:'tumbler',page:'reports/2026-11-06-word-tumbler-0010.html',board:'#board',targets:'.down,#submitBtn'},
+ {type:'cryptic',page:'reports/2026-11-24-word-cryptic-0003.html',board:'#play',targets:'#grid .sq,#kb .key,#hintBtn,#clearBtn'}
 ];
 async function reachable(p,selectors){
  const problems=await p.locator(selectors).evaluateAll(elements=>elements.flatMap(e=>{
