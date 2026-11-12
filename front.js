@@ -128,7 +128,7 @@
   }
 
   var PUZZLE_TYPES = [['mini','Mini'],['doku','Doku'],['sweep','Sweep'],['path','Path'],
-                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt'],['redact','Redact'],['tumbler','Tumbler']];
+                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt'],['redact','Redact'],['tumbler','Tumbler'],['cryptic','Cryptic']];
   var TYPE_LABEL = {}, TYPE_RANK = {};
   PUZZLE_TYPES.forEach(function(t, i){ TYPE_LABEL[t[0]] = t[1]; TYPE_RANK[t[1]] = i; });
   function puzzleType(it){
@@ -527,6 +527,8 @@
         t = shownClock(r.t) || clock(r.s); return t ? 'Found in ' + t : '';
       case 'redact':
         t = shownClock(r.t) || clock(r.s); return t ? 'Solved in ' + t : '';
+      case 'cryptic':   // Lab, 12 Nov 2026: the time, and the hints used (the share's two numbers)
+        t = shownClock(r.t) || clock(r.s); return t ? 'Solved in ' + t + (num(r.h) ? (r.h === 0 ? ', no hints' : ', ' + r.h + ' hint' + (r.h === 1 ? '' : 's')) : '') : '';
       case 'tilt':
         t = shownClock(r.t) || clock(r.s); return t ? 'Out in ' + t : '';
     }

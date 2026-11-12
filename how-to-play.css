@@ -43,3 +43,8 @@
 .guide-links a:hover{text-decoration:underline;text-underline-offset:3px}
 @media(min-width:560px){.guide-heading h1{font-size:26px}}
 .dn-in-app .guide-links{display:none}
+/* Cryptic's "Learn the clue types" (Lab, 12 Nov 2026): one example per type */
+.guide-types{margin:0;display:grid;gap:4px 0}
+.guide-types dt{font-weight:700;margin-top:10px}
+.guide-types dd{margin:0;font-size:15px;line-height:1.5;color:var(--muted)}
+.guide-types i{color:var(--ink,inherit);font-style:italic}

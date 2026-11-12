@@ -1,0 +1,926 @@
+{
+  "_comment": "Cryptic clue bank and ledger (Lab, built 12 Nov 2026; brief: project doc claude/brief-cryptic.md, type spec claude/23_typespec_cryptic.md). Every clue is original, written for the Noodle (no reused published clues). Spans are word indices [from, to) into the clue split on spaces, punctuation ignored. def: the definition, at one end. ind: the signpost (indicator), null for charades and double definitions. fod: the fodder words (anagram, hidden word, reversal). parts: the pieces and what each gives (charade: in order; container: outer then inner; sound-alike: the word it sounds like; double definition: the second definition). parse: the formal working. explain: two lines for the finish sheet (signpost, wordplay). checked: the cold solve by an independent checker that saw only the clue and enumeration. tools/build-cryptic-batch.js --check re-gates every entry and every page.",
+  "bank": [
+    {
+      "answer": "BARGAIN",
+      "enum": "7",
+      "clue": "Pub profit is a steal",
+      "type": "charade",
+      "def": [
+        3,
+        5
+      ],
+      "ind": null,
+      "parts": [
+        {
+          "w": [
+            0,
+            1
+          ],
+          "gives": "BAR"
+        },
+        {
+          "w": [
+            1,
+            2
+          ],
+          "gives": "GAIN"
+        }
+      ],
+      "parse": "BAR (pub) + GAIN (profit) = BARGAIN; “is” links to the definition",
+      "explain": [
+        "No signpost: in a charade the pieces sit side by side, and “is” links them to the definition.",
+        "BAR (pub) + GAIN (profit) = BARGAIN, a steal."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "BARGAIN",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "STUDY",
+      "enum": "5",
+      "clue": "Dusty, messy den",
+      "type": "anagram",
+      "def": [
+        2,
+        3
+      ],
+      "ind": [
+        1,
+        2
+      ],
+      "fod": [
+        0,
+        1
+      ],
+      "parse": "anagram (messy) of DUSTY = STUDY",
+      "explain": [
+        "“messy” says the letters of DUSTY are jumbled.",
+        "DUSTY rearranged → STUDY, a den."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "STUDY",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "CABIN",
+      "enum": "5",
+      "clue": "Hut found in taxicab interior",
+      "type": "hidden",
+      "def": [
+        0,
+        1
+      ],
+      "ind": [
+        1,
+        3
+      ],
+      "fod": [
+        3,
+        5
+      ],
+      "parse": "hidden (found in) taxiCAB INterior = CABIN",
+      "explain": [
+        "“found in” says the answer is hidden in the words that follow.",
+        "taxiCAB INterior → CABIN, a hut."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "CABIN",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "SCENT",
+      "enum": "5",
+      "clue": "Smell posted, we hear",
+      "type": "sounds",
+      "def": [
+        0,
+        1
+      ],
+      "ind": [
+        2,
+        4
+      ],
+      "parts": [
+        {
+          "w": [
+            1,
+            2
+          ],
+          "gives": "SENT"
+        }
+      ],
+      "parse": "sounds like (we hear) SENT (posted) = SCENT",
+      "explain": [
+        "“we hear” says the answer sounds like another word.",
+        "SENT (posted) sounds like SCENT, a smell."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "SCENT",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "REGAL",
+      "enum": "5",
+      "clue": "Royal lager sent back",
+      "type": "reversal",
+      "def": [
+        0,
+        1
+      ],
+      "ind": [
+        2,
+        4
+      ],
+      "fod": [
+        1,
+        2
+      ],
+      "parse": "LAGER reversed (sent back) = REGAL",
+      "explain": [
+        "“sent back” says a word is reversed.",
+        "LAGER backwards → REGAL, royal."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "REGAL",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "SWEAT",
+      "enum": "5",
+      "clue": "Sat outside, we perspire",
+      "type": "container",
+      "def": [
+        3,
+        4
+      ],
+      "ind": [
+        1,
+        2
+      ],
+      "parts": [
+        {
+          "w": [
+            0,
+            1
+          ],
+          "gives": "SAT"
+        },
+        {
+          "w": [
+            2,
+            3
+          ],
+          "gives": "WE"
+        }
+      ],
+      "parse": "SAT outside WE = S(WE)AT = SWEAT",
+      "explain": [
+        "“outside” says one piece wraps around another.",
+        "SAT around WE → S(WE)AT, SWEAT: perspire."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "SWEAT",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "PATIENT",
+      "enum": "7",
+      "clue": "Calm case on the ward",
+      "type": "double",
+      "def": [
+        0,
+        1
+      ],
+      "ind": null,
+      "parts": [
+        {
+          "w": [
+            1,
+            5
+          ],
+          "gives": "PATIENT"
+        }
+      ],
+      "parse": "PATIENT (calm) and PATIENT (a case on the ward)",
+      "explain": [
+        "No signpost: the clue is two definitions of the same word.",
+        "Calm = PATIENT, and a case on the ward = PATIENT."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "PATIENT",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "REACT",
+      "enum": "5",
+      "clue": "Respond to crate breaking",
+      "type": "anagram",
+      "def": [
+        0,
+        1
+      ],
+      "ind": [
+        3,
+        4
+      ],
+      "fod": [
+        2,
+        3
+      ],
+      "parse": "anagram (breaking) of CRATE = REACT; “to” links to the definition",
+      "explain": [
+        "“breaking” says the letters of CRATE are jumbled.",
+        "CRATE rearranged → REACT, respond."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "REACT",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "ATLAS",
+      "enum": "5",
+      "clue": "Map book found in flat lasagne",
+      "type": "hidden",
+      "def": [
+        0,
+        2
+      ],
+      "ind": [
+        2,
+        4
+      ],
+      "fod": [
+        4,
+        6
+      ],
+      "parse": "hidden (found in) flAT LASagne = ATLAS",
+      "explain": [
+        "“found in” says the answer is hidden in the words that follow.",
+        "flAT LASagne → ATLAS, a map book."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "ATLAS",
+        "confidence": "high",
+        "note": "first draft “…that last chapter” had a word doing no work; rewritten and re-solved"
+      }
+    },
+    {
+      "answer": "WARDEN",
+      "enum": "6",
+      "clue": "Battle lair for keeper",
+      "type": "charade",
+      "def": [
+        3,
+        4
+      ],
+      "ind": null,
+      "parts": [
+        {
+          "w": [
+            0,
+            1
+          ],
+          "gives": "WAR"
+        },
+        {
+          "w": [
+            1,
+            2
+          ],
+          "gives": "DEN"
+        }
+      ],
+      "parse": "WAR (battle) + DEN (lair) = WARDEN; “for” links to the definition",
+      "explain": [
+        "No signpost: the pieces sit side by side, and “for” links them to the definition.",
+        "WAR (battle) + DEN (lair) = WARDEN, a keeper."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "WARDEN",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "MEDDLE",
+      "enum": "6",
+      "clue": "Prize, we hear, to interfere",
+      "type": "sounds",
+      "def": [
+        4,
+        5
+      ],
+      "ind": [
+        1,
+        3
+      ],
+      "parts": [
+        {
+          "w": [
+            0,
+            1
+          ],
+          "gives": "MEDAL"
+        }
+      ],
+      "parse": "sounds like (we hear) MEDAL (prize) = MEDDLE; “to” links to the definition",
+      "explain": [
+        "“we hear” says the answer sounds like another word.",
+        "MEDAL (prize) sounds like MEDDLE, interfere."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "MEDDLE",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "REVEL",
+      "enum": "5",
+      "clue": "Lever pulled back to celebrate",
+      "type": "reversal",
+      "def": [
+        4,
+        5
+      ],
+      "ind": [
+        1,
+        3
+      ],
+      "fod": [
+        0,
+        1
+      ],
+      "parse": "LEVER reversed (pulled back) = REVEL; “to” links to the definition",
+      "explain": [
+        "“pulled back” says a word is reversed.",
+        "LEVER backwards → REVEL, celebrate."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "REVEL",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "CARTON",
+      "enum": "6",
+      "clue": "Con keeps art in box",
+      "type": "container",
+      "def": [
+        4,
+        5
+      ],
+      "ind": [
+        1,
+        2
+      ],
+      "parts": [
+        {
+          "w": [
+            0,
+            1
+          ],
+          "gives": "CON"
+        },
+        {
+          "w": [
+            2,
+            3
+          ],
+          "gives": "ART"
+        }
+      ],
+      "parse": "CON keeps ART = C(ART)ON = CARTON; “in” links to the definition",
+      "explain": [
+        "“keeps” says one piece holds another inside it.",
+        "CON around ART → C(ART)ON, CARTON: a box."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "CARTON",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "PITCH",
+      "enum": "5",
+      "clue": "Field throw",
+      "type": "double",
+      "def": [
+        0,
+        1
+      ],
+      "ind": null,
+      "parts": [
+        {
+          "w": [
+            1,
+            2
+          ],
+          "gives": "PITCH"
+        }
+      ],
+      "parse": "PITCH (field) and PITCH (throw)",
+      "explain": [
+        "No signpost: the clue is two definitions of the same word.",
+        "A field = PITCH, and to throw = PITCH."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "PITCH",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "TREASON",
+      "enum": "7",
+      "clue": "Senator ruined in betrayal",
+      "type": "anagram",
+      "def": [
+        3,
+        4
+      ],
+      "ind": [
+        1,
+        2
+      ],
+      "fod": [
+        0,
+        1
+      ],
+      "parse": "anagram (ruined) of SENATOR = TREASON; “in” links to the definition",
+      "explain": [
+        "“ruined” says the letters of SENATOR are jumbled.",
+        "SENATOR rearranged → TREASON, betrayal."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "TREASON",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "HERON",
+      "enum": "5",
+      "clue": "Bird spotted in her onions",
+      "type": "hidden",
+      "def": [
+        0,
+        1
+      ],
+      "ind": [
+        1,
+        3
+      ],
+      "fod": [
+        3,
+        5
+      ],
+      "parse": "hidden (spotted in) HER ONions = HERON",
+      "explain": [
+        "“spotted in” says the answer is hidden in the words that follow.",
+        "HER ONions → HERON, a bird."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "HERON",
+        "confidence": "high",
+        "note": "first draft ended “…onion bed”, a word doing no work; rewritten and re-solved"
+      }
+    },
+    {
+      "answer": "BULLETIN",
+      "enum": "8",
+      "clue": "Shot in news report",
+      "type": "charade",
+      "def": [
+        2,
+        4
+      ],
+      "ind": null,
+      "parts": [
+        {
+          "w": [
+            0,
+            1
+          ],
+          "gives": "BULLET"
+        },
+        {
+          "w": [
+            1,
+            2
+          ],
+          "gives": "IN"
+        }
+      ],
+      "parse": "BULLET (shot) + IN = BULLETIN",
+      "explain": [
+        "No signpost: the pieces sit side by side, and “in” stands for itself.",
+        "BULLET (shot) + IN = BULLETIN, a news report."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "BULLETIN",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "PAUSE",
+      "enum": "5",
+      "clue": "Animal feet, we hear, take a break",
+      "type": "sounds",
+      "def": [
+        4,
+        7
+      ],
+      "ind": [
+        2,
+        4
+      ],
+      "parts": [
+        {
+          "w": [
+            0,
+            2
+          ],
+          "gives": "PAWS"
+        }
+      ],
+      "parse": "sounds like (we hear) PAWS (animal feet) = PAUSE",
+      "explain": [
+        "“we hear” says the answer sounds like another word.",
+        "PAWS (animal feet) sounds like PAUSE, take a break."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "PAUSE",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "SPIT",
+      "enum": "4",
+      "clue": "Skewer tips back",
+      "type": "reversal",
+      "def": [
+        0,
+        1
+      ],
+      "ind": [
+        2,
+        3
+      ],
+      "fod": [
+        1,
+        2
+      ],
+      "parse": "TIPS reversed (back) = SPIT",
+      "explain": [
+        "“back” says a word is reversed.",
+        "TIPS backwards → SPIT, a skewer."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "SPIT",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "FRIEND",
+      "enum": "6",
+      "clue": "Fiend keeping right mate",
+      "type": "container",
+      "def": [
+        3,
+        4
+      ],
+      "ind": [
+        1,
+        2
+      ],
+      "parts": [
+        {
+          "w": [
+            0,
+            1
+          ],
+          "gives": "FIEND"
+        },
+        {
+          "w": [
+            2,
+            3
+          ],
+          "gives": "R"
+        }
+      ],
+      "parse": "FIEND keeping R (right) = F(R)IEND = FRIEND",
+      "explain": [
+        "“keeping” says one piece holds another inside it.",
+        "FIEND around R (right) → F(R)IEND, FRIEND: a mate."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "FRIEND",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "STALL",
+      "enum": "5",
+      "clue": "Put off market stand",
+      "type": "double",
+      "def": [
+        0,
+        2
+      ],
+      "ind": null,
+      "parts": [
+        {
+          "w": [
+            2,
+            4
+          ],
+          "gives": "STALL"
+        }
+      ],
+      "parse": "STALL (put off) and STALL (market stand)",
+      "explain": [
+        "No signpost: the clue is two definitions of the same word.",
+        "Put off = STALL, and a market stand = STALL."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "STALL",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "KNEAD",
+      "enum": "5",
+      "clue": "Want, we hear, to work dough",
+      "type": "sounds",
+      "def": [
+        4,
+        6
+      ],
+      "ind": [
+        1,
+        3
+      ],
+      "parts": [
+        {
+          "w": [
+            0,
+            1
+          ],
+          "gives": "NEED"
+        }
+      ],
+      "parse": "sounds like (we hear) NEED (want) = KNEAD; “to” links to the definition",
+      "explain": [
+        "“we hear” says the answer sounds like another word.",
+        "NEED (want) sounds like KNEAD, work dough."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "KNEAD",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "PADLOCK",
+      "enum": "7",
+      "clue": "Secure flat hair",
+      "type": "charade",
+      "def": [
+        0,
+        1
+      ],
+      "ind": null,
+      "parts": [
+        {
+          "w": [
+            1,
+            2
+          ],
+          "gives": "PAD"
+        },
+        {
+          "w": [
+            2,
+            3
+          ],
+          "gives": "LOCK"
+        }
+      ],
+      "parse": "PAD (flat) + LOCK (hair) = PADLOCK",
+      "explain": [
+        "No signpost: in a charade the pieces simply sit side by side.",
+        "PAD (flat) + LOCK (hair) = PADLOCK, secure."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "PADLOCK",
+        "confidence": "high"
+      }
+    },
+    {
+      "answer": "MINED",
+      "enum": "5",
+      "clue": "Excavated denim returned",
+      "type": "reversal",
+      "def": [
+        0,
+        1
+      ],
+      "ind": [
+        2,
+        3
+      ],
+      "fod": [
+        1,
+        2
+      ],
+      "parse": "DENIM reversed (returned) = MINED",
+      "explain": [
+        "“returned” says a word is reversed.",
+        "DENIM backwards → MINED, excavated."
+      ],
+      "checked": {
+        "on": "2026-11-12",
+        "solved": "MINED",
+        "confidence": "high"
+      }
+    }
+  ],
+  "ledger": {
+    "_comment": "days: the clue each page carries (serial, date, answer); written by build-cryptic-batch.js --through, never changed once a page exists. reserve: the unscheduled clues, in the order they will be used.",
+    "days": [
+      {
+        "serial": 1,
+        "date": "2026-11-22",
+        "answer": "BARGAIN"
+      },
+      {
+        "serial": 2,
+        "date": "2026-11-23",
+        "answer": "STUDY"
+      },
+      {
+        "serial": 3,
+        "date": "2026-11-24",
+        "answer": "CABIN"
+      },
+      {
+        "serial": 4,
+        "date": "2026-11-25",
+        "answer": "SCENT"
+      },
+      {
+        "serial": 5,
+        "date": "2026-11-26",
+        "answer": "REGAL"
+      },
+      {
+        "serial": 6,
+        "date": "2026-11-27",
+        "answer": "SWEAT"
+      },
+      {
+        "serial": 7,
+        "date": "2026-11-28",
+        "answer": "PATIENT"
+      },
+      {
+        "serial": 8,
+        "date": "2026-11-29",
+        "answer": "REACT"
+      },
+      {
+        "serial": 9,
+        "date": "2026-11-30",
+        "answer": "ATLAS"
+      },
+      {
+        "serial": 10,
+        "date": "2026-12-01",
+        "answer": "WARDEN"
+      },
+      {
+        "serial": 11,
+        "date": "2026-12-02",
+        "answer": "MEDDLE"
+      },
+      {
+        "serial": 12,
+        "date": "2026-12-03",
+        "answer": "REVEL"
+      },
+      {
+        "serial": 13,
+        "date": "2026-12-04",
+        "answer": "CARTON"
+      },
+      {
+        "serial": 14,
+        "date": "2026-12-05",
+        "answer": "PITCH"
+      }
+    ],
+    "reserve": [
+      "TREASON",
+      "HERON",
+      "BULLETIN",
+      "PAUSE",
+      "SPIT",
+      "FRIEND",
+      "STALL",
+      "KNEAD",
+      "PADLOCK",
+      "MINED"
+    ]
+  },
+  "dropped": [
+    {
+      "on": "2026-11-12",
+      "clue": "Simple aircraft, we hear (5)",
+      "answer": "PLAIN",
+      "why": "sound-alike whose partner (PLANE) has the same length: a fair wrong entry would shake"
+    },
+    {
+      "on": "2026-11-12",
+      "clue": "Rest for car stopper, we hear (5)",
+      "answer": "BREAK",
+      "why": "same-length partner (BRAKE); the checker rated it a real risk"
+    },
+    {
+      "on": "2026-11-12",
+      "clue": "Flower lines, we hear (4)",
+      "answer": "ROSE",
+      "why": "the checker found ROWS equally good"
+    },
+    {
+      "on": "2026-11-12",
+      "clue": "Rubbish middle, by the sound of it (5)",
+      "answer": "WASTE",
+      "why": "the checker found WAIST equally good"
+    },
+    {
+      "on": "2026-11-12",
+      "clue": "Sounds like breakfast food for drama series (6)",
+      "answer": "SERIAL",
+      "why": "same-length partner (CEREAL)"
+    },
+    {
+      "on": "2026-11-12",
+      "clue": "Cheater turned into class leader (7)",
+      "answer": "TEACHER",
+      "why": "solved, but CHEATER/TEACHER is a stock pair regulars know on sight"
+    },
+    {
+      "on": "2026-11-12",
+      "clue": "Animals step back (4)",
+      "answer": "PETS",
+      "why": "solved, but “animals” is a loose definition"
+    },
+    {
+      "on": "2026-11-12",
+      "clue": "Eye opening for student (5)",
+      "answer": "PUPIL",
+      "why": "solved; kept out to hold the double definitions to an occasional three"
+    },
+    {
+      "on": "2026-11-12",
+      "clue": "Complete pit, reportedly (5)",
+      "answer": "WHOLE",
+      "why": "solved; spare sound-alike, not needed"
+    },
+    {
+      "on": "2026-11-12",
+      "clue": "Deer, we hear, for bread (5)",
+      "answer": "DOUGH",
+      "why": "solved, but bread for DOUGH is slang on slang"
+    }
+  ]
+}

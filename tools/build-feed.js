@@ -199,7 +199,7 @@ function heroStat(html) {
 // digi-doku-0004) predate the naming pattern. A new type needs a line here and
 // a label in front.js's PUZZLE_TYPES, or its cards show under All puzzles only.
 const TYPE_OF_ID = { MINI: 'mini', LEXI: 'doku', SWEEP: 'sweep', PATH: 'path',
-                     LINK: 'link', TANG: 'tangle', BORD: 'borders', RECK: 'reckon', TALLY: 'tally', TILT: 'tilt', REDA: 'redact', TUMB: 'tumbler' };
+                     LINK: 'link', TANG: 'tangle', BORD: 'borders', RECK: 'reckon', TALLY: 'tally', TILT: 'tilt', REDA: 'redact', TUMB: 'tumbler', CRYP: 'cryptic' };
 function puzzleType(html, rel, warnings) {
   const m = html.match(/\bid\s*:\s*"DP·([A-Z]+)·/) || html.match(/DP·([A-Z]+)·[0-9]/);
   const type = m && TYPE_OF_ID[m[1]];
@@ -242,6 +242,8 @@ function puzzleMask(html, rel, warnings) {
   if (/\bwindow\.DN_PUZZLE=\{type:"redact"/.test(html)) return '';
   // Tumbler (Lab, 6 Nov 2026): the wheels would give letters away; the card uses the fixed dn:thumb.
   if (/\bwindow\.DN_PUZZLE=\{type:"tumbler"/.test(html)) return '';
+  // Cryptic (Lab, 12 Nov 2026): one clue; nothing of it travels to the card, which uses the fixed dn:thumb.
+  if (/\bwindow\.DN_PUZZLE=\{type:"cryptic"/.test(html)) return '';
   if (/\bwindow\.DN_PUZZLE=\{id:"DP\u00b7RECK\u00b7/.test(html)) {
     const qs = (html.match(/"lo":/g) || []).length;
     if (qs !== 10) warnings.push(`${rel} — Reckon puzzle parsed as ${qs} question(s), expected 10`);
