@@ -29,6 +29,7 @@ const TEXT = {
   redact: "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
   tumbler: "Today's word is hidden in four wheels of letters. Give them a spin and close in on it.",
   reach: 'Six numbers and a target. Add, take away, multiply and divide your way to it.',   // Lab build, 12 Nov 2026 (wording for Alec to approve)
+  pixel: 'Fill the squares the number clues call for, and a picture appears.',
 };
 const WORD = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
 /* Link keeps its daily twist: how many tiles are bluffing (the traps). */
@@ -49,6 +50,7 @@ const TYPE_OF = [
   [/-geo-borders-\d+\.html$/, 'borders'], [/-quiz-reckon-\d+\.html$/, 'reckon'], [/-logic-tally-\d+\.html$/, 'tally'],
   [/-logic-tilt-\d+\.html$/, 'tilt'], [/-word-redact-\d+\.html$/, 'redact'], [/-word-tumbler-\d+\.html$/, 'tumbler'],
   [/-logic-reach-\d+\.html$/, 'reach'],
+  [/-logic-pixel-\d+\.html$/, 'pixel'],
   // three July 2026 pages from before the dated names
   [/^digi-path-\d+\.html$/, 'path'], [/^digi-doku-\d+\.html$/, 'doku'], [/^DP-SWEEP-\d{4}-\d{2}-\d{2}\.html$/, 'sweep'],
 ];

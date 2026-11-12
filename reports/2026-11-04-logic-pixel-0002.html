@@ -1,0 +1,92 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="dn:headline"   content="Pixel 0002">
+<meta name="dn:standfirst" content="Fill the squares the number clues call for, and a picture appears.">
+<meta name="dn:topic"      content="Logic">
+<meta name="dn:date"       content="2026-11-04">
+<meta name="dn:kind"       content="puzzle">
+<meta name="dn:read"       content="~1 min">
+<meta name="dn:thumb"      content="assets/pixel-thumb.svg">
+<meta name="dn:badge"      content="In development">
+<meta name="theme-color" content="#2E5BFF">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pixel">
+<title>Pixel — Noodle Puzzles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../engines/pixel.css">
+<!-- og:start (tools/og-tags.js — do not edit by hand) -->
+<meta property="og:site_name" content="The Daily Noodle">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pixel 0002">
+<meta property="og:description" content="Fill the squares the number clues call for, and a picture appears.">
+<meta property="og:url" content="https://dailynoodle.co.uk/reports/2026-11-04-logic-pixel-0002.html">
+<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
+<meta name="twitter:card" content="summary_large_image">
+<!-- og:end -->
+</head>
+<body>
+<div class="app" id="app">
+<header>
+  <div class="masthead">
+    <div class="mono-mark">DP</div>
+    <div class="mh-text">
+      <div class="mh-name">Noodle<span class="accent">Puzzles</span></div>
+      <div class="mh-eyebrow">Pixel</div>
+    </div>
+  </div>
+  <div class="streakbox">🔥 <b id="streakn">0</b></div>
+</header>
+<div class="meta">
+  <span class="tag">Pixel</span>
+  <span id="pid">DP·PIXEL·0002</span>
+  <span>·</span>
+  <span id="pband">medium</span>
+  <span id="timer">0:00</span>
+</div>
+<main>
+  <div class="board" id="board">
+    <div class="corner" aria-hidden="true"></div>
+    <div class="colclues" id="colClues" aria-hidden="true"></div>
+    <div class="rowclues" id="rowClues" aria-hidden="true"></div>
+    <div class="grid" id="grid" role="grid" aria-label="Pixel board"></div>
+  </div>
+  <div class="tools">
+    <div class="mode" role="group" aria-label="What a tap does">
+      <button id="fillMode" type="button" aria-pressed="true"><span class="sw-fill" aria-hidden="true"></span>Fill</button>
+      <button id="crossMode" type="button" aria-pressed="false"><svg class="sw-x" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8"/></svg>Mark</button>
+    </div>
+    <button id="undoBtn" type="button" disabled>Undo</button>
+    <button id="checkBtn" type="button">Check</button>
+  </div>
+  <p class="progress"><b id="linesDone">0</b> of <span id="linesAll">16</span> lines done</p>
+  <p class="msg" id="msg">Tap a square to fill it, again to cross it out, again to clear it. Drag to paint a line.</p>
+</main>
+<footer>SHELL — Pixel v1 · DP·PIXEL·0002 · verified in code, not by eye</footer>
+</div>
+
+<div class="modal" id="modal"><div class="modalcard">
+  <h2>Solved</h2>
+  <div class="sub" id="modalsub">DP·PIXEL·0002 · MEDIUM</div>
+  <div class="statrow">
+    <div class="stat"><b id="statTime">0:00</b><span>Time</span></div>
+    <div class="stat"><b id="statStreak">0</b><span>Streak</span></div>
+  </div>
+  <div class="modalbtns">
+    <button id="shareBtn">Share result</button>
+    <button class="primary" id="closeBtn">Nice</button>
+  </div>
+</div></div>
+
+<script>
+/* This puzzle's data. The player is ../engines/pixel.js, shared by every Pixel. The picture comes from tools/pixel-pictures.json. */
+window.DN_PUZZLE={type:"pixel",id:"DP·PIXEL·0002",band:"medium",n:8,rows:[[],[4],[2,2],[8],[8],[2,2],[2,2],[]],cols:[[2],[5],[6],[1,2],[1,2],[6],[5],[2]],sol:"0000000000111100011001101111111111111111011001100110011000000000",colours:"..........bbbb...bb..bb.bbbbbbbbbbbbbbbb.kk..kk..kk..kk.........",name:"A car",pic:"car-8",seed:"pixel-0002"};
+window.DN_PALETTE={"b":"#2E7DD7","k":"#2B2D3A"};
+</script>
+<script src="../engines/pixel.js"></script>
+<script src="../dn-track.js" defer></script>
+</body></html>
