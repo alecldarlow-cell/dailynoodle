@@ -30,7 +30,7 @@
 .ac-sw input:checked{background:var(--accent)}
 .ac-sw input:checked::after{transform:translateX(20px)}
 .ac-sw input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.ac-sw[hidden]{display:none}
+.ac-sw[hidden],.ac-row[hidden]{display:none}
 @media (prefers-reduced-motion:reduce){.ac-sw input,.ac-sw input::after{transition:none}}
 /* the sign-in card's own parts (dn-sync.js), in this page's card */
 .ac-card.synccard{padding:4px 16px 2px}
