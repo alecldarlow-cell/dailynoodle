@@ -58,9 +58,7 @@ async function timer(browser, type) {
     await wait(p, 5000);
     check(await clock(p) === atEnd, type + ': clock stops at the result');
     if (type === 'link') {
-      await p.getByRole('button', { name: 'Play again (not recorded)', exact: true }).click();
-      await wait(p, 5000);
-      check(await clock(p) >= 5 && await clock(p) <= 6, 'link: replay starts a fresh clock without a start card');
+      check(await p.getByRole('button', { name: 'Play again (not recorded)', exact: true }).count() === 0, 'link: no replay after a loss (15 Nov 2026)');
     }
     await p.reload(); await wait(p, 5000);
     check(await clock(p) === atEnd, type + ': reopening preserves the original completed time');

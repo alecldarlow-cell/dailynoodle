@@ -517,7 +517,7 @@ function showEnd(win){
   $("#winTime").textContent=dnTime(stamp());
   $("#winStreak").textContent=$("#streak").textContent;
   $("#winBest").textContent=$("#best").textContent;
-  $("#winNew").textContent=win?"Done":"Play again";
+  $("#winNew").textContent="Done";   // no replays (15 Nov 2026, Alec): the sheet already shows every group
   finishSheet(shareText(),win);
   $("#winModal").classList.add("on");
 }
@@ -538,9 +538,7 @@ function finishSheet(share,win){
   const note=win?(nm?`All four groups with ${m}.${caught}`:"All four groups, no mistakes."):`You found ${found===1?"one group":["no","one","two","three"][found]+" groups"} of four.${caught}`;
   const bands=document.createElement("div");bands.className="fin-bands";
   bands.innerHTML=P.groups.slice().sort((a,b)=>a.rank-b.rank).map(g=>`<div class="fin-band fin-b${g.rank}"><b>${g.name}</b><span>${g.members.join(", ")}</span></div>`).join("");
-  let after=null;
-  if(!win){after=document.createElement("button");after.type="button";after.className="fin-link";after.textContent="Play again (not recorded)";
-    after.addEventListener("click",()=>{window.dnFinish.hide();$("#winModal").classList.remove("on");replayStarted=true;start();rankLabel();doneSync();});}
+  const after=null;   // "Play again (not recorded)" removed 15 Nov 2026 (Alec): after a loss the groups are on the sheet
   window.dnFinish.show({type:"link",id:P.id,n:parseInt(String(P.id).split("·").pop(),10),date:(document.querySelector('meta[name="dn:date"]')||{}).content||"",
     box:"winModal",title:"winTitle",solved:!!win,hero,note,share:{text:()=>share},
     stats:[{id:"winTime",label:"time"},{id:"winStreak",label:"day streak"},{id:"winBest",label:"best streak"}],
@@ -599,7 +597,7 @@ $("#winShare").onclick=async()=>{
   }
   setTimeout(()=>b.textContent="Share result",1600);
 };
-$("#winNew").onclick=()=>{$("#winModal").classList.remove("on"); if(!won){replayStarted=true;start();rankLabel();}};
+$("#winNew").onclick=()=>{$("#winModal").classList.remove("on");};
 $("#winModal").addEventListener("click",e=>{if(e.target===$("#winModal"))$("#winModal").classList.remove("on");});
 
 /* ---- controls ---- */
