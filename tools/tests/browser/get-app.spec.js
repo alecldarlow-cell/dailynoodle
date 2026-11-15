@@ -21,6 +21,8 @@ test('GET-APP-02: GIVEN a returning Android player WHEN Puzzles opens THEN the c
  const card=p.locator('#getapp');
  await expect(card).toBeVisible();
  await expect(card.locator('b')).toHaveText('Daily Noodle is on Google Play');
+ await expect(card.getByRole('link',{name:'Get it on Google Play'})).toBeVisible();
+ expect(await card.locator('.go img').evaluate(i=>i.complete&&i.naturalWidth>0)).toBe(true);
  expect(await card.locator('.go').getAttribute('href')).toMatch(new RegExp(PLAY.source+'today$'));
  expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await H.tap(p,card.locator('.no'));
@@ -50,9 +52,14 @@ test('GET-APP-04: GIVEN an Android browser WHEN Account and About open THEN each
  await expect(row).toBeVisible();
  expect(await row.getAttribute('href')).toMatch(new RegExp(PLAY.source+'account$'));
  await goto(phone,'about.html');
- const a=p.getByRole('link',{name:'on Google Play'});
+ const a=p.getByRole('link',{name:'on Google Play',exact:true});
  await expect(a).toBeVisible();
  expect(await a.getAttribute('href')).toMatch(new RegExp(PLAY.source+'about$'));
+ const badge=p.getByRole('link',{name:'Get it on Google Play',exact:true});
+ await expect(badge).toBeVisible();
+ expect(await badge.getAttribute('href')).toMatch(new RegExp(PLAY.source+'about-badge$'));
+ expect(await badge.locator('img').evaluate(i=>i.complete&&i.naturalWidth>0)).toBe(true);
+ await expect(p.getByText('Google Play and the Google Play logo are trademarks of Google LLC.')).toBeVisible();
  expect(await p.content()).not.toMatch(/is in testing/);
  expect(phone.errors).toEqual([]);
 });

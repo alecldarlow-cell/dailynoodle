@@ -8,6 +8,8 @@
    - The finish sheet (engines/finish.js loads this file): a quiet "Get the Daily Noodle app ›"
      line after a solve, same rule as the card.
    - Account and About: a plain link, for Android and desktop, always (the player went looking).
+   The badge is Google's own "Get it on Google Play" artwork (assets/google-play-badge.png, unaltered,
+   transparent margin trimmed): never recolour, crop or rearrange it. About carries the trademark line.
    Kept: noodle-getapp-v1 = {no: <ms>} after Not now, {got: <ms>} after a tap (new key).
    Sent (dn-track.js, only when it's recording): app_promo_view / app_promo_tap /
    app_promo_dismiss, each with {place}. The Play link carries an install referrer
@@ -57,7 +59,7 @@
       '.dn-getapp p{margin:4px 0 12px;font:14px/1.45 var(--body,Arial,sans-serif);color:var(--muted,#5F636B)}' +
       '.dn-getapp p a{color:inherit}' +
       '.dn-getapp .acts{display:flex;gap:10px;align-items:center}' +
-      '.dn-getapp .go{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:var(--accent,#0E7A4B);color:var(--on-accent,#fff);font:600 15px/1 var(--body,Arial,sans-serif);text-decoration:none}' +
+      '.dn-getapp .go{display:inline-block;line-height:0}.dn-getapp .go img{display:block;width:162px;height:48px}' +
       '.dn-getapp .no{min-height:44px;padding:0 12px;border:0;background:none;color:var(--muted,#5F636B);font:500 15px/1 var(--body,Arial,sans-serif);cursor:pointer}' +
       '.fin-getapp{order:5}';
     document.head.appendChild(s);
@@ -71,7 +73,7 @@
     box.setAttribute('role', 'region'); box.setAttribute('aria-label', 'Get the app');
     box.innerHTML = '<b>Daily Noodle is on Google Play</b>' +
       '<p>The same puzzles, made for your phone. To bring your streaks and leagues, <a href="account.html?via=getapp">sign in</a> here and in the app.</p>' +
-      '<div class="acts"><a class="go">Get the app</a><button type="button" class="no">Not now</button></div>';
+      '<div class="acts"><a class="go"><img src="assets/google-play-badge.png" width="162" height="48" alt="Get it on Google Play"></a><button type="button" class="no">Not now</button></div>';
     link(box.querySelector('.go'), 'today');
     box.querySelector('.no').addEventListener('click', function () {
       var s = load(); s.no = Date.now(); save(s); box.hidden = true; track('app_promo_dismiss', 'today');
