@@ -211,3 +211,11 @@ html.dn-house .app #grid .sq:hover{background:var(--active-word)}
 html.dn-house .app #grid .sq.cur:hover{background:var(--active)}
 .cr-card .sq.lock{color:var(--brand-deep)}
 @media (orientation:landscape) and (max-height:520px){.cr-card .cr-grid{--sq:46px;margin:4px 0 0}.cr-clue{font-size:clamp(18px,3.4vw,22px)}}
+
+/* ---- as printed (15 Nov 2026, Alec chose example B over A): an ACROSS heading in the clue's serif with a rule under it,
+   then the clue with its bold number beside it, as a newspaper sets a clue list ---- */
+.cr-card .cr-label{font-family:Georgia,"Iowan Old Style","Noto Serif","Times New Roman",serif;font-size:15px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink);padding-bottom:8px;border-bottom:1.5px solid var(--ink);margin-bottom:-2px}
+.cr-clue{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;align-items:baseline}
+.cr-clue .cr-cnum{font-weight:700}
+@media (orientation:landscape) and (max-height:520px){.cr-card .cr-label{font-size:13px;padding-bottom:5px}}

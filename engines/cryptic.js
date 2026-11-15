@@ -255,7 +255,9 @@ function clueHtml(text,opts){
   return out;
 }
 function paintClue(){
-  clueEl.innerHTML=clueHtml(PUZZLE.clue,{def:state.hints>=1?DEF:null})+'&nbsp;<span class="cr-enum">('+String(PUZZLE.enum)+')</span>';   // the enumeration never sits alone on a line
+  // as printed (Alec's pick, 15 Nov 2026, example B): the bold clue number beside the clue, the clue wrapping under its own first word;
+  // the enumeration never sits alone on a line
+  clueEl.innerHTML='<b class="cr-cnum" aria-hidden="true">1</b><span class="cr-ctext">'+clueHtml(PUZZLE.clue,{def:state.hints>=1?DEF:null})+'&nbsp;<span class="cr-enum">('+String(PUZZLE.enum)+')</span></span>';
 }
 
 /* ---------- the squares ---------- */
@@ -264,7 +266,7 @@ const squares=[];
 (function card(){
   const c=document.createElement("section");c.className="cr-card";c.setAttribute("aria-label","Today’s clue");
   const label=document.querySelector(".cr-label");
-  label.innerHTML='<b class="cr-num">1</b> Across';   // a crossword's own heading: players read "a clue, a light to fill" at a glance
+  label.textContent="Across";label.setAttribute("aria-label","1 Across");   // a newspaper puzzle's heading: players read "a clue, a light to fill" at a glance
   label.parentNode.insertBefore(c,label);[label,clueEl,gridEl].forEach(n=>c.appendChild(n));
 })();
 function build(){
