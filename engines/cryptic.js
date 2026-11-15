@@ -264,6 +264,7 @@ const squares=[];
 (function card(){
   const c=document.createElement("section");c.className="cr-card";c.setAttribute("aria-label","Today’s clue");
   const label=document.querySelector(".cr-label");
+  label.innerHTML='<b class="cr-num">1</b> Across';   // a crossword's own heading: players read "a clue, a light to fill" at a glance
   label.parentNode.insertBefore(c,label);[label,clueEl,gridEl].forEach(n=>c.appendChild(n));
 })();
 function build(){
@@ -293,9 +294,10 @@ function build(){
 }
 /* the squares stay square at whatever width they get (set from the grid's width; engines/cryptic.css shares it out) */
 function fit(){
-  const cs=getComputedStyle(gridEl),gap=parseFloat(cs.columnGap)||8,max=parseFloat(cs.getPropertyValue("--sq"))||56;
-  const w=gridEl.clientWidth;if(!w)return;
-  gridEl.style.setProperty("--side",Math.max(20,Math.min(max,Math.floor((w-(N-1)*gap)/N)))+"px");
+  // the answer is one crossword light (15 Nov 2026): joined squares in a framed strip, as wide as the card allows
+  const cs=getComputedStyle(gridEl),max=parseFloat(cs.getPropertyValue("--sq"))||56,frame=(parseFloat(cs.borderLeftWidth)||0)+(parseFloat(cs.borderRightWidth)||0);
+  const box=gridEl.parentNode,ps=getComputedStyle(box),w=box.clientWidth-(parseFloat(ps.paddingLeft)||0)-(parseFloat(ps.paddingRight)||0)-frame;if(!(w>0))return;
+  gridEl.style.setProperty("--side",Math.max(24,Math.min(max,Math.floor(w/N)))+"px");
 }
 window.addEventListener("resize",fit);window.addEventListener("dn:play",()=>requestAnimationFrame(fit));
 function firstOpen(from){for(let i=from;i<N;i++)if(!locked(i))return i;for(let i=0;i<N;i++)if(!locked(i))return i;return N-1;}

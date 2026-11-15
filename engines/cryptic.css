@@ -182,3 +182,32 @@ html.dn-reduce .sq.cur:empty::after,html.dn-reduce .sq.in{animation:none}
 html.dn-house[data-theme="dark"] .key{box-shadow:0 1px 0 rgba(0,0,0,.5)}
 @media (max-height:640px){.cr-card{padding:14px 14px 16px;gap:10px}}
 @media (orientation:landscape) and (max-height:520px){.cr-card{padding:10px 12px 12px;gap:8px;border-radius:16px}.cr-top::before,.cr-top::after{display:none}}
+
+/* ---- crossword look (15 Nov 2026, Alec: "I want the clue to look more like a crossword ... so players instinctively
+   grasp the puzzle"). The clue reads as a newspaper clue: "1 Across" over it, the clue in a book serif with its
+   enumeration; the answer is a crossword light like the Mini's grid: joined squares in a framed strip, a small 1 in
+   the first square, the word pale marigold and the current square marigold. A two-word answer gets a bar between words. */
+.cr-label{font-size:13px;letter-spacing:.06em;color:var(--ink-soft)}
+.cr-label .cr-num{color:var(--brand);font-weight:800;margin-right:2px}
+.cr-clue{font-family:Georgia,"Iowan Old Style","Noto Serif","Times New Roman",serif;font-size:clamp(21px,6.4vw,26px);line-height:1.32;letter-spacing:0}
+.cr-enum{font-size:1em;color:var(--ink-soft)}
+.cr-d{text-underline-offset:5px}
+.cr-card .cr-grid{--sq:54px;display:grid;grid-template-columns:repeat(var(--n),var(--side));gap:0;width:max-content;max-width:100%;margin:8px auto 0;
+  border:3px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line)}
+.cr-card .sq{position:relative;width:var(--side);height:var(--side);border:0;border-left:1px solid var(--cell-edge,#cfd3dc);border-radius:0;
+  background:var(--active-word);box-shadow:none;transform:none;font-size:calc(var(--side) * .48)}
+.cr-card .sq:first-child{border-left:0}
+.cr-card .sq.gap{margin-left:0;border-left:4px solid var(--line)}
+.cr-card .sq:first-child::before{content:"1";position:absolute;top:3px;left:4px;font:600 calc(var(--side) * .2)/1 var(--sans);color:var(--ink-soft)}
+.cr-card .sq.cur{background:var(--active);box-shadow:none;transform:none}
+.cr-card .sq.cur:first-child::before{color:#141726}
+.cr-card .sq.in{animation:cr-in2 .14s ease-out}
+@keyframes cr-in2{0%{transform:scale(.8)}100%{transform:scale(1)}}
+.cr-card .sq.won,html.dn-house .app #grid.cr-grid .sq.won{background:var(--good);color:#fff;border-left-color:rgba(255,255,255,.35)}
+.cr-card .sq.won::before{color:rgba(255,255,255,.8)}
+.cr-card .sq.pop{animation:cr-win2 .52s ease both}
+@keyframes cr-win2{0%{filter:brightness(1)}35%{filter:brightness(1.25)}100%{filter:brightness(1)}}
+html.dn-house .app #grid .sq:hover{background:var(--active-word)}
+html.dn-house .app #grid .sq.cur:hover{background:var(--active)}
+.cr-card .sq.lock{color:var(--brand-deep)}
+@media (orientation:landscape) and (max-height:520px){.cr-card .cr-grid{--sq:46px;margin:4px 0 0}.cr-clue{font-size:clamp(18px,3.4vw,22px)}}
