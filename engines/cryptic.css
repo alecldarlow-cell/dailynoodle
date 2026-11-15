@@ -148,3 +148,37 @@ footer{display:none}
 .fin-cryptic dd{margin:0;color:var(--ink-soft)}
 .fin-cryptic .cr-rc-type{margin:0;font-size:13px;color:var(--ink-soft)}
 .fin-cryptic .cr-learn{margin:0;align-self:flex-start}
+
+/* ---- polish (15 Nov 2026, Alec: "the main puzzle page could do with some more polish") ----
+   The label, clue and squares share one card (the start card's warm sheet), and the card, buttons and
+   help line sit centred in the room above the keyboard instead of hanging from the top. */
+.cr-card{background:#F1F0EC;border-radius:20px;padding:18px 18px 20px;display:flex;flex-direction:column;gap:14px}
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .cr-card{background:#1B1E29}}
+html.dn-house[data-theme="dark"] .cr-card{background:#1B1E29}
+.cr-card .cr-grid{margin-top:6px}
+.cr-top::before{content:"";flex:1 1 0}   /* a little more room below than above: the card sits a touch high, where the eye starts */
+.cr-top::after{content:"";flex:1.5 1 0}
+.cr-clue{text-wrap:pretty}
+.cr-enum{white-space:nowrap;font-size:.8em}
+/* the squares: a little softer, the current one lifted, a caret in an empty current square, a typed letter pops in */
+.sq{border-radius:10px;transition:background .15s,transform .15s,box-shadow .15s}
+.sq.cur{box-shadow:0 6px 14px rgba(20,23,38,.18);transform:translateY(-2px)}
+.sq.cur:empty::after{content:"";width:2px;height:46%;border-radius:1px;background:#141726;animation:cr-caret 1.1s steps(1) infinite}
+@keyframes cr-caret{50%{opacity:0}}
+.sq.in{animation:cr-in .14s ease-out}
+@keyframes cr-in{0%{transform:translateY(-2px) scale(.86)}100%{transform:translateY(-2px) scale(1)}}
+.sq.won,.sq.pop{box-shadow:none}
+@media (prefers-reduced-motion:reduce){.sq.cur:empty::after,.sq.in{animation:none}.sq.cur{transform:none}}
+html.dn-reduce .sq.cur:empty::after,html.dn-reduce .sq.in{animation:none}
+/* Hint carries the bulb of the mock; Reveal an eye */
+.cr-btn{display:flex;align-items:center;justify-content:center;gap:8px}
+.cr-btn svg{flex:none}
+/* the help line: quiet ink-soft; a message (a wrong answer, a nudge) a touch stronger */
+.msg{font-size:14px;line-height:1.4;max-width:34ch;margin-inline:auto;text-wrap:balance}
+.msg.cr-note{color:var(--ink);font-weight:500}
+/* keys: a hairline shadow under each, as a phone keyboard */
+.key{box-shadow:0 1px 0 rgba(20,23,38,.22)}
+@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .key{box-shadow:0 1px 0 rgba(0,0,0,.5)}}
+html.dn-house[data-theme="dark"] .key{box-shadow:0 1px 0 rgba(0,0,0,.5)}
+@media (max-height:640px){.cr-card{padding:14px 14px 16px;gap:10px}}
+@media (orientation:landscape) and (max-height:520px){.cr-card{padding:10px 12px 12px;gap:8px;border-radius:16px}.cr-top::before,.cr-top::after{display:none}}

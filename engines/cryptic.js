@@ -192,7 +192,14 @@ const NUM=parseInt(String(PUZZLE.id).split("·").pop(),10);
 $("pid").textContent="Cryptic "+NUM;
 if($("pband"))$("pband").textContent=LAB?"Lab":"Medium";
 function fmt(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
-function setMsg(t){msgEl.textContent=t;}
+/* the help line under the buttons is never blank: an empty message brings back the line for where the player is */
+function idleLine(){
+  if(state.solved)return msgEl.textContent;
+  if(state.hints===0)return "Type your answer, then press Enter. A hint underlines the definition first.";
+  if(state.hints===1)return "The underlined words are the definition. The rest of the clue is wordplay.";
+  return revealed()?"Reveal another letter if you need one: each counts as a hint.":"Still stuck? Reveal a letter: it counts as a hint.";
+}
+function setMsg(t){msgEl.textContent=t||idleLine();msgEl.classList.toggle("cr-note",!!t);}
 const hintsText=h=>h===0?"no hints":h+" hint"+(h===1?"":"s");
 
 /* ---------- clock ---------- */
@@ -248,11 +255,17 @@ function clueHtml(text,opts){
   return out;
 }
 function paintClue(){
-  clueEl.innerHTML=clueHtml(PUZZLE.clue,{def:state.hints>=1?DEF:null})+' <span class="cr-enum">('+String(PUZZLE.enum)+')</span>';
+  clueEl.innerHTML=clueHtml(PUZZLE.clue,{def:state.hints>=1?DEF:null})+'&nbsp;<span class="cr-enum">('+String(PUZZLE.enum)+')</span>';   // the enumeration never sits alone on a line
 }
 
 /* ---------- the squares ---------- */
 const squares=[];
+/* polish (15 Nov 2026): the label, clue and squares sit together on one card, centred in the room above the keyboard */
+(function card(){
+  const c=document.createElement("section");c.className="cr-card";c.setAttribute("aria-label","Today’s clue");
+  const label=document.querySelector(".cr-label");
+  label.parentNode.insertBefore(c,label);[label,clueEl,gridEl].forEach(n=>c.appendChild(n));
+})();
 function build(){
   gridEl.innerHTML="";squares.length=0;gridEl.style.setProperty("--n",N);
   let g=0,left=GROUPS[0];
@@ -303,6 +316,7 @@ function type(ch){
   startTimer();
   if(locked(state.cur))state.cur=firstOpen(state.cur);
   state.letters[state.cur]=ch;
+  const typed=squares[state.cur];if(typed&&!REDUCE_MOTION){typed.classList.remove("in");void typed.offsetWidth;typed.classList.add("in");}
   let j=state.cur+1;while(j<N&&locked(j))j++;
   if(j<N)state.cur=j;
   setMsg("");paint();saveCur();
@@ -346,9 +360,11 @@ function tip(){
     double:"A double definition: the clue gives two meanings of the same word, side by side."
   }[PUZZLE.kind];
 }
+const BULB='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>';
+const REVEAL='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 function paintHints(){
   const h=state.hints;
-  hintBtn.textContent=h<2?"Hint "+(h+1)+" of 3":"Reveal a letter";
+  hintBtn.innerHTML=(h<2?BULB+"<span>Hint "+(h+1)+" of 3</span>":REVEAL+"<span>Reveal a letter</span>");
   hintBtn.disabled=state.solved||revealed()>=N;
   if(h<2){panel.hidden=true;return;}
   panel.hidden=false;
@@ -460,5 +476,5 @@ $("closeBtn").addEventListener("click",()=>{$("winModal").classList.remove("on")
 $("shareBtn").addEventListener("click",()=>{const text=shareText(state.hints,$("winTime").textContent);if(navigator.share)navigator.share({text}).catch(()=>{});else setMsg(text);});
 
 build();fit();
-if(!restoreDone()){restoreCur();paint();if(state.resumed)setMsg("Carrying on where you left off.");}
+if(!restoreDone()){restoreCur();paint();setMsg(state.resumed?"Carrying on where you left off.":"");}
 })();
