@@ -1,0 +1,48 @@
+name: Delete branches
+# Deletes branches whose pull request was merged into the default branch (and that have had
+# no commits since), plus any branches named in "also". Never the default branch, gh-pages,
+# or a branch with an open pull request. Only by hand. Added 15 Nov 2026 at Alec's request,
+# to clear old branches without deleting them one by one; new merges already auto-delete.
+on:
+  workflow_dispatch:
+    inputs:
+      also:
+        description: Unmerged branches to delete too (space-separated)
+        type: string
+        default: ''
+      dry_run:
+        description: List what would be deleted, delete nothing
+        type: boolean
+        default: true
+permissions:
+  contents: write
+  pull-requests: read
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Delete
+        env:
+          GH_TOKEN: ${{ github.token }}
+          R: ${{ github.repository }}
+          ALSO: ${{ inputs.also }}
+          DRY: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          owner="${R%%/*}"; def=$(gh api "repos/$R" --jq .default_branch)
+          gone=0; kept=0
+          for b in $(gh api --paginate "repos/$R/branches?per_page=100" --jq '.[].name'); do
+            if [ "$b" = "$def" ] || [ "$b" = gh-pages ]; then continue; fi
+            open=$(gh api "repos/$R/pulls?head=$owner:$b&state=open" --jq 'length')
+            if [ "$open" != 0 ]; then echo "keep  $b (open pull request)"; kept=$((kept+1)); continue; fi
+            head=$(gh api "repos/$R/branches/$b" --jq .commit.sha)
+            merged=$(gh api "repos/$R/pulls?head=$owner:$b&state=closed" --jq "[.[]|select(.merged_at!=null and .head.sha==\"$head\")]|length")
+            why=""
+            if [ "$merged" != 0 ]; then why="merged"; fi
+            for a in $ALSO; do if [ "$a" = "$b" ]; then why="${why:-named}"; fi; done
+            if [ -z "$why" ]; then echo "keep  $b (not merged, not named)"; kept=$((kept+1)); continue; fi
+            if [ "$DRY" = true ]; then echo "would delete  $b ($why)"; else gh api -X DELETE "repos/$R/git/refs/heads/$b" >/dev/null; echo "deleted  $b ($why)"; fi
+            gone=$((gone+1))
+          done
+          echo "${gone} to delete, ${kept} kept (dry run: $DRY)" | tee -a "$GITHUB_STEP_SUMMARY"
