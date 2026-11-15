@@ -358,21 +358,17 @@ const TESTS = {
     ok(!p.errs.length, 'jingle: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },
-  /* the sheet after Play again keeps its title and stats (25 Oct 2026: finish.js removed the old sheet
-     before taking the engine's #winTitle/#winTime/#winStreak/#winBest out of it) */
+  /* no replays on Link (15 Nov 2026, Alec): a lost Link ends on its sheet, Done closes it, and a reload
+     reopens the result (replaced 'the sheet after Play again keeps its title and stats', 25 Oct 2026) */
   async 'finish:replay-sheet-link'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
     await play.link(p, { wrong: 4 });
     ok(await text(p, '#winTitle') === 'So close.' && ends(ev)[0] && ends(ev)[0].x.outcome === 'failed', 'link: loss keeps the exact title and logs failed');
     ok(/^You found one group of four\./.test(await text(p, '.fin-note')), `link: loss note "${await text(p, '.fin-note')}"`);
-    await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
-    ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'link: Play again closes the sheet and marks the replay');
-    await play.link(p, { wrong: 0 });
-    const k = await p.evaluate(() => ({ sheets: document.querySelectorAll('#dnFin').length,
-      title: (document.querySelector('#dnFin .fin-title') || {}).textContent || '',
-      stats: ['winTime', 'winStreak', 'winBest'].map(id => { const e = document.querySelector('#dnFin #' + id); return e ? e.textContent.trim() : ''; }) }));
-    ok(k.sheets === 1 && k.title.trim() !== '' && k.stats.length === 3 && k.stats.every(Boolean),
-      `link: the replay's sheet has its title and (kept, for the tracker) stats (${k.sheets} sheet, "${k.title}", ${JSON.stringify(k.stats)})`);
+    ok(await p.getByText('Play again', { exact: false }).count() === 0, 'link: no Play again after a loss');
+    ok(await text(p, '#winNew') === 'Done', `link: the end button says Done after a loss ("${await text(p, '#winNew')}")`);
+    await p.reload(); await wait(p, 1500);
+    ok(await p.locator('#board .tile').count() === 0 && await text(p, '#rank') === '', 'link: a reopened loss stays finished, with no board to replay');
     ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },
@@ -883,9 +879,9 @@ const TESTS = {
     const s = await ls(p, 'digi-link-v1'), rec = s.done && s.done[P.id];
     ok(rec && rec.o === 'loss' && rec.m === 4 && rec.g.length === 4 && !s.cur, `link: loss saved, round cleared (${JSON.stringify(rec)})`);
     ok(await text(p, '#winTitle') === 'So close.', 'link: loss title unchanged');
-    await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
-    await pick(G[0]);
-    ok(!(await ls(p, 'digi-link-v1')).cur, 'link: a replay is never kept as a round');
+    // no replays from 15 Nov 2026 (was: Play again, then "a replay is never kept as a round")
+    await p.reload(); await wait(p, 1500);
+    ok(await p.locator('#board .tile').count() === 0 && !(await ls(p, 'digi-link-v1')).cur, 'link: the reopened loss stays finished, with no round kept');
     ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },
