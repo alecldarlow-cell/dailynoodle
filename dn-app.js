@@ -7,6 +7,7 @@
      player (saved results on 2+ days), until they tap Get the app or Not now.
    - The finish sheet (engines/finish.js loads this file): a quiet "Get the Daily Noodle app ›"
      line after a solve, same rule as the card.
+   - Leagues: after joining in an Android browser, a line under "You're in" (unless they already tapped).
    - Account and About: a plain link, for Android and desktop, always (the player went looking).
    The badge is Google's own "Get it on Google Play" artwork (assets/google-play-badge.png, unaltered,
    transparent margin trimmed): never recolour, crop or rearrange it. About carries the trademark line.
@@ -81,6 +82,14 @@
     box.hidden = false;
     track('app_promo_view', 'today');
   }
+  /* Leagues: after joining a league in an Android browser, one line under "You're in" (board.html) */
+  function joined(p) {
+    var s = load();
+    if (!(offered() && android() && !s.got)) return;
+    var a = p.querySelector('a'); if (!a) return;
+    style(); link(a, 'joined'); p.hidden = false;
+    track('app_promo_view', 'joined');
+  }
   /* Account and About: a plain link, shown wherever the app can be installed from */
   function plain(a, place) {
     if (!offered()) { if (a.hasAttribute('data-getapp-hide')) a.hidden = true; return; }
@@ -98,11 +107,17 @@
 
   window.dnApp = { url: url, finish: finish, nudge: nudge };
   function run() {
-    var els = document.querySelectorAll('[data-getapp]');
+    var els = document.querySelectorAll('[data-getapp]:not([data-getapp-done])');
     for (var i = 0; i < els.length; i++) {
       var el = els[i], place = el.getAttribute('data-getapp');
-      if (place === 'today') card(el); else plain(el, place);
+      el.setAttribute('data-getapp-done', '');
+      if (place === 'today') card(el); else if (place === 'joined') joined(el); else plain(el, place);
     }
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  function start() {
+    run();
+    // board.html draws its cards after loading leagues, so watch for ones added later
+    try { if (window.MutationObserver) new MutationObserver(run).observe(document.body, { childList: true, subtree: true }); } catch (e) {}
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
