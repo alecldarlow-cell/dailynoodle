@@ -66,6 +66,7 @@
   .nine a{display:flex;align-items:center;gap:12px;min-height:48px;padding:6px 14px;color:var(--ink);text-decoration:none}
   .nine b{font-family:var(--display);flex:0 0 68px}
   .nine span{color:var(--muted);font-size:14px}
+  .doc .play-badge{display:inline-block;line-height:0}.doc .play-badge img{display:block;width:162px;height:48px}.doc .tm{margin-top:28px;font-size:12px;color:var(--faint)}
 </style>
 </head>
 <body>
@@ -120,10 +121,12 @@
     <p>The site also carries <a href="index.html">Noodle News</a>, sourced data journalism with the figures shown, and a room of quick <a href="games.html">browser games</a>.</p>
 
     <h2>On your phone</h2>
-    <p>The Daily Noodle works in any browser, and you can add it to your home screen. An Android app, Daily Noodle, is in testing.</p>
+    <p>The Daily Noodle works in any browser, and you can add it to your home screen. An Android app, Daily Noodle, is <a data-getapp="about" href="https://play.google.com/store/apps/details?id=uk.co.dailynoodle.app">on Google Play</a>.</p>
+    <p><a class="play-badge" data-getapp="about-badge" data-getapp-hide hidden href="https://play.google.com/store/apps/details?id=uk.co.dailynoodle.app"><img src="assets/google-play-badge.png" width="162" height="48" alt="Get it on Google Play"></a></p>
 
     <h2>Contact</h2>
     <p>Questions, corrections and ideas are welcome at <a href="mailto:contact@dailynoodle.co.uk">contact@dailynoodle.co.uk</a>. How visits are counted, and how to switch that off, is on the <a href="privacy.html">privacy page</a>.</p>
+    <p class="tm">Google Play and the Google Play logo are trademarks of Google LLC.</p>
   </main>
 
   <footer class="foot">
@@ -131,5 +134,6 @@
   </footer>
 </div>
 <script src="dn-track.js" defer></script>
+<script src="dn-app.js" defer></script>
 </body>
 </html>

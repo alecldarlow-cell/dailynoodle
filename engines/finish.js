@@ -499,6 +499,15 @@
        5 ANSWER: the type's recap; when the round wasn't solved it comes straight after RESULT (AF-015)
      footer: "New Doku in 3h 38m", the day, and the Sound switch on the five grid types.
      The stats the engines pass are adopted into the hidden keep box: the tracker still reads their ids. */
+  /* dn-app.js lives at the site root and is loaded only when it might be needed; a failed load shows nothing */
+  function getApp(foot) {
+    if (window.dnApp) { window.dnApp.finish(foot); return; }
+    try {
+      var s = document.createElement('script'); s.src = '../dn-app.js'; s.async = true;
+      s.onload = function () { if (window.dnApp) window.dnApp.finish(foot); };
+      document.head.appendChild(s);
+    } catch (e) {}
+  }
   function show(cfg) {
     var box = $(cfg.box); if (!box) return;
     css(); fonts();
@@ -581,6 +590,9 @@
       var how = el('a', 'fin-how', esc('How to play ' + NAME[cfg.type]) + ' \u203a');
       how.href = '../how-to-play.html?via=finish#' + cfg.type; foot.appendChild(how);
     }
+    // Get the app (15 Nov 2026, SITE.md › Getting the app): after a solve in an Android browser,
+    // ../dn-app.js decides (returning players only, not in the app, not after Not now) and adds the line
+    if (solved && !cfg.lab && window.__DN_APP !== 2 && /Android/.test(navigator.userAgent || '')) getApp(foot);
     f.appendChild(foot);
 
     (cfg.keep || []).forEach(function (id) { var e = $(id); if (e) keep.appendChild(e); });
