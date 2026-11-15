@@ -61,3 +61,58 @@ test('CRYPTIC-04: the ledger refuses a repeated answer or the same type two days
   r.unshift(r.splice(i, 1)[0]);
   assert.ok(B.check(b).some(e => /twice running/.test(e)));
 });
+
+/* 15 Nov 2026: three more clue types (deletion, first letters, alternate letters), the every-word-earns-its-place rule,
+   and the batch format that tools/cryptic-import.js reads (toolchain/cryptic-batches/). */
+const I = require(path.join(ROOT, 'tools/cryptic-import.js'));
+
+test('CRYPTIC-05: deletions, first letters and alternate letters are gated, and a stray word is refused', () => {
+  const one = line => I.parseLine(line, 1), errs = line => C.checkEntry(one(line));
+  assert.deepStrictEqual(errs('LEASE | <Please> [don\'t start] to {rent} | deletion'), []);
+  assert.strictEqual(one('LEASE | <Please> [don\'t start] to {rent} | deletion').cut, 'head');
+  assert.strictEqual(one('PLAN | [Unfinished] <plane> {design} | deletion').cut, 'tail');
+  assert.strictEqual(one('NICE | [Heartless] <niece> is {pleasant} | deletion').cut, 'middle');
+  assert.strictEqual(one('COST | (Shore=COAST) [loses heart], {price} | deletion').cut, 'middle');
+  assert.ok(errs('NICE | [Heartless] <nieces> is {pleasant} | deletion').some(e => /removing/.test(e)));
+  assert.deepStrictEqual(errs('PIANO | {Instrument} [starts to] <play in a new orchestra> | acrostic'), []);
+  assert.ok(errs('PIANO | {Instrument} [starts to] <play in a big orchestra> | acrostic').some(e => /first letters/.test(e)));
+  assert.deepStrictEqual(errs('POET | <Protect>, [regularly], {a writer of verse} | alternate'), []);
+  assert.deepStrictEqual(errs('LADY | <Clear day> [regularly] for {gentlewoman} | alternate'), []);   // the even letters
+  assert.ok(errs('POET | <Proteins>, [regularly], {a writer of verse} | alternate').some(e => /every other/.test(e)));
+  // every word earns its place: "the" is neither definition, signpost, wordplay nor a link word
+  assert.ok(errs('STUDY | <Dusty>, [messy] the {den} | anagram').some(e => /does no work/.test(e)));
+  assert.deepStrictEqual(errs('BREAD | <Beard> [tangled] in {loaf} | anagram'), []);
+  // a reversal may use a word the clue only hints at
+  assert.deepStrictEqual(errs('STAR | (Rodents=RATS) [return] with {celebrity} | reversal'), []);
+  // the page record of each new type passes the page gate, with letters to mark on the finish sheet
+  for (const line of ['LEASE | <Please> [don\'t start] to {rent} | deletion', 'PIANO | {Instrument} [starts to] <play in a new orchestra> | acrostic', 'POET | <Protect>, [regularly], {a writer of verse} | alternate']) {
+    const c = one(line), p = C.pageData(c, 'DP·CRYP·0999');
+    assert.deepStrictEqual(C.check(p), [], line);
+    const s = C.unwrap(p.sol, p.id), marked = s.mark.map(([a, b]) => c.clue.slice(a, b)).join('').toUpperCase();
+    if (c.type !== 'deletion') assert.strictEqual(marked, c.answer, line); else assert.strictEqual(marked, 'PLEASE');
+  }
+});
+
+test('CRYPTIC-06: the batch files still make the bank\'s clues, a container lists its outer piece first, and types never run twice', () => {
+  const bank = B.loadBank(), by = new Map(bank.bank.map(c => [c.answer, c])), dir = path.join(ROOT, 'toolchain/cryptic-batches');
+  let n = 0;
+  for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.txt'))) {
+    const { entries, errs } = I.readBatch(path.join(dir, f));
+    assert.deepStrictEqual(errs, [], f);
+    for (const c of entries) {
+      const b = by.get(c.answer); assert.ok(b, c.answer + ' of ' + f + ' is in the bank');
+      for (const k of ['clue', 'type', 'def', 'ind', 'parse', 'explain']) assert.deepStrictEqual(b[k], c[k], c.answer + ' ' + k);
+      n++;
+    }
+  }
+  assert.ok(n >= 340, 'the year-one batch');
+  assert.ok(bank.bank.length >= 365, 'a year of clues');
+  const c = I.parseLine('HEATER | (Dine=EAT) [in] (her) {radiator} | container', 1);
+  assert.deepStrictEqual(c.parts.map(p => p.gives), ['HER', 'EAT']);
+  assert.strictEqual(c.explain[1], 'HER (as written) around EAT (dine) → HEATER (“radiator”).');
+  const placed = I.arrange(bank.bank.slice(24), 'reversal');
+  for (let i = 1; i < placed.length; i++) assert.notStrictEqual(placed[i].type, placed[i - 1].type);
+  assert.notStrictEqual(placed[0].type, 'reversal');
+  // the bank file is written one clue a line, and writing it again changes nothing
+  assert.strictEqual(C.bankText(bank), fs.readFileSync(path.join(ROOT, 'tools/cryptic-clues.json'), 'utf8'));
+});

@@ -180,7 +180,7 @@ function writeThrough(through, opts) {
     bank.ledger.days.push({ serial, date, answer });
     out.push(file + ' ' + entry.type);
   }
-  fs.writeFileSync(BANK, JSON.stringify(bank, null, 2) + '\n');
+  fs.writeFileSync(BANK, C.bankText(bank));
   return out;
 }
 if (require.main === module) {

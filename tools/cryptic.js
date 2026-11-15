@@ -9,7 +9,21 @@
    security, only "no spoilers on sight": the answer has to be in the page for the player to check it.
 
    check(p) is the ship gate, re-run on every page by build-cryptic-batch.js --check and tools/tests/content.js. */
-const TYPES = { anagram: 'Anagram', hidden: 'Hidden word', charade: 'Charade', sounds: 'Sounds like', reversal: 'Reversal', container: 'Container', double: 'Double definition' };
+const TYPES = { anagram: 'Anagram', hidden: 'Hidden word', charade: 'Charade', sounds: 'Sounds like', reversal: 'Reversal', container: 'Container', double: 'Double definition',
+  // added 15 Nov 2026 after a review of the clue types (Alec's ask): the three other types a beginner meets early
+  deletion: 'Deletion', acrostic: 'First letters', alternate: 'Alternate letters' };
+/* Words that may sit between the definition and the wordplay doing no other work (the brief: "every word earns its
+   place: it's part of the definition, part of the wordplay, or a standard link word"). Checked from 15 Nov 2026. */
+const LINKS = new Set(['is', 'are', 'for', 'to', 'in', 'with', 'from', 'gives', 'giving', 'makes', 'making', 'and', 'of', 'by', 'as', 'becomes', 'gets',
+  'getting', 'shows', 'showing', 'produces', 'provides', 'needs', 'takes', 'has', 'its', 'thats', 'being', 'or']);
+/* a deletion's source minus its first, last or middle letter */
+function cutOf(src, A) {
+  if (src.slice(1) === A) return 'head';
+  if (src.slice(0, -1) === A) return 'tail';
+  if (src.length % 2 && src.slice(0, (src.length - 1) / 2) + src.slice((src.length + 1) / 2) === A) return 'middle';
+  return null;
+}
+const everyOther = (s, from) => s.split('').filter((_, i) => i % 2 === from).join('');
 
 /* the clue's words, punctuation ignored, with each word's [start, end) in the clue string */
 function words(clue) {
@@ -33,6 +47,12 @@ function marks(c) {
     const idx = flat.slice(at, at + c.answer.length), out = [];
     for (const i of idx) { const last = out[out.length - 1]; if (last && !/[A-Za-z]/.test(c.clue.slice(last[1], i))) last[1] = i + 1; else out.push([i, i + 1]); }   // one run across spaces, as the mock
     return out;
+  }
+  if (c.type === 'acrostic') return words(c.clue).slice(c.fod[0], c.fod[1]).map(x => [x.at, x.at + 1]);
+  if (c.type === 'alternate') {
+    const [a, b] = spanChars(c.clue, c.fod), flat = []; for (let i = a; i < b; i++) if (/[A-Za-z]/.test(c.clue[i])) flat.push(i);
+    const f = flat.map(i => c.clue[i].toUpperCase()).join(''), from = everyOther(f, 0) === c.answer ? 0 : 1;
+    return flat.filter((_, i) => i % 2 === from).map(i => [i, i + 1]);
   }
   if (c.fod) return [spanChars(c.clue, c.fod)];
   if (c.type === 'double') return [];
@@ -73,12 +93,32 @@ function checkEntry(c, veto) {
   else if (c.ind) errs.push('a ' + c.type + ' has no signpost');
   // the clue must not show the answer, except where it is hidden in the fodder (and never as a whole word)
   if (W.some(x => x.w.toUpperCase() === A)) errs.push('the clue contains the answer as a word');
-  if (c.type !== 'hidden' && letters(c.clue).includes(A)) errs.push('the answer can be read straight off the clue');
+  // (a charade of words used as written, "Sat in fabric", and a deletion from a word in the clue also spell it across words)
+  if (!['hidden', 'charade', 'deletion'].includes(c.type) && letters(c.clue).includes(A)) errs.push('the answer can be read straight off the clue');
+  // every word earns its place: definition, signpost, wordplay, or a standard link word
+  const used = new Array(n).fill(false), cover = sp => { if (Array.isArray(sp)) for (let i = sp[0]; i < sp[1] && i < n; i++) used[i] = true; };
+  cover(c.def); cover(c.ind); cover(c.fod); (c.parts || []).forEach(p => cover(p.w));
+  W.forEach((x, i) => { if (!used[i] && !LINKS.has(x.w.toLowerCase())) errs.push('“' + x.w + '” does no work in the clue (not definition, signpost, wordplay or a link word)'); });
   for (const x of W) if (veto.has(x.w.toLowerCase())) errs.push('blocked word in the clue: ' + x.w);
   if (veto.has(String(A).toLowerCase())) errs.push('the answer is on the blocklist');
   // the wordplay must give exactly the answer
   const t = c.type;
-  if (t === 'anagram' || t === 'hidden' || t === 'reversal') {
+  if (t === 'reversal' && !c.fod) {   // a reversal of a word the clue only hints at: "Rodents return" for STAR
+    if (!Array.isArray(c.parts) || c.parts.length !== 1) errs.push('a reversal needs its word');
+    else { span(c.parts[0].w, 'reversed part'); if (letters(c.parts[0].gives).split('').reverse().join('') !== A) errs.push('the reversal does not give the answer'); }
+  } else if (t === 'deletion') {
+    const src = c.fod ? (span(c.fod, 'fodder') ? letters(spanText(c.clue, c.fod)) : '') : (Array.isArray(c.parts) && c.parts.length === 1 && span(c.parts[0].w, 'source word') ? letters(c.parts[0].gives) : '');
+    if (!src) errs.push('a deletion needs its source word');
+    else if (!cutOf(src, A)) errs.push('removing the first, last or middle letter of ' + src + ' does not give the answer');
+    else if (c.cut !== cutOf(src, A)) errs.push('cut should be ' + cutOf(src, A));
+  } else if (t === 'acrostic') {
+    if (span(c.fod, 'fodder')) {
+      const Ws = W.slice(c.fod[0], c.fod[1]);
+      if (Ws.map(x => x.w[0].toUpperCase()).join('') !== A) errs.push('the first letters do not spell the answer');
+    }
+  } else if (t === 'alternate') {
+    if (span(c.fod, 'fodder')) { const f = letters(spanText(c.clue, c.fod)); if (everyOther(f, 0) !== A && everyOther(f, 1) !== A) errs.push('every other letter does not spell the answer'); }
+  } else if (t === 'anagram' || t === 'hidden' || t === 'reversal') {
     if (span(c.fod, 'fodder')) {
       const f = letters(spanText(c.clue, c.fod));
       if (t === 'anagram' && (sorted(f) !== sorted(A) || f === A)) errs.push('the anagram’s letters do not match the answer');
@@ -139,9 +179,16 @@ function check(p) {
   if (!Array.isArray(p.def) || !(p.def[0] >= 0 && p.def[1] > p.def[0] && p.def[1] <= n) || (p.def[0] !== 0 && p.def[1] !== n)) errs.push('the definition is not at one end of the clue');
   if (['charade', 'double'].includes(p.kind) ? !!p.ind : !(Array.isArray(p.ind) && p.ind[0] >= 0 && p.ind[1] > p.ind[0] && p.ind[1] <= n)) errs.push('signpost span wrong for a ' + p.kind);
   if (!s.parse || !Array.isArray(s.explain) || s.explain.length !== 2) errs.push('no parse or explanation');
-  if (W.some(x => x.w.toUpperCase() === A) || (p.kind !== 'hidden' && letters(p.clue).includes(A))) errs.push('the answer shows in the clear');
+  if (W.some(x => x.w.toUpperCase() === A) || (!['hidden', 'charade', 'deletion'].includes(p.kind) && letters(p.clue).includes(A))) errs.push('the answer shows in the clear');
   for (const x of W) if (veto.has(x.w.toLowerCase())) errs.push('blocked word in the clue: ' + x.w);
   if (veto.has(A.toLowerCase())) errs.push('the answer is on the blocklist');
   return errs;
 }
-module.exports = { TYPES, words, letters, spanText, spanChars, enumLen, marks, wrap, unwrap, checkEntry, vetoSet, pageData, check };
+/* the bank file's text: one clue a line, one dated day a line (a year of clues stays readable in a diff) */
+function bankText(bank) {
+  const J = JSON.stringify, L = bank.ledger || {}, rows = (list, pad) => list.map(x => pad + J(x)).join(',\n');
+  const reserve = []; for (let i = 0; i < (L.reserve || []).length; i += 12) reserve.push('      ' + L.reserve.slice(i, i + 12).map(J).join(', '));
+  return '{\n  "_comment": ' + J(bank._comment) + ',\n  "bank": [\n' + rows(bank.bank, '    ') + '\n  ],\n  "ledger": {\n    "_comment": ' + J(L._comment) +
+    ',\n    "days": [\n' + rows(L.days || [], '      ') + '\n    ],\n    "reserve": [\n' + reserve.join(',\n') + '\n    ]\n  },\n  "dropped": [\n' + rows(bank.dropped || [], '    ') + '\n  ]\n}\n';
+}
+module.exports = { bankText, TYPES, LINKS, cutOf, everyOther, words, letters, spanText, spanChars, enumLen, marks, wrap, unwrap, checkEntry, vetoSet, pageData, check };

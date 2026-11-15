@@ -135,7 +135,8 @@ const clueEl=$("clue"),gridEl=$("grid"),msgEl=$("msg"),timerEl=$("timer"),hintBt
 const meta=n=>{const m=document.querySelector('meta[name="'+n+'"]');return m?m.content:"";};
 const LAB=!!meta("dn:badge");
 const GUIDE="../how-to-play.html#cryptic";
-const TYPE_NAME={anagram:"Anagram",hidden:"Hidden word",charade:"Charade",sounds:"Sounds like",reversal:"Reversal",container:"Container",double:"Double definition"};
+const TYPE_NAME={anagram:"Anagram",hidden:"Hidden word",charade:"Charade",sounds:"Sounds like",reversal:"Reversal",container:"Container",double:"Double definition",
+  deletion:"Deletion",acrostic:"First letters",alternate:"Alternate letters"};   // three more from 15 Nov 2026 (tools/cryptic.js TYPES)
 
 /* ---------- the wrapped answer (tools/cryptic.js wrap) ---------- */
 function unwrap(s,id){
@@ -361,7 +362,10 @@ function tip(){
     sounds:ind+" signals a sound-alike: the answer sounds like a word for the part beside it.",
     reversal:ind+" signals a reversal: a word in the clue, read backwards.",
     container:ind+" signals a container: one piece goes around another.",
-    double:"A double definition: the clue gives two meanings of the same word, side by side."
+    double:"A double definition: the clue gives two meanings of the same word, side by side.",
+    deletion:ind+" signals a deletion: a word loses a letter from its start, its end or its middle.",
+    acrostic:ind+" signals first letters: take the first letter of each word beside it.",
+    alternate:ind+" signals alternate letters: take every other letter of the words beside it."
   }[PUZZLE.kind];
 }
 const BULB='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>';
