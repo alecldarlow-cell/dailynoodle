@@ -313,10 +313,10 @@ var dnUnits = (function () {
     if (!ft) return [[String(i), 'in']];
     return i ? [[String(ft), 'ft'], [String(i), 'in']] : [[String(ft), 'ft']];
   }
-  function useFtin(v, du) { return (du === 'ft' && v < 10 - 1 / 24) || (du === 'in' && v >= 12 - 0.5 && v < 120); }
+  function inFtin(v, du) { return (du === 'ft' && v < 10 - 1 / 24) || (du === 'in' && v >= 12 - 0.5 && v < 120); }
   // a display value as readout parts, [[number, unit], …]; s = significant figures (3 on the scale)
   function parts(v, du, s) {
-    if (useFtin(v, du)) return ftin(du === 'ft' ? v * 12 : v);
+    if (inFtin(v, du)) return ftin(du === 'ft' ? v * 12 : v);
     return [[num(v, s || 3), du]];
   }
   function text(v, du, s) { return parts(v, du, s).map(function (p) { return p[0] + ' ' + p[1]; }).join(' '); }
@@ -327,7 +327,7 @@ var dnUnits = (function () {
     if (!m || IMP.test(q.q)) return null;
     var b = m.big && q.a >= m.big.at - 1e-9 ? m.big : null;
     var iw = b ? b.iw : m.iw, du = b ? b.du : m.du, f = b ? b.f : m.f;
-    if (useFtin(q.a * f, du)) iw = 'feet and inches';
+    if (inFtin(q.a * f, du)) iw = 'feet and inches';
     var qi = q.q.replace(new RegExp('\\b(in|many) ' + esc(m.w) + '\\b'), '$1 ' + iw);
     return { k: m.k, f: f, du: du, mu: q.u, iu: SW[du], q: qi, n: note(q.n || ''), tip: KIND[m.k] };
   }
@@ -366,7 +366,7 @@ var dnUnits = (function () {
     var out = [], raw = ladder(dlo, false);
     for (var i = 0; i < raw.length; i++) {
       var v = raw[i];
-      if (useFtin(v, sp.du)) v = sp.du === 'ft' ? Math.round(v * 12) / 12 : Math.round(v);
+      if (inFtin(v, sp.du)) v = sp.du === 'ft' ? Math.round(v * 12) / 12 : Math.round(v);
       if (v >= min && v <= max && (!out.length || Math.abs(out[out.length - 1] - v) > 1e-9)) out.push(v);
     }
     return out;
