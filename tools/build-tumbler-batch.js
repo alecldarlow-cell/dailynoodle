@@ -70,7 +70,7 @@ function page({ serial, date, board, lab, updated }) {
 <main>
   <div class="board" id="board" aria-label="Tumbler wheels"></div>
   <button class="submit" id="submitBtn" type="button">Submit</button>
-  <p class="msg" id="msg">Make a word on the yellow line and submit it for clues.</p>
+  <p class="msg" id="msg">Make a word on the outlined line and submit it for clues.</p>
   <div class="tries" id="tries" aria-live="polite"></div>
 </main>
 <footer>SHELL — Tumbler v1 · ${id} · verified in code, not by eye</footer>

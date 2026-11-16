@@ -31,15 +31,25 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;ma
 .meta #timer{margin-left:auto;color:var(--ink);font-weight:700}
 #timer.waiting{color:var(--ink-soft)}
 
-/* ---- the wheels: as large as the screen allows, the submit line marigold ---- */
+/* ---- the wheels: as large as the screen allows while Submit and the latest submit stay on screen;
+   the submit line outlined, so green, amber and grey on the tiles are only ever clues (16 Nov 2026) ---- */
 main{flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:0;padding-top:4px}
 .board{--t:min(calc((100vw - 76px) / 4),calc((100dvh - 330px) / 8.4),68px);display:grid;grid-template-columns:repeat(4,min(calc(var(--t) * 1.6),calc((100vw - 76px) / 4),84px));gap:7px 12px;justify-content:center;user-select:none;-webkit-user-select:none;touch-action:none}
 .wheel{display:grid;grid-template-rows:repeat(7,var(--t));gap:5px;touch-action:none}
 .tile{border-radius:10px;background:var(--card);border:1.5px solid var(--line-soft);display:grid;place-items:center;font-weight:600;font-size:calc(var(--t) * .48);line-height:1;opacity:.55;transition:background .2s}
-.tile.read{opacity:1;background:var(--active-word);border-color:var(--active);color:var(--ink)}
-@media (prefers-color-scheme:dark){html.dn-house:not([data-theme="light"]) .tile.read{color:#ECEEF4}}
+.tile.read{opacity:1;background:var(--card);border-color:var(--ink);box-shadow:0 0 0 1.5px var(--ink);color:var(--ink)}
+/* clue marks from the submits (engines/tumbler.js wheelMarks) */
+.tile{position:relative}
+.tile.k-g{opacity:1;background:var(--good);border-color:var(--good);color:#fff}
+.tile.k-x{opacity:.28;background:transparent;border-style:dashed}
+.tile.read.k-x{opacity:1;background:var(--miss);border-color:var(--ink);border-style:solid}
+.tile.read.k-g{border-color:var(--ink)}
+.tile.k-n{opacity:.28;border-style:dashed}
+.tile.read.k-n{opacity:1;background:var(--amber);border-color:var(--ink);border-style:solid;color:#141726}
+.tile.read.k-n::after{display:none}
+.tile.k-a::after,.tile.k-n::after{content:"";position:absolute;top:calc(var(--t) * .1);right:calc(var(--t) * .12);width:calc(var(--t) * .16);height:calc(var(--t) * .16);border-radius:50%;background:var(--amber)}
 .down{height:max(28px,calc(var(--t) * .6));border-radius:10px;border:1px solid var(--line-soft);background:var(--card);display:grid;place-items:center;color:var(--ink)}
-.down:active{background:var(--active);color:#141726}
+.down:active{background:var(--ink);color:var(--paper)}
 .submit{width:min(100%,calc(var(--t,64px) * 4 + 36px),360px);min-height:50px;border-radius:25px;border:0;background:var(--brand);color:#fff;font-weight:600;font-size:17px}
 .submit:active{filter:brightness(.92)}
 .msg{margin:0;min-height:1.3em;font-size:14px;color:var(--ink-soft);text-align:center;max-width:36ch}
@@ -52,7 +62,7 @@ body.win .down,body.win .submit{visibility:hidden}
 /* the win beat (engines/tumbler.js winBeat): the line's letters pop green, the rest fade back */
 body.won .tile{transition:background .2s,opacity .4s}
 body.won .tile:not(.read){opacity:.25}
-.tile.read.won{background:var(--good);border-color:var(--good);color:#fff}
+.tile.read.won{background:var(--good);border-color:var(--good);box-shadow:0 0 0 1.5px var(--good);color:#fff}
 .tile.read.pop{animation:dn-tumbler-win .6s ease both}
 @keyframes dn-tumbler-win{0%{transform:scale(1)}35%{transform:scale(1.16)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){.tile.read.pop{animation:none}body.won .tile{transition:none}}
