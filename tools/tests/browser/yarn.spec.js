@@ -161,3 +161,43 @@ test('YARN-07: No clock (9 Nov 2026): its own board, no clock or stars; words co
  const end=await p.evaluate(()=>window.__yev.find(e=>e.ev==='game_end').x);expect(Number.isFinite(end.secs)).toBe(true);
  expect(phone.errors).toEqual([]);
 });
+
+test('YARN-08: Big Board (17 Nov 2026) opens after level 10; 5x5 boards, a two-minute clock and progress of their own; mode big is tracked',async({phone})=>{
+ await open(phone);const p=phone.p;
+ // locked for a new player
+ await expect(p.locator('#bigNote')).toHaveText('Opens after level 10');
+ await H.tap(p,p.locator('#modes button[data-m="b"]'));
+ await expect(p.locator('#modes button[data-m="c"]')).toHaveAttribute('aria-checked','true');
+ // clear level 10 and it opens
+ await p.evaluate(()=>{const lv={};for(let n=1;n<=10;n++)lv[n]={s:1,b:20};__dg.give({lv,snd:false,vib:false,rm:true,fs:false});});
+ await expect(p.locator('#bigNote')).toHaveText('5×5 · 2:00');
+ await H.tap(p,p.locator('#modes button[data-m="b"]'));
+ await expect(p.locator('#modes button[data-m="b"]')).toHaveAttribute('aria-checked','true');
+ await expect(p.locator('#hHead')).toHaveText('Level 1');await expect(p.locator('#hStatus')).toContainText('Aran 1 of 10');
+ await expect(p.locator('#scarfNote')).toContainText('first square of your blanket');
+ await H.tap(p,p.locator('#hPlay'));await live(p);
+ await expect(p.locator('.tile')).toHaveCount(25);await expect(p.locator('#lvPill')).toHaveText('5×5 · Aran · level 1');
+ const st=await p.evaluate(()=>__dg.state());
+ expect([st.L.tr,st.L.N,st.L.round,st.N]).toEqual(['b',5,120,5]);
+ expect(st.R.left).toBeGreaterThan(90);
+ // a word traced on the 5x5 board by tapping
+ const w=await p.evaluate(()=>__dg.level(1).main.find(x=>x.length===5));
+ const path=await p.evaluate(w=>__dg.pathOf(w),w);
+ for(const i of path)await H.tap(p,p.locator(`.tile[data-i="${i}"]`));
+ await H.tap(p,p.locator(`.tile[data-i="${path[path.length-1]}"]`));
+ await expect(p.locator('#score')).toHaveText('3');
+ await p.evaluate(()=>__dg.end(true));
+ await expect(p.locator('#result')).toBeVisible();await expect(p.locator('#rKick')).toContainText('Big Board level 1');
+ await expect(p.locator('#rVerdict')).toContainText('A new square for your blanket');
+ const s=await p.evaluate(()=>__dg.state().save);
+ expect(s.big.lv[1].s).toBe(1);expect(Object.keys(s.lv).length).toBe(10);expect(s.mode).toBe('b');   // classic levels untouched
+ await H.tap(p,p.locator('#rHome'));await expect(p.locator('#scarfNote')).toContainText('1 of 100 squares knitted');
+ // the mode is remembered; classic still shows its own next level
+ await p.reload();await expect(p.locator('#modes button[data-m="b"]')).toHaveAttribute('aria-checked','true');
+ await expect(p.locator('#hHead')).toHaveText('Level 2');
+ await H.tap(p,p.locator('#modes button[data-m="c"]'));await expect(p.locator('#hHead')).toHaveText('Level 11');
+ await H.tap(p,p.locator('#hPlay'));await live(p);await expect(p.locator('.tile')).toHaveCount(16);
+ expect(await p.evaluate(()=>__dg.state().L.round)).toBe(90);
+ const e=await p.evaluate(()=>window.__yev.map(e=>[e.ev,e.x.mode,e.x.level,e.x.grid]));
+ expect(e).toEqual([['game_start','big',1,undefined],['game_end','big',1,5],['game_start','skein',11,undefined]]);
+});
