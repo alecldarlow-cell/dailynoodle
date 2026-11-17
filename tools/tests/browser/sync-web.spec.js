@@ -24,6 +24,7 @@ const syncCalls = (dbs, name) => dbs.log.filter(c => c[0] === name).map(c => c[1
 /* ---------- the account side: the real sync functions ---------- */
 const SYNC_SQL = fs.readFileSync(path.join(H.REPO, 'toolchain/sql/2026-10-25-sync.sql'), 'utf8');
 const REV_SQL = fs.readFileSync(path.join(H.REPO, 'toolchain/sql/2026-10-29-sync-revision.sql'), 'utf8');
+const LAB_SQL = ['2026-11-04-tally-sync.sql', '2026-11-17-lab-sync.sql'].map(f => fs.readFileSync(path.join(H.REPO, 'toolchain/sql', f), 'utf8')).join('\n');
 const AUTH_HOSTING = `
   create role anon; create role authenticated;
   create schema auth;
@@ -436,5 +437,42 @@ test.describe('SYNC-WEB', () => {
       await expect(B.p.locator('#dnsyncMsg')).not.toContainText(/function|fail|couldn/i);
       expect(A.p.errs.concat(B.p.errs)).toEqual([]);
     } finally { await A.ctx.close(); await B.ctx.close(); }
+  });
+  test('SYNC-WEB-11: Lab saves and votes sync, the latest vote wins, and the Puzzles page picks up what came in', async ({ browser }) => {
+    test.setTimeout(240000);
+    await dbs.sync.exec(LAB_SQL);
+    const feed = require('../../../feed.json'), LDAY = '2026-11-17';
+    const lab = t => (feed.items || []).filter(it => it.type === t && /in development/i.test(it.badge || '') && it.date <= LDAY).sort((a, b) => a.date < b.date ? 1 : -1)[0];
+    const tilt = lab('tilt'), redact = lab('redact'), tumbler = lab('tumbler');
+    const A = USERS['alec@example.test'];
+    const seed = (key, doc) => dbs.sync.query('insert into sync.saves (user_id, key, doc) values ($1, $2, $3::jsonb) on conflict (user_id, key) do update set doc = excluded.doc', [A, key, JSON.stringify(doc)]);
+    // GIVEN the account holds Redact finished in the app, a Yes for Tilt at 2000 and a No for Redact
+    await seed('digi-redact-v1', { done: { [redact.id]: { t: '1:10', s: 70, m: 0, d: LDAY } } });
+    await seed('noodle-lab-votes-v1', { tilt: { v: 'yes', at: 2000 }, redact: { v: 'no', at: 500 } });
+    // ...and this browser finished Tilt and voted No for it earlier (at 1000)
+    const D = await device(browser, dbs, 'laptop', { time: LDAY + 'T20:00:00Z' });
+    try {
+      await D.ctx.addInitScript(([id, day]) => {
+        if (location.protocol !== 'https:' || localStorage.getItem('digi-tilt-v1')) return;
+        localStorage.setItem('digi-tilt-v1', JSON.stringify({ done: { [id]: { t: '0:42', s: 42, n: 14, d: day } } }));
+        localStorage.setItem('noodle-lab-votes-v1', JSON.stringify({ tilt: { v: 'no', at: 1000 } }));
+      }, [tilt.id, LDAY]);
+      // WHEN it signs in
+      await signIn(D, 'alec');
+      // THEN the browser has the account's Redact and the newer vote of each, and the account has this Tilt
+      expect(Object.keys((await store(D, 'digi-redact-v1')).done)).toEqual([redact.id]);
+      expect(await store(D, 'noodle-lab-votes-v1')).toEqual({ tilt: { v: 'yes', at: 2000 }, redact: { v: 'no', at: 500 } });
+      const acc = await held(dbs.sync, 'alec@example.test');
+      expect(Object.keys(acc['digi-tilt-v1'].done)).toEqual([tilt.id]);
+      expect(acc['noodle-lab-votes-v1']).toEqual({ tilt: { v: 'yes', at: 2000 }, redact: { v: 'no', at: 500 } });
+      expect(await store(D, 'noodle-lab-voter'), 'the voter code is never synced').toBeNull();
+      // WHEN Tumbler is finished in the app afterwards and Puzzles is opened here
+      await seed('digi-tumbler-v1', { done: { [tumbler.id]: { t: '0:55', s: 55, n: 3, d: LDAY } } });
+      await go(D, 'puzzles.html');
+      await settled(D);
+      // THEN From the Lab shows all three as the account has them, without a reload
+      await expect(D.p.locator('#labpanel .lp-call')).toHaveText(['✓ Done', '✓ Done', 'Rate it'], { timeout: 10000 });
+      expect(D.p.errs).toEqual([]);
+    } finally { await D.ctx.close(); }
   });
 });

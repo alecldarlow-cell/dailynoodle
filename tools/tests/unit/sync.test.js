@@ -270,3 +270,17 @@ test('TALLY-SYNC: the Tally save and streak keys are accepted, other keys are st
     await assert.rejects(() => put('digi-other-v1'), /sync_key_allowed/);
   } finally { await d.close(); }
 });
+
+// LAB-SYNC: toolchain/sql/2026-11-17-lab-sync.sql
+test('LAB-SYNC: GIVEN the Lab sync migration WHEN Lab saves, streaks and the votes document are saved THEN they go in and other keys are still refused', async () => {
+  const d = await db();
+  await d.exec(fs.readFileSync(path.join(__dirname, '../../../toolchain/sql/2026-11-04-tally-sync.sql'), 'utf8'));
+  await d.exec(fs.readFileSync(path.join(__dirname, '../../../toolchain/sql/2026-11-17-lab-sync.sql'), 'utf8'));
+  try {
+    const put = key => d.query("insert into sync.saves (user_id, key, doc) values ($1, $2, '{}'::jsonb)", [A, key]);
+    for (const t of ['tilt', 'redact', 'tumbler']) { await put('digi-' + t + '-v1'); await put('digi-' + t + '-streak'); }
+    await put('noodle-lab-votes-v1'); await put('digi-tally-v1'); await put('noodle-board-v1');
+    await assert.rejects(() => put('noodle-lab-voter'), /sync_key_allowed/);   // the voter code never leaves the device
+    await assert.rejects(() => put('digi-yarn-v1'), /sync_key_allowed/);
+  } finally { await d.close(); }
+});

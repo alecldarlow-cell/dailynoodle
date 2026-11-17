@@ -633,6 +633,17 @@
 
   // A puzzle finished in another tab marks its card here too.
   window.addEventListener('storage', function(e){ if(!e.key || /^digi-[a-z]+-v1$/.test(e.key) || e.key === 'noodle-lab-votes-v1'){ showPlayed(); showLab(); } });
+  // Signed in for sync (17 Nov 2026): the Puzzles front page pulls the account's copy as it opens,
+  // so a puzzle played in the app or another browser shows here (marks, From the Lab, the run).
+  // dn-sync.js needs dn-track.js's dnMove, so it goes in once the deferred scripts have run.
+  if (SEC.kind === 'puzzle' && !LAB) {
+    var addSync = function(){ try {
+      if (!localStorage.getItem('noodle-sync-auth') || document.querySelector('script[src$="dn-sync.js"]')) return;
+      var ss = document.createElement('script'); ss.src = 'dn-sync.js'; document.head.appendChild(ss);
+    } catch(e){} };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addSync); else addSync();
+    document.addEventListener('dn:synced', function(){ showRun(); showPlayed(); showLab(); });
+  }
 
   /* ---------- where you were: kept in this history entry ----------
      The card at the top of the screen (by its link) and its offset, not a
