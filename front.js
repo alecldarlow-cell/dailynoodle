@@ -418,11 +418,67 @@
     // the same order and markup as the build, tools/card-renderer.js daySet)
     if(SEC.kind === 'puzzle' && !LAB){ var set = window.dnCards.daySet(out, londonDay()); state.setDay = set.day; out = set.items; }
     else state.setDay = '';
+    // Lab (17 Nov 2026, Alec: the Lab was swamped with every past day of the trials): each running
+    // trial's newest puzzle leads, in the Lab's order; its older days stay in the page, hidden
+    // (crawlable, as old dailies on Puzzles), and the Archive is where players find them.
+    if(LAB && !q){
+      var cur = labCurrent(), lead = {}, hide = {};
+      cur.forEach(function(it){ lead[it.path] = 1; });
+      out.forEach(function(it){ if(it.kind === 'puzzle' && LAB_TYPES.indexOf(it.type) >= 0 && !lead[it.path]) hide[it.path] = 1; });
+      state.labHide = hide;
+      out = cur.filter(function(it){ return state.topic === 'all' || facet(it) === state.topic; })
+        .concat(out.filter(function(it){ return !lead[it.path]; }));
+    } else state.labHide = null;
     return out;
   }
 
   // Shared with the static build: cards have identical markup before and after scripts.
-  function card(it){ return window.dnCards.card(it,{today:londonDay(),lab:LAB,day:state.setDay}); }
+  function card(it){
+    var html = window.dnCards.card(it,{today:londonDay(),lab:LAB,day:state.setDay});
+    return state.labHide && state.labHide[it.path] ? html.replace(/^<li /, '<li hidden ') : html;
+  }
+
+  /* ---------- From the Lab (17 Nov 2026, Alec: the app's Today panel on the website) ----------
+     The running Lab trials, each with its newest puzzle (today's, or yesterday's before today's
+     build): a trial runs while its newest released puzzle is today's or yesterday's, as the app
+     (Daily-noodle-app labTrials). Shown under the day's set on Puzzles and leading the Lab page. */
+  var LAB_TYPES = ['tilt', 'redact', 'tumbler'];
+  var LAB_LINE = 'New puzzles on trial, here for a few weeks. Vote after you play: your votes help decide which become permanent dailies.';
+  function labCurrent(){
+    var today = londonDay(), y = window.dnCore.dayBefore(today), out = [];
+    LAB_TYPES.forEach(function(type){
+      var newest = null;
+      state.items.forEach(function(it){
+        if(it.kind !== 'puzzle' || it.type !== type || !inLab(it) || !it.date || it.date > today) return;
+        if(!newest || it.date > newest.date || (it.date === newest.date && it.path > newest.path)) newest = it;
+      });
+      if(newest && (newest.date === today || newest.date === y)) out.push(newest);
+    });
+    return out;
+  }
+  function labVotes(){ try { var v = JSON.parse(localStorage.getItem('noodle-lab-votes-v1') || 'null'); return v && typeof v === 'object' ? v : {}; } catch(e){ return {}; } }
+  var FLASK = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 3h6M10 3v6.2L4.8 18.4A1.7 1.7 0 0 0 6.3 21h11.4a1.7 1.7 0 0 0 1.5-2.6L14 9.2V3"/><path d="M7.5 15h9"/></svg>';
+  var CHEV = '<svg viewBox="0 0 8 14" width="7" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M1.5 1.5L6.5 7l-5 5.5"/></svg>';
+  function showLab(){
+    var el = document.getElementById('labpanel');
+    var cur = SEC.kind === 'puzzle' && !LAB && !state.q ? labCurrent() : [];
+    if(!cur.length){ if(el) el.hidden = true; return; }
+    if(!el){ el = document.createElement('section'); el.id = 'labpanel'; el.className = 'labpanel'; el.setAttribute('aria-labelledby', 'labpanel-h'); $feed.parentNode.insertBefore(el, $feed.nextSibling); }
+    var votes = labVotes(), saves = {};
+    el.innerHTML = '<h2 class="lp-h" id="labpanel-h"><span class="lp-mark">' + FLASK + '</span>From the Lab</h2>'
+      + '<p class="lp-line">' + esc(LAB_LINE) + '</p><ul class="lp-rows">'
+      + cur.map(function(it){
+          var st = playedState(it, saves), rated = !!votes[it.type], name = window.dnCards.types.filter(function(t){ return t[0] === it.type; })[0][1];
+          // The row follows today's puzzle, not the vote (as the app, 16 Nov 2026): a vote is one
+          // per type for the whole trial, so a rated type still says "Try it" when a new puzzle is up.
+          var call = st && st.done ? (rated ? '✓ Done' : 'Rate it') : st ? 'Continue' : 'Try it', done = call === '✓ Done';
+          return '<li><a class="lp-row" href="' + esc(it.path) + '" data-type="' + esc(it.type) + '" aria-label="' + esc(name + ', ' + (it.standfirst || 'Lab trial') + ', ' + call.replace('✓ ', '')) + '">'
+            + '<img class="lp-tile" src="' + esc(it.thumb || ('assets/' + it.type + '-thumb.svg')) + '" alt="" width="48" height="48" loading="lazy">'
+            + '<span class="lp-body"><span class="lp-name">' + esc(name) + '</span>' + (it.standfirst ? '<span class="lp-desc">' + esc(it.standfirst) + '</span>' : '') + '</span>'
+            + '<span class="lp-call' + (done ? ' done' : '') + '">' + esc(call) + '</span>' + (done ? '' : '<span class="lp-chev">' + CHEV + '</span>') + '</a></li>';
+        }).join('') + '</ul>';
+    el.hidden = false;
+  }
 
   function render(){
     renderChips();
@@ -431,12 +487,14 @@
       ? v.map(card).join('')
       : '<li class="empty">'+esc(state.items.some(mine)
           ? 'Nothing matches that filter yet.' : SEC.empty)+'</li>');
-    var shown = state.setDay ? v.filter(function(it){ return it.date === state.setDay; }).length : v.length;
+    var shown = state.setDay ? v.filter(function(it){ return it.date === state.setDay; }).length
+      : state.labHide ? v.filter(function(it){ return !state.labHide[it.path]; }).length : v.length;
     $count.textContent = shown
       ? shown + ' ' + SEC.noun[shown===1?0:1] + (state.q?' matching':'')
       : '';
     if (SEC.kind === 'puzzle') showRun();
     showPlayed();
+    showLab();
     if ($built) $built.textContent = state.built
       ? 'Index rebuilt ' + new Date(state.built).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})
       : '';
@@ -542,7 +600,7 @@
     if(r) return { done:true, lost: typeof r === 'object' && (r.o === 'loss' || r.o === 'gave'), text: (typeof r === 'object' && resultText(it.type, r)) || 'Played' };
     var d = s.days && s.days[it.id];
     if(it.type === 'tangle' && d && (d.state === 'playing' || d.state === 'suspended')) return { done:false };
-    if((it.type === 'borders' || it.type === 'reckon' || it.type === 'tally') && s.cur && s.cur.id === it.id) return { done:false };
+    if(/^(borders|reckon|tally|tilt|redact|tumbler)$/.test(it.type) && s.cur && s.cur.id === it.id) return { done:false };
     return null;
   }
   function showPlayed(){
@@ -574,7 +632,7 @@
   }
 
   // A puzzle finished in another tab marks its card here too.
-  window.addEventListener('storage', function(e){ if(!e.key || /^digi-[a-z]+-v1$/.test(e.key)) showPlayed(); });
+  window.addEventListener('storage', function(e){ if(!e.key || /^digi-[a-z]+-v1$/.test(e.key) || e.key === 'noodle-lab-votes-v1'){ showPlayed(); showLab(); } });
 
   /* ---------- where you were: kept in this history entry ----------
      The card at the top of the screen (by its link) and its offset, not a
