@@ -47,18 +47,17 @@ test('LAB-PANEL-WEB-02: GIVEN Tilt finished and voted, Redact finished not voted
  expect(phone.errors).toEqual([]);
 });
 
-test('LAB-PANEL-WEB-03: GIVEN three weeks of trial puzzles WHEN the Lab page opens THEN today\'s three lead and the older trial days are hidden but still in the page',async({phone})=>{
+test('LAB-PANEL-WEB-03: GIVEN three weeks of trial puzzles WHEN the Lab page opens THEN no trial card shows (they live in From the Lab on Puzzles), every trial day is still in the page hidden, and a search still finds them',async({phone})=>{
  await on(phone,'lab.html');
- const shown=phone.p.locator('#feed > li:not([hidden]) a.card');
- expect((await shown.evaluateAll(a=>a.map(x=>x.getAttribute('href')))).slice(0,3)).toEqual([tilt.path,redact.path,tumbler.path]);
- const trialShown=await shown.evaluateAll(a=>a.filter(x=>/-(logic-tilt|word-redact|word-tumbler)-/.test(x.getAttribute('href'))).length);
- expect(trialShown).toBe(3);
- const older=lab('tilt')[1];
- await expect(phone.p.locator('#feed > li[hidden] a.card[href="'+older.path+'"]')).toHaveCount(1);
- await expect(phone.p.locator('#feed > li:not([hidden]) a.card[href*="games"], #feed > li:not([hidden])[data-kind="game"]').first()).toBeVisible();
+ const shown=await phone.p.locator('#feed > li:not([hidden]) a.card').evaluateAll(a=>a.map(x=>x.getAttribute('href')));
+ expect(shown.filter(h=>/-(logic-tilt|word-redact|word-tumbler)-/.test(h))).toEqual([]);
+ for(const it of [tilt,redact,tumbler,lab('tilt')[1]]) await expect(phone.p.locator('#feed > li[hidden] a.card[href="'+it.path+'"]')).toHaveCount(1);
+ await expect(phone.p.locator('#feed > li:not([hidden])').first()).toBeVisible();
  await expect(phone.p.locator('#labpanel')).toHaveCount(0);
- // the count is what shows, not every trial day in the page
+ // the count is what shows, not the hidden trial days
  const n=await phone.p.locator('#feed > li:not([hidden])').count();
- await expect(phone.p.locator('#count')).toHaveText(n+' items');
+ await expect(phone.p.locator('#count')).toHaveText(n+(n===1?' item':' items'));
+ await phone.p.evaluate(()=>{const q=document.getElementById('q');q.value='tilt';q.dispatchEvent(new Event('input',{bubbles:true}));});
+ await expect(phone.p.locator('#feed > li:not([hidden]) a.card[href*="-logic-tilt-"]').first()).toBeVisible();
  expect(phone.errors).toEqual([]);
 });

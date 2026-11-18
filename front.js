@@ -418,16 +418,14 @@
     // the same order and markup as the build, tools/card-renderer.js daySet)
     if(SEC.kind === 'puzzle' && !LAB){ var set = window.dnCards.daySet(out, londonDay()); state.setDay = set.day; out = set.items; }
     else state.setDay = '';
-    // Lab (17 Nov 2026, Alec: the Lab was swamped with every past day of the trials): each running
-    // trial's newest puzzle leads, in the Lab's order; its older days stay in the page, hidden
-    // (crawlable, as old dailies on Puzzles), and the Archive is where players find them.
+    // Lab (18 Nov 2026, Alec: the trials now sit in From the Lab at the foot of Puzzles, so the Lab
+    // page doesn't list them): every day of Tilt, Redact and Tumbler stays in the page, hidden
+    // (crawlable, as old dailies on Puzzles), after the games in development. Search still finds them.
     if(LAB && !q){
-      var cur = labCurrent(), lead = {}, hide = {};
-      cur.forEach(function(it){ lead[it.path] = 1; });
-      out.forEach(function(it){ if(it.kind === 'puzzle' && LAB_TYPES.indexOf(it.type) >= 0 && !lead[it.path]) hide[it.path] = 1; });
+      var hide = {};
+      out.forEach(function(it){ if(it.kind === 'puzzle' && LAB_TYPES.indexOf(it.type) >= 0) hide[it.path] = 1; });
       state.labHide = hide;
-      out = cur.filter(function(it){ return state.topic === 'all' || facet(it) === state.topic; })
-        .concat(out.filter(function(it){ return !lead[it.path]; }));
+      out = out.filter(function(it){ return !hide[it.path]; }).concat(out.filter(function(it){ return hide[it.path]; }));
     } else state.labHide = null;
     return out;
   }
@@ -441,7 +439,7 @@
   /* ---------- From the Lab (17 Nov 2026, Alec: the app's Today panel on the website) ----------
      The running Lab trials, each with its newest puzzle (today's, or yesterday's before today's
      build): a trial runs while its newest released puzzle is today's or yesterday's, as the app
-     (Daily-noodle-app labTrials). Shown under the day's set on Puzzles and leading the Lab page. */
+     (Daily-noodle-app labTrials). Shown under the day's set on Puzzles (the Lab page lists none of them, 18 Nov 2026). */
   var LAB_TYPES = ['tilt', 'redact', 'tumbler'];
   var LAB_LINE = 'New puzzles on trial, here for a few weeks. Vote after you play: your votes help decide which become permanent dailies.';
   function labCurrent(){
