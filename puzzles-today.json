@@ -1,59 +1,59 @@
 {
- "today": "2026-11-18",
+ "today": "2026-11-19",
  "items": [
   {
    "type": "mini",
-   "id": "DP·MINI·0130",
-   "name": "Mini 130",
-   "path": "reports/2026-11-18-crossword-mini-0130.html"
+   "id": "DP·MINI·0131",
+   "name": "Mini 131",
+   "path": "reports/2026-11-19-crossword-mini-0131.html"
   },
   {
    "type": "doku",
-   "id": "DP·LEXI·0128",
-   "name": "Doku 128",
-   "path": "reports/2026-11-18-logic-doku-0128.html"
+   "id": "DP·LEXI·0129",
+   "name": "Doku 129",
+   "path": "reports/2026-11-19-logic-doku-0129.html"
   },
   {
    "type": "sweep",
-   "id": "DP·SWEEP·2026-11-18",
-   "name": "Sweep 125",
-   "path": "reports/2026-11-18-logic-sweep.html"
+   "id": "DP·SWEEP·2026-11-19",
+   "name": "Sweep 126",
+   "path": "reports/2026-11-19-logic-sweep.html"
   },
   {
    "type": "path",
-   "id": "DP·PATH·0123",
-   "name": "Path 123",
-   "path": "reports/2026-11-18-logic-path-0123.html"
+   "id": "DP·PATH·0124",
+   "name": "Path 124",
+   "path": "reports/2026-11-19-logic-path-0124.html"
   },
   {
    "type": "link",
-   "id": "DP·LINK·0102",
-   "name": "Link 102",
-   "path": "reports/2026-11-18-word-link-0102.html"
+   "id": "DP·LINK·0103",
+   "name": "Link 103",
+   "path": "reports/2026-11-19-word-link-0103.html"
   },
   {
    "type": "tangle",
-   "id": "DP·TANG·0043",
-   "name": "Tangle 43",
-   "path": "reports/2026-11-18-word-tangle-0043.html"
+   "id": "DP·TANG·0044",
+   "name": "Tangle 44",
+   "path": "reports/2026-11-19-word-tangle-0044.html"
   },
   {
    "type": "borders",
-   "id": "DP·BORD·0045",
-   "name": "Borders 45",
-   "path": "reports/2026-11-18-geo-borders-0045.html"
+   "id": "DP·BORD·0046",
+   "name": "Borders 46",
+   "path": "reports/2026-11-19-geo-borders-0046.html"
   },
   {
    "type": "reckon",
-   "id": "DP·RECK·0030",
-   "name": "Reckon 30",
-   "path": "reports/2026-11-18-quiz-reckon-0030.html"
+   "id": "DP·RECK·0031",
+   "name": "Reckon 31",
+   "path": "reports/2026-11-19-quiz-reckon-0031.html"
   },
   {
    "type": "tally",
-   "id": "DP·TALLY·0025",
-   "name": "Tally 25",
-   "path": "reports/2026-11-18-logic-tally-0025.html"
+   "id": "DP·TALLY·0026",
+   "name": "Tally 26",
+   "path": "reports/2026-11-19-logic-tally-0026.html"
   }
  ]
 }
