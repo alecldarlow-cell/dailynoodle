@@ -445,11 +445,12 @@
   // Every Lab trial type, running or retired (their older days stay hidden on the Lab page). Redact was retired on
   // 20 Nov 2026 (Alec, after the day-6 read-out: half its starters never finished) and Cryptic took its slot from 21 Nov.
   var LAB_TYPES = ['tilt', 'redact', 'tumbler', 'cryptic'];
-  var LAB_RUNNING = ['tilt', 'tumbler', 'cryptic'];
+  var LAB_RETIRED = { redact: '2026-11-21' }; // type → the first London day it is no longer listed
   var LAB_LINE = 'New puzzles on trial, here for a few weeks. Vote after you play: your votes help decide which become permanent dailies.';
   function labCurrent(){
     var today = londonDay(), y = window.dnCore.dayBefore(today), out = [];
-    LAB_RUNNING.forEach(function(type){
+    LAB_TYPES.forEach(function(type){
+      if(LAB_RETIRED[type] && today >= LAB_RETIRED[type]) return;
       var newest = null;
       state.items.forEach(function(it){
         if(it.kind !== 'puzzle' || it.type !== type || !inLab(it) || !it.date || it.date > today) return;

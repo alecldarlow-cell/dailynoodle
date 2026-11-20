@@ -62,3 +62,19 @@ test('LAB-PANEL-WEB-03: GIVEN three weeks of trial puzzles WHEN the Lab page ope
  await expect(phone.p.locator('#count')).toHaveText(n+' items');
  expect(phone.errors).toEqual([]);
 });
+
+test('LAB-PANEL-WEB-04: GIVEN Redact retired on 21 Nov 2026 and Cryptic in its slot WHEN Puzzles opens that day THEN Redact is gone and the rows keep the order Tilt, Tumbler, Cryptic',async({phone})=>{
+ const D2='2026-11-21';
+ const on2=t=>(feed.items||[]).filter(it=>it.type===t&&/in development/i.test(it.badge||'')&&it.date<=D2).sort((a,b)=>a.date<b.date?1:-1)[0];
+ // feed.json holds back forward-dated cards, so Cryptic 1 is only in it once the 21st has been built
+ // (locally: FEED_INCLUDE_FUTURE=1 node tools/build-feed.js); Redact's retirement is checked either way.
+ const want=['tilt','tumbler','cryptic'].filter(t=>{const it=on2(t);return it&&(it.date===D2||it.date==='2026-11-20');});
+ expect(want.slice(0,2)).toEqual(['tilt','tumbler']);
+ await phone.p.clock.setSystemTime(new Date(D2+'T12:00:00Z'));
+ await goto(phone,'puzzles.html');
+ const rows=phone.p.locator('#labpanel a.lp-row');
+ await expect(rows).toHaveCount(want.length);
+ expect(await rows.evaluateAll(a=>a.map(x=>x.dataset.type))).toEqual(want);
+ if(want.includes('cryptic'))expect(await rows.nth(2).getAttribute('href')).toBe(on2('cryptic').path);
+ expect(phone.errors).toEqual([]);
+});
