@@ -7,14 +7,20 @@
 (function () {
   'use strict';
   var TYPES = ['mini', 'doku', 'sweep', 'path', 'link', 'tangle', 'borders', 'reckon', 'tally'];
-  var LABEL = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally' };
+  var LABEL = { mini: 'Mini', doku: 'Doku', sweep: 'Sweep', path: 'Path', link: 'Link', tangle: 'Tangle', borders: 'Borders', reckon: 'Reckon', tally: 'Tally',
+    tilt: 'Tilt', redact: 'Redact', tumbler: 'Tumbler', cryptic: 'Cryptic', lab: 'Lab' };
+  /* The Lab in the Archive (20 Nov 2026, Alec, as the app): a Lab choice listing every Lab trial puzzle before today, and
+     All also lists the Lab puzzles you've played (finished or part-played), each with a small pink "Lab trial" label on its
+     tile. Retired trials are marked. Lab puzzles stay off the calendar. front.js LAB_RETIRED keeps the same list. */
+  var LAB = ['tilt', 'redact', 'tumbler', 'cryptic'];
+  var LAB_RETIRED = { redact: '2026-11-21' };
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   var TICK = '<svg class="ar-tk" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.5 8.5l3 3 6-7"/></svg>';
   var $ = function (id) { return document.getElementById(id); };
   var grid = $('ar-grid'), title = $('ar-month'), dayBox = $('ar-day'), status = $('ar-status');
   var listBox = $('ar-listview'), calBox = $('ar-cal'), sheet = $('ar-sheet'), scrim = $('ar-scrim'), pick = $('ar-pick');
   // view: 'list' (the default, as the app) or 'cal'; hide: "Hide done" (list only). Both live in the address, not storage.
-  var state = { items: [], byDay: {}, first: null, last: null, month: null, type: null, day: null, saves: {}, view: 'list', hide: false, today: '' };
+  var state = { items: [], lab: [], byDay: {}, first: null, last: null, month: null, type: null, day: null, saves: {}, curs: {}, retired: {}, view: 'list', hide: false, today: '' };
 
   function londonDay() {
     try {
@@ -27,12 +33,18 @@
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function track(ev, props) { try { if (window.digi && window.digi.track) window.digi.track(ev, props || {}); } catch (e) {} }
   function readSaves() {
-    var out = {};
-    TYPES.forEach(function (t) {
-      try { var d = JSON.parse(localStorage.getItem('digi-' + t + '-v1') || 'null'); if (d && d.done && typeof d.done === 'object') out[t] = d.done; } catch (e) {}
+    var out = {}; state.curs = {};
+    TYPES.concat(LAB).forEach(function (t) {
+      try {
+        var d = JSON.parse(localStorage.getItem('digi-' + t + '-v1') || 'null');
+        if (d && d.done && typeof d.done === 'object') out[t] = d.done;
+        if (LAB.indexOf(t) >= 0 && d && d.cur && d.cur.id) state.curs[d.cur.id] = 1;
+      } catch (e) {}
     });
     return out;
   }
+  function isLab(it) { return LAB.indexOf(it.type) >= 0; }
+  function started(it) { return !!(it.id && state.curs[it.id]); }
   function done(it) { var d = state.saves[it.type]; return !!(d && it.id && d[it.id]); }
   function clock(secs) {
     secs = Math.round(Number(secs)); if (!isFinite(secs) || secs < 0) return '';
@@ -64,6 +76,12 @@
     return x.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', timeZone: 'UTC' });
   }
   function visible(list) { return state.type ? list.filter(function (it) { return it.type === state.type; }) : list; }
+  // The list view's puzzles: a daily type's, the Lab's, or All: the dailies plus the Lab puzzles you've played.
+  function listed() {
+    if (state.type === 'lab') return state.lab.slice();
+    if (state.type) return visible(state.items);
+    return state.items.concat(state.lab.filter(function (it) { return done(it) || started(it); }));
+  }
 
   function saveUrl() {
     var q = new URLSearchParams();
@@ -76,13 +94,15 @@
 
   /* One row of controls (7 Nov 2026, as the app's option F): the type picker, "Hide done" (list only), the calendar. */
   function icon(t) {
-    return t ? '<img src="assets/' + t + '-thumb.svg" alt="" width="26" height="26">' : '<span class="ar-mark">' + $('ar-mark').innerHTML + '</span>';
+    // the Lab's face is Redact's tile, as in the app's picker
+    return t ? '<img src="assets/' + (t === 'lab' ? 'redact' : t) + '-thumb.svg" alt="" width="26" height="26">' : '<span class="ar-mark">' + $('ar-mark').innerHTML + '</span>';
   }
   function renderBar() {
     $('ar-pick-ico').innerHTML = icon(state.type);
     $('ar-pick-name').textContent = state.type ? LABEL[state.type] : 'All';
     pick.setAttribute('aria-label', 'Puzzles: ' + (state.type ? LABEL[state.type] : 'All') + '. Choose which puzzle to show');
     var hide = $('ar-hide'), view = $('ar-view'), cal = state.view === 'cal';
+    view.hidden = state.type === 'lab';   // the Lab is a short list: always as a list (as the app)
     hide.hidden = cal; hide.setAttribute('aria-checked', state.hide ? 'true' : 'false');
     view.setAttribute('aria-pressed', cal ? 'true' : 'false');
     view.setAttribute('aria-label', cal ? 'Show as a list' : 'Show as a calendar');
@@ -98,24 +118,27 @@
      headline, the description in two lines and the callout row on the tile's foot: when on the left, one thing on the
      right, your result once there is one, else How to play (a sibling link, never inside the card's). */
   function row(it, when) {
-    var ok = done(it), res = result(it);
+    var ok = done(it), res = result(it), lab = isLab(it), part = lab && !ok && started(it);
+    if (lab) { if (state.retired[it.type]) when = (when ? when + ' · ' : '') + 'Retired'; if (part) res = 'Continue'; }
     return '<li class="ar-item"><a class="ar-row' + (ok ? ' ok' : '') + '" href="' + esc(it.path) + '?via=archive" data-type="' + esc(it.type) + '" data-id="' + esc(it.id || '') + '">' +
       '<span class="ar-tile"><img src="' + esc(it.thumb || 'assets/' + it.type + '-thumb.svg') + '" alt="" width="96" height="96" loading="lazy">' +
-      (ok ? '<span class="ar-tick" aria-hidden="true">' + TICK + '</span>' : '') + '</span>' +
-      '<span class="ar-txt"><span class="ar-name">' + esc(it.headline) + '</span>' +
+      (ok ? '<span class="ar-tick" aria-hidden="true">' + TICK + '</span>' : '') +
+      (lab ? '<span class="ar-lab">Lab trial</span>' : '') + '</span>' +
+      '<span class="ar-txt"><span class="ar-name">' + esc(lab ? LABEL[it.type] + ' ' + Number(String(it.id).split('·').pop()) : it.headline) + '</span>' +
       (it.standfirst ? '<span class="ar-sf">' + esc(it.standfirst) + '</span>' : '') +
       '<span class="ar-meta">' + (when ? '<small class="ar-when">' + esc(when) + '</small>' : '') +
-      (ok ? '<span class="ar-res">' + esc(res) + '</span>' : '') + '</span></span>' +
-      '</a>' + (ok || !LABEL[it.type] ? '' : '<a class="ar-how" href="how-to-play.html#' + esc(it.type) + '" aria-label="How to play ' + esc(LABEL[it.type]) + '">How to play</a>') +
+      (ok || part ? '<span class="ar-res' + (part ? ' part' : '') + '">' + esc(res) + '</span>' : '') + '</span></span>' +
+      '</a>' + (ok || part || !LABEL[it.type] ? '' : '<a class="ar-how" href="how-to-play.html#' + esc(it.type) + '" aria-label="How to play ' + esc(LABEL[it.type]) + '">How to play</a>') +
       '</li>';
   }
   // Every released puzzle before today, newest first, in month sections (the app's list view).
   function renderList() {
     if (state.view !== 'list') return;
-    var list = visible(state.items).filter(function (it) { return !state.hide || !done(it); }).sort(function (a, b) {
-      return a.date === b.date ? TYPES.indexOf(a.type) - TYPES.indexOf(b.type) : a.date < b.date ? 1 : -1;
+    var order = TYPES.concat(LAB);
+    var list = listed().filter(function (it) { return !state.hide || !done(it); }).sort(function (a, b) {
+      return a.date === b.date ? order.indexOf(a.type) - order.indexOf(b.type) : a.date < b.date ? 1 : -1;
     });
-    if (!list.length) { listBox.innerHTML = state.items.length ? '<p class="ar-empty">' + (state.hide ? 'All done here' : 'No puzzles match') + '</p>' : ''; return; }
+    if (!list.length) { listBox.innerHTML = state.items.length || state.lab.length ? '<p class="ar-empty">' + (state.hide ? 'All done here' : 'No puzzles match') + '</p>' : ''; return; }
     var html = [], open = '';
     list.forEach(function (it) {
       var m = monthOf(it.date);
@@ -164,7 +187,7 @@
   /* The type sheet: a bottom sheet on phones, a centred card on wide screens. Escape, the scrim
      or a choice closes it; focus goes to the chosen tile, stays inside, and returns to the picker. */
   function tiles() {
-    $('ar-tiles').innerHTML = [''].concat(TYPES).map(function (t) {
+    $('ar-tiles').innerHTML = [''].concat(TYPES, state.lab.length ? ['lab'] : []).map(function (t) {
       var on = (state.type || '') === t;
       return '<button type="button" class="ar-tile" role="radio" data-t="' + t + '" aria-checked="' + on + '" tabindex="' + (on ? 0 : -1) + '">' +
         '<span class="ar-ico">' + icon(t) + '</span><span>' + (t ? LABEL[t] : 'All') + '</span></button>';
@@ -186,7 +209,7 @@
   scrim.addEventListener('click', closeSheet);
   $('ar-tiles').addEventListener('click', function (e) {
     var b = e.target.closest('.ar-tile'); if (!b) return;
-    state.type = b.getAttribute('data-t') || null; closeSheet(); render();
+    state.type = b.getAttribute('data-t') || null; if (state.type === 'lab') { state.view = 'list'; state.day = null; } closeSheet(); render();
   });
   sheet.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { e.preventDefault(); closeSheet(); return; }
@@ -224,6 +247,18 @@
       state.items = (feed.items || []).filter(function (it) {
         return it.kind === 'puzzle' && !it.badge && TYPES.indexOf(it.type) >= 0 && /^\d{4}-\d{2}-\d{2}$/.test(it.date || '') && it.date < today;
       });
+      // Lab trial puzzles (their cards carry the "In development" badge) before today, and which trials have ended:
+      // a trial runs while its newest puzzle is today's or yesterday's (front.js labCurrent), unless retired early.
+      var y = new Date(Date.parse(today + 'T12:00:00Z') - 864e5).toISOString().slice(0, 10), newest = {};
+      (feed.items || []).forEach(function (it) {
+        if (it.kind === 'puzzle' && it.badge && LAB.indexOf(it.type) >= 0 && /^DP·[A-Z]+·\d+$/.test(it.id || '') && /^\d{4}-\d{2}-\d{2}$/.test(it.date || '') && it.date <= today)
+          if (!newest[it.type] || it.date > newest[it.type]) newest[it.type] = it.date;
+      });
+      state.retired = {};
+      LAB.forEach(function (t) { if (newest[t] && (newest[t] < y || (LAB_RETIRED[t] && today >= LAB_RETIRED[t]))) state.retired[t] = 1; });
+      state.lab = (feed.items || []).filter(function (it) {
+        return it.kind === 'puzzle' && it.badge && LAB.indexOf(it.type) >= 0 && /^DP·[A-Z]+·\d+$/.test(it.id || '') && /^\d{4}-\d{2}-\d{2}$/.test(it.date || '') && it.date < today;
+      });
       state.byDay = {};
       state.items.forEach(function (it) { (state.byDay[it.date] = state.byDay[it.date] || []).push(it); });
       Object.keys(state.byDay).forEach(function (d) { state.byDay[d].sort(function (a, b) { return TYPES.indexOf(a.type) - TYPES.indexOf(b.type); }); });
@@ -234,7 +269,8 @@
       // A month or day in the address (Back from a puzzle opened from the calendar, older links) opens the calendar.
       state.view = m || d || q.get('v') === 'cal' ? 'cal' : 'list';
       state.hide = q.get('h') === '1';
-      state.type = TYPES.indexOf(t) >= 0 ? t : null;
+      state.type = TYPES.indexOf(t) >= 0 || (t === 'lab' && state.lab.length) ? t : null;
+      if (state.type === 'lab') state.view = 'list';
       state.month = m && /^\d{4}-\d{2}$/.test(m) && state.first && m >= monthOf(state.first) && m <= monthOf(state.last) ? m : state.last ? monthOf(state.last) : monthOf(today);
       state.day = d && state.byDay[d] && monthOf(d) === state.month ? d : null;
       status.textContent = days.length ? '' : 'No past puzzles yet.';

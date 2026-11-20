@@ -117,3 +117,9 @@ body.ar-locked{overflow:hidden}
 .ar-how::before{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
 .ar-how:hover{text-decoration:underline;text-underline-offset:3px}
 @media(min-width:560px){.ar-row{grid-template-columns:120px 1fr;gap:18px}.ar-tile,.ar-tile img{width:120px;height:120px}.ar-txt{min-height:120px}.ar-name{font-size:21px}}
+/* The Lab in the Archive (20 Nov 2026, Alec, as the app): a small pink "Lab trial" label on a Lab puzzle's tile foot,
+   as the tick sits on its corner; a part-played Lab puzzle says Continue */
+.ar-lab{position:absolute;left:6px;bottom:-8px;padding:1px 7px;border-radius:8px;border:2px solid var(--canvas);
+  background:var(--lab-soft);color:var(--lab);font:700 10px/1.4 Inter,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.ar-res.part{color:var(--muted)}
+.ar-view[hidden]{display:none}
