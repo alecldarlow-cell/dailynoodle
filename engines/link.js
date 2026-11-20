@@ -298,9 +298,29 @@ function toggle(w){
   startTimer();   // also works if the start card could not load
   if(sel.has(w))sel.delete(w);
   else{ if(sel.size>=4){setMsg("Four at a time");return;} sel.add(w); }
-  setMsg(""); render();
+  clearVerdict(); render();
 }
-function setMsg(t,tone){const m=$("#msg"); m.className="msg"+(tone?" "+tone:""); m.textContent=t||"";}
+function setMsg(t,tone){
+  const m=$("#msg"); clearTimeout(verdictTimer); verdictTimer=0;
+  m.className="msg"+(tone?" "+tone:"");
+  /* "One away" and "Not a group" are verdicts: each wears its own colour in a
+     pill, and stays up for VERDICT_HOLD even while the next tiles are tapped
+     (player feedback, 20 Nov 2026: they looked alike and vanished on the next
+     tap). textContent is unchanged, so the tests and dn-track read the same. */
+  if(tone==="near"||tone==="bad"){
+    m.textContent="";
+    const v=document.createElement("span"); v.className="verdict"; v.textContent=t||"";
+    m.appendChild(v); verdictUntil=Date.now()+VERDICT_HOLD;
+  }else{ m.textContent=t||""; verdictUntil=0; }
+}
+/* a tile tap clears the line, but never a verdict before its time is up —
+   then it goes by itself, unless something else has been said since */
+const VERDICT_HOLD=3000; let verdictUntil=0, verdictTimer=0;
+function clearVerdict(){
+  const left=verdictUntil-Date.now();
+  if(left<=0){setMsg("");return;}
+  if(!verdictTimer)verdictTimer=setTimeout(()=>{verdictTimer=0;setMsg("");},left);
+}
 /* haptics, where the device offers them — silent no-op everywhere else */
 function buzz(pattern){try{if(navigator.vibrate&&localStorage.getItem('dn-vibrate')!=='0')navigator.vibrate(pattern);}catch(e){}}   // Vibration: account.html (7 Nov 2026)
 
@@ -355,7 +375,7 @@ function submit(){
     },80*3+300);
     return;
   }
-  if(best===3)setMsg("One away",  "bad");
+  if(best===3)setMsg("One away",  "near");
   else        setMsg("Not a group","bad");
   mistakes++; justLost=true;
   render();                       // rebuilds the tiles — so paint the miss AFTER it

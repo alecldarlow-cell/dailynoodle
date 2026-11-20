@@ -137,7 +137,23 @@ main{position:relative;display:flex;flex-direction:column;align-items:center;gap
 .msg{min-height:18px;margin:14px 0 0;font-size:14px;color:var(--ink-soft);text-align:center;
   font-family:var(--mono);letter-spacing:.04em;transition:color .15s}
 .msg.wait{color:var(--ink-soft);opacity:.85}
-.msg.bad{color:var(--bad);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:13px}
+.msg.bad,.msg.near{color:var(--bad);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:13px}
+/* the two verdicts look different (player feedback, 20 Nov 2026): "One away"
+   is amber — close, keep going — and "Not a group" red. Each sits in a tinted
+   pill; inline padding, so the line's height and the board never move. */
+.msg.near{color:var(--near,#A85A00)}
+.msg .verdict{padding:3px 12px;border-radius:999px;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+  background:rgba(228,72,59,.12);animation:verdictin .28s ease-out both}
+.msg.near .verdict{background:rgba(255,166,0,.18)}
+@keyframes verdictin{0%{opacity:0}100%{opacity:1}}
+html.dn-reduce .msg .verdict{animation:none}
+@media (prefers-reduced-motion:reduce){.msg .verdict{animation:none}}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"]){--near:#FFB547}
+  html:not([data-theme="light"]) .msg .verdict{background:rgba(255,122,110,.16)}
+  html:not([data-theme="light"]) .msg.near .verdict{background:rgba(255,181,71,.16)}}
+html[data-theme="dark"]{--near:#FFB547}
+html[data-theme="dark"] .msg .verdict{background:rgba(255,122,110,.16)}
+html[data-theme="dark"] .msg.near .verdict{background:rgba(255,181,71,.16)}
 .controls{display:flex;gap:8px;align-items:center;justify-content:center;margin:10px 0 0;width:min(100%,420px)}
 button{font-family:var(--sans);font-size:13.5px;font-weight:600;letter-spacing:.01em;
   border:1px solid rgba(20,23,38,.16);background:var(--card);color:var(--ink);
