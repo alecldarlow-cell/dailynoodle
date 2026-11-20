@@ -133,7 +133,7 @@ test('ARCHIVE-08: GIVEN the picker sheet WHEN opened THEN it is titled "Choose a
  await H.tap(p,p.locator('#ar-pick'));await H.wait(p,100);
  await expect(p.locator('#ar-sheet')).toBeVisible();
  await expect(p.locator('#ar-sheet-title')).toHaveText('Choose a puzzle');
- await expect(p.locator('#ar-sheet .ar-tile')).toHaveCount(10);
+ await expect(p.locator('#ar-sheet .ar-tile')).toHaveCount(11);   // All, the nine dailies and the Lab (20 Nov 2026)
  await expect(p.locator('#ar-sheet .ar-tile[data-t=""]')).toBeFocused();
  await expect(p.locator('#ar-pick')).toHaveAttribute('aria-expanded','true');
  await p.keyboard.press('Escape');
@@ -141,5 +141,49 @@ test('ARCHIVE-08: GIVEN the picker sheet WHEN opened THEN it is titled "Choose a
  await H.tap(p,p.locator('#ar-pick'));await H.wait(p,100);
  await p.mouse.click(10,10);await H.wait(p,100);
  await expect(p.locator('#ar-sheet')).toBeHidden();
+ expect(phone.errors).toEqual([]);
+});
+
+// ARCHIVE-LAB (20 Nov 2026, Alec, as the app): played Lab puzzles in All with a pink "Lab trial" label, a Lab choice
+// listing every Lab puzzle before today, retired trials marked, no calendar for the Lab.
+const LDAY='2026-11-21';
+const labItems=(feed.items||[]).filter(it=>it.kind==='puzzle'&&it.badge&&['tilt','redact','tumbler','cryptic'].includes(it.type)&&it.date<LDAY);
+const newestOf=t=>labItems.filter(it=>it.type===t).sort((a,b)=>a.date<b.date?1:-1)[0];
+test('ARCHIVE-LAB-01: GIVEN a Lab puzzle finished and one part-played WHEN All shows THEN both are among the dailies with the Lab label, Hide done hides the finished one, and an unplayed one stays out',async({phone})=>{
+ const red=newestOf('redact'),tilt=newestOf('tilt'),tum=newestOf('tumbler');
+ expect(red&&tilt&&tum,'Lab puzzles before '+LDAY).toBeTruthy();
+ await phone.p.clock.setSystemTime(new Date(LDAY+'T12:00:00Z'));
+ await phone.ctx.addInitScript(([r,t])=>{
+  localStorage.setItem('digi-redact-v1',JSON.stringify({v:1,done:{[r]:{t:'2:05',s:125,m:0,d:'2026-11-20'}}}));
+  localStorage.setItem('digi-tilt-v1',JSON.stringify({v:1,done:{},cur:{id:t,pos:[5,5],g:0,rot:0,n:3,trail:[],s:20,at:1}}));
+ },[red.id,tilt.id]);
+ await goto(phone,'archive.html');
+ const rRow=phone.p.locator('a.ar-row[data-id="'+red.id+'"]'),tRow=phone.p.locator('a.ar-row[data-id="'+tilt.id+'"]');
+ await expect(rRow).toBeVisible();
+ await expect(rRow.locator('.ar-lab')).toHaveText(/lab trial/i);
+ await expect(rRow.locator('.ar-name')).toHaveText('Redact '+Number(red.id.split('·').pop()));
+ await expect(rRow.locator('.ar-res')).toHaveText('Solved in 2:05');
+ await expect(rRow.locator('.ar-when')).toContainText('Retired');   // Redact retired on 21 Nov
+ await expect(tRow.locator('.ar-res')).toHaveText('Continue');
+ await expect(tRow.locator('.ar-when')).not.toContainText('Retired');
+ await expect(phone.p.locator('a.ar-row[data-id="'+tum.id+'"]')).toHaveCount(0);
+ // a daily never carries the label
+ await expect(phone.p.locator('a.ar-row:not([data-type="tilt"]):not([data-type="redact"]):not([data-type="tumbler"]):not([data-type="cryptic"]) .ar-lab')).toHaveCount(0);
+ await H.tap(phone.p,phone.p.locator('#ar-hide'));await H.wait(phone.p,100);
+ await expect(rRow).toHaveCount(0);
+ await expect(tRow).toBeVisible();
+ expect(phone.errors).toEqual([]);
+});
+test('ARCHIVE-LAB-02: GIVEN Lab picked WHEN the list shows THEN every Lab puzzle before today, each labelled, as a list only; the address keeps it',async({phone})=>{
+ await phone.p.clock.setSystemTime(new Date(LDAY+'T12:00:00Z'));
+ await goto(phone,'archive.html');
+ await H.tap(phone.p,phone.p.locator('#ar-pick'));await H.wait(phone.p,100);
+ await H.tap(phone.p,phone.p.locator('#ar-sheet .ar-tile[data-t="lab"]'));await H.wait(phone.p,100);
+ await expect(phone.p.locator('#ar-pick-name')).toHaveText('Lab');
+ const rows=phone.p.locator('#ar-listview a.ar-row');
+ await expect(rows).toHaveCount(labItems.length);
+ await expect(phone.p.locator('#ar-listview a.ar-row .ar-lab')).toHaveCount(labItems.length);
+ await expect(phone.p.locator('#ar-view')).toBeHidden();
+ expect(phone.p.url()).toContain('t=lab');
  expect(phone.errors).toEqual([]);
 });
