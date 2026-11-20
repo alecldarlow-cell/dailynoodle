@@ -1,7 +1,7 @@
 /* Digi Puzzles — tumbler engine. One copy serves every tumbler page in reports/.
    Tumbler: a hidden four-letter word on four wheels of seven letters (Lab, 6 Nov 2026).
-   Turn the wheels down to make any real word on the marigold line and submit it for
-   Wordle clues; submit the hidden word to solve it. The clock is the score.
+   Turn the wheels down to make any real word on the outlined line and submit it for
+   Wordle clues, which also mark the wheels; submit the hidden word to solve it. The clock is the score.
    The page supplies window.DN_PUZZLE = {type:"tumbler", id:"DP·TUMB·0001", band, n:4,
    wheels:["7 capitals" ×4], secret, words:[every accepted word the wheels make], seed}.
    Generator and gate: tools/tumbler.js. Keep element ids and localStorage keys stable. */
@@ -132,6 +132,8 @@ const $=id=>document.getElementById(id);
 const boardEl=$("board"),msgEl=$("msg"),timerEl=$("timer");
 const meta=n=>{const m=document.querySelector('meta[name="'+n+'"]');return m?m.content:"";};
 const LAB=!!meta("dn:badge");
+/* pages before 16 Nov 2026 name the line by its old colour */
+if(/yellow line/.test(msgEl.textContent))msgEl.textContent="Make a word on the outlined line and submit it for clues.";
 
 /* ---------- ship gate at load ---------- */
 function gate(p){
@@ -211,6 +213,20 @@ function clue(g){
   for(let i=0;i<N;i++)if(res[i]!=="g"&&left[g[i]]){res[i]="a";left[g[i]]--;}
   return res;
 }
+/* the clues on the wheels (Alec, 16 Nov 2026, after Helen's play): only what the submits showed,
+   nothing deduced. A green letter goes green on its wheel; a grey letter is ruled out on every wheel;
+   a letter tried on a wheel and not green there is ruled out on that wheel; a letter that came up
+   amber and isn't found yet gets an amber dot wherever it hasn't been ruled out, and where it was
+   tried (k-n) it is faded with the dot, or amber on the line, as the submit row shows it. */
+function wheelMarks(){
+  const green=new Array(N).fill(null),notAt=[...Array(N)].map(()=>new Set()),out=new Set(),amber=new Set(),found=new Set();
+  for(const w of state.tries){
+    const W=w.toUpperCase(),c=clue(w),hit=new Set();
+    for(let i=0;i<N;i++){const L=W[i];if(c[i]==="g"){green[i]=L;found.add(L);hit.add(L);}else{notAt[i].add(L);if(c[i]==="a"){amber.add(L);hit.add(L);}}}
+    for(let i=0;i<N;i++)if(!hit.has(W[i]))out.add(W[i]);
+  }
+  return (k,L)=>green[k]===L?"k-g":out.has(L)?"k-x":notAt[k].has(L)?(amber.has(L)&&!found.has(L)?"k-n":"k-x"):(amber.has(L)&&!found.has(L))?"k-a":"";
+}
 function rowNode(w,cls){const r=document.createElement("div");r.className=cls||"r";clue(w).forEach((c,i)=>{const b=document.createElement("b");b.className=c;b.textContent=w[i].toUpperCase();r.appendChild(b);});return r;}
 
 /* ---------- the wheels ---------- */
@@ -238,7 +254,8 @@ function swipe(w,k){
   const end=()=>{y0=null;};w.addEventListener("pointerup",end);w.addEventListener("pointercancel",end);
 }
 function paint(){
-  for(let k=0;k<N;k++)for(let i=0;i<P;i++)wheels[k].children[i].textContent=letter(k,i);
+  const mark=wheelMarks();
+  for(let k=0;k<N;k++)for(let i=0;i<P;i++){const t=wheels[k].children[i],L=letter(k,i),m=mark(k,L);t.textContent=L;t.className="tile"+(i===READ?" read":"")+(m?" "+m:"");}
   const read=lineWord();wheels.forEach((w,k)=>w.children[READ].setAttribute("aria-label","Line letter "+(k+1)+": "+read[k].toUpperCase()));
   const box=$("tries");box.innerHTML="";
   state.tries.slice().reverse().forEach((w,j)=>{const r=rowNode(w);const s=document.createElement("small");s.textContent="submit "+(state.tries.length-j);r.appendChild(s);box.appendChild(r);});

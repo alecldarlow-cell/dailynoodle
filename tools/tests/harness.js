@@ -115,8 +115,14 @@ async function newPhone(browser, { width = 390, height = 844, scheme = 'light', 
     if (u.host === 'dailynoodle.co.uk') {
       let p = decodeURIComponent(u.pathname);
       if (p === '/puzzles-today.json') {
-        const day = await route.request().frame().evaluate(() => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()));
-        return route.fulfill({ status: 200, contentType: MIME.json, body: dailyList(day) });
+        // The page's (faked) London day. If the page reloads or navigates while this request is
+        // in flight, its frame is gone and evaluate throws; nobody is left to read the answer, so
+        // fall back to the real London day rather than crash the whole run (15 Nov 2026: the
+        // app's Tumbler replay reloads to test resume just as the finish sheet asks for this).
+        const london = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+        let day;
+        try { day = await route.request().frame().evaluate(london); } catch (e) { day = london(); }
+        return route.fulfill({ status: 200, contentType: MIME.json, body: dailyList(day) }).catch(() => {});
       }
       if (engines && p.startsWith('/engines/') && fs.existsSync(path.join(engines, p.slice(9)))) {
         const f = path.join(engines, p.slice(9));

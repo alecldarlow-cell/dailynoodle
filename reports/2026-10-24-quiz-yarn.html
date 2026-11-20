@@ -9,7 +9,7 @@
 <meta name="dn:standfirst" content="The daily Tangle without the wait: 720 boards, five stars each, and a scarf to knit as you win.">
 <meta name="dn:topic"      content="Quiz">
 <meta name="dn:date"       content="2026-10-24">
-<meta name="dn:updated"    content="2026-11-09">
+<meta name="dn:updated"    content="2026-11-17">
 <meta name="dn:read"       content="~2 min">
 <meta name="dn:thumb"      content="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAgMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI0Y1RUZFNiIvPjxnIGZpbGw9IiNGRkZERjkiIHN0cm9rZT0iIzJBMjExOCIgc3Ryb2tlLXdpZHRoPSIxLjgiPjxyZWN0IHg9IjU4IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIxMCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9Ijg2IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIvPjxyZWN0IHg9IjU4IiB5PSIzOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNSIgZmlsbD0iI0VDRTNENiIgc3Ryb2tlPSIjQjlBQTk2Ii8+PC9nPjxwYXRoIGQ9Ik01OCA2MkM2MiA0NiA2NiAyNiA3MCAyMlM5NiAyMCA5OCAyMiA5OCA0NiA5OCA1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQzA1MzJBIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iODQiIHI9IjI5IiBmaWxsPSIjQzA1MzJBIi8+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEUzQTFDIiBzdHJva2Utd2lkdGg9IjIuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj48cGF0aCBkPSJNMTYgNzRjMTQgNiAzNCA0IDUwLTEwIi8+PHBhdGggZD0iTTE0IDg4YzE4IDQgMzgtMiA1NC0xOCIvPjxwYXRoIGQ9Ik0yMCAxMDJjMTYgMCAzNC04IDQ2LTI0Ii8+PHBhdGggZD0iTTMwIDU5Yy02IDE0LTYgMzQgNCA1MiIvPjxwYXRoIGQ9Ik00NiA1NmMtOCAxNi04IDM4IDIgNTYiLz48L2c+PGNpcmNsZSBjeD0iMzEiIGN5PSI3MSIgcj0iNSIgZmlsbD0iI0U1ODI2MCIgb3BhY2l0eT0iLjciLz48L3N2Zz4=">
 <meta name="theme-color" content="#F5EFE6" id="themeColor">
@@ -72,6 +72,12 @@ a{color:inherit}
 #hPlay b{display:block;font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.02}
 #hPlay small{display:block;margin-top:4px;font-size:15px;color:var(--ink2)}
 #hPlay .go{display:inline-flex;align-items:center;min-height:44px;margin-top:12px;padding:0 22px;border-radius:24px;background:var(--primary);color:var(--onPrimary);font-weight:600}
+/* mode switch: Classic 4x4 or Big Board 5x5 (17 Nov 2026) */
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:16px;background:var(--soft);margin-top:2px}
+.modes button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;padding:4px 6px;border:0;border-radius:12px;background:none;cursor:pointer;color:var(--ink2);font-weight:600;font-size:15px}
+.modes button small{font-weight:500;font-size:12px;font-variant-numeric:tabular-nums}
+.modes button[aria-checked="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 0 var(--edge)}
+.modes button.shut{opacity:.6;cursor:default}
 .nclink{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;width:100%;min-height:44px;margin:-2px 0 0;padding:4px 18px;border:0;background:none;text-align:left;cursor:pointer;color:var(--ink2);font-size:15px}
 .nclink b{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;text-decoration-thickness:2px}
 .ncdone{min-width:80px;min-height:44px;padding:0 18px;border-radius:22px;border:1.5px solid var(--primary);background:var(--primary);color:var(--onPrimary);font:inherit;font-weight:700;font-size:17px;cursor:pointer}
@@ -166,7 +172,10 @@ details.how p{margin:0 0 12px;line-height:1.5}
 #toast.gold{background:var(--gold);color:#3B2A00}
 #toast.star{background:var(--sk);color:var(--onSk)}
 #boardWrap{position:relative;display:flex;justify-content:center}
-#board{position:relative;width:min(calc(100% - 12px),400px,max(272px,50dvh));aspect-ratio:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;touch-action:none}
+#board{position:relative;width:min(calc(100% - 12px),400px,max(272px,50dvh));aspect-ratio:1;display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:8px;touch-action:none}
+#board.n5{gap:6px}
+#board.n5 .tile{border-radius:10px;font-size:clamp(22px,7vw,32px)}
+#board.n5 .tile.qu{font-size:clamp(17px,5.4vw,25px)}
 .tile{position:relative;display:grid;place-items:center;border-radius:12px;background:var(--paper);border:1.5px solid var(--edge);box-shadow:0 3px 0 var(--edge);
   font-weight:700;font-size:clamp(26px,8.6vw,38px);font-stretch:95%;cursor:pointer;transition:background .12s,transform .12s,box-shadow .12s;z-index:1}
 .tile.qu{font-size:clamp(22px,7vw,31px)}
@@ -244,6 +253,7 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
    <h1 class="title">Yarn</h1>
    <p class="tag">Trace words, earn stars, knit a scarf.</p>
   </div>
+  <div class="modes" id="modes" role="radiogroup" aria-label="Board size"><button type="button" role="radio" data-m="c" aria-checked="true"><span>Classic</span><small>4×4 · 1:30</small></button><button type="button" role="radio" data-m="b" aria-checked="false"><span>Big Board</span><small id="bigNote">5×5 · 2:00</small></button></div>
   <div id="scarfBox"><svg id="scarf" aria-hidden="true"></svg><p id="scarfNote"></p></div>
   <button id="hPlay" type="button"><svg class="ball" viewBox="0 0 64 64" aria-hidden="true" id="hBall"></svg>
    <span class="txt"><b id="hHead">Level 1</b><small id="hStatus"></small><span class="go" id="hGo">Play</span></span></button>
@@ -258,6 +268,7 @@ details.bon summary{cursor:pointer;min-height:44px;display:flex;align-items:cent
    <p>Each level is one board and 90 seconds. Drag through touching letters, across, up, down or diagonally, to spell a word, or tap letters one by one and tap the last one again to enter. Each tile is used once per word; QU counts as two letters.</p>
    <p>A word scores its length minus two: 1 point for three letters, 2 for four, 3 for five. The board’s longest common word scores double. Any real word counts, plurals included: rarer words score just the same.</p>
    <p>The bar above the board shows the level’s five star scores. One star clears the level, knits a stripe into your scarf and opens the next. Replay any level for more stars.</p>
+   <p><b>Big Board</b> opens once level 10 is cleared: 5×5 boards with two minutes each, in ten skeins of ten, with stars and progress of their own. Each cleared level knits a square into a blanket.</p>
    <p><b>No clock</b> boards have no timer and no stars: find every common word at your own pace, then tap Done to see any you missed. They are boards of their own, so they never give a level away.</p>
    <p>Words you find here and in the daily Tangle all count towards your words found.</p>
   </details>
@@ -1153,6 +1164,106 @@ const NOCLOCK=[{"t":"otfmiaescngeirpa","s":"pricing"},
 {"t":"ayrypeltbalhesgi","s":"slightly"},
 {"t":"wlaenabeedeallis","s":"labelled"},
 {"t":"ouolhtwlonaryshd","s":"shallow"}];
+const BIG=[{"t":"silmumuianrdteaaeoirsrpnn","s":"simulation"},
+{"t":"dcietonnonoseudumarneetay","s":"consumer"},
+{"t":"tlaiilytintrseomondresfih","s":"initially"},
+{"t":"tdueerlesveltfcyciehbrmna","s":"mechanic"},
+{"t":"gsnerndetfiebtensgpogiach","s":"designing"},
+{"t":"seonooudrwcestlenradtvnhe","s":"wondrous"},
+{"t":"aitilecraorinepuaodtsctba","s":"politician"},
+{"t":"nibhtauslelroerpntmssmegs","s":"plausible"},
+{"t":"dremtdrooiaiavncsngtetdea","s":"removing"},
+{"t":"aetopthpsrsoewynrgeooinhs","s":"postponing"},
+{"t":"rsoerepliaxpctntaeimragld","s":"explicit"},
+{"t":"hedsdcanteblshttrgsnofioe","s":"brightness"},
+{"t":"daiipehlvcsitrdrgoeatnics","s":"civilised"},
+{"t":"ahernesiokniotmadateefrta","s":"hesitate"},
+{"t":"ieietlptancarodroimrtpexe","s":"proclaim"},
+{"t":"swtideoxettepirwnotsadiin","s":"expedition"},
+{"t":"yrabocloarypptgitseeodafp","s":"laboratory"},
+{"t":"tieoesygvreetonhsniotgftp","s":"governing"},
+{"t":"orpeatdicnnteioerltuarems","s":"deterrent"},
+{"t":"wrpqatworianeophiretctdca","s":"director"},
+{"t":"tlcphakiacdneatgtusdardeh","s":"tackling"},
+{"t":"sijnehuoesenctaorhietconp","s":"junction"},
+{"t":"odetxanlirlafdgikgerwnram","s":"remarking"},
+{"t":"vdbfmieraehgnefinrinnsgao","s":"deranging"},
+{"t":"ohtoesptalkinpdderdmrceoa","s":"hospital"},
+{"t":"aqocidvgaotandtsemitlevch","s":"advocating"},
+{"t":"nmedpaaetoggnhsoidaybatkr","s":"managing"},
+{"t":"deovsdretwaoloeekapnbtyro","s":"overloaded"},
+{"t":"linavpldeeaoisavityadsulc","s":"validity"},
+{"t":"ftcendanitliavcmlerefwyrt","s":"incentive"},
+{"t":"raiercefewalihtpgeruohaso","s":"outweigh"},
+{"t":"onlemiaetuttehsirioeriwnt","s":"irritation"},
+{"t":"boadaeyornkspohhiweiaores","s":"keyboard"},
+{"t":"inflccueatgoeafnolorrdset","s":"catalogue"},
+{"t":"ttovhaeemoesatpdildencrsm","s":"attempted"},
+{"t":"ebsthatoedeuireonfelbtwua","s":"beautiful"},
+{"t":"dgomsinecwseatnsecnyalaem","s":"classing"},
+{"t":"plicaiuptfntesueaynodesar","s":"facility"},
+{"t":"nrectdeeahnileuvarbtmoire","s":"terrible"},
+{"t":"tfhlmwtigidrrnacavegtnois","s":"overnight"},
+{"t":"dibmstereuqovsiswbarnicte","s":"bacterium"},
+{"t":"patmtndrohieoepsageccadim","s":"academic"},
+{"t":"eroarustngahwifrreeapwent","s":"renewing"},
+{"t":"siroidlonceggilnehatitsin","s":"congesting"},
+{"t":"gfdfnsetaayersnawhicvshre","s":"fascinated"},
+{"t":"floktereonvalieoimtrcnoed","s":"overlook"},
+{"t":"foualrtdhrogiaelnrelmitan","s":"relating"},
+{"t":"elertacfeaewtedfretiohisp","s":"reflected"},
+{"t":"onuodetdcgaryndcowiuinmst","s":"incoming"},
+{"t":"ubohewuoettwntrtaofrdemrd","s":"formatted"},
+{"t":"tommtcmrpaeceountotnsecal","s":"competence"},
+{"t":"tiensaeontlntesostpriioti","s":"isolation"},
+{"t":"ebiraotnecgrvameaasoctdin","s":"invasion"},
+{"t":"eteftylumreagrakiledtuner","s":"unlikely"},
+{"t":"rpaoeopchdnamraoelpebdaos","s":"approached"},
+{"t":"rngntoeisihtulpdiwudfermd","s":"muddling"},
+{"t":"meanhitgtpanenecoratheusa","s":"incoherent"},
+{"t":"myetceoonouismursalptceta","s":"compulsion"},
+{"t":"itreiblrtsitairtosndcsfgm","s":"arresting"},
+{"t":"octsdasesabpomtetearmifsc","s":"sometime"},
+{"t":"aboohrentnnhweilarnwylmof","s":"informally"},
+{"t":"ysrmoaepaynaearahtticraco","s":"apathetic"},
+{"t":"cepfgctintaepgelsaeauatde","s":"accepting"},
+{"t":"onglsonirnmtaueaodflcuoei","s":"educating"},
+{"t":"pacserewsaiollecnabgrapid","s":"incapable"},
+{"t":"dcateeeplhnalyarpodnateat","s":"anyplace"},
+{"t":"iaerowtsedernntdfoosionec","s":"confronted"},
+{"t":"celyrutpeardnotenladuirid","s":"lectured"},
+{"t":"pgixaennreriteougtsdsgesh","s":"suggesting"},
+{"t":"rpissaeseodtedeofdikraowa","s":"widespread"},
+{"t":"tnwotylealiolsnpvteeesrzo","s":"violently"},
+{"t":"grhlsregepatsoatneonngrds","s":"sponsored"},
+{"t":"gnimfalurecbplnielootnrad","s":"bulletin"},
+{"t":"tmsfdioeefsaorltrgncthain","s":"straight"},
+{"t":"putypydoslhemrsyteinlanno","s":"eminently"},
+{"t":"hcirieodetiminbrstlutyirr","s":"chemistry"},
+{"t":"orompwrrostinttaherhfsaac","s":"tomorrow"},
+{"t":"sgrencratessrdleviunlseoy","s":"yourselves"},
+{"t":"spidslesneagatdleeeuasfoe","s":"defeated"},
+{"t":"ghdntsetewmniprsrnigpuggn","s":"springing"},
+{"t":"oidimllvncrisigastonernew","s":"civilising"},
+{"t":"specemyoncaetustnrtmtmicp","s":"eccentric"},
+{"t":"pedititleynsnaeorgasitcpu","s":"causality"},
+{"t":"ntpieduhotngnsnfiicastadv","s":"advancing"},
+{"t":"ndasobepnesunpeacoorrendj","s":"pronounce"},
+{"t":"araurajttacdensvetresathi","s":"restaurant"},
+{"t":"pacsreseoererouvcnrtetaeo","s":"perverse"},
+{"t":"anrtrrsidaepogeamooyoneca","s":"composer"},
+{"t":"dienplrtaeiscahmiicrantie","s":"criticism"},
+{"t":"racroaeihrpgdaestgdnauoem","s":"horrendous"},
+{"t":"upciicdlataosiepetrnnotem","s":"duplicate"},
+{"t":"odarienctgaelearniegeteas","s":"entrance"},
+{"t":"setrmtfeeaalujnivsotnedid","s":"juvenile"},
+{"t":"ihnyddtpecaetexseirsodlog","s":"excepted"},
+{"t":"wrunnncdeosevgtttrortaisw","s":"undergone"},
+{"t":"weleatlsrpneedoeriotkvefn","s":"preserve"},
+{"t":"mebfdiredepnapepcorenetco","s":"proceeded"},
+{"t":"fnopuieasdctlntgiamgnoqts","s":"infecting"},
+{"t":"erteioegdrwrietdhersnatoh","s":"shorthand"},
+{"t":"laoekpmiroslisietafahysho","s":"simplest"}];
 const SKEINS=[
   {name:'Oatmeal', c:['#B08A52','#D2AE78'], t:[11,22,32]},
   {name:'Heather', c:['#8A63AE','#B595D6'], t:[12,23,33]},
@@ -1174,6 +1285,16 @@ const SKEINS2=[['Saffron','#B07A10','#E8B54A'],['Teal','#1F7A78','#5FB8B4'],['Pl
   ['Petrol','#1F5866','#5E9CAC'],['Heath','#8E4A6E','#D392B4'],['Ember','#B8461C','#F2845A'],['Pebble','#6E685E','#B5AFA4']]
   .map(([name,a,b])=>({name,c:[a,b],t:[15,27,37]}));
 const FIRST2=361, NEW_UNTIL='2026-11-29';
+/* Big Board (Alec, 17 Nov 2026): 5x5 boards (BIG, from tools/yarn-big-boards.js), two minutes, ten skeins of ten, with levels,
+   stars, best score and a blanket of their own. Star scores rise from 20/36/50 in Aran to 25/45/62 in Chenille for a
+   127-common-word board, scaled by (words/127)^0.77: the 90-second rounds to 17 Nov 2026 (2,871 of them) scored as
+   (words/50)^0.77, a 127-word 5x5 board in two minutes was put at a median of about 52, and the stars sit where the
+   classic ones sit against its median. A first estimate, to retune from real rounds. */
+const BIG_SKEINS=[['Aran','#8C6A3F','#CDA874'],['Tweed','#6F5A8C','#AE98CF'],['Mohair','#B2486A','#E58AA6'],['Alpaca','#4F7A6A','#8FC2AE'],
+  ['Merino','#2F6FA0','#76AEDC'],['Cashmere','#A0603A','#DE9B74'],['Shetland','#4D7A2E','#8DBE63'],['Bouclé','#7A3F8F','#BF86D2'],
+  ['Angora','#A07A12','#E2BC52'],['Chenille','#264A7A','#7E9FDB']]
+  .map(([name,a,b],k)=>({name,c:[a,b],t:[[20,25],[36,45],[50,62]].map(([lo,hi])=>Math.round(lo+(hi-lo)*k/9))}));
+const BIGN=BIG.length, BIG_ROUND=120, BIG_W=127, BIG_EXP=0.77, BIG_OPEN=10;
 const isNew=()=>{try{return londonDay()<NEW_UNTIL}catch(e){return false}};
 /* Star scores (90 s): the skein's scores for a 50-common-word board, scaled by (words/50)^0.7, since
    richer boards give more to find; never above these shares of the board's points. Set from the
@@ -1183,11 +1304,12 @@ const CAP=[.13,.24,.34];
    reached them in about 1 round in 4 and 1 in 7, so all five stars on 720 levels is about 6x the rounds that
    three stars on the first 360 took. Stars 1-3 are unchanged. */
 const UP=[1.1,1.2], NSTAR=5;
-const ROUND=90, MINLEN=3, N=4;
+const ROUND=90, MINLEN=3;
+let N=4;                                            // the board in play: 4 (classic, No clock) or 5 (Big Board)
 
 /* ---------- Noodle site tracking (site contract §5) ---------- */
 const GAME='yarn';
-const modeOf=n=>n>60&&n<FIRST2?'odds':'skein';
+const modeOf=n=>n>60&&n<FIRST2?'odds':'skein';      // Big Board rounds send mode: big
 let rnd={armed:false,open:false,secs:0,how:'new',lv:1,mode:''};
 function trk(ev,x){try{if(window.digi&&window.digi.track)window.digi.track(ev,Object.assign({game:GAME},x));}catch(e){}}
 function rndArm(how,lv,mode){rnd={armed:true,open:false,secs:0,how:how||'new',lv,mode:mode||''};}
@@ -1202,34 +1324,41 @@ const plural=(n,a,b)=>n+' '+(n===1?a:b);
 const num=n=>['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen'][n]||String(n);
 const fmt=n=>{try{return n.toLocaleString('en-GB')}catch(e){return String(n)}};
 function mmss(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
-const NB=(()=>{const a=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++){const s=[];for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
-  const r2=r+dr,c2=c+dc;if((dr||dc)&&r2>=0&&r2<N&&c2>=0&&c2<N)s.push(r2*N+c2);}a.push(s);}return a;})();
+const nbFor=(()=>{const m={};return N=>m[N]||(m[N]=(()=>{const a=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++){const s=[];for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
+  const r2=r+dr,c2=c+dc;if((dr||dc)&&r2>=0&&r2<N&&c2>=0&&c2<N)s.push(r2*N+c2);}a.push(s);}return a;})());})();
+let NB=nbFor(4);
+function setGrid(n){N=n;NB=nbFor(n);}
 
 /* ---------- word list ---------- */
 function unpack(s){const r=[];let prev='';const re=/(\d)([a-z]*)/g;let m;while((m=re.exec(s))){const w=prev.slice(0,+m[1])+m[2];r.push(w);prev=w;}return r;}
 const MAINW=unpack(DICT.M), BONW=unpack(DICT.B);
 const MAINSET=new Set(MAINW);
 const TRIE=(()=>{const root={};for(const w of MAINW.concat(BONW)){let n=root;for(const ch of w)n=n[ch]||(n[ch]={});n.$=w;}return root;})();
-function solve(low){const out=new Set();
-  const go=(i,node,used)=>{let n=node;for(const ch of low[i]){n=n[ch];if(!n)return;}if(n.$&&n.$.length>=MINLEN)out.add(n.$);for(const j of NB[i])if(!(used>>j&1))go(j,n,used|1<<j);};
-  for(let i=0;i<N*N;i++)go(i,TRIE,1<<i);return [...out];}
+function solve(low){const out=new Set(),nb=nbFor(Math.round(Math.sqrt(low.length)));
+  const go=(i,node,used)=>{let n=node;for(const ch of low[i]){n=n[ch];if(!n)return;}if(n.$&&n.$.length>=MINLEN)out.add(n.$);for(const j of nb[i])if(!(used>>j&1))go(j,n,used|1<<j);};
+  for(let i=0;i<low.length;i++)go(i,TRIE,1<<i);return [...out];}
 
 /* ---------- levels ---------- */
-const MAXLV=LEVELS.length;
-const skeinOf=n=>n<=60?SKEINS[Math.floor((n-1)/10)]:n<FIRST2?ODDS:SKEINS2[Math.floor((n-FIRST2)/10)];
-const colourOf=n=>n<=60||n>=FIRST2?skeinOf(n).c:SKEINS[(n*5)%6].c;
+/* two tracks: c = the classic 4x4 levels, b = Big Board. TR is the one on the home and levels screens. */
+let TR='c';
+const isBig=t=>(t||TR)==='b';
+const tlevels=t=>isBig(t)?BIG:LEVELS;
+const maxLv=t=>tlevels(t).length;
+const skeinOf=(n,t)=>isBig(t)?BIG_SKEINS[Math.floor((n-1)/10)]:n<=60?SKEINS[Math.floor((n-1)/10)]:n<FIRST2?ODDS:SKEINS2[Math.floor((n-FIRST2)/10)];
+const colourOf=(n,t)=>isBig(t)||n<=60||n>=FIRST2?skeinOf(n,t).c:SKEINS[(n*5)%6].c;
 const dark=()=>{try{const t=document.documentElement.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches}catch(e){return false}};
-const sk=n=>colourOf(n)[dark()?1:0];
+const sk=(n,t)=>colourOf(n,t)[dark()?1:0];
 const cache={};
-function level(n){
-  if(cache[n])return cache[n];
-  const L=LEVELS[n-1],tiles=L.t.split('').map(c=>c==='q'?'qu':c),star=L.s;
+function level(n,t){
+  t=t||TR;const key=t+n;
+  if(cache[key])return cache[key];
+  const big=isBig(t),L=tlevels(t)[n-1],tiles=L.t.split('').map(c=>c==='q'?'qu':c),star=L.s;
   const words=solve(tiles),main=words.filter(w=>MAINSET.has(w)).sort(),bonus=words.filter(w=>!MAINSET.has(w)).sort();
   const pts=w=>(w.length-2)*(w===star?2:1);
   const total=main.reduce((a,w)=>a+pts(w),0);
-  const S=skeinOf(n),f=Math.pow(main.length/50,0.7),targets=S.t.map((v,i)=>Math.max(1,Math.min(Math.round(v*f),Math.floor(CAP[i]*total))));
+  const S=skeinOf(n,t),f=big?Math.pow(main.length/BIG_W,BIG_EXP):Math.pow(main.length/50,0.7),targets=S.t.map((v,i)=>Math.max(1,Math.min(Math.round(v*f),Math.floor(CAP[i]*total))));
   for(const u of UP)targets.push(Math.max(targets[targets.length-1]+1,Math.round(u*targets[2])));
-  return cache[n]={n,tiles,star,main,bonus,MAIN:new Set(main),ALL:new Set(words),total,targets,skein:S,pts};
+  return cache[key]={n,tr:big?'b':'c',N:big?5:4,round:big?BIG_ROUND:ROUND,tiles,star,main,bonus,MAIN:new Set(main),ALL:new Set(words),total,targets,skein:S,pts};
 }
 /* ---------- No clock (Alec, 9 Nov 2026) ----------
    Boards of their own (NOCLOCK, made by tools/yarn-noclock-boards.js), never a level's, so playing without
@@ -1242,14 +1371,14 @@ function ncBoard(i){
   const B=NOCLOCK[i-1],tiles=B.t.split('').map(c=>c==='q'?'qu':c),star=B.s;
   const words=solve(tiles),main=words.filter(w=>MAINSET.has(w)).sort(),bonus=words.filter(w=>!MAINSET.has(w)).sort();
   const pts=w=>(w.length-2)*(w===star?2:1);
-  return ncCache[i]={n:i,nc:true,tiles,star,main,bonus,MAIN:new Set(main),ALL:new Set(words),total:main.reduce((a,w)=>a+pts(w),0),targets:[],skein:NC_SK,pts};
+  return ncCache[i]={n:i,nc:true,tr:'c',N:4,round:ROUND,tiles,star,main,bonus,MAIN:new Set(main),ALL:new Set(words),total:main.reduce((a,w)=>a+pts(w),0),targets:[],skein:NC_SK,pts};
 }
-function where(n){if(n>60&&n<FIRST2)return ODDS.name;const S=skeinOf(n);return S.name+' '+((n-1)%10+1)+' of 10';}
+function where(n){if(!isBig()&&n>60&&n<FIRST2)return ODDS.name;const S=skeinOf(n);return S.name+' '+((n-1)%10+1)+' of 10';}
 
 /* ---------- save ---------- */
 const KEY='digi-yarn-v1';
 const coarse=(()=>{try{return matchMedia('(pointer: coarse)').matches}catch(e){return false}})();
-function defaults(){return {v:1,lv:{},cur:null,words:[],best:0,snd:true,vib:true,rm:null,fs:coarse,nc:{next:1,cur:null,done:0,b:{}}};}
+function defaults(){return {v:1,lv:{},cur:null,words:[],best:0,snd:true,vib:true,rm:null,fs:coarse,nc:{next:1,cur:null,done:0,b:{}},mode:'c',big:{lv:{},cur:null,best:0}};}
 let save=defaults();
 try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.v===1)save=Object.assign(defaults(),s);}catch(e){}
 if(!save.lv||typeof save.lv!=='object')save.lv={};
@@ -1258,24 +1387,29 @@ let WORDS=new Set(save.words);
 /* No clock progress: next board, a board left mid-hunt {i, found}, boards finished, best common words per board */
 function ncSave(){const d={next:1,cur:null,done:0,b:{}};if(!save.nc||typeof save.nc!=='object')save.nc=d;const s=save.nc;
   if(!(s.next>=1&&s.next<=NCN))s.next=1;if(!s.b||typeof s.b!=='object')s.b={};if(s.cur&&!(NOCLOCK[s.cur.i-1]&&Array.isArray(s.cur.found)))s.cur=null;return s;}
+/* Big Board progress, apart from the classic levels: lv[n] {s stars, b best}, a paused round {n, found, score, left}, best score */
+function bigSave(){if(!save.big||typeof save.big!=='object')save.big={lv:{},cur:null,best:0};const s=save.big;
+  if(!s.lv||typeof s.lv!=='object')s.lv={};if(s.cur&&!(BIG[s.cur.n-1]&&Array.isArray(s.cur.found)))s.cur=null;return s;}
+const tsave=t=>isBig(t)?bigSave():save;              // the track's lv, cur and best
+const bigOpen=()=>((save.lv[BIG_OPEN]&&save.lv[BIG_OPEN].s)||0)>0||Object.keys(bigSave().lv).length>0;
 const ncGot=()=>L.main.filter(w=>R.found.includes(w)).length;
 function persist(){try{save.words=[...WORDS];localStorage.setItem(KEY,JSON.stringify(save));}catch(e){}}
-const starsOf=n=>(save.lv[n]&&save.lv[n].s)||0;
+const starsOf=n=>{const lv=tsave().lv;return (lv[n]&&lv[n].s)||0;};
 const cleared=n=>starsOf(n)>0;
-function nextLevel(){let n=1;while(n<MAXLV&&cleared(n))n++;return n;}
+function nextLevel(){let n=1;while(n<maxLv()&&cleared(n))n++;return n;}
 const unlocked=n=>n===1||cleared(n-1)||cleared(n);
 /* five stars (1 Nov 2026): levels saved with three stars get any 4th and 5th their best score already earned.
    Runs once, in small slices after the page has drawn, since each level's board has to be solved for its scores. */
 function upgradeStars(){
   if(save.up5)return;
-  const ks=Object.keys(save.lv).filter(k=>save.lv[k]&&save.lv[k].s===3&&LEVELS[k-1]);let i=0,changed=false;
+  const ks=Object.keys(save.lv).filter(k=>save.lv[k]&&save.lv[k].s===3&&LEVELS[k-1]);let i=0,changed=false;   // classic levels only
   const step=()=>{const t0=performance.now();
-    while(i<ks.length&&performance.now()-t0<12){const n=+ks[i++],x=save.lv[n],s=level(n).targets.filter(t=>(x.b||0)>=t).length;if(s>x.s){x.s=s;changed=true;}}
+    while(i<ks.length&&performance.now()-t0<12){const n=+ks[i++],x=save.lv[n],s=level(n,'c').targets.filter(t=>(x.b||0)>=t).length;if(s>x.s){x.s=s;changed=true;}}
     if(i<ks.length){setTimeout(step,0);return;}
     save.up5=1;persist();if(changed){if(view==='home')renderHome();else if(view==='levels')renderLevels();}};
   setTimeout(step,0);
 }
-function totalStars(){let t=0;for(const k in save.lv)t+=save.lv[k].s||0;return t;}
+function totalStars(){let t=0;const lv=tsave().lv;for(const k in lv)t+=lv[k].s||0;return t;}
 
 /* ---------- settings: sound, vibration, motion, full screen ---------- */
 const sysRM=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){return false}})();
@@ -1343,10 +1477,25 @@ function ballSVG(col,size){
    `<path d="M8 24c12 6 32 5 46-8"/><path d="M6 36c16 4 36-2 50-18"/><path d="M12 50c14 0 32-8 42-22"/><path d="M22 7c-6 14-6 34 4 52"/><path d="M38 6c-8 16-8 38 2 54"/></g>`+
    `<circle cx="23" cy="21" r="4.5" fill="#fff" opacity=".28"/>`;
 }
-function paintScarf(){
+/* Big Board: a blanket of 100 squares, five rows of two skeins */
+function paintBlanket(){
   const svg=$('scarf'),W=Math.max(240,Math.round(svg.getBoundingClientRect().width||320)),H=76;
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  const rows=[];for(let n=1;n<=MAXLV;n++)if(cleared(n))rows.push(n);
+  const cols=20,rows=Math.ceil(BIGN/cols),z=Math.min(13,(W-28)/cols),bw=cols*z,bh=rows*z,x0=(W-bw)/2,y0=(H-bh)/2;
+  let s=`<defs><pattern id="knitB" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 1l3 3.5 3-3.5" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="1.2"/></pattern></defs>`,done=0,three=0,five=0;
+  for(let n=1;n<=BIGN;n++){const x=x0+((n-1)%cols)*z,y=y0+Math.floor((n-1)/cols)*z,st=starsOf(n);
+    if(!st){s+=`<rect x="${(x+1).toFixed(2)}" y="${(y+1).toFixed(2)}" width="${(z-2).toFixed(2)}" height="${(z-2).toFixed(2)}" rx="2" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 2"/>`;continue;}
+    done++;if(st>=3)three++;if(st>=NSTAR)five++;
+    s+=`<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${(z+.4).toFixed(2)}" height="${(z+.4).toFixed(2)}" fill="${sk(n)}"/><rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${z.toFixed(2)}" height="${z.toFixed(2)}" fill="url(#knitB)"/>`;
+    if(st>=3)for(const dx of st>=NSTAR?[z/2-3,z/2+1]:[z/2-1])s+=`<rect x="${(x+dx).toFixed(2)}" y="${y.toFixed(2)}" width="2" height="${z.toFixed(2)}" fill="var(--gold)" opacity=".9"/>`;}
+  svg.innerHTML=s;
+  $('scarfNote').textContent=done?`${done} of ${BIGN} squares knitted`+(three?', '+three+' with gold thread for three stars or more':'')+(five?' ('+five+' doubled for five)':'')+'.':'Clear a Big Board level to knit the first square of your blanket.';
+}
+function paintScarf(){
+  if(isBig()){paintBlanket();return;}
+  const svg=$('scarf'),W=Math.max(240,Math.round(svg.getBoundingClientRect().width||320)),H=76;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const rows=[];for(let n=1;n<=maxLv();n++)if(cleared(n))rows.push(n);
   const fr=14,x0=fr,avail=W-2*fr,y0=12,h=46;
   let s=`<defs><pattern id="knit" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 1l4 5 4-5" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="1.4"/></pattern></defs>`;
   if(!rows.length){
@@ -1376,26 +1525,41 @@ function starsTxt(n){const s=starsOf(n);return '★'.repeat(s)+'<span class="off
 
 function renderHome(){
   closePause();disarmBack();show('home');
-  const cur=save.cur&&LEVELS[save.cur.n-1]?save.cur:null;
+  if(isBig()&&!bigOpen())TR='c';
+  const T=tsave(),cur=T.cur&&tlevels()[T.cur.n-1]?T.cur:null;
   const n=cur?cur.n:nextLevel(),L=level(n);
   setSkein(n);
   $('hBall').innerHTML=ballSVG(sk(n));
   $('hHead').textContent='Level '+n;
   if(cur){$('hStatus').textContent=`${where(n)}. Round paused: ${mmss(cur.left)} left, ${plural(cur.score,'point','points')}.`;$('hGo').textContent='Resume';}
   else if(cleared(n)){$('hStatus').textContent=`${where(n)}. Every level is cleared: replay for more stars.`;$('hGo').textContent='Play';}
-  else{$('hStatus').textContent=`${where(n)}. Stars at ${L.targets.join(', ')} points.`;$('hGo').textContent=n===1&&!Object.keys(save.lv).length?'Start':'Play';}
-  const ts=totalStars(),cl=Object.keys(save.lv).filter(k=>cleared(+k)).length;
-  $('hLvNote').textContent=cl?`${cl} cleared, ${plural(ts,'star','stars')}`:'720 boards in skeins of ten';
-  if(isNew()&&cl)$('hLvNote').innerHTML=`<span class="new">New</span> ${SKEINS2.length} more skeins · ${cl} cleared`;
-  $('sStars').textContent=fmt(ts);$('sBest').textContent=fmt(save.best||0);$('sWords').textContent=fmt(wordsFound());
+  else{$('hStatus').textContent=`${where(n)}. Stars at ${L.targets.join(', ')} points.`;$('hGo').textContent=n===1&&!Object.keys(T.lv).length?'Start':'Play';}
+  const ts=totalStars(),cl=Object.keys(T.lv).filter(k=>cleared(+k)).length;
+  $('hLvNote').textContent=cl?`${cl} cleared, ${plural(ts,'star','stars')}`:isBig()?`${BIGN} big boards in skeins of ten`:'720 boards in skeins of ten';
+  if(!isBig()&&isNew()&&cl)$('hLvNote').innerHTML=`<span class="new">New</span> ${SKEINS2.length} more skeins · ${cl} cleared`;
+  $('sStars').textContent=fmt(ts);$('sBest').textContent=fmt(T.best||0);
+  paintModes();$('sWords').textContent=fmt(wordsFound());
   const ns=ncSave();
   $('ncStatus').textContent=ns.cur?`Board ${ns.cur.i} waiting: ${plural(ns.cur.found.length,'word','words')} found so far`:ns.done?`Board ${ns.next} of ${NCN}: find every common word`:'Find every common word, at your own pace';
   paintDaily();paintScarf();toggles($('homeToggles'));paintFS();
 }
+function paintModes(){
+  const open=bigOpen();
+  for(const b of $('modes').querySelectorAll('button')){b.setAttribute('aria-checked',String(b.dataset.m===TR));if(b.dataset.m==='b')b.classList.toggle('shut',!open);}
+  $('bigNote').textContent=open?'5×5 · 2:00':'Opens after level '+BIG_OPEN;
+}
+function setTrack(m){if(m==='b'&&!bigOpen())return;if(m===TR)return;TR=m;save.mode=m;persist();renderHome();}
 function renderLevels(){
   closePause();disarmBack();show('levels');
   const nx=nextLevel(),host=$('lvList');let h='';
   const ts=totalStars();$('lvStars').textContent=plural(ts,'star','stars');
+  if(isBig()){
+    h+=`<div class="tier"><b>Big Board</b><small>Ten skeins of ten 5×5 boards, two minutes each. Levels 1 to ${BIGN}.</small></div>`;
+    BIG_SKEINS.forEach((S,k)=>{h+=skeinBlock(S,k*10+1,nx);});
+    host.innerHTML=h;
+    const nb=host.querySelector('.lv.next');if(nb)try{nb.scrollIntoView({block:'center'});}catch(e){}
+    return;
+  }
   h+=`<div class="tier"><b>The first basket</b><small>Six skeins, then 300 odds and ends. Levels 1 to ${FIRST2-1}.</small></div>`;
   SKEINS.forEach((S,k)=>{
     let got=0;for(let n=k*10+1;n<=k*10+10;n++)got+=starsOf(n);
@@ -1408,7 +1572,7 @@ function renderLevels(){
   else h+=`<p class="small">${FIRST2-61} more boards open once the Midnight skein is cleared.</p>`;
   h+='</div>';
   // 361-720: skeins already reached, plus the next one to aim for
-  h+=`<div class="tier t2"><b>The second basket${isNew()?'<span class="new">New</span>':''}</b><small>${SKEINS2.length} new skeins of ten, levels ${FIRST2} to ${MAXLV}: richer boards with more words to find.${cleared(FIRST2-1)?'':' They open once level '+(FIRST2-1)+' is cleared.'}</small></div>`;
+  h+=`<div class="tier t2"><b>The second basket${isNew()?'<span class="new">New</span>':''}</b><small>${SKEINS2.length} new skeins of ten, levels ${FIRST2} to ${maxLv()}: richer boards with more words to find.${cleared(FIRST2-1)?'':' They open once level '+(FIRST2-1)+' is cleared.'}</small></div>`;
   const open=SKEINS2.filter((S,k)=>{const a=FIRST2+k*10;return a<=nx+10||cleared(a)||cleared(a-1);});
   open.forEach((S)=>{const k=SKEINS2.indexOf(S);h+=skeinBlock(S,FIRST2+k*10,nx);});
   const rest=SKEINS2.length-open.length;
@@ -1426,13 +1590,14 @@ function lvBtn(n,nx){const ok=unlocked(n);
 let L=null, R=null, low=[], tiles=[], paused=false, counting=false, cdT=0, last=0;
 function buildBoard(){
   const b=$('board');b.querySelectorAll('.tile').forEach(t=>t.remove());tiles=[];
+  setGrid(L.N);b.classList.toggle('n5',L.N===5);b.style.setProperty('--n',L.N);
   L.tiles.forEach((t,i)=>{const d=document.createElement('div');d.className='tile'+(t==='qu'?' qu':'');d.textContent=t==='qu'?'Qu':t.toUpperCase();
     d.setAttribute('role','button');d.setAttribute('aria-label',t==='qu'?'Q U':t.toUpperCase());d.dataset.i=i;b.appendChild(d);tiles.push(d);});
 }
 let rects=[], boardRect=null;
 function measure(){if(!tiles.length)return;boardRect=$('board').getBoundingClientRect();rects=tiles.map(t=>t.getBoundingClientRect());drawPath(null);}
 function centre(i){const r=rects[i];return [r.left+r.width/2-boardRect.left,r.top+r.height/2-boardRect.top];}
-function hit(x,y,inner){for(let i=0;i<rects.length;i++){const r=rects[i],m=inner?0.15:0;
+function hit(x,y,inner){for(let i=0;i<rects.length;i++){const r=rects[i],m=inner?(N>4?0.22:0.15):0;   // 5x5: a smaller target mid-drag, so diagonals don't catch a neighbour
   if(x>=r.left+r.width*m&&x<=r.right-r.width*m&&y>=r.top+r.height*m&&y<=r.bottom-r.height*m)return i;}return -1;}
 let path=[], drag=null, kb='';
 const live=()=>view==='play'&&R&&R.state==='playing'&&!paused&&!counting;
@@ -1543,8 +1708,8 @@ function buildStarbar(){
 /* the bar's markers sit at even steps; the fill runs straight between them */
 const barAt=k=>(k*(96/NSTAR)).toFixed(1);
 function barFill(sc){const T=[0].concat(L.targets);for(let k=1;k<T.length;k++)if(sc<T[k])return k-1+(sc-T[k-1])/(T[k]-T[k-1]);return NSTAR+Math.min(1,(sc-T[NSTAR])/Math.max(4,T[NSTAR]*.1))*(4/(96/NSTAR));}
-function renderClock(){if(L&&L.nc)return;const left=Math.max(0,R?R.left:ROUND),c=$('clock');c.textContent=mmss(Math.ceil(left-1e-9));
-  c.classList.toggle('low',left<=10&&R&&R.state==='playing');$('timeFill').style.transform='scaleX('+(left/ROUND)+')';}
+function renderClock(){if(L&&L.nc)return;const full=L?L.round:ROUND,left=Math.max(0,R?R.left:full),c=$('clock');c.textContent=mmss(Math.ceil(left-1e-9));
+  c.classList.toggle('low',left<=10&&R&&R.state==='playing');$('timeFill').style.transform='scaleX('+(left/full)+')';}
 function renderScore(){
   $('ptsLbl').hidden=!!L.nc;
   if(L.nc){const got=ncGot();$('score').textContent=got;$('nWords').textContent='of '+L.main.length+' common words';
@@ -1572,18 +1737,18 @@ window.addEventListener('popstate',()=>{if(ignorePop){ignorePop=false;return;}
    A round is one attempt at one level: from the Play tap to time running out. Restarting, choosing
    another level or leaving mid-round sends nothing (abandoned). A round paused and then reloaded
    comes back as a new round (start: resume). */
-function saveCur(){if(L&&L.nc){if(R&&R.state==='playing')ncSave().cur={i:L.n,found:R.found.slice()};persist();return;}if(R&&R.state==='playing'){save.cur={n:L.n,found:R.found.slice(),score:R.score,left:Math.max(0,Math.round(R.left*10)/10)};}persist();}
+function saveCur(){if(L&&L.nc){if(R&&R.state==='playing')ncSave().cur={i:L.n,found:R.found.slice()};persist();return;}if(L&&R&&R.state==='playing'){tsave(L.tr).cur={n:L.n,found:R.found.slice(),score:R.score,left:Math.max(0,Math.round(R.left*10)/10)};}persist();}
 function startLevel(n,how){
-  if(!LEVELS[n-1]||!unlocked(n))return;
+  if(!tlevels()[n-1]||!unlocked(n))return;
   closePause();stopCount();ncLook(false);
   L=level(n);setSkein(n);low=L.tiles.slice();
-  const cur=save.cur&&save.cur.n===n&&how==='resume'?save.cur:null;
-  R={state:'playing',found:cur?cur.found.filter(w=>L.ALL.has(w)):[],score:0,left:cur?Math.min(ROUND,Math.max(1,cur.left)):ROUND};
+  const T=tsave(),cur=T.cur&&T.cur.n===n&&how==='resume'?T.cur:null;
+  R={state:'playing',found:cur?cur.found.filter(w=>L.ALL.has(w)):[],score:0,left:cur?Math.min(L.round,Math.max(1,cur.left)):L.round};
   R.score=R.found.reduce((a,w)=>a+L.pts(w),0);
-  save.cur=null;saveCur();
-  rndArm(how||'new',n);rndStart();                   // the Play tap is the round's first input
+  T.cur=null;saveCur();
+  rndArm(how||'new',n,L.tr==='b'?'big':'');rndStart();   // the Play tap is the round's first input
   buildBoard();buildStarbar();
-  $('lvPill').textContent=L.skein.name+' · level '+n;
+  $('lvPill').textContent=(L.tr==='b'?'5×5 · ':'')+L.skein.name+' · level '+n;
   path=[];kb='';show('play');$('play').classList.remove('locked');
   renderList();renderScore();paused=false;paint();last=performance.now();
   armBack();counting=true;requestAnimationFrame(()=>{measure();countIn();});   // closed from now, not from the next frame
@@ -1638,11 +1803,11 @@ function endRound(){
   R.state='done';R.left=0;stopCount();closePause();paused=false;disarmBack();
   if(drag)drag=null;path=[];kb='';paint();renderClock();
   $('play').classList.add('locked');$('board').classList.remove('hide');
-  const n=L.n,stars=starCount(R.score),prev=save.lv[n]||{s:0,b:0},first=!cleared(n)&&stars>0;
-  save.lv[n]={s:Math.max(prev.s||0,stars),b:Math.max(prev.b||0,R.score)};
-  if(!save.lv[n].s&&!save.lv[n].b)delete save.lv[n];
-  save.best=Math.max(save.best||0,R.score);save.cur=null;persist();
-  rndEnd(stars>0,{score:R.score,stars,words:R.found.length});
+  const n=L.n,T=tsave(L.tr),stars=starCount(R.score),prev=T.lv[n]||{s:0,b:0},first=!((prev.s||0)>0)&&stars>0;
+  T.lv[n]={s:Math.max(prev.s||0,stars),b:Math.max(prev.b||0,R.score)};
+  if(!T.lv[n].s&&!T.lv[n].b)delete T.lv[n];
+  T.best=Math.max(T.best||0,R.score);T.cur=null;persist();
+  rndEnd(stars>0,Object.assign({score:R.score,stars,words:R.found.length},L.tr==='b'?{grid:5}:{}));
   sfx.done();buzz(stars?[40,60,40]:60);
   const res={n,score:R.score,stars,prevStars:prev.s||0,prevBest:prev.b||0,found:R.found.slice(),first};
   setTimeout(()=>showResult(res),reduced()?100:650);
@@ -1703,19 +1868,19 @@ function showNCResult(r){
 }
 function showResult(r){
   show('result');resultLook(false);$('rNext').className='btn primary';
-  $('rKick').textContent='Level '+r.n+' · '+where(r.n);
+  $('rKick').textContent=(L.tr==='b'?'Big Board level ':'Level ')+r.n+' · '+where(r.n);
   $('rBig').innerHTML=r.score+'<small>'+(r.score===1?'point':'points')+'</small>';
   const st=$('rStars').children;for(let i=0;i<NSTAR;i++){st[i].className=i<r.stars?'got':'';if(i<r.stars&&!reduced()){st[i].classList.add('pop');st[i].style.animationDelay=(.15+i*.22)+'s';}}
   const T=L.targets;let v;
   if(!r.stars)v=`${T[0]} points clears this level. You were ${T[0]-r.score} short.`;
   else if(r.stars===NSTAR)v=r.prevStars===NSTAR?'Five stars again.':'Five stars!';
   else{const cap=x=>x.charAt(0).toUpperCase()+x.slice(1);v=(r.stars===1?'Cleared with one star.':cap(num(r.stars))+' stars'+(r.stars>r.prevStars&&r.stars>=3?'!':'.'))+` ${T[r.stars]} points for ${num(r.stars+1)}.`;}
-  if(r.first&&r.n<MAXLV)v+=' A new stripe for your scarf.';
+  if(r.first)v+=L.tr==='b'?' A new square for your blanket.':r.n<maxLv()?' A new stripe for your scarf.':'';
   if(r.score>r.prevBest&&r.prevBest>0)v+=` A new best here, up from ${r.prevBest}.`;
   $('rVerdict').textContent=v;
   const sw=L.star.toUpperCase();
   $('rStar').textContent=r.found.includes(L.star)?`You found the longest common word, ${sw}, for ${L.pts(L.star)} points.`:`The longest common word was ${sw}, worth ${L.pts(L.star)} points.`;
-  const canNext=cleared(r.n)&&r.n<MAXLV;
+  const canNext=cleared(r.n)&&r.n<maxLv();
   $('rNext').hidden=!canNext;$('rRetry').textContent=r.stars?'Play again':'Try again';
   $('rRetry').className='btn'+(canNext?'':' primary');
   $('rRetry').parentNode.style.gridTemplateColumns=canNext?'1fr 1fr':'1fr';
@@ -1733,9 +1898,11 @@ function showResult(r){
   b.addEventListener('contextmenu',e=>e.preventDefault());
   const go=fn=>()=>{goFS();audio();fn();};
   $('hPlay').addEventListener('click',go(()=>{
-    if(R&&R.state==='playing'&&L&&!L.nc&&save.cur&&save.cur.n===L.n){resumeRound();return;}
-    if(save.cur&&LEVELS[save.cur.n-1]){startLevel(save.cur.n,'resume');return;}
+    const T=tsave();
+    if(R&&R.state==='playing'&&L&&!L.nc&&L.tr===TR&&T.cur&&T.cur.n===L.n){resumeRound();return;}
+    if(T.cur&&tlevels()[T.cur.n-1]){startLevel(T.cur.n,'resume');return;}
     startLevel(nextLevel(),'new');}));
+  $('modes').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button[data-m]');if(b)setTrack(b.dataset.m);});
   $('hLevels').addEventListener('click',renderLevels);
   $('hNoClock').addEventListener('click',go(()=>{
     if(R&&R.state==='playing'&&L&&L.nc){resumeNC();return;}
@@ -1744,11 +1911,11 @@ function showResult(r){
   $('lvBack').addEventListener('click',renderHome);
   $('lvList').addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.lv');if(!t||t.disabled)return;goFS();audio();
     const n=+t.dataset.lv;
-    if(R&&R.state==='playing'&&L&&!L.nc&&L.n===n){resumeRound();return;}
-    startLevel(n,save.cur&&save.cur.n===n?'resume':'new');});
+    if(R&&R.state==='playing'&&L&&!L.nc&&L.tr===TR&&L.n===n){resumeRound();return;}
+    const T=tsave();startLevel(n,T.cur&&T.cur.n===n?'resume':'new');});
   $('pauseBtn').addEventListener('click',openPause);
   $('pResume').addEventListener('click',go(()=>{closePause();resumeRound();}));
-  $('pRestart').addEventListener('click',go(()=>{const n=L.n;save.cur=null;R=null;startLevel(n,'retry');}));
+  $('pRestart').addEventListener('click',go(()=>{const n=L.n;tsave(L.tr).cur=null;R=null;startLevel(n,'retry');}));
   $('pLevels').addEventListener('click',()=>{if(L&&L.nc)renderHome();else renderLevels();});
   $('pauseSheet').addEventListener('click',e=>{if(e.target===$('pauseSheet')){closePause();resumeRound();}});
   $('rNext').addEventListener('click',go(()=>{if(L&&L.nc)startNC(ncSave().next,'new');else startLevel(L.n+1,'new');}));
@@ -1774,24 +1941,26 @@ function showResult(r){
   try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(view==='home')renderHome();else if(L)setSkein(L.n);});}catch(e){}
   window.addEventListener('storage',e=>{if(view==='home'&&(e.key==='digi-tangle-v1'||e.key===KEY))renderHome();});
   last=performance.now();setInterval(tick,100);
+  TR=save.mode==='b'&&bigOpen()?'b':'c';
   renderHome();
   upgradeStars();
   if(window.__DGTEST===true)window.__dg={
     /* finish the current round through the real end path: a win scores the level's first star with real board words */
     end(win){
       if(R&&R.state==='done')return;                 // a finished round is never ended twice
-      if(!R)startLevel(save.cur?save.cur.n:nextLevel(),save.cur?'resume':'new');
+      if(!R){const T=tsave();startLevel(T.cur?T.cur.n:nextLevel(),T.cur?'resume':'new');}
       if(!R||R.state!=='playing')return;
       stopCount();paused=false;
       if(win){for(const w of L.main.slice().sort((a,b)=>b.length-a.length))if(R.score<L.targets[0]&&!R.found.includes(w))addWord(w);}
       else{R.found=[];R.score=0;}
       R.left=0;endRound();
     },
-    state:()=>({view,L:L&&{n:L.n,targets:L.targets,star:L.star,main:L.main.length,total:L.total},R,save,paused,counting,rnd}),
+    state:()=>({view,TR,N,L:L&&{n:L.n,tr:L.tr,N:L.N,round:L.round,targets:L.targets,star:L.star,main:L.main.length,total:L.total},R,save,paused,counting,rnd}),
     submitWord:w=>{const p=findPath(w);return p?submit(p):{r:'nopath'};},
     pathOf:w=>findPath(w),
     level:n=>{const x=level(n);return {targets:x.targets,total:x.total,main:x.main,bonus:x.bonus,star:x.star,tiles:x.tiles};},
-    give:s=>{save=Object.assign(defaults(),s);WORDS=new Set(save.words);persist();renderHome();},
+    give:s=>{save=Object.assign(defaults(),s);WORDS=new Set(save.words);TR=save.mode==='b'&&bigOpen()?'b':'c';persist();renderHome();},
+    track:m=>setTrack(m),bigCount:()=>BIGN,
     noclock:{start:i=>startNC(i||ncSave().next,'new'),done:()=>ncFinish(),board:i=>{const x=ncBoard(i);return {main:x.main,bonus:x.bonus,star:x.star,tiles:x.tiles};},count:()=>NCN}
   };
 })();

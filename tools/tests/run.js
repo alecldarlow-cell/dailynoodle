@@ -358,21 +358,17 @@ const TESTS = {
     ok(!p.errs.length, 'jingle: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },
-  /* the sheet after Play again keeps its title and stats (25 Oct 2026: finish.js removed the old sheet
-     before taking the engine's #winTitle/#winTime/#winStreak/#winBest out of it) */
+  /* no replays on Link (15 Nov 2026, Alec): a lost Link ends on its sheet, Done closes it, and a reload
+     reopens the result (replaced 'the sheet after Play again keeps its title and stats', 25 Oct 2026) */
   async 'finish:replay-sheet-link'(b) {
     const ev = []; const { ctx, p } = await open(b, F.link, { events: ev });
     await play.link(p, { wrong: 4 });
     ok(await text(p, '#winTitle') === 'So close.' && ends(ev)[0] && ends(ev)[0].x.outcome === 'failed', 'link: loss keeps the exact title and logs failed');
     ok(/^You found one group of four\./.test(await text(p, '.fin-note')), `link: loss note "${await text(p, '.fin-note')}"`);
-    await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
-    ok(!(await p.evaluate(() => document.getElementById('winModal').classList.contains('fin-open'))) && await text(p, '#rank') === '· replay', 'link: Play again closes the sheet and marks the replay');
-    await play.link(p, { wrong: 0 });
-    const k = await p.evaluate(() => ({ sheets: document.querySelectorAll('#dnFin').length,
-      title: (document.querySelector('#dnFin .fin-title') || {}).textContent || '',
-      stats: ['winTime', 'winStreak', 'winBest'].map(id => { const e = document.querySelector('#dnFin #' + id); return e ? e.textContent.trim() : ''; }) }));
-    ok(k.sheets === 1 && k.title.trim() !== '' && k.stats.length === 3 && k.stats.every(Boolean),
-      `link: the replay's sheet has its title and (kept, for the tracker) stats (${k.sheets} sheet, "${k.title}", ${JSON.stringify(k.stats)})`);
+    ok(await p.getByText('Play again', { exact: false }).count() === 0, 'link: no Play again after a loss');
+    ok(await text(p, '#winNew') === 'Done', `link: the end button says Done after a loss ("${await text(p, '#winNew')}")`);
+    await p.reload(); await wait(p, 1500);
+    ok(await p.locator('#board .tile').count() === 0 && await text(p, '#rank') === '', 'link: a reopened loss stays finished, with no board to replay');
     ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },
@@ -419,6 +415,49 @@ const TESTS = {
     ok(!p.errs.length, 'reckon: no page errors ' + p.errs.join(' | '));
     await ctx.close();
     await shareNative(b, F.reckon, p2 => play.reckon(p2), 'reckon');
+  },
+  /* The imperial switch (16 Nov 2026): one remembered setting per kind of unit; flipping keeps the guess where it is,
+     works on the reveal too, and the score is the metric one (Reckon 1: q2 Severn tide m, q5 Underground km, q7 Statue m). */
+  async 'reckon:units'(b) {
+    const { ctx, p } = await open(b, F.reckon, { time: RECKON_DAY });
+    await play.reckon(p, { wrong: [], stop: 1 });
+    const sw = () => p.evaluate(() => { const w = document.getElementById('unitSw'); return w && !w.hidden ? [...w.children].map(b => b.textContent + (b.getAttribute('aria-pressed') === 'true' ? '*' : '')) : null; });
+    const knob = () => p.evaluate(() => parseFloat(document.getElementById('th').style.left));
+    ok(JSON.stringify(await sw()) === '["m*","feet"]', `reckon: a metres question offers m | feet, metric first (${JSON.stringify(await sw())})`);
+    const b0 = await p.locator('#unitSw button').first().boundingBox();
+    ok(b0 && b0.height >= 44, 'reckon: the units switch is a thumb-sized target (' + (b0 && Math.round(b0.height)) + 'px)');
+    const P = await play.puzzle(p), q = P.qs[1], at = (Math.log10(q.a) - q.lo) / 2;
+    const t = await p.locator('#trk').boundingBox(), x = t.x + at * t.width, y = t.y + t.height / 2;
+    await p.mouse.move(x, y); await p.mouse.down(); await p.mouse.move(x + 1.5, y - 1); await p.mouse.move(x + 1, y + 1); await p.mouse.up(); await wait(p, 300);
+    const k0 = await knob(), m0 = await text(p, '#rv');
+    await tap(p, p.locator('#unitSw button[data-u="i"]')); await wait(p, 400);
+    ok(/, in feet\?$/.test(await text(p, '#q')), `reckon: the question asks in feet ("${await text(p, '#q')}")`);
+    ok(Math.abs(await knob() - k0) < 1.5, `reckon: flipping keeps the guess where it is (${k0.toFixed(1)}% → ${(await knob()).toFixed(1)}%)`);
+    ok(await text(p, '#ru') === 'ft' && Math.abs(parseFloat(await text(p, '#rv')) - parseFloat(m0) * 3.2808) / (parseFloat(m0) * 3.2808) < 0.03, `reckon: ${m0} m reads ${await text(p, '#rv')} ${await text(p, '#ru')}`);
+    ok(JSON.stringify(await sw()) === '["m","feet*"]', 'reckon: feet now pressed');
+    ok(/^Lengths stay in feet and inches/.test(await text(p, '#unitTip')) && await p.locator('#unitTip').isVisible(), 'reckon: a one-off tip says lengths stay in feet');
+    const un = await p.evaluate(() => JSON.parse(localStorage.getItem('digi-reckon-v1')).un);
+    ok(un && un.len === 'i' && Object.keys(un).length === 1, 'reckon: the setting is saved for lengths only ' + JSON.stringify(un));
+    const sc0 = +(await text(p, '#sc'));
+    await tap(p, p.locator('#act')); await wait(p, 900);
+    ok(+(await text(p, '#sc')) - sc0 === 100 && await text(p, '#fbV') === 'Bullseye', `reckon: a bullseye in feet scores as in metres (${await text(p, '#fbV')}, ${await text(p, '#sc')})`);
+    ok(await text(p, '#av') === '49.2' && await text(p, '#au') === 'ft', `reckon: the answer reads 49.2 ft (${await text(p, '#av')} ${await text(p, '#au')})`);
+    await tap(p, p.locator('#unitSw button[data-u="m"]')); await wait(p, 400);
+    ok(await text(p, '#av') === '15' && await text(p, '#au') === 'm' && /, in metres\?$/.test(await text(p, '#q')), 'reckon: flipping back on the reveal shows 15 m');
+    ok(await p.evaluate(() => document.getElementById('slz').classList.contains('show')), 'reckon: the reveal stays shown after a flip');
+    await tap(p, p.locator('#unitSw button[data-u="i"]')); await wait(p, 400);
+    await tap(p, p.locator('#act')); await wait(p, 700);
+    ok(await sw() === null, 'reckon: no switch on a percentage question');
+    await play.reckon(p, { wrong: [], stop: 4 });
+    ok(/, in kilometres\?$/.test(await text(p, '#q')) && JSON.stringify(await sw()) === '["km*","miles"]', 'reckon: distances stay metric (a separate setting)');
+    await play.reckon(p, { wrong: [], stop: 6 });
+    ok(/, in feet\?$/.test(await text(p, '#q')) && JSON.stringify(await sw()) === '["m","feet*"]' && !(await p.locator('#unitTip').isVisible()), 'reckon: the next metres question opens in feet, with no second tip');
+    await play.reckon(p, { wrong: [] });
+    ok(/^1000\s*pts$/.test(await text(p, '#rBig')), `reckon: ten bullseyes with two of them in feet still make 1000 pts (${await text(p, '#rBig')})`);
+    const rk = await p.locator('.fin-rk .ra').allTextContents();
+    ok(/ft · answer 49\.2 ft$/.test(rk[1]) && / m$/.test(rk[0] + ' m') && /km$/.test(rk[4]), `reckon: the recap shows each question in its chosen unit ("${rk[1]}", "${rk[4]}")`);
+    ok(!p.errs.length, 'reckon: no page errors ' + p.errs.join(' | '));
+    await ctx.close();
   },
   async 'reckon:start-resume'(b) {
     const ev = []; const { ctx, p } = await open(b, F.reckon, { events: ev, time: RECKON_DAY });
@@ -883,9 +922,9 @@ const TESTS = {
     const s = await ls(p, 'digi-link-v1'), rec = s.done && s.done[P.id];
     ok(rec && rec.o === 'loss' && rec.m === 4 && rec.g.length === 4 && !s.cur, `link: loss saved, round cleared (${JSON.stringify(rec)})`);
     ok(await text(p, '#winTitle') === 'So close.', 'link: loss title unchanged');
-    await tap(p, p.locator('.fin-recap ~ .fin-link, .fin > .fin-link').first()); await wait(p, 800);
-    await pick(G[0]);
-    ok(!(await ls(p, 'digi-link-v1')).cur, 'link: a replay is never kept as a round');
+    // no replays from 15 Nov 2026 (was: Play again, then "a replay is never kept as a round")
+    await p.reload(); await wait(p, 1500);
+    ok(await p.locator('#board .tile').count() === 0 && !(await ls(p, 'digi-link-v1')).cur, 'link: the reopened loss stays finished, with no round kept');
     ok(!p.errs.length, 'link: no page errors ' + p.errs.join(' | '));
     await ctx.close();
   },

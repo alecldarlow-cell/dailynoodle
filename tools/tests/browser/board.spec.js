@@ -104,7 +104,7 @@ test.describe('BOARD-E2E', () => {
       await expect(B.p.locator('.plist li').filter({ hasText: 'Ada' })).toContainText('(hidden)');
       await H.tap(B.p, B.p.locator('[data-act="setdone"]'));
       await expect(B.p.locator('.notyet')).toHaveText('Bea (you)');
-      expect(await B.p.evaluate(() => JSON.parse(localStorage.getItem('noodle-board-hidden-v1')))).toEqual({ [invite.searchParams.get('join')]: ['Ada'] });
+      expect(await B.p.evaluate(() => JSON.parse(localStorage.getItem('noodle-board-hidden-v1')))).toEqual({ [invite.searchParams.get('c')]: ['Ada'] });
       await go(A, 'board.html'); await expect(A.p.locator('.notyet')).toHaveText('Ada (you), Bea');
       await H.tap(B.p, B.p.locator('#lgbtn')); await H.tap(B.p, B.p.locator('[data-menu="settings"]'));
       await H.tap(B.p, B.p.locator('.plist li').filter({ hasText: 'Ada' }).locator('[data-act="hide"]'));
@@ -136,8 +136,8 @@ test.describe('BOARD-E2E', () => {
       const shared = await A.p.evaluate(() => window.__shared);
       expect(shared.length).toBe(1);
       const invite = new URL(shared[0].url);
-      expect(invite.origin + invite.pathname).toBe(SITE + 'board.html');
-      const code = invite.searchParams.get('join');
+      expect(invite.origin + invite.pathname).toBe(SITE + 'join.html');   // opens the app on Android (15 Nov 2026)
+      const code = invite.searchParams.get('c');
       expect(code).toMatch(/^[A-HJ-NP-Z2-9]{8}$/);
       expect((await q(db, 'select name, owner is not null as o from board.leagues where code = $1', [code]))).toEqual([{ name: 'Noodle Testers', o: true }]);
 
@@ -149,6 +149,11 @@ test.describe('BOARD-E2E', () => {
       { const r = B.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }   // League rules tick (8 Nov 2026)
       await H.tap(B.p, B.p.locator('#f .btn.go'));
       await expect(B.p.locator('.notyet')).toHaveText('Ada, Bea (you)');
+      // in an Android browser, "You're in" offers the app, with the league following on sign-in (15 Nov 2026, SITE.md › Getting the app)
+      const getApp = B.p.locator('.bcard [data-getapp="joined"]');
+      await expect(getApp).toBeVisible();
+      await expect(getApp).toContainText('Noodle Testers comes with you');
+      expect(await getApp.getByRole('link', { name: 'Get the Daily Noodle app' }).getAttribute('href')).toMatch(/details\?id=uk\.co\.dailynoodle\.app&referrer=.*utm_campaign%3Djoined$/);
       expect(await q(db, `select m.nickname from board.members m join board.leagues l on l.id = m.league_id
                           where l.code = $1 and m.left_at is null order by m.joined_at`, [code])).toEqual([{ nickname: 'Ada' }, { nickname: 'Bea' }]);
 

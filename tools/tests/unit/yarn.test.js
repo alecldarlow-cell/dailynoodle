@@ -103,3 +103,29 @@ test('YARN-DATA-05: No clock boards (9 Nov 2026) follow the level rules, repeat 
     assert.ok(main.length >= 52 && main.length <= 70, n + ' has ' + main.length + ' common words');
   }
 });
+
+test('YARN-DATA-06: Big Board boards (17 Nov 2026) are 5x5 with a unique 8+ letter longest common word no rarer word beats, 100-150 common words, and no repeated or borrowed longest word', () => {
+  const BIG = vm.runInNewContext('(' + html.match(/\nconst BIG=(\[[\s\S]*?\]);\n/)[1] + ')');
+  const NC = vm.runInNewContext('(' + html.match(/\nconst NOCLOCK=(\[[\s\S]*?\]);\n/)[1] + ')');
+  const NOSTAR = new Set(JSON.parse(fs.readFileSync(path.join(ROOT, 'tools/word-blocklist.json'), 'utf8')).nostar);
+  const NB = [...Array(25)].map((_, i) => [...Array(25).keys()].filter(j => j !== i && Math.abs(Math.floor(i / 5) - Math.floor(j / 5)) <= 1 && Math.abs(i % 5 - j % 5) <= 1));
+  const trie = ws => { const r = {}; for (const w of ws) { let n = r; for (const c of w) n = n[c] || (n[c] = {}); n.$ = w; } return r; };
+  const solve5 = root => T => { const out = new Set(); const go = (i, node, used) => { let n = node; for (const ch of T[i]) { n = n[ch]; if (!n) return; } if (n.$ && n.$.length >= 3) out.add(n.$); for (const j of NB[i]) if (!(used >> j & 1)) go(j, n, used | 1 << j); }; for (let i = 0; i < 25; i++) go(i, root, 1 << i); return [...out]; };
+  const solveMain = solve5(trie(MAIN)), solveAll = solve5(trie([...ALL]));
+  const stars = new Set(daily.map(P => P.star).concat(LEVELS.map(L => L.s), NC.map(L => L.s)));
+  const seenS = new Set(), seenB = new Set();
+  assert.strictEqual(BIG.length, 100, 'ten skeins of ten');
+  for (const [i, B] of BIG.entries()) {
+    const n = 'big board ' + (i + 1), T = tiles(B.t);
+    assert.ok(/^[a-z]{25}$/.test(B.t), n);
+    assert.ok(T.filter(t => t === 'qu').length <= 1 && T.filter(t => /^[jkvxz]$/.test(t)).length <= 2, 'rare letters ' + n);
+    assert.ok(MAINSET.has(B.s) && B.s.length >= 8 && !NOSTAR.has(B.s), 'longest word ' + n);
+    assert.ok(!stars.has(B.s) && !seenS.has(B.s), 'longest word repeats ' + n); seenS.add(B.s);
+    assert.ok(!seenB.has(B.t), 'board repeats ' + n); seenB.add(B.t);
+    const main = solveMain(T);
+    assert.ok(main.includes(B.s), 'longest word not on ' + n);
+    assert.deepStrictEqual(main.filter(w => w !== B.s && w.length >= B.s.length), [], n + ' has another common word as long as its longest');
+    assert.deepStrictEqual(solveAll(T).filter(w => w.length > B.s.length), [], n + ' has a rarer word longer than its longest');
+    assert.ok(main.length >= 100 && main.length <= 150, n + ' has ' + main.length + ' common words');
+  }
+});

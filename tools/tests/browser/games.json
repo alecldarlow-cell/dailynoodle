@@ -13,5 +13,6 @@
  {"id":"echo","file":"2026-10-21-arcade-echo-cave.html","start":"#play","pause":"#pause"},
  {"id":"yarn","file":"2026-10-24-quiz-yarn.html","start":"#hPlay","pause":"#pauseBtn"},
  {"id":"astro","file":"2026-11-04-arcade-astro-drop.html","start":"#play","pause":"#pause"},
+ {"id":"astro-quake","file":"2026-11-15-arcade-astro-drop-quake.html","start":"#play","pause":"#pause"},
  {"id":"inkline","file":"2026-11-05-arcade-inkline.html","start":"#play","pause":"#hPause"}
 ]

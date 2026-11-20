@@ -6,7 +6,7 @@
 const {test,expect,H,goto}=require('./support');
 const fs=require('fs'),path=require('path'),vm=require('vm');
 const C=require('../../cryptic');
-const FILE='reports/2026-11-24-word-cryptic-0003.html';
+const FILE='reports/2026-11-23-word-cryptic-0003.html';
 const P=vm.runInNewContext('('+fs.readFileSync(path.join(H.REPO,FILE),'utf8').match(/\nwindow\.DN_PUZZLE=(\{.*\});\n/)[1]+')');
 const ANS=C.unwrap(P.sol,P.id).a,ID=P.id;
 const key=(p,ch)=>H.tap(p,p.locator('#kb .key[data-k="'+ch+'"]'));

@@ -93,3 +93,22 @@ test('TUMBLER-E2E-03: GIVEN the solving submit WHEN the word is found THEN the l
  await expect(p.locator('.tile.read.pop')).toHaveCount(0);
  expect(phone.errors).toEqual([]);
 });
+test('TUMBLER-E2E-04: GIVEN a wrong submit WHEN it is checked THEN its clues mark the wheels: the line shows them, grey letters fade on every wheel, nothing is deduced',async({phone})=>{
+ // Alec, 16 Nov 2026 (Helen's play): the line looked like it should change colour, and the tries sat off screen
+ const p=phone.p;await goto(phone,FILE);
+ await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
+ await make(p,OTHER);await H.tap(p,p.locator('#submitBtn'));
+ const fb=T.feedback(OTHER,P.secret),W=OTHER.toUpperCase();
+ const line=await p.locator('.wheel .tile.read').evaluateAll(ts=>ts.map(t=>t.className));
+ line.forEach((c,k)=>expect(c).toContain(fb[k]==='g'?'k-g':fb[k]==='a'?'k-n':'k-x'));
+ const out=[...W].filter((L,i)=>fb[i]==='x'&&![...W].some((M,j)=>M===L&&fb[j]!=='x'));
+ const cls=await p.locator('.wheel').evaluateAll(ws=>ws.map(w=>[...w.children].map(t=>[t.textContent,t.className])));
+ for(let k=0;k<4;k++)for(const [L,c] of cls[k]){
+  if(out.includes(L))expect(c).toContain('k-x');
+  if(!W.includes(L))expect(c).not.toMatch(/k-[gxna]/);
+ }
+ // the latest submit stays on screen under Submit
+ const vh=await p.evaluate(()=>innerHeight),bottom=await p.locator('#tries .r').first().evaluate(e=>e.getBoundingClientRect().bottom);
+ expect(bottom).toBeLessThanOrEqual(vh);
+ expect(phone.errors).toEqual([]);
+});

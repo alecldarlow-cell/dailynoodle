@@ -100,6 +100,13 @@
   .status{font-size:14px;margin-top:12px;padding:10px 12px;border-radius:8px;background:var(--wash);color:var(--muted)}
   .status.ok{background:var(--good-soft);color:var(--good)}
   .status.err{background:var(--bad-soft);color:var(--bad)}
+  .labread{display:grid;gap:10px;margin:4px 0 12px}
+  .labread .lr{border:1px solid var(--line,rgba(127,127,127,.25));border-left-width:4px;border-radius:10px;padding:10px 12px}
+  .labread .lr.good{border-left-color:var(--good)} .labread .lr.warn{border-left-color:var(--warn)} .labread .lr.bad{border-left-color:var(--bad)}
+  .labread .lr h3{margin:0 0 4px;font-size:14px} .labread .lr h3 span{font-weight:600}
+  .labread .lr.good h3 span{color:var(--good)} .labread .lr.warn h3 span{color:var(--warn)} .labread .lr.bad h3 span{color:var(--bad)}
+  .labread ul{margin:0;padding-left:18px;font-size:13px;line-height:1.45}
+  .labnote{font-size:12px;color:var(--muted);margin:10px 0 0}
 
   /* cards, headings */
   .card{background:var(--paper);border:1px solid var(--hair);border-radius:10px;padding:14px;min-width:0}
@@ -510,8 +517,10 @@
       </div>
       <div class="card" id="labStats">
         <h2>Lab trial</h2>
-        <p class="sub">Each Lab puzzle in this period (website and app): players, finishes and abandons next to the one-tap votes (“Should it go daily?”). Read the votes with the abandons: a high Yes from the few who finished isn’t the whole story. Votes are each voter’s latest answer, anonymous.</p>
+        <p class="sub">What players are telling us about each Lab puzzle in this period, website and app together. Two kinds of feedback: what they <b>say</b> (the one-tap “Should it go daily?” vote) and what they <b>do</b> (come back on other days, finish or give up). The bar to go daily is about 20+ votes and 70%+ Yes, read with coming back.</p>
+        <div class="labread" id="labRead" aria-live="polite"></div>
         <div class="tscroll"><table id="tLab"></table></div>
+        <p class="labnote">Votes can’t be split by how often the voter played: a vote is deliberately kept apart from the visitor code that plays are counted by. Each voter counts once, with their latest answer (they can change it after any play). Coming back counts different days in this period, so a short period understates it.</p>
       </div>
       <details class="more">
         <summary>What happened to each opened puzzle</summary>
@@ -648,7 +657,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
 <script src="admin-health.js"></script>
 <script>
 (function(){
@@ -698,6 +707,13 @@
       ['gaband','Abandoned rounds','Rounds started minus rounds ended: restarted, closed or left mid-round.','Includes rounds still being played when the period ends.'],
       ['gsecs','Round time','Median active play time of finished rounds, as reported by the game.','Excludes time paused or with the tab hidden.'],
       ['furthest','Furthest level','The highest level any player reached in the period. Each game says what a level is (Lighthouse Keeper: the headland number).','Games with no levels leave this blank.']
+    ]],
+    ['Lab trial', [
+      ['labplayers','Played by','Visitors who opened the Lab puzzle in the period (website and app), and how many of them started it.',''],
+      ['labback','Came back','Players who started it on 2 or more different days in the period, as a share of those who started. 3+ days are counted as regulars.','Days outside the period are not counted, so set the range to the whole trial.'],
+      ['labfinish','Finished','Players who finished it at least once, as a share of those who started.',''],
+      ['labvotes','Votes','One-tap answers to “Should it go daily?”: one per voter (a phone, browser or signed-in account), their latest answer, changed in the period. Split by app and website.','Not linked to plays, so not split by how often the voter played.'],
+      ['labread','Read-out','Plain-language summary per puzzle. Votes: under 20 is too few to call; 70%+ Yes clears the bar. Coming back (with 5+ starters): 40%+ is a strong pull, under 20% little. Abandoned: 40%+ of starts is flagged.','Guide thresholds, not statistical tests. The decision stays a judgement.']
     ]],
     ['Front pages and arrivals', [
       ['taps','Card taps','Taps on a card on the News, Puzzles or Games list.','Position 1 is the top of the list at the time.'],
@@ -995,21 +1011,55 @@
 
   /* ---------------- Lab trial (11 Nov 2026) ----------------
      admin_lab: per Lab type, plays (players, starts, finishes, abandons, median time) and the votes. */
-  var LAB_NAMES = { tilt:'Tilt', redact:'Redact', tumbler:'Tumbler' };
+  var LAB_NAMES = { tilt:'Tilt', redact:'Redact', tumbler:'Tumbler', cryptic:'Cryptic' };
+  function labRead(t){
+    var num = function(x){ return Number(x||0).toLocaleString('en-GB'); };
+    var name = LAB_NAMES[t.type] || t.type, votes = (t.yes||0) + (t.no||0), pts = [], head, tone;
+    if (!t.starters && !votes) return { name:name, tone:'', head:'No plays yet', pts:['Nobody started it in this period.'] };
+    var enough = votes >= 20, liked = t.pct_yes != null && t.pct_yes >= 70;
+    var readBack = (t.starters||0) >= 5 && t.returners != null, back = t.pct_returned;
+    var pull = !readBack ? null : back >= 40 ? 'strong' : back >= 20 ? 'some' : 'little';
+    // what they say
+    if (!votes) pts.push('No votes yet.');
+    else pts.push(num(t.yes)+' Yes, '+num(t.no)+' No: '+t.pct_yes+'% Yes from '+num(votes)+' '+plural(votes,'voter')+
+      (enough ? (liked ? ', clearing the 70% bar.' : ', below the 70% bar.') : ', too few to call (bar about 20).'));
+    // what they do
+    if (t.starters && t.returners != null) pts.push(num(t.starters)+' '+plural(t.starters,'player')+' started it'+(t.trial_days ? ' over '+t.trial_days+' '+plural(t.trial_days,'day') : '')+'; '+
+      num(t.returners)+' came back on another day ('+(back||0)+'%)'+(t.regulars ? ', '+num(t.regulars)+' on 3+ days' : '')+
+      (readBack ? (pull === 'strong' ? ': a strong pull.' : pull === 'some' ? ': some pull.' : ': most played once.') : ' (too few players to read yet).'));
+    if (t.pct_finished != null) pts.push(t.pct_finished+'% of players finished at least once'+(t.median_solve_secs != null ? ', median time '+fmtSecs(t.median_solve_secs) : '')+
+      (t.pct_abandoned != null && t.pct_abandoned >= 40 ? '. '+t.pct_abandoned+'% of starts were abandoned: it may be too hard or unclear.' : '.'));
+    // headline
+    if (!enough) {
+      tone = 'warn'; head = 'Too early to call';
+      if (pull === 'strong') head += ', but players keep coming back';
+      else if (pull === 'little') head += ', and few come back so far';
+    } else if (liked && pull !== 'little') { tone = 'good'; head = pull === 'strong' ? 'Looks like a daily: liked and returned to' : 'Liked: clears the vote bar'; }
+    else if (liked) { tone = 'warn'; head = 'Liked, but few come back'; }
+    else if (pull === 'strong') { tone = 'warn'; head = 'Split vote, but players keep coming back'; }
+    else { tone = 'bad'; head = 'Not landing: below the bar and few return'; }
+    return { name:name, tone:tone, head:head, pts:pts };
+  }
+  function fmtSecs(x){ return x == null ? '–' : Math.floor(x/60)+':'+String(x%60).padStart(2,'0'); }
   function loadLabStats(seq){
     return sb.rpc('admin_lab', { p_from: S.from, p_to: S.to }).then(function(r){ return r; }, function(e){ return { error: e }; }).then(function(r){
       if (seq != null && seq !== loadSeq) return;
-      var el = $('#tLab');
-      if (!r || r.error || !r.data) { el.innerHTML = '<tbody><tr><td class="empty">'+(r && r.error && /admin_lab|PGRST202|42883/.test(JSON.stringify(r.error)) ? 'Not set up yet: apply migration lab_votes.' : 'Couldn’t load these figures.')+'</td></tr></tbody>'; return; }
+      var el = $('#tLab'), rd = $('#labRead');
+      if (!r || r.error || !r.data) { rd.innerHTML = ''; el.innerHTML = '<tbody><tr><td class="empty">'+(r && r.error && /admin_lab|PGRST202|42883/.test(JSON.stringify(r.error)) ? 'Not set up yet: apply migration lab_votes.' : 'Couldn’t load these figures.')+'</td></tr></tbody>'; return; }
       var types = r.data.types || [];
-      var secs = function(x){ return x == null ? '–' : Math.floor(x/60)+':'+String(x%60).padStart(2,'0'); };
+      var hasBack = types.some(function(t){ return t.returners != null; });
+      rd.innerHTML = types.map(function(t){
+        var x = labRead(t);
+        return '<div class="lr '+x.tone+'" data-type="'+esc(t.type)+'"><h3>'+esc(x.name)+': <span>'+esc(x.head)+'</span></h3><ul>'+x.pts.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join('')+'</ul></div>';
+      }).join('') + (hasBack ? '' : '<p class="labnote">Coming back isn’t available yet: apply migration lab_readout.</p>');
       table(el, [
         {key:'type', label:'Puzzle', left:true, sort:function(t){ return t.type; }, fmt:function(t){ return '<span class="hl">'+esc(LAB_NAMES[t.type]||t.type)+'</span>'; }},
-        {key:'players', label:'Players', fmt:function(t){ return n(t.players) + '<span class="meta">'+n(t.finishers)+' finished</span>'; }},
-        {key:'starts', label:'Starts', fmt:function(t){ return n(t.starts); }},
+        {key:'players', label:'Played by', def:'labplayers', fmt:function(t){ return n(t.players) + '<span class="meta">'+n(t.starters)+' started</span>'; }},
+        {key:'returners', label:'Came back', def:'labback', sort:function(t){ return t.pct_returned == null ? -1 : t.pct_returned; }, fmt:function(t){ return t.returners == null ? '–' : n(t.returners) + '<span class="meta">'+(t.pct_returned != null ? t.pct_returned+'% · ' : '')+n(t.regulars)+' on 3+ days</span>'; }},
+        {key:'finishers', label:'Finished', def:'labfinish', fmt:function(t){ return n(t.finishers) + (t.pct_finished != null ? '<span class="meta">'+t.pct_finished+'% of starters</span>' : ''); }},
         {key:'abandons', label:'Abandoned', fmt:function(t){ return n(t.abandons) + (t.pct_abandoned != null ? '<span class="meta">'+t.pct_abandoned+'% of starts</span>' : ''); }},
-        {key:'median_solve_secs', label:'Median time', fmt:function(t){ return secs(t.median_solve_secs); }},
-        {key:'yes', label:'Votes', fmt:function(t){ var v=(t.yes||0)+(t.no||0); return v ? n(t.yes)+' yes · '+n(t.no)+' no<span class="meta">'+t.pct_yes+'% yes · app '+n(t.app.yes)+'/'+n(t.app.no)+' · web '+n(t.web.yes)+'/'+n(t.web.no)+'</span>' : '–'; }}
+        {key:'median_solve_secs', label:'Median time', fmt:function(t){ return fmtSecs(t.median_solve_secs); }},
+        {key:'yes', label:'Votes', def:'labvotes', fmt:function(t){ var v=(t.yes||0)+(t.no||0); return v ? n(t.yes)+' yes · '+n(t.no)+' no<span class="meta">'+t.pct_yes+'% yes · app '+n(t.app.yes)+'/'+n(t.app.no)+' · web '+n(t.web.yes)+'/'+n(t.web.no)+'</span>' : '–'; }}
       ], types, { sortKey:'type', sortDir:'asc' });
     });
   }

@@ -42,8 +42,11 @@
   var SRI = 'sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok';
   var AUTH = 'noodle-sync-auth';   // the signed-in session (supabase-js storageKey); dn-track.js checks it
   var LAST = 'noodle-sync-last';   // when this browser last synced, for the card
-  var SYNC_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon|tally)-(v1|streak)$/;
+  // The Lab trials' saves and streaks sync too (17 Nov 2026, Alec), and the Lab votes document
+  // (VOTES), so a signed-in player's Lab status reads the same on the website and the app.
+  var SYNC_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon|tally|tilt|redact|tumbler|cryptic)-(v1|streak)$/;
   var BOARD = 'noodle-board-v1';
+  var VOTES = 'noodle-lab-votes-v1';
   var ON_BOARD = /\/board\.html$/.test(location.pathname);
   // account.html (7 Nov 2026) shows the same card, laid out as the app's rows; the sign-in link still lands on board.html
   var ON_ACCOUNT = /\/account\.html$/.test(location.pathname);
@@ -124,14 +127,31 @@
     try { n = localStorage.length; } catch (e) {}
     for (var i = 0; i < n; i++) {
       var k = null; try { k = localStorage.key(i); } catch (e) {}
-      if (!k || !(SYNC_KEY.test(k) || k === BOARD)) continue;
+      if (!k || !(SYNC_KEY.test(k) || k === BOARD || k === VOTES)) continue;
       var v = parse(get(k));
       if (isObj(v)) out[k] = v;
     }
     return out;
   }
   /* Merge the account's documents into this browser (dnMove.importData). */
+  /* Lab votes: per type, the latest answer wins ({type: {v: 'yes'|'no', at}}), whichever device
+     gave it. Only the shown answer: the counted vote is the server's (insights.lab_votes). */
+  function stamp(x){ return typeof x === 'number' ? x : (Date.parse(x) || 0); }
+  function newerVotes(here, there){
+    var out = {}, t;
+    if (isObj(here)) for (t in here) out[t] = here[t];
+    if (isObj(there)) for (t in there) {
+      var b = there[t];
+      if (!isObj(b) || (b.v !== 'yes' && b.v !== 'no')) continue;
+      if (!isObj(out[t]) || stamp(b.at) > stamp(out[t].at)) out[t] = b;
+    }
+    return out;
+  }
   function mergeIn(remote){
+    if (isObj(remote[VOTES])) {
+      var mv = newerVotes(parse(get(VOTES)), remote[VOTES]);
+      if (!same(mv, parse(get(VOTES)))) set(VOTES, JSON.stringify(mv));
+    }
     var d = {};
     for (var k in remote) if (SYNC_KEY.test(k) && isObj(remote[k])) d[k] = JSON.stringify(remote[k]);
     // League identity: only another player's needs the import's adopt-or-ask rule;
@@ -233,7 +253,11 @@
      merge with it (dnCore.saveProgress). A round in progress here is kept (the import
      keeps this browser's fields). */
   if (!ON_BOARD && !ON_ACCOUNT) {
-    sync().then(settled, settled);
+    // dn:synced tells the page what came in (the Puzzles front page redraws its marks, 17 Nov 2026)
+    sync().then(function (r) {
+      settled();
+      if (r && r.changed) try { document.dispatchEvent(new CustomEvent('dn:synced')); } catch (e) {}
+    }, settled);
     document.addEventListener('dn:puzzle_end', function () {
       // Let the page finish writing its save first.
       setTimeout(function () { sync().catch(function () {}); }, 1200);

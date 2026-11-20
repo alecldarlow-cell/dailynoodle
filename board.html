@@ -309,7 +309,9 @@
   // v= is the link-preview version. WhatsApp keeps the preview it first made for a link,
   // so bump it when the share image changes (assets/share-card.png; see SITE.md).
   var PREVIEW_V = '2';
-  function link(code) { return 'https://dailynoodle.co.uk/board.html?join=' + encodeURIComponent(code) + '&v=' + PREVIEW_V; }
+  /* invites and leaderboard shares go out as join.html (15 Nov 2026, SITE.md › App links): on Android it opens the
+     Daily Noodle app when it's installed; anywhere else join.html goes straight on to board.html?join=CODE&v=2 */
+  function link(code) { return 'https://dailynoodle.co.uk/join.html?c=' + encodeURIComponent(code) + '&v=' + PREVIEW_V; }
   function share(text, url, btn) {
     if (navigator.share) return navigator.share({ text: text, url: url }).catch(function () {});
     var all = text + '\n' + url;
@@ -680,7 +682,10 @@
            (IOS ? '<p class="tip">On an iPhone, if this page opened inside WhatsApp or another app, send yourself your link ' +
                   'and open it in Safari or the home-screen app, wherever you play, so your results reach the board.</p>' : '') +
            '<div class="acts">' + (IOS ? '<button class="btn go" data-act="key">Send me my link</button>' : '') +
-           '<button class="btn alt" data-go="start" data-from="joined">Start another league</button></div></div>';
+           '<button class="btn alt" data-go="start" data-from="joined">Start another league</button></div>' +
+           /* Android browsers only (dn-app.js decides and fills the link; 15 Nov 2026, SITE.md › Getting the app) */
+           '<p class="tip" data-getapp="joined" hidden>Playing on Android? <a>Get the Daily Noodle app</a>. Sign in with the same email ' +
+           '<a href="account.html?via=joined">here</a> and in the app, and ' + esc(L.name) + ' comes with you.</p></div>';
       S.joined = 0;
     } else if (S.moved) {
       h += '<div class="bcard"><h2>Your leagues are here now</h2><p>Results and streaks from your link have been added to this ' +
@@ -1008,5 +1013,6 @@
 </script>
 <script src="dn-nav.js" defer></script>
 <script src="dn-track.js" defer></script>
+<script src="dn-app.js" defer></script>
 </body>
 </html>

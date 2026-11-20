@@ -252,6 +252,129 @@ function toggles(host,fsOnly){
     b.addEventListener('click',()=>{set(!get());b.setAttribute('aria-checked',String(get()));persist(false);});host.appendChild(b);}
 }
 
+/* units:start — the imperial switch (16 Nov 2026, Alec's call after a tester asked for miles).
+   Display only: every guess is kept and scored in the fact's own metric unit, so a guess scores the same
+   either way (points depend on the ratio, which a constant factor leaves alone). Pure functions, no DOM:
+   the app's src/features/puzzles/reckon/units.ts is a line-for-line port, checked against this block. */
+var dnUnits = (function () {
+  // metric unit → kind (one remembered setting per kind), the question's word, its imperial word,
+  // the readout unit and factor (imperial = metric × f); litres switch to gallons from 20 l up
+  var U = {
+    'km':       { k: 'dist',  w: 'kilometres',        iw: 'miles',          du: 'miles',    f: 0.621371192237334 },
+    'm':        { k: 'len',   w: 'metres',            iw: 'feet',           du: 'ft',       f: 3.280839895013123 },
+    'cm':       { k: 'len',   w: 'centimetres',       iw: 'inches',         du: 'in',       f: 0.393700787401575 },
+    'km²':      { k: 'area',  w: 'square kilometres', iw: 'square miles',   du: 'sq miles', f: 0.386102158542446 },
+    'm²':       { k: 'area',  w: 'square metres',     iw: 'square feet',    du: 'sq ft',    f: 10.76391041670972 },
+    'hectares': { k: 'area',  w: 'hectares',          iw: 'acres',          du: 'acres',    f: 2.471053814671653 },
+    'km/h':     { k: 'speed', w: 'km per hour',       iw: 'miles per hour', du: 'mph',      f: 0.621371192237334 },
+    'kg':       { k: 'mass',  w: 'kilograms',         iw: 'pounds',         du: 'lb',       f: 2.204622621848776 },
+    'g':        { k: 'mass',  w: 'grams',             iw: 'ounces',         du: 'oz',       f: 0.035273961949580,
+                  big: { at: 453.59237, iw: 'pounds', du: 'lb', f: 0.002204622621849 } },
+    'tonnes':   { k: 'mass',  w: 'tonnes',            iw: 'tons',           du: 'tons',     f: 0.984206527611061 },
+    'litres':   { k: 'vol',   w: 'litres',            iw: 'pints',          du: 'pints',    f: 1.759753986392702,
+                  big: { at: 20, iw: 'gallons', du: 'gallons', f: 0.219969248299088 } },
+    'ml':       { k: 'vol',   w: 'millilitres',       iw: 'fluid ounces',   du: 'fl oz',    f: 0.035195079727854 }
+  };
+  // the switch's imperial label and the tip after the first switch, per kind
+  var KIND = {
+    dist:  'Distances stay in miles until you switch back.',
+    len:   'Lengths stay in feet and inches until you switch back.',
+    area:  'Areas stay in imperial units until you switch back.',
+    speed: 'Speeds stay in mph until you switch back.',
+    mass:  'Weights stay in pounds, ounces and tons until you switch back.',
+    vol:   'Volumes stay in pints and gallons until you switch back.'
+  };
+  var SW = { miles: 'miles', ft: 'feet', in: 'inches', 'sq miles': 'sq miles', 'sq ft': 'sq ft', acres: 'acres', mph: 'mph',
+    lb: 'lb', oz: 'oz', tons: 'tons', pints: 'pints', gallons: 'gallons', 'fl oz': 'fl oz' };
+  // a question that already names an imperial unit (km in a mile, grams in an ounce) keeps metric only
+  var IMP = /\b(miles?|inch|inches|foot|feet|ft|yards?|(?:in|per) a stone|\d+ stones?|pounds?|lbs?|ounces?|oz|pints?|gallons?|mph|acres?)\b/i;
+  var NUM = '(\\d{1,3}(?:,\\d{3})+(?:\\.\\d+)?|\\d+(?:\\.\\d+)?)';
+  var NU = 'km²|m²|km/h|km|cm|m|kg|g|tonnes|tonne|litres|litre|ml|hectares|kilometres|kilometre|centimetres|centimetre|metres|metre|kilograms|kilogram|grams|gram';
+  var NRX = new RegExp(NUM + '(?:( to | and |–)' + NUM + ')?( million| billion)? (' + NU + ')(?![\\w²/-])', 'g');
+  var NAMES = { kilometres: 'km', kilometre: 'km', centimetres: 'cm', centimetre: 'cm', metres: 'm', metre: 'm',
+    kilograms: 'kg', kilogram: 'kg', grams: 'g', gram: 'g', tonne: 'tonnes', litre: 'litres' };
+  var ONE = { miles: 'mile', pints: 'pint', gallons: 'gallon', acres: 'acre', tons: 'ton' };
+  var NOUNLESS = /^ (of|from|up|down|long|wide|high|tall|deep|thick|across|away|by|in|on|and|or|to|at|per|into|under|over|above|below|before|after|through|lower|higher|taller|longer|shorter|off|including|between|more|less|a|an|the)\b/;
+  var esc = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
+
+  function group(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function sig(v, s) { return v === 0 ? 0 : +v.toPrecision(s); }
+  // a number to s significant figures, worded as the game words its numbers
+  function num(v, s) {
+    v = sig(v, s);
+    if (v >= 1e9) return String(+(v / 1e9).toPrecision(3)) + ' billion';
+    if (v >= 1e6) return String(+(v / 1e6).toPrecision(3)) + ' million';
+    if (v >= 1000) return group(v);
+    return String(v);
+  }
+  // inches as feet and inches: [[5,'ft'],[6,'in']]
+  function ftin(inches) {
+    var r = Math.round(inches), ft = Math.floor(r / 12), i = r % 12;
+    if (!ft) return [[String(i), 'in']];
+    return i ? [[String(ft), 'ft'], [String(i), 'in']] : [[String(ft), 'ft']];
+  }
+  function inFtin(v, du) { return (du === 'ft' && v < 10 - 1 / 24) || (du === 'in' && v >= 12 - 0.5 && v < 120); }
+  // a display value as readout parts, [[number, unit], …]; s = significant figures (3 on the scale)
+  function parts(v, du, s) {
+    if (inFtin(v, du)) return ftin(du === 'ft' ? v * 12 : v);
+    return [[num(v, s || 3), du]];
+  }
+  function text(v, du, s) { return parts(v, du, s).map(function (p) { return p[0] + ' ' + p[1]; }).join(' '); }
+
+  // the fact's imperial view, or null when it keeps metric only
+  function spec(q) {
+    var m = q && U[q.u];
+    if (!m || IMP.test(q.q)) return null;
+    var b = m.big && q.a >= m.big.at - 1e-9 ? m.big : null;
+    var iw = b ? b.iw : m.iw, du = b ? b.du : m.du, f = b ? b.f : m.f;
+    if (inFtin(q.a * f, du)) iw = 'feet and inches';
+    var qi = q.q.replace(new RegExp('\\b(in|many) ' + esc(m.w) + '\\b'), '$1 ' + iw);
+    return { k: m.k, f: f, du: du, mu: q.u, iu: SW[du], q: qi, n: note(q.n || ''), tip: KIND[m.k] };
+  }
+  // the note's metric figures, converted; a note that already gives imperial is left as written
+  function note(n) {
+    if (!n || IMP.test(n)) return n;
+    return n.replace(NRX, function (all, a, sep, b, mult, unit, at, src) {
+      var key = NAMES[unit] || unit, m = U[key];
+      if (!m) return all;
+      var x = mult === ' billion' ? 1e9 : mult === ' million' ? 1e6 : 1;
+      var va = parseFloat(a.replace(/,/g, '')) * x, vb = b ? parseFloat(b.replace(/,/g, '')) * x : null;
+      var top = vb == null ? va : vb, use = m.big && top >= m.big.at ? m.big : m;
+      // as many figures as the note gives (2 or 3), one more for an exact figure, so "93 m" reads 305 ft as the
+      // answer does while "about 76 m" stays a round "about 250 ft"
+      var rough = /\b(about|around|roughly|nearly|almost|some|over|under|more than|less than|up to|than) $/i.test(src.slice(0, at)) ? 0 : 1;
+      var s = function (t) { return Math.max(2, Math.min(3, t.replace(/[,.]/g, '').replace(/^0+/, '').replace(/0+$/, '').length + rough)); };
+      var sa = s(a), sb = b ? s(b) : sa;
+      if (b) sa = sb = Math.min(sa, sb);
+      if (vb == null) {
+        var t = text(va * use.f, use.du, sa), one1 = ONE[use.du];
+        // "a 3.8 km swim" → "a 2.4-mile swim": a figure used as an adjective takes the singular
+        if (one1 && /\b(a|an|two|three|four|five|six|seven|eight|nine|ten)\s$/i.test(src.slice(0, at)) &&
+          /^ [a-z]+/.test(src.slice(at + all.length)) && !NOUNLESS.test(src.slice(at + all.length))) t = t.replace(/ \S+$/, '-' + one1);
+        return t;
+      }
+      var pa = parts(va * use.f, use.du, sa), pb = parts(vb * use.f, use.du, sb);
+      // "62 to 68 mph": the unit once, unless a side is in feet and inches
+      var one = pa.length === 1 && pb.length === 1 && pa[0][1] === pb[0][1];
+      var left = one ? pa[0][0] : pa.map(function (p) { return p[0] + ' ' + p[1]; }).join(' ');
+      return left + (sep === '–' ? '–' : sep) + pb.map(function (p) { return p[0] + ' ' + p[1]; }).join(' ');
+    });
+  }
+  // the imperial scale's rungs, in display units; feet and inches round to whole inches
+  function rungs(lo, sp, ladder) {
+    var dlo = lo + Math.log10(sp.f), min = Math.pow(10, dlo) * 0.9999, max = Math.pow(10, dlo + 2) * 1.0001;
+    var out = [], raw = ladder(dlo, false);
+    for (var i = 0; i < raw.length; i++) {
+      var v = raw[i];
+      if (inFtin(v, sp.du)) v = sp.du === 'ft' ? Math.round(v * 12) / 12 : Math.round(v);
+      if (v >= min && v <= max && (!out.length || Math.abs(out[out.length - 1] - v) > 1e-9)) out.push(v);
+    }
+    return out;
+  }
+  return { spec: spec, note: note, parts: parts, text: text, rungs: rungs, U: U };
+})();
+/* units:end */
+
 /* ---------- numbers and the scale (Ballpark's own) ---------- */
 function grp(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')}
 function trim(x){return String(+(+x).toPrecision(3))}
@@ -284,6 +407,13 @@ let P=null, view='home', paused=false;
 let R=null;              // the round in play (= save.cur)
 let VR=null, Q=0;        // the round and question on screen: the live one, or one being reviewed
 let F=null, LAD=[], LOGS=[], CI=0, shown=null, last=0, lockedAt=-1e9;
+let SP=null, IU=false, DLO=0;   // the question's imperial view (dnUnits.spec), whether it is showing, the scale's low end in shown units
+const dv=v=>IU?v*SP.f:v, mv=v=>IU?v/SP.f:v;    // metric (kept and scored) ⇄ shown
+const unitOn=q=>{const sp=dnUnits.spec(q);return sp&&save.un&&save.un[sp.k]==='i'?sp:null};
+function shownNum(v,q,ans){const sp=unitOn(q);return sp?dnUnits.text(v*sp.f,sp.du):withU(ans?fmtA(v):fmt(v),q.u)}
+function readout(el,ul,v,ans){if(!IU){el.textContent=ans?fmtA(v):fmt(v);ul.textContent=F.u;return}
+  const ps=dnUnits.parts(v,SP.du);if(ps.length===1){el.textContent=ps[0][0];ul.textContent=ps[0][1];return}
+  el.innerHTML=ps.map(p=>esc(p[0])+'<small>'+esc(p[1])+'</small>').join(' ');ul.textContent=''}
 const live=()=>!!R&&VR===R&&Q===R.i;            // the question you can still play
 const endRev=()=>!!VR&&VR!==R;                  // reviewing a finished round from the result
 function show(id){view=id;if(id!=='winModal')window.dnFinish.hide();for(const s of document.querySelectorAll('.scr'))s.classList.toggle('vis',s.id===id);}
@@ -340,30 +470,52 @@ function renderQ(){
   $('prevB').disabled=Q<=0;$('fwdB').disabled=Q>=maxQ;
   $('rvt').hidden=live();$('rvt').textContent=endRev()?'Reviewing your round':'Reviewing';
   $('pauseBtn').style.visibility=endRev()?'hidden':'';
-  $('q').textContent=F.q;$('ru').textContent=F.u;
-  LAD=ladder(F.lo,F.int);LOGS=LAD.map(L10);
+  SP=dnUnits.spec(q);IU=!!(SP&&save.un&&save.un[SP.k]==='i');DLO=IU?F.lo+L10(SP.f):F.lo;unitSwitch();
+  $('q').textContent=IU?SP.q:F.q;$('ru').textContent=F.u;
+  LAD=IU?dnUnits.rungs(F.lo,SP,ladder):ladder(F.lo,F.int);LOGS=LAD.map(L10);
   let tk='',lb='';
-  for(let d=Math.floor(F.lo);d<=Math.ceil(F.lo+SPAN);d++)for(let k=1;k<=9;k++){const lv=d+L10(k),x=(lv-F.lo)/SPAN*100;if(x<-0.01||x>100.01)continue;
+  for(let d=Math.floor(DLO);d<=Math.ceil(DLO+SPAN);d++)for(let k=1;k<=9;k++){const lv=d+L10(k),x=(lv-DLO)/SPAN*100;if(x<-0.01||x>100.01)continue;
     tk+='<span class="tk'+(k===1?' mj':k===3?' md':'')+'" style="left:'+x+'%"></span>';
     if((k===1||k===3)&&x>4&&x<96)lb+='<span class="lab" style="left:'+x+'%">'+shortLab(k*Math.pow(10,d))+'</span>'}
   $('tks').innerHTML=tk;$('labs').innerHTML=lb;
   $('zbs').innerHTML='';$('slz').classList.remove('show');
-  if(guessing){CI=R.cur==null?nearest(F.lo+SPAN/2):Math.max(0,LAD.indexOf(R.cur));if(CI<0)CI=nearest(F.lo+SPAN/2);
+  if(guessing){CI=R.cur==null?nearest(DLO+SPAN/2):IU?nearest(L10(dv(R.cur))):Math.max(0,LAD.indexOf(R.cur));if(CI<0)CI=nearest(DLO+SPAN/2);
     setIdx(CI,true);$('fb').hidden=true;$('ansC').hidden=true;$('read').classList.remove('two');$('ctl').classList.remove('rev');actLabel('Lock in',false);$('minus').disabled=$('plus').disabled=false}
-  else{const g=VR.g[Q];CI=LAD.indexOf(g)>=0?LAD.indexOf(g):nearest(L10(g));setIdx(CI,true);reveal(false)}
+  else{const g=VR.g[Q];CI=!IU&&LAD.indexOf(g)>=0?LAD.indexOf(g):nearest(L10(dv(g)));setIdx(CI,true);reveal(false)}
   $('slz').classList.toggle('ro',!guessing);$('slz').setAttribute('aria-readonly',guessing?'false':'true');
   $('tip').hidden=!!save.tip||Q>0||!guessing;
   $('mid').scrollTop=0;
   renderMeter();
 }
+/* the units switch under the readout (16 Nov 2026): one remembered setting per kind of unit (save.un, e.g.
+   {dist:'i'}); flipping keeps the guess where it is (it is held in the fact's own unit) and works on the reveal too */
+function unitSwitch(){let w=$('unitSw');
+  if(!w){w=document.createElement('div');w.id='unitSw';w.className='usw';w.setAttribute('role','group');
+    w.innerHTML='<button type="button" data-u="m"></button><button type="button" data-u="i"></button>';
+    w.addEventListener('click',e=>{const b=e.target.closest('button[data-u]');if(b)setUnits(b.dataset.u==='i');});
+    $('read').insertAdjacentElement('afterend',w);
+    const t=document.createElement('div');t.id='unitTip';t.className='utip';t.hidden=true;t.setAttribute('role','status');w.insertAdjacentElement('afterend',t);}
+  w.hidden=!SP;$('read').classList.toggle('hasu',!!SP);if(!SP){$('unitTip').hidden=true;return}
+  w.setAttribute('aria-label','Units');const [bm,bi]=w.children;bm.textContent=SP.mu;bi.textContent=SP.iu;
+  bm.setAttribute('aria-pressed',String(!IU));bi.setAttribute('aria-pressed',String(IU));}
+let tipT=null;
+function setUnits(imp){if(!SP||paused||imp===IU)return;
+  if(!save.un||typeof save.un!=='object')save.un={};
+  if(imp)save.un[SP.k]='i';else delete save.un[SP.k];
+  const told=save.unT&&save.unT[SP.k];
+  if(imp&&!told){save.unT=Object.assign({},save.unT,{[SP.k]:1});const t=$('unitTip');t.textContent=SP.tip;t.hidden=false;
+    clearTimeout(tipT);tipT=setTimeout(()=>{t.hidden=true},4000);}
+  else if(!imp)$('unitTip').hidden=true;
+  persist(false);const top=$('mid').scrollTop;renderQ();$('mid').scrollTop=top;
+  if(!$('fb').hidden)$('slz').classList.add('show');}
 function nearest(lv){let a=0,b=LOGS.length-1;while(b-a>1){const m=(a+b)>>1;if(LOGS[m]<lv)a=m;else b=m}return (lv-LOGS[a]<=LOGS[b]-lv)?a:b}
-function posOf(v){return Math.max(0,Math.min(100,(L10(v)-F.lo)/SPAN*100))}
+function posOf(v){return Math.max(0,Math.min(100,(L10(v)-DLO)/SPAN*100))}   // v in shown units
 function setIdx(i,quiet){i=Math.max(0,Math.min(LAD.length-1,i));const ch=i!==CI,prevV=LAD[CI];CI=i;
-  if(live()&&R.ph==='g')R.cur=LAD[i];          // only the live guess is ever changed
-  $('th').style.left=posOf(LAD[i])+'%';$('rv').textContent=fmt(LAD[i]);
+  if(live()&&R.ph==='g')R.cur=mv(LAD[i]);      // only the live guess is ever changed; kept in the fact's own unit
+  $('th').style.left=posOf(LAD[i])+'%';readout($('rv'),$('ru'),LAD[i],false);
   if(ch&&!quiet&&prevV&&Math.floor(L10(prevV)+1e-9)!==Math.floor(L10(LAD[i])+1e-9))buzz(10);
   const sl=$('slz');sl.setAttribute('aria-valuemin','0');sl.setAttribute('aria-valuemax',String(LAD.length-1));sl.setAttribute('aria-valuenow',String(i));
-  sl.setAttribute('aria-valuetext',withU(fmt(LAD[i]),F.u));if(ch&&!quiet)SND.tick()}
+  sl.setAttribute('aria-valuetext',IU?dnUnits.text(LAD[i],SP.du):withU(fmt(LAD[i]),F.u));if(ch&&!quiet)SND.tick()}
 function actLabel(t,nx){const b=$('act');b.textContent=t;b.classList.toggle('nx',nx)}
 function renderMeter(){$('sc').textContent=score(VR);
   const maxQ=endRev()?NQ-1:R.i;let h='';
@@ -373,25 +525,25 @@ function renderMeter(){$('sc').textContent=score(VR);
   $('pips').innerHTML=h}
 function first(){ac();if(!$('tip').hidden){$('tip').hidden=true;save.tip=1;persist();}}
 function lockIn(){if(!live()||R.ph!=='g'||paused)return;first();lockedAt=performance.now();
-  const g=LAD[CI],z=zone(g,F.a);R.g[R.i]=g;R.z[R.i]=z;R.ph='r';R.cur=null;persist();
+  const g=mv(LAD[CI]),z=zone(g,F.a);R.g[R.i]=g;R.z[R.i]=z;R.ph='r';R.cur=null;persist();
   SND.lock();reveal(true);setTimeout(()=>{SND.res(z);buzz(z===0?[30,60,30,60,45]:z<=2?25:12)},120);renderMeter()}
 function reveal(anim){
   const g=VR.g[Q],z=VR.z[Q],a=F.a;
-  let zb='';for(let k=BAND.length-1;k>=0;k--){const l=Math.max(0,posOf(a/BAND[k])),r=Math.min(100,posOf(a*BAND[k]));
+  let zb='';for(let k=BAND.length-1;k>=0;k--){const l=Math.max(0,posOf(dv(a)/BAND[k])),r=Math.min(100,posOf(dv(a)*BAND[k]));
     zb+='<span class="zb" style="left:'+l+'%;width:'+(r-l)+'%;background:'+ZC[k]+'"></span>'}
-  $('zbs').innerHTML=zb;$('pin').style.left=posOf(a)+'%';
+  $('zbs').innerHTML=zb;$('pin').style.left=posOf(dv(a))+'%';
   if(anim&&!isRM())requestAnimationFrame(()=>requestAnimationFrame(()=>$('slz').classList.add('show')));else $('slz').classList.add('show');
   $('fbV').textContent=ZN[z];$('fbP').textContent='+'+PTS[z];$('fbP').style.background=ZC[z];
   $('fbL').textContent=offText(g,a);
-  $('av').textContent=fmtA(a);$('au').textContent=F.u;$('ansC').hidden=false;$('read').classList.add('two');$('ctl').classList.add('rev');
-  $('fbN').textContent=F.n;$('fbN').hidden=!F.n||/^(About |Around |Up to about )?[\d.,]+( [^ .]+)?\.$/.test(F.n);$('fb').hidden=false;
+  readout($('av'),$('au'),dv(a),!IU);$('ansC').hidden=false;$('read').classList.add('two');$('ctl').classList.add('rev');
+  $('fbN').textContent=IU?SP.n:F.n;$('fbN').hidden=!F.n||/^(About |Around |Up to about )?[\d.,]+( [^ .]+)?\.$/.test(F.n);$('fb').hidden=false;
   $('minus').disabled=$('plus').disabled=true;$('tip').hidden=true;
   if(endRev())actLabel('Back to results',true);
   else if(!live())actLabel('Back to question '+(R.i+1),true);
   else actLabel(R.i<NQ-1?'Next':'See result',true);
   if(anim&&z===0&&!isRM())burst();
   setTimeout(()=>{try{$('read').scrollIntoView({block:'nearest',behavior:isRM()?'auto':'smooth'})}catch(e){}},anim?60:0)}
-function burst(){const t=$('trk'),x=posOf(F.a);
+function burst(){const t=$('trk'),x=posOf(dv(F.a));
   for(let k=0;k<16;k++){const s=document.createElement('span');s.className='burst';const ang=Math.PI*(1.05+k/15*0.9),d=40+Math.random()*50;
     s.style.left='calc('+x+'% - 4px)';s.style.top='-4px';s.style.background=['var(--z0)','var(--z2)','var(--tom)','#4B4FC4'][k%4];
     s.style.setProperty('--dx',Math.cos(ang)*d+'px');s.style.setProperty('--dy',Math.sin(ang)*d+'px');t.appendChild(s);setTimeout(()=>s.remove(),800)}}
@@ -438,7 +590,7 @@ function showResult(rec,fresh){
   show('winModal');
   const ul=document.createElement('ul');ul.className='fin-rk';
   ul.innerHTML=P.qs.map((q,k)=>{const z=rec.z[k],g=rec.g[k];
-    return '<li><button type="button" data-k="'+k+'"><span class="rq">'+esc(q.q)+'</span><span class="ra">You '+esc(withU(fmt(g),q.u))+' · answer '+esc(withU(fmtA(q.a),q.u))+'</span>'+
+    return '<li><button type="button" data-k="'+k+'"><span class="rq">'+esc(q.q)+'</span><span class="ra">You '+esc(shownNum(g,q,false))+' · answer '+esc(shownNum(q.a,q,true))+'</span>'+
       '<span class="rp" style="background:'+ZC[z]+'">'+PTS[z]+'</span></button></li>'}).join('');
   ul.addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(b)reviewEnd(+b.dataset.k);});
   const rc=document.createElement('div');rc.appendChild(ul);
@@ -465,7 +617,7 @@ function closePause(){paused=false;$('pause').hidden=true;last=performance.now()
 
 /* ---------- slider input ---------- */
 let dragging=false;
-function fromX(cx){const r=$('trk').getBoundingClientRect();const fr=Math.max(0,Math.min(1,(cx-r.left)/r.width));return nearest(F.lo+fr*SPAN)}
+function fromX(cx){const r=$('trk').getBoundingClientRect();const fr=Math.max(0,Math.min(1,(cx-r.left)/r.width));return nearest(DLO+fr*SPAN)}
 function step(d){if(!live()||R.ph!=='g'||paused)return;first();setIdx(CI+d)}
 let holdT=null,holdI=null,held=false;
 function stopHold(){clearTimeout(holdT);clearInterval(holdI);holdT=holdI=null}
@@ -521,5 +673,5 @@ function loop(t){const dt=Math.min(0.25,Math.max(0,(t-last)/1000));last=t;
     state:()=>({view,R:R?JSON.parse(JSON.stringify(R)):null,save:JSON.parse(JSON.stringify(save)),Q,live:live(),endRev:endRev(),lad:LAD.length,ci:CI}),
     answer:()=>F&&F.a, guess(v){if(!live()||R.ph!=='g')return;first();setIdx(nearest(L10(v)),true)},
     lock:()=>lockIn(), next:()=>nextQ(), shareText:()=>shown&&shareText(shown), gate:GATE,
-    zone, fmt, fmtA, off:offText, ladder:(lo,i)=>ladder(lo,i), packs:()=>Object.keys(PACKS)};
+    zone, fmt, fmtA, off:offText, ladder:(lo,i)=>ladder(lo,i), packs:()=>Object.keys(PACKS), units:dnUnits, setUnits, shownGuess:()=>LAD[CI], iu:()=>IU};
 })();

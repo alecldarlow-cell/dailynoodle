@@ -368,3 +368,22 @@
   box-shadow:var(--side-pad) 0 0 var(--canvas),calc(-1 * var(--side-pad)) 0 0 var(--canvas)}
 .has-tabs .pager{padding-bottom:6px}
 .has-tabs .ar-bar{padding:6px 0}
+
+/* From the Lab (17 Nov 2026, Alec: the app's Today panel on the website): the running trials as
+   compact rows in the Lab pink, under the day's set on Puzzles. */
+.labpanel{margin:24px 0 8px;padding:16px 16px 6px;border-radius:18px;background:var(--lab-soft)}
+.labpanel[hidden]{display:none}
+.lp-h{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.01em;color:var(--ink);margin:0}
+.lp-mark{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--lab);color:#fff}
+.lp-line{font-size:13px;line-height:1.4;color:var(--muted);margin:6px 0 4px}
+.lp-rows{list-style:none;margin:0;padding:0}
+.lp-rows>li+li{border-top:1px solid color-mix(in srgb,var(--lab) 22%,transparent)}
+.lp-row{display:flex;align-items:center;gap:12px;min-height:44px;padding:10px 0;color:inherit;text-decoration:none}
+.lp-tile{width:48px;height:48px;border-radius:8px;flex:none;display:block}
+.lp-body{flex:1;min-width:0;display:flex;flex-direction:column}
+.lp-name{font-weight:700;font-size:15px;color:var(--ink)}
+.lp-desc{font-size:12.5px;line-height:1.35;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lp-call{font-weight:700;font-size:13px;color:var(--lab);white-space:nowrap}
+.lp-call.done{color:var(--puzzles)}
+.lp-chev{color:var(--lab);display:inline-flex}
+.lp-row:hover .lp-name{text-decoration:underline}

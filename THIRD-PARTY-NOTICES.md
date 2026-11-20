@@ -31,6 +31,10 @@ Test-only: `tools/tests/fixtures/fonts/test-symbols.woff`, a DejaVu Sans subset 
 test dependencies in `package.json` (Fontsource fonts, OFL-1.1; axe-core, MPL-2.0; Playwright, Apache-2.0)
 are used for testing only and are not published on the site.
 
+## Store badge
+`assets/google-play-badge.png`: Google's "Get it on Google Play" badge, used unaltered under Google's badge guidelines
+(https://play.google.com/intl/en_gb/badges/). Google Play and the Google Play logo are trademarks of Google LLC.
+
 ## The app
 The Daily Noodle app's notices, including every open-source package it is built from:
 https://github.com/alecldarlow-cell/Daily-noodle-app/blob/main/THIRD-PARTY-NOTICES.md
