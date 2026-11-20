@@ -1,0 +1,487 @@
+# Cryptic batch 2 (15 Nov 2026): the rest of year one. Format: tools/cryptic-import.js.
+# Every clue is original, written for the Noodle. Each was solved cold by an independent checker before it joined the bank.
+
+# ---- anagrams ----
+TEAM | {Side} with [fresh] <meat> | anagram
+MEAL | <Male> [cooked] {dinner} | anagram
+STALE | {No longer fresh} <tales> [retold] | anagram
+BREAD | <Beard> [tangled] in {loaf} | anagram
+DREAM | {Fantasy} of being <armed> [curiously] | anagram
+ANGEL | <Angle> [adjusted] for {heavenly messenger} | anagram
+DANGER | {Risk} in [wild] <garden> | anagram
+FOREST | <Softer> [damaged] {woodland} | anagram
+STREAM | {Brook} [troubled] <master> | anagram
+INSECT | <Nicest> [dancing] {bug} | anagram
+SISTER | <Resist> [upset] {sibling} | anagram
+METEOR | <Remote> [crashing] {space rock} | anagram
+BATTLE | {Fight} with [crushed] <tablet> | anagram
+STRIPE | <Priest> [reformed] in {band} | anagram
+SEARCH | {Hunt} in [ruined] <arches> | anagram
+PRAISE | <Aspire> [strangely] to {acclaim} | anagram
+DIRECT | [Shuffled] <credit> is {straight} | anagram
+IGNORE | {Overlook} [unsettled] <region> | anagram
+RESIDE | {Live} with [unruly] <desire> | anagram
+RECALL | {Remember} [wrecked] <cellar> | anagram
+DEPART | {Leave} <parted> [awkwardly] | anagram
+AUCTION | <Caution> [disrupted] {sale} | anagram
+TOPICAL | {Current} <optical> [distortion] | anagram
+POINTER | {Tip} for [cooking] <protein> | anagram
+SERPENT | {Snake} is [unusual] <present> | anagram
+TRAINER | {Coach} in [rough] <terrain> | anagram
+SLENDER | {Slim} <lenders> [in trouble] | anagram
+ELBOW | {Joint} [slipped] <below> | anagram
+SHELF | {Ledge} with <flesh> [crawling] | anagram
+STAGE | <Gates> [swinging] by {platform} | anagram
+WRONG | <Grown> [twisted] and {mistaken} | anagram
+HORSE | {Mount} [rocky] <shore> | anagram
+SOLVE | <Loves> [unusually] to {work out} | anagram
+NERVE | {Courage} <never> [shaken] | anagram
+STONE | <Notes> [scattered] by {rock} | anagram
+TOUGH | <Ought> [to change] being {hard} | anagram
+ROUTE | <Outer> [rebuilt] {road} | anagram
+PLANE | <Panel> [replaced] in {jet} | anagram
+SHAPE | {Form} of [altered] <phase> | anagram
+SPORT | <Ports> [redeveloped] for {game} | anagram
+QUIET | <Quite> [strangely] {silent} | anagram
+VERSE | <Serve> [mixed] {poetry} | anagram
+STEAK | <Takes> [cooked] {beef} | anagram
+SWEAR | {Curse} <wears> [off] | anagram
+SWORD | <Words> [twisted] for {weapon} | anagram
+WORTH | {Value} of [wild] <throw> | anagram
+TRIED | <Tired> [out], {attempted} | anagram
+TOWER | <Wrote> [off] {tall building} | anagram
+TRAIL | {Path} of [messy] <trial> | anagram
+WEIRD | <Wider> [spread] is {strange} | anagram
+DIARY | <Dairy> [changed] {daily record} | anagram
+CAFE | <Face> [off] in {coffee shop} | anagram
+INCH | <Chin> [broken], {move slowly} | anagram
+ICON | <Coin> [tossed] for {idol} | anagram
+ONCE | <Cone> [crushed] {one time} | anagram
+EARN | <Near> [collapse], {make money} | anagram
+FLEE | <Feel> [bad] and {run away} | anagram
+LIFE | <File> [corrupted] in {biography} | anagram
+HEAT | <Hate> [terrible] {warmth} | anagram
+HIRE | <Heir> [struggling] to {employ} | anagram
+HINT | {Clue}: <thin>, [disguised] | anagram
+KEEN | <Knee> [twisted], {eager} | anagram
+LAKE | <Leak> [fixed] by {loch} | anagram
+LAMP | <Palm> [swaying] by {light} | anagram
+LANE | <Lean> [badly] in {alley} | anagram
+SALT | <Last> [shake] of {seasoning} | anagram
+TALE | <Late> [changes] to {story} | anagram
+PLEA | <Pale>, [shaky] {appeal} | anagram
+SLIP | <Lips> [quivering], {mistake} | anagram
+SOIL | <Oils> [spilt], {dirt} | anagram
+SNOW | <Owns> [drifting] {white stuff} | anagram
+RIOT | {Disorder} from <trio> [playing] | anagram
+SHUT | <Thus> [rudely] {closed} | anagram
+SING | <Sign> [off] and {carol} | anagram
+SINK | <Skin> [damaged] in {basin} | anagram
+SURE | <User> [error]? {Certain} | anagram
+BOWL | <Blow> [out] {dish} | anagram
+DEAR | <Read> [novel], {expensive} | anagram
+LEAD | <Deal> [reworked] with {metal} | anagram
+RAGE | <Gear> [crunching] in {fury} | anagram
+CAST | <Cats> [performing] with {company of actors} | anagram
+SAGE | <Ages> [stewing] {herb} | anagram
+BUSY | <Buys> [frantically], {occupied} | anagram
+
+# ---- hidden words ----
+EARTH | {Planet} [in] <clear thought> | hidden
+HEART | {Core} [part of] <the artwork> | hidden
+OTTER | {River swimmer} [spotted in] <hot terrain> | hidden
+CANOE | {Boat} [caught in] <volcano eruption> | hidden
+MANGO | <Human goes> [carrying] {tropical fruit} | hidden
+PEARL | <Appear later> [holding] {gem} | hidden
+LEARN | {Master} [part of] <unclear note> | hidden
+ANGER | {Rage} [found in] <orange rind> | hidden
+TRAIN | {Practise} [in] <extra innings> | hidden
+TEACH | <State achieves> [in part] to {educate} | hidden
+NORTH | {Direction} [in] <manor theatre> | hidden
+MOTEL | {Roadside inn} [in] <remote location> | hidden
+HONEY | [Some] <phone you> {sweetheart} | hidden
+OPERA | {Musical work} [in] <proper attire> | hidden
+DANCE | {Ball} [in] <attendance> | hidden
+MOUSE | {Rodent} [in] <famous exhibit> | hidden
+CAMEL | {Desert animal} [partly] <became lost> | hidden
+SEAL | {Marine mammal} [in] <house alarm> | hidden
+TUNA | [Somewhat] <fortunate> {fish} | hidden
+CRAB | {Shellfish} [in] <Scrabble> | hidden
+LAMB | {Meat} [in] <clam bake> | hidden
+RICE | {Grain} [in] <summer ice> | hidden
+PASTA | {Italian food} [in] <past ages> | hidden
+CREAM | {Best} [part of] <scream> | hidden
+ACTOR | {Player} [in] <factory> | hidden
+ARTIST | <Start is tough> [in part] for {painter} | hidden
+ANKLE | {Joint} [in] <bank lending> | hidden
+CHEST | {Trunk} [in] <orchestra> | hidden
+SPINE | <Wasp in ear> [reveals] {backbone} | hidden
+CHESS | {Board game} [in] <duchess> | hidden
+POKER | {Card game} [in] <bespoke range> | hidden
+DRUM | {Beat} [in] <hard rumba> | hidden
+HARP | {Instrument} [in] <rich arpeggio> | hidden
+EMAIL | {Message} [from] <system ailing> | hidden
+ERASE | {Delete} [part of] <opera season> | hidden
+EVENT | {Occasion} [in] <seven times> | hidden
+ENTER | {Go in} [during] <current era> | hidden
+UNDER | [Some] <thunder> {below} | hidden
+OVEN | {Cooker} [in] <love nest> | hidden
+IRON | {Metal} [in] <environment> | hidden
+ECHO | {Repeat} [part of] <the choir> | hidden
+IDEA | {Notion} [in] <hideaway> | hidden
+EDGE | {Border} [in] <hedgerow> | hidden
+OPEN | {Frank} [in] <rope necklace> | hidden
+EXIT | {Way out} [in] <complex item> | hidden
+ALSO | {As well}, [some] <petals open> | hidden
+REST | {Relax} [in] <forest> | hidden
+HERO | {Champion} [in] <the rodeo> | hidden
+COAT | {Jacket} [in] <disco attire> | hidden
+BOOT | {Footwear} [in] <taboo topic> | hidden
+SCARF | {Neckwear} [in] <Oscar fever> | hidden
+NOISE | <Piano is easy> [in part] making {din} | hidden
+STABLE | {Horse house} [held by] <most able> | hidden
+HAMLET | {Village} [in] <sham letter> | hidden
+THREAD | <With readers> [holding] {strand} | hidden
+PLANET | {World} [in] <plane ticket> | hidden
+COMET | {Space traveller} [in] <welcome tour> | hidden
+RAIN | {Shower} [in] <brainstorm> | hidden
+HAIL | {Greet} [some] <with ailments> | hidden
+MIST | {Fog} [in] <chemistry> | hidden
+RAVEN | {Black bird} [in] <brave night> | hidden
+SWAN | {Bird} <was wandering> [in part] | hidden
+DOVE | {Peace symbol} [in] <torpedo vessel> | hidden
+CROW | {Bird} [in] <microwave> | hidden
+WREN | {Small bird} [in] <new rental> | hidden
+IRIS | {Flower} [held by] <Sir Isaac> | hidden
+HILL | [Some] <chilly> {high ground} | hidden
+SHIP | {Vessel} [in] <courtship> | hidden
+MAST | {Pole} [in] <Christmas tree> | hidden
+SPELL | {Charm} [in] <gospel lyrics> | hidden
+DEMON | {Fiend} [in] <demonstration> | hidden
+OGRE | {Monster} [in] <progress> | hidden
+TROLL | {Online pest} [in] <patrol leader> | hidden
+ROBOT | {Android} [in] <zero bother> | hidden
+ALIEN | <Portal I entered> [conceals] {stranger} | hidden
+PETROL | {Fuel} [in] <carpet roll> | hidden
+ROAD | {Street} [in] <broadsheet> | hidden
+ATTIC | {Loft} [in] <lattice> | hidden
+SOAP | <Also appears> [in part] as {TV drama} | hidden
+KING | {Ruler} [in] <parking> | hidden
+LION | {Big cat} [in] <medallion> | hidden
+
+# ---- charades ----
+SATIN | (Sat) (in) {fabric} | charade
+INFORM | {Tell} (in) (class=FORM) | charade
+INFIRM | {Frail} (in) (company=FIRM) | charade
+INDEED | {Certainly} (in) (act=DEED) | charade
+INJURY | {Harm} (in) (panel=JURY) | charade
+VILLAIN | (Holiday home=VILLA) (popular=IN) with {baddie} | charade
+LESSON | (Not so much=LESS) (on) in {class} | charade
+PERSON | (Each=PER) (boy=SON) is {someone} | charade
+SEASON | (Ocean=SEA) (child=SON) to {add salt and pepper} | charade
+COTTON | (Baby bed=COT) (heavy weight=TON) for {natural fibre} | charade
+BATON | (Club=BAT) (on) {conductor's stick} | charade
+WAGON | (Joker=WAG) (on) {cart} | charade
+DRAGON | (Pull=DRAG) (on) {fire breather} | charade
+SURGEON | (Rush=SURGE) (on) {doctor} | charade
+COMBAT | (Groom=COMB) (at) {fight} | charade
+HABITAT | (Custom=HABIT) (at) {home} | charade
+ATOM | (A) (cat=TOM) is {tiny particle} | charade
+TOMATO | (Cat=TOM) (at) (nothing=O) for {salad fruit} | charade
+VETO | (Animal doctor=VET) with (nothing=O) to {block} | charade
+ONSET | {Start} (on) (film location=SET) | charade
+SOLID | (Very=SO) (top=LID) {firm} | charade
+NOVICE | (No) (bad habit=VICE) for {beginner} | charade
+NOMAD | (No) (crazy=MAD) {wanderer} | charade
+MAYBE | (Month=MAY) to (exist=BE), {perhaps} | charade
+BELOW | (Be) (sad=LOW) {underneath} | charade
+BETRAY | (Wager=BET) (beam=RAY) to {double-cross} | charade
+DONATE | (Mafia boss=DON) (ate) to {give} | charade
+PARDON | {Forgive} (average=PAR) (professor=DON) | charade
+CARROT | (Vehicle=CAR) (decay=ROT) for {vegetable} | charade
+CARAVAN | (Motor=CAR) (a) (truck=VAN) is {mobile home} | charade
+TANGO | (Bronze=TAN) (turn=GO) in {dance} | charade
+TARGET | (Pitch=TAR), (obtain=GET) {goal} | charade
+FORBID | (In favour of=FOR) (offer=BID)? {Ban} | charade
+FORTUNE | {Luck} (for) (melody=TUNE) | charade
+PASSPORT | (Hand over=PASS) (wine=PORT) for {travel document} | charade
+MUSHROOM | (Pulp=MUSH) (space=ROOM) for {fungus} | charade
+PUMPKIN | (Shoe=PUMP) (family=KIN) for {Halloween vegetable} | charade
+SPARROW | (Box=SPAR), (argue=ROW) with {bird} | charade
+SHAMROCK | (Fake=SHAM) (stone=ROCK) is {Irish emblem} | charade
+JUSTICE | (Only=JUST) (ice) for {judge} | charade
+PUPPET | (Young dog=PUP) (favourite=PET) is {doll on strings} | charade
+PANTHER | (Gasp=PANT)! (Her) {big cat} | charade
+WASHER | (Was) (her) {laundry machine} | charade
+FATHER | (Plump=FAT) (her) {dad} | charade
+EXPLAIN | (Former partner=EX) (ordinary=PLAIN) to {make clear} | charade
+RESTRAIN | (Relax=REST) (shower=RAIN) to {hold back} | charade
+DISCOVER | (Record=DISC) (finished=OVER), {find} | charade
+CONTEST | (Trick=CON) (exam=TEST) in {competition} | charade
+MENACE | (Chaps=MEN) with (top card=ACE) {threat} | charade
+PEASANT | (Vegetables=PEAS) (insect=ANT) for {farm labourer} | charade
+MESSAGE | (Muddle=MESS) (a long time=AGE) for {note} | charade
+HOSTAGE | (Presenter=HOST) (grow old=AGE) as {captive} | charade
+LAPTOP | (Circuit=LAP) (best=TOP) for {computer} | charade
+UPROAR | (Out of bed=UP) (lion's cry=ROAR) in {commotion} | charade
+ASKING | (Like=AS) (monarch=KING) {requesting} | charade
+DOMAIN | (Party=DO) (chief=MAIN) {territory} | charade
+PALACE | (Friend=PAL) (expert=ACE) in {royal home} | charade
+BEGIN | (Plead=BEG) (in) to {commence} | charade
+OFTEN | (Of) (ten), {frequently} | charade
+
+# ---- containers ----
+HEATER | (Dine=EAT) [in] (her) {radiator} | container
+PIRATE | (Rodent=RAT) [in] (pastry dish=PIE) is {sea robber} | container
+PILLAR | (Sick=ILL) [in] (standard=PAR) {column} | container
+RELIEF | {Comfort} from (fib=LIE) [in] (match official=REF) | container
+COMPETE | (Turn up=COME) [holding] (favourite=PET) to {take part} | container
+COURAGE | (Pen=CAGE) [holds] (our) {bravery} | container
+ROUTINE | (Road=ROUTE) [taking] (in) {regular procedure} | container
+SUPPORT | (Up) [in] (game=SPORT)? {Back} | container
+SOAKING | (Carol=SING) [about] (tree=OAK), {drenched} | container
+WINDING | (Racket=DIN) [in] (part of hospital=WING), {twisting} | container
+GAMES | (Chat=GAS) [about] (me) and {sports} | container
+HOUSE | (Garden tool=HOE) [around] (us) for {dwelling} | container
+MONEY | (One) [in] (my) {cash} | container
+WHERE | (We) [hold] (her) {in which place} | container
+BORED | (Or) [in] (bed), {fed up} | container
+CHEAP | (He) [in] (hat=CAP) is {inexpensive} | container
+SHEET | (He) [in] (set) of {bed linen} | container
+BONUS | (On) [boarding] (coach=BUS) for {extra payment} | container
+FORGOT | (Leave=GO) [inside] (castle=FORT), {failed to remember} | container
+HONOUR | (On) [in] (sixty minutes=HOUR), {respect} | container
+BASKET | (Wager=BET) [about] (request=ASK) for {hamper} | container
+FINITE | (Penalty=FINE) [includes] (it), {limited} | container
+RELATED | (Tardy=LATE) [in] (crimson=RED), {connected} | container
+PLASTER | (Each=PER) [keeps] (final=LAST) {wall coating} | container
+PRAY | (Wages=PAY) [include] (right=R) to {worship} | container
+TRAY | (Attempt=TRY) [to hold] (a) {platter} | container
+BLEND | (Left=L) [in] (bend) to {mix} | container
+CRAVE | (Right=R) [in] (hollow=CAVE), {long for} | container
+GRAVE | (Donated=GAVE) [about] (right=R), {serious} | container
+COUSIN | (Money=COIN) [about] (us) for {relative} | container
+MOAT | (Nothing=O) [in] (rug=MAT)? {Castle ditch} | container
+THORN | (Ripped=TORN) [around] (hot=H) {spike} | container
+STAIN | (Wrongdoing=SIN) [about] (thanks=TA) gets {mark} | container
+FRAME | (Right=R) [in] (celebrity=FAME) {picture border} | container
+WAITER | (I) [in] (water) as {restaurant worker} | container
+SHALLOW | (Plant seed=SOW) [around] (corridor=HALL), {not deep} | container
+SUSPEND | (Pay out=SPEND) [about] (us) to {hang} | container
+
+# ---- reversals ----
+STAB | <Bats> [returned] to {wound} | reversal
+DEER | <Reed> [blown back] by {stag} | reversal
+LAID | <Dial> [turned] and {put down} | reversal
+DOOM | <Mood> [swings back] to {ruin} | reversal
+LIVE | <Evil> [returns] to {dwell} | reversal
+WOLF | <Flow> [reversed] by {wild animal} | reversal
+PEEK | <Keep> [back] {quick look} | reversal
+RAIL | <Liar> [comes back] to {complain} | reversal
+POOL | <Loop> [back] to {swimming place} | reversal
+SPAM | <Maps> [returned] as {junk mail} | reversal
+STUN | <Nuts> [thrown back] to {shock} | reversal
+TRAP | <Part> [reversed] in {snare} | reversal
+SNIP | <Pins> [pushed back] to {cut} | reversal
+STAR | <Rats> [return] with {celebrity} | reversal
+STRAP | <Parts> [sent back] with {leather band} | reversal
+SMART | <Trams> [reverse], {clever} | reversal
+DELIVER | <Reviled>, [turning] to {hand over} | reversal
+REWARD | <Drawer> [pushed back] for {prize} | reversal
+AVID | <Diva> [returns], {keen} | reversal
+DRAB | <Bard> [goes back] to {dull} | reversal
+GARB | <Brag> [back] in {clothing} | reversal
+SMUG | <Gums> [receding], {self-satisfied} | reversal
+MOOR | <Room> [reversed] by {heath} | reversal
+EMIT | <Time> [to go back] and {give out} | reversal
+TANG | <Gnat> [flies back] with {sharp taste} | reversal
+SNUB | <Buns> [sent back], {rebuff} | reversal
+SNAP | <Pans> [returned] with {photo} | reversal
+EDIT | <Tide> [turning] to {change text} | reversal
+TOOL | <Loot> [taken back] for {implement} | reversal
+SLEEP | <Peels> [back] to {doze} | reversal
+SPOOL | <Loops> [wound back] for {reel} | reversal
+TIMER | <Remit> [returned] with {clock} | reversal
+SWAP | <Paws> [back] to {exchange} | reversal
+
+# ---- sound-alikes ----
+WAIT | {Hang on} for (heaviness=WEIGHT), [we hear] | sounds
+KNIGHT | {Chess piece} in (darkness=NIGHT), [by the sound of it] | sounds
+WRAP | (Knock=RAP), [we hear], to {cover} | sounds
+KNOT | {Tie} (not), [they say] | sounds
+HOUR | {Time} of (our) [broadcast] | sounds
+FLOUR | (Bloom=FLOWER), [we hear], for {baking ingredient} | sounds
+GUEST | {Visitor} (estimated=GUESSED), [reportedly] | sounds
+MISSED | (Haze=MIST), [reportedly], {skipped} | sounds
+PACT | {Deal} (crammed=PACKED), [we hear] | sounds
+ALOUD | {So all can hear}, (permitted=ALLOWED) [reportedly] | sounds
+QUEUE | {Line} (prompt=CUE), [we hear] | sounds
+PLAICE | (Spot=PLACE), [they say], {a fish} | sounds
+CHORD | {Notes together} from (string=CORD), [we hear] | sounds
+BRUISE | (Makes tea=BREWS), [we hear], getting {injury} | sounds
+CRUISE | {Sea holiday} for (teams=CREWS), [we hear] | sounds
+PHRASE | {Expression} (wears thin=FRAYS), [they say] | sounds
+MAIZE | {Corn} (labyrinth=MAZE), [reportedly] | sounds
+WHALE | {Sea giant} to (cry=WAIL) [out loud] | sounds
+WHINE | {Complain} of (red or white=WINE), [we hear] | sounds
+SIGHED | (Team=SIDE), [we hear], {breathed out sadly} | sounds
+ROWED | (Street=ROAD), [we hear], {used oars} | sounds
+TOAD | {Pond dweller} (pulled=TOWED), [we hear] | sounds
+BOLD | {Brave}, (sent down a ball=BOWLED), [we hear] | sounds
+FIND | {Discover} (penalised=FINED), [reportedly] | sounds
+BANNED | (Group=BAND), [we hear], {forbidden} | sounds
+TACKS | {Small nails} (duty=TAX), [we hear] | sounds
+TEASE | (Hot drinks=TEAS), [we hear], to {mock} | sounds
+FREEZE | (Releases=FREES), [we hear], to {turn to ice} | sounds
+SEIZE | (Oceans=SEAS), [we hear], to {grab} | sounds
+CHOOSE | (Munches=CHEWS), [we hear], to {pick} | sounds
+BERRY | (Put underground=BURY), [we hear], {small fruit} | sounds
+NONE | (Sister=NUN), [we hear], has {not any} | sounds
+SCENE | (Spotted=SEEN), [we hear], in {part of play} | sounds
+SIGHT | (Location=SITE), [we hear], is {vision} | sounds
+NOSE | {Smeller} (understands=KNOWS), [we hear] | sounds
+THREW | {Tossed} (finished=THROUGH), [we hear] | sounds
+BALD | {Hairless}, (cried=BAWLED), [we hear] | sounds
+AISLE | {Passage} to (island=ISLE), [we hear] | sounds
+KERNEL | (Officer=COLONEL), [we hear], is {nut centre} | sounds
+MANOR | {Big house} (style=MANNER), [we hear] | sounds
+PROFIT | {Gain} from (seer=PROPHET), [we hear] | sounds
+RAISE | (Beams=RAYS), [we hear], to {lift} | sounds
+CLAUSE | (Talons=CLAWS), [we hear], in {part of contract} | sounds
+TAUGHT | {Schooled}, (tight=TAUT), [we hear] | sounds
+KNEW | {Was aware} of (fresh=NEW), [we hear] | sounds
+WRING | (Phone=RING), [we hear], to {squeeze} | sounds
+WRITE | (Ceremony=RITE), [we hear], to {put pen to paper} | sounds
+HYMN | {Church song} for (that man=HIM), [we hear] | sounds
+THYME | (Clock reading=TIME), [we hear], for {herb} | sounds
+PAST | {History} (went by=PASSED), [we hear] | sounds
+GORILLA | {Ape} (rebel fighter=GUERRILLA), [we hear] | sounds
+BUOY | (Lad=BOY), [we hear], is {sea marker} | sounds
+QUAY | (Opener=KEY), [we hear], for {dock} | sounds
+CASH | {Money} in (hidden store=CACHE), [we hear] | sounds
+LINKS | (Wild cat=LYNX), [we hear], is {golf course} | sounds
+
+# ---- double definitions ----
+FAIR | {Just} (blonde) | double
+FINE | {Excellent} (penalty) | double
+KIND | {Caring} (sort) | double
+LIGHT | {Lamp} (not heavy) | double
+MINE | {Pit} (belonging to me) | double
+POUND | {Beat} (British money) | double
+RING | {Phone} (band) | double
+SPRING | {Leap} (season) | double
+WATCH | {Observe} (timepiece) | double
+WELL | {Healthy} (water source) | double
+BOARD | {Get on} (plank) | double
+BOOK | {Reserve} (novel) | double
+CHANGE | {Alter} (coins) | double
+COACH | {Train} (bus) | double
+FIRE | {Sack} (blaze) | double
+FIRM | {Solid} (company) | double
+HIDE | {Conceal} (skin) | double
+ORDER | {Command} (tidiness) | double
+PLAIN | {Simple} (flat land) | double
+SECOND | {Moment} (after first) | double
+STRIKE | {Hit} (walkout) | double
+TOAST | {Drink to} (grilled bread) | double
+TRUNK | {Elephant's nose} in (large case) | double
+REFUSE | {Decline} (rubbish) | double
+DESERT | {Abandon} (dry land) | double
+MINUTE | {Tiny} (sixty seconds) | double
+CURRENT | {Present} (flow) | double
+ADDRESS | {Speech} (where you live) | double
+OBJECT | {Protest} (thing) | double
+ENTRANCE | {Delight} (way in) | double
+PUPIL | {Eye opening} for (student) | double
+TEMPLE | {Place of worship} by (side of forehead) | double
+DATE | {Fruit} for (romantic meeting) | double
+
+# ---- deletions ----
+RIDGE | <Bridge> [missing front] gives {crest} | deletion
+HAIR | [Leaderless] <chair> needs {locks} | deletion
+RINK | <Drink> [loses head] in {ice arena} | deletion
+RIGHT | <Bright>, [not initially] {correct} | deletion
+LEASE | <Please> [don't start] to {rent} | deletion
+RUMBLE | <Grumble> [not at first] {distant thunder} | deletion
+HEEL | <Wheel> [loses front] {part of shoe} | deletion
+LINK | <Blink> [and miss the start] of {connection} | deletion
+MAZE | (Astonish=AMAZE), [losing head], in {labyrinth} | deletion
+ROUND | <Ground> [not starting] {circular} | deletion
+OVER | <Cover> [not starting]? {Finished} | deletion
+EACH | <Beach> [with no front] for {every one} | deletion
+EAST | <Feast> [without starter] in {the Orient} | deletion
+LAST | <Blast>! [First off], {final} | deletion
+LOUD | <Cloud>, [first off], is {noisy} | deletion
+HOST | [Headless] <ghost> is {presenter} | deletion
+CORE | <Score> [loses opener] {centre} | deletion
+UTTER | <Butter> [not starting] to {speak} | deletion
+INNER | <Winner> [loses lead] {inside} | deletion
+AWFUL | <Lawful>? [Not at first], {terrible} | deletion
+REACH | <Preach> [not initially] to {arrive at} | deletion
+LAND | (Dull=BLAND), [first off], to {touch down} | deletion
+PAIN | <Paint> [not finished]? {Ache} | deletion
+PLAN | [Unfinished] <plane> {design} | deletion
+PART | <Party> [cut short] for {role} | deletion
+CAME | [Tailless] <camel> {arrived} | deletion
+BEAR | <Beard> [trimmed] for {grizzly} | deletion
+BRAND | <Brandy> [not finished], {make} | deletion
+PLUM | [Mostly] <plump> {fruit} | deletion
+TWIN | <Twine> [cut short] for {double} | deletion
+CELL | [Endless] <cello> in {prison room} | deletion
+WAGE | (Bet=WAGER) [cut] for {pay} | deletion
+NICE | [Heartless] <niece> is {pleasant} | deletion
+BEST | [Heartless] <beast> is {top} | deletion
+COST | (Shore=COAST) [loses heart], {price} | deletion
+FIST | <First> [loses heart], {clenched hand} | deletion
+COLD | <Could> [lose heart], {feeling chilly} | deletion
+DOOR | <Donor> [has no heart], {way in} | deletion
+ROOT | [Heartless] <robot> is {origin} | deletion
+TIED | <Tired>, [lacking heart], {drawn} | deletion
+
+# ---- first letters ----
+PIANO | {Instrument} [starts to] <play in a new orchestra> | acrostic
+STOP | {Halt}! <Some trains only pass> [at first] | acrostic
+EASY | {Simple}: <every answer seems yours> [initially] | acrostic
+HOME | {Residence} <he owns, mostly empty> [at first] | acrostic
+SOUP | [Starters of] <salmon, olives, unusual pasta>: {first course} | acrostic
+TEST | {Exam} [starts with] <teachers explaining some topics> | acrostic
+WASP | <We all scream, panicking> [at first]: {stinger} | acrostic
+FROG | {Pond hopper} <found resting on grass> [at first] | acrostic
+NEWS | {Bulletin} from <north, east, west, south> [at first] | acrostic
+GOAT | <Grazing on a tussock> [at first], {billy perhaps} | acrostic
+MOON | {Satellite} <moves overhead on nights> [at first] | acrostic
+LOVE | <Lots of valentines exchanged> [at first] in {romance} | acrostic
+KISS | [Leaders of] <Kent's international swimming squad> {peck} | acrostic
+BABY | {Infant} <born at Bristol yesterday> [initially] | acrostic
+QUIZ | <Questions unsettle intelligent zookeepers> [at first] in {pub contest} | acrostic
+CLUE | <Cryptic lines usually entertain> [at first]: {hint} | acrostic
+NOODLE | <No one orders dinner like Emma> [initially]: {pasta strand} | acrostic
+DAILY | <Does anyone in London yawn> [at first]? {Every day} | acrostic
+WORD | <Writers often rewrite drafts> [at first], {term} | acrostic
+READ | {Study} <reports, essays and diaries> [at first] | acrostic
+MENU | [Heads of] <most eateries need updating> {list of dishes} | acrostic
+DIET | <Doctor insists, eat tomatoes> [for starters] in {slimming plan} | acrostic
+MILK | <Mum is leaving kitchen> [at first] with {dairy drink} | acrostic
+FISH | <Fried in sizzling heat> [at first], {cod perhaps} | acrostic
+CHIPS | <Cooked hot in pan, salted> [at first]: {fries} | acrostic
+LUNCH | <Let us now consume ham> [at first] for {midday meal} | acrostic
+GOAL | <Great orchestras applaud loudly> [at first], {aim} | acrostic
+GOLF | {Sport} <game on long fairways> [at first] | acrostic
+PETS | <Puppies, even tiny snakes> [at first] are {household animals} | acrostic
+HARE | <Hopping around rural England> [at first], {fast runner} | acrostic
+TREE | <The roots extend everywhere> [at first] for {oak, say} | acrostic
+ROSE | <Red or scarlet, each> [at first] is {a flower} | acrostic
+WIND | <Weather is now dreadful> [at first]: {gale} | acrostic
+ARMY | <All ranks march yearly> [at first] in {military force} | acrostic
+BAND | [Leaders of] <brass and noisy drums> in {music group} | acrostic
+SONG | <Singers often need guitars> [at first] for {tune} | acrostic
+FILM | {Movie} <fans in line mostly> [at first] | acrostic
+HOPE | <Happy outcomes please everyone> [at first]: {optimism} | acrostic
+CALM | <Cats always like milk> [at first], {peaceful} | acrostic
+JOKE | <Jesters often keep entertaining> [at first] with {gag} | acrostic
+
+# ---- alternate letters ----
+POET | <Protect>, [regularly], {a writer of verse} | alternate
+TITLE | <Twist clue> [oddly] for {heading} | alternate
+SUPER | <Sour poetry>? [Oddly] {great} | alternate
+SALAD | <Shall raid> [oddly] for {leafy dish} | alternate

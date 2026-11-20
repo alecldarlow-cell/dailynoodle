@@ -128,7 +128,7 @@
   }
 
   var PUZZLE_TYPES = [['mini','Mini'],['doku','Doku'],['sweep','Sweep'],['path','Path'],
-                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt'],['redact','Redact'],['tumbler','Tumbler']];
+                      ['link','Link'],['tangle','Tangle'],['borders','Borders'],['reckon','Reckon'],['tally','Tally'],['tilt','Tilt'],['redact','Redact'],['tumbler','Tumbler'],['cryptic','Cryptic']];
   var TYPE_LABEL = {}, TYPE_RANK = {};
   PUZZLE_TYPES.forEach(function(t, i){ TYPE_LABEL[t[0]] = t[1]; TYPE_RANK[t[1]] = i; });
   function puzzleType(it){
@@ -442,11 +442,15 @@
      The running Lab trials, each with its newest puzzle (today's, or yesterday's before today's
      build): a trial runs while its newest released puzzle is today's or yesterday's, as the app
      (Daily-noodle-app labTrials). Shown under the day's set on Puzzles and leading the Lab page. */
-  var LAB_TYPES = ['tilt', 'redact', 'tumbler'];
+  // Every Lab trial type, running or retired (their older days stay hidden on the Lab page). Redact was retired on
+  // 20 Nov 2026 (Alec, after the day-6 read-out: half its starters never finished) and Cryptic took its slot from 21 Nov.
+  var LAB_TYPES = ['tilt', 'redact', 'tumbler', 'cryptic'];
+  var LAB_RETIRED = { redact: '2026-11-21' }; // type → the first London day it is no longer listed
   var LAB_LINE = 'New puzzles on trial, here for a few weeks. Vote after you play: your votes help decide which become permanent dailies.';
   function labCurrent(){
     var today = londonDay(), y = window.dnCore.dayBefore(today), out = [];
     LAB_TYPES.forEach(function(type){
+      if(LAB_RETIRED[type] && today >= LAB_RETIRED[type]) return;
       var newest = null;
       state.items.forEach(function(it){
         if(it.kind !== 'puzzle' || it.type !== type || !inLab(it) || !it.date || it.date > today) return;
@@ -585,6 +589,8 @@
         t = shownClock(r.t) || clock(r.s); return t ? 'Found in ' + t : '';
       case 'redact':
         t = shownClock(r.t) || clock(r.s); return t ? 'Solved in ' + t : '';
+      case 'cryptic':   // Lab, 12 Nov 2026: the time, and the hints used (the share's two numbers)
+        t = shownClock(r.t) || clock(r.s); return t ? 'Solved in ' + t + (num(r.h) ? (r.h === 0 ? ', no hints' : ', ' + r.h + ' hint' + (r.h === 1 ? '' : 's')) : '') : '';
       case 'tilt':
         t = shownClock(r.t) || clock(r.s); return t ? 'Out in ' + t : '';
     }
@@ -600,7 +606,7 @@
     if(r) return { done:true, lost: typeof r === 'object' && (r.o === 'loss' || r.o === 'gave'), text: (typeof r === 'object' && resultText(it.type, r)) || 'Played' };
     var d = s.days && s.days[it.id];
     if(it.type === 'tangle' && d && (d.state === 'playing' || d.state === 'suspended')) return { done:false };
-    if(/^(borders|reckon|tally|tilt|redact|tumbler)$/.test(it.type) && s.cur && s.cur.id === it.id) return { done:false };
+    if(/^(borders|reckon|tally|tilt|redact|tumbler|cryptic)$/.test(it.type) && s.cur && s.cur.id === it.id) return { done:false };
     return null;
   }
   function showPlayed(){

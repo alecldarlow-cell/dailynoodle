@@ -44,7 +44,7 @@
   var LAST = 'noodle-sync-last';   // when this browser last synced, for the card
   // The Lab trials' saves and streaks sync too (17 Nov 2026, Alec), and the Lab votes document
   // (VOTES), so a signed-in player's Lab status reads the same on the website and the app.
-  var SYNC_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon|tally|tilt|redact|tumbler)-(v1|streak)$/;
+  var SYNC_KEY = /^digi-(mini|doku|sweep|path|link|tangle|borders|reckon|tally|tilt|redact|tumbler|cryptic)-(v1|streak)$/;
   var BOARD = 'noodle-board-v1';
   var VOTES = 'noodle-lab-votes-v1';
   var ON_BOARD = /\/board\.html$/.test(location.pathname);

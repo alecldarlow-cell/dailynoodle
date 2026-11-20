@@ -1011,7 +1011,7 @@
 
   /* ---------------- Lab trial (11 Nov 2026) ----------------
      admin_lab: per Lab type, plays (players, starts, finishes, abandons, median time) and the votes. */
-  var LAB_NAMES = { tilt:'Tilt', redact:'Redact', tumbler:'Tumbler' };
+  var LAB_NAMES = { tilt:'Tilt', redact:'Redact', tumbler:'Tumbler', cryptic:'Cryptic' };
   function labRead(t){
     var num = function(x){ return Number(x||0).toLocaleString('en-GB'); };
     var name = LAB_NAMES[t.type] || t.type, votes = (t.yes||0) + (t.no||0), pts = [], head, tone;

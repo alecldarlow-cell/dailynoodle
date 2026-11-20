@@ -46,7 +46,7 @@ try {
   const perm=debt.filter(d=>d.permanent).length;
   console.log('Registry: no new errors; '+errors.length+' exact archive exceptions ('+perm+' accepted history, '+(debt.length-perm)+' dated; see test-results/registry.log).');
   const {G:link}=require('../build-link-batch'),{G:pg,grade}=require('../build-path-batch'),sweep=require('../build-sweep-batch');
-  const {broadAlts}=require('../doku-broad-check'),reckon=require('../build-reckon-batch'),tally=require('../tally'),tilt=require('../tilt'),redact=require('../redact'),tumbler=require('../tumbler');
+  const {broadAlts}=require('../doku-broad-check'),reckon=require('../build-reckon-batch'),tally=require('../tally'),tilt=require('../tilt'),redact=require('../redact'),tumbler=require('../tumbler'),cryptic=require('../cryptic');
   const veto=require('../word-veto'),banned=new Set([...veto.BLOCKED,...veto.SENSITIVE,...veto.VETO]);
   const gates={};
   for(const type of ['mini','doku']) {
@@ -63,7 +63,7 @@ try {
   let through=today;const n=new Date(today+'T12:00Z');n.setUTCDate(n.getUTCDate()+7);through=n.toISOString().slice(0,10);
   let checked=0;
   for(const file of fs.readdirSync(path.join(ROOT,'reports')).sort()){
-    if(!/^\d{4}-\d{2}-\d{2}-(crossword-mini|logic-(doku|sweep|path|tally|tilt)|word-(link|tangle|redact|tumbler)|geo-borders|quiz-reckon)/.test(file))continue;
+    if(!/^\d{4}-\d{2}-\d{2}-(crossword-mini|logic-(doku|sweep|path|tally|tilt)|word-(link|tangle|redact|tumbler|cryptic)|geo-borders|quiz-reckon)/.test(file))continue;
     const day=file.slice(0,10);if(day<today||(!all&&day>through))continue;
     const p=read(path.join(ROOT,'reports',file));let gate;
     if(file.includes('crossword-mini')){
@@ -79,6 +79,7 @@ try {
     else if(file.includes('word-tangle')){assert.equal(p.tiles.length,16,file);assert.ok(p.main.includes(p.star),file);assert.equal(new Set(p.main).size,p.main.length,file);gate={pass:true};}
     else if(file.includes('quiz-reckon')){const errs=reckon.gateDay(p);assert.equal(p.date,day,file);gate={pass:!errs.length,checks:errs};}
     else if(file.includes('logic-tally')){const errs=tally.check(p);const g=errs.length?null:tally.grade(p);if(g&&g.pairs)errs.push('needs a naked pair');gate={pass:!errs.length,checks:errs};}   // Tally (Lab, 3 Nov 2026): tools/tally.js, no guess ever
+    else if(file.includes('word-cryptic')){const errs=cryptic.check(p);gate={pass:!errs.length,checks:errs};}   // Cryptic (Lab, 12 Nov 2026): tools/cryptic.js; build-cryptic-batch.js --check gates the bank and ledger
     else if(file.includes('word-tumbler')){const errs=tumbler.check(p);gate={pass:!errs.length,checks:errs};}   // Tumbler (Lab, 6 Nov 2026): tools/tumbler.js
     else if(file.includes('word-redact')){const errs=redact.check(p);gate={pass:!errs.length,checks:errs};}   // Redact (Lab, 6 Nov 2026): tools/redact.js
     else if(file.includes('logic-tilt')){const errs=tilt.check(p);gate={pass:!errs.length,checks:errs};}   // Tilt (Lab, 6 Nov 2026): tools/tilt.js

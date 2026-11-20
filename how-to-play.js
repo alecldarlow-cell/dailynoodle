@@ -35,6 +35,7 @@
   // Static links point straight to today's files. Refresh on return to a cached page.
   function refreshPlayLinks(){
     panels.forEach(function(panel){
+      if(panel.hasAttribute('data-lab'))return;   // a Lab type's section links to the Lab, which has no daily to find
       panel.querySelector('.guide-play').setAttribute('href','/'+panel.id+'?via=how-to-play');
     });
     fetch('/puzzles-today.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
