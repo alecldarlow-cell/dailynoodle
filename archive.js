@@ -158,7 +158,18 @@
   var LAB = ['tilt', 'redact', 'tumbler', 'cryptic'];
   var LAB_RETIRED = { redact: '2026-11-21' };
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  var GOLD = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#5A4300"/></svg>';   // a dark star on the gold disc (21 Nov 2026, Alec's option A: the tick, upgraded)
+  /* the gold coin (21 Nov 2026, Alec: one design everywhere): a shaded gold face, a darker rim, a small shine
+     and a dark star; each drawing gets its own gradient id, so one inside a hidden card can't blank the rest */
+  var coinN = 0;
+  function coin(size, label) {
+    var g = 'dnCoin' + (++coinN) + '-' + Math.random().toString(36).slice(2, 6);
+    return '<svg class="dn-coin" width="' + size + '" height="' + size + '" viewBox="0 0 32 32" ' + (label ? 'role="img" aria-label="' + label + '"' : 'aria-hidden="true"') + ' focusable="false">' +
+      '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFEBA3"/><stop offset=".45" stop-color="#F5C542"/><stop offset="1" stop-color="#C98A06"/></linearGradient></defs>' +
+      '<circle cx="16" cy="16" r="15.6" fill="url(#' + g + ')" stroke="#B07A06" stroke-width=".8"/>' +
+      '<circle cx="16" cy="16" r="13.4" fill="none" stroke="#A87508" stroke-width="1.2"/>' +
+      '<ellipse cx="11.5" cy="9.8" rx="5" ry="2.6" fill="#fff" opacity=".35" transform="rotate(-25 11.5 9.8)"/>' +
+      '<path transform="translate(5.2 5.6) scale(.9)" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#5A4300"/></svg>';
+  }
   var TICK = '<svg class="ar-tk" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.5 8.5l3 3 6-7"/></svg>';
   var $ = function (id) { return document.getElementById(id); };
   var grid = $('ar-grid'), title = $('ar-month'), dayBox = $('ar-day'), status = $('ar-status');
@@ -268,12 +279,12 @@
     if (lab) { if (state.retired[it.type]) when = (when ? when + ' · ' : '') + 'Retired'; if (part) res = 'Continue'; }
     return '<li class="ar-item"><a class="ar-row' + (ok ? ' ok' : '') + '" href="' + esc(it.path) + '?via=archive" data-type="' + esc(it.type) + '" data-id="' + esc(it.id || '') + '">' +
       '<span class="ar-tile"><img src="' + esc(it.thumb || 'assets/' + it.type + '-thumb.svg') + '" alt="" width="96" height="96" loading="lazy">' +
-      (gw ? '<span class="ar-gold" aria-hidden="true">' + GOLD + '</span>' : ok ? '<span class="ar-tick" aria-hidden="true">' + TICK + '</span>' : '') +
+      (gw ? '<span class="ar-gold" aria-hidden="true">' + coin(23) + '</span>' : ok ? '<span class="ar-tick" aria-hidden="true">' + TICK + '</span>' : '') +
       (lab ? '<span class="ar-lab">Lab trial</span>' : '') + '</span>' +
       '<span class="ar-txt"><span class="ar-name">' + esc(lab ? LABEL[it.type] + ' ' + Number(String(it.id).split('·').pop()) : it.headline) + '</span>' +
       (it.standfirst ? '<span class="ar-sf">' + esc(it.standfirst) + '</span>' : '') +
       '<span class="ar-meta">' + (when ? '<small class="ar-when">' + esc(when) + '</small>' : '') +
-      (ok || part ? '<span class="ar-res' + (part ? ' part' : gw ? ' gold' : '') + '">' + esc(res) + (gw ? '<span class="ar-vh"> · gold star</span>' : '') + '</span>' : '') + '</span></span>' +
+      (ok || part ? '<span class="ar-res' + (part ? ' part' : '') + '">' + esc(res) + (gw ? '<span class="ar-vh"> · gold star</span>' : '') + '</span>' : '') + '</span></span>' +
       '</a>' + (ok || part || !LABEL[it.type] ? '' : '<a class="ar-how" href="how-to-play.html#' + esc(it.type) + '" aria-label="How to play ' + esc(LABEL[it.type]) + '">How to play</a>') +
       '</li>';
   }
