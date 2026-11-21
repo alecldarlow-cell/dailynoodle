@@ -107,9 +107,8 @@ body.ar-locked{overflow:hidden}
 .ar-tick .ar-tk{width:12px;height:12px}
 /* gold star (21 Nov 2026, Alec's option A): the tick's disc, a touch larger, gold face, dark star */
 .ar-gold{position:absolute;top:-9px;right:-9px;width:28px;height:28px;box-sizing:border-box;border-radius:50%;
-  background:linear-gradient(#FFE27A,#E2A814);border:2.5px solid var(--canvas);display:grid;place-content:center}
-.ar-gold svg{display:block;width:15px;height:15px}
-.ar-res.gold{color:var(--gold-ink)}
+  border:2.5px solid var(--canvas);display:grid;place-content:center}
+.ar-gold svg{display:block}
 .ar-vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .ar-txt{display:flex;flex-direction:column;min-height:96px;min-width:0}
 .ar-name{font-family:var(--display);font-weight:700;font-size:19px;line-height:1.22;letter-spacing:-.01em}

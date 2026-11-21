@@ -232,9 +232,9 @@ html.dn-reduce *,html.dn-reduce *::before,html.dn-reduce *::after{animation-dura
 
 /* Gold star (21 Nov 2026, Alec): a big star pops in beside the result, with a line saying what earned it */
 .fin-gold .fin-hero{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.fin-gold-star{position:relative;flex:none;width:112px;height:112px;display:grid;place-items:center;margin-right:-6px}
+.fin-gold-star{position:relative;flex:none;width:112px;height:112px;display:grid;place-items:center}
 .fin-gold-star::before{content:"";position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle,rgba(242,194,48,.38),rgba(242,194,48,0) 70%)}
-.fin-gold-star .fin-gs{position:relative;filter:drop-shadow(0 5px 10px rgba(201,142,18,.35));animation:fin-gold-pop .8s cubic-bezier(.2,.9,.3,1.25) .15s both}
+.fin-gold-star .dn-coin{position:relative;filter:drop-shadow(0 5px 10px rgba(201,142,18,.35));animation:fin-gold-pop .8s cubic-bezier(.2,.9,.3,1.25) .15s both}
 .fin-spark{position:absolute;width:12px;height:12px;background:#F2C230;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);animation:fin-twinkle 1.6s ease-in-out infinite}
 .fin-spark.s1{left:2px;top:12px;width:15px;height:15px}
 .fin-spark.s2{right:2px;top:30px;animation-delay:.5s;background:#FFE27A}
@@ -242,6 +242,7 @@ html.dn-reduce *,html.dn-reduce *::before,html.dn-reduce *::after{animation-dura
 @keyframes fin-gold-pop{0%{transform:scale(.3) rotate(-25deg);opacity:0}60%{transform:scale(1.15) rotate(8deg);opacity:1}100%{transform:none;opacity:1}}
 @keyframes fin-twinkle{0%,100%{opacity:.15;transform:scale(.5)}50%{opacity:1;transform:none}}
 .fin-goldline{display:flex;align-items:center;gap:10px;font-size:16px;line-height:1.4;color:var(--f-ink);margin:10px 0 0}
-.fin-goldline b{font-weight:700;color:var(--f-goldInk)}
-.fin-gold-ico{flex:none;width:30px;height:30px;box-sizing:border-box;border-radius:50%;display:grid;place-items:center;background:var(--f-goldT);border:2px solid var(--f-gold)}
-@media (max-width:359px){.fin-gold-star{width:88px;height:88px}.fin-gold-star .fin-gs{width:76px;height:76px}}
+.fin-goldline b{font-weight:700;color:var(--f-ink)}
+.fin-gold-ico{flex:none;width:30px;height:30px;display:grid;place-items:center}
+.fin-gold-ico svg{display:block}
+@media (max-width:359px){.fin-gold-star{width:88px;height:88px}.fin-gold-star .dn-coin{width:76px;height:76px}}

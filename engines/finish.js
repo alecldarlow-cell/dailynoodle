@@ -255,14 +255,17 @@
     });
     return sec;
   }
-  /* the gold star: a shiny five-point star with a highlight (21 Nov 2026); its gradient id is unique per drawing */
-  var goldN = 0;
-  function goldStar(size, label) {
-    var g = 'dnGold' + (++goldN);
-    return '<svg class="fin-gs" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" ' + (label ? 'role="img" aria-label="' + label + '"' : 'aria-hidden="true"') + ' focusable="false">' +
-      '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFEA8C"/><stop offset=".55" stop-color="#F2C230"/><stop offset="1" stop-color="#C98E12"/></linearGradient></defs>' +
-      '<path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="url(#' + g + ')" stroke="#8A6408" stroke-width="' + (size > 40 ? '.7' : '1.1') + '" stroke-linejoin="round"/>' +
-      '</svg>';
+  /* the gold coin (21 Nov 2026, Alec: one design everywhere): a shaded gold face, a darker rim, a small shine
+     and a dark star; each drawing gets its own gradient id, so one inside a hidden card can't blank the rest */
+  var coinN = 0;
+  function coin(size, label) {
+    var g = 'dnCoin' + (++coinN) + '-' + Math.random().toString(36).slice(2, 6);
+    return '<svg class="dn-coin" width="' + size + '" height="' + size + '" viewBox="0 0 32 32" ' + (label ? 'role="img" aria-label="' + label + '"' : 'aria-hidden="true"') + ' focusable="false">' +
+      '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFEBA3"/><stop offset=".45" stop-color="#F5C542"/><stop offset="1" stop-color="#C98A06"/></linearGradient></defs>' +
+      '<circle cx="16" cy="16" r="15.6" fill="url(#' + g + ')" stroke="#B07A06" stroke-width=".8"/>' +
+      '<circle cx="16" cy="16" r="13.4" fill="none" stroke="#A87508" stroke-width="1.2"/>' +
+      '<ellipse cx="11.5" cy="9.8" rx="5" ry="2.6" fill="#fff" opacity=".35" transform="rotate(-25 11.5 9.8)"/>' +
+      '<path transform="translate(5.2 5.6) scale(.9)" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#5A4300"/></svg>';
   }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function read(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
@@ -578,8 +581,8 @@
     var gw = solved && !cfg.lab && window.dnCore && window.dnCore.gold ? window.dnCore.gold(cfg.type, done(cfg.type)[cfg.id]) : '';
     if (gw) {
       res.classList.add('fin-gold');
-      hero.appendChild(el('span', 'fin-gold-star', goldStar(96, 'Gold star') + '<i class="fin-spark s1"></i><i class="fin-spark s2"></i><i class="fin-spark s3"></i>'));
-      res.appendChild(el('p', 'fin-goldline', '<span class="fin-gold-ico">' + goldStar(20) + '</span><span><b>Gold star</b> · ' + esc(gw) + '</span>'));
+      hero.appendChild(el('span', 'fin-gold-star', coin(96, 'Gold star') + '<i class="fin-spark s1"></i><i class="fin-spark s2"></i><i class="fin-spark s3"></i>'));
+      res.appendChild(el('p', 'fin-goldline', '<span class="fin-gold-ico">' + coin(30) + '</span><span><b>Gold star</b> · ' + esc(gw) + '</span>'));
     }
     res.appendChild(streakLine(cfg, adopted));
     if (cfg.note) res.appendChild(el('p', 'fin-note', cfg.note));

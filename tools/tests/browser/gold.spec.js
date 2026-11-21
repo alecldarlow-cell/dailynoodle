@@ -18,10 +18,10 @@ test('GOLD-WEB-01: GIVEN a perfect Borders and a slow Path WHEN Puzzles draws it
  await goto(phone,'puzzles.html');
  const b=phone.p.locator('li.puzzle-card.is-played:not([hidden]) a.card[href*="-geo-borders-"]').first();
  await expect(b.locator('.played-mark.gold svg')).toHaveCount(1);
- await expect(b.locator('.card-result.gold')).toHaveText('1000 points · 10/10 · gold star');
+ await expect(b.locator('.card-result.done')).toHaveText('1000 points · 10/10 · gold star');   // words stay green: the coin says gold
  const p=phone.p.locator('li.puzzle-card.is-played:not([hidden]) a.card[href*="-logic-path-"]').first();
  await expect(p.locator('.played-mark:not(.gold)')).toHaveCount(1);
- await expect(p.locator('.card-result.gold')).toHaveCount(0);
+ await expect(p.locator('.played-mark.gold')).toHaveCount(0);
  expect(phone.errors).toEqual([]);
 });
 
@@ -34,7 +34,7 @@ test('GOLD-WEB-02: GIVEN one gold day and one plain day WHEN a day opens in the 
  const gold=phone.p.locator('#ar-day a.ar-row[href^="'+bd.path+'"]'),plain=phone.p.locator('#ar-day a.ar-row[href^="'+mi.path+'"]');
  await expect(gold.locator('.ar-gold svg')).toHaveCount(1);
  await expect(gold.locator('.ar-tick')).toHaveCount(0);
- await expect(gold.locator('.ar-res.gold')).toContainText('gold star');
+ await expect(gold.locator('.ar-res')).toContainText('gold star');
  await expect(plain.locator('.ar-tick')).toHaveCount(1);
  await expect(plain.locator('.ar-gold')).toHaveCount(0);
  expect(phone.errors).toEqual([]);
