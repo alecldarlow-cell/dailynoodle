@@ -294,9 +294,9 @@
   border-radius:50%;background:var(--accent);color:var(--on-accent);border:2.5px solid var(--canvas);
   display:grid;place-content:center;pointer-events:none}
 .played-mark.started{background:var(--play);color:var(--on-play)}
-/* gold star (21 Nov 2026): the star itself, no disc, a little larger than the tick's disc */
-.played-mark.gold{background:none;border:0;width:32px;height:32px;top:7px;left:75px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.25))}
-@media(min-width:560px){.played-mark.gold{left:99px}}
+/* gold star (21 Nov 2026, Alec's option A): the tick's disc and ring, a touch larger, gold face, dark star */
+.played-mark.gold{width:28px;height:28px;top:10px;left:76px;background:linear-gradient(#FFE27A,#E2A814);color:#5A4300}
+@media(min-width:560px){.played-mark.gold{left:100px}}
 .played-mark svg{display:block}
 .card-result.done{color:var(--accent);font-weight:700}
 .card-result.gold{color:var(--gold-ink)}

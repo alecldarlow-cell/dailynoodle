@@ -158,7 +158,7 @@
   var LAB = ['tilt', 'redact', 'tumbler', 'cryptic'];
   var LAB_RETIRED = { redact: '2026-11-21' };
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  var GOLD = '<svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true" focusable="false"><defs><linearGradient id="dnGoldAr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFEA8C"/><stop offset=".55" stop-color="#F2C230"/><stop offset="1" stop-color="#C98E12"/></linearGradient></defs><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="url(#dnGoldAr)" stroke="#8A6408" stroke-width="1.1" stroke-linejoin="round"/></svg>';
+  var GOLD = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#5A4300"/></svg>';   // a dark star on the gold disc (21 Nov 2026, Alec's option A: the tick, upgraded)
   var TICK = '<svg class="ar-tk" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.5 8.5l3 3 6-7"/></svg>';
   var $ = function (id) { return document.getElementById(id); };
   var grid = $('ar-grid'), title = $('ar-month'), dayBox = $('ar-day'), status = $('ar-status');
