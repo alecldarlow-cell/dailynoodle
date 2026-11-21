@@ -271,7 +271,6 @@ const MINE_SVG=`<svg class="glyph" viewBox="0 0 24 24" aria-hidden="true" focusa
 
 /* ================= The Digi Sweep player =========================== */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-let usedHints=0;   // for the finish sheet's one line
 let P=null,revealed=null,flagged=null,boomed=null,NUM=null,MS=null;
 let started=false,tHandle=null,seconds=0,over=false,won=false,flagMode=false,flagCheck=true;
 /* ranked = today's result is not yet on the books. A loss sticks; everything
@@ -499,24 +498,10 @@ function clearWhy(){
   $$("#grid .cell.why").forEach(c=>c.classList.remove("why"));
   if(hintShown){hintShown=false;$("#msg").textContent="";scheduleFit();}
 }
-$("#hint").onclick=()=>{
-  if(!over)usedHints++;
-  if(over)return;
-  clearWhy();
-  const h=hintPick();
-  if(!h){$("#msg").textContent="Nothing new is deducible from the board as it stands — check your flags.";return;}
-  const cell=$(`#grid .cell[data-i="${h.pick}"]`);
-  $$("#grid .cell.hint").forEach(x=>x.classList.remove("hint"));   // one marked square, the one the line is about
-  void cell.offsetWidth; cell.classList.add("hint");
-  if(h.wrong)$("#msg").textContent=WRONG_FLAG;                     // no ring: no number is being read
-  else{
-    const c=h.c;
-    for(const s of (c.A?[c.A.src,c.B.src]:[c.src]))if(s>=0)$(`#grid .cell[data-i="${s}"]`).classList.add("why");
-    $("#msg").textContent=hintWhy(c);
-  }
-  hintShown=true; scheduleFit();
-  clearTimeout(hintT); hintT=setTimeout(()=>cell.classList.remove("hint"),2400);
-};
+/* No Hint (21 Nov 2026, Alec): Sweep is solved unaided, so gold stars can be judged on time.
+   Older pages still carry the button in their markup; take it out of the page. The prover
+   above stays: the generator and the tests use it. */
+{const hb=document.getElementById("hint"); if(hb) hb.remove();}
 $("#revealAll").onclick=async()=>{
   if(ranked){await recordResult(false);$("#rank").textContent="· replay";}  // giving up is a result
   startTimer(); over=true; stopTimer(); donePut(P.id,{o:"gave",s:seconds});
@@ -614,7 +599,7 @@ function showEnd(win){
 /* ---- the shared finish sheet (engines/finish.js) ---- */
 function finishSheet(o,fresh){
   const W=["no","one","two","three","four","five","six","seven","eight","nine","ten"],m=W[MS.size]||MS.size;
-  let note=o==="win"?(fresh?`All ${m} mines found, ${usedHints?(usedHints===1?"with one hint":`with ${W[usedHints]||usedHints} hints`):"no hints"}.`:`All ${m} mines found.`)
+  let note=o==="win"?`All ${m} mines found.`
     :"That was a mine. The grid never needed a guess; the step was there to find.";
   let played=0;try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");played=s&&s.done?Object.keys(s.done).length:0;}catch(e){}
   const FLAG='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 14V2M4 2.5l8 2.8-8 2.9" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';

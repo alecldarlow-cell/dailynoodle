@@ -178,3 +178,6 @@ html.app-mode .controls .spacer{display:none}
   html.app-mode .msg{grid-area:message;margin:0}
   html.app-mode .controls{grid-area:tools;margin:0;flex-wrap:wrap}
 }
+
+/* No Hint on Sweep (21 Nov 2026): older pages still carry the button; engines/sweep.js removes it. */
+#hint{display:none!important}

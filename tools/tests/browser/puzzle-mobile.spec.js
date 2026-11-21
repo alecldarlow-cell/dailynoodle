@@ -3,8 +3,8 @@ const {test,expect,H,goto,fullScreenOff}=require('./support');
 const cases=[
  {type:'mini',file:'crossword-mini-0100',board:'#grid',targets:'#grid .cell:not(.block),#kb .key,.cluearrow,#checkWord,#checkAll,#revealWord,#fs'},
  {type:'doku',file:'logic-doku-0098',board:'#grid',targets:'#grid .cell,#bank .tile,#toggleHints,#fs'},
- {type:'path',file:'logic-path-0093',board:'#grid',targets:'#grid .cell,#undoBtn,#hintBtn'},
- {type:'sweep',file:'logic-sweep',board:'#grid',targets:'#grid .cell,#modeDig,#modeFlag,#hint,#fs'},
+ {type:'path',file:'logic-path-0093',board:'#grid',targets:'#grid .cell,#undoBtn'},
+ {type:'sweep',file:'logic-sweep',board:'#grid',targets:'#grid .cell,#modeDig,#modeFlag,#fs'},
  {type:'link',file:'word-link-0072',board:'#board',targets:'#board .tile,#shuffle,#clear,#submit'},
  {type:'tangle',file:'word-tangle-0013',board:'#board',targets:'#board .tile,#homeBtn,#fsPlay'},
  {type:'borders',file:'geo-borders-0015',board:'#qmap',targets:'#opts .opt,#pauseBtn,#hintBtn'},

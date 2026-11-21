@@ -100,3 +100,6 @@ footer{font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spaci
   html.dn-house .msg{grid-column:2;grid-row:1;margin:0;align-self:end}
   html.dn-house .controls{grid-column:2;grid-row:2;align-self:start}
 }
+
+/* No Hint on Path (21 Nov 2026): older pages still carry the button; engines/path.js removes it. */
+#hintBtn{display:none!important}
