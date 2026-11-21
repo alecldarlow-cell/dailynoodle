@@ -291,7 +291,6 @@ function streakBump(){
 }
 state.streak=streakLive();
 document.getElementById("streakn").textContent=state.streak;
-let usedHints=0;   // for the finish sheet's one line
 const lockedByValue = new Map(PUZZLE.locked.map(([r,c,v])=>[v,[r-1,c-1]]));
 for(const [r,c,v] of PUZZLE.locked) state.cellValue[r-1][c-1] = v;
 state.lowCell  = lockedByValue.get(1).slice();
@@ -476,39 +475,9 @@ document.getElementById("undoBtn").addEventListener("click",()=>{
   paint();
 });
 
-// ---------- Hint — scoped to the two active ends, same bracket rule as the prover ----------
-document.getElementById("hintBtn").addEventListener("click",()=>{
-  if(!state.solved)usedHints++;
-  if(state.solved) return;
-  const vmap = valueCellMap();
-  const known=[]; for(let v=1;v<=TOTAL;v++) if(vmap[v]) known.push(v);
-  function forcedFor(target){
-    let below=null, above=null;
-    for(let i=known.length-1;i>=0;i--){ if(known[i]<target){below=known[i];break;} }
-    for(let i=0;i<known.length;i++){ if(known[i]>target){above=known[i];break;} }
-    if(below===null||above===null) return null;
-    const aCell=vmap[below], bCell=vmap[above];
-    const da=target-below, db=above-target;
-    const cands=[];
-    for(let r=0;r<N;r++) for(let c=0;c<N;c++){
-      if(state.cellValue[r][c]!==null) continue;
-      const dA=Math.abs(r-aCell[0])+Math.abs(c-aCell[1]);
-      const dB=Math.abs(r-bCell[0])+Math.abs(c-bCell[1]);
-      if(dA<=da && (da-dA)%2===0 && dB<=db && (db-dB)%2===0) cands.push([r,c]);
-    }
-    return cands.length===1 ? cands[0] : null;
-  }
-  const lowTarget=state.lowHead+1, highTarget=state.highHead-1;
-  let cell=null, end=null;
-  if(lowTarget<=highTarget){
-    cell=forcedFor(lowTarget);
-    if(cell) end="low";
-    else { cell=forcedFor(highTarget); if(cell) end="high"; }
-  }
-  if(!cell){ setMsg("Neither end’s next square is forced yet — trace what has to pass where."); return; }
-  state.activeEnd=end;
-  onTap(cell[0], cell[1]);
-});
+// ---------- No Hint (21 Nov 2026, Alec): Path is solved unaided, so gold stars can be judged on time.
+// Older pages still carry the button in their markup; take it out of the page.
+{const hb=document.getElementById("hintBtn"); if(hb) hb.remove();}
 
 // ---------- Reset ----------
 document.getElementById("resetBtn").addEventListener("click",()=>{
@@ -654,9 +623,8 @@ function restoreDone(){
 }
 /* ---- the shared finish sheet (engines/finish.js) ---- */
 function finishSheet(fresh){
-  const W=["no","one","two","three","four","five","six","seven","eight","nine","ten"];
   const h2=document.querySelector("#modal h2"); if(h2){h2.id="winTitle";h2.textContent="Path complete";}
-  const note=fresh?(usedHints?`One to 36 with ${usedHints===1?"one hint":(W[usedHints]||usedHints)+" hints"}.`:"One to 36 without a hint."):"";
+  const note=fresh?"Every square, one to 36.":"";
   let played=0;try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");played=s&&s.done?Object.keys(s.done).length:0;}catch(e){}
   const st=streakGet()||{};
   const at={};PUZZLE.solution.forEach((row,r)=>row.forEach((v,c)=>at[v]=[r,c]));
