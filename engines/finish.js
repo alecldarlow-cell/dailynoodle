@@ -111,7 +111,34 @@
   try{root.localStorage.setItem(key,JSON.stringify(value));saved(key);return true;}
   catch(e){failed(key,()=>saveStreak(key,value,external));return false;}
  }
- return {londonDay,dayBefore,getDone,putDone,mergeProgress,saveProgress,saveStreak,saveIssues,onSaveChange,retrySaves};
+ /* Gold stars (21 Nov 2026, Alec; project doc claude/rewards-review-2026-11-21.md): a really
+    good result, about one finish in ten, by fixed rules that are the same every day. Worked out
+    from the saved result alone, so old results earn gold too (back-dated). Returns the reason
+    ("A perfect ten") or '' for no gold. Lab types never get gold. Past Minis saved before the
+    help flag `h` (checks or reveals used) are judged on time alone. The app's
+    packages/core/src/gold.ts must give the same answers (its parity test reads this file). */
+ const GOLD={
+  mini:r=>!r.h&&secsOf(r)!==null&&secsOf(r)<=40?'Under 0:40 with no checks or reveals':'',
+  doku:r=>secsOf(r)!==null&&secsOf(r)<=30?'Under 0:30':'',
+  sweep:r=>r.o==='win'&&secsOf(r)!==null&&secsOf(r)<=30?'Swept in under 0:30':'',
+  path:r=>secsOf(r)!==null&&secsOf(r)<=20?'Under 0:20':'',
+  tally:r=>secsOf(r)!==null&&secsOf(r)<=60?'Under 1:00':'',
+  link:r=>r.o==='win'&&r.m===0&&secsOf(r)!==null&&secsOf(r)<=60?'No mistakes, under 1:00':'',
+  tangle:r=>num(r.s)&&r.s>=40?'40 points or more':'',
+  borders:r=>r.c===10&&(!num(r.p)||r.p>=1000)?'A perfect ten':'',
+  reckon:r=>num(r.p)&&r.p>=750?'750 points or more':''
+ };
+ const num=x=>typeof x==='number'&&isFinite(x);
+ // seconds from a record: `s` where it is a time (never Tangle's or Reckon's points), else the clock text `t` ("0:20", "00:20", "1:02:03")
+ function secsOf(r){
+  if(num(r.s))return r.s;
+  const m=/^(\d+):(\d\d)(?::(\d\d))?$/.exec(String(r.t||''));
+  return m?(m[3]?+m[1]*3600+ +m[2]*60+ +m[3]:+m[1]*60+ +m[2]):null;
+ }
+ function gold(type,r){
+  try{return object(r)&&GOLD[type]?GOLD[type](r):'';}catch(e){return '';}
+ }
+ return {londonDay,dayBefore,getDone,putDone,mergeProgress,saveProgress,saveStreak,saveIssues,onSaveChange,retrySaves,gold};
 });
 /* dn-core:end */
 /* ---------------------------------------------------------------------------
@@ -227,6 +254,15 @@
       });
     });
     return sec;
+  }
+  /* the gold star: a shiny five-point star with a highlight (21 Nov 2026); its gradient id is unique per drawing */
+  var goldN = 0;
+  function goldStar(size, label) {
+    var g = 'dnGold' + (++goldN);
+    return '<svg class="fin-gs" width="' + size + '" height="' + size + '" viewBox="0 0 24 24" ' + (label ? 'role="img" aria-label="' + label + '"' : 'aria-hidden="true"') + ' focusable="false">' +
+      '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFEA8C"/><stop offset=".55" stop-color="#F2C230"/><stop offset="1" stop-color="#C98E12"/></linearGradient></defs>' +
+      '<path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="url(#' + g + ')" stroke="#8A6408" stroke-width="' + (size > 40 ? '.7' : '1.1') + '" stroke-linejoin="round"/>' +
+      '</svg>';
   }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function read(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
@@ -538,6 +574,13 @@
     res.appendChild(hero);
     var adopted = {};
     (cfg.stats || []).forEach(function (s) { if (s.id) { var v = adopt(s.id); if (v) { adopted[s.id] = v; v.className = 'fin-stat-val'; keep.appendChild(v); } } });
+    // Gold star (21 Nov 2026, Alec): a really good result, by dnCore.gold's fixed rules, read from the save
+    var gw = solved && !cfg.lab && window.dnCore && window.dnCore.gold ? window.dnCore.gold(cfg.type, done(cfg.type)[cfg.id]) : '';
+    if (gw) {
+      res.classList.add('fin-gold');
+      hero.appendChild(el('span', 'fin-gold-star', goldStar(96, 'Gold star') + '<i class="fin-spark s1"></i><i class="fin-spark s2"></i><i class="fin-spark s3"></i>'));
+      res.appendChild(el('p', 'fin-goldline', '<span class="fin-gold-ico">' + goldStar(20) + '</span><span><b>Gold star</b> · ' + esc(gw) + '</span>'));
+    }
     res.appendChild(streakLine(cfg, adopted));
     if (cfg.note) res.appendChild(el('p', 'fin-note', cfg.note));
     f.appendChild(res);
