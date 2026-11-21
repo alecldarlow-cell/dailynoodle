@@ -633,7 +633,12 @@
     if(!s || typeof s !== 'object') return null;
     var r = s.done && typeof s.done === 'object' && s.done[it.id];
     // gold: a really good result (21 Nov 2026, dnCore.gold); its star replaces the tick
-    if(r) return { done:true, lost: typeof r === 'object' && (r.o === 'loss' || r.o === 'gave'), text: (typeof r === 'object' && resultText(it.type, r)) || 'Played', gold: window.dnCore && window.dnCore.gold ? window.dnCore.gold(it.type, r) : '' };
+    if(r){
+      var o = { done:true, lost: typeof r === 'object' && (r.o === 'loss' || r.o === 'gave'), text: (typeof r === 'object' && resultText(it.type, r)) || 'Played' };
+      var g = window.dnCore && window.dnCore.gold ? window.dnCore.gold(it.type, r) : '';
+      if(g) o.gold = g;   // only when gold, so the record matches the app's playedState field for field
+      return o;
+    }
     var d = s.days && s.days[it.id];
     if(it.type === 'tangle' && d && (d.state === 'playing' || d.state === 'suspended')) return { done:false };
     if(/^(borders|reckon|tally|tilt|redact|tumbler|cryptic)$/.test(it.type) && s.cur && s.cur.id === it.id) return { done:false };
