@@ -62,6 +62,9 @@ function block(file, html) {
   return lines.join('\n') + '\n';
 }
 
+// Legacy pages pinned by hash in the registry debt list (tools/tests/fixtures/registry-debt.json, "sha256")
+// are frozen until someone re-reviews them; a change of link-preview wording must not touch them (22 Nov 2026).
+const FROZEN = (() => { try { return new Set(require('./tests/fixtures/registry-debt.json').filter((d) => d.sha256).map((d) => d.file)); } catch (e) { return new Set(); } })();
 let scanned = 0, written = 0, skipped = 0;
 for (const dir of DIRS) {
   const abs = path.join(process.cwd(), dir);
@@ -72,6 +75,7 @@ for (const dir of DIRS) {
     const p = path.join(abs, name);
     const html = fs.readFileSync(p, 'utf8');
     if (html.includes('<!-- moved-page:')) continue;   // forwarding page for a moved piece or game (tools/moved-pages.js)
+    if (dir === 'reports' && FROZEN.has(name)) { skipped++; continue; }
     const want = block(dir + '/' + name, html);
     if (!want) { skipped++; continue; }
     let out;
