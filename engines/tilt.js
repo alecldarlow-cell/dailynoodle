@@ -312,21 +312,21 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pagehide",()=>{if(!state.solved){stopTimer();saveCur();}});
 timerEl.classList.add("waiting");
 
-/* ---------- an unfinished maze is kept in digi-tilt-v1.cur (beside done, which only putDone writes) ---------- */
+/* ---------- an unfinished maze is kept in digi-tilt-v1.rounds[id] (the latest also in .cur) (beside done, which only putDone writes) ---------- */
 function readSave(){try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");return s&&typeof s==="object"?s:{v:1};}catch(e){return {v:1};}}
 function saveCur(){
   if(state.solved||window.dnCore.getDone(DONE_KEY,PUZZLE.id))return;
   try{const s=readSave();
-    if(state.turns)s.cur={id:PUZZLE.id,pos:state.pos,g:state.g,rot:state.rot,n:state.turns,trail:[...state.trail],s:Math.round(state.secs+(state.t0?(Date.now()-state.t0)/1000:0)),at:Date.now()};
-    else if(s.cur&&s.cur.id===PUZZLE.id)delete s.cur;
+    if(state.turns)window.dnCore.keepRound(s,{id:PUZZLE.id,pos:state.pos,g:state.g,rot:state.rot,n:state.turns,trail:[...state.trail],s:Math.round(state.secs+(state.t0?(Date.now()-state.t0)/1000:0))});
+    else if((s.cur&&s.cur.id===PUZZLE.id)||(s.rounds&&s.rounds[PUZZLE.id])){window.dnCore.dropRound(s,PUZZLE.id);if(s.cur&&s.cur.id===PUZZLE.id)delete s.cur;}
     else return;
     if(!s.v)s.v=1;
     localStorage.setItem(DONE_KEY,JSON.stringify(s));
   }catch(e){}
 }
-function clearCur(){try{const s=readSave();if(s.cur&&s.cur.id===PUZZLE.id){delete s.cur;localStorage.setItem(DONE_KEY,JSON.stringify(s));}}catch(e){}}
+function clearCur(){try{const s=readSave();if((s.cur&&s.cur.id===PUZZLE.id)||(s.rounds&&s.rounds[PUZZLE.id])){window.dnCore.dropRound(s,PUZZLE.id);if(s.cur&&s.cur.id===PUZZLE.id)delete s.cur;localStorage.setItem(DONE_KEY,JSON.stringify(s));}}catch(e){}}
 function restoreCur(){
-  const c=readSave().cur;
+  const c=window.dnCore.roundFor(readSave(),PUZZLE.id);   // its own round (22 Nov 2026), else cur
   if(!c||c.id!==PUZZLE.id||!Array.isArray(c.pos)||c.pos.length!==2)return;
   const [r,cc]=c.pos;if(!(r>=0&&r<N&&cc>=0&&cc<N)||!(c.g>=0&&c.g<4))return;
   state.pos=[r,cc];state.g=c.g;state.rot=Number.isInteger(c.rot)?c.rot:0;state.turns=+c.n||0;

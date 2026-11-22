@@ -243,6 +243,8 @@
         var d = JSON.parse(localStorage.getItem('digi-' + t + '-v1') || 'null');
         if (d && d.done && typeof d.done === 'object') out[t] = d.done;
         if (LAB.indexOf(t) >= 0 && d && d.cur && d.cur.id) state.curs[d.cur.id] = 1;
+        // every Lab puzzle's own part-played round (22 Nov 2026)
+        if (LAB.indexOf(t) >= 0 && d && d.rounds && typeof d.rounds === 'object') Object.keys(d.rounds).forEach(function (id) { if (!(d.done && d.done[id])) state.curs[id] = 1; });
       } catch (e) {}
     });
     return out;

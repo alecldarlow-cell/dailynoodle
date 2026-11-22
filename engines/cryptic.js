@@ -295,20 +295,20 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pagehide",()=>{if(!state.solved){stopTimer();saveCur();}});
 timerEl.classList.add("waiting");
 
-/* ---------- an unfinished clue is kept in digi-cryptic-v1.cur = {id, letters, hints, s, at} ---------- */
+/* ---------- an unfinished clue is kept in digi-cryptic-v1.rounds[id] (the latest also in .cur) = {id, letters, hints, s, at} ---------- */
 function readSave(){try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");return s&&typeof s==="object"?s:{v:1};}catch(e){return {v:1};}}
 function saveCur(){
   if(state.solved||window.dnCore.getDone(DONE_KEY,PUZZLE.id))return;
   try{const s=readSave();
-    if(state.hints||state.letters.some(Boolean))s.cur={id:PUZZLE.id,letters:state.letters.slice(),hints:state.hints,s:Math.round(state.secs+(state.t0?(Date.now()-state.t0)/1000:0)),at:Date.now()};
-    else if(s.cur&&s.cur.id===PUZZLE.id)delete s.cur;
+    if(state.hints||state.letters.some(Boolean))window.dnCore.keepRound(s,{id:PUZZLE.id,letters:state.letters.slice(),hints:state.hints,s:Math.round(state.secs+(state.t0?(Date.now()-state.t0)/1000:0))});
+    else if((s.cur&&s.cur.id===PUZZLE.id)||(s.rounds&&s.rounds[PUZZLE.id])){window.dnCore.dropRound(s,PUZZLE.id);if(s.cur&&s.cur.id===PUZZLE.id)delete s.cur;}
     else return;
     if(!s.v)s.v=1;localStorage.setItem(DONE_KEY,JSON.stringify(s));
   }catch(e){}
 }
-function clearCur(){try{const s=readSave();if(s.cur&&s.cur.id===PUZZLE.id){delete s.cur;localStorage.setItem(DONE_KEY,JSON.stringify(s));}}catch(e){}}
+function clearCur(){try{const s=readSave();if((s.cur&&s.cur.id===PUZZLE.id)||(s.rounds&&s.rounds[PUZZLE.id])){window.dnCore.dropRound(s,PUZZLE.id);if(s.cur&&s.cur.id===PUZZLE.id)delete s.cur;localStorage.setItem(DONE_KEY,JSON.stringify(s));}}catch(e){}}
 function restoreCur(){
-  const c=readSave().cur;
+  const c=window.dnCore.roundFor(readSave(),PUZZLE.id);   // its own round (22 Nov 2026), else cur
   if(!c||c.id!==PUZZLE.id||!Array.isArray(c.letters)||c.letters.length!==N)return;
   state.letters=c.letters.map(x=>/^[A-Z]$/.test(x)?x:"");state.hints=Math.max(0,Math.min(N+2,+c.hints||0));state.secs=+c.s||0;state.resumed=true;
   for(let i=0;i<revealed();i++)state.letters[i]=ANS[i];

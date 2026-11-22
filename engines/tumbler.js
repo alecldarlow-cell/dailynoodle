@@ -264,20 +264,20 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pagehide",()=>{if(!state.solved){stopTimer();saveCur();}});
 timerEl.classList.add("waiting");
 
-/* ---------- an unfinished board is kept in digi-tumbler-v1.cur ---------- */
+/* ---------- an unfinished board is kept in digi-tumbler-v1.rounds[id] (the latest also in .cur) ---------- */
 function readSave(){try{const s=JSON.parse(localStorage.getItem(DONE_KEY)||"null");return s&&typeof s==="object"?s:{v:1};}catch(e){return {v:1};}}
 function saveCur(){
   if(state.solved||window.dnCore.getDone(DONE_KEY,PUZZLE.id))return;
   try{const s=readSave();
-    if(state.turns||state.tries.length)s.cur={id:PUZZLE.id,o:state.off,w:state.tries,t:state.turns,s:Math.round(state.secs+(state.t0?(Date.now()-state.t0)/1000:0)),at:Date.now()};
-    else if(s.cur&&s.cur.id===PUZZLE.id)delete s.cur;
+    if(state.turns||state.tries.length)window.dnCore.keepRound(s,{id:PUZZLE.id,o:state.off,w:state.tries,t:state.turns,s:Math.round(state.secs+(state.t0?(Date.now()-state.t0)/1000:0))});
+    else if((s.cur&&s.cur.id===PUZZLE.id)||(s.rounds&&s.rounds[PUZZLE.id])){window.dnCore.dropRound(s,PUZZLE.id);if(s.cur&&s.cur.id===PUZZLE.id)delete s.cur;}
     else return;
     if(!s.v)s.v=1;localStorage.setItem(DONE_KEY,JSON.stringify(s));
   }catch(e){}
 }
-function clearCur(){try{const s=readSave();if(s.cur&&s.cur.id===PUZZLE.id){delete s.cur;localStorage.setItem(DONE_KEY,JSON.stringify(s));}}catch(e){}}
+function clearCur(){try{const s=readSave();if((s.cur&&s.cur.id===PUZZLE.id)||(s.rounds&&s.rounds[PUZZLE.id])){window.dnCore.dropRound(s,PUZZLE.id);if(s.cur&&s.cur.id===PUZZLE.id)delete s.cur;localStorage.setItem(DONE_KEY,JSON.stringify(s));}}catch(e){}}
 function restoreCur(){
-  const c=readSave().cur;
+  const c=window.dnCore.roundFor(readSave(),PUZZLE.id);   // its own round (22 Nov 2026), else cur
   if(!c||c.id!==PUZZLE.id||!Array.isArray(c.o)||c.o.length!==N)return;
   state.off=c.o.map(x=>((+x||0)%P+P)%P);state.tries=Array.isArray(c.w)?c.w.filter(w=>WORDS.has(w)):[];state.turns=+c.t||0;state.secs=+c.s||0;state.resumed=true;timerEl.textContent=fmt(state.secs);
 }

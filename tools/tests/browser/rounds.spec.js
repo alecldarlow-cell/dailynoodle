@@ -72,3 +72,17 @@ test('ROUNDS-E2E-04: GIVEN a Link round kept in rounds while cur holds another p
  await expect(p.locator('.dn-start-card h2+p')).toContainText('One group found so far');
  expect(phone.errors).toEqual([]);
 });
+
+test('ROUNDS-E2E-05: GIVEN a Cryptic round kept in rounds while cur holds another clue\'s WHEN it is opened THEN its own letters come back and the other clue\'s round is left alone',async({phone})=>{
+ const files=fs.readdirSync(path.join(H.REPO,'reports')).filter(f=>/-lab-cryptic-\d+\.html$|-word-cryptic-\d+\.html$|cryptic-\d+\.html$/.test(f)).sort();
+ const A='reports/'+files[0],B='reports/'+files[1];
+ const PA=puzzle(A),PB=puzzle(B),a=PA.id,b=PB.id,len=P=>String(P.enum).split(/[^0-9]+/).filter(Boolean).reduce((n,x)=>n+ +x,0);
+ const fill=(n,ch)=>Array.from({length:n},(_,i)=>i?'':ch);
+ const ra={id:a,letters:fill(len(PA),'A'),hints:0,s:12,at:1},rb={id:b,letters:fill(len(PB),'Z'),hints:1,s:5,at:2};
+ await seed(phone,'digi-cryptic-v1',{v:1,done:{},cur:rb,rounds:{[a]:ra,[b]:rb}});
+ await goto(phone,A);
+ await expect(phone.p.locator('.sq').first()).toContainText('A');
+ const s=await ls(phone.p,'digi-cryptic-v1');
+ expect(Object.keys(s.rounds).sort()).toEqual([a,b].sort());
+ expect(phone.errors).toEqual([]);
+});
