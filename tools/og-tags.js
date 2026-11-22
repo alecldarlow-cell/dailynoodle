@@ -71,6 +71,7 @@ for (const dir of DIRS) {
     scanned++;
     const p = path.join(abs, name);
     const html = fs.readFileSync(p, 'utf8');
+    if (html.includes('<!-- moved-page:')) continue;   // forwarding page for a moved piece or game (tools/moved-pages.js)
     const want = block(dir + '/' + name, html);
     if (!want) { skipped++; continue; }
     let out;

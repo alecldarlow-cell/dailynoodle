@@ -9,9 +9,11 @@ function run(file,args=[]){
 function prepare(){
  run('sync-core.js',['--check']);
  run('sync-cards.js',['--check']);
+ run('sync-home.js',['--check']);
+ run('moved-pages.js',['--check']);
  for(const file of ['inject-tracker.js','share-v2.js'])run(file);
  for(const type of ['mini','doku','sweep','link','path','tangle','borders','reckon','tally'])run('engine-shells.js',[type]);
- for(const file of ['og-tags.js','news-share.js','news-nav.js','news-dark.js','build-feed.js'])run(file);
+ for(const file of ['og-tags.js','build-feed.js'])run(file);
  run('add-done-state.js',['--check']);
 }
 module.exports={prepare,run};

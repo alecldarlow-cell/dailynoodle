@@ -5,7 +5,7 @@
    Reckon is the daily of the Ballpark game: ten questions a day from Ballpark's own bank,
    the same ten for everyone.
      - Facts are read by anchor from the `const PACKS=` block of
-       reports/2026-10-15-quiz-ballpark.html and copied into each day as they are
+       tools/data/ballpark.html (Ballpark's page as of 22 Nov 2026) and copied into each day as they are
        (question, unit, answer, note, flags). A fact's id is "<pack>:<index>"; Ballpark's
        own saves depend on those indexes, so facts are only ever appended to a pack.
      - Each day takes one fact from each of ten of the twelve packs (two sit out in
@@ -31,7 +31,7 @@
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports');
-const BALLPARK = path.join(REPORTS, '2026-10-15-quiz-ballpark.html');
+const BALLPARK = path.join(__dirname, 'data', 'ballpark.html');   // Ballpark's bank (tools/data/README.md)
 const TEMPLATE = path.join(__dirname, 'reckon-template.html');
 const args = process.argv.slice(2), has = k => args.includes(k);
 const arg = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };

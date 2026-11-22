@@ -7,7 +7,7 @@
    Usage: node tools/yarn-words.js [--check]   (--check writes nothing; exit 1 if a refused word is in a list) */
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const { refused } = require('./word-rules.js');
-const FILE = path.resolve(__dirname, '../reports/2026-10-24-quiz-yarn.html');
+const FILE = path.resolve(__dirname, 'data/yarn.html');   // tools/data/README.md
 const DICT_RE = /\nconst DICT=(\{.*?\});\n/;
 
 function unpack(s) { const r = []; let prev = ''; const re = /(\d)([a-z]*)/g; let m; while ((m = re.exec(s))) { const w = prev.slice(0, +m[1]) + m[2]; r.push(w); prev = w; } return r; }

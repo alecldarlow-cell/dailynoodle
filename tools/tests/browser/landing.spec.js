@@ -1,8 +1,9 @@
 'use strict';
-// LANDING: the bare address "/" opens Puzzles for everyone (10 Nov 2026, Alec's call in the distribution
-// review), keeping the query and fragment. Before that only the installed app and browsers that had played
-// were sent on (24 Oct 2026) and a first visit stayed on News. /index.html (the News tab and the pieces'
-// "← News") never moves. See SITE.md, Sections.
+// LANDING: dailynoodle.co.uk is puzzles only from 22 Nov 2026 (Alec's call). The bare address "/" IS the
+// Puzzles front page (index.html, a generated copy of puzzles.html, tools/sync-home.js), with no redirect,
+// so a first visit, a search engine and the installed app all land on it. puzzles.html keeps working
+// (installed apps start there). News and Games moved to news. and games.dailynoodle.co.uk, and their old
+// addresses forward (tools/moved-pages.js). See SITE.md, Sections.
 const { test, expect, H } = require('./support');
 const SITE = 'https://dailynoodle.co.uk';
 
@@ -20,27 +21,31 @@ async function open(browser, url, { saves = {}, app = false } = {}) {
 }
 
 test.describe('LANDING', () => {
-  test('LANDING-01: a first visit to the bare address opens Puzzles, keeping the query and fragment', async ({ browser }) => {
+  test('LANDING-01: the bare address is the Puzzles front page, for a first visit, with the query and fragment kept', async ({ browser }) => {
     const r = await open(browser, '/');
-    expect([r.url, r.section]).toEqual([SITE + '/puzzles.html', 'puzzles']);
+    expect([r.url, r.section]).toEqual([SITE + '/', 'puzzles']);
     const q = await open(browser, '/?via=reddit#top');
-    expect(q.url).toBe(SITE + '/puzzles.html?via=reddit#top');
+    expect([q.url, q.section]).toEqual([SITE + '/?via=reddit#top', 'puzzles']);
     const n = await open(browser, '/index.html');
-    expect([n.url, n.section]).toEqual([SITE + '/index.html', 'news']);   // the News tab's own address never moves
+    expect([n.url, n.section]).toEqual([SITE + '/index.html', 'puzzles']);   // News moved to news.dailynoodle.co.uk
     expect([...r.errs, ...q.errs, ...n.errs]).toEqual([]);
   });
-  test('LANDING-02: a browser that has played opens Puzzles, keeping the query and fragment', async ({ browser }) => {
+  test('LANDING-02: a browser that has played lands on Puzzles too', async ({ browser }) => {
     const r = await open(browser, '/?via=share#x', { saves: { 'digi-mini-v1': JSON.stringify({ v: 1, done: {} }) } });
-    expect([r.url, r.section]).toEqual([SITE + '/puzzles.html?via=share#x', 'puzzles']);
-    const g = await open(browser, '/', { saves: { 'noodle-board-v1': '{"pid":"x"}' } });
-    expect(g.url).toBe(SITE + '/puzzles.html');
-    expect([...r.errs, ...g.errs]).toEqual([]);
+    expect([r.url, r.section]).toEqual([SITE + '/?via=share#x', 'puzzles']);
+    const p = await open(browser, '/puzzles.html', { saves: { 'noodle-board-v1': '{"pid":"x"}' } });
+    expect([p.url, p.section]).toEqual([SITE + '/puzzles.html', 'puzzles']);
+    expect([...r.errs, ...p.errs]).toEqual([]);
   });
-  test('LANDING-03: the installed app opens Puzzles; /index.html always stays on News', async ({ browser }) => {
+  test('LANDING-03: the installed app opens Puzzles; the front pages link to no News or Games', async ({ browser }) => {
     const a = await open(browser, '/', { app: true });
-    expect(a.url).toBe(SITE + '/puzzles.html');
-    const n = await open(browser, '/index.html', { app: true, saves: { 'digi-doku-v1': '{"v":1}' } });
-    expect([n.url, n.section]).toEqual([SITE + '/index.html', 'news']);
-    expect([...a.errs, ...n.errs]).toEqual([]);
+    expect([a.url, a.section]).toEqual([SITE + '/', 'puzzles']);
+    expect(a.errs).toEqual([]);
+    const ctx = await H.newPhone(browser), p = await ctx.newPage();
+    for (const f of ['/', '/puzzles.html', '/lab.html', '/about.html', '/how-to-play.html', '/privacy.html']) {
+      await p.goto(SITE + f); await H.wait(p, 300);
+      expect(await p.locator('a[href$="games.html"], a.sec.news, a.sec.games, a[href*="news.dailynoodle"], a[href*="games.dailynoodle"]').count(), f).toBe(0);
+    }
+    await ctx.close();
   });
 });

@@ -14,13 +14,13 @@ test('sitemap: lists front pages and published feed items only, never held or La
     { path: 'reports/held.html', date: '2026-10-21' },                    // not in the site: held back
     { path: 'reports/lab.html', date: '2026-10-19', badge: 'In development' },
   ] }));
-  assert.strictEqual(write(site), 4);
+  assert.strictEqual(write(site), 2);
   const xml = fs.readFileSync(path.join(site, 'sitemap.xml'), 'utf8');
   assert.match(xml, /<loc>https:\/\/dailynoodle.co.uk\/reports\/a.html<\/loc><lastmod>2026-10-20<\/lastmod>/);
-  // the bare address opens Puzzles from 10 Nov 2026: Puzzles leads the list, News is /index.html and "/" is not listed
-  assert.match(xml, /<urlset[^>]*>\s*<url><loc>https:\/\/dailynoodle.co.uk\/puzzles.html<\/loc>/);
-  assert.match(xml, /<loc>https:\/\/dailynoodle.co.uk\/index.html<\/loc>/);
-  assert.doesNotMatch(xml, /<loc>https:\/\/dailynoodle.co.uk\/<\/loc>/);
+  // puzzles only from 22 Nov 2026: the bare address is the Puzzles front page and leads the list;
+  // puzzles.html (its alternate), News and Games are not listed
+  assert.match(xml, /<urlset[^>]*>\s*<url><loc>https:\/\/dailynoodle.co.uk\/<\/loc>/);
+  assert.doesNotMatch(xml, /puzzles\.html|index\.html|games\.html/);
   assert.doesNotMatch(xml, /held\.html|lab\.html/);
   assert.match(fs.readFileSync(path.join(site, 'robots.txt'), 'utf8'), /^Sitemap: https:\/\/dailynoodle.co.uk\/sitemap.xml$/m);
 });
@@ -30,7 +30,7 @@ test('sitemap: the shared how-to page is included when it is published',()=>{
  try{
   fs.writeFileSync(path.join(site,'feed.json'),JSON.stringify({today:'2026-10-20',items:[]}));
   fs.writeFileSync(path.join(site,'how-to-play.html'),'<!doctype html><title>How to play</title>');
-  assert.strictEqual(write(site),4);
+  assert.strictEqual(write(site),2);
   const xml=fs.readFileSync(path.join(site,'sitemap.xml'),'utf8');
   assert.match(xml,/<loc>https:\/\/dailynoodle.co.uk\/how-to-play.html<\/loc>/);
   assert.doesNotMatch(xml,/#mini|#path/);

@@ -205,20 +205,6 @@ const TESTS = {
     }
   },
 
-  async 'news:dark'(b) {
-    for (const f of ['2026-10-18-student-visa-grants-peak-fall.html', '2026-07-28-uk-two-party-vote-share.html']) for (const sc of ['light', 'dark']) {
-      const { ctx, p } = await open(b, f, { scheme: sc }); await wait(p, 2500);
-      const k = await p.evaluate(() => { const fills = [...document.querySelectorAll('.dn-fig svg [fill],.dn-fig svg [stroke]')].map(e => (e.getAttribute('fill') || '') + ' ' + (e.getAttribute('stroke') || '')).join(' ').toUpperCase();
-        return { bg: getComputedStyle(document.body).backgroundColor, subj: DN.colors.subject, figs: document.querySelectorAll('.dn-fig svg').length,
-          oldBlue: fills.includes('#1C46C2'), newBlue: fills.includes('#9DB2FF'), sw: document.documentElement.scrollWidth, vw: innerWidth }; });
-      const dark = sc === 'dark';
-      ok(k.bg === (dark ? 'rgb(17, 19, 26)' : 'rgb(252, 252, 251)') && k.subj === (dark ? '#9DB2FF' : '#1C46C2') && k.figs > 0 && k.sw <= k.vw && !p.errs.length,
-        `${f.slice(11, 40)} ${sc}: canvas ${k.bg}, chart subject ${k.subj}, ${k.figs} charts` + (p.errs.length ? ' ' + p.errs.join(' | ') : ''));
-      ok(dark ? (!k.oldBlue && k.newBlue) : !k.newBlue, `${f.slice(11, 40)} ${sc}: chart colours ${dark ? 'swapped for dark' : 'untouched'}`);
-      await ctx.close();
-    }
-  },
-
   /* every painted frame while opening puzzles in dark mode: none light, none showing the old result layout */
   async 'flash:dark'(b) {
     if (chromiumOnly(b, 'opening Path, Tangle and Mini in dark: no light frame', 'records every painted frame with the Chromium DevTools screencast (CDP), which WebKit does not offer')) return;
@@ -398,7 +384,7 @@ const TESTS = {
     ok(await text(p, '#winTitle') === 'Reckoned' && /^800\s*pts$/.test(await text(p, '#rBig')), 'reckon: Reckoned, 800 pts');
     ok(/^Eight bullseyes/.test(await text(p, '.fin-note')), `reckon: note "${await text(p, '.fin-note')}"`);
     ok(await p.locator('.fin-rk button').count() === 10, 'reckon: ten questions in the recap');
-    ok(await p.locator('.fin a.fin-link[href*="quiz-ballpark"]').count() === 1, 'reckon: Ballpark link in the recap');
+    ok(await p.locator('.fin a.fin-link').count() === 0, 'reckon: no link out to a game in the recap (puzzles only, 22 Nov 2026)');
     const save = await ls(p, 'digi-reckon-v1'), rec = save && save.done && save.done['DP·RECK·0001'];
     ok(rec && rec.p === 800 && rec.b === 8 && rec.d === '2026-10-20' && rec.z.length === 10 && rec.g.length === 10 && !save.cur, 'reckon: first result saved with its London day; no round left open');
     ok(save && save.streak && save.streak.n === 1 && save.streak.last === '2026-10-20', 'reckon: streak 1 for a round finished on its day');
@@ -526,7 +512,7 @@ const TESTS = {
     ok(await text(p, '#rPts') === '650', `borders: 650 points with no run bonus, got ${await text(p, '#rPts')}`);
     ok(/^You missed \w[\w ]*, [\w ]+ and [\w ]+\./.test(await text(p, '.fin-note')), `borders: note "${await text(p, '.fin-note')}"`);
     ok(await p.locator('.fin-outl figure').count() === 10 && await p.locator('.fin-outl figure.x').count() === 3, 'borders: ten outlines, three missed');
-    ok(await p.locator('.fin a.fin-link[href*="borderline"]').count() === 1, 'borders: Borderline link in the recap');
+    ok(await p.locator('.fin a.fin-link, .endbtns a[href*="borderline"]').count() === 0, 'borders: no link out to Borderline (puzzles only, 22 Nov 2026)');
     await shareClipboard(p, ctx, 'borders');
     await reopen(p, ev, 'borders');
     ok(!p.errs.length, 'borders: no page errors ' + p.errs.join(' | '));

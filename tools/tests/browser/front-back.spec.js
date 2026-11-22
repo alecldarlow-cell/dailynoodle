@@ -20,7 +20,7 @@ const topCard=p=>p.evaluate(()=>{
 // Puzzles has no filter row from 7 Nov 2026 (the puzzles nav replaced it; filtering lives in the
 // Archive), so it is checked on its whole list (topic "all"); News still checks a topic.
 // Puzzles lists the day's set only from 7 Nov 2026 (about nine cards), so its card is nearer the top.
-for(const [page,topic,nth] of [['puzzles.html','all',2],['index.html','Science',9]])
+for(const [page,topic,nth] of [['puzzles.html','all',2]])
 test('FRONT-BACK: '+page+' keeps topic "'+topic+'" and the top card across Back with no back-forward cache',async({phone})=>{
  const {ctx,p}=phone;
  // the page from disk, as the harness serves it, plus no-store (never route.fetch: that goes to the network)

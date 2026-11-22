@@ -9,7 +9,7 @@ const R = require('../../build-reckon-batch');
 const { read } = require('../read-puzzle');
 
 const ENGINE = fs.readFileSync(path.join(ROOT, 'engines/reckon.js'), 'utf8');
-const BALLPARK = fs.readFileSync(path.join(ROOT, 'reports/2026-10-15-quiz-ballpark.html'), 'utf8');
+const BALLPARK = fs.readFileSync(path.join(ROOT, 'tools/data/ballpark.html'), 'utf8');
 function slice(src, from, to) { const a = src.indexOf(from), b = src.indexOf(to, a); assert.ok(a >= 0 && b > a, 'markers ' + from); return src.slice(a, b); }
 // the engine's constants and gate, run on their own
 const engine = vm.createContext({});

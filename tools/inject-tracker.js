@@ -29,6 +29,7 @@ for (const dir of DIRS) {
     scanned++;
     const p = path.join(abs, file);
     const html = fs.readFileSync(p, 'utf8');
+    if (html.includes('<!-- moved-page:')) continue;   // forwarding page for a moved piece or game (tools/moved-pages.js)
     if (html.includes('dn-track.js')) { already++; continue; }
     const i = html.toLowerCase().lastIndexOf('</body>');
     const out = i >= 0

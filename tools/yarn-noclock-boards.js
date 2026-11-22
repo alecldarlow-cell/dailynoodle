@@ -9,7 +9,7 @@
    Usage: node tools/yarn-noclock-boards.js [count=100] [--write]   (--write puts them in the page's NOCLOCK line) */
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const { unpack } = require('./yarn-words.js');
-const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports'), FILE = path.join(REPORTS, '2026-10-24-quiz-yarn.html');
+const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports'), FILE = path.join(__dirname, 'data', 'yarn.html');   // tools/data/README.md
 const html = fs.readFileSync(FILE, 'utf8');
 const DICT = vm.runInNewContext('(' + html.match(/\nconst DICT=(\{.*?\});\n/)[1] + ')');
 const LEVELS = vm.runInNewContext('(' + html.match(/\nconst LEVELS=(\[[\s\S]*?\]);\n/)[1] + ')');

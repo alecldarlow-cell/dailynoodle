@@ -38,11 +38,12 @@ test('uses feed numbering, including filenames without serials, and cached feed 
 test('archive numbers that were reused get dates; future and Lab content are excluded',()=>{
  const items=[puzzle('doku',4,'2026-07-16'),puzzle('doku',4,'2026-07-17'),puzzle('mini',102,'2026-10-21'),{...puzzle(),badge:'In development'}];
  const pages=entries({today:'2026-10-20',items});
- assert.equal(pages.length,5);
- assert.equal(new Set(pages.map(([,m])=>m.title)).size,5);
- assert.match(pages[3][1].title,/Doku 4 \(2026-07-16\)/);
- assert.match(pages[4][1].title,/Doku 4 \(2026-07-17\)/);
- assert.equal(pages[0][1].canonical,'https://dailynoodle.co.uk/index.html');   // "/" opens Puzzles from 10 Nov 2026
+ assert.equal(pages.length,4);
+ assert.equal(new Set(pages.map(([,m])=>m.title)).size,4);
+ assert.match(pages[2][1].title,/Doku 4 \(2026-07-16\)/);
+ assert.match(pages[3][1].title,/Doku 4 \(2026-07-17\)/);
+ assert.equal(pages[0][1].canonical,'https://dailynoodle.co.uk/');   // puzzles only from 22 Nov 2026: "/" is the Puzzles front page
+ assert.equal(pages[1][1].canonical,'https://dailynoodle.co.uk/');   // puzzles.html names "/" too
 });
 
 test('head metadata is escaped, unique and idempotent; page, saves and social/card copy stay intact',()=>{
@@ -68,7 +69,7 @@ test('writes released metadata, preserving editorial titles/descriptions and hol
   const now=puzzle(),future=puzzle('path',95,'2026-10-21'),news={kind:'report',path:'reports/news.html'};
   for(const file of ['index.html','puzzles.html','games.html',now.path,future.path,news.path,'how-to-play.html'])fs.writeFileSync(path.join(site,file),html);
   fs.writeFileSync(path.join(site,'feed.json'),JSON.stringify({today:'2026-10-20',items:[now,future,news]}));
-  assert.equal(write(site),5);
+  assert.equal(write(site),4);   // index, puzzles, the released puzzle, the news item (games.html is no longer a hub, 22 Nov 2026)
   const result=fs.readFileSync(path.join(site,now.path),'utf8');
   assert.match(result,/<title>Path 94 — Daily Number Path Puzzle \| Daily Noodle<\/title>/);
   for(const file of [future.path,'how-to-play.html'])assert.equal(fs.readFileSync(path.join(site,file),'utf8'),html);
@@ -78,7 +79,7 @@ test('writes released metadata, preserving editorial titles/descriptions and hol
   write(site);assert.equal(fs.readFileSync(path.join(site,now.path),'utf8'),result);
   // The already-built future file gets metadata automatically on its release day.
   fs.writeFileSync(path.join(site,'feed.json'),JSON.stringify({today:'2026-10-21',items:[now,future,news]}));
-  assert.equal(write(site),6);
+  assert.equal(write(site),5);
   assert.match(fs.readFileSync(path.join(site,future.path),'utf8'),/<title>Path 95 — Daily Number Path Puzzle \| Daily Noodle<\/title>/);
 
  }finally{fs.rmSync(site,{recursive:true,force:true});}

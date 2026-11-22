@@ -49,7 +49,8 @@ function build(out=path.join(ROOT,'_site')){
    assert.equal((head.match(/<link\s+rel="canonical"/gi)||[]).length,1,file+' canonical');
    assert.ok(head.includes('href="'+meta.canonical+'"'),file+' canonical URL');
    assert.ok(!titles.has(meta.title),'Reused search title: '+meta.title);titles.add(meta.title);
-   if(file!=='puzzles.html')assert.equal(published.slice(published.indexOf('</head>')),source.slice(source.indexOf('</head>')),file+' body changed');
+   if(file!=='puzzles.html'&&file!=='index.html')assert.equal(published.slice(   // both hubs carry the crawlable cards (index.html is puzzles.html's copy, 22 Nov 2026)
+    published.indexOf('</head>')),source.slice(source.indexOf('</head>')),file+' body changed');
    assert.deepEqual(published.match(/<meta\b[^>]*\b(?:name="dn:|property="og:)[^>]*>/g),source.match(/<meta\b[^>]*\b(?:name="dn:|property="og:)[^>]*>/g),file+' card/social metadata changed');
   }
   for(const it of feed.items.filter(it=>it.kind==='puzzle'&&it.type)){assert.equal(it.thumb,'assets/'+it.type+'-thumb.svg','One fixed icon per type: '+it.path);assert.ok(fs.existsSync(path.join(site,it.thumb)),it.thumb);}

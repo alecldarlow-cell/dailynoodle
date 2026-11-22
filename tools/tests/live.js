@@ -11,7 +11,7 @@ function searchTags(html,meta,canonical){
 }
 (async()=>{
  const base='https://dailynoodle.co.uk';
- for(const file of ['index.html','admin.html','admin-health.js','puzzles.html','games.html','how-to-play.html','front.js','engines/finish.js','sw.js','manifest.webmanifest','join.html']){
+ for(const file of ['index.html','admin.html','admin-health.js','puzzles.html','how-to-play.html','front.js','engines/finish.js','sw.js','manifest.webmanifest','join.html']){
   const r=await fetch(base+'/'+file,{signal:AbortSignal.timeout(20000),cache:'no-cache'});assert.equal(r.status,200,file);const html=await r.text();assert.ok(html.length>20,file);
   if(HUBS[file])searchTags(html,HUBS[file],base+'/'+file);console.log('LIVE '+file+' OK');
  }

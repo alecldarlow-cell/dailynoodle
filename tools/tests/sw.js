@@ -101,7 +101,7 @@ const ORIGIN = `http://localhost:${srv.address().port}`;
   // 4. network first
   S.down = false;
   await p.close(); p = await ctx.newPage(); p.on('pageerror', e => errs.push(p.url().replace(ORIGIN, '') + ': ' + e.message));   // leave the failed admin page behind
-  await p.goto(ORIGIN + '/games.html'); await p.waitForTimeout(300);
+  await p.goto(ORIGIN + '/lab.html'); await p.waitForTimeout(300);
   S.override['/feed.json'] = JSON.stringify({ items: [] , marker: 'fresh-1' });
   const feed = await p.evaluate(() => fetch('/feed.json', { cache: 'no-cache' }).then(r => r.json()));
   ok(feed.marker === 'fresh-1', 'online: a changed file is served fresh, not from the cache');

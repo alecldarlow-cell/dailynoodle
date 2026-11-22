@@ -9,7 +9,7 @@ function check(site){
  const feed=JSON.parse(fs.readFileSync(path.join(site,'feed.json'),'utf8')),xml=fs.readFileSync(path.join(site,'sitemap.xml'),'utf8');
  const urls=Array.from(xml.matchAll(/<loc>([^<]+)<\/loc>/g),m=>decode(m[1]));
  if(!urls.length)fail('empty sitemap');
- const expected=['puzzles.html','index.html','games.html'];   // the bare address opens Puzzles (10 Nov 2026) and is not listed
+ const expected=[''];   // the bare address is the Puzzles front page (22 Nov 2026); puzzles.html is its alternate and is not listed
  if(fs.existsSync(path.join(site,'how-to-play.html')))expected.push('how-to-play.html');
  const guidePages=require('./guide-pages');
  for(const page of [...Object.keys(guidePages.PAGES).map(guidePages.rel),'about.html'])if(fs.existsSync(path.join(site,page)))expected.push(page);
@@ -46,9 +46,12 @@ function check(site){
  for(const loc of wanted)if(!seen.has(loc))fail('missing sitemap URL '+loc);
  const robots=fs.readFileSync(path.join(site,'robots.txt'),'utf8');
  if(!robots.includes('Sitemap: '+ORIGIN+'/sitemap.xml')||/Disallow:\s*\/\s*$/mi.test(robots))fail('robots blocks discovery or omits sitemap');
- const hub=fs.readFileSync(path.join(site,'puzzles.html'),'utf8');
- for(const it of feed.items||[])if(it.kind==='puzzle'&&!it.badge&&(!feed.today||it.date<=feed.today)){
-  if(!hub.includes('href="'+it.path+'"'))fail('puzzle is absent from initial HTML '+it.path);
+ for(const page of ['index.html','puzzles.html']){   // the bare address and its alternate carry the same cards (22 Nov 2026)
+  if(!fs.existsSync(path.join(site,page)))continue;
+  const hub=fs.readFileSync(path.join(site,page),'utf8');
+  for(const it of feed.items||[])if(it.kind==='puzzle'&&!it.badge&&(!feed.today||it.date<=feed.today)){
+   if(!hub.includes('href="'+it.path+'"'))fail('puzzle is absent from initial HTML '+it.path+' ('+page+')');
+  }
  }
  if(fs.existsSync(path.join(site,'how-to-play.html'))){
   const guide=fs.readFileSync(path.join(site,'how-to-play.html'),'utf8');

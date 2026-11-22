@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs');
 const {test,expect,H,goto}=require('./support');
-for(const page of ['index.html','puzzles.html','games.html'])test('A11Y: named controls, links and images on '+page,async({phone})=>{
+for(const page of ['index.html','puzzles.html'])test('A11Y: named controls, links and images on '+page,async({phone})=>{
  await goto(phone,page);await phone.p.addScriptTag({content:fs.readFileSync(require.resolve('axe-core'),'utf8')});
  const result=await phone.p.evaluate(async()=>{
   const r=await axe.run(document,{runOnly:{type:'rule',values:['button-name','link-name','image-alt','label','aria-valid-attr','aria-valid-attr-value','aria-required-attr','aria-dialog-name']}});
