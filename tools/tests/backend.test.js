@@ -502,3 +502,41 @@ test('ADMIN-ARCHIVE-01: weekly archive and stats counts, admin only, excluded re
   ].filter(w => w.archive_opens + w.archive_plays + w.stats_opens));
   await assert.rejects(() => q("select public.admin_archive_stats('2026-11-15','2026-11-01')"), /bad_range/);
 });
+
+// ADMIN-PUZZLES-ONLY: toolchain/sql/2026-11-22-admin-puzzles-only.sql. From 22 Nov 2026 'index.html' is three
+// front pages, told apart by section: Puzzles (the bare address), the News list (news.) and the Games list (games.).
+test('ADMIN-PUZZLES-ONLY: from 22 Nov the bare address counts as Puzzles, the News list as before, the Games list as Games; earlier days unchanged', async t => {
+  const db = new PGlite();
+  t.after(() => db.close());
+  await db.exec(`
+    create role anon; create role authenticated; create role service_role;
+    create schema auth;
+    create function auth.jwt() returns jsonb language sql stable as
+      $$ select coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb $$;
+    grant usage on schema auth to anon, authenticated, service_role;
+  `);
+  await db.exec(fs.readFileSync(path.join(__dirname, '../../toolchain/sql/2026-10-20-admin-live-definitions.sql'), 'utf8'));
+  await db.exec(fs.readFileSync(path.join(__dirname, '../../toolchain/sql/2026-11-22-admin-puzzles-only.sql'), 'utf8'));
+  const q = async (sql, params = []) => (await db.query(sql, params)).rows;
+  await db.exec("insert into insights.admins values ('editor@example.test')");
+  await q("select set_config('request.jwt.claims',$1,false)", [JSON.stringify({ email: 'editor@example.test' })]);
+  const id = n => '00000000-0000-4000-8000-0000000000' + String(n).padStart(2, '0');
+  const S = id(99);
+  const pv = (anon, day, item, section, n) => q(
+    'insert into public.events(occurred_at,anon_id,session_id,section,event,item_path,props) values ($1::timestamptz,$2,$3,$4,$5,$6,$7::jsonb)',
+    [day + 'T12:00:00Z', anon, S, section, 'page_view', item, JSON.stringify({ pv: anon + '-' + n })]);
+  // Every reader opens two pages, so none is a one-page reader.
+  const OLD = id(11), PZ = id(12), NW = id(13), GM = id(14);
+  await pv(OLD, '2026-11-21', 'index.html', 'news', 1); await pv(OLD, '2026-11-21', 'index.html', 'news', 2);   // the old home: News list
+  await pv(PZ, '2026-11-22', 'index.html', 'puzzles', 1); await pv(PZ, '2026-11-22', 'index.html', 'puzzles', 2); // the bare address: Puzzles
+  await pv(NW, '2026-11-22', 'index.html', 'news', 1); await pv(NW, '2026-11-22', 'index.html', 'news', 2);       // news.dailynoodle.co.uk
+  await pv(GM, '2026-11-22', 'index.html', 'games', 1); await pv(GM, '2026-11-22', 'index.html', 'games', 2);     // games.dailynoodle.co.uk
+  const d = (await q("select public.admin_dashboard('2026-11-21'::date,'2026-11-22'::date,false) as v"))[0].v;
+  const front = Object.fromEntries(d.front_pages.map(f => [f.page, f.readers]));
+  assert.deepStrictEqual(front, { 'index.html': 2, 'puzzles.html': 1, 'games.html': 1 }, 'News list = old home + news.; Puzzles and Games fronts by section');
+  const sec = Object.fromEntries(d.sections.map(s => [s.section, s.readers]));
+  assert.deepStrictEqual(sec, { puzzles: 1, games: 1 }, 'opening only a News list still counts as no section');
+  const day = Object.fromEntries(d.daily.map(r => [r.day, r]));
+  assert.strictEqual(day['2026-11-21'].puzzles, 0, 'before the switch the home page is not Puzzles');
+  assert.strictEqual(day['2026-11-22'].puzzles, 1);
+});

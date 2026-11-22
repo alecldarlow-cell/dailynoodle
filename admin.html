@@ -1634,8 +1634,11 @@
   setRange(S.range);
   var h0 = location.hash.slice(1);
   showTab(TABS.indexOf(h0) >= 0 ? h0 : 'overview', { keepHash: true, keepScroll: true });
-  var feedP = fetch('feed.json', {cache:'no-store'}).then(function(r){ return r.ok ? r.json() : {items:[]}; })
-    .then(function(j){ (j.items||[]).forEach(function(i){ FEED[i.path] = i; }); }).catch(function(){});
+  // Puzzles only from 22 Nov 2026: news pieces and games list on their own sites' feeds (same paths, reports/…),
+  // so the News and Games tabs read those too. GitHub Pages serves them to any origin.
+  function loadFeed(url){ return fetch(url, {cache:'no-store'}).then(function(r){ return r.ok ? r.json() : {items:[]}; })
+    .then(function(j){ (j.items||[]).forEach(function(i){ if (!FEED[i.path]) FEED[i.path] = i; }); }).catch(function(){}); }
+  var feedP = Promise.all([loadFeed('feed.json'), loadFeed('https://news.dailynoodle.co.uk/feed.json'), loadFeed('https://games.dailynoodle.co.uk/feed.json')]);
   feedP.then(newsToday);
 
   if (!sb) { showSignin('The sign-in library didn’t load. Check your connection and reload the page.', 'err'); return; }
