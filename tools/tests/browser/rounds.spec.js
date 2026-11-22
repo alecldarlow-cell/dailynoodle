@@ -5,9 +5,10 @@
    the latest. GIVEN two puzzles of a type part-played, WHEN the older one is opened again, THEN it
    resumes from its own round. */
 const {test,expect,H,goto}=require('./support');
-const fs=require('fs'),path=require('path');
-const {parseDnPuzzle}=require('../../puzzle-json');
-const puzzle=file=>parseDnPuzzle(fs.readFileSync(path.join(H.REPO,file),'utf8'));
+const fs=require('fs'),path=require('path'),vm=require('vm');
+// the page's own DN_PUZZLE object, read once per file (no time limit: a loaded CI box is slow)
+const puzzle=file=>{const m=/(window\.DN_PUZZLE\s*=[\s\S]*?)<\/script>/.exec(fs.readFileSync(path.join(H.REPO,file),'utf8'));
+ const box={window:{}};vm.runInNewContext(m[1],box);return JSON.parse(JSON.stringify(box.window.DN_PUZZLE));};
 const ls=(p,k)=>p.evaluate(k=>JSON.parse(localStorage.getItem(k)),k);
 async function seed(phone,key,doc){
  await phone.ctx.addInitScript(([k,v])=>{if(sessionStorage.getItem('seeded'))return;sessionStorage.setItem('seeded','1');localStorage.setItem(k,v);},[key,JSON.stringify(doc)]);
