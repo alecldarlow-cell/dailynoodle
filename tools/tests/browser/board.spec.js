@@ -347,7 +347,7 @@ test.describe('BOARD-E2E', () => {
     } finally { await A.ctx.close(); }
   });
 
-  // 7 Nov 2026 (as the app's Leagues): the pager steps All puzzles → each puzzle → Astro Drop → Records; the league's name
+  // 7 Nov 2026 (as the app's Leagues): the pager steps All puzzles → each puzzle → Records (Astro Drop left it on 22 Nov 2026); the league's name
   // is the masthead kicker and opens the menu (Invite people, League settings, Start, Join); Share is the board's one action.
   test('BOARD-SWIPE-01: a sideways swipe steps the stops even on an empty board, and not over the section row', async ({ browser }) => {
     test.setTimeout(60000);
@@ -407,7 +407,8 @@ test.describe('BOARD-E2E', () => {
       await expect(A.p.locator('#app [data-act="share"]')).toHaveText('Share leaderboard');
       await expect(A.p.locator('details.set')).toHaveCount(0);
       await expect(A.p.locator('.pg-ico img')).toHaveAttribute('src', 'assets/mini-thumb.svg');
-      await expect(A.p.locator('.dot')).toHaveCount(12);
+      await expect(A.p.locator('.dot')).toHaveCount(11);   // All puzzles, the nine, Records: Astro Drop left the pager on 22 Nov 2026
+      await expect(A.p.locator('.dot[data-p="astro"]')).toHaveCount(0);
       await expect(A.p.locator('.dot[data-p="mini"]')).toHaveAttribute('aria-pressed', 'true');
       // the arrows step along the stops; the last stop is Records, which has no next
       await H.tap(A.p, A.p.locator('.pg-arrow').nth(1)); await H.wait(A.p, 400);

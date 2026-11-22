@@ -195,7 +195,8 @@ const TESTS = {
   },
 
   async 'front:dark'(b) {
-    for (const pg of ['index', 'puzzles', 'games', 'lab', 'board', 'privacy']) for (const sc of ['light', 'dark']) {
+    for (const pg of ['index', 'puzzles', 'lab', 'board', 'privacy'])   // games.html forwards to games.dailynoodle.co.uk (22 Nov 2026)
+      for (const sc of ['light', 'dark']) {
       const { ctx, p } = await open(b, `../${pg}.html`, { scheme: sc }); await wait(p, 1200);
       const k = await p.evaluate(() => ({ bg: getComputedStyle(document.body).backgroundColor, sw: document.documentElement.scrollWidth, vw: innerWidth,
         tc: [...document.querySelectorAll('meta[name="theme-color"]')].filter(m => matchMedia(m.media || 'all').matches).map(m => m.content)[0] }));
