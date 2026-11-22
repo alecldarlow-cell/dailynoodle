@@ -94,6 +94,16 @@ jobs:
           echo "github-pages artifact still not listed after 150 s; deploying anyway"
       - name: Deploy tested artifact to GitHub Pages
         id: deploy
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      # deploy-pages reads the artifact list through its own service, which can lag the upload even after
+      # the REST list shows it (22 Nov 2026). One retry after a minute; a second failure fails the run.
+      - name: Retry the deploy once after a minute
+        if: steps.deploy.outcome == 'failure'
+        run: sleep 60
+      - name: Deploy tested artifact to GitHub Pages (retry)
+        id: deploy2
+        if: steps.deploy.outcome == 'failure'
         uses: actions/deploy-pages@v4
       - name: Read-only live health check
         run: npm run test:live
