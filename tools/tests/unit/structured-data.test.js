@@ -14,9 +14,12 @@ const FEED={today:'2026-11-10',items:[
 const block=html=>JSON.parse(html.match(/<script type="application\/ld\+json" data-dn="ld">([\s\S]*?)<\/script>/)[1]);
 test('STRUCT-01 every released page is described once; held and Lab pages never are',()=>{
  const map=new Map(entries(FEED));
- assert.deepEqual([...map.keys()],['index.html','puzzles.html','games.html','reports/tally.html','reports/mini-old.html','reports/mini.html','reports/planes.html','reports/news.html']);
- assert.deepEqual(map.get('index.html')['@graph'].map(n=>n['@type']),['WebSite','Organization','CollectionPage']);
- const today=map.get('puzzles.html');
+assert.deepEqual([...map.keys()],['index.html','puzzles.html','reports/tally.html','reports/mini-old.html','reports/mini.html','reports/planes.html','reports/news.html']);
+ // puzzles only (22 Nov 2026): "/" and its alternate puzzles.html carry the site and today's puzzles
+ assert.deepEqual(map.get('index.html')['@graph'].map(n=>n['@type']),['WebSite','Organization','ItemList']);
+ assert.deepEqual(map.get('puzzles.html'),map.get('index.html'));
+ const today=map.get('index.html')['@graph'][2];
+ assert.equal(today.url,'https://dailynoodle.co.uk/');
  assert.deepEqual(today.itemListElement.map(e=>e.name),['Mini 122','Tally 15'],'the daily order, whatever the feed order');
  assert.match(map.get('index.html')['@graph'][0].description,/^Nine free daily puzzles/);
 });

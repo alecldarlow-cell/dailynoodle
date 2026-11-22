@@ -7,7 +7,7 @@
    Facts are only ever edited in place: indexes are ids that the game's saves depend on. */
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm');
-const FILE = path.join(__dirname, '..', 'reports', '2026-10-15-quiz-ballpark.html');
+const FILE = path.join(__dirname, 'data', 'ballpark.html');   // tools/data/README.md
 const [fixFile] = process.argv.slice(2).filter(a => !a.startsWith('--')), DRY = process.argv.includes('--dry');
 if (!fixFile) { console.error('usage: node tools/apply-ballpark-fixes.js FIXES.json [--dry]'); process.exit(2); }
 const FIX = JSON.parse(fs.readFileSync(fixFile, 'utf8')).fixes;

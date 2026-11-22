@@ -4,8 +4,8 @@ const fs=require('node:fs'),path=require('node:path'),{card,daySet}=require('./c
 function write(out){
  const feed=JSON.parse(fs.readFileSync(path.join(out,'feed.json'),'utf8'));
  const items=(feed.items||[]).filter(it=>it.kind==='puzzle'&&!/^\s*in development\s*$/i.test(it.badge||'')&&(!feed.today||it.date<=feed.today));
- const hub=path.join(out,'puzzles.html');
- if(fs.existsSync(hub)){
+ // index.html (the bare address) is a copy of puzzles.html from 22 Nov 2026 (tools/sync-home.js): both carry the cards
+ for(const hub of ['puzzles.html','index.html'].map(f=>path.join(out,f)))if(fs.existsSync(hub)){
   let html=fs.readFileSync(hub,'utf8');
   // the day's set shows; every older card is in the page too (crawlable), hidden (card-renderer daySet)
   const set=daySet(items,feed.today||'9999'),shown=set.items.filter(it=>it.date===set.day).length;

@@ -6,7 +6,7 @@
 const test = require('node:test'), assert = require('node:assert');
 const fs = require('fs'), path = require('path'), vm = require('vm'), crypto = require('crypto');
 const ROOT = path.resolve(__dirname, '../../..'), REPORTS = path.join(ROOT, 'reports');
-const html = fs.readFileSync(path.join(REPORTS, '2026-10-24-quiz-yarn.html'), 'utf8');
+const html = fs.readFileSync(path.join(__dirname, '..', '..', 'data', 'yarn.html'), 'utf8');
 const DICT = vm.runInNewContext('(' + html.match(/\nconst DICT=(\{.*?\});\n/)[1] + ')');
 const LEVELS = vm.runInNewContext('(' + html.match(/\nconst LEVELS=(\[[\s\S]*?\]);\n/)[1] + ')');
 const unpack = s => { const r = []; let prev = ''; const re = /(\d)([a-z]*)/g; let m; while ((m = re.exec(s))) { const w = prev.slice(0, +m[1]) + m[2]; r.push(w); prev = w; } return r; };

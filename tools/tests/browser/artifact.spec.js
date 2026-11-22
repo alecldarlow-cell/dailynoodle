@@ -4,7 +4,7 @@ const {test,expect,H,goto}=require('./support');
 const ROOT=path.resolve(__dirname,'../../..');
 // Source-only browser runs remain usable; the suite also runs this against
 // the freshly transformed _site with DN_TEST_ROOT set in a separate process.
-for(const page of ['index.html','puzzles.html','games.html'])test('BUILD/FRONT: '+page+' has cards and every card opens',async({phone})=>{
+for(const page of ['index.html','puzzles.html'])test('BUILD/FRONT: '+page+' has cards and every card opens',async({phone})=>{
  const file=path.join(H.REPO,'puzzles-today.json'),day=JSON.parse(fs.readFileSync(file)).today;
  await phone.p.clock.setSystemTime(new Date(day+'T12:00:00Z'));await goto(phone,page);
  const cards=phone.p.locator('a.card');expect(await cards.count()).toBeGreaterThan(0);

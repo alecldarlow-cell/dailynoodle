@@ -450,7 +450,7 @@ function homeExtras(){
   let st=$('hStats');
   if(!st){st=document.createElement('div');st.className='hstats';st.id='hStats';card.parentNode.insertBefore(st,card.nextSibling);
     const how=document.createElement('details');how.className='how';
-    how.innerHTML='<summary>How to play</summary><p>Ten country outlines, easiest first. Pick the country from four names: 100 points for each right answer, up to 1,000.</p><p>Stuck? Show on map puts the outline on a world map, for half points. Every country you name goes into your atlas in Borderline.</p>';
+    how.innerHTML='<summary>How to play</summary><p>Ten country outlines, easiest first. Pick the country from four names: 100 points for each right answer, up to 1,000.</p><p>Stuck? Show on map puts the outline on a world map, for half points.</p>';
     st.parentNode.insertBefore(how,st.nextSibling);}
   const best=Math.max(0,...Object.values(save.done||{}).map(d=>+d.p||0));
   st.innerHTML='<div><b>'+liveStreak()+'</b><span>Borders streak</span></div><div><b>'+best+'</b><span>best score</span></div><div><b>'+Object.keys(save.done||{}).length+'</b><span>Borders played</span></div>';
@@ -560,8 +560,9 @@ function showResult(rec,fresh){
   const outl=document.createElement('div');outl.className='fin-outl';
   outl.innerHTML=P.qs.map((q,i)=>{const a=rec.ans[i];return `<figure class="${a&&a.ok?'ok':'x'}">${tileSVG(q)}<figcaption>${q.n}${a&&a.ok&&a.h?' (map)':''}</figcaption></figure>`;}).join('');
   const rc=document.createElement('div');rc.appendChild(outl);
-  const more=document.querySelector('.endbtns a[href*="borderline"]');
-  if(more){const a=document.createElement('a');a.className='fin-link';a.href=more.getAttribute('href');a.textContent='Explore more outlines in Borderline';rc.appendChild(a);}
+  // Puzzles only (22 Nov 2026): Borderline moved to games.dailynoodle.co.uk, so the page's old links to it go.
+  document.querySelectorAll('.endbtns a[href*="borderline"]').forEach(x=>x.remove());
+  document.querySelectorAll('#winModal p.small').forEach(x=>{if(/Borderline/.test(x.textContent))x.remove();});
   window.dnFinish.show({type:'borders',id:P.id,n:parseInt(P.id.slice(-4),10),date:P.date,box:'winModal',title:'winTitle',hero:'rBig',note,
     share:{text:()=>shareText(rec)},
     stats:[{id:'rPts',label:'points'},{id:'rStreak',label:'day streak'},{value:best,label:'best score'}],

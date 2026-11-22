@@ -317,6 +317,7 @@ for (const { dir, kind } of DIRS) {
     if (!/\.html?$/i.test(file)) continue;
     const rel = `${dir}/${file}`;
     const html = fs.readFileSync(path.join(abs, file), 'utf8');
+    if (html.includes('<!-- moved-page:')) continue;   // forwarding page for a moved piece or game (tools/moved-pages.js)
     const head = html.slice(0, 20000);
     const fn = fromFilename(file);
 

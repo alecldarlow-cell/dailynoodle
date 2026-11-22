@@ -674,7 +674,6 @@ function showResult(rec,fresh){
       '<span class="rp" style="background:'+ZC[z]+'">'+PTS[z]+'</span></button></li>'}).join('');
   ul.addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(b)reviewEnd(+b.dataset.k);});
   const rc=document.createElement('div');rc.appendChild(ul);
-  const a=document.createElement('a');a.className='fin-link';a.href='2026-10-15-quiz-ballpark.html';a.textContent='Play more in Ballpark';rc.appendChild(a);
   window.dnFinish.show({type:'reckon',id:P.id,n:serial(),date:P.date,box:'winModal',title:'winTitle',hero:'rBig',note:noteFor(rec),
     share:{text:()=>shareText(rec)},
     stats:[{id:'winTime',label:'time'},{id:'rStreak',label:'day streak'},{value:bestScore(),label:'best score'}],

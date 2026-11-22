@@ -15,10 +15,9 @@ test('CI: build precedes the bounded pool; free slots immediately take the next 
   active--;
  });
  await tick();assert.equal(gates.size,MAX_JOBS);assert.equal(peak,MAX_JOBS);
- assert.ok(!calls.includes('news'));
- gates.get('browser-games').resolve();await tick();assert.ok(calls.includes('browser-accounts'));assert.ok(!calls.includes('news'));
- gates.get('browser-pages').resolve();await tick();assert.ok(calls.includes('news'));assert.ok(!calls.includes('timing-dates'));
- gates.get('browser-accounts').resolve();await tick();assert.ok(calls.includes('timing-dates'));
+ assert.ok(calls.includes('browser-accounts'));assert.ok(!calls.includes('timing-dates'));
+ gates.get('browser-pages').resolve();await tick();assert.ok(calls.includes('timing-dates'));assert.ok(!calls.includes('worker'));
+ gates.get('browser-accounts').resolve();await tick();assert.ok(calls.includes('worker'));
  for(let round=0;round<plan().tasks.length+2;round++){for(const g of gates.values())g.resolve();await tick();if(calls.length===plan().serial.length&&active===0)break;}
  await job;assert.deepEqual(calls.slice().sort(),plan().serial.map(t=>t.name).sort());
  assert.equal(peak,MAX_JOBS);
@@ -29,7 +28,7 @@ test('CI: failure stops dispatch, waits for every active group and rejects publi
  const job=execute(async t=>{
   calls.push(t.name);
   if(t.name==='browser-pages')throw Error('browser regression');
-  if(t.name.startsWith('puzzles-')||t.name==='browser-games')await gate.promise;
+  if(t.name.startsWith('puzzles-')||t.name==='browser-accounts')await gate.promise;
  }).finally(()=>{ended=true;});
  const rejected=assert.rejects(job,/browser regression/);
  await tick();assert.equal(ended,false);assert.ok(!calls.includes('artifact'));assert.ok(!calls.includes('worker'));
@@ -46,10 +45,10 @@ test('CI: smaller pools and serial mode retain every required check; invalid cap
  for(const jobs of [0,6,1.5,NaN])await assert.rejects(execute(async()=>{}, {jobs}),/DN_TEST_JOBS/);
 });
 test('CI: every gate and source browser spec appears once in the plan',()=>{
- const expected=['unit','backend','content','build','browser-games','browser-pages','browser-accounts','artifact','puzzles-1','puzzles-2','puzzles-3','timing-dates','offline-next','worker','push-crypto','push-panel','news'].sort();
+ const expected=['unit','backend','content','build','browser-pages','browser-accounts','artifact','puzzles-1','puzzles-2','puzzles-3','timing-dates','offline-next','worker','push-crypto','push-panel'].sort();   // games and news groups left with their sites, 22 Nov 2026
  const p=plan();assert.deepEqual(p.serial.map(t=>t.name).sort(),expected);
  assert.deepEqual([...p.preflight,...p.tasks].map(t=>t.name).sort(),expected);
- const files=browserFiles(),flat=Object.values(files).flat();assert.ok(files.games.length&&files.pages.length&&files.accounts.length);
+ const files=browserFiles(),flat=Object.values(files).flat();assert.ok(files.pages.length&&files.accounts.length);
  assert.equal(new Set(flat).size,flat.length);
  const fs=require('node:fs'),path=require('node:path');
  const allSpecs=fs.readdirSync(path.join(__dirname,'../browser'),{recursive:true}).filter(isBrowserSpec).sort();
@@ -68,8 +67,8 @@ test('CI: nightly and optional cross-browser gates remain required',()=>{
  assert.ok(!plan().serial.some(t=>t.name==='cross-browser'));
  assert.ok(plan({nightly:true,crossBrowser:true}).serial.some(t=>t.name==='cross-browser'));
 });
-test('CI: a news-only release runs the checks a news file can break, and no game or puzzle groups',()=>{
+test('CI: a news-only release (none since News moved out, 22 Nov 2026) runs only the artifact check after preflight',()=>{
  const p=plan({newsOnly:true});
- assert.deepEqual(p.serial.map(t=>t.name),['unit','content','build','news','artifact']);
- assert.ok(plan().tasks.some(t=>t.name==='browser-games'));
+ assert.deepEqual(p.serial.map(t=>t.name),['unit','content','build','artifact']);
+ assert.ok(!plan().tasks.some(t=>t.name==='browser-games'||t.name==='news'));
 });

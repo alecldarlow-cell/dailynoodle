@@ -14,10 +14,9 @@ test('BUILD-01/02: London cutoff, intact apostrophes and no future deployed HTML
  for(const file of ['package.json','registry.json','held.txt'])assert.ok(!fs.existsSync(path.join(dir,'_site',file)),file+' must not deploy');
  run('build-feed.js',dir,[],{...env,DN_TEST_TIME:'2026-10-19T23:30:00Z'});assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'feed.json'))).items.length,2);
 });
-test('BUILD-02: transformations are idempotent; News navigation removes byte for byte',t=>{
+test('BUILD-02: transformations are idempotent (news navigation moved with News to its own repo, 22 Nov 2026)',t=>{
  const dir=fixture(t),file=path.join(dir,'reports/2026-10-19-science-example.html');
- const original=html('2026-10-19','Example').replace('<h1>','<header class="mast"><div class="mono">DN</div><div class="word">Noodle<b>News</b></div></header><h1>');fs.writeFileSync(file,original);
- run('news-nav.js',dir);const once=fs.readFileSync(file,'utf8');assert.notEqual(once,original,'Fixture must actually transform');run('news-nav.js',dir);assert.equal(fs.readFileSync(file,'utf8'),once);run('news-nav.js',dir,['--remove']);assert.equal(fs.readFileSync(file,'utf8'),original);
+ fs.writeFileSync(file,html('2026-10-19','Example'));
  run('og-tags.js',dir);const og=fs.readFileSync(file,'utf8');run('og-tags.js',dir);assert.equal(fs.readFileSync(file,'utf8'),og);assert.match(og,/og:image/);
 });
 test('BUILD-01: assembler rejects a broken feed target',t=>{

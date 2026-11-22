@@ -7,12 +7,11 @@
 
      <script type="application/ld+json" data-dn="ld">…</script>
 
-   - Home (/):       WebSite + Organization (what the site is, who publishes it)
-   - puzzles.html:   ItemList of today's daily puzzles
-   - games.html:     ItemList of the published games
+   - Home (/) and puzzles.html (its alternate): WebSite + Organization + ItemList of
+     today's daily puzzles (22 Nov 2026: the site is puzzles only)
    - a puzzle page:  Game (name, type, rules line, date, free to play)
-   - a game page:    VideoGame (browser, free)
-   - a news piece:   NewsArticle (headline, dates, publisher)
+   - game and news blocks (VideoGame, NewsArticle) remain for any such item, though
+     news and games now live on their own sites
 
    Lab items (badge) and anything dated after feed.today are skipped, as in the
    sitemap. The block is data only: nothing visible changes, and a second run
@@ -38,13 +37,14 @@ const day = s => (/^\d{4}-\d{2}-\d{2}$/.test(String(s || '')) ? s : '');
 const live = (feed, it) => it && it.path && !it.badge && /^reports\/[\w.-]+\.html$/.test(it.path) && (!feed.today || !day(it.date) || it.date <= feed.today);
 const clean = o => { for (const k of Object.keys(o)) if (o[k] === '' || o[k] == null) delete o[k]; return o; };
 
-function home() {
-  return { '@context': 'https://schema.org', '@graph': [
+function home(today) {
+  // The bare address is the Puzzles front page (22 Nov 2026: dailynoodle.co.uk is puzzles only).
+  const graph = [
     { '@type': 'WebSite', '@id': ORIGIN + '/#site', name: NAME, alternateName: 'Daily Noodle', url: ORIGIN + '/', description: ABOUT, inLanguage: 'en-GB', publisher: PUBLISHER },
-    ORG,
-    // "/" opens Puzzles (10 Nov 2026); this page's own address is /index.html, the News front page.
-    { '@type': 'CollectionPage', '@id': ORIGIN + '/index.html#page', name: 'Noodle News', url: ORIGIN + '/index.html', inLanguage: 'en-GB', isPartOf: { '@id': ORIGIN + '/#site' } }
-  ] };
+    ORG
+  ];
+  if (today && today.length) { const l = list("Today's daily puzzles", ORIGIN + '/', today); delete l['@context']; graph.push(l); }
+  return { '@context': 'https://schema.org', '@graph': graph };
 }
 function list(name, url, items) {
   return { '@context': 'https://schema.org', '@type': 'ItemList', name, url, numberOfItems: items.length,
@@ -74,10 +74,7 @@ function entries(feed) {
   const items = (feed.items || []).filter(it => live(feed, it));
   const order = Object.keys(TYPES), rank = it => { const i = order.indexOf(it.type); return i < 0 ? order.length : i; };   // the daily set's order
   const today = items.filter(it => it.kind === 'puzzle' && it.date === feed.today).sort((a, b) => rank(a) - rank(b));
-  const games = items.filter(it => it.kind === 'game');
-  const out = [['index.html', home()]];
-  if (today.length) out.push(['puzzles.html', list("Today's daily puzzles", ORIGIN + '/puzzles.html', today)]);
-  if (games.length) out.push(['games.html', list('Browser games', ORIGIN + '/games.html', games)]);
+  const out = [['index.html', home(today)], ['puzzles.html', home(today)]];
   for (const it of items) {
     const data = it.kind === 'puzzle' ? puzzle(it) : it.kind === 'game' ? game(it) : it.kind === 'report' ? article(it) : null;
     if (data) out.push([it.path, data]);

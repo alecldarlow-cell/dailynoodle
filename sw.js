@@ -225,7 +225,7 @@
 'use strict';
 
 const OFF = false;
-const VERSION = 'nn-9-getapp';
+const VERSION = 'nn-10-puzzles-only';
 const PAGES = 'nn-pages-' + VERSION;      // this site's files
 const FONTS = 'nn-fonts-' + VERSION;      // Google Fonts (stylesheets and font files)
 const MAX_ENTRIES = 400;                  // pages cache trimmed past this, oldest first
@@ -234,7 +234,7 @@ const API = 'https://gnehttjheoyutrfsvslq.supabase.co/rest/v1/rpc/';
 const KEY = 'sb_publishable_dEMntRNiElpGHn3Hd5Ef1Q_HvLa2wTB';   // public by design
 
 const CORE = [
-  '/', '/index.html', '/puzzles.html', '/games.html', '/lab.html', '/board.html', '/privacy.html', '/account.html', '/account.css', '/account.js',
+  '/', '/index.html', '/puzzles.html', '/lab.html', '/board.html', '/privacy.html', '/account.html', '/account.css', '/account.js',
   '/front.css', '/front.js', '/dn-nav.js', '/dn-track.js', '/dn-app.js', '/dn-board.js', '/dn-sync.js',
   '/feed.json', '/puzzles-today.json', '/manifest.webmanifest',
   '/icons/favicon.svg', '/icons/favicon-32.png', '/icons/icon-192.png',
@@ -376,7 +376,7 @@ font:600 15px/1.2 inherit;font-family:inherit;color:var(--acc);border:1.5px soli
 <h1>You're offline</h1>
 <p>This page hasn't been saved on this phone yet.<br>Anything you've opened before still works.</p>
 <button onclick="location.reload()">Try again</button>
-<a href="/puzzles.html">Puzzles</a><a href="/games.html">Games</a><a href="/index.html">News</a>
+<a href="/puzzles.html">Puzzles</a><a href="/lab.html">Lab</a>
 </main></body></html>`;
   return new Response(html, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 }

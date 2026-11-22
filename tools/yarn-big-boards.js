@@ -7,7 +7,7 @@
    Usage: node tools/yarn-big-boards.js [count=100] [--probe] [--write]   (--write puts them in the page's BIG line) */
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const { unpack } = require('./yarn-words.js');
-const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports'), FILE = path.join(REPORTS, '2026-10-24-quiz-yarn.html');
+const ROOT = path.resolve(__dirname, '..'), REPORTS = path.join(ROOT, 'reports'), FILE = path.join(__dirname, 'data', 'yarn.html');   // tools/data/README.md
 const html = fs.readFileSync(FILE, 'utf8');
 const grab = name => vm.runInNewContext('(' + html.match(new RegExp('\\nconst ' + name + '=(\\[[\\s\\S]*?\\]);\\n'))[1] + ')');
 const DICT = vm.runInNewContext('(' + html.match(/\nconst DICT=(\{.*?\});\n/)[1] + ')');

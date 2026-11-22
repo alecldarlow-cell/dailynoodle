@@ -7,9 +7,6 @@ const cases=[
  {id:'sweep-finish-390-light',file:'reports/2026-10-19-logic-sweep.html',w:390,h:844,scheme:'light',finish:true},
  {id:'sweep-finish-360-dark',file:'reports/2026-10-19-logic-sweep.html',w:360,h:640,scheme:'dark',finish:true},
  {id:'puzzles-390-light',file:'puzzles.html',w:390,h:844,scheme:'light'},
- {id:'games-360-dark',file:'games.html',w:360,h:640,scheme:'dark'},
- {id:'lantern-320-light',file:'reports/2026-09-27-arcade-lantern-drift.html',w:320,h:568,scheme:'light'},
- {id:'campfire-780-landscape',file:'reports/2026-10-16-strategy-campfire-watch.html',w:780,h:360,scheme:'dark'},
 ];
 for(const c of cases)test('VIEW: '+c.id,async({phone})=>{
  const {p,ctx}=phone;await p.setViewportSize({width:c.w,height:c.h});await p.emulateMedia({colorScheme:c.scheme,reducedMotion:'reduce'});

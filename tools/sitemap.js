@@ -17,7 +17,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ORIGIN = 'https://dailynoodle.co.uk';
-const FRONT = ['puzzles.html', 'index.html', 'games.html'];   // "/" itself opens Puzzles (10 Nov 2026), so News is listed as /index.html
+const FRONT = [''];   // the bare address is the Puzzles front page (22 Nov 2026: puzzles only); puzzles.html names it as canonical
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const day = s => (/^\d{4}-\d{2}-\d{2}$/.test(String(s || '')) ? s : '');

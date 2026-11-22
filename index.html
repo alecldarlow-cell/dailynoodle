@@ -1,18 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-section="news">
+<!-- index.html: generated from puzzles.html by tools/sync-home.js; edit puzzles.html, then run it -->
+<html lang="en" data-section="puzzles">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<script>
-/* The bare address opens Puzzles (10 Nov 2026, Alec's call in the distribution review: Search Console showed
-   every search click arriving here by the site's name, and the puzzles are what the site is for). Until then
-   only the installed app and browsers that had played were sent on (24 Oct 2026); now every visit to "/" goes
-   to puzzles.html, keeping the query and fragment. /index.html (the News tab, "← News" in pieces) always
-   stays here, and is this page's own address for search engines. */
-(function(){try{
-  if(location.pathname==='/')location.replace('/puzzles.html'+location.search+location.hash);
-}catch(e){}})();
-</script>
 <script>
 /* full-screen app only: hold the top and bottom insets and the screen height steady (dn-pin, 18 Oct 2026).
    On every page load Android briefly brings its bars back, which changed these and made the page jump.
@@ -41,12 +32,12 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="theme-color" content="#FCFCFB" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#11131A" media="(prefers-color-scheme: dark)">
-<title>The Daily Noodle — the data desk</title>
-<meta name="description" content="The Daily Noodle — data journalism. Facts first, fully sourced, honest about uncertainty.">
+<title>The Daily Noodle — the puzzle desk</title>
+<meta name="description" content="The Daily Noodle — a daily crossword mini, logic grids and word links. One solution each, no guessing required.">
 <meta property="og:site_name" content="The Daily Noodle">
 <meta property="og:type" content="website">
-<meta property="og:title" content="The Daily Noodle">
-<meta property="og:description" content="News, daily puzzles and games. Fresh every morning.">
+<meta property="og:title" content="The Daily Noodle · Puzzles">
+<meta property="og:description" content="The Daily Noodle — a daily crossword mini, logic grids and word links. One solution each, no guessing required.">
 <meta property="og:url" content="https://dailynoodle.co.uk/">
 <meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
 <meta property="og:image:width" content="1200">
@@ -57,39 +48,45 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!--
-  DIGI NEWS — FRONT PAGE  (index.html)
-  One of three section pages (index.html, puzzles.html, games.html). Layout,
+  DIGI PUZZLES — FRONT PAGE  (puzzles.html)
+  The Puzzles front page. index.html (the bare address) is a generated copy (tools/sync-home.js). Layout,
   styles and script are shared in front.css and front.js; this
   file only sets the section (data-section on <html>), masthead and footer.
   You should never need to edit it to publish.
 -->
 <link rel="stylesheet" href="front.css">
 </head>
-<body>
+<body class="has-tabs">
 <div class="wrap">
 
   <header class="mast">
     <div class="mono" aria-hidden="true"><svg class="noodle" viewBox="292 220 462 600" width="18" height="23" focusable="false"><path d="M352 760V360a80 80 0 0 1 160 0v320a80 80 0 0 0 160 0V298" fill="none" stroke="currentColor" stroke-width="96" stroke-linecap="round"/><circle cx="672" cy="298" r="66" fill="none" stroke="currentColor" stroke-width="20"/><circle cx="672" cy="298" r="66" fill="#FFD54A"/></svg></div>
-    <h1 class="word">Noodle<b>News</b></h1>
-    <div class="kick">The data desk<span class="k2">Facts first · fully sourced</span></div>
+    <h1 class="word">Daily <b>Noodle</b></h1>
+    <div class="kick">Today<span id="kickdate"></span></div>
   </header>
+  <nav class="tabs" aria-label="Puzzles">
+    <a href="puzzles.html" data-tab="today" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg><span>Today</span></a>
+    <a href="board.html?from=tabs" data-tab="leagues"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5v1.5A3 3 0 0 0 7.5 10.5M17 6h2.5v1.5a3 3 0 0 1-3 3"/><path d="M12 14v3.5M8.5 20h7M9.5 17.5h5"/></svg><span>Leagues</span></a>
+    <a href="archive.html?from=tabs" data-tab="archive" data-feature="archive"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg><span>Archive</span></a>
+    <a href="stats.html?from=tabs" data-tab="stats" data-feature="stats" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20v-6M12 20V6M18 20v-9M3.5 20h17"/></svg><span>Stats</span></a>
+    <a href="account.html?from=tabs" data-tab="account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.2a6.5 6.5 0 0 1 11 0"/></svg><span>Account</span></a>
+  </nav>
 
-  <nav class="controls" aria-label="Sections and filters">
+  <nav class="controls" aria-label="Sections">
     <div class="bar">
       <div class="sections" role="group" aria-label="Sections">
-        <a class="sec puzzles" href="puzzles.html">Puzzles</a>
-        <a class="sec games" href="games.html">Games</a>
-        <a class="sec news" href="index.html" aria-current="page">News</a>
+        <a class="sec puzzles" href="puzzles.html" aria-current="page">Puzzles</a>
         <a class="sec lab" href="lab.html">Lab</a>
       </div>
       <button class="sbtn" id="sbtn" type="button" hidden aria-label="Search" aria-expanded="false" aria-controls="searchrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
     </div>
     <div class="searchrow" id="searchrow" hidden>
-      <input class="search" id="q" type="search" placeholder="Search headlines…" aria-label="Search headlines">
+      <input class="search" id="q" type="search" placeholder="Search puzzles…" aria-label="Search puzzles">
     </div>
-    <div class="chips" id="chips" role="group" aria-label="Topic"></div>
+    <div class="chips" id="chips" role="group" aria-label="Puzzle type" hidden></div>
   </nav>
 
+  <div id="getapp" data-getapp="today" hidden></div>
   <div id="status"></div>
   <p class="count" id="count" aria-live="polite"></p>
   <ul class="feed" id="feed">
@@ -97,14 +94,13 @@
   </ul>
 
   <footer class="foot">
-    <p><b>The Daily Noodle · News</b> — data journalism. Every piece is self-contained, sourced to tier, and
-    dated to the day it was produced. Corrections are logged in the footer of the piece concerned.</p>
-    <p style="margin-top:8px" id="built"></p>
-    <p class="privacy"><a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">contact@dailynoodle.co.uk</a> · <a href="admin.html" rel="nofollow">Admin</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
+    <p class="privacy"><a href="how-to-play.html">How to play</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:contact@dailynoodle.co.uk">Contact us</a> · <button type="button" class="optout" data-digi-optout aria-pressed="false">Don’t record my visits</button></p>
   </footer>
 
 </div>
 <script src="front.js"></script>
+<script src="dn-nav.js" defer></script>
 <script src="dn-track.js" defer></script>
+<script src="dn-app.js" defer></script>
 </body>
 </html>
