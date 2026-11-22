@@ -16,7 +16,9 @@
    October domain move used. The hand-off lands on the games site's front page
    (?go=<path>), which writes no saves of its own. w:1 (22 Nov 2026) marks it as a move from here: the first
    one to arrive in a browser wins outright on the games site (anything there was a fresh save started before
-   the real progress came across); later ones merge. Otherwise dn-track.js there merges them in
+   the real progress came across); later ones merge. ?restore on a game's old link (22 Nov 2026) sends
+   only that game's own saves (OWN) with w:2, which the games site writes over whatever it has: for a player
+   whose real progress was lost under a fresh save there (Yarn writes its in-memory save when the page hides). Otherwise dn-track.js there merges them in
    without overwriting newer progress, then the page goes on to the game. (Landing
    on the game itself would not work: a game writes its fresh save on load, before
    the tracker runs, and the merge keeps the newer-looking fresh one.) Puzzle saves
@@ -31,10 +33,13 @@ const GAME_KEYS=['digi-bubble-burst-v2','lk_meta_v3','lk_run_v3','digi-lantern-d
  'digi-borderline-v1','digi-archipelago-v1','digi-archipelago-run-v1','digi-ballpark-v1','digi-ancient-cities-v1','digi-campfire-watch-v1',
  'campfire-watch-bests-v1','digi-paper-planes-v1','digi-two-dots-landscape-v1','digi-echo-cave-v1','digi-yarn-v1','digi-astro-drop-v1',
  'digi-inkline-v1','digi-astro-drop-quake-v1'];
+const SPECIAL={'lighthouse-keeper':['lk_meta_v3','lk_run_v3']};
+function own(file){const slug=file.replace(/^\d{4}-\d{2}-\d{2}-[a-z]+-/,'').replace(/\.html$/,'');
+  return SPECIAL[slug]||GAME_KEYS.filter(k=>k.indexOf(slug)>=0);}
 function page(file,host,game){
   const url='https://'+host+'/reports/'+file;
-  const pack=game?`var d={},K=${JSON.stringify(GAME_KEYS)};try{K.forEach(function(k){var v=localStorage.getItem(k);if(v!=null)d[k]=v;});if(localStorage.getItem('digi.optout')!=='1'){var a=localStorage.getItem('digi.aid');if(a)d['digi.aid']=a;}}catch(e){}
-if(Object.keys(d).length){var j=JSON.stringify({v:1,w:1,d:d,h:location.hash||''});location.replace('https://${host}/?go='+encodeURIComponent('reports/${file}')+'#dnmove='+btoa(unescape(encodeURIComponent(j))).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,''));return;}`:'';
+  const pack=game?`var d={},R=/[?&]restore(=|&|$)/.test(location.search),K=R?${JSON.stringify(own(file))}:${JSON.stringify(GAME_KEYS)};try{K.forEach(function(k){var v=localStorage.getItem(k);if(v!=null)d[k]=v;});if(localStorage.getItem('digi.optout')!=='1'){var a=localStorage.getItem('digi.aid');if(a)d['digi.aid']=a;}}catch(e){}
+if(Object.keys(d).length){var j=JSON.stringify({v:1,w:R?2:1,d:d,h:location.hash||''});location.replace('https://${host}/?go='+encodeURIComponent('reports/${file}')+'#dnmove='+btoa(unescape(encodeURIComponent(j))).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,''));return;}`:'';
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8">
 <!-- moved-page: forwarding page written by tools/moved-pages.js; do not edit by hand -->
@@ -54,4 +59,4 @@ for(const [kind,host,game] of [['news','news.dailynoodle.co.uk',false],['games',
     if(have!==want){if(check){bad++;console.log('moved-pages: '+f+' is not the forwarding page');}else fs.writeFileSync(p,want);}}
 if(check&&bad){console.log(bad+' of '+n+' forwarding pages out of date: run node tools/moved-pages.js');process.exit(1);}
 console.log('moved-pages: '+n+' forwarding pages '+(check?'ok':'written'));
-module.exports={GAME_KEYS};
+module.exports={GAME_KEYS,own};
