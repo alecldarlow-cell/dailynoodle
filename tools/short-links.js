@@ -42,7 +42,7 @@ function page(type, name) {
 <meta property="og:image" content="${ORIGIN}/assets/share-card.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
+<meta property="og:image:alt" content="The Daily Noodle: nine daily puzzles">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#EDEEF2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#11131A" media="(prefers-color-scheme: dark)">
@@ -102,7 +102,7 @@ function gamePage(link, file, name) {
 <meta property="og:image" content="${ORIGIN}/assets/share-card.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Daily Noodle: news, puzzles and games">
+<meta property="og:image:alt" content="The Daily Noodle: nine daily puzzles">
 <meta name="twitter:card" content="summary_large_image">
 <noscript><meta http-equiv="refresh" content="0;url=${target}?via=share"></noscript>
 </head>
