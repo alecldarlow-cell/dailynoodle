@@ -1,5 +1,5 @@
 'use strict';
-// The site's icons: the noodle n in blue (7 Nov 2026), drawn by tools/make-icons.js.
+// The site's icons: the noodle n (7 Nov 2026) on the app's green tile (22 Nov 2026), drawn by tools/make-icons.js.
 const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs'), path = require('path');
@@ -46,7 +46,7 @@ test('icons: every file the pages, manifest and service worker name is drawn, at
 test('icons: the blue glow centres on the old tile blue, and the dot is the puzzles marigold', () => {
   const [t, b] = [rgb(icons.TILE_TOP), rgb(icons.TILE_BOTTOM)];
   const mid = t.map((v, i) => Math.round((v + b[i]) / 2));
-  assert.ok(near(mid, icons.BLUE, 2), `midpoint ${mid}`);
+  assert.ok(near(mid, icons.TILE_MID, 2), `midpoint ${mid}`);
   assert.strictEqual(icons.MARIGOLD, '#FFD54A');
 });
 

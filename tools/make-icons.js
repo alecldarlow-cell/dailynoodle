@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
  * Draws the website's icons: the Daily Noodle "noodle n" (Alec, 7 Nov 2026), the app's mark in
- * the site's blue. One white noodle drawn as an "n" (an arch, a U-turn on the same baseline, a
+ * the house green (the app's tile, from 22 Nov 2026; blue before). One white noodle drawn as an "n" (an arch, a U-turn on the same baseline, a
  * climb back up) ends in a marigold dot whose top is level with the top of the arch, on a gentle
- * vertical glow of blue (midpoint #1C46C2, the colour of the old DN tile) with a soft shadow.
+ * vertical glow of green (midpoint #0E7A4B, as the app) with a soft shadow.
  * Ported from the app's scripts/make-icons.js (Daily-noodle-app), which draws the same mark in
  * the house green; change both together. No dependencies:
  *
@@ -24,13 +24,13 @@ const zlib = require('zlib');
 
 const ROOT = path.join(__dirname, '..');
 
-/** The site's icon blue (the old DN tile's colour); the app uses the house green instead. */
-const BLUE = '#1C46C2';
-/** The tile's glow, top to bottom; its midpoint is the icon blue. */
-const TILE_TOP = '#2350D0';
-const TILE_BOTTOM = '#163CB4';
-/** The shadow under the noodle: deep blue at 45%, 16 px down on a 1024 icon. */
-const SHADOW = '#0F2C86';
+/** The tile's mid colour: the house green, the same tile as the app (22 Nov 2026, puzzles only; was blue #1C46C2). */
+const TILE_MID = '#0E7A4B';
+/** The tile's glow, top to bottom; its midpoint is the house green. */
+const TILE_TOP = '#118553';
+const TILE_BOTTOM = '#0C6F44';
+/** The shadow under the noodle: deep green at 45%, 16 px down on a 1024 icon. */
+const SHADOW = '#0A5C38';
 const SHADOW_ALPHA = 0.45;
 const SHADOW_DROP = 16;
 const WHITE = '#FFFFFF';
@@ -373,7 +373,7 @@ module.exports = {
   render,
   encodePng,
   cover,
-  BLUE,
+  TILE_MID,
   TILE_TOP,
   TILE_BOTTOM,
   MARIGOLD,
