@@ -70,8 +70,7 @@ function page(guide, type) {
   const meta = PAGES[type], name = TYPES[type].name, url = ORIGIN + '/' + rel(type);
   const head = guide.match(/<head\b[^>]*>[\s\S]*?<\/head\s*>/i);
   const mast = guide.match(/<header class="mast">[\s\S]*?<\/header>/);
-  const sections = guide.match(/<div class="sections"[\s\S]*?<\/div>/);
-  if (!head || !mast || !sections) throw new Error('guide-pages: how-to-play.html has lost its head, masthead or section row');
+  if (!head || !mast) throw new Error('guide-pages: how-to-play.html has lost its head or masthead');   // no section row since 22 Nov 2026
   const description = meta.lede + (section(guide, type).includes('class="guide-example"') ? ' Rules, a worked example and a first move.' : ' Rules and a first move.');
   const headHtml = head[0]
     .replace(/<meta charset="UTF-8">/i, '<meta charset="UTF-8">\n<base href="/">')
@@ -92,7 +91,7 @@ function page(guide, type) {
   const facts = [['New puzzle', DAILY], ...meta.facts, ['Cost', FREE], ['Also known as', meta.aka]]
     .map(([k, v]) => '        <div><dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd></div>').join('\n');
   return '<!DOCTYPE html>\n<html lang="en" data-section="puzzles">\n' + headHtml + '\n<body class="guide-page">\n<div class="wrap">\n  ' + mast[0] + '\n\n'
-    + '  <nav class="controls" aria-label="Sections and puzzle guides">\n    <div class="bar">\n      ' + sections[0] + '\n    </div>\n'
+    + '  <nav class="controls" aria-label="Puzzle guides">\n'
     + '    <div class="chips" id="guide-pills" role="group" aria-label="Puzzle type">\n' + chips + '\n    </div>\n  </nav>\n\n'
     + '  <main id="guide-content">\n    ' + body + '\n'
     + '    <section class="guide-more" aria-labelledby="facts-title">\n      <h2 id="facts-title">Good to know</h2>\n      <dl class="guide-facts">\n' + facts + '\n      </dl>\n'
