@@ -372,7 +372,7 @@ test.describe('BOARD-E2E', () => {
       await expect(A.p.locator('.dot[data-p="doku"]')).toHaveAttribute('aria-pressed', 'true');
       await swipe('#app', 120);                   // right: back to Mini
       await expect(A.p.locator('.dot[data-p="mini"]')).toHaveAttribute('aria-pressed', 'true');
-      await swipe('.sections', -120);             // the section row scrolls sideways: no step
+      await swipe('.tabs, nav', -120);             // a swipe on the page's own navigation is not a pager step (the section row went on 22 Nov 2026)
       await A.p.waitForTimeout(300);
       await expect(A.p.locator('.dot[data-p="mini"]')).toHaveAttribute('aria-pressed', 'true');
     } finally { await A.ctx.close(); }
