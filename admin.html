@@ -1552,14 +1552,9 @@
 
   /* ---------------- publishing line on Overview ---------------- */
   function newsToday(){
-    var today = londonToday();
-    var p = feedList().filter(function(f){ return f.kind === 'report' && f.date === today; });
-    var hour = +new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',hour:'2-digit',hourCycle:'h23'}).format(new Date());
-    var tone = p.length ? 'good' : hour >= 6 ? 'warn' : '';
-    $('#pubNews').innerHTML = '<p class="pub-state '+tone+'">'+(p.length ? p.length+' '+plural(p.length,'piece')+' in the feed for '+fmtDay(today) : 'No pieces in the feed for '+fmtDay(today)+' yet')+'</p>'+
-      (p.length ? '<ul class="pub-items" style="grid-template-columns:1fr">'+p.map(function(f){ return '<li><a href="'+esc(f.path)+'">'+esc(f.headline)+'</a></li>'; }).join('')+'</ul>'
-               : '<p class="sub">The nightly task publishes two pieces overnight; they appear here once a release has put them in the feed.</p>');
-    return { count: p.length, tone: tone };
+    // News moved to its own site on 22 Nov 2026 (SITE.md › Sections): nothing to check in this feed.
+    $('#pubNews').innerHTML = '<p class="pub-state">News publishes on <a href="https://news.dailynoodle.co.uk/">news.dailynoodle.co.uk</a> from 22 Nov 2026.</p>';
+    return { count: 0, tone: '' };
   }
   document.addEventListener('dn:publishing', function(e){
     var s = e.detail || {}, line = $('#pubLine'), head = $('#pubLineHead'), txt = $('#pubLineText');
@@ -1570,7 +1565,7 @@
       if (s.live.error) { bump('bad'); problems.push('today’s puzzles not confirmed'); }
       else { bits.push(s.live.ok+' of '+s.live.total+' puzzles live'); if (s.live.ok < s.live.total) { bump('bad'); problems.push((s.live.total - s.live.ok)+' of today’s puzzles not responding'); } }
     }
-    bits.push(nw.count+' news '+plural(nw.count,'piece')+' today'); if (nw.tone === 'warn') { bump('warn'); problems.push('no news in the feed for today yet'); }
+    // News publishes on news.dailynoodle.co.uk from 22 Nov 2026, so this site's feed has none to check
     if (s.stock) {
       if (s.stock.error || s.stock.stale) { bump('warn'); problems.push('puzzle stock not confirmed'); }
       else { bits.push(s.stock.through ? 'stock to '+fmtDate(s.stock.through) : 'no future stock'); if (s.stock.futureDays < 7) { bump('warn'); problems.push('only '+s.stock.futureDays+' days of puzzle stock'); } }
