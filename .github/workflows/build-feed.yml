@@ -33,6 +33,7 @@ permissions:
   contents: write   # commit feed.json and patched pieces
   pages: write      # deploy the site
   id-token: write   # required by deploy-pages
+  actions: read     # wait for the site artifact to be listed before deploying
 
 concurrency:
   group: build-feed
@@ -79,6 +80,18 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+      # 22 Nov 2026: three releases in a row failed at deploy with "Found 1 artifact(s)" — the run's
+      # artifact list had not caught up with the github-pages upload a second earlier. Wait until it has.
+      - name: Wait for the site artifact to be listed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 30); do
+            n=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" --jq '[.artifacts[]|select(.name=="github-pages")]|length')
+            [ "$n" = "1" ] && echo "github-pages listed after ${i} check(s)" && exit 0
+            sleep 5
+          done
+          echo "github-pages artifact still not listed after 150 s; deploying anyway"
       - name: Deploy tested artifact to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
