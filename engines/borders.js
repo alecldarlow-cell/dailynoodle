@@ -84,7 +84,56 @@
   }
   if(current.streak||stored.streak)merged.streak=mergeStreak(current.streak,stored.streak);
   if('best' in current||'best' in stored)merged.best=Math.max(Number(current.best)||0,Number(stored.best)||0);
+  if(object(current.rounds)||object(stored.rounds)){
+   const rounds=mergeRounds(current.rounds,stored.rounds,merged.done,activeId);
+   if(Object.keys(rounds).length)merged.rounds=rounds;else delete merged.rounds;
+  }
   return merged;
+ }
+ /* Unfinished rounds, one per puzzle (22 Nov 2026, Alec: "Only one Tally can be part-played"
+    came up too often). `rounds` = {id: round}, each stamped `at` (ms), beside `done`. The old
+    single `cur` slot is still written with the latest round, so older pages and app builds
+    keep resuming it; a puzzle's own round is read first, then `cur` if it is that puzzle's.
+    keepRound stamps `at` and puts the round in both places. */
+ const ROUNDS_KEPT=10;
+ function roundFor(s,id){
+  if(!object(s)||!id||object(s.done)&&s.done[id])return null;
+  const r=object(s.rounds)?s.rounds[id]:null;
+  if(object(r))return r;
+  return object(s.cur)&&s.cur.id===id?s.cur:null;
+ }
+ function pruneRounds(rounds,done,keep){
+  const out={};
+  for(const [id,r] of Object.entries(object(rounds)?rounds:{}))if(object(r)&&!(object(done)&&done[id]))out[id]=r;
+  const ids=Object.keys(out).sort((a,b)=>(Number(out[b].at)||0)-(Number(out[a].at)||0));
+  for(const id of ids.slice(ROUNDS_KEPT))if(id!==keep)delete out[id];
+  return out;
+ }
+ function keepRound(s,round,now){
+  if(!object(s)||!object(round)||!round.id)return s;
+  round.at=num(now)?now:Date.now();
+  s.rounds=pruneRounds(Object.assign({},object(s.rounds)?s.rounds:{},{[round.id]:round}),s.done,round.id);
+  s.cur=round;
+  return s;
+ }
+ // Takes puzzle `id`'s round out of `rounds` (the key goes when none are left). `cur` is the
+ // engine's own to clear, as before, so a finished save reads exactly as it did.
+ function dropRound(s,id){
+  if(!object(s)||!id||!object(s.rounds)||!(id in s.rounds))return s;
+  const r=Object.assign({},s.rounds);delete r[id];
+  if(Object.keys(r).length)s.rounds=r;else delete s.rounds;
+  return s;
+ }
+ // Two copies of `rounds`: every puzzle's round survives, the newer `at` winning (the one in
+ // play, `activeId`, always from `a`); finished puzzles' rounds go; the newest ten are kept.
+ function mergeRounds(a,b,done,activeId){
+  const out=Object.assign({},object(b)?b:{});
+  for(const [id,r] of Object.entries(object(a)?a:{})){
+   if(!object(r))continue;
+   const o=out[id];
+   if(id===activeId||!object(o)||(Number(r.at)||0)>=(Number(o.at)||0))out[id]=r;
+  }
+  return pruneRounds(out,done,activeId);
  }
  function same(a,b){
   if(a===b)return true;
@@ -95,7 +144,7 @@
  function progressOnly(s){
   s=s||{};
   const days=Object.fromEntries(Object.entries(s.days||{}).filter(([,d])=>d&&d.state!=='ready'));
-  return {done:s.done||{},days,cur:s.cur||null,streak:s.streak&&s.streak.last?s.streak:null,best:s.best||0};
+  return {done:s.done||{},days,cur:s.cur||null,rounds:s.rounds||{},streak:s.streak&&s.streak.last?s.streak:null,best:s.best||0};
  }
  function saveProgress(key,current,activeId,storage,report=true){
   // Merge even if writing fails, so the current tab retains the results it read.
@@ -143,7 +192,7 @@
  function gold(type,r){
   try{return object(r)&&GOLD[type]?GOLD[type](r):'';}catch(e){return '';}
  }
- return {londonDay,dayBefore,getDone,putDone,mergeProgress,saveProgress,saveStreak,saveIssues,onSaveChange,retrySaves,gold};
+ return {londonDay,dayBefore,getDone,putDone,mergeProgress,saveProgress,saveStreak,saveIssues,onSaveChange,retrySaves,gold,roundFor,keepRound,dropRound,mergeRounds};
 });
 /* dn-core:end */
 
@@ -193,6 +242,10 @@ function defaults(){return {v:1,done:{},streak:{last:null,n:0,best:0},cur:null,s
 let save=defaults();
 function load(){try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s&&s.v===1)save=Object.assign(defaults(),s);}}catch(e){}}
 function persist(progress=true){
+  /* one round per puzzle (22 Nov 2026): the round in play goes into rounds[id], stamped, and stays in cur;
+     a finished puzzle's round is dropped */
+  if(P&&save.cur&&save.cur.id===P.id&&!save.done[P.id])window.dnCore.keepRound(save,save.cur);
+  else if(P&&save.done[P.id])window.dnCore.dropRound(save,P.id);
   const playing=!!(P&&(save.done[P.id]||(save.cur&&save.cur.id===P.id)));
   window.dnCore.saveProgress(KEY,save,P&&P.id,undefined,progress&&playing);
 }
@@ -408,7 +461,7 @@ function renderHome(){
   $('dateLine').textContent='No. '+parseInt(P.id.slice(-4),10)+', '+longDate(P.date).replace(/ \d{4}$/,'');
   homeExtras();
   $('homeWorld').outerHTML='<img class="world" id="homeWorld" src="../assets/borders-thumb.svg" width="132" height="132" alt="">';
-  const c=save.cur&&save.cur.id===P.id?save.cur:null;
+  const c=window.dnCore.roundFor(save,P.id);
   $('playStatus').textContent=c?`Question ${Math.min(NQ,c.ans.length+1)} of ${NQ}, ${c.pts} points so far.`:dnHouseLine('borders',P);
   howRule('Ten country outlines, easiest first. Name them from four; 100 points each.');
   $('playGo').textContent=c?'Resume':'Play';
@@ -418,7 +471,8 @@ function renderHome(){
 /* ---------- quiz flow ---------- */
 function start(){
   if(save.done[P.id]){showResult(save.done[P.id],false);return;}
-  cur=save.cur&&save.cur.id===P.id&&Array.isArray(save.cur.ans)?save.cur:{id:P.id,i:0,ans:[],pts:0,run:0,secs:0};
+  const kept=window.dnCore.roundFor(save,P.id);
+  cur=kept&&Array.isArray(kept.ans)?kept:{id:P.id,i:0,ans:[],pts:0,run:0,secs:0};
   cur.i=cur.ans.length;cur.hint=false;cur.run=0;for(const a of cur.ans)cur.run=a.ok?cur.run+1:0;
   save.cur=cur;persist();
   if(cur.i>=NQ){finish();return;}
