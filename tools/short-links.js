@@ -118,15 +118,16 @@ try{location.replace(${JSON.stringify(target)}+'?'+tag);}catch(e){location.href=
 }
 
 function games(out) {
-  const f = path.join(out, 'feed.json');
-  if (!fs.existsSync(f)) return [];
-  const feed = JSON.parse(fs.readFileSync(f, 'utf8'));
+  // Games moved to games.dailynoodle.co.uk on 22 Nov 2026 and left this feed, but their short links
+  // (dailynoodle.co.uk/astro-drop …) are in shared scores, so they stay: each opens the game's old
+  // address here, whose forwarding page (tools/moved-pages.js) carries the player's saves across.
+  const moved = require('./moved-pages.json').games || [];
   const list = [];
-  for (const it of feed.items || []) {
-    if (!it || it.kind !== 'game' || it.badge) continue;
-    const m = String(it.path || '').match(GAME_RE);
-    if (!m || !fs.existsSync(path.join(out, it.path))) continue;
-    list.push({ link: ALIAS[m[1]] || m[1], file: it.path, name: it.headline || m[1] });
+  for (const file of moved) {
+    const p = 'reports/' + file, m = p.match(GAME_RE);
+    if (!m || !fs.existsSync(path.join(out, p))) continue;
+    const slug = m[1], name = slug.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+    list.push({ link: ALIAS[slug] || slug, file: p, name });
   }
   return list;
 }
