@@ -112,11 +112,23 @@
         out[k] = u;
       } else if (k === 'streak' && isObj(out[k]) && isObj(old[k])) {
         out[k] = mergeObj(out[k], old[k]);
+      } else if (k === 'rounds' && isObj(out[k]) && isObj(old[k])) {
+        // One unfinished round per puzzle (22 Nov 2026): every puzzle's round survives,
+        // the newer `at` winning; finished puzzles' rounds are dropped below.
+        var rs = {}, q;
+        for (q in out[k]) rs[q] = out[k][q];
+        for (q in old[k]) if (isObj(old[k][q]) && (!isObj(rs[q]) || (+old[k][q].at || 0) > (+rs[q].at || 0))) rs[q] = old[k][q];
+        out[k] = rs;
       } else if (k === 'cur' && isObj(old[k]) && +old[k].at > 0 && (out[k] == null || (isObj(out[k]) && +old[k].at > (+out[k].at || 0)))) {
         // An unfinished round stamped with when it was saved (Link, 29 Oct 2026):
         // the newer one wins. Rounds without a stamp (Borders, Reckon) keep this browser's.
         out[k] = old[k];
       }
+    }
+    if (isObj(out.rounds) && isObj(out.done)) {
+      var left = {}, n;
+      for (n in out.rounds) if (!out.done[n]) left[n] = out.rounds[n];
+      out.rounds = left;
     }
     return out;
   }
