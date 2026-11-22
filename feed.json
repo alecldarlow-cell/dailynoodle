@@ -1,8 +1,8 @@
 {
-  "built": "2026-11-22T15:35:45.082Z",
+  "built": "2026-11-22T15:45:45.636Z",
   "today": "2026-11-22",
   "timezone": "Europe/London",
-  "count": 884,
+  "count": 944,
   "items": [
     {
       "path": "reports/2026-11-22-crossword-mini-0134.html",
@@ -7226,6 +7226,24 @@
       "id": "DP·LINK·0070"
     },
     {
+      "path": "reports/2026-10-17-word-redact-0094.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0094",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-17",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0094",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-17-word-tangle-0011.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -7343,6 +7361,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0069"
+    },
+    {
+      "path": "reports/2026-10-16-word-redact-0093.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0093",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-16",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0093",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-16-word-tangle-0010.html",
@@ -7464,6 +7500,24 @@
       "id": "DP·LINK·0068"
     },
     {
+      "path": "reports/2026-10-15-word-redact-0092.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0092",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-15",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0092",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-15-word-tangle-0009.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -7581,6 +7635,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0067"
+    },
+    {
+      "path": "reports/2026-10-14-word-redact-0091.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0091",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-14",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0091",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-14-word-tangle-0008.html",
@@ -7702,6 +7774,24 @@
       "id": "DP·LINK·0066"
     },
     {
+      "path": "reports/2026-10-13-word-redact-0090.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0090",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-13",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0090",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-13-word-tangle-0007.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -7819,6 +7909,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0065"
+    },
+    {
+      "path": "reports/2026-10-12-word-redact-0089.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0089",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-12",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0089",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-12-word-tangle-0006.html",
@@ -7940,6 +8048,24 @@
       "id": "DP·LINK·0064"
     },
     {
+      "path": "reports/2026-10-11-word-redact-0088.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0088",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-11",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0088",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-11-word-tangle-0005.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -8057,6 +8183,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0063"
+    },
+    {
+      "path": "reports/2026-10-10-word-redact-0087.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0087",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-10",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0087",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-10-word-tangle-0004.html",
@@ -8178,6 +8322,24 @@
       "id": "DP·LINK·0062"
     },
     {
+      "path": "reports/2026-10-09-word-redact-0086.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0086",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-09",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0086",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-09-word-tangle-0003.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -8295,6 +8457,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0061"
+    },
+    {
+      "path": "reports/2026-10-08-word-redact-0085.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0085",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-08",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0085",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-08-word-tangle-0002.html",
@@ -8416,6 +8596,24 @@
       "id": "DP·LINK·0060"
     },
     {
+      "path": "reports/2026-10-07-word-redact-0084.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0084",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-07",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0084",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-07-word-tangle-0001.html",
       "kind": "puzzle",
       "topic": "Word",
@@ -8535,6 +8733,24 @@
       "id": "DP·LINK·0059"
     },
     {
+      "path": "reports/2026-10-06-word-redact-0083.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0083",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-06",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0083",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-05-crossword-mini-0086.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -8637,6 +8853,24 @@
       "id": "DP·LINK·0058"
     },
     {
+      "path": "reports/2026-10-05-word-redact-0082.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0082",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-05",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0082",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-04-crossword-mini-0085.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -8720,6 +8954,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0057"
+    },
+    {
+      "path": "reports/2026-10-04-word-redact-0081.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0081",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-04",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0081",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-03-crossword-mini-0084.html",
@@ -8807,6 +9059,24 @@
       "id": "DP·LINK·0056"
     },
     {
+      "path": "reports/2026-10-03-word-redact-0080.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0080",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-03",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0080",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-10-02-crossword-mini-0083.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -8890,6 +9160,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0055"
+    },
+    {
+      "path": "reports/2026-10-02-word-redact-0079.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0079",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-02",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0079",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-10-01-crossword-mini-0082.html",
@@ -8977,6 +9265,24 @@
       "id": "DP·LINK·0054"
     },
     {
+      "path": "reports/2026-10-01-word-redact-0078.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0078",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-10-01",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0078",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-30-crossword-mini-0081.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -9060,6 +9366,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0053"
+    },
+    {
+      "path": "reports/2026-09-30-word-redact-0077.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0077",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-30",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0077",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-29-crossword-mini-0080.html",
@@ -9147,6 +9471,24 @@
       "id": "DP·LINK·0052"
     },
     {
+      "path": "reports/2026-09-29-word-redact-0076.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0076",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-29",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0076",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-28-crossword-mini-0079.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -9230,6 +9572,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0051"
+    },
+    {
+      "path": "reports/2026-09-28-word-redact-0075.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0075",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-28",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0075",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-27-crossword-mini-0078.html",
@@ -9317,6 +9677,24 @@
       "id": "DP·LINK·0050"
     },
     {
+      "path": "reports/2026-09-27-word-redact-0074.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0074",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-27",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0074",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-26-crossword-mini-0077.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -9400,6 +9778,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0049"
+    },
+    {
+      "path": "reports/2026-09-26-word-redact-0073.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0073",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-26",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0073",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-25-crossword-mini-0076.html",
@@ -9487,6 +9883,24 @@
       "id": "DP·LINK·0048"
     },
     {
+      "path": "reports/2026-09-25-word-redact-0072.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0072",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-25",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0072",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-24-crossword-mini-0075.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -9570,6 +9984,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0047"
+    },
+    {
+      "path": "reports/2026-09-24-word-redact-0071.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0071",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-24",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0071",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-23-crossword-mini-0074.html",
@@ -9657,6 +10089,24 @@
       "id": "DP·LINK·0046"
     },
     {
+      "path": "reports/2026-09-23-word-redact-0070.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0070",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-23",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0070",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-22-crossword-mini-0073.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -9740,6 +10190,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0045"
+    },
+    {
+      "path": "reports/2026-09-22-word-redact-0069.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0069",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-22",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0069",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-21-crossword-mini-0072.html",
@@ -9827,6 +10295,24 @@
       "id": "DP·LINK·0044"
     },
     {
+      "path": "reports/2026-09-21-word-redact-0068.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0068",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-21",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0068",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-20-crossword-mini-0071.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -9910,6 +10396,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0043"
+    },
+    {
+      "path": "reports/2026-09-20-word-redact-0067.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0067",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-20",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0067",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-19-crossword-mini-0070.html",
@@ -9997,6 +10501,24 @@
       "id": "DP·LINK·0042"
     },
     {
+      "path": "reports/2026-09-19-word-redact-0066.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0066",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-19",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0066",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-18-crossword-mini-0069.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -10080,6 +10602,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0041"
+    },
+    {
+      "path": "reports/2026-09-18-word-redact-0065.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0065",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-18",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0065",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-17-crossword-mini-0068.html",
@@ -10167,6 +10707,24 @@
       "id": "DP·LINK·0040"
     },
     {
+      "path": "reports/2026-09-17-word-redact-0064.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0064",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-17",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0064",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-16-crossword-mini-0067.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -10250,6 +10808,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0039"
+    },
+    {
+      "path": "reports/2026-09-16-word-redact-0063.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0063",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-16",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0063",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-15-crossword-mini-0066.html",
@@ -10337,6 +10913,24 @@
       "id": "DP·LINK·0038"
     },
     {
+      "path": "reports/2026-09-15-word-redact-0062.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0062",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-15",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0062",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-14-crossword-mini-0065.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -10420,6 +11014,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0037"
+    },
+    {
+      "path": "reports/2026-09-14-word-redact-0061.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0061",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-14",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0061",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-13-crossword-mini-0064.html",
@@ -10507,6 +11119,24 @@
       "id": "DP·LINK·0036"
     },
     {
+      "path": "reports/2026-09-13-word-redact-0060.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0060",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-13",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0060",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-12-crossword-mini-0063.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -10590,6 +11220,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0035"
+    },
+    {
+      "path": "reports/2026-09-12-word-redact-0059.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0059",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-12",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0059",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-11-crossword-mini-0062.html",
@@ -10677,6 +11325,24 @@
       "id": "DP·LINK·0034"
     },
     {
+      "path": "reports/2026-09-11-word-redact-0058.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0058",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-11",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0058",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-10-crossword-mini-0061.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -10760,6 +11426,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0033"
+    },
+    {
+      "path": "reports/2026-09-10-word-redact-0057.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0057",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-10",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0057",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-09-crossword-mini-0060.html",
@@ -10847,6 +11531,24 @@
       "id": "DP·LINK·0032"
     },
     {
+      "path": "reports/2026-09-09-word-redact-0056.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0056",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-09",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0056",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-08-crossword-mini-0059.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -10930,6 +11632,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0031"
+    },
+    {
+      "path": "reports/2026-09-08-word-redact-0055.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0055",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-08",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0055",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-07-crossword-mini-0058.html",
@@ -11017,6 +11737,24 @@
       "id": "DP·LINK·0030"
     },
     {
+      "path": "reports/2026-09-07-word-redact-0054.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0054",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-07",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0054",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-06-crossword-mini-0057.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -11100,6 +11838,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0029"
+    },
+    {
+      "path": "reports/2026-09-06-word-redact-0053.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0053",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-06",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0053",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-05-crossword-mini-0056.html",
@@ -11187,6 +11943,24 @@
       "id": "DP·LINK·0028"
     },
     {
+      "path": "reports/2026-09-05-word-redact-0052.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0052",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-05",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0052",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-04-crossword-mini-0055.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -11270,6 +12044,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0027"
+    },
+    {
+      "path": "reports/2026-09-04-word-redact-0051.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0051",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-04",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0051",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-03-crossword-mini-0054.html",
@@ -11357,6 +12149,24 @@
       "id": "DP·LINK·0026"
     },
     {
+      "path": "reports/2026-09-03-word-redact-0050.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0050",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-03",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0050",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-09-02-crossword-mini-0053.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -11440,6 +12250,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0025"
+    },
+    {
+      "path": "reports/2026-09-02-word-redact-0049.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0049",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-02",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0049",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-09-01-crossword-mini-0052.html",
@@ -11527,6 +12355,24 @@
       "id": "DP·LINK·0024"
     },
     {
+      "path": "reports/2026-09-01-word-redact-0048.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0048",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-09-01",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0048",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-08-31-crossword-mini-0051.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -11610,6 +12456,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0023"
+    },
+    {
+      "path": "reports/2026-08-31-word-redact-0047.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0047",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-31",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0047",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-08-30-crossword-mini-0050.html",
@@ -11697,6 +12561,24 @@
       "id": "DP·LINK·0022"
     },
     {
+      "path": "reports/2026-08-30-word-redact-0046.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0046",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-30",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0046",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-08-29-crossword-mini-0049.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -11780,6 +12662,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0021"
+    },
+    {
+      "path": "reports/2026-08-29-word-redact-0045.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0045",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-29",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0045",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-08-28-crossword-mini-0048.html",
@@ -11867,6 +12767,24 @@
       "id": "DP·LINK·0020"
     },
     {
+      "path": "reports/2026-08-28-word-redact-0044.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0044",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-28",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0044",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-08-27-crossword-mini-0047.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -11950,6 +12868,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0019"
+    },
+    {
+      "path": "reports/2026-08-27-word-redact-0043.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0043",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-27",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0043",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-08-26-crossword-mini-0046.html",
@@ -12037,6 +12973,24 @@
       "id": "DP·LINK·0018"
     },
     {
+      "path": "reports/2026-08-26-word-redact-0042.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0042",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-26",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0042",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-08-25-crossword-mini-0045.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -12120,6 +13074,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0017"
+    },
+    {
+      "path": "reports/2026-08-25-word-redact-0041.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0041",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-25",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0041",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-08-24-crossword-mini-0044.html",
@@ -12207,6 +13179,24 @@
       "id": "DP·LINK·0016"
     },
     {
+      "path": "reports/2026-08-24-word-redact-0040.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0040",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-24",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0040",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-08-23-crossword-mini-0043.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -12290,6 +13280,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0015"
+    },
+    {
+      "path": "reports/2026-08-23-word-redact-0039.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0039",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-23",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0039",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-08-22-crossword-mini-0042.html",
@@ -12377,6 +13385,24 @@
       "id": "DP·LINK·0014"
     },
     {
+      "path": "reports/2026-08-22-word-redact-0038.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0038",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-22",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0038",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-08-21-crossword-mini-0041.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -12460,6 +13486,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0013"
+    },
+    {
+      "path": "reports/2026-08-21-word-redact-0037.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0037",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-21",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0037",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-08-20-crossword-mini-0040.html",
@@ -12547,6 +13591,24 @@
       "id": "DP·LINK·0012"
     },
     {
+      "path": "reports/2026-08-20-word-redact-0036.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0036",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-20",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0036",
+      "badge": "In development"
+    },
+    {
       "path": "reports/2026-08-19-crossword-mini-0039.html",
       "kind": "puzzle",
       "topic": "Crossword",
@@ -12630,6 +13692,24 @@
       "mask": "................",
       "type": "link",
       "id": "DP·LINK·0011"
+    },
+    {
+      "path": "reports/2026-08-19-word-redact-0035.html",
+      "kind": "puzzle",
+      "topic": "Word",
+      "headline": "Redact 0035",
+      "standfirst": "There's a crossword hiding in here. Black out the letters that don't belong to find it.",
+      "date": "2026-08-19",
+      "updated": "",
+      "read": "~1 min",
+      "thumb": "assets/redact-thumb.svg",
+      "stat": "",
+      "statUnit": "",
+      "statLabel": "",
+      "mask": "",
+      "type": "redact",
+      "id": "DP·REDA·0035",
+      "badge": "In development"
     },
     {
       "path": "reports/2026-08-18-crossword-mini-0038.html",
