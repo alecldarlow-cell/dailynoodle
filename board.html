@@ -39,7 +39,7 @@
 <meta property="og:title" content="The Daily Noodle · Leaderboard">
 <meta property="og:description" content="Daily leaderboards for your group: one board per puzzle, every day.">
 <meta property="og:url" content="https://dailynoodle.co.uk/board.html">
-<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card.png">
+<meta property="og:image" content="https://dailynoodle.co.uk/assets/share-card-v2.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Daily Noodle: nine daily puzzles">
@@ -297,7 +297,7 @@
   }
   function rowCls(r, dim) { return 'row' + (r.me ? ' me' + (!dim && r.rank >= 1 && r.rank <= 3 ? ' p' + r.rank : '') : '') + (dim ? ' dim' : ''); }
   // v= is the link-preview version. WhatsApp keeps the preview it first made for a link,
-  // so bump it when the share image changes (assets/share-card.png; see SITE.md).
+  // so bump it when the share image changes (assets/share-card-v2.png; see SITE.md).
   var PREVIEW_V = '2';
   /* invites and leaderboard shares go out as join.html (15 Nov 2026, SITE.md › App links): on Android it opens the
      Daily Noodle app when it's installed; anywhere else join.html goes straight on to board.html?join=CODE&v=2 */

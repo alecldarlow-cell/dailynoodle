@@ -39,7 +39,7 @@ function page(type, name) {
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${desc}">
 <meta property="og:url" content="${ORIGIN}/${type}">
-<meta property="og:image" content="${ORIGIN}/assets/share-card.png">
+<meta property="og:image" content="${ORIGIN}/assets/share-card-v2.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Daily Noodle: nine daily puzzles">
@@ -99,7 +99,7 @@ function gamePage(link, file, name) {
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="Play ${escHtml(name)} on The Daily Noodle: free, no sign-up.">
 <meta property="og:url" content="${ORIGIN}/${link}">
-<meta property="og:image" content="${ORIGIN}/assets/share-card.png">
+<meta property="og:image" content="${ORIGIN}/assets/share-card-v2.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="The Daily Noodle: nine daily puzzles">
