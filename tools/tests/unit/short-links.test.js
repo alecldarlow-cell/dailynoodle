@@ -11,7 +11,7 @@ test('short links: one page per puzzle type, with link-preview tags and the toda
   for (const type of Object.keys(TYPES)) {
     const html = fs.readFileSync(path.join(out, type, 'index.html'), 'utf8');
     assert.match(html, new RegExp(`og:url" content="https://dailynoodle.co.uk/${type}"`));
-    assert.match(html, /og:image" content="https:\/\/dailynoodle.co.uk\/assets\/share-card.png"/);
+    assert.match(html, /og:image" content="https:\/\/dailynoodle.co.uk\/assets\/share-card-v2.png"/);
     assert.match(html, /\/puzzles-today\.json/);
     assert.match(html, /via=share/);
     assert.match(html, new RegExp(`var TYPE="${type}"`));

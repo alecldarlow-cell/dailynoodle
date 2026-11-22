@@ -15,7 +15,7 @@
      the next run, and an unchanged file is never touched.
    - Values are copied from the dn:* content attributes exactly as written
      (already HTML-escaped there), so nothing is escaped twice.
-   - Image: the site-wide share banner (assets/share-card.png, 1200x630),
+   - Image: the site-wide share banner (assets/share-card-v2.png, 1200x630),
      shown large in WhatsApp. Thumbnails are SVG, which preview cards don't show.
    - Not part of the in-page Share button, which stays text-only.
 
@@ -25,7 +25,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ORIGIN = 'https://dailynoodle.co.uk';
-const IMAGE = ORIGIN + '/assets/share-card.png';
+const IMAGE = ORIGIN + '/assets/share-card-v2.png';
 const IMAGE_ALT = 'The Daily Noodle: nine daily puzzles';
 const SITE = 'The Daily Noodle';
 const DIRS = ['reports'];

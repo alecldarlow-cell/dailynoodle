@@ -25,7 +25,7 @@ const { TYPES, puzzleMeta } = require('./search-meta');
 
 const ORIGIN = 'https://dailynoodle.co.uk';
 const NAME = 'The Daily Noodle';
-const IMAGE = ORIGIN + '/assets/share-card.png';
+const IMAGE = ORIGIN + '/assets/share-card-v2.png';
 const LOGO = ORIGIN + '/icons/icon-512.png';
 const COUNT = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'][Object.keys(TYPES).length] || String(Object.keys(TYPES).length);
 const ABOUT = COUNT + ' free daily puzzles in British English, new every morning: a mini crossword, word and logic grids, geography and number quizzes. No adverts, and no account needed to play.';
