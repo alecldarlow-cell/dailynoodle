@@ -433,6 +433,27 @@ test.describe('BOARD-E2E', () => {
     } finally { await A.ctx.close(); }
   });
 
+  test('BOARD-STOP-STALE: a saved stop that left the pager (Astro Drop, 22 Nov 2026) opens All puzzles, not "Loading…"', async ({ browser }) => {
+    test.setTimeout(60000);
+    const A = await phone(browser, db, 'A');
+    try {
+      await go(A, 'board.html');
+      await H.tap(A.p, A.p.locator('[data-go="start"]'));
+      await A.p.fill('input[name="lname"]', 'Noodlers');
+      await A.p.fill('input[name="nick"]', 'Ada');
+      { const r = A.p.locator('#f input[name="rules"]'); if (await r.count()) await r.check(); }
+      await H.tap(A.p, A.p.locator('#f .btn.go'));
+      await expect(A.p.locator('.bcard h2')).toHaveText('Noodlers is ready');
+      await A.p.evaluate(() => { const s = JSON.parse(localStorage.getItem('noodle-board-v1')); s.ptype = 'astro'; localStorage.setItem('noodle-board-v1', JSON.stringify(s)); });
+      await go(A, 'board.html?from=tabs');
+      await expect(A.p.locator('.pg-title')).toHaveText('All puzzles');
+      await expect(A.p.locator('#app .loading')).toHaveCount(0);
+      await go(A, 'board.html?p=astro');
+      await expect(A.p.locator('.pg-title')).toHaveText('All puzzles');
+      expect(A.p.errs, 'page errors').toEqual([]);
+    } finally { await A.ctx.close(); }
+  });
+
   test('BOARD-REC-STALE: with an older cached dn-board.js (no records), every board still loads', async ({ browser }) => {
     test.setTimeout(60000);
     const A = await phone(browser, db, 'A');

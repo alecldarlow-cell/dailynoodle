@@ -247,7 +247,9 @@
   var $app = document.getElementById('app'), $pager = document.getElementById('pillbar');
   var Q = new URLSearchParams(location.search);
   var S = {
-    type: (NB.BY_ID[Q.get('p')] || Q.get('p') === 'all' || Q.get('p') === 'records') ? Q.get('p') : (NB.lastType() || 'all'),
+    /* the saved stop is checked too (23 Nov 2026): a player last on Astro Drop, which left the pager on 22 Nov,
+       had 'astro' saved, and an unknown stop threw in the pager and left the board on "Loading…" */
+    type: [Q.get('p'), NB.lastType()].filter(function (v) { return NB.BY_ID[v] || v === 'all' || v === 'records'; })[0] || 'all',
     date: /^\d{4}-\d{2}-\d{2}$/.test(Q.get('d') || '') ? Q.get('d') : NB.today(),
     join: (Q.get('join') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12),
     from: Q.get('from') || (Q.get('join') ? 'join' : 'direct'),
@@ -326,7 +328,7 @@
      The date opens the earlier days. Astro Drop (a game's Daily) was a stop before Records until
      22 Nov 2026, when Games moved to games.dailynoodle.co.uk; its past scores stay in the database. */
   var STOPS = ['all'].concat(TYPES.map(function (t) { return t.id; }), ['records']);
-  function stopName(v) { return v === 'all' ? 'All puzzles' : v === 'records' ? 'Records' : NB.BY_ID[v].name; }
+  function stopName(v) { return v === 'all' ? 'All puzzles' : v === 'records' ? 'Records' : (NB.BY_ID[v] || { name: 'All puzzles' }).name; }
   var MARK = (document.querySelector('.mast .mono') || {}).innerHTML || '';
   function stopIcon(v) {
     return NB.BY_ID[v] ? '<span class="pg-ico"><img src="assets/' + v + '-thumb.svg" width="36" height="36" alt=""></span>'
