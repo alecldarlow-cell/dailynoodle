@@ -339,7 +339,7 @@ function swipe(w,k){
 /* tap to pick (Alec, 26 Nov 2026): the tapped letter glides into the line, the shortest way round (at most three
    steps, up or down; the arrows and dragging still turn down only), then pulses once it is in place. Counts as one
    turn. The wheel is set to its new position at once and drawn sliding from where it was, so a submit or a save
-   mid-glide always reads the letters that will land; reduced motion jumps straight there and still pulses. */
+   mid-glide always reads the letters that will land; reduced motion jumps straight there, with no glide or pulse. */
 const rolling=new Array(N).fill(false);
 function pick(k,i){
   if(state.solved||rolling[k]||i===READ)return;
