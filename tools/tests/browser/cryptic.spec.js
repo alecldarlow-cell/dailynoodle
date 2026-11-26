@@ -24,8 +24,12 @@ test('CRYPTIC-E2E-01: start card, typing, a wrong answer shakes, hints 1–3, re
  await expect(p.locator('#grid .sq')).toHaveCount(ANS.length);
  await expect(p.locator('#grid .sq.cur')).toHaveCount(1);
  // a wrong answer: it shakes, nothing goes green, nothing is spent
+ // the shake lasts 0.42 s and its class is removed on animationend, so on a slow runner the tap can outlast it
+ // (two failed release attempts, 26 Nov 2026); record that the class was added instead of racing to see it
+ await p.evaluate(()=>{const g=document.getElementById('grid');window.__crShook=false;
+  new MutationObserver(()=>{if(g.classList.contains('shake'))window.__crShook=true;}).observe(g,{attributes:true,attributeFilter:['class']});});
  await typeWord(p,WRONG);await H.tap(p,p.locator('#kEnter'));
- await expect(p.locator('#grid')).toHaveClass(/shake/);
+ await expect.poll(()=>p.evaluate(()=>window.__crShook)).toBe(true);
  await expect(p.locator('#msg')).toContainText('Not quite');
  await expect(p.locator('#grid .sq.won')).toHaveCount(0);
  await expect(p.locator('#hintBtn')).toHaveText('Hint 1 of 3');
