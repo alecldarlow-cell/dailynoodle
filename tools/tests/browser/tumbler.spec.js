@@ -7,8 +7,8 @@ const fs=require('fs'),path=require('path'),vm=require('vm');
 const T=require('../../tumbler');
 const FILE='reports/2026-11-06-word-tumbler-0010.html';
 const P=vm.runInNewContext('('+fs.readFileSync(path.join(H.REPO,FILE),'utf8').match(/\nwindow\.DN_PUZZLE=(\{.*\});\n/)[1]+')');
-const READ=1,S=P.wheels[0].length;
-/* turns to put a word on the yellow line, from the current offsets (wheels only turn down: offset decreases) */
+const READ=3,S=P.wheels[0].length;   // the outlined line is the middle row (26 Nov 2026; was row 2)
+/* turns to put a word on the outlined line, from the current offsets (wheels only turn down: offset decreases) */
 async function make(p,word){
  for(let k=0;k<4;k++){
   for(let n=0;n<S;n++){
@@ -110,5 +110,30 @@ test('TUMBLER-E2E-04: GIVEN a wrong submit WHEN it is checked THEN its clues mar
  // the latest submit stays on screen under Submit
  const vh=await p.evaluate(()=>innerHeight),bottom=await p.locator('#tries .r').first().evaluate(e=>e.getBoundingClientRect().bottom);
  expect(bottom).toBeLessThanOrEqual(vh);
+ expect(phone.errors).toEqual([]);
+});
+test('TUMBLER-E2E-05: GIVEN a letter off the line WHEN it is tapped, with a little finger jitter THEN it glides onto the line and pulses, one turn; a drag still turns; the start line is unchanged',async({phone})=>{
+ // Alec, 26 Nov 2026: tap a letter to select it for each wheel; the line moved to the middle row; a smooth glide and a pulse on landing
+ const p=phone.p;await goto(phone,FILE);
+ await H.tap(p,p.locator('#dnPlay'));await H.wait(p,300);
+ const line=()=>p.locator('.wheel .tile.read').evaluateAll(ts=>ts.map(t=>t.textContent).join(''));
+ expect(await line()).toBe(P.wheels.map(w=>w[1]).join(''));   // every board starts on the same word as before the move
+ for(let k=0;k<4;k++){
+  const tiles=p.locator('.wheel').nth(k).locator('.tile');
+  const i=await tiles.evaluateAll((ts,L)=>ts.findIndex(t=>t.textContent===L),P.secret[k].toUpperCase());
+  if(i===READ)continue;
+  const box=await tiles.nth(i).boundingBox(),x=box.x+box.width/2,y=box.y+box.height/2;
+  await p.mouse.move(x,y);await p.mouse.down();await p.mouse.move(x+3,y+4);await p.mouse.move(x-2,y+2);await p.mouse.up();
+  await expect(tiles.nth(READ)).toHaveText(P.secret[k].toUpperCase());
+  await expect(tiles.nth(READ)).toHaveClass(/\bland\b/,{timeout:1500});
+ }
+ expect(await line()).toBe(P.secret.toUpperCase());
+ const cur=await p.evaluate(()=>JSON.parse(localStorage.getItem('digi-tumbler-v1')).cur);
+ expect(cur.t).toBeLessThanOrEqual(4);   // one turn a tap
+ // a drag down still turns the wheel a step at a time
+ const before=await p.locator('.wheel').nth(0).locator('.tile').nth(READ).textContent();
+ const b=await p.locator('.wheel').nth(0).locator('.tile').nth(1).boundingBox();
+ await p.mouse.move(b.x+b.width/2,b.y+5);await p.mouse.down();await p.mouse.move(b.x+b.width/2,b.y+5+b.height*.7,{steps:6});await p.mouse.up();
+ expect(await p.locator('.wheel').nth(0).locator('.tile').nth(READ).textContent()).not.toBe(before);
  expect(phone.errors).toEqual([]);
 });

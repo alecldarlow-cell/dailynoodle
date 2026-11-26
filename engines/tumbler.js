@@ -1,6 +1,6 @@
 /* Digi Puzzles — tumbler engine. One copy serves every tumbler page in reports/.
    Tumbler: a hidden four-letter word on four wheels of seven letters (Lab, 6 Nov 2026).
-   Turn the wheels down to make any real word on the outlined line and submit it for
+   Turn the wheels down (or tap a letter to bring it to the line) to make any real word on the outlined line and submit it for
    Wordle clues, which also mark the wheels; submit the hidden word to solve it. The clock is the score.
    The page supplies window.DN_PUZZLE = {type:"tumbler", id:"DP·TUMB·0001", band, n:4,
    wheels:["7 capitals" ×4], secret, words:[every accepted word the wheels make], seed}.
@@ -203,8 +203,12 @@ document.write('<link rel="stylesheet" href="../engines/finish.css"><link rel="s
 (function(){
 "use strict";
 const PUZZLE=window.DN_PUZZLE;
-const N=PUZZLE.n,P=PUZZLE.wheels[0].length,READ=1,SECRET=PUZZLE.secret,WORDS=new Set(PUZZLE.words);
+/* the outlined line is the middle row (row 4 of 7, Alec, 26 Nov 2026; was row 2). Offsets and saves keep their
+   old meaning: the letter on the line is wheels[k][(LINE + off) % P], LINE = 1, so every board starts on the same
+   word as before, saved rounds resume on the same line and the gate's "secret not on the line at the start" holds. */
+const N=PUZZLE.n,P=PUZZLE.wheels[0].length,LINE=1,READ=3,SECRET=PUZZLE.secret,WORDS=new Set(PUZZLE.words);
 const $=id=>document.getElementById(id);
+const REDUCE_MOTION=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches);
 const boardEl=$("board"),msgEl=$("msg"),timerEl=$("timer");
 const meta=n=>{const m=document.querySelector('meta[name="'+n+'"]');return m?m.content:"";};
 const LAB=!!meta("dn:badge");
@@ -306,7 +310,7 @@ function wheelMarks(){
 function rowNode(w,cls){const r=document.createElement("div");r.className=cls||"r";clue(w).forEach((c,i)=>{const b=document.createElement("b");b.className=c;b.textContent=w[i].toUpperCase();r.appendChild(b);});return r;}
 
 /* ---------- the wheels ---------- */
-const letter=(k,i)=>PUZZLE.wheels[k][((i+state.off[k])%P+P)%P];
+const letter=(k,i)=>PUZZLE.wheels[k][((i-READ+LINE+state.off[k])%P+P)%P];
 const lineWord=()=>{let w="";for(let k=0;k<N;k++)w+=letter(k,READ);return w.toLowerCase();};
 const wheels=[];
 function build(){
@@ -322,22 +326,43 @@ function build(){
     a.addEventListener("click",()=>turn(k));boardEl.appendChild(a);
   }
 }
-/* a drag down the wheel turns it a step for each tile's height */
+/* a drag down the wheel turns it a step for each 0.6 of a tile; a press that moves under 12 px and turns
+   nothing is a tap on the tile it started on, which brings that letter to the line (Alec, 26 Nov 2026) */
+const TAP_SLOP=12;
 function swipe(w,k){
-  let y0=null;
-  w.addEventListener("pointerdown",e=>{y0=e.clientY;try{w.setPointerCapture(e.pointerId);}catch(x){}});
-  w.addEventListener("pointermove",e=>{if(y0===null)return;const step=w.firstChild.getBoundingClientRect().height*.6;if(e.clientY-y0>=step){turn(k);y0=e.clientY;}});
-  const end=()=>{y0=null;};w.addEventListener("pointerup",end);w.addEventListener("pointercancel",end);
+  let y0=null,x0=0,yS=0,moved=false,tile=-1;
+  w.addEventListener("pointerdown",e=>{y0=yS=e.clientY;x0=e.clientX;moved=false;const t=e.target.closest&&e.target.closest(".tile");tile=t?[...w.children].indexOf(t):-1;try{w.setPointerCapture(e.pointerId);}catch(x){}});
+  w.addEventListener("pointermove",e=>{if(y0===null)return;if(Math.abs(e.clientY-yS)>TAP_SLOP||Math.abs(e.clientX-x0)>TAP_SLOP)moved=true;const step=w.firstChild.getBoundingClientRect().height*.6;if(e.clientY-y0>=step){turn(k);y0=e.clientY;moved=true;}});
+  w.addEventListener("pointerup",()=>{if(y0!==null&&!moved&&tile>=0)pick(k,tile);y0=null;});
+  w.addEventListener("pointercancel",()=>{y0=null;});
 }
+/* tap to pick (Alec, 26 Nov 2026): the tapped letter glides into the line, the shortest way round (at most three
+   steps, up or down; the arrows and dragging still turn down only), then pulses once it is in place. Counts as one
+   turn. The wheel is set to its new position at once and drawn sliding from where it was, so a submit or a save
+   mid-glide always reads the letters that will land; reduced motion jumps straight there and still pulses. */
+const rolling=new Array(N).fill(false);
+function pick(k,i){
+  if(state.solved||rolling[k]||i===READ)return;
+  let d=((READ-i)%P+P)%P;if(d>P/2)d-=P;   // d > 0: the wheel rolls down d tiles; d < 0: up
+  startTimer();state.turns++;setMsg("");
+  const tiles=[...wheels[k].children],pitch=tiles[1].getBoundingClientRect().top-tiles[0].getBoundingClientRect().top;
+  state.off[k]=((state.off[k]-d)%P+P)%P;paint();saveCur();
+  const land=()=>{rolling[k]=false;pulse(k);};
+  if(REDUCE_MOTION||typeof tiles[0].animate!=="function"||!pitch){land();return;}
+  rolling[k]=true;let left=tiles.length;
+  const dur=150+75*Math.abs(d),done=()=>{if(--left===0)land();};
+  tiles.forEach(t=>{const an=t.animate([{transform:"translateY("+(-d*pitch)+"px)"},{transform:"translateY(0)"}],{duration:dur,easing:"cubic-bezier(.22,.8,.3,1)"});an.onfinish=done;an.oncancel=done;});
+}
+function pulse(k){const t=wheels[k].children[READ];t.classList.remove("land");void t.offsetWidth;t.classList.add("land");}
 function paint(){
   const mark=wheelMarks();
-  for(let k=0;k<N;k++)for(let i=0;i<P;i++){const t=wheels[k].children[i],L=letter(k,i),m=mark(k,L);t.textContent=L;t.className="tile"+(i===READ?" read":"")+(m?" "+m:"");}
+  for(let k=0;k<N;k++)for(let i=0;i<P;i++){const t=wheels[k].children[i],L=letter(k,i),m=mark(k,L);t.textContent=L;t.className="tile"+(i===READ?" read":"")+(m?" "+m:"")+(i===READ&&t.classList.contains("land")?" land":"");if(i!==READ)t.setAttribute("aria-label","Bring "+L+" to the line");else t.removeAttribute("aria-label");}
   const read=lineWord();wheels.forEach((w,k)=>w.children[READ].setAttribute("aria-label","Line letter "+(k+1)+": "+read[k].toUpperCase()));
   const box=$("tries");box.innerHTML="";
   state.tries.slice().reverse().forEach((w,j)=>{const r=rowNode(w);const s=document.createElement("small");s.textContent="submit "+(state.tries.length-j);r.appendChild(s);box.appendChild(r);});
 }
 function turn(k){
-  if(state.solved)return;
+  if(state.solved||rolling[k])return;
   startTimer();state.off[k]=(state.off[k]-1+P)%P;state.turns++;paint();setMsg("");saveCur();
 }
 function submit(){
@@ -380,7 +405,6 @@ function finish(){
 /* the win beat (Alec, 9 Nov 2026: the solving submit went straight to the sheet): the other
    letters fade back, the four on the line pop and turn green left to right, then a short hold
    on the word, then the sheet, about 1.5 s in all, as Mini, Doku and Redact pause before theirs */
-const REDUCE_MOTION=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches);
 function winBeat(done){
   const line=wheels.map(w=>w.children[READ]);
   document.body.classList.add("won");
@@ -415,7 +439,7 @@ function restoreDone(){
   const rec=window.dnCore.getDone(DONE_KEY,PUZZLE.id);if(!rec)return false;
   const t=(/^\d{1,4}:\d{2}$/.test(String(rec.t))?String(rec.t):null)||"0:00";
   state.solved=true;state.tries=Array.isArray(rec.w)?rec.w:[SECRET];
-  for(let k=0;k<N;k++){const i=PUZZLE.wheels[k].indexOf(SECRET[k].toUpperCase());state.off[k]=((i-READ)%P+P)%P;}
+  for(let k=0;k<N;k++){const i=PUZZLE.wheels[k].indexOf(SECRET[k].toUpperCase());state.off[k]=((i-LINE)%P+P)%P;}
   stopTimer();timerEl.textContent=t;timerEl.classList.remove("waiting");$("statTime").textContent=t;$("statStreak").textContent=state.streak;
   paint();document.body.classList.add("win","won");wheels.forEach(w=>w.children[READ].classList.add("won"));setMsg("Solved in "+t+".");
   try{document.documentElement.setAttribute("data-dn-done","");}catch(e){}
