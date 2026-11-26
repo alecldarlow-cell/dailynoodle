@@ -174,6 +174,30 @@ test('ARCHIVE-LAB-01: GIVEN a Lab puzzle finished and one part-played WHEN All s
  await expect(tRow).toBeVisible();
  expect(phone.errors).toEqual([]);
 });
+// ARCHIVE-LAB-03 (26 Nov 2026, Alec: unplayed Cryptics in All): every Cryptic before today is in All, played or not.
+test('ARCHIVE-LAB-03: GIVEN Cryptics before today, none played WHEN All shows THEN every one is among the dailies with the Lab label, today\'s is not, an unplayed Tilt stays out, and Hide done hides a finished one',async({phone})=>{
+ const CDAY='2026-11-24';
+ const cry=(feed.items||[]).filter(it=>it.kind==='puzzle'&&it.badge&&it.type==='cryptic');
+ const past=cry.filter(it=>it.date<CDAY),now=cry.find(it=>it.date===CDAY);
+ const tilt=(feed.items||[]).find(it=>it.kind==='puzzle'&&it.badge&&it.type==='tilt'&&it.date<CDAY);
+ expect(past.length>=2&&now&&tilt,'Cryptics before '+CDAY).toBeTruthy();
+ await phone.p.clock.setSystemTime(new Date(CDAY+'T12:00:00Z'));
+ await phone.ctx.addInitScript(id=>{localStorage.setItem('digi-cryptic-v1',JSON.stringify({v:1,done:{[id]:{t:'0:48',s:48,h:1,d:'2026-11-22'}}}));},past[0].id);
+ await goto(phone,'archive.html');
+ for(const it of past){
+  const row=phone.p.locator('#ar-listview a.ar-row[data-id="'+it.id+'"]');
+  await expect(row).toBeVisible();
+  await expect(row.locator('.ar-lab')).toHaveText(/lab trial/i);
+  await expect(row.locator('.ar-name')).toHaveText('Cryptic '+Number(it.id.split('·').pop()));
+ }
+ await expect(phone.p.locator('#ar-listview a.ar-row[data-id="'+past[0].id+'"] .ar-res')).toHaveText('Solved in 0:48');
+ await expect(phone.p.locator('a.ar-row[data-id="'+now.id+'"]')).toHaveCount(0);   // today's is on Puzzles
+ await expect(phone.p.locator('a.ar-row[data-id="'+tilt.id+'"]')).toHaveCount(0);  // other trials: only once played
+ await H.tap(phone.p,phone.p.locator('#ar-hide'));await H.wait(phone.p,100);
+ await expect(phone.p.locator('a.ar-row[data-id="'+past[0].id+'"]')).toHaveCount(0);
+ await expect(phone.p.locator('a.ar-row[data-id="'+past[1].id+'"]')).toBeVisible();
+ expect(phone.errors).toEqual([]);
+});
 test('ARCHIVE-LAB-02: GIVEN Lab picked WHEN the list shows THEN every Lab puzzle before today, each labelled, as a list only; the address keeps it',async({phone})=>{
  await phone.p.clock.setSystemTime(new Date(LDAY+'T12:00:00Z'));
  await goto(phone,'archive.html');

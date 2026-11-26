@@ -206,6 +206,9 @@
      tile. Retired trials are marked. Lab puzzles stay off the calendar. front.js LAB_RETIRED keeps the same list. */
   var LAB = ['tilt', 'redact', 'tumbler', 'cryptic'];
   var LAB_RETIRED = { redact: '2026-11-21' };
+  /* Lab types whose every past puzzle is listed in All, played or not (26 Nov 2026, Alec: Cryptic's missed days
+     should be easy to catch up on); the other trials still show in All only once played. Daily-noodle-app LAB_IN_ALL. */
+  var LAB_IN_ALL = ['cryptic'];
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   /* the gold coin (21 Nov 2026, Alec: one design everywhere): a shaded gold face, a darker rim, a small shine
      and a dark star; each drawing gets its own gradient id, so one inside a hidden card can't blank the rest */
@@ -286,7 +289,7 @@
   function listed() {
     if (state.type === 'lab') return state.lab.slice();
     if (state.type) return visible(state.items);
-    return state.items.concat(state.lab.filter(function (it) { return done(it) || started(it); }));
+    return state.items.concat(state.lab.filter(function (it) { return LAB_IN_ALL.indexOf(it.type) >= 0 || done(it) || started(it); }));
   }
 
   function saveUrl() {
