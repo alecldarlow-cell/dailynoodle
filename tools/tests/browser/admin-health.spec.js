@@ -6,20 +6,21 @@ const {test,expect,H,goto}=require('./support');
 const F=require('./admin-fixtures');
 async function at(phone){await phone.p.clock.setSystemTime(new Date('2026-11-27T17:40:00Z'));}
 
-test('ADMIN-TODAY-01: GIVEN live puzzles, a passed release, Lab stock for 22 days and Link short of the goal WHEN Today opens THEN it names both as things to do and the lamps say why',async({phone})=>{
- await F.auth(phone);const state=await F.publishing(phone);await at(phone);await phone.p.setViewportSize({width:360,height:780});await goto(phone,'admin.html');
+test('ADMIN-TODAY-01: GIVEN live puzzles, a passed release, a Lab review in 2 days and Link with under 3 months left WHEN Today opens THEN it names both as things to do and the lamps say why',async({phone})=>{
+ await F.auth(phone);const state=await F.publishing(phone,{stockOver:{link:'2027-01-26'}});await at(phone);await phone.p.setViewportSize({width:360,height:780});await goto(phone,'admin.html');
  const p=phone.p;
  await expect(p.locator('#todayHead')).toContainText('2 things need you');
- await expect(p.locator('#todayHead')).toContainText('Make Lab puzzles past 19 Dec');
- await expect(p.locator('#todayHead')).toContainText('Extend Link to 31 Dec 2027');
- await expect(p.locator('#todayHead')).toContainText('Link ends 21 Jul 2027, 163 days short');
+ await expect(p.locator('#todayHead')).toContainText('Decide on Tumbler, Tilt by Sun 29 Nov');
+ await expect(p.locator('#todayHead')).toContainText('Make more Link puzzles');
+ await expect(p.locator('#todayHead')).toContainText('Link ends 26 Jan 2027 (60 days)');
+ // Lab files run past the review (19 Dec against 29 Nov), so Lab stock is not a problem
  await expect(p.locator('#lamps')).toContainText('12 of 12 responding: 9 dailies and 3 Lab');
  await expect(p.locator('#lamps')).toContainText('No app errors in 7 days');
  await expect(p.locator('#lamps')).toContainText('Passed');
  await expect(p.locator('#lamps')).toContainText('Nightly tests passed');
- await expect(p.locator('#lamps .lmp').last()).toHaveClass(/bad/);
- await expect(p.locator('#rwList')).toContainText('Lab trials');
- await expect(p.locator('#rwList .rw.bad')).toHaveCount(1);
+ await expect(p.locator('#lamps .lmp').last()).toHaveClass(/warn/);
+ await expect(p.locator('#rwList')).toContainText('Lab: Tilt');await expect(p.locator('#rwList')).toContainText('Review 29 Nov');
+ await expect(p.locator('#rwList .rw.bad')).toHaveCount(0);await expect(p.locator('#rwList .rw.warn')).toHaveCount(1);
  await expect(p.locator('#ydTiles')).toContainText('22');await expect(p.locator('#ydTiles')).toContainText('came back');
  await expect(p.locator('#ydFlags')).toContainText('Link 110');
  await expect(p.locator('#ydApp')).toContainText('26');
@@ -52,9 +53,20 @@ test('ADMIN-TODAY-02: GIVEN an app crash this week WHEN Today opens THEN the App
  expect(phone.errors).toEqual([]);
 });
 
-test('ADMIN-TODAY-03: GIVEN everything live, released and stocked to the goal WHEN Today opens THEN it says All clear',async({phone})=>{
- await F.auth(phone);await F.publishing(phone,{stockOver:{through:'2028-02-01',link:'2028-02-01',lab:'2027-03-01'}});await at(phone);await goto(phone,'admin.html');
+test('ADMIN-TODAY-03: GIVEN everything live, released, stocked and no Lab review due WHEN Today opens THEN it says All clear',async({phone})=>{
+ await F.auth(phone);await F.publishing(phone,{stockOver:{lab:'2027-03-01'}});await at(phone);
+ const targets=JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname,'../../../admin-targets.json'),'utf8'));
+ for(const t of Object.values(targets.lab.trials))if(t.review)t.review='2027-02-01';
+ await phone.ctx.route('**/admin-targets.json',r=>r.fulfill({json:targets}));
+ await goto(phone,'admin.html');
  await expect(phone.p.locator('#todayHead')).toHaveClass(/good/);await expect(phone.p.locator('#todayHead')).toContainText('All clear');
+ expect(phone.errors).toEqual([]);
+});
+
+test('ADMIN-TODAY-04: GIVEN Lab files that end before the review WHEN Today opens THEN that is red',async({phone})=>{
+ await F.auth(phone);await F.publishing(phone,{stockOver:{lab:'2026-11-28'}});await at(phone);await goto(phone,'admin.html');
+ await expect(phone.p.locator('#todayHead')).toContainText('Lab puzzles run out before the review');
+ await expect(phone.p.locator('#rwList .rw.bad')).toHaveCount(3);
  expect(phone.errors).toEqual([]);
 });
 

@@ -45,3 +45,4 @@ The checks moved from the Publishing tab to **Today** (cards folded under Publis
 - **Release**: when the latest run failed, the failed job and step are read from GitHub's public jobs API and shown.
 - **Nightly**: the latest scheduled run of `tests.yml` is read too.
 - The `dn:publishing` event now carries `live` (with `lab`, `down`), `stock` (with `runway`, `lab`, `shortest`), `release` (with `step`) and `tests`.
+- 27 Nov 2026 (evening): no end-date goal. `analyse(s, today, {warn, bad})` tones dailies amber under 90 days and red under 30 (the admin page passes `admin-targets.json` › `runway`). Lab entries carry `last` and `days` only; the admin page compares them with each trial's review date.

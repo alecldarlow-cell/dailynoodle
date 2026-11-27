@@ -1,7 +1,8 @@
 {
   "version": 1,
   "about": "Admin scorecard targets, signed off by Alec 27 Nov 2026 (Claude Project doc claude/admin-targets-draft-2026-11-27.md). Edit numbers here; admin.html reads this file. Percentages are whole numbers; times are seconds.",
-  "stock_goal": "2027-12-31",
+  "runway": { "warn_days": 90, "bad_days": 30, "about": "Alec 27 Nov 2026: about 3 months notice is enough. Lab trials are judged by their review date, not stock." },
+  "lab_decision_warn_days": 3,
   "app_players_goal": 1000,
   "min_attempts": 20,
   "min_puzzle_players": 5,
