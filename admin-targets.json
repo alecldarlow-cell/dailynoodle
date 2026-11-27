@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "about": "Admin scorecard targets, signed off by Alec 27 Nov 2026 (Claude Project doc claude/admin-targets-draft-2026-11-27.md). Edit numbers here; admin.html reads this file. Percentages are whole numbers; times are seconds.",
+  "stock_goal": "2027-12-31",
+  "app_players_goal": 1000,
+  "min_attempts": 20,
+  "min_puzzle_players": 5,
+  "gold_band": [7, 14],
+  "players": {
+    "stickiness": [25, 35],
+    "stickiness_flag": 20,
+    "daily_weekly": 50,
+    "back_next_day": 30,
+    "back_next_day_flag": 20,
+    "back_week_2": 25,
+    "back_month": 15,
+    "type_returning": 60
+  },
+  "types": {
+    "mini":    { "finished": 90, "secs": [50, 100], "help_max": 20 },
+    "doku":    { "bands": {
+                   "easy":   { "finished": 90, "secs": [0, 60] },
+                   "medium": { "finished": 85, "secs": [60, 150] },
+                   "hard":   { "finished": 80, "secs": [180, 300], "p75_max": 480 } } },
+    "path":    { "finished": 90, "secs": [25, 60] },
+    "sweep":   { "won": [70, 85], "secs": [40, 80] },
+    "link":    { "won": [65, 80], "mistakes_max": 1.8 },
+    "tally":   { "finished": 85, "secs": [90, 180] },
+    "tangle":  { "finished": 95, "score": [20, 30] },
+    "borders": { "finished": 95, "mean": [550, 700] },
+    "reckon":  { "finished": 95, "mean": [550, 650] }
+  },
+  "flags": { "worst_pct": 5, "floor_won": { "link": 25, "sweep": 25 }, "floor_finished": 40, "group_at": 5 },
+  "lab": {
+    "votes": 20, "yes": 70, "finished": 85, "secs": [30, 180], "retire_returning": 50,
+    "trials": {
+      "tumbler": { "from": "2026-11-15", "review": "2026-11-29" },
+      "tilt":    { "from": "2026-11-15", "review": "2026-11-29" },
+      "cryptic": { "from": "2026-11-21", "review": "2026-12-05" },
+      "redact":  { "from": "2026-11-12", "retired": "2026-11-20" }
+    }
+  }
+}

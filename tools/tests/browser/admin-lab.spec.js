@@ -1,37 +1,34 @@
 'use strict';
-// ADMIN-LAB-WEB: the admin Puzzles tab's Lab trial read-out (17 Nov 2026), on a stubbed admin_lab.
+// ADMIN-LAB-WEB: the admin Lab tab (27 Nov 2026 rebuild; read-out from 17 Nov), on stubbed admin_lab and admin_ops.
 const {test,expect,goto}=require('./support');
-async function auth(phone,lab){
- await phone.ctx.addInitScript(lab=>{
-  window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:{user:{email:'admin@example.test'}}}}),onAuthStateChange(){},signOut:async()=>({})},rpc:async name=>{
-   if(name==='admin_lab')return lab;
-   return {data:name==='admin_dashboard'?{range:{from:'2026-11-01',to:'2026-11-17'},generated_at:'2026-11-17T12:00:00Z',kpis:{},items:[]}:name==='admin_board'?{leagues:[]}:name==='admin_archive_stats'?{weeks:[]}:false};
-  }})};
- },lab);
-}
-const row=(type,o)=>Object.assign({type,players:0,starters:0,finishers:0,starts:0,finishes:0,abandons:0,pct_abandoned:null,median_solve_secs:null,yes:0,no:0,pct_yes:null,app:{yes:0,no:0},web:{yes:0,no:0},pct_finished:null,trial_days:0,returners:0,regulars:0,pct_returned:null,avg_days:null},o);
-test('ADMIN-LAB-WEB-01: GIVEN liked-and-returned, split-but-returned and too-early types WHEN the Puzzles tab opens THEN each gets a plain read-out and the table shows coming back',async({phone})=>{
- await auth(phone,{data:{types:[
-  row('redact',{players:30,starters:25,finishers:15,starts:40,abandons:20,pct_abandoned:50,pct_finished:60,trial_days:6,returners:12,regulars:6,pct_returned:48,yes:12,no:10,pct_yes:55,app:{yes:10,no:8},web:{yes:2,no:2}}),
-  row('tilt',{players:40,starters:35,finishers:33,starts:60,abandons:3,pct_abandoned:5,pct_finished:94,median_solve_secs:75,trial_days:6,returners:18,regulars:9,pct_returned:51,yes:22,no:4,pct_yes:85,app:{yes:20,no:4},web:{yes:2,no:0}}),
-  row('tumbler',{players:6,starters:6,finishers:5,starts:6,abandons:1,pct_abandoned:17,pct_finished:83,trial_days:2,returners:0,pct_returned:0,yes:3,no:0,pct_yes:100,app:{yes:3,no:0}})
- ]}});
- await goto(phone,'admin.html#puzzles');
- const rd=phone.p.locator('#labRead');
- await expect(rd.locator('[data-type="tilt"]')).toContainText('Looks like a daily: liked and returned to');
- await expect(rd.locator('[data-type="tilt"]')).toContainText('85% Yes from 26 voters, clearing the 70% bar.');
- await expect(rd.locator('[data-type="redact"]')).toContainText('Split vote, but players keep coming back');
- await expect(rd.locator('[data-type="redact"]')).toContainText('may be too hard or unclear');
- await expect(rd.locator('[data-type="tumbler"]')).toContainText('Too early to call, and few come back so far');
- await expect(phone.p.locator('#tLab')).toContainText('48% · 6 on 3+ days');
- await expect(rd).not.toContainText('apply migration lab_readout');
+const F=require('./admin-fixtures');
+async function at(phone){await phone.p.clock.setSystemTime(new Date('2026-11-27T17:40:00Z'));}
+
+test('ADMIN-LAB-WEB-01: GIVEN three trials WHEN the Lab tab opens THEN each gets a verdict against the bar, vote pace and the call for the review',async({phone})=>{
+ await F.auth(phone);await F.publishing(phone);await at(phone);await goto(phone,'admin.html#lab');
+ const p=phone.p;
+ await expect(p.locator('#labHead')).toContainText('Review on Sun 29 Nov');
+ await expect(p.locator('#labHead')).toContainText('Votes have stalled');
+ await expect(p.locator('.trial[data-type="tumbler"] .vp')).toHaveText('Liked, fewer return');   // 65% come back against the dailies' 66%
+ await expect(p.locator('.trial[data-type="tilt"] .vp')).toHaveText('Liked, fewer return');
+ await expect(p.locator('.trial[data-type="cryptic"] .vp')).toHaveText('Too early');
+ await expect(p.locator('.trial[data-type="tumbler"]')).toContainText('6 short of 20 · 2 in 7 days');
+ await expect(p.locator('#labCall')).toContainText('65% against 66%');
+ await expect(p.locator('#labRetired')).toContainText('Redact');
+ // the 17 Nov read-out is kept under Trial detail
+ await p.locator('#labStats summary').click();
+ await expect(p.locator('#labRead [data-type="tilt"]')).toContainText('79% Yes from 14 voters');
+ await expect(p.locator('#tLab')).toContainText('58% · 6 on 3+ days');
+ expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await p.screenshot({path:'test-results/admin-lab-phone.png',fullPage:true});
  expect(phone.errors).toEqual([]);
 });
+
 test('ADMIN-LAB-WEB-02: GIVEN admin_lab from before the read-out migration WHEN the tab opens THEN the votes still read and it says coming back needs the migration',async({phone})=>{
- const old=row('tilt',{players:4,starters:4,finishers:4,starts:4,pct_abandoned:0,yes:1,no:0,pct_yes:100,app:{yes:1,no:0}});
+ const old=F.labRow('tilt',{players:4,starters:4,finishers:4,starts:4,pct_abandoned:0,yes:1,no:0,pct_yes:100,app:{yes:1,no:0}});
  ['pct_finished','trial_days','returners','regulars','pct_returned','avg_days'].forEach(k=>delete old[k]);
- await auth(phone,{data:{types:[old]}});
- await goto(phone,'admin.html#puzzles');
+ await F.auth(phone,{admin_lab:{data:{types:[old]}}});await F.publishing(phone);await at(phone);await goto(phone,'admin.html#lab');
+ await phone.p.locator('#labStats summary').click();
  await expect(phone.p.locator('#labRead')).toContainText('Too early to call');
  await expect(phone.p.locator('#labRead')).toContainText('apply migration lab_readout');
  expect(phone.errors).toEqual([]);

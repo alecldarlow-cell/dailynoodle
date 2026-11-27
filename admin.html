@@ -12,15 +12,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!--
   NOODLE ADMIN — private reader insights (admin.html)
+  Rebuilt 27 Nov 2026 around three aims (Claude Project docs claude/admin-review-2026-11-27.md and
+  claude/admin-targets-draft-2026-11-27.md): Today (is everything live, released, stocked and the app
+  healthy?), Players & growth, and Puzzles and Lab judged against admin-targets.json. Each tab loads its
+  own figures the first time it opens. News, Games and Sources are under Other.
   The page itself is public, like every file on GitHub Pages, but it holds no
   data. Figures come from the `digi` Supabase database through admin_dashboard
   and admin_board, which answer only a signed-in email on the admin list
   (insights.admins). Sign-in is an emailed one-time link.
   This page deliberately does NOT load dn-track.js: admin visits are not counted.
-  Layout (20 Oct 2026): tabs (Overview, News, Puzzles, Games, Leagues,
-  Publishing, Basis), controls in the Settings sheet, light and dark like the
-  front pages. Preset ranges end yesterday; today is fetched separately and
-  drawn hollow on the daily chart.
+  Controls in the Settings sheet, light and dark like the front pages. Preset
+  ranges end yesterday.
 -->
 <style>
   :root{
@@ -29,6 +31,7 @@
     --news:#1C46C2; --news-soft:#ECF0FC;
     --puzzles:#0E7A4B; --puzzles-soft:#E4F4EB;
     --games:#6A2BC9; --games-soft:#F1EAFC;
+    --lab:#8A1F59; --lab-soft:#FBEAF3;
     --good:#1F7A4D; --warn:#9A5600; --bad:#B42318;
     --good-soft:#E6F4EC; --warn-soft:#FFF3E0; --bad-soft:#FDECEA;
     --on-ink:#FFFFFF;
@@ -40,13 +43,13 @@
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
     --canvas:#11131A; --paper:#1B1E29; --ink:#ECEEF4; --muted:#A6ABBD; --faint:#8F95A8;
     --hair:#2E3344; --wash:#232735; --scrim:rgba(0,0,0,.6); --track:#3A3F52; --knob:#ECEEF4;
-    --news:#8EA6FF; --news-soft:#1C2440; --puzzles:#4CC793; --puzzles-soft:#142C24; --games:#B794FF; --games-soft:#2A2043;
+    --news:#8EA6FF; --news-soft:#1C2440; --puzzles:#4CC793; --puzzles-soft:#142C24; --games:#B794FF; --games-soft:#2A2043; --lab:#F59AC8; --lab-soft:#3A1A2C;
     --good:#4CC793; --warn:#F2B866; --bad:#FF7A6E; --good-soft:#142C24; --warn-soft:#3A2A12; --bad-soft:#3A1A1A;
     --on-ink:#11131A; color-scheme:dark}}
   :root[data-theme="dark"]{
     --canvas:#11131A; --paper:#1B1E29; --ink:#ECEEF4; --muted:#A6ABBD; --faint:#8F95A8;
     --hair:#2E3344; --wash:#232735; --scrim:rgba(0,0,0,.6); --track:#3A3F52; --knob:#ECEEF4;
-    --news:#8EA6FF; --news-soft:#1C2440; --puzzles:#4CC793; --puzzles-soft:#142C24; --games:#B794FF; --games-soft:#2A2043;
+    --news:#8EA6FF; --news-soft:#1C2440; --puzzles:#4CC793; --puzzles-soft:#142C24; --games:#B794FF; --games-soft:#2A2043; --lab:#F59AC8; --lab-soft:#3A1A2C;
     --good:#4CC793; --warn:#F2B866; --bad:#FF7A6E; --good-soft:#142C24; --warn-soft:#3A2A12; --bad-soft:#3A1A1A;
     --on-ink:#11131A; color-scheme:dark}
   *{margin:0;padding:0;box-sizing:border-box}
@@ -318,6 +321,80 @@
   .prl{display:flex;align-items:center;gap:10px;min-height:48px;border-top:1px solid var(--hair);font-size:14.5px}
   .prl .ghost,.prl .sub{margin-left:auto}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  /* admin rebuild (27 Nov 2026): verdicts, lamps, runway, loops, scorecard */
+  .head{border-radius:12px;padding:14px;border:1px solid var(--hair);background:var(--paper)}
+  .head h1,.head h2{font-family:var(--display);font-size:19px;line-height:1.25;letter-spacing:-.01em}
+  .head p{font-size:13px;color:var(--muted);margin-top:4px}
+  .head.good{border-color:var(--good);background:var(--good-soft)} .head.good h1,.head.good h2{color:var(--good)}
+  .head.warn{border-color:var(--warn);background:var(--warn-soft)} .head.warn h1,.head.warn h2{color:var(--warn)}
+  .head.bad{border-color:var(--bad);background:var(--bad-soft)} .head.bad h1,.head.bad h2{color:var(--bad)}
+  .act{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;margin-top:6px;padding-top:6px;border-top:1px solid var(--hair);text-decoration:none;color:var(--ink);font-size:13.5px;width:100%;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left}
+  .act small{display:block;font-size:12.5px;color:var(--muted)}
+  .lamps{padding:4px 14px}
+  .lmp{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--hair)}
+  .lmp:first-child{border-top:0}
+  .lmp .lamp{width:10px;height:10px;border-radius:50%;background:var(--faint);margin-top:5px;flex:none}
+  .lmp.good .lamp{background:var(--good)} .lmp.warn .lamp{background:var(--warn)} .lmp.bad .lamp{background:var(--bad)}
+  .lmp b{display:block;font-size:14px} .lmp.warn b{color:var(--warn)} .lmp.bad b{color:var(--bad)}
+  .lmp span.t{display:block;font-size:12.5px;color:var(--muted)}
+  .rwl{position:relative;display:flex;flex-direction:column;gap:9px}
+  .rw{display:grid;grid-template-columns:84px minmax(0,1fr) 78px;align-items:center;font-size:12.5px}
+  .rw .trk{height:10px;background:var(--wash);border-radius:5px;overflow:hidden;position:relative}
+  .rw .fill{display:block;height:100%;background:var(--good)}
+  .rw.warn .fill{background:var(--warn)} .rw.bad .fill{background:var(--bad)}
+  .rw .d{text-align:right;color:var(--muted)} .rw.warn .d{color:var(--warn);font-weight:600} .rw.bad .d{color:var(--bad);font-weight:600}
+  .rw .goal{position:absolute;top:-3px;bottom:-3px;border-left:1.5px dashed var(--faint)}
+  .tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .tiles.four{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;text-align:center}
+  .tile{background:var(--wash);border-radius:8px;padding:10px;min-width:0}
+  .tiles.four .tile{padding:8px 4px}
+  .tile .big{font-family:var(--display);font-weight:800;font-size:24px;font-variant-numeric:tabular-nums;line-height:1.15}
+  .tiles.four .tile .big{font-size:20px}
+  .tile .s{font-size:12px;color:var(--muted);line-height:1.3}
+  .tiles.four .tile .s{font-size:11px}
+  .tile.good{background:var(--good-soft)} .tile.good .big,.tile.good .s{color:var(--good)}
+  .tile.warn{background:var(--warn-soft)} .tile.warn .big,.tile.warn .s{color:var(--warn)}
+  .tile.bad{background:var(--bad-soft)} .tile.bad .big,.tile.bad .s{color:var(--bad)}
+  .tile.none .big{color:var(--faint)}
+  .loop h3{font-size:13.5px;font-weight:700;margin:14px 0 6px} .loop h3:first-child{margin-top:4px}
+  .note{font-size:12px;color:var(--muted);margin-top:6px}
+  .goalbar{height:10px;background:var(--wash);border-radius:5px;overflow:hidden;margin-top:8px}
+  .goalbar span{display:block;height:100%;background:var(--puzzles)}
+  .kv .v.warn{color:var(--warn)} .kv .v.good{color:var(--good)} .kv .v.bad{color:var(--bad)}
+  .vrow{padding:10px 0;border-top:1px solid var(--hair)}
+  .vrow .top{display:flex;align-items:center;gap:8px}
+  .vrow .top b{font-size:15px}
+  .vrow .figs{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .vrow .figs .miss{color:var(--warn);font-weight:700} .vrow .figs .bad{color:var(--bad);font-weight:700}
+  .vrow .nx{font-size:12.5px;margin-top:4px}
+  .vp{margin-left:auto;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--wash);color:var(--muted);white-space:nowrap}
+  .vp.good{background:var(--good-soft);color:var(--good)} .vp.warn{background:var(--warn-soft);color:var(--warn)} .vp.bad{background:var(--bad-soft);color:var(--bad)}
+  .frow{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;border-top:1px solid var(--hair);text-decoration:none;color:var(--ink);font-size:13.5px}
+  .frow .r{font-weight:600;white-space:nowrap} .frow .r.bad{color:var(--bad)} .frow .r.warn{color:var(--warn)}
+  .frow .m{color:var(--muted)}
+  .fgroup{display:block;padding:10px 12px;margin-bottom:6px;background:var(--bad-soft);border-radius:8px;font-size:13.5px}
+  .fgroup b{color:var(--bad)} .fgroup span{display:block;font-size:12.5px;color:var(--muted)}
+  .bandrow{display:grid;grid-template-columns:62px minmax(0,1fr) 128px;gap:8px;align-items:center;font-size:12.5px}
+  .bandrow .trk{position:relative;height:12px;background:var(--wash);border-radius:6px}
+  .bandrow .med{position:absolute;left:0;height:100%;background:var(--puzzles);border-radius:6px}
+  .bandrow .q{position:absolute;height:100%;background:var(--puzzles-soft)}
+  .bandrow.warn .med{background:var(--warn)} .bandrow.warn .q{background:var(--warn-soft)}
+  .bandrow .r{text-align:right} .bandrow.warn .r{color:var(--warn);font-weight:600}
+  .srow{display:grid;grid-template-columns:minmax(0,1fr) 50px 46px 56px;gap:4px;padding:10px 0;border-top:1px solid var(--hair);font-size:13.5px;text-align:right}
+  .srow > :first-child{text-align:left;overflow-wrap:anywhere}
+  .srow.h{border-top:0;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+  .srow b{font-weight:700}
+  .trial .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+  .trial .grid2 > div{background:var(--wash);border-radius:8px;padding:8px 10px;font-size:12.5px}
+  .trial .grid2 b{font-size:16px;display:block}
+  .trial .ok{color:var(--good)} .trial .no{color:var(--warn)}
+  .lab-head{background:var(--lab-soft);border-radius:12px;padding:14px}
+  .lab-head h1{font-family:var(--display);font-size:19px;color:var(--lab)}
+  .lab-head p{font-size:13px;color:var(--muted);margin-top:6px}
+  .lab-head p b{color:var(--lab)}
+  .tab[data-tab="lab"][aria-selected="true"]{border-bottom-color:var(--lab)}
+  .pill-btn{display:inline-flex;align-self:flex-start;align-items:center;gap:6px;min-height:36px;padding:0 12px;border:1px solid var(--hair);border-radius:999px;background:var(--paper);font-size:13px;font-weight:600;color:var(--ink)}
+  .wait{color:var(--faint);font-size:13.5px;padding:10px 0}
 </style>
 </head>
 <body>
@@ -330,12 +407,6 @@
       <button class="icon-btn" id="gear" type="button" aria-label="Settings" hidden>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
       </button>
-    </div>
-    <div class="rangebar" id="rangebar" hidden>
-      <button class="rangebtn" id="rangeBtn" type="button"><span id="rangeName">Last 7 days</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-      </button>
-      <span class="rangetxt" id="rangeTxt"></span>
     </div>
   </header>
 
@@ -354,194 +425,154 @@
   <!-- ============ DASHBOARD ============ -->
   <div id="app" hidden>
     <nav class="tabs" role="tablist" aria-label="Sections">
-      <button class="tab" role="tab" type="button" data-tab="overview" id="t-overview" aria-controls="overview">Overview</button>
-      <button class="tab" role="tab" type="button" data-tab="sources" id="t-sources" aria-controls="sources">Sources</button>
-      <button class="tab" role="tab" type="button" data-tab="news" id="t-news" aria-controls="news">News</button>
+      <button class="tab" role="tab" type="button" data-tab="today" id="t-today" aria-controls="today">Today</button>
+      <button class="tab" role="tab" type="button" data-tab="players" id="t-players" aria-controls="players">Players &amp; growth</button>
       <button class="tab" role="tab" type="button" data-tab="puzzles" id="t-puzzles" aria-controls="puzzles">Puzzles</button>
-      <button class="tab" role="tab" type="button" data-tab="games" id="t-games" aria-controls="games">Games</button>
+      <button class="tab" role="tab" type="button" data-tab="lab" id="t-lab" aria-controls="lab">Lab</button>
       <button class="tab" role="tab" type="button" data-tab="leagues" id="t-leagues" aria-controls="leagues">Leagues</button>
-      <button class="tab" role="tab" type="button" data-tab="publishing" id="t-publishing" aria-controls="publishing">Publishing</button>
+      <button class="tab" role="tab" type="button" data-tab="other" id="t-other" aria-controls="other">Other</button>
       <button class="tab" role="tab" type="button" data-tab="basis" id="t-basis" aria-controls="basis">Basis</button>
     </nav>
     <div class="status err" id="loadError" role="alert" hidden></div>
 
-    <!-- OVERVIEW -->
-    <section class="tabpanel" id="overview" role="tabpanel" aria-labelledby="t-overview">
-      <h1 class="sr">Overview</h1>
-      <button type="button" class="publine" id="pubLine" data-go="publishing">
-        <span class="lamp" aria-hidden="true"></span>
-        <span><b id="pubLineHead">Checking publishing…</b><span class="t" id="pubLineText">Today’s puzzles, news, stock and the last release</span></span>
-        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
-      </button>
-      <div class="kpis" id="kpis" role="group" aria-label="Headline figures"></div>
-      <div class="card">
-        <h2>Readers per day</h2>
-        <p class="sub" id="dailySub">Today is drawn hollow until the day is over.</p>
-        <div id="daily"></div>
-      </div>
-      <div class="card">
-        <h2>Worth a look</h2>
-        <div class="siglist" id="signals"></div>
-      </div>
-      <details class="more">
-        <summary>Audience</summary>
-        <div class="inner">
-          <div>
-            <h3>Which sections people use</h3>
-            <p class="sub">Each reader counted once, by the sections they used. Opening only the News list counts as none.</p>
-            <div id="mix"></div>
-          </div>
-          <div>
-            <h3>Do new readers come back?</h3>
-            <p class="sub">Readers grouped by the week of their first visit. “Came back” means seen again on a later day, at any time.</p>
-            <div class="tscroll"><table id="tCohorts"></table></div>
-          </div>
-          <div>
-            <h3>Where readers arrive from</h3>
-            <p class="sub">Now on its own tab. <button type="button" class="linkbtn" data-go="sources" style="min-height:0">Open Sources</button></p>
-          </div>
-          <div>
-            <h3>Devices</h3>
-            <p class="sub" id="devLine"></p>
-          </div>
+    <!-- TODAY: is everything OK? Independent of the date range. -->
+    <section class="tabpanel" id="today" role="tabpanel" aria-labelledby="t-today">
+      <p class="sub" style="margin:0"><span id="todayDate"></span> · <span id="pubChecked" role="status">Checking…</span> · <button type="button" class="linkbtn" id="pubCheck" style="min-height:0">Check again</button></p>
+      <section class="head" id="todayHead" aria-live="polite"><h1>Checking…</h1></section>
+      <section class="card lamps" id="lamps" aria-label="Status"></section>
+      <section class="card" id="runway" aria-labelledby="rwH">
+        <h2 id="rwH">Runway per type</h2>
+        <p class="sub" id="rwSub">Last dated puzzle on file. The line marks the goal.</p>
+        <div id="rwList" class="rwl"><p class="wait">Checking…</p></div>
+        <p class="note">Amber: short of the goal or under 90 days. Red: under 30 days.</p>
+      </section>
+      <section class="card" aria-labelledby="ydH">
+        <h2 id="ydH">Yesterday</h2>
+        <div class="tiles" id="ydTiles" style="margin-top:10px"><p class="wait">Loading…</p></div>
+        <button type="button" class="act" data-go="players" id="ydApp" hidden></button>
+        <h3 style="font-size:13px;margin-top:12px">Flagged yesterday</h3>
+        <div id="ydFlags"><p class="wait">Loading…</p></div>
+      </section>
+      <details class="card" id="pubPanel"><summary>Publishing detail</summary>
+        <p class="sub">Each check is separate. Future stock is counted at the last published build: exactly one dated file of each type, with matching date, type and puzzle ID metadata. Counts do not mean every future puzzle has been fully tested; each release validates today and the next seven days.</p>
+        <div class="pub-grid">
+          <article class="card"><h3>Today’s puzzles</h3><div id="pubLive">Not checked yet.</div></article>
+          <article class="card"><h3>Future puzzle stock</h3><div id="pubStock">Not checked yet.</div></article>
+          <article class="card"><h3>Deployment</h3><div id="pubRelease">Not checked yet.</div></article>
         </div>
-      </details>
-      <details class="more">
-        <summary>Front-page taps</summary>
-        <div class="inner">
-          <div>
-            <h3>Taps by position in the list</h3>
-            <p class="sub">How strongly position drives taps on the News, Puzzles and Games lists. Position 11 includes everything further down.</p>
-            <div class="chartbox"><canvas id="chPos" role="img" aria-label="Card taps by list position"></canvas></div>
-          </div>
-          <div>
-            <h3>Most tapped cards</h3>
-            <p class="sub">Average position shows whether a card was found high up or scrolled to.</p>
-            <div class="tscroll"><table id="tCards"></table></div>
-          </div>
-        </div>
+        <div id="pubDays" class="tscroll">Not checked yet.</div>
       </details>
     </section>
 
-    <!-- SOURCES -->
-    <section class="tabpanel" id="sources" role="tabpanel" aria-labelledby="t-sources" hidden>
-      <h1 class="sr">Sources</h1>
-      <div class="card">
-        <h2>Make a tracked link</h2>
-        <p class="sub">One link per place you post, so you can see what each post brings in. Anyone who opens it is counted against it.</p>
-        <form class="form" id="lkForm" novalidate>
-          <div><label class="lab" for="lkLabel">Where you’re posting</label><input class="field" id="lkLabel" type="text" maxlength="80" placeholder="e.g. Reddit r/crossword" style="width:100%"></div>
-          <div class="two">
-            <div><label class="lab" for="lkPage">Link to</label>
-              <select id="lkPage" style="width:100%"><option value="">Home (News)</option><option value="puzzles.html">Puzzles</option><option value="games.html">Games</option><option value="board.html">Leaderboard</option></select></div>
-            <div><label class="lab" for="lkTag">Code in the link</label><input class="field" id="lkTag" type="text" maxlength="24" autocapitalize="off" spellcheck="false" style="width:100%"></div>
-          </div>
-          <p class="hint">The code goes in the link as <code>?via=</code>: lower-case letters, numbers, - and _, up to 24.</p>
-          <button type="submit" class="primary" id="lkMake">Create link</button>
-        </form>
-        <div id="lkOut" aria-live="polite"></div>
-      </div>
-      <div class="card" style="padding-bottom:4px">
-        <h2>Your tracked links</h2>
-        <p class="sub" style="margin:2px 0 6px">All-time results for each link: new readers it brought, how many stayed, came back on a later day, and visits through it.</p>
-        <div id="links"></div>
-      </div>
-      <div class="card">
-        <h2>Where new readers first came from</h2>
-        <p class="sub">Readers whose first ever visit falls in this period, by the source of that first page.</p>
-        <div class="tscroll"><table id="tFirst"></table></div>
-      </div>
-      <div class="card">
-        <h2>All visits by source</h2>
-        <p class="sub">Visits starting in this period, new and returning readers, by how the visit began. One-page readers are left out here.</p>
-        <div class="tscroll"><table id="tVisits"></table></div>
-      </div>
-      <p class="sub">“Direct” is typed or bookmarked visits, the home-screen app, and apps such as WhatsApp that don’t say where a link came from. Anything you post without a tracked link usually ends up there.</p>
-    </section>
-
-    <!-- NEWS -->
-    <section class="tabpanel" id="news" role="tabpanel" aria-labelledby="t-news" hidden>
-      <h1 class="sr">News</h1>
-      <div class="card">
-        <h2>Who reached the news</h2>
-        <div class="twobig" style="margin-top:10px">
-          <div><div class="big" id="nwList">–</div><div class="s">readers opened the News list, which is also the home page</div></div>
-          <div class="hi"><div class="big" id="nwOpens">–</div><div class="s" id="nwOpensS">article opens</div></div>
+    <!-- PLAYERS & GROWTH -->
+    <section class="tabpanel" id="players" role="tabpanel" aria-labelledby="t-players" hidden>
+      <button type="button" class="pill-btn rangebtn" data-range-open><span class="rangeName">Last 30 days</span></button>
+      <section class="head" id="plHead"><h1>Loading…</h1></section>
+      <section class="card" aria-labelledby="goalH">
+        <h2 id="goalH" class="k" style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-family:var(--body)">Goal: <span id="goalN">1,000</span> app players</h2>
+        <div style="display:flex;align-items:baseline;gap:6px;margin-top:4px"><span class="disp" style="font-weight:800;font-size:34px" id="appN">–</span><span class="sub">played in the app in the last 30 days</span></div>
+        <div class="goalbar" role="img" id="goalBar" aria-label=""><span id="goalFill" style="width:0"></span></div>
+        <p class="note" id="appNote">An estimate: app devices are those that opened a page inside the app. Exact once the app marks its own plays.</p>
+      </section>
+      <div class="kpis" id="plKpis" role="group" aria-label="Headline figures"></div>
+      <p class="sub" id="plCohort"></p>
+      <section class="card" aria-labelledby="pdH">
+        <h2 id="pdH">Players per day</h2>
+        <p class="sub" id="pdSub">Players who started a puzzle, by day.</p>
+        <div id="plDaily"></div>
+      </section>
+      <section class="card loop" aria-labelledby="lpH">
+        <h2 id="lpH">Growth loops</h2>
+        <p class="sub">Each step through to new players who stayed.</p>
+        <div id="loops"><p class="wait">Loading…</p></div>
+      </section>
+      <section class="card" aria-labelledby="srH">
+        <h2 id="srH">Where new players came from</h2>
+        <p class="sub">By first visit in this period. Played → came back on a later day → regular (3+ days).</p>
+        <div id="plSources"><p class="wait">Loading…</p></div>
+      </section>
+      <details class="more">
+        <summary>Make a tracked link</summary>
+        <div class="inner">
+          <p class="sub">One link per place you post, so you can see what each post brings in. Results are under Other › Sources.</p>
+          <form class="form" id="lkForm" novalidate>
+            <div><label class="lab" for="lkLabel">Where you’re posting</label><input class="field" id="lkLabel" type="text" maxlength="80" placeholder="e.g. Reddit r/crossword" style="width:100%"></div>
+            <div class="two">
+              <div><label class="lab" for="lkPage">Link to</label>
+                <select id="lkPage" style="width:100%"><option value="">Puzzles (home)</option><option value="board.html">Leaderboard</option><option value="how-to-play.html">How to play</option></select></div>
+              <div><label class="lab" for="lkTag">Code in the link</label><input class="field" id="lkTag" type="text" maxlength="24" autocapitalize="off" spellcheck="false" style="width:100%"></div>
+            </div>
+            <p class="hint">The code goes in the link as <code>?via=</code>: lower-case letters, numbers, - and _, up to 24.</p>
+            <button type="submit" class="primary" id="lkMake">Create link</button>
+          </form>
+          <div id="lkOut" aria-live="polite"></div>
         </div>
-        <p class="sub" style="margin-top:10px">Only article opens count as News reading; a visit to the list counts as the site.</p>
-      </div>
-      <div class="card" style="padding-bottom:4px">
-        <h2>Published in this period</h2>
-        <p class="sub" id="pubPiecesSub" style="margin-top:2px"></p>
-        <div class="chips" role="group" aria-label="Sort pieces">
-          <button type="button" class="chip" data-psort="new" aria-pressed="true">Newest</button>
-          <button type="button" class="chip" data-psort="read" aria-pressed="false">Most read</button>
-          <button type="button" class="chip" data-psort="none" aria-pressed="false" id="psNone">Not opened</button>
-        </div>
-        <div id="pieces"></div>
-      </div>
-      <div class="card" style="padding-bottom:4px">
-        <h2>Opened in this period</h2>
-        <p class="sub" style="margin:2px 0 8px">Any piece, whenever it was published.</p>
-        <div class="tools"><label class="sr" for="qNews">Search opened articles</label><input class="field" id="qNews" type="search" placeholder="Search articles"></div>
-        <div id="opened"></div>
-      </div>
-      <div class="cols" id="newsCharts" hidden>
-        <div class="card"><h2>Readers by topic</h2><p class="sub">Unique readers of each topic’s articles.</p><div id="topics"></div></div>
-        <div class="card"><h2>Read-through vs attention</h2><p class="sub">Each dot is an article with 5 or more readers. Top right is best.</p><div class="chartbox"><canvas id="chScatter" role="img" aria-label="Article read-through against time on page"></canvas></div></div>
-      </div>
-      <p class="sub" id="newsChartsNote">Topic and read-through charts appear once a piece has 5 or more readers.</p>
+      </details>
     </section>
 
     <!-- PUZZLES -->
     <section class="tabpanel" id="puzzles" role="tabpanel" aria-labelledby="t-puzzles" hidden>
-      <h1 class="sr">Puzzles</h1>
-      <div class="card" style="padding-bottom:4px">
-        <div class="stepper">
-          <button type="button" class="round" id="dayPrev" aria-label="Previous day"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
-          <h2 id="dayTitle" aria-live="polite">Puzzles by day</h2>
-          <button type="button" class="round" id="dayNext" aria-label="Next day"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+      <button type="button" class="pill-btn rangebtn" data-range-open><span class="rangeName">Last 30 days</span></button>
+      <section class="card" aria-labelledby="scH" style="padding-bottom:4px">
+        <h2 id="scH" style="font-size:17px">Scorecard</h2>
+        <p class="sub" id="scSub" style="margin:2px 0 6px">Loading…</p>
+        <div id="scRows"></div>
+      </section>
+      <section class="card" aria-labelledby="bdH">
+        <h2 id="bdH">Doku by band</h2>
+        <p class="sub">Median time, the slowest quarter shaded. Hard should never need trial and error.</p>
+        <div id="bands" style="display:flex;flex-direction:column;gap:10px;margin-top:10px"><p class="wait">Loading…</p></div>
+        <p class="note" id="bandNote"></p>
+      </section>
+      <section class="card" aria-labelledby="wpH" style="padding-bottom:6px">
+        <h2 id="wpH">Worst puzzles</h2>
+        <p class="sub" id="wpSub" style="margin:2px 0 8px"></p>
+        <div id="worst"><p class="wait">Loading…</p></div>
+      </section>
+      <details class="more" id="byDay">
+        <summary>Puzzles by day</summary>
+        <div class="inner">
+          <div class="stepper">
+            <button type="button" class="round" id="dayPrev" aria-label="Previous day"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+            <h3 id="dayTitle" aria-live="polite">Puzzles by day</h3>
+            <button type="button" class="round" id="dayNext" aria-label="Next day"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div>
+          <div id="dayRows"><p class="wait">Loading…</p></div>
+          <p class="sub">Median: the middle solve time on timed puzzles, the middle score on scored rounds.</p>
         </div>
-        <div id="dayRows"></div>
-        <p class="sub">Median: the middle solve time on timed puzzles, the middle score on scored rounds.</p>
-      </div>
-      <div class="card">
-        <h2>Types in this period</h2>
-        <p class="sub">Shares of puzzles started. Tangle, Borders and Reckon are scored rounds, so they show a typical score.</p>
-        <div class="tscroll"><table id="tTypes"></table></div>
-      </div>
-      <div class="card" id="archStats">
-        <h2>Archive and stats</h2>
-        <p class="sub">By week in this period: archive opens and plays started from the archive (website and app), and Your stats opens. Anonymous events only.</p>
-        <div class="tscroll"><table id="tArch"></table></div>
-      </div>
-      <div class="card" id="labStats">
-        <h2>Lab trial</h2>
-        <p class="sub">What players are telling us about each Lab puzzle in this period, website and app together. Two kinds of feedback: what they <b>say</b> (the one-tap “Should it go daily?” vote) and what they <b>do</b> (come back on other days, finish or give up). The bar to go daily is about 20+ votes and 70%+ Yes, read with coming back.</p>
-        <div class="labread" id="labRead" aria-live="polite"></div>
-        <div class="tscroll"><table id="tLab"></table></div>
-        <p class="labnote">Votes can’t be split by how often the voter played: a vote is deliberately kept apart from the visitor code that plays are counted by. Each voter counts once, with their latest answer (they can change it after any play). Coming back counts different days in this period, so a short period understates it.</p>
-      </div>
-      <details class="more">
-        <summary>What happened to each opened puzzle</summary>
-        <div class="inner"><div class="chartbox"><canvas id="chFunnel" role="img" aria-label="Puzzle outcomes by type"></canvas></div></div>
       </details>
-      <div class="card">
-        <h2>Find any puzzle</h2>
-        <div class="tools" style="margin-top:8px"><label class="sr" for="qPuz">Search puzzles</label><input class="field" id="qPuz" type="search" placeholder="e.g. Mini 99, Link, 0077"></div>
-        <div class="tscroll" id="puzBox" hidden><table id="tPuz"></table></div>
-        <button type="button" class="ghost" id="puzAll">Show every puzzle played</button>
-      </div>
+      <details class="more" id="findAny">
+        <summary>Find any puzzle</summary>
+        <div class="inner">
+          <div class="tools" style="margin:0"><label class="sr" for="qPuz">Search puzzles</label><input class="field" id="qPuz" type="search" placeholder="e.g. Mini 99, Link, 0077"></div>
+          <div class="tscroll" id="puzBox" hidden><table id="tPuz"></table></div>
+          <button type="button" class="ghost" id="puzAll">Show every puzzle played</button>
+        </div>
+      </details>
+      <details class="more" id="archStats">
+        <summary>Archive use</summary>
+        <div class="inner">
+          <p class="sub">By week in this period: archive opens and plays started from the archive (website and app), and Your stats opens. Anonymous events only.</p>
+          <div class="tscroll"><table id="tArch"></table></div>
+        </div>
+      </details>
     </section>
 
-    <!-- GAMES -->
-    <section class="tabpanel" id="games" role="tabpanel" aria-labelledby="t-games" hidden>
-      <h1 class="sr">Games</h1>
-      <div class="card">
-        <h2>Games in this period</h2>
-        <p class="sub">Rounds played, results and how far people get.</p>
-        <div class="tscroll"><table id="tGames"></table></div>
-      </div>
+    <!-- LAB -->
+    <section class="tabpanel" id="lab" role="tabpanel" aria-labelledby="t-lab" hidden>
+      <section class="lab-head" id="labHead"><h1>Lab</h1><p>Loading…</p></section>
+      <div id="trials" class="stack"></div>
+      <section class="card" id="labCall" hidden></section>
+      <details class="more" id="labStats">
+        <summary>Trial detail</summary>
+        <div class="inner">
+          <p class="sub">What players say (the one-tap “Should it go daily?” vote) and what they do (come back on other days, finish or give up), each over its trial window.</p>
+          <div class="labread" id="labRead" aria-live="polite"></div>
+          <div class="tscroll"><table id="tLab"></table></div>
+          <p class="labnote">Votes can’t be split by how often the voter played: a vote is deliberately kept apart from the visitor code that plays are counted by. Each voter counts once, with their latest answer.</p>
+        </div>
+      </details>
+      <p class="sub" id="labRetired"></p>
     </section>
 
     <!-- LEAGUES -->
@@ -565,20 +596,83 @@
       <p class="sub" id="lgMsg" role="status"></p>
     </section>
 
-    <!-- PUBLISHING (ids used by admin-health.js) -->
-    <section class="tabpanel" id="publishing" role="tabpanel" aria-labelledby="t-publishing" hidden>
-      <h1 class="sr">Publishing</h1>
-      <p class="sub" style="margin:0">Today’s live puzzles, today’s news, future stock and release status. Independent of the date range.</p>
-      <div class="tools"><button type="button" class="ghost" id="pubCheck">Check publishing</button><span id="pubChecked" class="sub" role="status">Available after admin access is confirmed.</span></div>
-      <div class="pub-grid">
-        <article class="card"><h3>Today’s puzzles</h3><div id="pubLive">Not checked yet.</div></article>
-        <article class="card"><h3>Today’s news</h3><div id="pubNews">Not checked yet.</div></article>
-        <article class="card"><h3>Future puzzle stock</h3><div id="pubStock">Not checked yet.</div></article>
-        <article class="card"><h3>Deployment</h3><div id="pubRelease">Not checked yet.</div></article>
-      </div>
-      <details class="card"><summary>Next eight days and how these checks work</summary>
-        <p class="sub">Future stock is counted at the last published build: exactly one dated file of each type, with matching date, type and puzzle ID metadata. Newer repository changes appear after a successful release. Counts do not mean that every future puzzle has been fully tested. Each release validates today and the next seven days before deployment. Today’s news lists the pieces dated today in the published feed; the nightly task publishes two.</p>
-        <div id="pubDays" class="tscroll">Not checked yet.</div>
+    <!-- OTHER: site visitors, News, Games and Sources (News and Games have their own sites from 22 Nov 2026) -->
+    <section class="tabpanel" id="other" role="tabpanel" aria-labelledby="t-other" hidden>
+      <button type="button" class="pill-btn rangebtn" data-range-open><span class="rangeName">Last 30 days</span></button>
+      <p class="sub" style="margin:0">Visitors to every page, and the News and Games sites, which send their visits to the same database.</p>
+      <details class="more" id="oVisitors" open>
+        <summary>Site visitors</summary>
+        <div class="inner">
+          <div class="kpis" id="kpis" role="group" aria-label="Site figures"></div>
+          <div>
+            <h3>Visitors per day</h3>
+            <p class="sub" id="dailySub">Unique visitors each day.</p>
+            <div id="daily"></div>
+          </div>
+          <div><h3>Worth a look</h3><div class="siglist" id="signals"></div></div>
+          <div>
+            <h3>Which sections people use</h3>
+            <p class="sub">Each visitor counted once, by the sections they used.</p>
+            <div id="mix"></div>
+          </div>
+          <div>
+            <h3>Do new visitors come back?</h3>
+            <p class="sub">Grouped by the week of their first visit. “Came back” means seen again on a later day.</p>
+            <div class="tscroll"><table id="tCohorts"></table></div>
+          </div>
+          <div><h3>Devices</h3><p class="sub" id="devLine"></p></div>
+          <div>
+            <h3>Taps by position in the list</h3>
+            <p class="sub">How strongly position drives taps on the front-page lists. Position 11 includes everything further down.</p>
+            <div class="chartbox"><canvas id="chPos" role="img" aria-label="Card taps by list position"></canvas></div>
+          </div>
+          <div>
+            <h3>Most tapped cards</h3>
+            <div class="tscroll"><table id="tCards"></table></div>
+          </div>
+        </div>
+      </details>
+      <details class="more" id="oNews">
+        <summary>News</summary>
+        <div class="inner">
+          <div class="twobig">
+            <div><div class="big" id="nwList">–</div><div class="s">visitors opened the News list</div></div>
+            <div class="hi"><div class="big" id="nwOpens">–</div><div class="s" id="nwOpensS">article opens</div></div>
+          </div>
+          <div>
+            <h3>Published in this period</h3>
+            <p class="sub" id="pubPiecesSub"></p>
+            <div class="chips" role="group" aria-label="Sort pieces">
+              <button type="button" class="chip" data-psort="new" aria-pressed="true">Newest</button>
+              <button type="button" class="chip" data-psort="read" aria-pressed="false">Most read</button>
+              <button type="button" class="chip" data-psort="none" aria-pressed="false" id="psNone">Not opened</button>
+            </div>
+            <div id="pieces"></div>
+          </div>
+          <div>
+            <h3>Opened in this period</h3>
+            <div class="tools"><label class="sr" for="qNews">Search opened articles</label><input class="field" id="qNews" type="search" placeholder="Search articles"></div>
+            <div id="opened"></div>
+          </div>
+          <div class="cols" id="newsCharts" hidden>
+            <div><h3>Readers by topic</h3><div id="topics"></div></div>
+            <div><h3>Read-through vs attention</h3><div class="chartbox"><canvas id="chScatter" role="img" aria-label="Article read-through against time on page"></canvas></div></div>
+          </div>
+          <p class="sub" id="newsChartsNote">Topic and read-through charts appear once a piece has 5 or more readers.</p>
+        </div>
+      </details>
+      <details class="more" id="oGames">
+        <summary>Games</summary>
+        <div class="inner"><div class="tscroll"><table id="tGames"></table></div></div>
+      </details>
+      <details class="more" id="oSources">
+        <summary>Sources</summary>
+        <div class="inner">
+          <div><h3>Your tracked links</h3><p class="sub">All-time results for each link: new visitors it brought, how many stayed, came back on a later day, and visits through it.</p><div id="links"></div></div>
+          <div><h3>Where new visitors first came from</h3><div class="tscroll"><table id="tFirst"></table></div></div>
+          <div><h3>All visits by source</h3><div class="tscroll"><table id="tVisits"></table></div></div>
+          <p class="sub">“Direct” is typed or bookmarked visits, the home-screen app, and apps such as WhatsApp that don’t say where a link came from.</p>
+        </div>
       </details>
     </section>
 
@@ -586,24 +680,20 @@
     <section class="tabpanel" id="basis" role="tabpanel" aria-labelledby="t-basis" hidden>
       <div>
         <h1 class="disp" style="font-size:20px">Basis of preparation</h1>
-        <p class="sub">How every figure is produced, and what it can’t tell you.</p>
+        <p class="sub">How every figure is produced, and what it can’t tell you. Targets come from <code>admin-targets.json</code>.</p>
       </div>
       <details class="more" open>
         <summary>General basis</summary>
         <div class="inner">
           <ul class="notes">
-            <li><b>Source.</b> Events recorded by <code>dn-track.js</code> on every page of the site and stored in the <code>digi</code> Supabase database (London). Figures are worked out live when this page loads or you press Refresh, so a change to a rule also applies to past dates.</li>
-            <li><b>Reader.</b> One browser on one device, identified by a random code stored in that browser. The same person on a phone and a laptop counts as two readers; clearing browser data or a private window starts a new reader. No names, emails or IP addresses are held.</li>
-            <li><b>Visit.</b> A run of activity by one reader with no gap longer than 30 minutes.</li>
-            <li><b>Page load.</b> One opening of one page. Reloading, or returning via the back button after the page was discarded, counts again.</li>
-            <li><b>Dates.</b> UK dates (Europe/London). A range includes both its start and end date. The 7, 30 and 90-day ranges end yesterday; today is shown on the daily chart as “so far”. “All” starts on 26 Sep 2026, when recording began.</li>
-            <li><b>Compared with.</b> The same number of days just before the range. Not shown for All, or when the earlier days fall before recording began.</li>
-            <li><b>News list.</b> The News list is also the home page, so opening it counts as the site, not as reading News (from 20 Oct 2026, and for past dates too). Taps on its cards still count as News list taps.</li>
-            <li><b>Not counted.</b> Readers who switched recording off, browsers sending Global Privacy Control or Do Not Track, readers whose browser blocked the script, visits to this admin page, and any browser on the exclusion list (<span id="exclCount">0</span> at present, e.g. your own phone; exclude the device you’re on in Settings).</li>
-            <li><b>Losses.</b> Events are sent in small batches. Some are lost when a phone closes a page abruptly or goes offline, most often the “left the page” event that carries time on page. Timings are averaged over page loads where that event arrived; loads without it are left out of those averages rather than counted as zero.</li>
-            <li><b>Bots.</b> Browsers that say they are automated (the <code>webdriver</code> flag, or a crawler or headless user agent) send nothing, from 19 Oct 2026. Crawlers that hide it still get through, so one-page readers are left out of every figure by default; the switch in Settings brings them back in. Treat sudden spikes with care.</li>
-            <li><b>Small numbers.</b> Percentages from a handful of readers swing wildly. “Worth a look” ignores anything with fewer than 5 readers or starts.</li>
-            <li><b>Retention.</b> Raw events are kept for 13 months, then reduced to daily totals; ranges older than that will read as empty here.</li>
+            <li><b>Source.</b> Events recorded by <code>dn-track.js</code> on every page (website and app) and stored in the <code>digi</code> Supabase database (London).</li>
+            <li><b>Nightly copy.</b> Players &amp; growth uses the events directly. The Puzzles scorecard, worst puzzles, by band and yesterday’s flags read a copy of the page-by-page figures made at 00:20 each night, so they run to the end of yesterday. Refresh in Settings makes a new copy first.</li>
+            <li><b>Player.</b> One browser or one app install, identified by a random code stored on that device, that started a puzzle. The same person on a phone and a laptop counts as two players. No names, emails or IP addresses are held.</li>
+            <li><b>Dates.</b> UK dates (Europe/London). Ranges include both ends and end yesterday. “All” starts on 26 Sep 2026, when recording began.</li>
+            <li><b>Not counted.</b> Visitors who switched recording off, browsers sending Global Privacy Control or Do Not Track, browsers that blocked the script, visits to this admin page, and devices on the exclusion list (<span id="exclCount">0</span> at present; exclude the device you’re on in Settings).</li>
+            <li><b>Bots.</b> Browsers that say they are automated send nothing. Crawlers that hide it still get through; they rarely start a puzzle, so player figures are barely touched, but visitor figures under Other leave one-page visitors out unless switched on in Settings.</li>
+            <li><b>Small numbers.</b> A type needs 20 attempts in the period before it gets a verdict, and a puzzle 5 players before it is flagged. Percentages from a handful of players swing wildly.</li>
+            <li><b>Retention.</b> Raw events are kept for 13 months, then reduced to daily totals.</li>
           </ul>
         </div>
       </details>
@@ -620,7 +710,7 @@
     <div class="sheethead"><h2 id="setH">Settings</h2>
       <button type="button" class="icon-btn" data-close aria-label="Close settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
-    <div class="lab" id="rangeLab" style="margin-bottom:6px">Date range</div>
+    <div class="lab" id="rangeLab" style="margin-bottom:6px">Date range (Players, Puzzles, Other)</div>
     <div class="seg" role="group" aria-labelledby="rangeLab">
       <button type="button" data-range="7">7 days</button>
       <button type="button" data-range="30">30 days</button>
@@ -628,10 +718,10 @@
       <button type="button" data-range="all">All</button>
     </div>
     <div class="dates"><label for="from">From</label><input id="from" type="date"><label for="to">to</label><input id="to" type="date"></div>
-    <p class="sub" style="margin-top:6px">Ranges end yesterday. Today shows on the daily chart as “so far”.</p>
+    <p class="sub" style="margin-top:6px" id="rangeTxt">Ranges end yesterday. Targets are set for 30 days.</p>
     <div style="margin-top:8px">
-      <div class="line"><div><div class="t">Compare with the period before</div><div class="s">Shows the change on the headline figures</div></div><button type="button" class="sw" role="switch" id="cmp" aria-checked="true" aria-label="Compare with the period before"></button></div>
-      <div class="line"><div><div class="t">Include one-page readers</div><div class="s" id="ghostS">Mostly crawlers; hidden by default</div></div><button type="button" class="sw" role="switch" id="ghosts" aria-checked="false" aria-label="Include one-page readers"></button></div>
+      <div class="line"><div><div class="t">Compare with the period before</div><div class="s">Visitor figures under Other</div></div><button type="button" class="sw" role="switch" id="cmp" aria-checked="true" aria-label="Compare with the period before"></button></div>
+      <div class="line"><div><div class="t">Include one-page visitors</div><div class="s" id="ghostS">Mostly crawlers; hidden by default (Other)</div></div><button type="button" class="sw" role="switch" id="ghosts" aria-checked="false" aria-label="Include one-page visitors"></button></div>
       <div class="line"><div><div class="t">This device</div><div class="s" id="meDev" aria-live="polite">Checking…</div></div><span id="meBtn" style="margin-left:auto"></span></div>
       <div class="line"><div><div class="t">Figures</div><div class="s" id="updated">Not loaded yet</div></div><button type="button" class="ghost" id="refresh" style="margin-left:auto">Refresh</button></div>
       <div class="line"><button type="button" class="linkbtn" data-go="basis">How it’s measured</button></div>
@@ -657,7 +747,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
 <script src="admin-health.js"></script>
 <script>
 (function(){
@@ -665,71 +754,69 @@
   var SUPABASE_URL = 'https://gnehttjheoyutrfsvslq.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_dEMntRNiElpGHn3Hd5Ef1Q_HvLa2wTB';   // public by design; data needs an admin sign-in
   var START = '2026-09-26';                       // recording began
-  var MARKS = { '2026-10-18': 'new address' };    // one-off events worth a label on the daily chart
+  var MARKS = { '2026-10-18': 'new address' };    // one-off events worth a label on the visitors chart
+  // Chart.js is only needed under Other, so it loads the first time Other opens (27 Nov 2026: faster first load).
+  var CHART_JS = { src: 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js', sri: 'sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ' };
   var $ = function(s){ return document.querySelector(s); };
   var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
   function store(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){ return null; } }
   function css(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
+  /* ---------------- puzzle types ----------------
+     One map, by tracker slug and by short key (27 Nov 2026: the page had two maps called TYPE_NAMES and the
+     second overwrote the first, so slugs showed raw). */
+  var TYPES = [
+    ['crossword-mini','mini','Mini'], ['logic-doku','doku','Doku'], ['logic-path','path','Path'], ['word-link','link','Link'],
+    ['logic-sweep','sweep','Sweep'], ['word-tangle','tangle','Tangle'], ['geo-borders','borders','Borders'], ['quiz-reckon','reckon','Reckon'],
+    ['logic-tally','tally','Tally'], ['logic-tilt','tilt','Tilt'], ['word-tumbler','tumbler','Tumbler'], ['word-cryptic','cryptic','Cryptic'], ['word-redact','redact','Redact']
+  ];
+  var KEY = {}, SLUG = {}, NAME = {};
+  TYPES.forEach(function(t){ KEY[t[0]] = t[1]; SLUG[t[1]] = t[0]; NAME[t[0]] = t[2]; NAME[t[1]] = t[2]; });
+  var DAILY = ['mini','doku','path','link','sweep','tangle','borders','reckon','tally'];
+  var SCORED = { tangle:1, borders:1, reckon:1 }, WON = { link:1, sweep:1 };
+  var TYPE_RX = new RegExp('(' + TYPES.map(function(t){ return t[0]; }).join('|') + ')');
+  function ptype(path){ var m = String(path).match(TYPE_RX); return m ? m[1] : ''; }
+  function isScoredType(slug){ return !!SCORED[KEY[slug]]; }
+  function typeName(t){ return NAME[t] || t; }
+  var TARGETS = null;
+
   /* ---------------- definitions (Basis tab) ---------------- */
   var DEF_GROUPS = [
-    ['Readers', [
-      ['readers','Readers','Distinct browsers with at least one recorded event in the period. One-page readers are left out unless switched on in Settings.','A person on two devices counts twice.'],
-      ['ghosts','One-page reader','A browser whose whole recorded history (all time) is a single page load with nothing done on it: no second page, scroll through an article, puzzle, game or tap. Mostly crawlers that run the tracker with fresh storage on every page, plus one-off glances.','A real person who opened one page and left is hidden too. Once a reader does anything more, even on a later day, they count for every day they were seen.'],
-      ['new','New readers','Readers whose first ever recorded event falls inside the period.','Readers who cleared their browser data reappear as new.'],
-      ['returning','Came back','Readers in the period who had also been seen on an earlier day.','Shown as a share of readers. Can include days before the period.'],
-      ['loads','Page loads','Openings of any page, including the three front pages.','Reloads count again.'],
-      ['visits','Visits','Runs of activity by one reader with no gap over 30 minutes.','']
+    ['Today', [
+      ['live','Live today','Every daily and today’s Lab trials: the page and the app’s data file for each answer on the published site.','Availability only, not a play-through.'],
+      ['runway','Runway','The last dated puzzle on file for each type, from the last published build, against the goal (31 Dec 2027). Amber: short of the goal or under 90 days. Red: under 30 days.','Lab trials count from the last day each has a file.'],
+      ['apperr','App errors','What broke in the app in the last 7 days (insights.app_errors: never who). A crash (kind fatal) is red.',''],
+      ['nightly','Nightly checks','The scheduled run of the Tests workflow on GitHub, and any scheduled task that reports its runs to insights.task_runs.','GitHub’s public API allows about 60 calls an hour from one address.']
     ]],
-    ['News', [
-      ['articles','Article opens','Openings of a news piece. The News list doesn’t count: it is also the home page, so everyone who arrives opens it.','Your excluded devices aren’t counted.'],
-      ['time','Time on page','Seconds the page was on screen and in the foreground, summed across the reader leaving and coming back. Medians are used so one open-all-night tab doesn’t distort them.','Only page loads where the leaving event arrived are included.'],
-      ['read75','Read to 75%','Share of article opens that scrolled at least 75% of the way down the page.','Pages shorter than the screen count as fully read.'],
-      ['bounced','Bounced','Share of article opens that were on screen for under 10 seconds.','Only page loads with a timing are included.'],
-      ['charts','Charts seen','Number of times an exhibit (chart) came at least half into view.','Counted once per chart per page load.'],
-      ['sources','Sources opened','Taps on links to other websites from an article, mostly its footnoted sources.','']
+    ['Players & growth', [
+      ['player','Players','Devices that started a puzzle in the period (website and app).','A person on two devices counts twice.'],
+      ['stick','Daily ÷ monthly','Average players a day ÷ players in the period. Over 30 days this is the usual DAU ÷ MAU stickiness: 20%+ is healthy, Google Play’s top games sit near 31%.','Over other ranges it is daily ÷ all players in that range.'],
+      ['d1','Back next day','New players (first puzzle in the 64 days to the end of the range) who started a puzzle the next day. Back in week 2: on any of days 7–13. After a month: days 28–34.','Only players whose window has finished are counted.'],
+      ['appp','App players','Devices that opened a page inside the app and started a puzzle in the last 30 days.','An estimate until the app marks its own plays.'],
+      ['loops','Growth loops','Sharing: share taps, then new visitors whose first page came from a shared link, how many played and came back. League invites: joins, and joiners still playing 7+ days later. Website to app: “Get the app” views and taps. New in the app: new app players, back, regular.','Invites are not recorded yet; taps can’t be linked to app installs.'],
+      ['src','Where new players came from','A visitor’s first page: a shared result, the app, a tracked link (?via=), Google, other search, AI tools, another site, else direct.','Only sources with at least one player are listed.']
     ]],
     ['Puzzles', [
-      ['started','Started','A puzzle page load where the player tapped inside the play area (grid, board, letters, clues or the Play card) or typed.','Before 15 Oct 2026 any tap counted, including the masthead or the start of a scroll. For those older loads, a start with no result and under 15 seconds on the page is not counted.'],
-      ['solved','Solved','The puzzle’s result box appeared with a winning title, without “Reveal all” having been used.','Share is solved ÷ started, for types that can be solved (not Tangle, Borders or Reckon).'],
-      ['failed','Failed','The result box appeared with a losing title (Sweep “Boom.”, Link “So close.”).','Only some types can be failed.'],
-      ['scored','Scored','Tangle, Borders and Reckon are rounds with a score, not puzzles that are solved or failed. Every finished round is “scored”; the Result column shows the typical score.','Scores are recorded from 15 Oct 2026; earlier rounds count as scored with no score.'],
-      ['result','Result','Typical result per type: median points and words (Tangle), median countries named out of the total and points (Borders), median points out of 1,000 (Reckon), average mistakes used (Link, out of 4).','Medians of the rounds that recorded a result.'],
-      ['revealed','Revealed','The player used “Reveal all” before the result box appeared.',''],
-      ['abandoned','Unfinished','Started, but no result by the time the page was last seen.','Includes puzzles left open in a tab to finish later.'],
-      ['solvetime','Solve time','The time shown on the puzzle’s own result box for solved puzzles (median).','Falls back to seconds since the first tap if the box shows no time.'],
-      ['help','Used help','Share of finished puzzles where the player pressed any Check, Reveal-word or Hint button.','']
+      ['attempt','Attempt','One player on one puzzle in the period, archive plays included, counted once however many times it was opened.',''],
+      ['finished','Finished','Solved, or a scored round completed, at least once.',''],
+      ['won','Won','Link and Sweep: solved ÷ (solved + failed).','Unfinished attempts are left out.'],
+      ['median','Median time','Middle first-solve time of solved attempts.',''],
+      ['returning','Come back','Players of that type who played it on 2+ different days in the period.',''],
+      ['gold','Gold','Finishes that earn a gold star by the rules in dn-core.js, as a share of finishes. About 1 in 10 by design: outside 7–14% is flagged, never a miss.',''],
+      ['verdict','Verdict','Keep: every target met. Watch: one missed. Improve: two or more missed, or the same one missed in the period before too. Retire candidate: bottom of the dailies on both share of players and coming back, in this period and the one before. Too few: under 20 attempts.','A verdict never acts on its own.'],
+      ['worst','Worst puzzles','Each daily type’s worst 5% by its main measure (won, finished, or median score for scored rounds), plus any under the floor: Link and Sweep under 25% won, others under 40% finished. 5+ players each. Five or more of one type show as one line.',''],
+      ['band','Doku by band','The band each Doku was made at (feed-lite.json). Hard aims for no trial and error: the slowest quarter should finish within 8 minutes.','']
     ]],
-    ['Games', [
-      ['runs','Game rounds','Rounds started (game_start). Each game defines a round in its own code: a level, a run or a single play-through. A retry or a resumed game counts as a new round.',''],
-      ['wins','Wins / losses','Rounds that ended in a win or a loss (game_end). Rounds abandoned mid-way are neither.',''],
-      ['gaband','Abandoned rounds','Rounds started minus rounds ended: restarted, closed or left mid-round.','Includes rounds still being played when the period ends.'],
-      ['gsecs','Round time','Median active play time of finished rounds, as reported by the game.','Excludes time paused or with the tab hidden.'],
-      ['furthest','Furthest level','The highest level any player reached in the period. Each game says what a level is (Lighthouse Keeper: the headland number).','Games with no levels leave this blank.']
+    ['Lab', [
+      ['labbar','Bar to go daily','20+ votes with 70%+ Yes, players coming back at least as often as on the dailies (their median), 85%+ finished and a median time of 0:30–3:00, over the trial’s own window.','A guide, not a test. The decision stays Alec’s.'],
+      ['labpace','Vote pace','New voters in the last 7 days.',''],
+      ['labvotes','Votes','One-tap answers to “Should it go daily?”: one per voter, their latest answer.','Not linked to plays.']
     ]],
-    ['Lab trial', [
-      ['labplayers','Played by','Visitors who opened the Lab puzzle in the period (website and app), and how many of them started it.',''],
-      ['labback','Came back','Players who started it on 2 or more different days in the period, as a share of those who started. 3+ days are counted as regulars.','Days outside the period are not counted, so set the range to the whole trial.'],
-      ['labfinish','Finished','Players who finished it at least once, as a share of those who started.',''],
-      ['labvotes','Votes','One-tap answers to “Should it go daily?”: one per voter (a phone, browser or signed-in account), their latest answer, changed in the period. Split by app and website.','Not linked to plays, so not split by how often the voter played.'],
-      ['labread','Read-out','Plain-language summary per puzzle. Votes: under 20 is too few to call; 70%+ Yes clears the bar. Coming back (with 5+ starters): 40%+ is a strong pull, under 20% little. Abandoned: 40%+ of starts is flagged.','Guide thresholds, not statistical tests. The decision stays a judgement.']
-    ]],
-    ['Front pages and arrivals', [
-      ['taps','Card taps','Taps on a card on the News, Puzzles or Games list.','Position 1 is the top of the list at the time.'],
-      ['avgpos','Average position','Mean list position of the card when it was tapped.','Lower means it was tapped from nearer the top.'],
-      ['ref','Source','Where the page load came from: a shared link tagged ?via=… (e.g. Share result), else an in-app browser that names itself (Facebook, Instagram), else the referring site.','WhatsApp and most apps send nothing, so untagged links from them appear as direct. Tags and app names recorded from 15 Oct 2026.']
-    ]],
-    ['Sources', [
-      ['src','Source','How a page view arrived: a tracked link’s code (?via=, or utm_source= or ref= that some sites add), else an in-app browser that names itself (Facebook, Instagram), else the referring site, else Direct.','WhatsApp and most apps send nothing, so untagged links from them count as Direct. utm_source and ref= are read from 20 Oct 2026.'],
-      ['firstsrc','First source','The source of a reader’s first ever page view. Each reader counts once, against the source that first brought them.','A reader who clears their browser data starts again as new.'],
-      ['leftnow','Left at once','New readers whose whole history is one page with nothing done on it. These are the one-page readers hidden elsewhere; here they are counted, because a bounce from a post is part of the answer.','Includes crawlers that run the page.'],
-      ['stayed','Stayed','New readers who, on that first visit, opened a second page or did something: started a puzzle or game, scrolled an article, tapped a card or opened the board.',''],
-      ['cameback','Came back','New readers seen again on a later day, at any time up to now.','Recent readers have had less time to come back.'],
-      ['visit','Visit by source','A visit counts against the source of its first page. Returning readers coming back through a tracked link count there again.','']
-    ]],
-    ['Worth a look', [
-      ['signals','Worth a look','Automatic flags with fixed thresholds. Puzzle type: at least 5 starts and under 40% solved or over 40% unfinished. News: at least 3 pieces published in the period and fewer than half opened; an article with at least 5 readers and under 30% reaching 75% or over 60% bounced. Most played: the puzzle type and the game with the most players (at least 2).','Rules are fixed thresholds, not statistical tests.']
+    ['Other', [
+      ['readers','Visitors','Distinct browsers with at least one recorded event in the period. One-page visitors are left out unless switched on in Settings.',''],
+      ['articles','Article opens','Openings of a news piece on news.dailynoodle.co.uk.',''],
+      ['ref','Source','Where a page load came from: a tracked link (?via=), an in-app browser that names itself, the referring site, else Direct.','WhatsApp and most apps send nothing.']
     ]]
   ];
   function defLink(id){ return '<a class="def" href="#def-'+id+'" title="How this is measured" aria-label="How this is measured">i</a>'; }
@@ -752,6 +839,7 @@
   function daysBetween(a,b){ return Math.round((Date.parse(b+'T12:00:00Z')-Date.parse(a+'T12:00:00Z'))/864e5); }
   function fmtDate(iso){ if(!iso) return ''; var d=new Date(iso+'T12:00:00Z'); return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}); }
   function fmtDay(iso){ if(!iso) return ''; var d=new Date(iso+'T12:00:00Z'); return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'}); }
+  function fmtShort(iso){ var d=new Date(iso+'T12:00:00Z'); return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit',timeZone:'UTC'}); }
   function fmtWeekday(iso){ var d=new Date(iso+'T12:00:00Z'); return d.toLocaleDateString('en-GB',{weekday:'short',timeZone:'UTC'})+' '+d.getUTCDate()+' '+d.toLocaleDateString('en-GB',{month:'short',timeZone:'UTC'}); }
   function shortDay(iso){ var d=new Date(iso+'T12:00:00Z'); return d.toLocaleDateString('en-GB',{weekday:'short',timeZone:'UTC'}).slice(0,2)+' '+d.getUTCDate(); }
   function fmtSpan(a,b){
@@ -761,23 +849,22 @@
     return (yr?fmtDate(a):fmtDay(a))+' – '+(yr?fmtDate(b):fmtDay(b));
   }
   function n(x){ return x==null ? '<span class="dash">–</span>' : Number(x).toLocaleString('en-GB'); }
+  function num(x){ return x==null ? '–' : Number(x).toLocaleString('en-GB'); }
   function pct(x){ return x==null ? '<span class="dash">–</span>' : x+'%'; }
   function dur(s){ if(s==null) return '<span class="dash">–</span>'; s=Math.round(s); return s<60 ? s+'s' : Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+  function clock(s){ if(s==null) return '–'; s=Math.round(s); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
   function share(a,b){ return b ? Math.round(100*a/b) : null; }
   function tone(v,good,bad,higherBetter){ if(v==null) return ''; if(higherBetter){ return v>=good?'good':v<bad?'bad':'warn'; } return v<=good?'good':v>bad?'bad':'warn'; }
   function plural(k,one,many){ return k===1 ? one : (many || one+'s'); }
+  function median(a){ a = a.filter(function(x){ return x!=null; }).sort(function(x,y){ return x-y; }); if(!a.length) return null; var m=Math.floor(a.length/2); return a.length%2 ? a[m] : Math.round((a[m-1]+a[m])/2); }
+  function inBand(v,b){ return v!=null && v>=b[0] && v<=b[1]; }
 
-  var FEED = {};
+  var FEED = {}, BANDS = {};
   function feedList(){ return Object.keys(FEED).map(function(k){ return FEED[k]; }); }
   function title(path){ var f=FEED[path]; if(f) return f.headline; var m=String(path).replace(/^reports\//,'').replace(/\.html$/,'').replace(/^\d{4}-\d{2}-\d{2}-/,''); return m.replace(/-/g,' '); }
   function pubDate(path){ var f=FEED[path]; if(f&&f.date) return f.date; var m=String(path).match(/(\d{4}-\d{2}-\d{2})/); return m?m[1]:''; }
-  var TYPE_NAMES = {'crossword-mini':'Mini','logic-doku':'Doku','logic-path':'Path','logic-sweep':'Sweep','word-link':'Link','geo-borders':'Borders','word-tangle':'Tangle','quiz-reckon':'Reckon','logic-tally':'Tally'};
-  var TYPE_ORDER = ['crossword-mini','logic-doku','logic-path','word-link','logic-sweep','word-tangle','geo-borders','quiz-reckon','logic-tally'];
-  function ptype(path){ var m=String(path).match(/(crossword-mini|logic-doku|logic-path|logic-sweep|word-link|geo-borders|word-tangle|quiz-reckon|logic-tally)/); return m?m[1]:''; }
-  function isScoredType(t){ return /word-tangle|geo-borders|quiz-reckon/.test(t); }
 
   /* ---------------- sortable tables ---------------- */
-  // cols: [{key, label, def, left, fmt(row)->html, sort(row)->value}]
   function table(el, cols, rows, opts){
     opts = opts || {};
     var state = el._sort || { key: opts.sortKey || cols[1].key, dir: opts.sortDir || 'desc' };
@@ -808,15 +895,20 @@
       more.onclick = function(){ el._limit = 100000; table(el, cols, rows, opts); };
     } else if (more) { more.remove(); }
     el.querySelectorAll('thead button').forEach(function(b){
-      b.onclick = function(){
-        var k=b.dataset.k; state.dir = (state.key===k && state.dir==='desc') ? 'asc' : 'desc'; state.key=k;
-        table(el, cols, rows, opts);
-      };
+      b.onclick = function(){ var k=b.dataset.k; state.dir = (state.key===k && state.dir==='desc') ? 'asc' : 'desc'; state.key=k; table(el, cols, rows, opts); };
     });
   }
 
-  /* ---------------- charts (Chart.js, coloured from the theme tokens) ---------------- */
-  var charts = {};
+  /* ---------------- charts (Other only) ---------------- */
+  var charts = {}, chartP = null;
+  function loadChart(){
+    if (window.Chart) return Promise.resolve();
+    if (!chartP) chartP = new Promise(function(res){
+      var s = document.createElement('script'); s.src = CHART_JS.src; s.integrity = CHART_JS.sri; s.crossOrigin = 'anonymous';
+      s.onload = function(){ res(); }; s.onerror = function(){ res(); }; document.head.appendChild(s);
+    });
+    return chartP;
+  }
   function chart(id, cfg){
     if (!window.Chart) return;
     Chart.defaults.font.family = "'Inter','Helvetica Neue',Arial,sans-serif";
@@ -839,7 +931,6 @@
     e.textContent = msg || 'Nothing recorded in this period.';
   }
   function hbars(el, rows, opts){
-    // rows: [{label, value, sec}]
     opts = opts || {};
     if (!rows.length) { el.innerHTML = '<p class="empty">'+esc(opts.empty || 'Nothing recorded in this period.')+'</p>'; return; }
     var max = Math.max.apply(null, rows.map(function(r){ return r.value; }).concat([1]));
@@ -847,20 +938,53 @@
       return '<div class="hb"'+(r.sec?' data-sec="'+r.sec+'"':'')+'><span class="lbl" title="'+esc(r.label)+'">'+esc(r.label)+'</span><span class="trk"><span class="fill" style="width:'+Math.max(2,Math.round(100*r.value/max))+'%"></span></span><span class="val">'+n(r.value)+'</span></div>';
     }).join('')+'</div>';
   }
+  /* Daily bars: [{day, v, so}] → a labelled bar chart with a tap-to-read line. */
+  function bars(el, days, noun){
+    if (!days.length) { el.innerHTML = '<p class="empty">Nothing recorded in this period.</p>'; return; }
+    var top = Math.max.apply(null, days.map(function(d){ return d.v; }).concat([1])), many = days.length > 14, step = Math.ceil(days.length / 6);
+    var mag = Math.pow(10, Math.floor(Math.log10(top))), max = [1,2,3,4,5,6,8,10,12,15,20,25,30,40,50,60,80,100].map(function(k){ return k*mag/10; })
+      .filter(function(v){ return v >= top && v === Math.round(v) && (v % 2 === 0 || v === 1); })[0] || 10*mag;
+    var grid = [0, max/2, max].filter(function(v, i){ return i !== 1 || max >= 2; }).map(function(v){
+      return '<div class="grid" aria-hidden="true" style="bottom:'+Math.round(110*v/max)+'px"><span>'+v+'</span></div>'; }).join('');
+    var cols = 'grid-template-columns:repeat('+days.length+',minmax(0,1fr))';
+    var label = noun+' per day: ' + days.map(function(d){ return fmtDay(d.day)+' '+d.v+(d.so?' so far':''); }).join(', ');
+    el.innerHTML = '<div class="chart"><div class="bars" role="img" aria-label="'+esc(label)+'" style="'+cols+'">'+grid+days.map(function(d, i){
+      var h = d.so && !d.v ? 6 : Math.max(1, Math.round(110 * d.v / max));
+      return '<div class="c" data-i="'+i+'" title="'+esc(fmtDay(d.day)+': '+d.v+(d.so?' so far':''))+'">'+(MARKS[d.day] && !many ? '<span class="mk">'+esc(MARKS[d.day])+'</span>' : '')+
+        (many ? '' : '<span class="v num">'+d.v+'</span>')+'<div class="b'+(d.so?' so':'')+'" style="height:'+h+'px"></div></div>';
+    }).join('')+'</div></div><div class="barlab" aria-hidden="true" style="'+cols+'">'+days.map(function(d,i){
+      var show = d.so || !many || (i % step === 0 && i < days.length - step);
+      var txt = d.so ? 'Today' : many ? fmtDay(d.day) : shortDay(d.day);
+      return '<span'+(d.so?' class="tdy"':'')+'>'+(show?esc(txt):'')+'</span>';
+    }).join('')+'</div><p class="pick" aria-live="polite"></p>';
+    var pick = el.querySelector('.pick');
+    var tot = days.filter(function(d){ return !d.so; }), pk = tot.slice().sort(function(a,b){ return b.v - a.v; })[0];
+    var summary = tot.length ? 'Peak <b>'+pk.v+'</b> on '+esc(fmtWeekday(pk.day))+' · average <b>'+Math.round(tot.reduce(function(a,d){ return a + d.v; }, 0) / tot.length)+'</b> a day · tap a bar for its figure' : '';
+    pick.innerHTML = summary;
+    el.querySelectorAll('.c').forEach(function(c){ c.onclick = function(){
+      var d = days[+c.dataset.i], was = c.classList.contains('on');
+      el.querySelectorAll('.c.on').forEach(function(x){ x.classList.remove('on'); });
+      if (was) { pick.innerHTML = summary; return; }
+      c.classList.add('on');
+      pick.innerHTML = '<b>'+esc(fmtWeekday(d.day))+'</b>: <b>'+d.v+'</b> '+plural(d.v, noun.toLowerCase().replace(/s$/,''))+(d.so ? ' so far today' : '')+(MARKS[d.day] ? ' ('+esc(MARKS[d.day])+')' : '');
+    }; });
+  }
 
   /* ---------------- state ---------------- */
   var S = {
-    range: store('digiAdmin.range') || '7', from: '', to: '',
+    range: store('digiAdmin.range30') || '30', from: '', to: '',
     ghosts: store('digiAdmin.ghosts') === '1', compare: store('digiAdmin.compare') !== '0',
-    tab: 'overview', data: null, prev: null, today: null, day: null, psort: 'new', piecesAll: false, puzAll: false
+    tab: 'today', data: null, prev: null, today: null, day: null, psort: 'new', piecesAll: false, puzAll: false,
+    loaded: {}, cache: {}, gen: 0, health: null
   };
-  if (['7','30','90','all'].indexOf(S.range) < 0) S.range = '7';
+  if (['7','30','90','all'].indexOf(S.range) < 0) S.range = '30';
   function setRange(r){
-    S.range = r; if (r !== 'custom') store('digiAdmin.range', r);
+    S.range = r; if (r !== 'custom') store('digiAdmin.range30', r);
     var y = addDays(londonToday(), -1);
     if (r === 'all') { S.from = START; S.to = y; }
     else if (r !== 'custom') { S.from = addDays(y, -(+r - 1)); S.to = y; }
     if (S.from > S.to) S.from = S.to;
+    if (S.from < START) S.from = START;
     $('#from').value = S.from; $('#to').value = S.to;
     $$('[data-range]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.range === r)); });
     S.day = null;
@@ -873,28 +997,33 @@
     return { from: pf, to: pt };
   }
   function rangeLabel(){
-    var names = { '7':'Last 7 days', '30':'Last 30 days', '90':'Last 90 days', 'all':'All time', 'custom':'Custom dates' };
-    $('#rangeName').textContent = names[S.range] || 'Custom dates';
-    var p = prevSpan();
-    $('#rangeTxt').textContent = fmtSpan(S.from, S.to) + (p ? ' · compared with ' + fmtSpan(p.from, p.to) : '');
+    var names = { '7':'Last 7 days', '30':'Last 30 days', '90':'Last 90 days', 'all':'All time', 'custom':fmtSpan(S.from, S.to) };
+    $$('.rangeName').forEach(function(e){ e.textContent = (names[S.range] || 'Custom dates') + (S.range !== 'custom' ? ' · ' + fmtSpan(S.from, S.to).replace(' – ','–') : ''); });
   }
+  /* The fixed window Today and Lab use: the 30 days to yesterday. */
+  function last30(){ var y = addDays(londonToday(), -1); return { from: addDays(y, -29) < START ? START : addDays(y, -29), to: y }; }
 
-  /* ---------------- tabs ---------------- */
-  var TABS = ['overview','sources','news','puzzles','games','leagues','publishing','basis'];
+  /* ---------------- tabs ----------------
+     Each tab loads its own figures the first time it opens (27 Nov 2026), so opening the page asks only
+     for Today's. Old addresses still work: #overview and #publishing open Today; #news, #games, #sources Other. */
+  var TABS = ['today','players','puzzles','lab','leagues','other','basis'];
+  var ALIAS = { overview:'today', publishing:'today', news:'other', games:'other', sources:'other' };
   function showTab(t, opts){
     opts = opts || {};
-    if (TABS.indexOf(t) < 0) t = 'overview';
+    t = ALIAS[t] || t;
+    if (TABS.indexOf(t) < 0) t = 'today';
     S.tab = t;
     TABS.forEach(function(x){
       var on = x === t, b = document.getElementById('t-'+x);
       b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
       document.getElementById(x).hidden = !on;
     });
-    if (!opts.keepHash) history.replaceState(null, '', location.pathname + location.search + (t === 'overview' ? '' : '#' + t));
+    if (!opts.keepHash) history.replaceState(null, '', location.pathname + location.search + (t === 'today' ? '' : '#' + t));
     if (!opts.keepScroll) window.scrollTo(0, 0);
     var b = document.getElementById('t-'+t), bar = b.parentNode;
     if (bar.scrollWidth > bar.clientWidth) bar.scrollLeft = Math.max(0, b.offsetLeft - bar.clientWidth / 2 + b.offsetWidth / 2);
     if (opts.focus) b.focus();
+    if (S.ready) ensure(t);
   }
   $$('.tab').forEach(function(b){ b.addEventListener('click', function(){ showTab(b.dataset.tab); }); });
   $('.tabs').addEventListener('keydown', function(e){
@@ -904,14 +1033,14 @@
   });
   document.addEventListener('click', function(e){
     var go = e.target.closest('[data-go]');
-    if (go) { var d = go.closest('dialog'); if (d) d.close(); showTab(go.dataset.go); return; }
+    if (go) { var d = go.closest('dialog'); if (d) d.close(); showTab(go.dataset.go); if (go.dataset.at) { var el = document.getElementById(go.dataset.at); if (el) el.scrollIntoView({ block: 'start' }); } return; }
     var a = e.target.closest('a[href^="#def-"]');
     if (a) {
       e.preventDefault();
       $('#qDefs').value = ''; renderDefs();
       showTab('basis', { keepScroll: true });
-      var el = document.getElementById(a.getAttribute('href').slice(1));
-      if (el) { el.classList.add('hit'); el.scrollIntoView({ block: 'center' }); setTimeout(function(){ el.classList.remove('hit'); }, 2500); }
+      var el2 = document.getElementById(a.getAttribute('href').slice(1));
+      if (el2) { el2.classList.add('hit'); el2.scrollIntoView({ block: 'center' }); setTimeout(function(){ el2.classList.remove('hit'); }, 2500); }
     }
   });
 
@@ -921,24 +1050,22 @@
     d.addEventListener('click', function(e){ if (e.target === d || e.target.closest('[data-close]')) d.close(); });
   });
   $('#gear').onclick = function(){ openSheet($('#settings')); };
-  $('#rangeBtn').onclick = function(){ openSheet($('#settings')); };
+  $$('[data-range-open]').forEach(function(b){ b.onclick = function(){ openSheet($('#settings')); }; });
 
   /* ---------------- auth ---------------- */
   var sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit' }
   }) : null;
-
   function showSignin(msg, kind){
-    $('#app').hidden = true; $('#signin').hidden = false; $('#gear').hidden = true; $('#rangebar').hidden = true;
+    $('#app').hidden = true; $('#signin').hidden = false; $('#gear').hidden = true;
     $$('dialog.sheet').forEach(function(d){ if (d.open) d.close(); });
     if (msg) { var s=$('#signinStatus'); s.hidden=false; s.className='status'+(kind?' '+kind:''); s.textContent=msg; }
   }
   function showApp(email){
-    $('#signin').hidden = true; $('#app').hidden = false; $('#gear').hidden = false; $('#rangebar').hidden = false;
+    $('#signin').hidden = true; $('#app').hidden = false; $('#gear').hidden = false;
     $('#who').textContent = 'Signed in as ' + email;
   }
   $('#signout').onclick = function(){ sb.auth.signOut().then(function(){ showSignin('Signed out.'); }); };
-
   $('#signinForm').addEventListener('submit', function(e){
     e.preventDefault();
     var email = $('#email').value.trim();
@@ -958,353 +1085,420 @@
       });
   });
 
-  /* ---------------- load ----------------
-     Three calls: the range, the same number of days before it (for ▲▼) and,
-     when the range ends before today, today on its own (the hollow bar). */
-  var loadSeq = 0;
-  function dash(from, to){ return sb.rpc('admin_dashboard', { p_from: from, p_to: to, p_ghosts: S.ghosts }); }
-  function quiet(p){ return p.then(function(r){ return r && !r.error ? r.data : null; }, function(){ return null; }); }
-  function load(){
-    var seq = ++loadSeq, today = londonToday(), p = prevSpan();
-    $('#loadError').hidden = true;
-    $('#updated').textContent = 'Loading…';
-    return Promise.all([dash(S.from, S.to), p ? quiet(dash(p.from, p.to)) : null, S.to < today ? quiet(dash(today, today)) : null]).then(function(rs){
-      if (seq !== loadSeq) return;
-      var r = rs[0];
-      if (r.error) {
-        if (/not_admin/.test(r.error.message)) { sb.auth.signOut(); showSignin('That email isn’t on the admin list. Sign in with an admin email.', 'err'); return; }
-        if (/JWT|expired|auth/i.test(r.error.message)) { showSignin('Your sign-in has expired. Send yourself a new link.', 'err'); return; }
-        var e=$('#loadError'); e.hidden=false; e.textContent='Couldn’t load the figures: '+r.error.message+'. Try Refresh in Settings.';
-        $('#updated').textContent = 'Couldn’t load';
-        return;
-      }
-      if (window.dnPublishingHealth) window.dnPublishingHealth.start();
-      S.data = r.data || {}; S.prev = rs[1]; S.today = rs[2];
-      render();
-      loadLeagues();
-      loadSources(seq);
-      loadArchiveStats(seq);
-      loadLabStats(seq);
-    });
+  /* ---------------- data calls ----------------
+     call() runs one admin function once per load generation, so tabs that need the same figures share them.
+     Errors come back as {error}; not_admin signs out. */
+  function call(name, args){
+    var k = S.gen + ':' + name + ':' + JSON.stringify(args || {});
+    if (!S.cache[k]) S.cache[k] = sb.rpc(name, args || {}).then(function(r){
+      if (r && r.error && /not_admin/.test(r.error.message || '')) { sb.auth.signOut(); showSignin('That email isn’t on the admin list. Sign in with an admin email.', 'err'); }
+      return r || { error: { message: 'no answer' } };
+    }, function(e){ return { error: { message: String(e && e.message || e) } }; });
+    return S.cache[k];
+  }
+  function missing(r, fn){ return r && r.error && (new RegExp(fn+'|PGRST202|42883').test(JSON.stringify(r.error))); }
+  function setupMsg(r, fn, mig){ return missing(r, fn) ? 'Not set up yet: apply migration '+mig+'.' : 'Couldn’t load these figures'+(r && r.error ? ': '+r.error.message : '')+'.'; }
+  function getJSON(url){ return fetch(url, { cache: 'no-store' }).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }); }
+  function ensure(t){
+    if (S.loaded[t] || !S.ready) return;
+    S.loaded[t] = true;
+    ({ today: loadToday, players: loadPlayers, puzzles: loadPuzzles, lab: loadLab, leagues: loadLeagues, other: loadOther, basis: function(){} }[t])();
+  }
+  function reloadAll(){
+    S.gen++; S.cache = {}; S.loaded = {};
+    $('#updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    ensure(S.tab);
   }
 
-  /* ---------------- archive and stats (6 Nov 2026) ----------------
-     admin_archive_stats: per London week, archive_open, archive_play (by type) and stats_open. */
-  var TYPE_NAMES = { mini:'Mini', doku:'Doku', sweep:'Sweep', path:'Path', link:'Link', tangle:'Tangle', borders:'Borders', reckon:'Reckon', tally:'Tally' };
-  function loadArchiveStats(seq){
-    return sb.rpc('admin_archive_stats', { p_from: S.from, p_to: S.to }).then(function(r){ return r; }, function(e){ return { error: e }; }).then(function(r){
-      if (seq != null && seq !== loadSeq) return;
+  /* ---------------- targets and verdicts ---------------- */
+  function scoreChecks(key, r, bands){
+    var T = TARGETS && TARGETS.types && TARGETS.types[key] || {}, P = TARGETS && TARGETS.players || {}, out = [];
+    function band(id, label, v, b, fmt){ if (b) out.push({ id:id, label:label, v:v, txt:fmt(v), target:fmt(b[0])+'–'+fmt(b[1]), ok:inBand(v,b), low: v!=null && v<b[0] }); }
+    function min(id, label, v, m, fmt){ if (m!=null) out.push({ id:id, label:label, v:v, txt:fmt(v), target:fmt(m)+'+', ok: v!=null && v>=m, low:true }); }
+    function max(id, label, v, m, fmt){ if (m!=null) out.push({ id:id, label:label, v:v, txt:fmt(v), target:'≤'+fmt(m), ok: v!=null && v<=m, low:false }); }
+    var P100 = function(v){ return v==null ? '–' : v+'%'; }, SEC = clock, PTS = function(v){ return v==null ? '–' : v; };
+    if (WON[key]) band('won', 'won', r.pct_won, T.won, P100);
+    min('finished', 'finished', r.pct_finished, T.finished, P100);
+    band('secs', 'median', r.med_secs, T.secs, SEC);
+    max('help', 'help used', r.pct_help, T.help_max, P100);
+    max('mistakes', 'mistakes', r.avg_mistakes == null ? null : Number(r.avg_mistakes), T.mistakes_max, function(v){ return v==null ? '–' : (+v).toFixed(1); });
+    band('score', 'median', r.med_score, T.score, function(v){ return v==null ? '–' : v+' pts'; });
+    band('mean', 'mean', r.mean_score, T.mean, PTS);
+    if (T.bands && bands) Object.keys(T.bands).forEach(function(b){
+      var row = bands.filter(function(x){ return x.band === b; })[0], bt = T.bands[b]; if (!row) return;
+      min('f_'+b, b+' finished', row.pct_finished, bt.finished, P100);
+      if (bt.secs && b !== 'easy') band('s_'+b, b+' median', row.med_secs, bt.secs, SEC);
+      if (bt.secs && b === 'easy') max('s_'+b, b+' median', row.med_secs, bt.secs[1], SEC);
+      max('q_'+b, b+' slowest quarter', row.p75_secs, bt.p75_max, SEC);
+    });
+    min('returning', 'come back', r.pct_returning, P.type_returning, P100);
+    return out;
+  }
+  var NEXT = {
+    'link:won': 'make 2 traps the norm (your 8 Nov call); re-edit the forward-dated Links with 3.',
+    'link:mistakes': 'traps are costing guesses; ease the trickiest groups.',
+    'sweep:won': 'check mis-taps and flag mode before the boards: most losses end on a mine.',
+    'doku:f_hard': 'check the hard boards for trial and error.',
+    'doku:q_hard': 'the slowest quarter on hard is too slow; check for trial and error.',
+    'tally:finished': 'too many left unfinished; look at the slowest cages.',
+    'returning': 'fewest come back; worth asking players why.',
+    'secs': 'median time is outside the band.',
+    'finished': 'too many left unfinished.'
+  };
+  function nextStep(key, misses){
+    var m = misses[0]; if (!m) return '';
+    return NEXT[key+':'+m.id] || NEXT[m.id] || (m.label + ' ' + m.txt + ' against ' + m.target + '.');
+  }
+  function verdicts(sc){
+    var min = TARGETS && TARGETS.min_attempts || 20, G = TARGETS && TARGETS.gold_band || [7,14];
+    var bandRows = (sc.bands || []).filter(function(b){ return b.slug === 'logic-doku'; });
+    function rowsOf(types, withBands){
+      var by = {}; (types || []).forEach(function(t){ var k = KEY[t.slug]; if (DAILY.indexOf(k) >= 0) by[k] = t; });
+      return DAILY.filter(function(k){ return by[k]; }).map(function(k){
+        var r = by[k], checks = scoreChecks(k, r, k === 'doku' && withBands ? bandRows : null);
+        return { key:k, r:r, checks:checks, misses:checks.filter(function(c){ return !c.ok; }), enough: r.attempts >= min };
+      });
+    }
+    var cur = rowsOf(sc.types, true), prev = rowsOf(sc.prev && sc.prev.types, false), pby = {};
+    prev.forEach(function(p){ pby[p.key] = p; });
+    function bottom(list, f){ var ok = list.filter(function(x){ return x.enough && x.r[f] != null; }); if (ok.length < 3) return null; return ok.slice().sort(function(a,b){ return a.r[f]-b.r[f]; })[0].key; }
+    var reach = bottom(cur,'pct_of_players'), back = bottom(cur,'pct_returning'), preach = bottom(prev,'pct_of_players'), pback = bottom(prev,'pct_returning');
+    cur.forEach(function(x){
+      var p = pby[x.key], again = p && x.misses.some(function(m){ return p.misses.some(function(q){ return q.id === m.id; }); });
+      x.gold = x.r.pct_gold == null ? null : Number(x.r.pct_gold);
+      x.goldOff = x.gold != null && (x.gold < G[0] || x.gold > G[1]);
+      if (!x.enough) { x.v = 'Too few'; x.tone = ''; }
+      else if (reach === x.key && back === x.key && preach === x.key && pback === x.key) { x.v = 'Retire candidate'; x.tone = 'bad'; }
+      else if (x.misses.length >= 2 || again) { x.v = 'Improve'; x.tone = 'bad'; x.again = again; }
+      else if (x.misses.length === 1) { x.v = 'Watch'; x.tone = 'warn'; }
+      else { x.v = 'Keep'; x.tone = 'good'; }
+      x.next = x.tone === 'good' ? '' : nextStep(x.key, x.misses);
+    });
+    var order = { 'Retire candidate':0, 'Improve':1, 'Watch':2, 'Keep':3, 'Too few':4 };
+    cur.sort(function(a,b){ return order[a.v]-order[b.v] || DAILY.indexOf(a.key)-DAILY.indexOf(b.key); });
+    return { rows: cur, reach: reach, back: back };
+  }
+  /* Worst puzzles: each daily type's worst 5% by its main measure, plus anything under the floor. */
+  function worstPuzzles(sc){
+    var F = TARGETS && TARGETS.flags || { worst_pct:5, floor_won:{link:25,sweep:25}, floor_finished:40, group_at:5 };
+    var by = {}, out = [];
+    (sc.puzzles || []).forEach(function(p){ var k = KEY[p.slug]; if (DAILY.indexOf(k) >= 0) (by[k] = by[k] || []).push(p); });
+    Object.keys(by).forEach(function(k){
+      var list = by[k], measure = function(p){ return WON[k] ? p.pct_won : SCORED[k] ? p.med_score : p.pct_finished; };
+      list.sort(function(a,b){ var x = measure(a), y = measure(b); if (x==null) return 1; if (y==null) return -1; return x-y || (b.med_secs||0)-(a.med_secs||0); });
+      var take = list.length >= 10 ? Math.max(1, Math.round(list.length * F.worst_pct / 100)) : 0;
+      // A worst-5% pick is flagged only if it also misses the type's own bar (a 95% Mini is never "worst").
+      var T = TARGETS && TARGETS.types && TARGETS.types[k] || {};
+      var bar = WON[k] ? (T.won || [65])[0] : SCORED[k] ? ((T.score || T.mean || [0])[0]) : (T.finished != null ? T.finished : 80);
+      list.forEach(function(p, i){
+        var under = WON[k] ? (p.pct_won != null && p.pct_won < (F.floor_won[k] || 25)) : (!SCORED[k] && p.pct_finished < F.floor_finished);
+        if ((i < take && measure(p) != null && measure(p) < bar) || under) out.push({ key:k, p:p, m:measure(p), under:under });
+      });
+    });
+    return out;
+  }
+  function puzName(p){ var f = FEED[p.path]; return f && f.headline ? f.headline : typeName(p.slug); }
+  function flagText(x){
+    if (WON[x.key]) return x.p.pct_won + '% won · ' + x.p.players;
+    if (SCORED[x.key]) return (x.p.med_score != null ? x.p.med_score + ' pts median' : 'no score') + ' · ' + x.p.players;
+    return x.p.pct_finished + '% finished · ' + x.p.players;
+  }
+
+  /* ---------------- TODAY ---------------- */
+  var TD = { players:null, score:null, ops:null };
+  function loadToday(){
+    var w = last30();
+    $('#todayDate').textContent = fmtWeekday(londonToday());
+    if (window.dnPublishingHealth) window.dnPublishingHealth.start();
+    call('admin_players', { p_from: w.from, p_to: w.to }).then(function(r){ TD.players = r; renderToday(); });
+    loadBands().then(function(){ return call('admin_scorecard', { p_from: w.from, p_to: w.to, p_bands: bandMap(w) }); }).then(function(r){ TD.score = r; renderToday(); });
+    call('admin_ops', {}).then(function(r){ TD.ops = r; renderToday(); });
+  }
+  document.addEventListener('dn:publishing', function(e){
+    var s = e.detail || {};
+    S.health = s.checking ? S.health : s;
+    if (!s.checking) renderToday();
+    if (S.loaded.lab) renderLab();
+  });
+  function lamp(tone, head, text, extra){ return '<div class="lmp '+tone+'"><span class="lamp" aria-hidden="true"></span><div style="flex:1"><b>'+esc(head)+'</b><span class="t">'+esc(text)+'</span></div>'+(extra||'')+'</div>'; }
+  function renderToday(){
+    var h = S.health || {}, ops = TD.ops && TD.ops.data, acts = [], lamps = [], goal = (TARGETS && TARGETS.stock_goal) || '2027-12-31';
+    function act(t, head, small, go, at){ acts.push({ t:t, head:head, small:small, go:go, at:at }); }
+    // Live today
+    if (!h.live) lamps.push(lamp('', 'Live today', 'Checking…'));
+    else if (h.live.error) { lamps.push(lamp('bad', 'Live today', h.live.error)); act('bad', 'Today’s puzzles not confirmed', h.live.error, 'today', 'pubPanel'); }
+    else {
+      var lt = h.live.ok === h.live.total ? 'good' : 'bad';
+      lamps.push(lamp(lt, 'Live today', h.live.ok+' of '+h.live.total+' responding: '+h.live.dailyTotal+' dailies and '+h.live.lab+' Lab, pages and app data'));
+      if (lt === 'bad') act('bad', (h.live.total - h.live.ok)+' of today’s puzzles not responding', h.live.down.join(', '), 'today', 'pubPanel');
+    }
+    // App
+    if (!TD.ops) lamps.push(lamp('', 'App', 'Loading…'));
+    else if (!ops) lamps.push(lamp('', 'App', setupMsg(TD.ops, 'admin_ops', 'admin_rebuild')));
+    else {
+      var ae = ops.app_errors || {}, top = (ae.top || [])[0];
+      if (ae.fatal_week) { lamps.push(lamp('bad', 'App', ae.fatal_week+' '+plural(ae.fatal_week,'crash','crashes')+' this week'+(top ? ' · '+top.message : ''))); act('bad', ae.fatal_week+' app '+plural(ae.fatal_week,'crash','crashes')+' this week', top ? top.message : '', 'today'); }
+      else if (ae.week) { lamps.push(lamp('warn', 'App', ae.week+' app '+plural(ae.week,'error')+' this week'+(top ? ' · '+top.kind+': '+top.message : ''))); }
+      else lamps.push(lamp('good', 'App', 'No app errors in 7 days'+(ae.latest_version ? ' · last seen version '+ae.latest_version : '')));
+    }
+    // Release
+    if (!h.release) lamps.push(lamp('', 'Last release', 'Checking…'));
+    else if (h.release.error) lamps.push(lamp('warn', 'Last release', 'GitHub status not confirmed (its public limit may be reached)'));
+    else if (h.release.failed) { lamps.push(lamp('bad', 'Last release', 'Failed'+(h.release.step ? ' at: '+h.release.step : ''), '<a class="ghost" href="'+esc(h.release.url)+'" style="min-height:32px">Run</a>')); act('bad', 'The last release failed', h.release.step || 'Open the run on GitHub', 'today', 'pubPanel'); }
+    else if (h.release.success) lamps.push(lamp('good', 'Last release', 'Passed '+(h.release.lastSuccess ? relTime(h.release.lastSuccess) : '')+' · deployed and live-checked'));
+    else lamps.push(lamp('warn', 'Last release', 'Running now'+(h.release.lastSuccess ? ' · last passed '+relTime(h.release.lastSuccess) : '')));
+    // Nightly checks
+    var nt = h.tests, tasks = ops ? (ops.tasks || []) : [], tbad = tasks.filter(function(x){ return !x.ok; });
+    var ntxt = !nt ? 'Checking…' : nt.error ? 'Nightly tests: not confirmed' : nt.ok ? 'Nightly tests passed '+relTime(nt.at) : nt.done ? 'Nightly tests failed '+relTime(nt.at) : 'Nightly tests running';
+    if (nt && !nt.error && nt.stale) ntxt += ' (no run in 26 hours)';
+    ntxt += tasks.length ? ' · ' + tasks.map(function(x){ return x.task + (x.ok ? ' OK ' : ' FAILED ') + relTime(x.ran_at); }).join(' · ') : ' · scheduled tasks don’t report here yet';
+    var ntone = !nt ? '' : (nt.error || nt.stale || (nt.done && !nt.ok) || tbad.length) ? 'warn' : 'good';
+    lamps.push(lamp(ntone, 'Nightly checks', ntxt));
+    if (nt && nt.done && !nt.ok) act('warn', 'Nightly tests failed', 'They don’t block publishing; look today', 'today');
+    tbad.forEach(function(x){ act('warn', x.task+' reported a problem', x.summary || '', 'today'); });
+    // Stock and runway
+    var st = h.stock;
+    if (!st) lamps.push(lamp('', 'Puzzle stock', 'Checking…'));
+    else if (st.error) { lamps.push(lamp('warn', 'Puzzle stock', st.error)); }
+    else {
+      var bits = [], stone = 'good';
+      function bump(t){ if (t === 'bad' || (t === 'warn' && stone === 'good')) stone = t; }
+      if (st.stale) { bump('warn'); bits.push('build snapshot out of date'); }
+      if (st.futureDays < 7) { bump('bad'); bits.push('only '+st.futureDays+' complete days ahead'); act('bad', 'Only '+st.futureDays+' days of complete stock', 'Every daily must have a file each day', 'today', 'runway'); }
+      var labs = st.lab || [], labBad = labs.filter(function(l){ return l.tone !== 'good'; });
+      if (labBad.length) {
+        var lw = labBad.slice().sort(function(a,b){ return a.last.localeCompare(b.last); })[0];
+        bump(lw.tone); bits.push('Lab ends '+fmtDay(lw.last));
+        act(lw.tone, 'Make Lab puzzles past '+fmtDay(lw.last), labBad.map(function(l){ return NAME[l.type]; }).join(', ')+': '+lw.days+' '+plural(lw.days,'day')+' left', 'lab');
+      }
+      // One action for the dailies short of the goal, however many (each type's date is in the runway list).
+      var short = (st.runway || []).filter(function(r){ return r.tone !== 'good'; }).sort(function(a,b){ return (a.last||'').localeCompare(b.last||''); });
+      short.forEach(function(r){ bump(r.tone); });
+      if (short.length) {
+        var w0 = short[0], wt = short.some(function(r){ return r.tone === 'bad'; }) ? 'bad' : 'warn';
+        bits.push(short.length === 1 ? NAME[w0.type]+' short of the goal' : short.length+' dailies short of the goal');
+        act(wt, short.length === 1 ? 'Extend '+NAME[w0.type]+' to '+fmtDate(goal) : 'Extend '+short.length+' dailies to '+fmtDate(goal),
+          short.slice(0, 3).map(function(r){ return NAME[r.type]+' ends '+(r.last ? fmtDate(r.last)+(r.short ? ', '+r.short+' days short' : '') : 'now'); }).join(' · ')+(short.length > 3 ? ' · and '+(short.length-3)+' more' : ''), 'today', 'runway');
+      }
+      if (st.shortest && st.shortest.last) bits.push('all dailies on file to '+fmtDate(st.shortest.last));
+      lamps.push(lamp(stone, 'Puzzle stock', bits.join(' · ')));
+      renderRunway(st, goal);
+    }
+    $('#lamps').innerHTML = lamps.join('');
+    // Headline
+    var hd = $('#todayHead'), pending = !h.live || !h.stock || !h.release || !TD.ops;
+    acts.sort(function(a,b){ return (a.t === 'bad' ? 0 : 1) - (b.t === 'bad' ? 0 : 1); });
+    if (!acts.length) { hd.className = 'head ' + (pending ? '' : 'good'); hd.innerHTML = '<h1>'+(pending ? 'Checking…' : 'All clear')+'</h1>'+(pending ? '' : '<p>Live, released and stocked to the goal.</p>'); }
+    else {
+      var worst = acts.some(function(a){ return a.t === 'bad'; }) ? 'bad' : 'warn';
+      hd.className = 'head ' + worst;
+      hd.innerHTML = '<h1>'+acts.length+' '+plural(acts.length,'thing')+' '+(acts.length===1?'needs':'need')+' you</h1>'+acts.map(function(a){
+        return '<button type="button" class="act" data-go="'+a.go+'"'+(a.at ? ' data-at="'+a.at+'"' : '')+'><span><b>'+esc(a.head)+'</b><small>'+esc(a.small)+'</small></span><span aria-hidden="true">›</span></button>';
+      }).join('');
+    }
+    renderYesterday();
+  }
+  function relTime(iso){
+    var d = new Date(iso); if (!isFinite(d)) return '';
+    var day = londonDay(d), t = d.toLocaleTimeString('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit'});
+    return day === londonToday() ? t : day === addDays(londonToday(), -1) ? 'yesterday '+t : fmtDay(day);
+  }
+  function renderRunway(st, goal){
+    var today = londonToday(), rows = [];
+    var labs = st.lab || [];
+    if (labs.length) {
+      var same = labs.every(function(l){ return l.last === labs[0].last; });
+      if (same) rows.push({ label:'Lab trials', last:labs[0].last, days:labs[0].days, tone:labs[0].tone, bold:true, note: labs.map(function(l){ return NAME[l.type]; }).join(', ') });
+      else labs.forEach(function(l){ rows.push({ label:'Lab: '+NAME[l.type], last:l.last, days:l.days, tone:l.tone, bold:true }); });
+    }
+    (st.runway || []).slice().sort(function(a,b){ return (a.last||'').localeCompare(b.last||''); }).forEach(function(r){ rows.push({ label:NAME[r.type], last:r.last, days:r.days, tone:r.tone, bold:r.tone !== 'good' }); });
+    var maxD = Math.max.apply(null, rows.map(function(r){ return r.days || 0; }).concat([daysBetween(today, goal) + 30]));
+    var gp = Math.min(100, 100 * daysBetween(today, goal) / maxD);
+    $('#rwSub').textContent = 'Last dated puzzle on file. The line marks the goal, '+fmtDate(goal)+'.';
+    $('#rwList').innerHTML = rows.map(function(r){
+      return '<div class="rw '+r.tone+'"'+(r.note ? ' title="'+esc(r.note)+'"' : '')+'><span'+(r.bold?' style="font-weight:600"':'')+'>'+esc(r.label)+'</span><span class="trk"><span class="fill" style="width:'+Math.max(1, Math.min(100, 100*(r.days||0)/maxD)).toFixed(1)+'%"></span><span class="goal" style="left:'+gp.toFixed(1)+'%"></span></span><span class="d">'+(r.last ? esc(fmtShort(r.last)) : 'none')+'</span></div>';
+    }).join('') || '<p class="empty">No stock snapshot.</p>';
+  }
+  function renderYesterday(){
+    var y = addDays(londonToday(), -1), P = TD.players, el = $('#ydTiles');
+    $('#ydH').textContent = 'Yesterday · ' + fmtWeekday(y);
+    if (P) {
+      if (P.error) el.innerHTML = '<p class="empty">'+esc(setupMsg(P, 'admin_players', 'admin_rebuild'))+'</p>';
+      else {
+        var d = (P.data.daily || []).filter(function(x){ return x.day === y; })[0] || { players:0, returning:0, new:0 };
+        el.innerHTML = tileH(n(d.players), 'players') + tileH(n(d.returning), 'came back') + tileH(n(d.new), 'new');
+        var a = P.data.app || {}, goal = TARGETS && TARGETS.app_players_goal || 1000, b = $('#ydApp');
+        b.hidden = false; b.innerHTML = '<span>App players, last 30 days</span><span><b>'+num(a.players_30)+'</b> of '+num(goal)+' ›</span>';
+      }
+    }
+    var F = $('#ydFlags'), sc = TD.score;
+    if (!sc) return;
+    if (sc.error || !sc.data) { F.innerHTML = '<p class="empty">'+esc(setupMsg(sc, 'admin_scorecard', 'admin_rebuild'))+'</p>'; return; }
+    var fl = worstPuzzles(sc.data).filter(function(x){ return x.p.date === y; });
+    F.innerHTML = fl.length ? fl.map(function(x){ return '<button type="button" class="frow act" data-go="puzzles" style="margin:0;padding:0"><span>'+esc(puzName(x.p))+'</span><span class="r '+(x.under ? 'bad' : 'warn')+'">'+esc(flagText(x))+'</span></button>'; }).join('') : '<p class="sub">Nothing flagged from yesterday’s puzzles.</p>';
+  }
+  function tileH(big, s, cls){ return '<div class="tile '+(cls||'')+'"><div class="big">'+big+'</div><div class="s">'+esc(s)+'</div></div>'; }
+
+  /* ---------------- PLAYERS & GROWTH ---------------- */
+  function loadPlayers(){
+    $('#plHead').className = 'head'; $('#plHead').innerHTML = '<h1>Loading…</h1>';
+    call('admin_players', { p_from: S.from, p_to: S.to }).then(renderPlayers);
+  }
+  function renderPlayers(r){
+    if (!r || r.error || !r.data) { $('#plHead').innerHTML = '<h1>Players</h1><p>'+esc(setupMsg(r, 'admin_players', 'admin_rebuild'))+'</p>'; return; }
+    var D = r.data, P = TARGETS && TARGETS.players || {}, len = daysBetween(S.from, S.to) + 1, goal = TARGETS && TARGETS.app_players_goal || 1000;
+    var stick = D.players ? Math.round(100 * (D.avg_daily || 0) / D.players) : null;
+    var c = D.cohort || {}, d1 = share(c.d1, c.d1_n), w2 = share(c.w2, c.w2_n), m1 = share(c.m1, c.m1_n);
+    var a7 = D.avg_daily_last7, f7 = D.avg_daily_first7, up = a7 != null && f7 != null && len >= 14 && a7 > f7 * 1.1, down = a7 != null && f7 != null && len >= 14 && a7 < f7 * 0.9;
+    var weak = [];
+    if (d1 != null && d1 < (P.back_next_day || 30)) weak.push(['new players don’t stick', 'Only '+d1+'% of new players come back the next day (target '+(P.back_next_day||30)+'%).']);
+    if (stick != null && len >= 28 && len <= 31 && stick < (P.stickiness || [25])[0]) weak.push(['most don’t play daily', stick+'% of the month’s players play on an average day (target '+(P.stickiness||[25])[0]+'%+).']);
+    var lead = up ? 'Growing' : down ? 'Shrinking' : 'Steady';
+    var t = weak.length ? lead + ', but ' + weak[0][0] : lead + (up ? ', and players come back' : ': players come back as hoped');
+    var hd = $('#plHead');
+    hd.className = 'head ' + (down ? 'bad' : weak.length ? 'warn' : 'good');
+    var app = D.app || {}, L = D.loops || {};
+    var appStick = L.app_new ? share(L.app_regular, L.app_new) : null, shareStick = L.share_played ? share(L.share_back, L.share_played) : null;
+    hd.innerHTML = '<h1>'+esc(t)+'</h1><p>'+esc((a7 != null ? Math.round(a7) + ' a day' + (len >= 14 && f7 != null ? ', ' + (up ? 'up from ' : down ? 'down from ' : 'against ') + Math.round(f7) + ' at the start of the period' : '') + '. ' : '') +
+      (weak.length ? weak[0][1] + ' ' : '') + (appStick != null && shareStick != null && appStick > shareStick ? 'App players stick best; shared results bring visitors who play once.' : ''))+'</p>';
+    // goal
+    $('#goalN').textContent = num(goal); $('#appN').textContent = num(app.players_30);
+    $('#goalFill').style.width = Math.min(100, 100 * (app.players_30 || 0) / goal).toFixed(1) + '%';
+    $('#goalBar').setAttribute('aria-label', num(app.players_30) + ' of ' + num(goal));
+    var wk = app.weeks || [];
+    $('#appNote').textContent = 'Last 7 days: '+num(app.players_7)+' app '+plural(app.players_7||0,'player')+'.'+(wk.length > 1 ? ' By week: '+wk.map(function(w){ return w.players; }).join(', ')+'.' : '')+' An estimate: app devices are those that opened a page inside the app, until the app marks its own plays.';
+    // KPIs
+    function kpi(label, v, sub, cls, def){ return '<div class="kpi"><div class="k"><span>'+esc(label)+'</span>'+(def?defLink(def):'')+'</div><div class="v'+(cls?' '+cls:'')+'"'+(cls?' style="color:var(--'+cls+')"':'')+'>'+v+'</div><div class="n">'+sub+'</div></div>'; }
+    var stickLbl = len >= 28 && len <= 31 ? 'Daily ÷ monthly' : 'Daily ÷ all';
+    $('#plKpis').innerHTML =
+      kpi('Players', n(D.players), 'started a puzzle · '+n(D.new_players)+' new', '', 'player') +
+      kpi('A day', a7 == null ? n(null) : Math.round(a7), len >= 14 && f7 != null ? (up ? 'up' : down ? 'down' : 'steady') + ' from '+Math.round(f7)+' in the first week' : 'last 7 days', up ? 'good' : down ? 'warn' : '', '') +
+      kpi(stickLbl, stick == null ? n(null) : stick+'%', 'target '+(P.stickiness||[25,35]).join('–')+'%', stick != null && stick < (P.stickiness||[25])[0] ? 'warn' : 'good', 'stick') +
+      kpi('Back next day', d1 == null ? n(null) : d1+'%', 'of '+n(c.d1_n)+' new players · target '+(P.back_next_day||30)+'%+', d1 != null && d1 < (P.back_next_day||30) ? 'warn' : 'good', 'd1');
+    $('#plCohort').innerHTML = 'Back in week 2: <b style="color:var(--'+(w2 != null && w2 >= (P.back_week_2||25) ? 'good' : 'warn')+')">'+pct(w2)+'</b> (target '+(P.back_week_2||25)+'%) · after a month: <b style="color:var(--'+(m1 != null && m1 >= (P.back_month||15) ? 'good' : 'warn')+')">'+pct(m1)+'</b> (target '+(P.back_month||15)+'%) '+defLink('d1');
+    // daily
+    var days = (D.daily || []).map(function(x){ return { day:x.day, v:x.players || 0 }; });
+    bars($('#plDaily'), days.slice(-31), 'Players');
+    $('#pdSub').textContent = 'Players who started a puzzle, by day' + (days.length > 31 ? ' (last 31 days of the period).' : '.');
+    // loops
+    function t4(v, s, cls){ return '<div class="tile '+(cls||'')+'"><div class="big">'+(v==null?'–':num(v))+'</div><div class="s">'+esc(s)+'</div></div>'; }
+    var tap = L.app_prompt_views ? share(L.app_prompt_taps, L.app_prompt_views) : null;
+    $('#loops').innerHTML =
+      '<h3>Sharing</h3><div class="tiles four">' + t4(L.share_taps, 'share taps by '+num(L.share_players)+' players') + t4(L.share_arrivals, 'new visitors arrived') + t4(L.share_played, 'played') + t4(L.share_back, 'came back', L.share_played && share(L.share_back, L.share_played) < 30 ? 'warn' : 'good') + '</div>' +
+      (L.share_played ? '<p class="note">'+(L.share_played - L.share_back)+' of '+L.share_played+' who arrived through a share played once.</p>' : '') +
+      '<h3>League invites</h3><div class="tiles">' + t4(L.invites || null, (L.invites ? 'invites sent' : 'invites sent (not recorded yet)'), L.invites ? '' : 'none') + t4(L.joins, 'joined a league') + t4(L.joins_due ? L.joins_playing : null, L.joins_due ? 'still playing after 7 days, of '+L.joins_due : 'still playing after 7 days (none due yet)', L.joins_due ? '' : 'none') + '</div>' +
+      '<h3>Website to app</h3><div class="tiles">' + t4(L.app_prompt_views, '“Get the app” views') + t4(L.app_prompt_taps, 'taps'+(tap != null ? ' ('+tap+'%)' : ''), tap != null && tap < 10 ? 'bad' : '') + t4(null, 'then played in the app (can’t be linked)', 'none') + '</div>' +
+      '<h3>New in the app</h3><div class="tiles">' + t4(L.app_new, 'new app players') + t4(L.app_back, 'came back') + t4(L.app_regular, 'regulars (3+ days)', 'good') + '</div>';
+    // sources
+    var src = D.sources || [];
+    $('#plSources').innerHTML = src.length ? '<div class="srow h"><span>Source</span><span>Played</span><span>Back</span><span>Regular</span></div>' + src.map(function(s){
+      return '<div class="srow"><span>'+esc(s.src)+'</span><span>'+num(s.played)+'</span><span>'+num(s.came_back)+'</span><span><b>'+num(s.regular)+'</b></span></div>';
+    }).join('') : '<p class="empty">No new players in this period.</p>';
+  }
+
+  /* ---------------- PUZZLES ---------------- */
+  function bandMap(w){
+    var m = {}; Object.keys(BANDS).forEach(function(p){ var d = pubDate(p); if (d >= addDays(w.from, -60) && d <= w.to) m[p] = BANDS[p]; }); return m;
+  }
+  var bandsP = null;
+  function loadBands(){
+    if (!bandsP) bandsP = getJSON('feed-lite.json').then(function(j){
+      ((j && j.items) || []).forEach(function(i){ if (i.band && /logic-doku/.test(i.path)) BANDS[i.path] = i.band; if (i.path && !FEED[i.path]) FEED[i.path] = i; });
+    });
+    return bandsP;
+  }
+  function loadPuzzles(){
+    $('#scSub').textContent = 'Loading…';
+    loadBands().then(function(){ return call('admin_scorecard', { p_from: S.from, p_to: S.to, p_bands: bandMap(S) }); }).then(renderPuzzles);
+    loadArchiveStats();
+  }
+  function renderPuzzles(r){
+    if (!r || r.error || !r.data) { $('#scSub').textContent = setupMsg(r, 'admin_scorecard', 'admin_rebuild'); $('#scRows').innerHTML = ''; $('#bands').innerHTML = ''; $('#worst').innerHTML = ''; return; }
+    var V = verdicts(r.data), rows = V.rows, cnt = {};
+    rows.forEach(function(x){ cnt[x.v] = (cnt[x.v] || 0) + 1; });
+    var parts = ['Improve','Watch','Keep','Retire candidate','Too few'].filter(function(k){ return cnt[k]; }).map(function(k){ return cnt[k]+' '+k.toLowerCase(); });
+    var rt = rows.filter(function(x){ return x.v === 'Retire candidate'; });
+    var by = {}; rows.forEach(function(x){ by[x.key] = x; });
+    var reachTxt = V.reach && by[V.reach] ? NAME[V.reach]+', '+by[V.reach].r.pct_of_players+'%' : '–', backTxt = V.back && by[V.back] ? NAME[V.back]+', '+by[V.back].r.pct_returning+'%' : '–';
+    $('#scSub').innerHTML = esc(parts.join(' · ')) + '. ' + (rt.length ? '<b style="color:var(--bad)">Retire candidate: '+esc(NAME[rt[0].key])+'.</b>' : 'Retire: none. ' + (V.reach && V.reach === V.back ? esc(NAME[V.reach])+' is bottom on both reach and coming back this period; it needs the period before too.' : 'No type is bottom on both reach ('+esc(reachTxt)+') and coming back ('+esc(backTxt)+').')) + ' ' + defLink('verdict');
+    $('#scRows').innerHTML = rows.map(function(x){
+      var figs = x.checks.map(function(c){ return '<span class="'+(c.ok ? '' : 'miss')+'">'+esc(c.txt+' '+c.label)+(c.ok ? '' : ' ('+esc(c.target)+')')+'</span>'; });
+      if (x.gold != null) figs.push('<span class="'+(x.goldOff ? 'miss' : '')+'">gold '+Math.round(x.gold)+'%'+(x.goldOff ? (x.gold > ((TARGETS && TARGETS.gold_band) || [7,14])[1] ? ', above band' : ', below band') : '')+'</span>');
+      figs.unshift(esc(x.r.pct_of_players+'% of players · '+num(x.r.attempts)+' attempts'));
+      return '<div class="vrow" data-type="'+x.key+'"><div class="top"><b>'+esc(NAME[x.key])+'</b><span class="vp '+x.tone+'">'+esc(x.v)+'</span></div><div class="figs">'+figs.join(' · ')+'</div>'+
+        (x.next ? '<div class="nx"><b>Next:</b> '+esc(x.next)+(x.again ? ' (missed in the period before too)' : '')+'</div>' : '')+'</div>';
+    }).join('') || '<p class="empty">No puzzles played in this period.</p>';
+    // bands
+    var T = TARGETS && TARGETS.types && TARGETS.types.doku && TARGETS.types.doku.bands || {}, B = (r.data.bands || []).filter(function(b){ return b.slug === 'logic-doku'; });
+    if (!B.length) { $('#bands').innerHTML = '<p class="empty">'+(Object.keys(BANDS).length ? 'No Doku played in this period.' : 'Bands come from feed-lite.json on the published site.')+'</p>'; $('#bandNote').textContent = ''; }
+    else {
+      var scale = 600;
+      $('#bands').innerHTML = ['easy','medium','hard'].map(function(k){
+        var b = B.filter(function(x){ return x.band === k; })[0]; if (!b) return '';
+        var t = T[k] || {}, ok = (t.finished == null || b.pct_finished >= t.finished) && (t.p75_max == null || b.p75_secs <= t.p75_max) && (!t.secs || b.med_secs <= t.secs[1]);
+        var m = Math.min(100, 100 * (b.med_secs || 0) / scale), q = Math.max(0, Math.min(100, 100 * (b.p75_secs || 0) / scale) - m);
+        return '<div class="bandrow '+(ok ? '' : 'warn')+'"><span style="font-weight:600;text-transform:capitalize">'+k+'</span><span class="trk"><span class="med" style="width:'+m.toFixed(1)+'%"></span><span class="q" style="left:'+m.toFixed(1)+'%;width:'+q.toFixed(1)+'%"></span></span><span class="r">'+clock(b.med_secs)+' · '+b.pct_finished+'%'+(ok ? ' · on target' : '')+'</span></div>';
+      }).join('');
+      var hard = B.filter(function(x){ return x.band === 'hard'; })[0];
+      $('#bandNote').textContent = 'Scale 0–10 min.' + (hard ? ' Hard’s slowest quarter runs from '+clock(hard.p75_secs)+'; one in ten takes over '+clock(hard.p90_secs)+'.' : '');
+    }
+    // worst
+    var W = worstPuzzles(r.data), F = TARGETS && TARGETS.flags || { group_at:5, floor_won:{link:25}, floor_finished:40 }, grouped = {}, html = '';
+    W.forEach(function(x){ (grouped[x.key] = grouped[x.key] || []).push(x); });
+    $('#wpSub').innerHTML = W.length + ' flagged of ' + (r.data.puzzles || []).filter(function(p){ return DAILY.indexOf(KEY[p.slug]) >= 0; }).length + ' daily puzzles with '+(TARGETS && TARGETS.min_puzzle_players || 5)+'+ players. Each type’s worst '+(F.worst_pct||5)+'%, plus any under the floor. ' + defLink('worst');
+    var single = [];
+    Object.keys(grouped).forEach(function(k){
+      var g = grouped[k];
+      if (g.length >= (F.group_at || 5)) html += '<div class="fgroup"><b>'+esc(NAME[k])+': '+g.length+' flagged</b><span>A type problem, not one-offs. Worst: '+g.slice(0, 3).map(function(x){ return esc(puzName(x.p))+' ('+esc(flagText(x).split(' · ')[0])+')'; }).join(', ')+'.</span></div>';
+      else single = single.concat(g);
+    });
+    single.sort(function(a,b){ return (b.under?1:0)-(a.under?1:0) || (a.m==null?1:0)-(b.m==null?1:0) || (a.m||0)-(b.m||0); });
+    html += single.map(function(x){ return '<a class="frow" href="'+esc(x.p.path)+'" target="_blank" rel="noopener"><span><b>'+esc(puzName(x.p))+'</b> <span class="m">· '+esc(fmtDay(x.p.date))+'</span></span><span class="r '+(x.under ? 'bad' : 'warn')+'">'+esc(flagText(x))+'</span></a>'; }).join('');
+    $('#worst').innerHTML = html || '<p class="empty">Nothing flagged in this period.</p>';
+  }
+  // Archive use (6 Nov 2026)
+  function loadArchiveStats(){
+    call('admin_archive_stats', { p_from: S.from, p_to: S.to }).then(function(r){
       var el = $('#tArch');
-      if (!r || r.error || !r.data) { el.innerHTML = '<tbody><tr><td class="empty">'+(r && r.error && /admin_archive_stats|PGRST202|42883/.test(JSON.stringify(r.error)) ? 'Not set up yet: apply migration admin_archive_stats.' : 'Couldn’t load these figures.')+'</td></tr></tbody>'; return; }
+      if (!r || r.error || !r.data) { el.innerHTML = '<tbody><tr><td class="empty">'+esc(setupMsg(r, 'admin_archive_stats', 'admin_archive_stats'))+'</td></tr></tbody>'; return; }
       var weeks = r.data.weeks || [];
       if (!weeks.length) { el.innerHTML = '<tbody><tr><td class="empty">No archive or stats use in this period yet.</td></tr></tbody>'; return; }
       table(el, [
         {key:'week', label:'Week of', left:true, sort:function(w){ return w.week; }, fmt:function(w){ return '<span class="hl">'+esc(fmtDay(w.week))+'</span>'; }},
         {key:'archive_opens', label:'Archive opens', fmt:function(w){ return n(w.archive_opens); }},
         {key:'archive_plays', label:'Archive plays', fmt:function(w){
-          var t = w.by_type || {}, parts = Object.keys(t).sort(function(a,b){ return t[b]-t[a]; }).map(function(k){ return esc(TYPE_NAMES[k]||k)+' '+t[k]; });
+          var t = w.by_type || {}, parts = Object.keys(t).sort(function(a,b){ return t[b]-t[a]; }).map(function(k){ return esc(typeName(k))+' '+t[k]; });
           return n(w.archive_plays) + (parts.length ? '<span class="meta">'+parts.join(' · ')+'</span>' : ''); }},
         {key:'stats_opens', label:'Stats opens', fmt:function(w){ return n(w.stats_opens) + '<span class="meta">'+n(w.stats_visitors)+' '+plural(w.stats_visitors,'visitor')+'</span>'; }}
       ], weeks, { sortKey:'week', sortDir:'desc' });
     });
   }
-
-  /* ---------------- Lab trial (11 Nov 2026) ----------------
-     admin_lab: per Lab type, plays (players, starts, finishes, abandons, median time) and the votes. */
-  var LAB_NAMES = { tilt:'Tilt', redact:'Redact', tumbler:'Tumbler', cryptic:'Cryptic' };
-  function labRead(t){
-    var num = function(x){ return Number(x||0).toLocaleString('en-GB'); };
-    var name = LAB_NAMES[t.type] || t.type, votes = (t.yes||0) + (t.no||0), pts = [], head, tone;
-    if (!t.starters && !votes) return { name:name, tone:'', head:'No plays yet', pts:['Nobody started it in this period.'] };
-    var enough = votes >= 20, liked = t.pct_yes != null && t.pct_yes >= 70;
-    var readBack = (t.starters||0) >= 5 && t.returners != null, back = t.pct_returned;
-    var pull = !readBack ? null : back >= 40 ? 'strong' : back >= 20 ? 'some' : 'little';
-    // what they say
-    if (!votes) pts.push('No votes yet.');
-    else pts.push(num(t.yes)+' Yes, '+num(t.no)+' No: '+t.pct_yes+'% Yes from '+num(votes)+' '+plural(votes,'voter')+
-      (enough ? (liked ? ', clearing the 70% bar.' : ', below the 70% bar.') : ', too few to call (bar about 20).'));
-    // what they do
-    if (t.starters && t.returners != null) pts.push(num(t.starters)+' '+plural(t.starters,'player')+' started it'+(t.trial_days ? ' over '+t.trial_days+' '+plural(t.trial_days,'day') : '')+'; '+
-      num(t.returners)+' came back on another day ('+(back||0)+'%)'+(t.regulars ? ', '+num(t.regulars)+' on 3+ days' : '')+
-      (readBack ? (pull === 'strong' ? ': a strong pull.' : pull === 'some' ? ': some pull.' : ': most played once.') : ' (too few players to read yet).'));
-    if (t.pct_finished != null) pts.push(t.pct_finished+'% of players finished at least once'+(t.median_solve_secs != null ? ', median time '+fmtSecs(t.median_solve_secs) : '')+
-      (t.pct_abandoned != null && t.pct_abandoned >= 40 ? '. '+t.pct_abandoned+'% of starts were abandoned: it may be too hard or unclear.' : '.'));
-    // headline
-    if (!enough) {
-      tone = 'warn'; head = 'Too early to call';
-      if (pull === 'strong') head += ', but players keep coming back';
-      else if (pull === 'little') head += ', and few come back so far';
-    } else if (liked && pull !== 'little') { tone = 'good'; head = pull === 'strong' ? 'Looks like a daily: liked and returned to' : 'Liked: clears the vote bar'; }
-    else if (liked) { tone = 'warn'; head = 'Liked, but few come back'; }
-    else if (pull === 'strong') { tone = 'warn'; head = 'Split vote, but players keep coming back'; }
-    else { tone = 'bad'; head = 'Not landing: below the bar and few return'; }
-    return { name:name, tone:tone, head:head, pts:pts };
+  // Puzzles by day and Find any puzzle read admin_dashboard, only when opened.
+  function dashData(){
+    return call('admin_dashboard', { p_from: S.from, p_to: S.to, p_ghosts: S.ghosts }).then(function(r){ if (!r.error) S.data = r.data || {}; return r; });
   }
-  function fmtSecs(x){ return x == null ? '–' : Math.floor(x/60)+':'+String(x%60).padStart(2,'0'); }
-  function loadLabStats(seq){
-    return sb.rpc('admin_lab', { p_from: S.from, p_to: S.to }).then(function(r){ return r; }, function(e){ return { error: e }; }).then(function(r){
-      if (seq != null && seq !== loadSeq) return;
-      var el = $('#tLab'), rd = $('#labRead');
-      if (!r || r.error || !r.data) { rd.innerHTML = ''; el.innerHTML = '<tbody><tr><td class="empty">'+(r && r.error && /admin_lab|PGRST202|42883/.test(JSON.stringify(r.error)) ? 'Not set up yet: apply migration lab_votes.' : 'Couldn’t load these figures.')+'</td></tr></tbody>'; return; }
-      var types = r.data.types || [];
-      var hasBack = types.some(function(t){ return t.returners != null; });
-      rd.innerHTML = types.map(function(t){
-        var x = labRead(t);
-        return '<div class="lr '+x.tone+'" data-type="'+esc(t.type)+'"><h3>'+esc(x.name)+': <span>'+esc(x.head)+'</span></h3><ul>'+x.pts.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join('')+'</ul></div>';
-      }).join('') + (hasBack ? '' : '<p class="labnote">Coming back isn’t available yet: apply migration lab_readout.</p>');
-      table(el, [
-        {key:'type', label:'Puzzle', left:true, sort:function(t){ return t.type; }, fmt:function(t){ return '<span class="hl">'+esc(LAB_NAMES[t.type]||t.type)+'</span>'; }},
-        {key:'players', label:'Played by', def:'labplayers', fmt:function(t){ return n(t.players) + '<span class="meta">'+n(t.starters)+' started</span>'; }},
-        {key:'returners', label:'Came back', def:'labback', sort:function(t){ return t.pct_returned == null ? -1 : t.pct_returned; }, fmt:function(t){ return t.returners == null ? '–' : n(t.returners) + '<span class="meta">'+(t.pct_returned != null ? t.pct_returned+'% · ' : '')+n(t.regulars)+' on 3+ days</span>'; }},
-        {key:'finishers', label:'Finished', def:'labfinish', fmt:function(t){ return n(t.finishers) + (t.pct_finished != null ? '<span class="meta">'+t.pct_finished+'% of starters</span>' : ''); }},
-        {key:'abandons', label:'Abandoned', fmt:function(t){ return n(t.abandons) + (t.pct_abandoned != null ? '<span class="meta">'+t.pct_abandoned+'% of starts</span>' : ''); }},
-        {key:'median_solve_secs', label:'Median time', fmt:function(t){ return fmtSecs(t.median_solve_secs); }},
-        {key:'yes', label:'Votes', def:'labvotes', fmt:function(t){ var v=(t.yes||0)+(t.no||0); return v ? n(t.yes)+' yes · '+n(t.no)+' no<span class="meta">'+t.pct_yes+'% yes · app '+n(t.app.yes)+'/'+n(t.app.no)+' · web '+n(t.web.yes)+'/'+n(t.web.no)+'</span>' : '–'; }}
-      ], types, { sortKey:'type', sortDir:'asc' });
-    });
-  }
-
-  /* ---------------- render ---------------- */
-  function sec(D, s){ var x = (D && D.sections || []).filter(function(r){ return r.section === s; })[0]; return x ? x.readers : 0; }
-  function piecesIn(from, to){
-    return feedList().filter(function(f){ return f.kind === 'report' && f.date >= from && f.date <= to; })
-      .sort(function(a,b){ return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
-  }
-  function newsItems(D){ return (D && D.items || []).filter(function(i){ return i.section === 'news'; }); }
-  function articleOpens(D){ var K = D.kpis || {}; return K.article_opens != null ? K.article_opens : newsItems(D).reduce(function(a,i){ return a + (i.page_loads||0); }, 0); }
-
-  function render(){
-    var D = S.data || {};
-    var gen = D.generated_at ? new Date(D.generated_at) : new Date();
-    $('#updated').textContent = 'Updated ' + gen.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    $('#genAt').textContent = 'generated ' + gen.toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'});
-    $('#exclCount').textContent = D.excluded_readers || 0;
-    $('#ghosts').setAttribute('aria-checked', String(S.ghosts));
-    $('#cmp').setAttribute('aria-checked', String(S.compare));
-    $('#ghostS').innerHTML = (D.ghost_readers != null ? n(D.ghost_readers) + ' in this period · ' : '') + 'mostly crawlers; hidden by default';
-    rangeLabel();
-    renderOverview(); renderNews(); renderPuzzles(); renderGames();
-  }
-
-  function delta(cur, prev){
-    if (prev == null || cur == null) return '';
-    if (cur === prev) return '<div class="d">Same as before</div>';
-    var up = cur > prev;
-    return '<div class="d '+(up?'up':'down')+'"><svg width="10" height="9" viewBox="0 0 10 9" aria-hidden="true" style="margin-right:4px;vertical-align:0"><path d="'+(up?'M5 0 10 9H0z':'M0 0h10L5 9z')+'" fill="currentColor"/></svg><span class="sr">'+(up?'Up':'Down')+'</span>from '+n(prev)+'</div>';
-  }
-
-  function renderOverview(){
-    var D = S.data, K = D.kpis || {}, P = S.prev && S.prev.kpis || null;
-    var pieces = piecesIn(S.from, S.to), seen = {};
-    newsItems(D).forEach(function(i){ if (i.readers > 0) seen[i.item_path] = true; });
-    var opened = pieces.filter(function(f){ return seen[f.path]; }).length, opens = articleOpens(D);
-    var ret = share(K.returning_readers, K.readers);
-    var sr = share(K.puzzles_solved, K.solvable_starts != null ? K.solvable_starts : K.puzzle_starts);
-    var pz = sec(D,'puzzles'), gm = sec(D,'games');
-    var tiles = [
-      { label:'Readers', sec:'', v:K.readers, d:delta(K.readers, P && P.readers),
-        n: K.readers ? n(K.returning_readers||0)+' came back ('+ret+'%)' : '', def:'readers' },
-      { label:'Articles opened', sec:'news', v:opens,
-        d: pieces.length ? '<div class="d'+(opened < pieces.length/2 ? ' warn' : '')+'">'+opened+' of '+pieces.length+' new '+plural(pieces.length,'piece')+'</div>' : delta(opens, P && P.article_opens),
-        n: K.article_readers != null ? 'by '+n(K.article_readers)+' '+plural(K.article_readers,'reader') : '', def:'articles' },
-      { label:'Puzzles solved', sec:'puzzles', v:K.puzzles_solved, d:delta(K.puzzles_solved, P && P.puzzles_solved),
-        n: (sr!=null ? sr+'% of starts · ' : '') + n(pz)+' '+plural(pz,'player'), def:'solved' },
-      { label:'Game rounds', sec:'games', v:K.game_runs, d:delta(K.game_runs, P && P.game_runs),
-        n: n(gm)+' '+plural(gm,'player'), def:'runs' }
-    ];
-    $('#kpis').innerHTML = tiles.map(function(t){
-      return '<div class="kpi"'+(t.sec?' data-sec="'+t.sec+'"':'')+'><div class="k">'+(t.sec?'<span class="dot" aria-hidden="true"></span>':'')+'<span>'+t.label+'</span>'+defLink(t.def)+'</div>'+
-        '<div class="v">'+n(t.v)+'</div>'+(t.d||'')+'<div class="n">'+t.n+'</div></div>';
-    }).join('');
-
-    /* readers per day: complete days, then today hollow */
-    var today = londonToday();
-    var days = (D.daily || []).map(function(d){ return { day:d.day, v:d.readers||0, so:d.day===today }; });
-    if (S.today && S.today.daily && S.today.daily.length && S.to < today) days.push({ day: today, v: S.today.daily[0].readers || 0, so: true });
-    if (!days.length) { $('#daily').innerHTML = '<p class="empty">Nothing recorded in this period.</p>'; }
-    else {
-      var top = Math.max.apply(null, days.map(function(d){ return d.v; }).concat([1])), many = days.length > 14, step = Math.ceil(days.length / 6);
-      // a round axis top (1, 2, 5 × 10^k, even so the halfway line is whole) and three labelled lines
-      var mag = Math.pow(10, Math.floor(Math.log10(top))), max = [1,2,3,4,5,6,8,10,12,15,20,25,30,40,50,60,80,100].map(function(k){ return k*mag/10; })
-        .filter(function(v){ return v >= top && v === Math.round(v) && (v % 2 === 0 || v === 1); })[0] || 10*mag;
-      var grid = [0, max/2, max].filter(function(v, i){ return i !== 1 || max >= 2; }).map(function(v){
-        return '<div class="grid" aria-hidden="true" style="bottom:'+Math.round(110*v/max)+'px"><span>'+v+'</span></div>'; }).join('');
-      var cols = 'grid-template-columns:repeat('+days.length+',minmax(0,1fr))';
-      var label = 'Readers per day: ' + days.map(function(d){ return fmtDay(d.day)+' '+d.v+(d.so?' so far':''); }).join(', ');
-      $('#daily').innerHTML = '<div class="chart"><div class="bars" role="img" aria-label="'+esc(label)+'" style="'+cols+'">'+grid+days.map(function(d, i){
-        var h = d.so && !d.v ? 6 : Math.max(1, Math.round(110 * d.v / max));
-        return '<div class="c" data-i="'+i+'" title="'+esc(fmtDay(d.day)+': '+d.v+(d.so?' so far':''))+'">'+(MARKS[d.day] && !many ? '<span class="mk">'+esc(MARKS[d.day])+'</span>' : '')+
-          (many ? '' : '<span class="v num">'+d.v+'</span>')+'<div class="b'+(d.so?' so':'')+'" style="height:'+h+'px"></div></div>';
-      }).join('')+'</div></div><div class="barlab" aria-hidden="true" style="'+cols+'">'+days.map(function(d,i){
-        var show = d.so || !many || (i % step === 0 && i < days.length - step);
-        var txt = d.so ? 'Today' : many ? fmtDay(d.day) : shortDay(d.day);
-        return '<span'+(d.so?' class="tdy"':'')+'>'+(show?esc(txt):'')+'</span>';
-      }).join('')+'</div><p class="pick" id="dailyPick" aria-live="polite"></p>';
-      var tot = days.filter(function(d){ return !d.so; }), pk = tot.slice().sort(function(a,b){ return b.v - a.v; })[0];
-      var summary = tot.length ? 'Peak <b>'+pk.v+'</b> on '+esc(fmtWeekday(pk.day))+' · average <b>'+(tot.reduce(function(a,d){ return a + d.v; }, 0) / tot.length).toFixed(1)+'</b> a day · tap a bar for its figure' : '';
-      $('#dailyPick').innerHTML = summary;
-      $$('#daily .c').forEach(function(c){ c.onclick = function(){
-        var d = days[+c.dataset.i], was = c.classList.contains('on');
-        $$('#daily .c.on').forEach(function(x){ x.classList.remove('on'); });
-        if (was) { $('#dailyPick').innerHTML = summary; return; }
-        c.classList.add('on');
-        $('#dailyPick').innerHTML = '<b>'+esc(fmtWeekday(d.day))+'</b>: <b>'+d.v+'</b> '+plural(d.v,'reader')+(d.so ? ' so far today' : '')+(MARKS[d.day] ? ' ('+esc(MARKS[d.day])+')' : '');
-      }; });
-    }
-    $('#dailySub').textContent = days.some(function(d){ return d.so; }) ? 'Today is drawn hollow until the day is over.' : 'Unique readers each day.';
-
-    renderSignals(pieces, opened);
-    renderAudience();
-  }
-
-  function renderSignals(pieces, opened){
-    var D = S.data, sig = [];
-    (D.puzzle_types || []).forEach(function(t){
-      var srt = t.is_scored ? null : share(t.solved, t.starts), ab = share(t.abandoned, t.starts), name = TYPE_NAMES[t.type] || t.type;
-      if (t.starts < 5) return;
-      var hard = srt != null && srt < 40, left = ab != null && ab > 40;
-      if (hard && left) sig.push(['bad', name, srt+'% of '+t.starts+' starts solved and '+ab+'% left unfinished.', 'puzzles']);
-      else if (hard) sig.push(['warn', name, 'Only '+srt+'% of '+t.starts+' starts solved.', 'puzzles']);
-      else if (left) sig.push(['warn', name, ab+'% of '+t.starts+' starts left unfinished.', 'puzzles']);
-    });
-    if (pieces.length >= 3 && opened < pieces.length / 2)
-      sig.push(['warn', 'News', (pieces.length - opened)+' of the '+pieces.length+' pieces published in this period show no readers (your excluded devices aren’t counted).', 'news']);
-    newsItems(D).forEach(function(i){
-      if (i.readers>=5 && i.pct_read_75!=null && i.pct_read_75<30) sig.push(['warn','Read-through','“'+title(i.item_path)+'”: only '+i.pct_read_75+'% of '+i.readers+' readers reached 75%.', 'news']);
-      if (i.readers>=5 && i.pct_bounced!=null && i.pct_bounced>60) sig.push(['bad','Bounce','“'+title(i.item_path)+'”: '+i.pct_bounced+'% left within 10 seconds.', 'news']);
-    });
-    var tp = (D.puzzle_types || []).slice().sort(function(a,b){ return b.players - a.players; })[0];
-    if (tp && tp.players >= 2) sig.push(['good', TYPE_NAMES[tp.type] || tp.type, 'Most played puzzle: '+tp.players+' players'+(tp.is_scored ? (tp.median_score!=null ? ', median '+tp.median_score+' points' : '') : tp.starts ? ', '+share(tp.solved,tp.starts)+'% solved' : '')+'.', 'puzzles']);
-    var tg = (D.games || []).slice().sort(function(a,b){ return b.players - a.players || b.runs - a.runs; })[0];
-    if (tg && tg.players >= 2) sig.push(['good', 'Games', 'Most played game: '+gameName(tg.game)+', '+tg.players+' players and '+tg.runs+' rounds.', 'games']);
-    if ((D.ghost_readers || 0) >= 10 && !S.ghosts) sig.push(['info', 'Note', Number(D.ghost_readers).toLocaleString('en-GB')+' one-page readers (mostly crawlers) are left out of these figures.', 'basis']);
-    if (!sig.length) sig.push(['info', 'Nothing flagged', (D.kpis||{}).readers ? 'Nothing has passed a threshold yet. Most need at least 5 readers or starts.' : 'No readers recorded in this period.', 'basis']);
-    $('#signals').innerHTML = sig.slice(0, 6).map(function(s){
-      return '<button type="button" class="sig '+s[0]+'" data-go="'+s[3]+'"><span class="tag">'+esc(s[1])+'</span><span>'+esc(s[2])+'</span></button>';
-    }).join('');
-  }
-
-  function renderAudience(){
-    var D = S.data;
-    var mix = (D.mix || []).slice().sort(function(a,b){ return b.readers - a.readers; });
-    hbars($('#mix'), mix.map(function(m){ return { label: m.mix, value: m.readers, sec: m.mix === 'News' ? 'news' : m.mix === 'Puzzles' ? 'puzzles' : m.mix === 'Games' ? 'games' : '' }; }));
-    table($('#tCohorts'), [
-      {key:'week', label:'First week', left:true, fmt:function(r){ return 'w/c '+fmtDay(r.week); }},
-      {key:'new_readers', label:'New', def:'new', fmt:function(r){return n(r.new_readers);}},
-      {key:'came_back', label:'Came back', def:'returning', fmt:function(r){return n(r.came_back);}},
-      {key:'rate', label:'Rate', sort:function(r){return share(r.came_back,r.new_readers);}, fmt:function(r){ var v=share(r.came_back,r.new_readers); return v==null?pct(v):'<span class="pill '+tone(v,30,15,true)+'">'+v+'%</span>'; }}
-    ], D.cohorts || [], { sortKey:'week', sortDir:'desc' });
-    var dev = (D.devices || []).slice(), order = ['phone','tablet','desktop','unknown'];
-    dev.sort(function(a,b){ return order.indexOf(a.screen)-order.indexOf(b.screen); });
-    $('#devLine').textContent = dev.length ? dev.map(function(d){ return d.screen.charAt(0).toUpperCase()+d.screen.slice(1)+' '+d.readers; }).join(' · ') + '. By screen width when the page opened: phone under 480px, tablet under 1024px.' : 'Nothing recorded in this period.';
-
-    var pos = D.positions || [];
-    if (!pos.length) emptyChart('chPos');
-    else {
-      var labels = []; for (var i=1;i<=11;i++) labels.push(i===11?'11+':String(i));
-      var secs = ['news','puzzles','games'].filter(function(s){ return pos.some(function(p){return p.section===s;}); });
-      chart('chPos',{ type:'bar', data:{ labels:labels, datasets:secs.map(function(s){ return { label:s.charAt(0).toUpperCase()+s.slice(1), backgroundColor:css('--'+s), borderRadius:2,
-          data:labels.map(function(_,ix){ var p=pos.filter(function(q){return q.section===s && q.pos===ix+1;})[0]; return p?p.taps:0; }) }; }) },
-        options:{ maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}, scales:{ x:{grid:{display:false}, title:{display:true,text:'Position in list'}}, y:{beginAtZero:true,ticks:{precision:0}} } } });
-    }
-    table($('#tCards'), [
-      {key:'item_path', label:'Card', left:true, sort:function(r){return title(r.item_path);}, fmt:function(r){ return '<a class="hl" href="'+esc(r.item_path)+'" target="_blank" rel="noopener">'+esc(title(r.item_path))+'</a><span class="meta">'+esc(r.section === 'news' ? 'News list' : r.section)+'</span>'; }},
-      {key:'taps', label:'Taps', def:'taps', fmt:function(r){return n(r.taps);}},
-      {key:'avg_pos', label:'Avg pos', def:'avgpos', fmt:function(r){return r.avg_pos==null?pct(null):r.avg_pos;}}
-    ], D.cards || [], { sortKey:'taps', limit:10 });
-  }
-
-  /* ---------------- news ---------------- */
-  function renderNews(){
-    var D = S.data;
-    var list = (D.front_pages || []).filter(function(f){ return f.page === 'index.html'; })[0];
-    $('#nwList').innerHTML = D.front_pages ? n(list ? list.readers : 0) : n(null);
-    var opens = articleOpens(D), pcs = newsItems(D).length;
-    $('#nwOpens').innerHTML = n(opens);
-    $('#nwOpensS').textContent = plural(opens,'article open')+(pcs ? ', across '+pcs+' '+plural(pcs,'piece') : '');
-
-    var items = {}; newsItems(D).forEach(function(i){ items[i.item_path] = i; });
-    var pieces = piecesIn(S.from, S.to), opened = pieces.filter(function(f){ return items[f.path] && items[f.path].readers > 0; }).length;
-    $('#pubPiecesSub').textContent = pieces.length ? pieces.length+' '+plural(pieces.length,'piece')+' · '+opened+' opened' : 'No pieces dated in this period.';
-    $('#psNone').textContent = 'Not opened (' + (pieces.length - opened) + ')';
-    $$('[data-psort]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.psort === S.psort)); });
-    var rows = pieces.slice();
-    if (S.psort === 'read') rows.sort(function(a,b){ return ((items[b.path]||{}).readers||0) - ((items[a.path]||{}).readers||0); });
-    if (S.psort === 'none') rows = rows.filter(function(f){ return !(items[f.path] && items[f.path].readers > 0); });
-    var cap = S.piecesAll ? rows.length : 6;
-    $('#pieces').innerHTML = (rows.length ? rows.slice(0, cap).map(function(f){
-      var it = items[f.path];
-      return '<div class="row"><div><a class="hl" href="'+esc(f.path)+'" target="_blank" rel="noopener">'+esc(f.headline)+'</a><div class="meta">'+esc([f.topic, fmtDay(f.date)].filter(Boolean).join(' · '))+'</div></div>'+
-        (it && it.readers ? '<div class="cnt"><b class="num">'+n(it.readers)+'</b> '+plural(it.readers,'reader')+'</div>' : '<div class="cnt none">No readers</div>')+'</div>';
-    }).join('') : '<p class="empty">Nothing to show.</p>') +
-      (rows.length > cap ? '<div class="row" style="padding:2px 0"><button type="button" class="linkbtn" id="piecesMore">Show all '+rows.length+'</button></div>' : '');
-    var pm = $('#piecesMore'); if (pm) pm.onclick = function(){ S.piecesAll = true; renderNews(); };
-
-    renderOpened();
-
-    var big = newsItems(D).filter(function(i){ return i.readers >= 5; });
-    $('#newsCharts').hidden = !big.length; $('#newsChartsNote').hidden = !!big.length;
-    if (big.length) {
-      var topics = {}; newsItems(D).forEach(function(i){ var t=i.topic||'Untagged'; topics[t]=(topics[t]||0)+i.readers; });
-      hbars($('#topics'), Object.keys(topics).sort(function(a,b){ return topics[b]-topics[a]; }).map(function(k){ return { label:k, value:topics[k], sec:'news' }; }));
-      var sc = big.filter(function(i){ return i.median_secs!=null && i.pct_read_75!=null; });
-      if (!sc.length) emptyChart('chScatter', 'Needs articles with timings.');
-      else chart('chScatter',{ type:'bubble', data:{ datasets:[{ label:'Articles', data:sc.map(function(i){ return {x:i.median_secs, y:i.pct_read_75, r:Math.max(4, Math.min(16, 3+Math.sqrt(i.readers)*2)), t:title(i.item_path), n:i.readers}; }),
-          backgroundColor:css('--news-soft'), borderColor:css('--news') }]},
-        options:{ maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:function(c){ var p=c.raw; return p.t+' — '+p.n+' readers, '+p.y+'% read to 75%, median '+Math.round(p.x)+'s'; } } } },
-          scales:{ x:{ title:{display:true,text:'Median seconds on page'}, beginAtZero:true }, y:{ title:{display:true,text:'% reaching 75%'}, min:0, max:100 } } } });
-    }
-  }
-  function renderOpened(){
-    var q = $('#qNews').value.trim().toLowerCase();
-    var rows = newsItems(S.data).filter(function(i){ return !q || (title(i.item_path)+' '+i.item_path+' '+(i.topic||'')).toLowerCase().indexOf(q) >= 0; })
-      .sort(function(a,b){ return b.readers - a.readers || b.page_loads - a.page_loads; });
-    $('#opened').innerHTML = rows.length ? rows.map(function(i){
-      var bits = [i.topic, fmtDay(pubDate(i.item_path))];
-      if (i.median_secs != null) bits.push(dur(i.median_secs)+' on page');
-      if (i.pct_read_75 != null) bits.push(i.pct_read_75+'% read to 75%');
-      if (i.pct_bounced != null && i.pct_bounced > 50) bits.push(i.pct_bounced+'% left within 10s');
-      if (i.charts_seen) bits.push(i.charts_seen+' '+plural(i.charts_seen,'chart')+' seen');
-      if (i.sources_opened) bits.push(i.sources_opened+' '+plural(i.sources_opened,'source')+' opened');
-      return '<div class="row"><div><a class="hl" href="'+esc(i.item_path)+'" target="_blank" rel="noopener">'+esc(title(i.item_path))+'</a><div class="meta">'+esc(bits.filter(Boolean).join(' · '))+'</div></div>'+
-        '<div class="cnt"><b class="num">'+n(i.readers)+'</b> '+plural(i.readers,'reader')+'</div></div>';
-    }).join('') : '<p class="empty">'+(q ? 'No opened article matches that.' : 'No articles opened in this period.')+'</p>';
-  }
-
-  /* ---------------- puzzles ---------------- */
-  function dayList(){
-    var out = [], d = S.from, today = londonToday();
-    while (d <= S.to) { out.push(d); d = addDays(d, 1); }
-    if (S.today && S.to < today) out.push(today);
-    return out;
-  }
-  function resultCell(r){
-    var bits = [];
-    if (r.median_got != null) bits.push(r.median_got + (r.of_n ? ' of ' + r.of_n : '') + ' named');
-    if (r.median_score != null) bits.push(r.median_score + ' pts');
-    if (r.median_words != null) bits.push(r.median_words + ' words');
-    if (r.avg_mistakes != null) bits.push(r.avg_mistakes + ' mistakes');
-    return bits.length ? esc(bits.join(' · ')) : '<span class="dash">–</span>';
-  }
+  $('#byDay').addEventListener('toggle', function(){ if (this.open) dashData().then(function(){ renderDay(); }); });
+  $('#findAny').addEventListener('toggle', function(){ if (this.open) dashData().then(function(){ renderPuzList(); }); });
+  function dayList(){ var out = [], d = S.from; while (d <= S.to) { out.push(d); d = addDays(d, 1); } return out; }
   function renderDay(){
+    if (!S.data) return;
     var days = dayList(); if (!days.length) return;
     if (!S.day || days.indexOf(S.day) < 0) S.day = S.to;
-    var i = days.indexOf(S.day), today = londonToday(), yest = addDays(today, -1);
+    var i = days.indexOf(S.day), yest = addDays(londonToday(), -1);
     $('#dayPrev').disabled = i <= 0; $('#dayNext').disabled = i >= days.length - 1;
-    $('#dayTitle').textContent = (S.day === today ? 'Today so far · ' : S.day === yest ? 'Yesterday · ' : '') + fmtWeekday(S.day);
-    var src = S.day === today && S.to < today ? (S.today || {}) : S.data, items = {};
-    (src.items || []).forEach(function(it){ if (it.section === 'puzzles' && it.item_path.indexOf('reports/'+S.day+'-') === 0) items[it.item_path] = it; });
+    $('#dayTitle').textContent = (S.day === yest ? 'Yesterday · ' : '') + fmtWeekday(S.day);
+    var items = {};
+    (S.data.items || []).forEach(function(it){ if (it.section === 'puzzles' && it.item_path.indexOf('reports/'+S.day+'-') === 0) items[it.item_path] = it; });
     var paths = {};
     feedList().forEach(function(f){ if (f.kind === 'puzzle' && f.date === S.day) paths[f.path] = f; });
     Object.keys(items).forEach(function(p){ if (!paths[p]) paths[p] = { path:p, headline:title(p) }; });
-    var rows = Object.keys(paths).map(function(p){ return paths[p]; })
-      .sort(function(a,b){ return TYPE_ORDER.indexOf(ptype(a.path)) - TYPE_ORDER.indexOf(ptype(b.path)); });
+    var order = TYPES.map(function(t){ return t[0]; });
+    var rows = Object.keys(paths).map(function(p){ return paths[p]; }).sort(function(a,b){ return order.indexOf(ptype(a.path)) - order.indexOf(ptype(b.path)); });
     $('#dayRows').innerHTML = rows.length ? '<div class="prow day h"><span>Puzzle</span><span>Players</span><span>Median</span><span>Solved</span></div>' + rows.map(function(f){
       var it = items[f.path], t = ptype(f.path), line, res, typical = '<span class="dash">–</span>';
       if (!it || !it.readers) { line = 'No plays'; res = '<span class="dash">–</span>'; }
       else if (isScoredType(t)) {
-        line = n(it.starts)+' '+plural(it.starts,'round')+' started';
-        res = '<span class="dash">–</span>';
+        line = n(it.starts)+' '+plural(it.starts,'round')+' started'; res = '<span class="dash">–</span>';
         if (it.median_score != null) typical = n(it.median_score)+' pts'; else if (it.median_got != null) typical = it.median_got+(it.of_n?'/'+it.of_n:'');
       } else {
         line = n(it.solved)+' of '+n(it.starts)+' solved'+(it.failed ? ', '+it.failed+' failed' : '');
@@ -1316,77 +1510,307 @@
   }
   $('#dayPrev').onclick = function(){ var d = dayList(), i = d.indexOf(S.day); if (i > 0) { S.day = d[i-1]; renderDay(); } };
   $('#dayNext').onclick = function(){ var d = dayList(), i = d.indexOf(S.day); if (i < d.length - 1) { S.day = d[i+1]; renderDay(); } };
-
-  function renderPuzzles(){
-    var D = S.data, types = D.puzzle_types || [];
-    renderDay();
-    table($('#tTypes'), [
-      {key:'type', label:'Type', left:true, fmt:function(r){ return esc(TYPE_NAMES[r.type]||r.type); }, sort:function(r){ return TYPE_NAMES[r.type]||r.type; }},
-      {key:'players', label:'Players', def:'readers', fmt:function(r){return n(r.players);}},
-      {key:'sr', label:'Solved', def:'solved', sort:function(r){return r.is_scored?null:share(r.solved,r.starts);}, fmt:function(r){ if(r.is_scored) return r.median_score!=null ? n(r.median_score)+' pts' : '<span class="dash">scored</span>'; var v=share(r.solved,r.starts); return v==null?pct(v):'<span class="pill '+tone(v,60,40,true)+'">'+v+'%</span>'; }},
-      {key:'ab', label:'Unfinished', def:'abandoned', sort:function(r){return share(r.abandoned,r.starts);}, fmt:function(r){ var v=share(r.abandoned,r.starts); return v==null?pct(v):v>40?'<span class="pill bad">'+v+'%</span>':v+'%'; }},
-      {key:'median_solve_secs', label:'Time', def:'solvetime', fmt:function(r){return dur(r.median_solve_secs);}},
-      {key:'res', label:'Result', def:'result', left:true, sort:function(r){return r.median_score!=null?r.median_score:r.median_got!=null?r.median_got:r.avg_mistakes;}, fmt:resultCell},
-      {key:'help', label:'Used help', def:'help', sort:function(r){return share(r.used_help,r.finished);}, fmt:function(r){return pct(share(r.used_help,r.finished));}}
-    ], types, { sortKey:'players' });
-    var tOrder = types.slice().sort(function(a,b){ return b.page_loads-a.page_loads; });
-    if (!tOrder.length) emptyChart('chFunnel');
-    else chart('chFunnel', { type:'bar', data:{ labels:tOrder.map(function(t){ return TYPE_NAMES[t.type]||t.type; }), datasets:[
-        { label:'Opened, not started', data:tOrder.map(function(t){return t.page_loads - t.starts;}), backgroundColor:css('--hair'), stack:'s' },
-        { label:'Unfinished', data:tOrder.map(function(t){return t.abandoned;}), backgroundColor:css('--warn'), stack:'s' },
-        { label:'Revealed', data:tOrder.map(function(t){return t.revealed;}), backgroundColor:css('--faint'), stack:'s' },
-        { label:'Failed', data:tOrder.map(function(t){return t.failed;}), backgroundColor:css('--bad'), stack:'s' },
-        { label:'Solved', data:tOrder.map(function(t){return t.solved;}), backgroundColor:css('--puzzles'), stack:'s' },
-        { label:'Scored round', data:tOrder.map(function(t){return t.scored||0;}), backgroundColor:css('--good-soft'), borderColor:css('--puzzles'), borderWidth:1, stack:'s' } ]},
-      options:{ maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}, scales:{ x:{stacked:true,grid:{display:false}}, y:{stacked:true,beginAtZero:true,ticks:{precision:0}} } } });
-    renderPuzList();
-  }
   function renderPuzList(){
+    if (!S.data) return;
     var q = $('#qPuz').value.trim().toLowerCase(), on = !!(q || S.puzAll);
     var played = (S.data.items||[]).filter(function(i){ return i.section==='puzzles' && /^reports\//.test(i.item_path); });
-    var rows = played.filter(function(i){ return !q || (title(i.item_path)+' '+i.item_path+' '+(TYPE_NAMES[ptype(i.item_path)]||'')).toLowerCase().indexOf(q)>=0; });
+    var rows = played.filter(function(i){ return !q || (title(i.item_path)+' '+i.item_path+' '+typeName(ptype(i.item_path))).toLowerCase().indexOf(q)>=0; });
     $('#puzBox').hidden = !on; $('#puzAll').hidden = on;
     $('#puzAll').textContent = 'Show every puzzle played (' + played.length + ')';
     var more = $('#puzBox').nextElementSibling; if (!on && more && more.classList.contains('more-btn')) more.remove();
     if (!on) return;
     table($('#tPuz'), [
       {key:'item_path', label:'Puzzle', left:true, sort:function(r){return title(r.item_path);}, fmt:function(r){ return '<a class="hl" href="'+esc(r.item_path)+'" target="_blank" rel="noopener">'+esc(title(r.item_path))+'</a><span class="meta">'+esc(fmtDate(pubDate(r.item_path)))+'</span>'; }},
-      {key:'readers', label:'Players', def:'readers', fmt:function(r){return n(r.readers);}},
-      {key:'starts', label:'Started', def:'started', fmt:function(r){return n(r.starts);}},
-      {key:'pct_solved', label:'Solved', def:'solved', fmt:function(r){ if(r.is_scored) return r.median_score!=null ? n(r.median_score)+' pts' : '<span class="dash">scored</span>'; return r.pct_solved==null?pct(null):'<span class="pill '+tone(r.pct_solved,60,40,true)+'">'+r.pct_solved+'%</span>'; }},
-      {key:'failed', label:'Failed', def:'failed', fmt:function(r){return n(r.failed);}},
-      {key:'revealed', label:'Revealed', def:'revealed', fmt:function(r){return n(r.revealed);}},
-      {key:'median_solve_secs', label:'Time', def:'solvetime', fmt:function(r){return dur(r.median_solve_secs);}}
+      {key:'readers', label:'Players', fmt:function(r){return n(r.readers);}},
+      {key:'starts', label:'Started', fmt:function(r){return n(r.starts);}},
+      {key:'pct_solved', label:'Solved', fmt:function(r){ if(r.is_scored) return r.median_score!=null ? n(r.median_score)+' pts' : '<span class="dash">scored</span>'; return r.pct_solved==null?pct(null):'<span class="pill '+tone(r.pct_solved,60,40,true)+'">'+r.pct_solved+'%</span>'; }},
+      {key:'failed', label:'Failed', fmt:function(r){return n(r.failed);}},
+      {key:'revealed', label:'Revealed', fmt:function(r){return n(r.revealed);}},
+      {key:'median_solve_secs', label:'Time', def:'median', fmt:function(r){return dur(r.median_solve_secs);}}
     ], rows, { sortKey:'readers' });
   }
-  $('#puzAll').onclick = function(){ S.puzAll = true; if (S.data) renderPuzList(); };
+  $('#puzAll').onclick = function(){ S.puzAll = true; renderPuzList(); };
 
-  /* ---------------- games ---------------- */
+  /* ---------------- LAB ---------------- */
+  var LAB = { rows:{}, ops:null, score:null, ready:false };
+  function trials(){ var t = TARGETS && TARGETS.lab && TARGETS.lab.trials || {}; return Object.keys(t).map(function(k){ return { type:k, from:t[k].from, review:t[k].review, retired:t[k].retired }; }); }
+  function loadLab(){
+    var y = addDays(londonToday(), -1), live = trials().filter(function(t){ return !t.retired; }), froms = {};
+    live.forEach(function(t){ (froms[t.from] = froms[t.from] || []).push(t.type); });
+    var calls = Object.keys(froms).map(function(f){
+      return call('admin_lab', { p_from: f <= y ? f : y, p_to: y }).then(function(r){
+        if (r && r.data) (r.data.types || []).forEach(function(row){ if (froms[f].indexOf(row.type) >= 0) LAB.rows[row.type] = row; });
+        else LAB.err = r;
+      });
+    });
+    var w = last30();
+    calls.push(call('admin_ops', {}).then(function(r){ LAB.ops = r; }));
+    calls.push(loadBands().then(function(){ return call('admin_scorecard', { p_from: w.from, p_to: w.to, p_bands: bandMap(w) }); }).then(function(r){ LAB.score = r; }));
+    Promise.all(calls).then(function(){ LAB.ready = true; renderLab(); });
+  }
+  function labVerdict(t, row, sc, pace, med){
+    var L = TARGETS && TARGETS.lab || {}, votes = (row.yes||0)+(row.no||0), yes = row.pct_yes;
+    var checks = {
+      votes: votes >= (L.votes||20) && yes != null && yes >= (L.yes||70),
+      back: row.pct_returned != null && med != null && row.pct_returned >= med,
+      fin: row.pct_finished != null && row.pct_finished >= (L.finished||85),
+      time: inBand(row.median_solve_secs, L.secs || [30,180])
+    };
+    var v, tone;
+    if (checks.votes && checks.back && checks.fin && checks.time) { v = 'Ready to go daily'; tone = 'good'; }
+    else if (votes >= (L.votes||20) && yes < (L.yes||70) && row.pct_returned != null && row.pct_returned < (L.retire_returning||50)) { v = 'Retire candidate'; tone = 'bad'; }
+    else if ((row.trial_days || 0) < 10) { v = 'Too early'; tone = ''; }
+    else if (checks.back && checks.fin && checks.time) { v = 'Nearly there'; tone = 'good'; }
+    else if ((yes == null || yes >= (L.yes||70)) && !checks.back) { v = 'Liked, fewer return'; tone = 'warn'; }
+    else { v = 'Mixed'; tone = 'warn'; }
+    return { v:v, tone:tone, checks:checks, votes:votes };
+  }
+  function renderLab(){
+    if (!LAB.ready) return;
+    var h = S.health || {}, y = addDays(londonToday(), -1), L = TARGETS && TARGETS.lab || {};
+    var ops = LAB.ops && LAB.ops.data, pace = {}; ((ops && ops.lab_votes) || []).forEach(function(v){ pace[v.type] = v; });
+    var sc = LAB.score && LAB.score.data, st = {}, dailyBack = [];
+    ((sc && sc.types) || []).forEach(function(t){ st[KEY[t.slug]] = t; if (DAILY.indexOf(KEY[t.slug]) >= 0 && t.attempts >= 20) dailyBack.push(t.pct_returning); });
+    var med = median(dailyBack), dailyShare = median(DAILY.map(function(k){ return st[k] && st[k].pct_of_players; }).filter(function(x){ return x != null; }));
+    var minShare = Math.min.apply(null, DAILY.map(function(k){ return st[k] ? st[k].pct_of_players : 999; }));
+    var live = trials().filter(function(t){ return !t.retired; }), reviews = live.map(function(t){ return t.review; }).filter(Boolean).sort();
+    var next = reviews.filter(function(r){ return r >= londonToday(); })[0] || reviews[reviews.length-1];
+    var labStock = h.stock && h.stock.lab || [], lend = labStock.slice().sort(function(a,b){ return a.last.localeCompare(b.last); })[0];
+    var stalled = live.filter(function(t){ var p = pace[t.type] || {}; return (p.total||0) < (L.votes||20) && (p.new_7d||0) <= 2 && t.from <= addDays(londonToday(), -10); });
+    var hd = $('#labHead');
+    hd.innerHTML = '<h1>'+(next ? 'Review on '+esc(fmtWeekday(next)) : 'Lab')+'</h1>' +
+      '<p>Each trial is read over its own window.'+(lend ? ' Lab stock ends '+esc(fmtDay(lend.last))+' ('+lend.days+' '+plural(lend.days,'day')+').' : '')+'</p>' +
+      (stalled.length ? '<p><b>Votes have stalled:</b> '+esc(stalled.map(function(t){ return NAME[t.type]+' ('+((pace[t.type]||{}).new_7d||0)+')'; }).join(', '))+' new in the last 7 days. With about '+esc(String(Math.round(median(live.map(function(t){ return (LAB.rows[t.type]||{}).starters || 0; })) || 0)))+' players per trial, '+(L.votes||20)+' votes may never come, so coming back carries more weight.</p>' : '') +
+      '<p style="font-size:12.5px">To go daily: '+(L.votes||20)+'+ votes with '+(L.yes||70)+'%+ Yes · comes back at least as often as the dailies ('+(med != null ? med+'%' : '–')+') · '+(L.finished||85)+'%+ finished · median '+clock((L.secs||[30])[0])+'–'+clock((L.secs||[0,180])[1])+' '+defLink('labbar')+'</p>';
+    if (LAB.err && !Object.keys(LAB.rows).length) { $('#trials').innerHTML = '<p class="empty">'+esc(setupMsg(LAB.err, 'admin_lab', 'lab_readout'))+'</p>'; return; }
+    var calls = [];
+    $('#trials').innerHTML = live.map(function(t){
+      var row = LAB.rows[t.type]; if (!row) return '';
+      var V = labVerdict(t, row, st[t.type], pace[t.type], med), p = pace[t.type] || {}, s = st[t.type];
+      calls.push({ t:t, row:row, V:V });
+      var vt = V.votes ? num(row.yes)+' Yes · '+num(row.no)+' No' : 'No votes';
+      var vs = (row.pct_yes != null ? row.pct_yes+'% Yes · ' : '') + ((L.votes||20) - V.votes > 0 ? ((L.votes||20) - V.votes)+' short of '+(L.votes||20)+' · ' : '') + (p.new_7d||0)+' in 7 days';
+      return '<section class="card trial" data-type="'+t.type+'"><div style="display:flex;align-items:center;gap:8px"><h2 style="font-size:17px">'+esc(NAME[t.type])+'</h2><span class="vp '+V.tone+'">'+esc(V.v)+'</span></div>' +
+        '<p class="sub">Trial from '+esc(fmtDay(t.from))+' · '+num(row.starters)+' players'+(s ? ', '+s.pct_of_players+'% of all players (dailies '+(minShare < 999 ? minShare+'%+' : '–')+')' : '')+'</p>' +
+        '<div class="grid2">' +
+          '<div><b>'+esc(vt)+'</b><span class="'+(V.checks.votes ? 'ok' : 'no')+'">'+esc(vs)+'</span></div>' +
+          '<div><b>'+pct(row.pct_returned)+'</b><span class="'+(V.checks.back ? 'ok' : 'no')+'">come back (bar '+(med != null ? med+'%' : '–')+')'+(V.checks.back ? ' · met' : '')+'</span></div>' +
+          '<div><b>'+pct(row.pct_finished)+'</b><span class="'+(V.checks.fin ? 'ok' : 'no')+'">finished'+(V.checks.fin ? ' · met' : '')+'</span></div>' +
+          '<div><b>'+clock(row.median_solve_secs)+'</b><span class="'+(V.checks.time ? 'ok' : 'no')+'">median'+(V.checks.time ? ' · met' : '')+'</span></div>' +
+        '</div></section>';
+    }).join('') || '<p class="empty">No Lab trials running.</p>';
+    // the call
+    var c = $('#labCall');
+    if (calls.length) {
+      c.hidden = false;
+      c.innerHTML = '<h2>The call'+(next ? ' on '+esc(fmtWeekday(next)) : '')+'</h2><p class="sub" style="font-size:13px;margin-top:4px">'+calls.map(function(x){
+        var nm = '<b style="color:var(--ink)">'+esc(NAME[x.t.type])+'</b> ';
+        if (x.V.v === 'Ready to go daily') return nm+'clears every bar.';
+        if (x.V.v === 'Nearly there') return nm+'meets every bar but votes'+(x.V.votes ? ' ('+x.V.votes+' of '+(L.votes||20)+')' : '')+'.';
+        if (x.V.v === 'Liked, fewer return') return nm+'is liked but returned to less ('+x.row.pct_returned+'% against '+med+'%).';
+        if (x.V.v === 'Too early') return nm+'needs its full trial'+(x.t.review ? ', to '+esc(fmtDay(x.t.review)) : '')+'.';
+        if (x.V.v === 'Retire candidate') return nm+'is below the vote bar and few come back.';
+        return nm+'is mixed: check the detail.';
+      }).join(' ')+'</p>';
+    } else c.hidden = true;
+    // detail (the 17 Nov read-out)
+    var rows = live.map(function(t){ return LAB.rows[t.type]; }).filter(Boolean);
+    $('#labRead').innerHTML = rows.map(function(t){
+      var x = labRead(t);
+      return '<div class="lr '+x.tone+'" data-type="'+esc(t.type)+'"><h3>'+esc(x.name)+': <span>'+esc(x.head)+'</span></h3><ul>'+x.pts.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join('')+'</ul></div>';
+    }).join('') + (rows.some(function(t){ return t.returners != null; }) || !rows.length ? '' : '<p class="labnote">Coming back isn’t available yet: apply migration lab_readout.</p>');
+    table($('#tLab'), [
+      {key:'type', label:'Puzzle', left:true, sort:function(t){ return t.type; }, fmt:function(t){ return '<span class="hl">'+esc(typeName(t.type))+'</span>'; }},
+      {key:'players', label:'Played by', fmt:function(t){ return n(t.players) + '<span class="meta">'+n(t.starters)+' started</span>'; }},
+      {key:'returners', label:'Came back', sort:function(t){ return t.pct_returned == null ? -1 : t.pct_returned; }, fmt:function(t){ return t.returners == null ? '–' : n(t.returners) + '<span class="meta">'+(t.pct_returned != null ? t.pct_returned+'% · ' : '')+n(t.regulars)+' on 3+ days</span>'; }},
+      {key:'finishers', label:'Finished', fmt:function(t){ return n(t.finishers) + (t.pct_finished != null ? '<span class="meta">'+t.pct_finished+'% of starters</span>' : ''); }},
+      {key:'abandons', label:'Abandoned', fmt:function(t){ return n(t.abandons) + (t.pct_abandoned != null ? '<span class="meta">'+t.pct_abandoned+'% of starts</span>' : ''); }},
+      {key:'median_solve_secs', label:'Median time', fmt:function(t){ return clock(t.median_solve_secs); }},
+      {key:'yes', label:'Votes', def:'labvotes', fmt:function(t){ var v=(t.yes||0)+(t.no||0); return v ? n(t.yes)+' yes · '+n(t.no)+' no<span class="meta">'+t.pct_yes+'% yes · app '+n(t.app.yes)+'/'+n(t.app.no)+' · web '+n(t.web.yes)+'/'+n(t.web.no)+'</span>' : '–'; }}
+    ], rows, { sortKey:'type', sortDir:'asc' });
+    var ret = trials().filter(function(t){ return t.retired; });
+    $('#labRetired').textContent = ret.length ? 'Retired: ' + ret.map(function(t){ var p = pace[t.type]; return NAME[t.type]+' ('+fmtDay(t.retired)+(p ? ', '+p.yes+' Yes of '+p.total : '')+')'; }).join(', ') + '.' : '';
+  }
+  // The 17 Nov plain-language read-out, per trial.
+  function labRead(t){
+    var name = typeName(t.type), votes = (t.yes||0) + (t.no||0), pts = [], head, tone;
+    if (!t.starters && !votes) return { name:name, tone:'', head:'No plays yet', pts:['Nobody started it in this period.'] };
+    var enough = votes >= 20, liked = t.pct_yes != null && t.pct_yes >= 70;
+    var readBack = (t.starters||0) >= 5 && t.returners != null, back = t.pct_returned;
+    var pull = !readBack ? null : back >= 40 ? 'strong' : back >= 20 ? 'some' : 'little';
+    if (!votes) pts.push('No votes yet.');
+    else pts.push(num(t.yes)+' Yes, '+num(t.no)+' No: '+t.pct_yes+'% Yes from '+num(votes)+' '+plural(votes,'voter')+(enough ? (liked ? ', clearing the 70% bar.' : ', below the 70% bar.') : ', too few to call (bar about 20).'));
+    if (t.starters && t.returners != null) pts.push(num(t.starters)+' '+plural(t.starters,'player')+' started it'+(t.trial_days ? ' over '+t.trial_days+' '+plural(t.trial_days,'day') : '')+'; '+
+      num(t.returners)+' came back on another day ('+(back||0)+'%)'+(t.regulars ? ', '+num(t.regulars)+' on 3+ days' : '')+
+      (readBack ? (pull === 'strong' ? ': a strong pull.' : pull === 'some' ? ': some pull.' : ': most played once.') : ' (too few players to read yet).'));
+    if (t.pct_finished != null) pts.push(t.pct_finished+'% of players finished at least once'+(t.median_solve_secs != null ? ', median time '+clock(t.median_solve_secs) : '')+
+      (t.pct_abandoned != null && t.pct_abandoned >= 40 ? '. '+t.pct_abandoned+'% of starts were abandoned: it may be too hard or unclear.' : '.'));
+    if (!enough) { tone = 'warn'; head = 'Too early to call'; if (pull === 'strong') head += ', but players keep coming back'; else if (pull === 'little') head += ', and few come back so far'; }
+    else if (liked && pull !== 'little') { tone = 'good'; head = pull === 'strong' ? 'Looks like a daily: liked and returned to' : 'Liked: clears the vote bar'; }
+    else if (liked) { tone = 'warn'; head = 'Liked, but few come back'; }
+    else if (pull === 'strong') { tone = 'warn'; head = 'Split vote, but players keep coming back'; }
+    else { tone = 'bad'; head = 'Not landing: below the bar and few return'; }
+    return { name:name, tone:tone, head:head, pts:pts };
+  }
+
+  /* ---------------- OTHER: visitors, News, Games, Sources ---------------- */
+  var feedsP = null;
+  function loadFeed(url){ return getJSON(url).then(function(j){ ((j && j.items) || []).forEach(function(i){ if (!FEED[i.path] || !FEED[i.path].kind) FEED[i.path] = i; }); }); }
+  function loadOther(){
+    if (!feedsP) feedsP = Promise.all([loadFeed('https://news.dailynoodle.co.uk/feed.json'), loadFeed('https://games.dailynoodle.co.uk/feed.json')]);
+    var today = londonToday(), p = prevSpan();
+    $('#updated').textContent = 'Loading…';
+    Promise.all([dashData(), p ? call('admin_dashboard', { p_from: p.from, p_to: p.to, p_ghosts: S.ghosts }) : null, call('admin_dashboard', { p_from: today, p_to: today, p_ghosts: S.ghosts }), feedsP, loadChart()]).then(function(rs){
+      var r = rs[0];
+      if (r.error) { var e=$('#loadError'); e.hidden=false; e.textContent='Couldn’t load the figures: '+r.error.message+'. Try Refresh in Settings.'; return; }
+      S.prev = rs[1] && !rs[1].error ? rs[1].data : null; S.today = rs[2] && !rs[2].error ? rs[2].data : null;
+      var D = S.data || {}, gen = D.generated_at ? new Date(D.generated_at) : new Date();
+      $('#updated').textContent = 'Updated ' + gen.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      $('#genAt').textContent = 'generated ' + gen.toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'});
+      $('#exclCount').textContent = D.excluded_readers || 0;
+      $('#ghostS').innerHTML = (D.ghost_readers != null ? n(D.ghost_readers) + ' in this period · ' : '') + 'mostly crawlers; hidden by default (Other)';
+      renderVisitors(); renderNews(); renderGames();
+    });
+    loadSources();
+  }
+  function sec(D, s){ var x = (D && D.sections || []).filter(function(r){ return r.section === s; })[0]; return x ? x.readers : 0; }
+  function piecesIn(from, to){
+    return feedList().filter(function(f){ return f.kind === 'report' && f.date >= from && f.date <= to; })
+      .sort(function(a,b){ return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+  }
+  function newsItems(D){ return (D && D.items || []).filter(function(i){ return i.section === 'news'; }); }
+  function articleOpens(D){ var K = D.kpis || {}; return K.article_opens != null ? K.article_opens : newsItems(D).reduce(function(a,i){ return a + (i.page_loads||0); }, 0); }
+  function delta(cur, prev){
+    if (prev == null || cur == null) return '';
+    if (cur === prev) return '<div class="d">Same as before</div>';
+    var up = cur > prev;
+    return '<div class="d '+(up?'up':'down')+'"><svg width="10" height="9" viewBox="0 0 10 9" aria-hidden="true" style="margin-right:4px;vertical-align:0"><path d="'+(up?'M5 0 10 9H0z':'M0 0h10L5 9z')+'" fill="currentColor"/></svg><span class="sr">'+(up?'Up':'Down')+'</span>from '+n(prev)+'</div>';
+  }
+  function renderVisitors(){
+    var D = S.data, K = D.kpis || {}, P = S.prev && S.prev.kpis || null;
+    var pieces = piecesIn(S.from, S.to), seen = {};
+    newsItems(D).forEach(function(i){ if (i.readers > 0) seen[i.item_path] = true; });
+    var opened = pieces.filter(function(f){ return seen[f.path]; }).length, opens = articleOpens(D);
+    var ret = share(K.returning_readers, K.readers), sr = share(K.puzzles_solved, K.solvable_starts != null ? K.solvable_starts : K.puzzle_starts);
+    var pz = sec(D,'puzzles'), gm = sec(D,'games');
+    var tiles = [
+      { label:'Visitors', v:K.readers, d:delta(K.readers, P && P.readers), n: K.readers ? n(K.returning_readers||0)+' came back ('+ret+'%)' : '', def:'readers' },
+      { label:'Articles opened', sec:'news', v:opens, d:delta(opens, P && P.article_opens), n: K.article_readers != null ? 'by '+n(K.article_readers)+' '+plural(K.article_readers,'reader') : '', def:'articles' },
+      { label:'Puzzles solved', sec:'puzzles', v:K.puzzles_solved, d:delta(K.puzzles_solved, P && P.puzzles_solved), n: (sr!=null ? sr+'% of starts · ' : '') + n(pz)+' '+plural(pz,'player'), def:'finished' },
+      { label:'Game rounds', sec:'games', v:K.game_runs, d:delta(K.game_runs, P && P.game_runs), n: n(gm)+' '+plural(gm,'player'), def:'readers' }
+    ];
+    $('#kpis').innerHTML = tiles.map(function(t){
+      return '<div class="kpi"'+(t.sec?' data-sec="'+t.sec+'"':'')+'><div class="k">'+(t.sec?'<span class="dot" aria-hidden="true"></span>':'')+'<span>'+t.label+'</span>'+defLink(t.def)+'</div><div class="v">'+n(t.v)+'</div>'+(t.d||'')+'<div class="n">'+t.n+'</div></div>';
+    }).join('');
+    var today = londonToday();
+    var days = (D.daily || []).map(function(d){ return { day:d.day, v:d.readers||0, so:d.day===today }; });
+    if (S.today && S.today.daily && S.today.daily.length && S.to < today) days.push({ day: today, v: S.today.daily[0].readers || 0, so: true });
+    bars($('#daily'), days, 'Visitors');
+    $('#dailySub').textContent = days.some(function(d){ return d.so; }) ? 'Today is drawn hollow until the day is over.' : 'Unique visitors each day.';
+    // signals: News and Games only (puzzles have their scorecard)
+    var sig = [];
+    if (pieces.length >= 3 && opened < pieces.length / 2) sig.push(['warn', 'News', (pieces.length - opened)+' of the '+pieces.length+' pieces published in this period show no readers.']);
+    newsItems(D).forEach(function(i){
+      if (i.readers>=5 && i.pct_read_75!=null && i.pct_read_75<30) sig.push(['warn','Read-through','“'+title(i.item_path)+'”: only '+i.pct_read_75+'% of '+i.readers+' readers reached 75%.']);
+      if (i.readers>=5 && i.pct_bounced!=null && i.pct_bounced>60) sig.push(['bad','Bounce','“'+title(i.item_path)+'”: '+i.pct_bounced+'% left within 10 seconds.']);
+    });
+    var tg = (D.games || []).slice().sort(function(a,b){ return b.players - a.players || b.runs - a.runs; })[0];
+    if (tg && tg.players >= 2) sig.push(['good', 'Games', 'Most played game: '+gameName(tg.game)+', '+tg.players+' players and '+tg.runs+' rounds.']);
+    if ((D.ghost_readers || 0) >= 10 && !S.ghosts) sig.push(['info', 'Note', num(D.ghost_readers)+' one-page visitors (mostly crawlers) are left out of these figures.']);
+    if (!sig.length) sig.push(['info', 'Nothing flagged', 'Nothing has passed a threshold yet.']);
+    $('#signals').innerHTML = sig.slice(0, 6).map(function(s){ return '<div class="sig '+s[0]+'"><span class="tag">'+esc(s[1])+'</span><span>'+esc(s[2])+'</span></div>'; }).join('');
+    var mix = (D.mix || []).slice().sort(function(a,b){ return b.readers - a.readers; });
+    hbars($('#mix'), mix.map(function(m){ return { label: m.mix, value: m.readers, sec: m.mix === 'News' ? 'news' : m.mix === 'Puzzles' ? 'puzzles' : m.mix === 'Games' ? 'games' : '' }; }));
+    table($('#tCohorts'), [
+      {key:'week', label:'First week', left:true, fmt:function(r){ return 'w/c '+fmtDay(r.week); }},
+      {key:'new_readers', label:'New', fmt:function(r){return n(r.new_readers);}},
+      {key:'came_back', label:'Came back', fmt:function(r){return n(r.came_back);}},
+      {key:'rate', label:'Rate', sort:function(r){return share(r.came_back,r.new_readers);}, fmt:function(r){ var v=share(r.came_back,r.new_readers); return v==null?pct(v):'<span class="pill '+tone(v,30,15,true)+'">'+v+'%</span>'; }}
+    ], D.cohorts || [], { sortKey:'week', sortDir:'desc' });
+    var dev = (D.devices || []).slice(), order = ['phone','tablet','desktop','unknown'];
+    dev.sort(function(a,b){ return order.indexOf(a.screen)-order.indexOf(b.screen); });
+    $('#devLine').textContent = dev.length ? dev.map(function(d){ return d.screen.charAt(0).toUpperCase()+d.screen.slice(1)+' '+d.readers; }).join(' · ') + '. By screen width when the page opened: phone under 480px, tablet under 1024px.' : 'Nothing recorded in this period.';
+    var pos = D.positions || [];
+    if (!pos.length || !window.Chart) emptyChart('chPos', window.Chart ? '' : 'The chart library didn’t load.');
+    else {
+      var labels = []; for (var i=1;i<=11;i++) labels.push(i===11?'11+':String(i));
+      var secs = ['news','puzzles','games'].filter(function(s){ return pos.some(function(p){return p.section===s;}); });
+      chart('chPos',{ type:'bar', data:{ labels:labels, datasets:secs.map(function(s){ return { label:s.charAt(0).toUpperCase()+s.slice(1), backgroundColor:css('--'+s), borderRadius:2,
+          data:labels.map(function(_,ix){ var p=pos.filter(function(q){return q.section===s && q.pos===ix+1;})[0]; return p?p.taps:0; }) }; }) },
+        options:{ maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}, scales:{ x:{grid:{display:false}, title:{display:true,text:'Position in list'}}, y:{beginAtZero:true,ticks:{precision:0}} } } });
+    }
+    table($('#tCards'), [
+      {key:'item_path', label:'Card', left:true, sort:function(r){return title(r.item_path);}, fmt:function(r){ return '<span class="hl">'+esc(title(r.item_path))+'</span><span class="meta">'+esc(r.section === 'news' ? 'News list' : r.section)+'</span>'; }},
+      {key:'taps', label:'Taps', fmt:function(r){return n(r.taps);}},
+      {key:'avg_pos', label:'Avg pos', fmt:function(r){return r.avg_pos==null?pct(null):r.avg_pos;}}
+    ], D.cards || [], { sortKey:'taps', limit:10 });
+  }
+  function renderNews(){
+    var D = S.data;
+    var list = (D.front_pages || []).filter(function(f){ return f.page === 'index.html'; })[0];
+    $('#nwList').innerHTML = D.front_pages ? n(list ? list.readers : 0) : n(null);
+    var opens = articleOpens(D), pcs = newsItems(D).length;
+    $('#nwOpens').innerHTML = n(opens);
+    $('#nwOpensS').textContent = plural(opens,'article open')+(pcs ? ', across '+pcs+' '+plural(pcs,'piece') : '');
+    var items = {}; newsItems(D).forEach(function(i){ items[i.item_path] = i; });
+    var pieces = piecesIn(S.from, S.to), opened = pieces.filter(function(f){ return items[f.path] && items[f.path].readers > 0; }).length;
+    $('#pubPiecesSub').textContent = pieces.length ? pieces.length+' '+plural(pieces.length,'piece')+' · '+opened+' opened' : 'No pieces dated in this period.';
+    $('#psNone').textContent = 'Not opened (' + (pieces.length - opened) + ')';
+    $$('[data-psort]').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.psort === S.psort)); });
+    var rows = pieces.slice();
+    if (S.psort === 'read') rows.sort(function(a,b){ return ((items[b.path]||{}).readers||0) - ((items[a.path]||{}).readers||0); });
+    if (S.psort === 'none') rows = rows.filter(function(f){ return !(items[f.path] && items[f.path].readers > 0); });
+    var cap = S.piecesAll ? rows.length : 6;
+    $('#pieces').innerHTML = (rows.length ? rows.slice(0, cap).map(function(f){
+      var it = items[f.path];
+      return '<div class="row"><div><a class="hl" href="https://news.dailynoodle.co.uk/'+esc(f.path)+'" target="_blank" rel="noopener">'+esc(f.headline)+'</a><div class="meta">'+esc([f.topic, fmtDay(f.date)].filter(Boolean).join(' · '))+'</div></div>'+
+        (it && it.readers ? '<div class="cnt"><b class="num">'+n(it.readers)+'</b> '+plural(it.readers,'reader')+'</div>' : '<div class="cnt none">No readers</div>')+'</div>';
+    }).join('') : '<p class="empty">Nothing to show.</p>') + (rows.length > cap ? '<div class="row" style="padding:2px 0"><button type="button" class="linkbtn" id="piecesMore">Show all '+rows.length+'</button></div>' : '');
+    var pm = $('#piecesMore'); if (pm) pm.onclick = function(){ S.piecesAll = true; renderNews(); };
+    renderOpened();
+    var big = newsItems(D).filter(function(i){ return i.readers >= 5; });
+    $('#newsCharts').hidden = !big.length; $('#newsChartsNote').hidden = !!big.length;
+    if (big.length) {
+      var topics = {}; newsItems(D).forEach(function(i){ var t=i.topic||'Untagged'; topics[t]=(topics[t]||0)+i.readers; });
+      hbars($('#topics'), Object.keys(topics).sort(function(a,b){ return topics[b]-topics[a]; }).map(function(k){ return { label:k, value:topics[k], sec:'news' }; }));
+      var sc = big.filter(function(i){ return i.median_secs!=null && i.pct_read_75!=null; });
+      if (!sc.length || !window.Chart) emptyChart('chScatter', 'Needs articles with timings.');
+      else chart('chScatter',{ type:'bubble', data:{ datasets:[{ label:'Articles', data:sc.map(function(i){ return {x:i.median_secs, y:i.pct_read_75, r:Math.max(4, Math.min(16, 3+Math.sqrt(i.readers)*2)), t:title(i.item_path), n:i.readers}; }),
+          backgroundColor:css('--news-soft'), borderColor:css('--news') }]},
+        options:{ maintainAspectRatio:false, plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:function(c){ var p=c.raw; return p.t+' — '+p.n+' readers, '+p.y+'% read to 75%, median '+Math.round(p.x)+'s'; } } } },
+          scales:{ x:{ title:{display:true,text:'Median seconds on page'}, beginAtZero:true }, y:{ title:{display:true,text:'% reaching 75%'}, min:0, max:100 } } } });
+    }
+  }
+  function renderOpened(){
+    if (!S.data) return;
+    var q = $('#qNews').value.trim().toLowerCase();
+    var rows = newsItems(S.data).filter(function(i){ return !q || (title(i.item_path)+' '+i.item_path+' '+(i.topic||'')).toLowerCase().indexOf(q) >= 0; })
+      .sort(function(a,b){ return b.readers - a.readers || b.page_loads - a.page_loads; });
+    $('#opened').innerHTML = rows.length ? rows.map(function(i){
+      var bits = [i.topic, fmtDay(pubDate(i.item_path))];
+      if (i.median_secs != null) bits.push(dur(i.median_secs)+' on page');
+      if (i.pct_read_75 != null) bits.push(i.pct_read_75+'% read to 75%');
+      return '<div class="row"><div><span class="hl">'+esc(title(i.item_path))+'</span><div class="meta">'+esc(bits.filter(Boolean).join(' · '))+'</div></div><div class="cnt"><b class="num">'+n(i.readers)+'</b> '+plural(i.readers,'reader')+'</div></div>';
+    }).join('') : '<p class="empty">'+(q ? 'No opened article matches that.' : 'No articles opened in this period.')+'</p>';
+  }
   function gameName(g){ return String(g||'').replace(/-/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}); }
   function renderGames(){
     table($('#tGames'), [
       {key:'game', label:'Game', left:true, fmt:function(r){ return '<span class="hl">'+esc(gameName(r.game))+'</span>'; }},
-      {key:'players', label:'Players', def:'readers', fmt:function(r){return n(r.players);}},
-      {key:'runs', label:'Rounds', def:'runs', fmt:function(r){return n(r.runs);}},
-      {key:'wr', label:'Win rate', def:'wins', sort:function(r){return share(r.wins, r.wins+r.losses);}, fmt:function(r){return pct(share(r.wins, r.wins+r.losses));}},
-      {key:'wins', label:'Wins', def:'wins', fmt:function(r){return n(r.wins);}},
-      {key:'losses', label:'Losses', def:'wins', fmt:function(r){return n(r.losses);}},
-      {key:'abandoned', label:'Abandoned', def:'gaband', fmt:function(r){return n(r.abandoned);}},
-      {key:'median_secs', label:'Round time', def:'gsecs', fmt:function(r){return dur(r.median_secs);}},
-      {key:'furthest', label:'Furthest level', def:'furthest', fmt:function(r){return r.furthest==null?pct(null):n(r.furthest);}},
-      {key:'avg_end', label:'Avg level at end', fmt:function(r){return r.avg_end==null?pct(null):r.avg_end;}}
+      {key:'players', label:'Players', fmt:function(r){return n(r.players);}},
+      {key:'runs', label:'Rounds', fmt:function(r){return n(r.runs);}},
+      {key:'wr', label:'Win rate', sort:function(r){return share(r.wins, r.wins+r.losses);}, fmt:function(r){return pct(share(r.wins, r.wins+r.losses));}},
+      {key:'abandoned', label:'Abandoned', fmt:function(r){return n(r.abandoned);}},
+      {key:'median_secs', label:'Round time', fmt:function(r){return dur(r.median_secs);}},
+      {key:'furthest', label:'Furthest level', fmt:function(r){return r.furthest==null?pct(null):n(r.furthest);}}
     ], S.data.games || [], { sortKey:'players' });
   }
-
-  /* ---------------- sources ----------------
-     admin_sources gives first-touch and visit counts by source for the range,
-     and all-time totals per ?via= tag; admin_links keeps the tracked links. */
+  // Sources (20 Oct 2026)
   var SRC = null, LINKS = [];
   var HOSTS = { 'reddit.com':'Reddit', 'news.ycombinator.com':'Hacker News', 't.co':'X (Twitter)', 'x.com':'X (Twitter)', 'twitter.com':'X (Twitter)',
     'facebook.com':'Facebook', 'instagram.com':'Instagram', 'linkedin.com':'LinkedIn', 'lnkd.in':'LinkedIn', 'mumsnet.com':'Mumsnet', 'producthunt.com':'Product Hunt',
     'bsky.app':'Bluesky', 'threads.net':'Threads', 'mastodon.social':'Mastodon', 'lobste.rs':'Lobsters', 'duckduckgo.com':'DuckDuckGo', 'bing.com':'Bing',
     'alecldarlow-cell.github.io':'Old address (github.io)', 'dailynoodle.co.uk':'The site itself',
-    /* AI answer engines (10 Nov 2026): as a referring host, or as the utm_source they add to links (kept as a tag) */
     'chatgpt.com':'ChatGPT', 'chat.openai.com':'ChatGPT', 'openai.com':'ChatGPT', 'perplexity.ai':'Perplexity', 'gemini.google.com':'Gemini',
     'copilot.microsoft.com':'Copilot', 'copilot.com':'Copilot', 'claude.ai':'Claude', 'chat.mistral.ai':'Mistral', 'meta.ai':'Meta AI', 'grok.com':'Grok', 'you.com':'You.com' };
   function linkByTag(t){ return LINKS.filter(function(l){ return l.tag === t; })[0]; }
@@ -1401,12 +1825,11 @@
   function srcMeta(src){ return src === 'direct' ? 'no referrer' : src.indexOf('via:') === 0 ? '?via=' + src.slice(4) : src.indexOf('ref:') === 0 ? src.slice(4) : 'in-app browser'; }
   function linkUrl(l){ return location.origin + '/' + (l.page || '') + '?via=' + l.tag; }
   function slug(t){ return String(t||'').toLowerCase().replace(/^r\//,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,24).replace(/-+$/,''); }
-  function loadSources(seq){
+  function loadSources(){
     return Promise.all([
-      sb.rpc('admin_sources', { p_from: S.from, p_to: S.to }).then(function(r){ return r && !r.error ? r.data : null; }, function(){ return null; }),
-      sb.rpc('admin_links', { p_action: 'list', p_tag: null, p_label: null, p_page: null, p_note: null }).then(function(r){ return r && !r.error ? r.data : null; }, function(){ return null; })
+      call('admin_sources', { p_from: S.from, p_to: S.to }).then(function(r){ return r && !r.error ? r.data : null; }),
+      call('admin_links', { p_action: 'list', p_tag: null, p_label: null, p_page: null, p_note: null }).then(function(r){ return r && !r.error ? r.data : null; })
     ]).then(function(rs){
-      if (seq != null && seq !== loadSeq) return;
       SRC = rs[0] && typeof rs[0] === 'object' ? rs[0] : null;
       LINKS = Array.isArray(rs[1]) ? rs[1] : [];
       renderSources();
@@ -1425,27 +1848,27 @@
       return '<div class="lrow'+(l.archived?' arch':'')+'"><div class="top"><b>'+esc(l.label)+'</b>'+
         '<button type="button" class="ghost" data-copy="'+esc(linkUrl(l))+'">Copy link</button></div>'+
         '<code>'+esc(linkUrl(l).replace(/^https?:\/\//,''))+'</code>'+
-        '<div class="stats"><span><b>'+n(t.new_readers||0)+'</b> new '+plural(t.new_readers||0,'reader')+'</span><span><b>'+n(t.stayed||0)+'</b> stayed</span><span><b>'+n(t.came_back||0)+'</b> came back</span><span><b>'+n(t.visits||0)+'</b> '+plural(t.visits||0,'visit')+'</span></div>'+
+        '<div class="stats"><span><b>'+n(t.new_readers||0)+'</b> new</span><span><b>'+n(t.stayed||0)+'</b> stayed</span><span><b>'+n(t.came_back||0)+'</b> came back</span><span><b>'+n(t.visits||0)+'</b> '+plural(t.visits||0,'visit')+'</span></div>'+
         '<div class="sub">Made '+esc(fmtDay(String(l.created||'').slice(0,10)))+(t.last_day ? ' · last arrival '+esc(fmtDay(t.last_day)) : ' · no arrivals yet')+
         ' · <button type="button" class="linkbtn" style="min-height:0;font-size:12.5px" data-lk="'+(l.archived?'restore':'archive')+'" data-tag="'+esc(l.tag)+'">'+(l.archived?'Restore':'Archive')+'</button></div></div>';
     }
     var other = Object.keys(tags).filter(function(t){ return !linkByTag(t); });
-    $('#links').innerHTML = (live.length ? live.map(row).join('') : '<p class="empty">No tracked links yet. Make one above for each place you post.</p>') +
+    $('#links').innerHTML = (live.length ? live.map(row).join('') : '<p class="empty">No tracked links yet. Make one under Players &amp; growth.</p>') +
       (other.length ? '<div class="lrow"><b style="font-size:14px">Other codes seen</b><div class="stats">'+other.map(function(k){ var t = tags[k]; return '<span>'+esc(k === 'share' ? 'share (Share buttons)' : k)+': <b>'+n(t.new_readers)+'</b> new, <b>'+n(t.visits)+'</b> '+plural(t.visits,'visit')+'</span>'; }).join('')+'</div></div>' : '') +
       (arch.length ? '<details style="border-top:1px solid var(--hair)"><summary style="min-height:44px;display:flex;align-items:center;font-weight:600;cursor:pointer">Archived ('+arch.length+')</summary>'+arch.map(row).join('')+'</details>' : '');
     if (!SRC) { $('#tFirst').innerHTML = '<tbody><tr><td class="empty">Couldn’t load sources.</td></tr></tbody>'; $('#tVisits').innerHTML = ''; return; }
     table($('#tFirst'), [
-      {key:'src', label:'Source', left:true, def:'firstsrc', sort:function(r){ return srcName(r.src); }, fmt:function(r){ return '<span class="hl">'+esc(srcName(r.src))+'</span><span class="meta">'+esc(srcMeta(r.src))+'</span>'; }},
+      {key:'src', label:'Source', left:true, def:'ref', sort:function(r){ return srcName(r.src); }, fmt:function(r){ return '<span class="hl">'+esc(srcName(r.src))+'</span><span class="meta">'+esc(srcMeta(r.src))+'</span>'; }},
       {key:'new_readers', label:'New', fmt:function(r){ return n(r.new_readers); }},
-      {key:'left', label:'Left at once', def:'leftnow', sort:function(r){ return share(r.left_at_once, r.new_readers); }, fmt:function(r){ var v = share(r.left_at_once, r.new_readers); return n(r.left_at_once)+(v!=null && r.new_readers >= 5 ? ' <span class="dash">('+v+'%)</span>' : ''); }},
-      {key:'stayed', label:'Stayed', def:'stayed', fmt:function(r){ return n(r.stayed); }},
-      {key:'came_back', label:'Came back', def:'cameback', fmt:function(r){ return n(r.came_back); }}
+      {key:'left', label:'Left at once', sort:function(r){ return share(r.left_at_once, r.new_readers); }, fmt:function(r){ return n(r.left_at_once); }},
+      {key:'stayed', label:'Stayed', fmt:function(r){ return n(r.stayed); }},
+      {key:'came_back', label:'Came back', fmt:function(r){ return n(r.came_back); }}
     ], SRC.first || [], { sortKey:'new_readers' });
     table($('#tVisits'), [
-      {key:'src', label:'Source', left:true, def:'visit', sort:function(r){ return srcName(r.src); }, fmt:function(r){ return '<span class="hl">'+esc(srcName(r.src))+'</span><span class="meta">'+esc(srcMeta(r.src))+'</span>'; }},
+      {key:'src', label:'Source', left:true, sort:function(r){ return srcName(r.src); }, fmt:function(r){ return '<span class="hl">'+esc(srcName(r.src))+'</span><span class="meta">'+esc(srcMeta(r.src))+'</span>'; }},
       {key:'visits', label:'Visits', fmt:function(r){ return n(r.visits); }},
-      {key:'readers', label:'Readers', fmt:function(r){ return n(r.readers); }},
-      {key:'returning_readers', label:'Returning', def:'returning', fmt:function(r){ return n(r.returning_readers); }}
+      {key:'readers', label:'Visitors', fmt:function(r){ return n(r.readers); }},
+      {key:'returning_readers', label:'Returning', fmt:function(r){ return n(r.returning_readers); }}
     ], SRC.visits || [], { sortKey:'visits' });
   }
   var tagEdited = false;
@@ -1467,7 +1890,7 @@
       var url = linkUrl({ tag: tag, page: page });
       out.innerHTML = '<div class="linkout"><code>'+esc(url)+'</code><button type="button" class="ghost" data-copy="'+esc(url)+'">Copy</button></div>';
       $('#lkLabel').value = ''; $('#lkTag').value = ''; tagEdited = false;
-      renderSources();
+      if (S.loaded.other) renderSources();
     });
   });
   document.addEventListener('click', function(e){
@@ -1531,7 +1954,6 @@
     e.preventDefault(); var v = $('#mgName').value.trim(); if (!v || !MG) return;
     $('#mgName').blur(); loadLeagues('rename', MG, v).then(function(ok){ if (ok) $('#mgMsg').textContent = 'Renamed.'; });
   });
-  // Remove and Close ask for a second tap instead of a browser pop-up.
   function arm(b, label, armedLabel){
     if (b.dataset.armed === '1') return false;
     b.dataset.armed = '1'; b.textContent = armedLabel;
@@ -1550,40 +1972,7 @@
     }
   });
 
-  /* ---------------- publishing line on Overview ---------------- */
-  function newsToday(){
-    // News moved to its own site on 22 Nov 2026 (SITE.md › Sections): nothing to check in this feed.
-    $('#pubNews').innerHTML = '<p class="pub-state">News publishes on <a href="https://news.dailynoodle.co.uk/">news.dailynoodle.co.uk</a> from 22 Nov 2026.</p>';
-    return { count: 0, tone: '' };
-  }
-  document.addEventListener('dn:publishing', function(e){
-    var s = e.detail || {}, line = $('#pubLine'), head = $('#pubLineHead'), txt = $('#pubLineText');
-    if (s.checking) { line.className = 'publine'; head.textContent = 'Checking publishing…'; return; }
-    var nw = newsToday(), bits = [], worst = 'good', problems = [];
-    function bump(t){ if (t === 'bad' || (t === 'warn' && worst === 'good')) worst = t; }
-    if (s.live) {
-      if (s.live.error) { bump('bad'); problems.push('today’s puzzles not confirmed'); }
-      else { bits.push(s.live.ok+' of '+s.live.total+' puzzles live'); if (s.live.ok < s.live.total) { bump('bad'); problems.push((s.live.total - s.live.ok)+' of today’s puzzles not responding'); } }
-    }
-    // News publishes on news.dailynoodle.co.uk from 22 Nov 2026, so this site's feed has none to check
-    if (s.stock) {
-      if (s.stock.error || s.stock.stale) { bump('warn'); problems.push('puzzle stock not confirmed'); }
-      else { bits.push(s.stock.through ? 'stock to '+fmtDate(s.stock.through) : 'no future stock'); if (s.stock.futureDays < 7) { bump('warn'); problems.push('only '+s.stock.futureDays+' days of puzzle stock'); } }
-    }
-    if (s.release) {
-      if (s.release.error) { bump('warn'); problems.push('release status not confirmed'); }
-      else if (s.release.failed) { bump('bad'); problems.push('the last release failed'); }
-      if (s.release.lastSuccess) { var at = new Date(s.release.lastSuccess); bits.push('released '+(londonDay(at) === londonToday() ? at.toLocaleTimeString('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit'}) : fmtDay(londonDay(at)))); }
-    }
-    line.className = 'publine ' + worst;
-    head.textContent = worst === 'good' ? 'Publishing OK' : problems[0].charAt(0).toUpperCase() + problems[0].slice(1);
-    txt.textContent = (worst === 'good' ? bits : problems.slice(1).concat(bits)).join(' · ');
-  });
-
-  /* ---------------- this device: counted or excluded ----------------
-     The site's tracker keeps this browser's reader ID in localStorage
-     (digi.aid) on the same origin as this page, so the admin page can read
-     it and add or remove it from the exclusion list. */
+  /* ---------------- this device: counted or excluded ---------------- */
   function renderMe(state){
     var el = $('#meDev'), btn = $('#meBtn');
     var aid = store('digi.aid'), off = store('digi.optout') === '1';
@@ -1591,13 +1980,13 @@
     if (off) { el.textContent = 'Not recorded (switched off)'; return; }
     if (!aid) { el.textContent = 'No reader ID yet (open any page of the site first)'; return; }
     if (state == null) { el.textContent = 'Checking…'; return; }
-    el.textContent = state ? 'Not counted in any figure' : 'Counted like any reader';
+    el.textContent = state ? 'Not counted in any figure' : 'Counted like any visitor';
     btn.innerHTML = '<button type="button" class="ghost" id="meToggle">' + (state ? 'Count it' : 'Exclude it') + '</button>';
     $('#meToggle').onclick = function(){
       this.disabled = true;
       sb.rpc('admin_exclude_device', { p_anon: aid, p_exclude: !state }).then(function(r){
         if (r.error) { $('#meDev').textContent = 'Couldn’t update (' + r.error.message + ')'; return; }
-        renderMe(r.data); load();
+        renderMe(r.data); reloadAll();
       });
     };
   }
@@ -1605,49 +1994,61 @@
     var aid = store('digi.aid');
     if (!aid || store('digi.optout') === '1') { renderMe(); return; }
     renderMe(null);
-    sb.rpc('admin_exclude_device', { p_anon: aid, p_exclude: null }).then(function(r){
-      if (r.error) { $('#meDev').textContent = ''; return; }
-      renderMe(r.data);
-    });
+    sb.rpc('admin_exclude_device', { p_anon: aid, p_exclude: null }).then(function(r){ if (r.error) { $('#meDev').textContent = ''; return; } renderMe(r.data); });
   }
 
   /* ---------------- controls ---------------- */
-  $$('[data-range]').forEach(function(b){ b.onclick = function(){ setRange(b.dataset.range); load(); }; });
+  // A new range reloads only the tabs that use it (Players, Puzzles, Other); Today, Lab and Leagues keep their figures.
+  function rangeChanged(){
+    S.gen++; S.cache = {}; S.data = null;
+    ['players','puzzles','other'].forEach(function(t){ S.loaded[t] = false; });
+    if (S.ready) ensure(S.tab);
+  }
+  $$('[data-range]').forEach(function(b){ b.onclick = function(){ setRange(b.dataset.range); rangeChanged(); }; });
   ['#from','#to'].forEach(function(id){ $(id).addEventListener('change', function(){
     var f=$('#from').value, t=$('#to').value; if(!f||!t) return;
     if (f>t) { var e=$('#loadError'); e.hidden=false; e.textContent='The start date is after the end date. Pick a start on or before '+fmtDate(t)+'.'; return; }
-    S.range='custom'; S.from=f; S.to=t; S.day=null; $$('[data-range]').forEach(function(b){ b.setAttribute('aria-pressed','false'); }); rangeLabel(); load();
+    $('#loadError').hidden = true;
+    S.range='custom'; S.from=f; S.to=t; S.day=null; $$('[data-range]').forEach(function(b){ b.setAttribute('aria-pressed','false'); }); rangeLabel(); rangeChanged();
   }); });
-  $('#refresh').onclick = function(){ load(); };
-  $('#ghosts').onclick = function(){ S.ghosts = !S.ghosts; store('digiAdmin.ghosts', S.ghosts ? '1' : '0'); this.setAttribute('aria-checked', String(S.ghosts)); load(); };
-  $('#cmp').onclick = function(){ S.compare = !S.compare; store('digiAdmin.compare', S.compare ? '1' : '0'); this.setAttribute('aria-checked', String(S.compare)); rangeLabel(); load(); };
+  $('#refresh').onclick = function(){
+    var b = this; b.disabled = true; $('#updated').textContent = 'Making a fresh copy…';
+    sb.rpc('admin_refresh', {}).then(function(){ b.disabled = false; reloadAll(); }, function(){ b.disabled = false; reloadAll(); });
+  };
+  $('#ghosts').onclick = function(){ S.ghosts = !S.ghosts; store('digiAdmin.ghosts', S.ghosts ? '1' : '0'); this.setAttribute('aria-checked', String(S.ghosts)); if (S.loaded.other) { S.gen++; S.cache = {}; S.loaded.other = false; S.data = null; if (S.tab === 'other') ensure('other'); } };
+  $('#cmp').onclick = function(){ S.compare = !S.compare; store('digiAdmin.compare', S.compare ? '1' : '0'); this.setAttribute('aria-checked', String(S.compare)); if (S.loaded.other) { S.loaded.other = false; if (S.tab === 'other') ensure('other'); } };
+  $('#ghosts').setAttribute('aria-checked', String(S.ghosts)); $('#cmp').setAttribute('aria-checked', String(S.compare));
   $$('[data-psort]').forEach(function(b){ b.onclick = function(){ S.psort = b.dataset.psort; S.piecesAll = false; if (S.data) renderNews(); }; });
-  var qt; [['#qNews', function(){ renderOpened(); }], ['#qPuz', function(){ renderPuzList(); }]].forEach(function(p){
-    $(p[0]).addEventListener('input', function(){ clearTimeout(qt); qt = setTimeout(function(){ if (S.data) p[1](); }, 150); });
+  var qt; [['#qNews', function(){ renderOpened(); }], ['#qPuz', function(){ dashData().then(renderPuzList); }]].forEach(function(p){
+    $(p[0]).addEventListener('input', function(){ clearTimeout(qt); qt = setTimeout(p[1], 150); });
   });
   $('#qDefs').addEventListener('input', function(){ renderDefs(this.value); });
-  // Charts take their colours from the theme, so redraw when the phone switches light/dark.
-  if (window.matchMedia) { var mq = window.matchMedia('(prefers-color-scheme: dark)'), redraw = function(){ if (S.data) render(); }; if (mq.addEventListener) mq.addEventListener('change', redraw); else if (mq.addListener) mq.addListener(redraw); }
+  if (window.matchMedia) { var mq = window.matchMedia('(prefers-color-scheme: dark)'), redraw = function(){ if (S.loaded.other && S.data) renderVisitors(); }; if (mq.addEventListener) mq.addEventListener('change', redraw); else if (mq.addListener) mq.addListener(redraw); }
 
   /* ---------------- boot ---------------- */
   var e0 = store('digiAdmin.email'); if (e0) $('#email').value = e0;
   setRange(S.range);
   var h0 = location.hash.slice(1);
-  showTab(TABS.indexOf(h0) >= 0 ? h0 : 'overview', { keepHash: true, keepScroll: true });
-  // Puzzles only from 22 Nov 2026: news pieces and games list on their own sites' feeds (same paths, reports/…),
-  // so the News and Games tabs read those too. GitHub Pages serves them to any origin.
-  function loadFeed(url){ return fetch(url, {cache:'no-store'}).then(function(r){ return r.ok ? r.json() : {items:[]}; })
-    .then(function(j){ (j.items||[]).forEach(function(i){ if (!FEED[i.path]) FEED[i.path] = i; }); }).catch(function(){}); }
-  var feedP = Promise.all([loadFeed('feed.json'), loadFeed('https://news.dailynoodle.co.uk/feed.json'), loadFeed('https://games.dailynoodle.co.uk/feed.json')]);
-  feedP.then(newsToday);
-
+  showTab(ALIAS[h0] || (TABS.indexOf(h0) >= 0 ? h0 : 'today'), { keepHash: true, keepScroll: true });
+  var bootP = Promise.all([
+    getJSON('admin-targets.json').then(function(j){ TARGETS = j || {}; }),
+    loadFeed('feed.json')
+  ]);
   if (!sb) { showSignin('The sign-in library didn’t load. Check your connection and reload the page.', 'err'); return; }
   var booted = false;
   function start(session){
     if (!session) { booted = false; showSignin(); return; }
     if (booted) return; booted = true;
     showApp(session.user && session.user.email || '');
-    feedP.then(load);
+    // admin_ops is the access check: publishing requests start only after it answers for an admin.
+    bootP.then(function(){ return call('admin_ops', {}); }).then(function(r){
+      if (r && r.error && /not_admin/.test(r.error.message || '')) return;
+      if (r && r.error && /JWT|expired|auth/i.test(r.error.message || '')) { showSignin('Your sign-in has expired. Send yourself a new link.', 'err'); return; }
+      S.ready = true;
+      $('#updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      ensure(S.tab);
+      if (S.tab !== 'today') ensure('today');
+    });
     checkMe();
     if (location.hash && /access_token|error/.test(location.hash)) history.replaceState(null, '', location.pathname);
   }
