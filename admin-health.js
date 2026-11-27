@@ -15,7 +15,8 @@
  // Lab trials (must match LAB in tools/publishing-health.js)
  const LAB={tilt:'logic-tilt',tumbler:'word-tumbler',cryptic:'word-cryptic',redact:'word-redact'};
  const LAB_IDS={tilt:'TILT',tumbler:'TUMB',cryptic:'CRYP',redact:'REDA'};
- const GOAL='2027-12-31';           // Alec, Oct 2026: every daily scheduled to at least the end of 2027
+ // Runway notice (Alec, 27 Nov 2026: about 3 months' notice is enough; no end-date goal). admin-targets.json › runway can override.
+ const RUNWAY={warn:90,bad:30};
  const REPO='https://github.com/alecldarlow-cell/dailynoodle';
  const GH='https://api.github.com/repos/alecldarlow-cell/dailynoodle/actions';
  const API=GH+'/workflows/build-feed.yml/runs?per_page=20';
@@ -27,8 +28,10 @@
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const counts=(o,keys)=>o&&typeof o==='object'&&!Array.isArray(o)&&Object.entries(o).every(([t,n])=>keys.includes(t)&&Number.isInteger(n)&&n>=1);
  /** Stock, runway and Lab runway from the build snapshot. `tone` per type: bad under 30 days,
-     warn under 90 days or short of the goal, else good. */
- function analyse(s,today){
+     warn under 90 days (opt.warn/opt.bad override), else good. Lab trials are not judged here: a trial
+     ends by design, so the admin page compares its last file with the trial's review date. */
+ function analyse(s,today,opt){
+  const W=(opt&&opt.warn)||RUNWAY.warn,B=(opt&&opt.bad)||RUNWAY.bad;
   if(s?.version!==1||!validDay(s.today)||!s.days||Array.isArray(s.days)||typeof s.days!=='object'||!Number.isFinite(Date.parse(s.builtAt)))throw Error('Publishing snapshot is unavailable or invalid.');
   for(const [date,d] of Object.entries(s.days)){
    if(!validDay(date)||!counts(d?.counts,TYPES)||!Array.isArray(d.blocked)||d.blocked.some(t=>!TYPES.includes(t))||(d.lab!==undefined&&!counts(d.lab,Object.keys(LAB))))throw Error('Publishing snapshot contains invalid counts.');
@@ -40,9 +43,9 @@
   let futureDays=0;while(futureDays<2000&&status(add(today,futureDays+1)).count===TYPES.length)futureDays++;
   const firstGap=status(add(today,futureDays+1));
   const dates=Object.keys(s.days).sort();
-  const tone=(last)=>{if(!last)return 'bad';const left=between(today,last);return left<30?'bad':(left<90||last<GOAL)?'warn':'good';};
-  const runway=TYPES.map(t=>{let last=null;for(const d of dates)if(d>=today&&s.days[d].counts[t])last=d;return {type:t,last,days:last?between(today,last):0,short:last?Math.max(0,between(last,GOAL)):null,tone:tone(last)};});
-  const lab=Object.keys(LAB).filter(t=>(s.days[today]?.lab||{})[t]).map(t=>{let last=null;for(const d of dates)if(d>=today&&(s.days[d].lab||{})[t])last=d;const left=between(today,last);return {type:t,last,days:left,tone:left<30?'bad':left<60?'warn':'good'};});
+  const tone=(last)=>{if(!last)return 'bad';const left=between(today,last);return left<B?'bad':left<W?'warn':'good';};
+  const runway=TYPES.map(t=>{let last=null;for(const d of dates)if(d>=today&&s.days[d].counts[t])last=d;return {type:t,last,days:last?between(today,last):0,tone:tone(last)};});
+  const lab=Object.keys(LAB).filter(t=>(s.days[today]?.lab||{})[t]).map(t=>{let last=null;for(const d of dates)if(d>=today&&(s.days[d].lab||{})[t])last=d;return {type:t,last,days:between(today,last)};});
   return {stale:s.today!==today,futureDays,through:futureDays?add(today,futureDays):null,firstGap,next:Array.from({length:8},(_,i)=>status(add(today,i+1))),runway,lab};
  }
  function dailyList(j,today){
@@ -98,9 +101,9 @@
   }
   async function stock(today){
    try{
-    const s=await request('publishing-health.json?publishing-check=1',{},true),a=analyse(s,today);
+    const s=await request('publishing-health.json?publishing-check=1',{},true),a=analyse(s,today,api.runway);
     const shortest=a.runway.slice().sort((x,y)=>(x.last||'').localeCompare(y.last||''))[0];
-    sum.stock={stale:a.stale,futureDays:a.futureDays,through:a.through,runway:a.runway,lab:a.lab,shortest,goal:GOAL};
+    sum.stock={stale:a.stale,futureDays:a.futureDays,through:a.through,runway:a.runway,lab:a.lab,shortest};
     card('pubStock',a.stale?'warn':a.futureDays>=7?'good':'warn',a.stale?'Build snapshot is out of date':a.futureDays+' complete future days on file',text((a.through?'One of each type from tomorrow through '+fmt(a.through)+'. ':'')+'First incomplete date: '+fmt(a.firstGap.date)+'. '+problems(a.firstGap))+text('Snapshot assembled '+stamp(s.builtAt)+' (London).')+'<a href="'+runLink(s.runId)+'">View this build’s release run</a>');
     $('pubDays').innerHTML='<table><caption>Next eight days of puzzle stock</caption><thead><tr><th>Date</th><th>Types</th><th>Needs attention</th></tr></thead><tbody>'+a.next.map(d=>'<tr><th scope="row">'+fmt(d.date)+'</th><td>'+d.count+'/'+TYPES.length+'</td><td>'+esc(problems(d)||'Every type on file')+'</td></tr>').join('')+'</tbody></table>';
    }catch(e){sum.stock={error:e.message};card('pubStock','warn','Future stock not confirmed',text(e.message));$('pubDays').textContent='No inventory snapshot available.';}
@@ -135,5 +138,5 @@
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&started&&!document.getElementById('app').hidden&&day()!==checkedDay)check();});
   api.start=()=>{if(!started){started=true;check();}};
  }
- const api={analyse,dailyList,labList,failedStep,mount,TYPES,LAB,NAMES,GOAL};return api;
+ const api={analyse,dailyList,labList,failedStep,mount,TYPES,LAB,NAMES,RUNWAY,runway:null};return api;
 });

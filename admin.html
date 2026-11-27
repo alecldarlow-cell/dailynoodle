@@ -442,9 +442,9 @@
       <section class="card lamps" id="lamps" aria-label="Status"></section>
       <section class="card" id="runway" aria-labelledby="rwH">
         <h2 id="rwH">Runway per type</h2>
-        <p class="sub" id="rwSub">Last dated puzzle on file. The line marks the goal.</p>
+        <p class="sub" id="rwSub">Last dated puzzle on file.</p>
         <div id="rwList" class="rwl"><p class="wait">Checking…</p></div>
-        <p class="note">Amber: short of the goal or under 90 days. Red: under 30 days.</p>
+        <p class="note">Dailies: amber under 3 months, red under 30 days. Lab trials: red only if files run out before the review.</p>
       </section>
       <section class="card" aria-labelledby="ydH">
         <h2 id="ydH">Yesterday</h2>
@@ -785,7 +785,7 @@
   var DEF_GROUPS = [
     ['Today', [
       ['live','Live today','Every daily and today’s Lab trials: the page and the app’s data file for each answer on the published site.','Availability only, not a play-through.'],
-      ['runway','Runway','The last dated puzzle on file for each type, from the last published build, against the goal (31 Dec 2027). Amber: short of the goal or under 90 days. Red: under 30 days.','Lab trials count from the last day each has a file.'],
+      ['runway','Runway','The last dated puzzle on file for each daily, from the last published build. Amber under 3 months, red under 30 days (admin-targets.json › runway; Alec, 27 Nov 2026: about 3 months’ notice is enough).','Lab trials end by design: they are red only if their files run out before the review date. A Lab decision shows on Today from 3 days before each review.'],
       ['apperr','App errors','What broke in the app in the last 7 days (insights.app_errors: never who). A crash (kind fatal) is red.',''],
       ['nightly','Nightly checks','The scheduled run of the Tests workflow on GitHub, and any scheduled task that reports its runs to insights.task_runs.','GitHub’s public API allows about 60 calls an hour from one address.']
     ]],
@@ -1222,7 +1222,7 @@
   });
   function lamp(tone, head, text, extra){ return '<div class="lmp '+tone+'"><span class="lamp" aria-hidden="true"></span><div style="flex:1"><b>'+esc(head)+'</b><span class="t">'+esc(text)+'</span></div>'+(extra||'')+'</div>'; }
   function renderToday(){
-    var h = S.health || {}, ops = TD.ops && TD.ops.data, acts = [], lamps = [], goal = (TARGETS && TARGETS.stock_goal) || '2027-12-31';
+    var h = S.health || {}, ops = TD.ops && TD.ops.data, acts = [], lamps = [];
     function act(t, head, small, go, at){ acts.push({ t:t, head:head, small:small, go:go, at:at }); }
     // Live today
     if (!h.live) lamps.push(lamp('', 'Live today', 'Checking…'));
@@ -1265,30 +1265,37 @@
       function bump(t){ if (t === 'bad' || (t === 'warn' && stone === 'good')) stone = t; }
       if (st.stale) { bump('warn'); bits.push('build snapshot out of date'); }
       if (st.futureDays < 7) { bump('bad'); bits.push('only '+st.futureDays+' complete days ahead'); act('bad', 'Only '+st.futureDays+' days of complete stock', 'Every daily must have a file each day', 'today', 'runway'); }
-      var labs = st.lab || [], labBad = labs.filter(function(l){ return l.tone !== 'good'; });
-      if (labBad.length) {
-        var lw = labBad.slice().sort(function(a,b){ return a.last.localeCompare(b.last); })[0];
-        bump(lw.tone); bits.push('Lab ends '+fmtDay(lw.last));
-        act(lw.tone, 'Make Lab puzzles past '+fmtDay(lw.last), labBad.map(function(l){ return NAME[l.type]; }).join(', ')+': '+lw.days+' '+plural(lw.days,'day')+' left', 'lab');
-      }
-      // One action for the dailies short of the goal, however many (each type's date is in the runway list).
+      // Lab trials end by design: what matters is the decision at each review, and that files last until then.
+      var labs = st.lab || [], tr = labTrials();
+      labs.forEach(function(l){ var t = tr[l.type]; l.review = t && t.review; l.tone = l.review && l.last < l.review ? 'bad' : 'good'; });
+      var labShort = labs.filter(function(l){ return l.tone === 'bad'; });
+      if (labShort.length) { bump('bad'); bits.push('Lab files run out before the review'); act('bad', 'Lab puzzles run out before the review', labShort.map(function(l){ return NAME[l.type]+' ends '+fmtDay(l.last)+', review '+fmtDay(l.review); }).join(' · '), 'lab'); }
+      else if (labs.length) bits.push('Lab files to '+fmtDay(labs.map(function(l){ return l.last; }).sort()[0]));
+      // One action for the dailies under the notice period, however many (each type's date is in the runway list).
+      var R = (TARGETS && TARGETS.runway) || { warn_days: 90 };
       var short = (st.runway || []).filter(function(r){ return r.tone !== 'good'; }).sort(function(a,b){ return (a.last||'').localeCompare(b.last||''); });
       short.forEach(function(r){ bump(r.tone); });
       if (short.length) {
         var w0 = short[0], wt = short.some(function(r){ return r.tone === 'bad'; }) ? 'bad' : 'warn';
-        bits.push(short.length === 1 ? NAME[w0.type]+' short of the goal' : short.length+' dailies short of the goal');
-        act(wt, short.length === 1 ? 'Extend '+NAME[w0.type]+' to '+fmtDate(goal) : 'Extend '+short.length+' dailies to '+fmtDate(goal),
-          short.slice(0, 3).map(function(r){ return NAME[r.type]+' ends '+(r.last ? fmtDate(r.last)+(r.short ? ', '+r.short+' days short' : '') : 'now'); }).join(' · ')+(short.length > 3 ? ' · and '+(short.length-3)+' more' : ''), 'today', 'runway');
+        bits.push(short.length === 1 ? NAME[w0.type]+' runs out within '+Math.round(R.warn_days/30)+' months' : short.length+' dailies run out within '+Math.round(R.warn_days/30)+' months');
+        act(wt, short.length === 1 ? 'Make more '+NAME[w0.type]+' puzzles' : 'Make more puzzles for '+short.length+' dailies',
+          short.slice(0, 3).map(function(r){ return NAME[r.type]+' ends '+(r.last ? fmtDate(r.last)+' ('+r.days+' '+plural(r.days,'day')+')' : 'now'); }).join(' · ')+(short.length > 3 ? ' · and '+(short.length-3)+' more' : ''), 'today', 'runway');
+      }
+      // Lab decisions due: a trial's review date within a few days, or passed with no decision recorded.
+      var dueIn = (TARGETS && TARGETS.lab_decision_warn_days) || 3, due = Object.keys(tr).filter(function(k){ var t = tr[k]; return !t.retired && !t.decided && t.review && daysBetween(londonToday(), t.review) <= dueIn; });
+      if (due.length) {
+        var rv = due.map(function(k){ return tr[k].review; }).sort()[0], late = rv < londonToday();
+        act(late ? 'bad' : 'warn', (late ? 'Lab decision overdue: ' : 'Decide on ')+due.map(function(k){ return NAME[k]; }).join(', ')+(late ? '' : ' by '+fmtWeekday(rv)), 'Promote, extend or retire. The Lab tab has a suggestion for each.', 'lab');
       }
       if (st.shortest && st.shortest.last) bits.push('all dailies on file to '+fmtDate(st.shortest.last));
       lamps.push(lamp(stone, 'Puzzle stock', bits.join(' · ')));
-      renderRunway(st, goal);
+      renderRunway(st);
     }
     $('#lamps').innerHTML = lamps.join('');
     // Headline
     var hd = $('#todayHead'), pending = !h.live || !h.stock || !h.release || !TD.ops;
     acts.sort(function(a,b){ return (a.t === 'bad' ? 0 : 1) - (b.t === 'bad' ? 0 : 1); });
-    if (!acts.length) { hd.className = 'head ' + (pending ? '' : 'good'); hd.innerHTML = '<h1>'+(pending ? 'Checking…' : 'All clear')+'</h1>'+(pending ? '' : '<p>Live, released and stocked to the goal.</p>'); }
+    if (!acts.length) { hd.className = 'head ' + (pending ? '' : 'good'); hd.innerHTML = '<h1>'+(pending ? 'Checking…' : 'All clear')+'</h1>'+(pending ? '' : '<p>Live, released, stocked and no decisions due.</p>'); }
     else {
       var worst = acts.some(function(a){ return a.t === 'bad'; }) ? 'bad' : 'warn';
       hd.className = 'head ' + worst;
@@ -1303,20 +1310,16 @@
     var day = londonDay(d), t = d.toLocaleTimeString('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit'});
     return day === londonToday() ? t : day === addDays(londonToday(), -1) ? 'yesterday '+t : fmtDay(day);
   }
-  function renderRunway(st, goal){
-    var today = londonToday(), rows = [];
-    var labs = st.lab || [];
-    if (labs.length) {
-      var same = labs.every(function(l){ return l.last === labs[0].last; });
-      if (same) rows.push({ label:'Lab trials', last:labs[0].last, days:labs[0].days, tone:labs[0].tone, bold:true, note: labs.map(function(l){ return NAME[l.type]; }).join(', ') });
-      else labs.forEach(function(l){ rows.push({ label:'Lab: '+NAME[l.type], last:l.last, days:l.days, tone:l.tone, bold:true }); });
-    }
+  function labTrials(){ return (TARGETS && TARGETS.lab && TARGETS.lab.trials) || {}; }
+  function renderRunway(st){
+    var rows = [], R = (TARGETS && TARGETS.runway) || { warn_days: 90, bad_days: 30 };
+    (st.lab || []).forEach(function(l){ rows.push({ label:'Lab: '+NAME[l.type], last:l.last, days:l.days, tone:l.tone || 'good', bold:true, note: l.review ? 'Review '+fmtDay(l.review) : '' }); });
     (st.runway || []).slice().sort(function(a,b){ return (a.last||'').localeCompare(b.last||''); }).forEach(function(r){ rows.push({ label:NAME[r.type], last:r.last, days:r.days, tone:r.tone, bold:r.tone !== 'good' }); });
-    var maxD = Math.max.apply(null, rows.map(function(r){ return r.days || 0; }).concat([daysBetween(today, goal) + 30]));
-    var gp = Math.min(100, 100 * daysBetween(today, goal) / maxD);
-    $('#rwSub').textContent = 'Last dated puzzle on file. The line marks the goal, '+fmtDate(goal)+'.';
+    var maxD = Math.max.apply(null, rows.map(function(r){ return r.days || 0; }).concat([R.warn_days * 2]));
+    var wp = Math.min(100, 100 * R.warn_days / maxD);
+    $('#rwSub').textContent = 'Last dated puzzle on file. The line marks '+Math.round(R.warn_days/30)+' months from today. Lab trials show their review date.';
     $('#rwList').innerHTML = rows.map(function(r){
-      return '<div class="rw '+r.tone+'"'+(r.note ? ' title="'+esc(r.note)+'"' : '')+'><span'+(r.bold?' style="font-weight:600"':'')+'>'+esc(r.label)+'</span><span class="trk"><span class="fill" style="width:'+Math.max(1, Math.min(100, 100*(r.days||0)/maxD)).toFixed(1)+'%"></span><span class="goal" style="left:'+gp.toFixed(1)+'%"></span></span><span class="d">'+(r.last ? esc(fmtShort(r.last)) : 'none')+'</span></div>';
+      return '<div class="rw '+r.tone+'"'+(r.note ? ' title="'+esc(r.note)+'"' : '')+'><span'+(r.bold?' style="font-weight:600"':'')+'>'+esc(r.label)+(r.note ? '<small style="display:block;font-weight:400;color:var(--muted)">'+esc(r.note)+'</small>' : '')+'</span><span class="trk"><span class="fill" style="width:'+Math.max(1, Math.min(100, 100*(r.days||0)/maxD)).toFixed(1)+'%"></span><span class="goal" style="left:'+wp.toFixed(1)+'%"></span></span><span class="d">'+(r.last ? esc(fmtShort(r.last)) : 'none')+'</span></div>';
     }).join('') || '<p class="empty">No stock snapshot.</p>';
   }
   function renderYesterday(){
@@ -1557,13 +1560,15 @@
       time: inBand(row.median_solve_secs, L.secs || [30,180])
     };
     var v, tone;
-    if (checks.votes && checks.back && checks.fin && checks.time) { v = 'Ready to go daily'; tone = 'good'; }
-    else if (votes >= (L.votes||20) && yes < (L.yes||70) && row.pct_returned != null && row.pct_returned < (L.retire_returning||50)) { v = 'Retire candidate'; tone = 'bad'; }
-    else if ((row.trial_days || 0) < 10) { v = 'Too early'; tone = ''; }
-    else if (checks.back && checks.fin && checks.time) { v = 'Nearly there'; tone = 'good'; }
-    else if ((yes == null || yes >= (L.yes||70)) && !checks.back) { v = 'Liked, fewer return'; tone = 'warn'; }
-    else { v = 'Mixed'; tone = 'warn'; }
-    return { v:v, tone:tone, checks:checks, votes:votes };
+    // v: what the figures say; d: the suggested decision at the review (Alec, 27 Nov 2026: every trial needs one).
+    var d;
+    if (checks.votes && checks.back && checks.fin && checks.time) { v = 'Ready to go daily'; tone = 'good'; d = 'Promote'; }
+    else if (votes >= (L.votes||20) && yes < (L.yes||70) && row.pct_returned != null && row.pct_returned < (L.retire_returning||50)) { v = 'Retire candidate'; tone = 'bad'; d = 'Retire'; }
+    else if ((row.trial_days || 0) < 10) { v = 'Too early'; tone = ''; d = 'Extend: too early to call'; }
+    else if (checks.back && checks.fin && checks.time) { v = 'Nearly there'; tone = 'good'; d = 'Promote, or extend for votes'; }
+    else if ((yes == null || yes >= (L.yes||70)) && !checks.back) { v = 'Liked, fewer return'; tone = 'warn'; d = row.pct_returned != null && med != null && med - row.pct_returned <= 5 ? 'Promote or extend: close on coming back' : 'Extend, or retire if it doesn’t pick up'; }
+    else { v = 'Mixed'; tone = 'warn'; d = 'Extend or retire'; }
+    return { v:v, tone:tone, d:d, checks:checks, votes:votes };
   }
   function renderLab(){
     if (!LAB.ready) return;
@@ -1578,8 +1583,9 @@
     var labStock = h.stock && h.stock.lab || [], lend = labStock.slice().sort(function(a,b){ return a.last.localeCompare(b.last); })[0];
     var stalled = live.filter(function(t){ var p = pace[t.type] || {}; return (p.total||0) < (L.votes||20) && (p.new_7d||0) <= 2 && t.from <= addDays(londonToday(), -10); });
     var hd = $('#labHead');
-    hd.innerHTML = '<h1>'+(next ? 'Review on '+esc(fmtWeekday(next)) : 'Lab')+'</h1>' +
-      '<p>Each trial is read over its own window.'+(lend ? ' Lab stock ends '+esc(fmtDay(lend.last))+' ('+lend.days+' '+plural(lend.days,'day')+').' : '')+'</p>' +
+    hd.innerHTML = '<h1>'+(next ? 'Decision due '+esc(fmtWeekday(next)) : 'Lab')+'</h1>' +
+      '<p>Each trial is short by design and ends with a decision: <b>promote</b> it to a daily, <b>extend</b> the trial, or <b>retire</b> it.</p>' +
+      '<p>Each trial is read over its own window.'+(lend ? ' Lab files run to '+esc(fmtDay(lend.last))+'; extending a trial past that needs more puzzles.' : '')+'</p>' +
       (stalled.length ? '<p><b>Votes have stalled:</b> '+esc(stalled.map(function(t){ return NAME[t.type]+' ('+((pace[t.type]||{}).new_7d||0)+')'; }).join(', '))+' new in the last 7 days. With about '+esc(String(Math.round(median(live.map(function(t){ return (LAB.rows[t.type]||{}).starters || 0; })) || 0)))+' players per trial, '+(L.votes||20)+' votes may never come, so coming back carries more weight.</p>' : '') +
       '<p style="font-size:12.5px">To go daily: '+(L.votes||20)+'+ votes with '+(L.yes||70)+'%+ Yes · comes back at least as often as the dailies ('+(med != null ? med+'%' : '–')+') · '+(L.finished||85)+'%+ finished · median '+clock((L.secs||[30])[0])+'–'+clock((L.secs||[0,180])[1])+' '+defLink('labbar')+'</p>';
     if (LAB.err && !Object.keys(LAB.rows).length) { $('#trials').innerHTML = '<p class="empty">'+esc(setupMsg(LAB.err, 'admin_lab', 'lab_readout'))+'</p>'; return; }
@@ -1597,13 +1603,14 @@
           '<div><b>'+pct(row.pct_returned)+'</b><span class="'+(V.checks.back ? 'ok' : 'no')+'">come back (bar '+(med != null ? med+'%' : '–')+')'+(V.checks.back ? ' · met' : '')+'</span></div>' +
           '<div><b>'+pct(row.pct_finished)+'</b><span class="'+(V.checks.fin ? 'ok' : 'no')+'">finished'+(V.checks.fin ? ' · met' : '')+'</span></div>' +
           '<div><b>'+clock(row.median_solve_secs)+'</b><span class="'+(V.checks.time ? 'ok' : 'no')+'">median'+(V.checks.time ? ' · met' : '')+'</span></div>' +
-        '</div></section>';
+        '</div>' +
+        '<p style="margin-top:10px;font-size:13.5px"><b>Suggested at the review'+(t.review ? ' ('+esc(fmtDay(t.review))+')' : '')+':</b> '+esc(V.d)+'</p></section>';
     }).join('') || '<p class="empty">No Lab trials running.</p>';
     // the call
     var c = $('#labCall');
     if (calls.length) {
       c.hidden = false;
-      c.innerHTML = '<h2>The call'+(next ? ' on '+esc(fmtWeekday(next)) : '')+'</h2><p class="sub" style="font-size:13px;margin-top:4px">'+calls.map(function(x){
+      c.innerHTML = '<h2>The decision'+(next ? ' on '+esc(fmtWeekday(next)) : '')+'</h2><p class="sub" style="font-size:13px;margin-top:4px">'+calls.map(function(x){
         var nm = '<b style="color:var(--ink)">'+esc(NAME[x.t.type])+'</b> ';
         if (x.V.v === 'Ready to go daily') return nm+'clears every bar.';
         if (x.V.v === 'Nearly there') return nm+'meets every bar but votes'+(x.V.votes ? ' ('+x.V.votes+' of '+(L.votes||20)+')' : '')+'.';
