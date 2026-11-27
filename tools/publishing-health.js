@@ -3,11 +3,16 @@ const fs=require('node:fs'),path=require('node:path');
 const {londonDay}=require('../dn-core');
 const TYPES={mini:'crossword-mini',doku:'logic-doku',sweep:'logic-sweep',path:'logic-path',link:'word-link',tangle:'word-tangle',borders:'geo-borders',reckon:'quiz-reckon',tally:'logic-tally'};
 const IDS={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK',tally:'TALLY'};
+// Lab trials (27 Nov 2026): counted per day under `lab`, apart from the daily stock, so a trial running out
+// never makes the dailies' stock look short. A trial is live on a day it has a file. Add a new trial here.
+const LAB={tilt:'logic-tilt',tumbler:'word-tumbler',cryptic:'word-cryptic',redact:'word-redact'};
 const addDay=(day,n)=>{const d=new Date(day+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
 function snapshot(root,{now=new Date(),env=process.env}={}){
  const today=londonDay(now),days={};
  for(const file of fs.readdirSync(path.join(root,'reports')).sort()){
   const m=/^(\d{4}-\d{2}-\d{2})-(.+)\.html$/.exec(file);if(!m||m[1]<today)continue;
+  const lab=Object.keys(LAB).find(t=>new RegExp('^'+LAB[t]+'(?:-\\d+)?$').test(m[2]));
+  if(lab){const e=(days[m[1]]||={counts:{},blocked:[]});(e.lab||={})[lab]=(e.lab[lab]||0)+1;continue;}
   const type=Object.keys(TYPES).find(t=>new RegExp('^'+TYPES[t]+'(?:-\\d+)?$').test(m[2]));if(!type)continue;
   const date=m[1],src=fs.readFileSync(path.join(root,'reports',file),'utf8');
   const meta=name=>{const tag=src.match(new RegExp('<meta\\b[^>]*name=["\\\']'+name+'["\\\'][^>]*>','i'));return tag&&(tag[0].match(/content=(["'])(.*?)\1/i)||[])[2];};
@@ -19,4 +24,4 @@ function snapshot(root,{now=new Date(),env=process.env}={}){
  const run=/^\d+$/.test(env.GITHUB_RUN_ID||'')?env.GITHUB_RUN_ID:null;
  return {version:1,builtAt:new Date(now).toISOString(),today,runId:run,checkedThrough:addDay(today,7),days};
 }
-module.exports={snapshot,TYPES,addDay};
+module.exports={snapshot,TYPES,LAB,addDay};

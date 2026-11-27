@@ -36,3 +36,12 @@ The page and build metadata are public static files, like the existing admin HTM
 - Browser fixtures cover healthy stock/live URLs, queued/in-progress releases alongside the last success, failed URL checks, stale stock, API rate limiting, timeout/retry, sign-out and rejected admin access. Phone and desktop panel renders were inspected.
 - Worker tests assert network-only health requests; the real worker suite retains its offline regressions.
 - Artifact checks require a current snapshot without future content. The post-deploy read-only check confirms the public admin/script, current metadata, and both GET and HEAD responses for every one of today's puzzle URLs.
+
+## Admin rebuild (27 Nov 2026)
+
+The checks moved from the Publishing tab to **Today** (cards folded under Publishing detail, same ids). Changes:
+- **Lab trials** are checked too: today's Lab items come from `feed.json`, and every daily and trial has both its page and its app data file (`reports/<page>.json`) checked with HEAD.
+- **Stock** counts Lab trials per day under `lab` in `publishing-health.json`, apart from the daily counts, so a trial running out never shortens the daily stock. `analyse()` also returns `runway` (last dated file per daily, tone against the goal 31 Dec 2027) and `lab` (per trial live today).
+- **Release**: when the latest run failed, the failed job and step are read from GitHub's public jobs API and shown.
+- **Nightly**: the latest scheduled run of `tests.yml` is read too.
+- The `dn:publishing` event now carries `live` (with `lab`, `down`), `stock` (with `runway`, `lab`, `shortest`), `release` (with `step`) and `tests`.

@@ -1,23 +1,37 @@
-/* Publishing counts are public build metadata. Reader/admin data stays in Supabase. */
+/* Publishing counts are public build metadata. Reader/admin data stays in Supabase.
+   27 Nov 2026 (admin rebuild): also checks today's Lab trials and the app's data file for each
+   puzzle, gives each type's runway (last puzzle on file) against the goal, names the failed job
+   and step of a red release, and reads the nightly Tests run. Results go out in one dn:publishing
+   event for the Today tab. */
 (function(root,factory){
  const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;
  else {root.dnPublishingHealth=api;api.mount();}
 })(typeof globalThis==='object'?globalThis:this,function(){
  'use strict';
  const TYPES=['mini','doku','sweep','path','link','tangle','borders','reckon','tally'];   // Reckon from 20 Oct 2026, Tally from 5 Nov 2026
- const NAMES={mini:'Mini',doku:'Doku',sweep:'Sweep',path:'Path',link:'Link',tangle:'Tangle',borders:'Borders',reckon:'Reckon',tally:'Tally'};
+ const NAMES={mini:'Mini',doku:'Doku',sweep:'Sweep',path:'Path',link:'Link',tangle:'Tangle',borders:'Borders',reckon:'Reckon',tally:'Tally',tilt:'Tilt',tumbler:'Tumbler',cryptic:'Cryptic',redact:'Redact'};
  const SLUGS={mini:'crossword-mini',doku:'logic-doku',sweep:'logic-sweep',path:'logic-path',link:'word-link',tangle:'word-tangle',borders:'geo-borders',reckon:'quiz-reckon',tally:'logic-tally'};
  const IDS={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK',tally:'TALLY'};
+ // Lab trials (must match LAB in tools/publishing-health.js)
+ const LAB={tilt:'logic-tilt',tumbler:'word-tumbler',cryptic:'word-cryptic',redact:'word-redact'};
+ const LAB_IDS={tilt:'TILT',tumbler:'TUMB',cryptic:'CRYP',redact:'REDA'};
+ const GOAL='2027-12-31';           // Alec, Oct 2026: every daily scheduled to at least the end of 2027
  const REPO='https://github.com/alecldarlow-cell/dailynoodle';
- const API='https://api.github.com/repos/alecldarlow-cell/dailynoodle/actions/workflows/build-feed.yml/runs?per_page=20';
+ const GH='https://api.github.com/repos/alecldarlow-cell/dailynoodle/actions';
+ const API=GH+'/workflows/build-feed.yml/runs?per_page=20';
+ const TESTS=GH+'/workflows/tests.yml/runs?event=schedule&per_page=1';
  const day=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
  const add=(d,n)=>{const x=new Date(d+'T12:00:00Z');x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10);};
+ const between=(a,b)=>Math.round((Date.parse(b+'T12:00:00Z')-Date.parse(a+'T12:00:00Z'))/864e5);
  const validDay=d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&Number.isFinite(Date.parse(d+'T12:00:00Z'))&&new Date(d+'T12:00:00Z').toISOString().slice(0,10)===d;
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const counts=(o,keys)=>o&&typeof o==='object'&&!Array.isArray(o)&&Object.entries(o).every(([t,n])=>keys.includes(t)&&Number.isInteger(n)&&n>=1);
+ /** Stock, runway and Lab runway from the build snapshot. `tone` per type: bad under 30 days,
+     warn under 90 days or short of the goal, else good. */
  function analyse(s,today){
   if(s?.version!==1||!validDay(s.today)||!s.days||Array.isArray(s.days)||typeof s.days!=='object'||!Number.isFinite(Date.parse(s.builtAt)))throw Error('Publishing snapshot is unavailable or invalid.');
   for(const [date,d] of Object.entries(s.days)){
-   if(!validDay(date)||!d?.counts||typeof d.counts!=='object'||!Array.isArray(d.blocked)||d.blocked.some(t=>!TYPES.includes(t))||Object.entries(d.counts).some(([t,n])=>!TYPES.includes(t)||!Number.isInteger(n)||n<1))throw Error('Publishing snapshot contains invalid counts.');
+   if(!validDay(date)||!counts(d?.counts,TYPES)||!Array.isArray(d.blocked)||d.blocked.some(t=>!TYPES.includes(t))||(d.lab!==undefined&&!counts(d.lab,Object.keys(LAB))))throw Error('Publishing snapshot contains invalid counts.');
   }
   const status=date=>{
    const d=s.days[date]||{counts:{},blocked:[]};
@@ -25,7 +39,11 @@
   };
   let futureDays=0;while(futureDays<2000&&status(add(today,futureDays+1)).count===TYPES.length)futureDays++;
   const firstGap=status(add(today,futureDays+1));
-  return {stale:s.today!==today,futureDays,through:futureDays?add(today,futureDays):null,firstGap,next:Array.from({length:8},(_,i)=>status(add(today,i+1)))};
+  const dates=Object.keys(s.days).sort();
+  const tone=(last)=>{if(!last)return 'bad';const left=between(today,last);return left<30?'bad':(left<90||last<GOAL)?'warn':'good';};
+  const runway=TYPES.map(t=>{let last=null;for(const d of dates)if(d>=today&&s.days[d].counts[t])last=d;return {type:t,last,days:last?between(today,last):0,short:last?Math.max(0,between(last,GOAL)):null,tone:tone(last)};});
+  const lab=Object.keys(LAB).filter(t=>(s.days[today]?.lab||{})[t]).map(t=>{let last=null;for(const d of dates)if(d>=today&&(s.days[d].lab||{})[t])last=d;const left=between(today,last);return {type:t,last,days:left,tone:left<30?'bad':left<60?'warn':'good'};});
+  return {stale:s.today!==today,futureDays,through:futureDays?add(today,futureDays):null,firstGap,next:Array.from({length:8},(_,i)=>status(add(today,i+1))),runway,lab};
  }
  function dailyList(j,today){
   if(j?.today!==today)throw Error('Daily list is out of date; expected '+today+'.');
@@ -35,33 +53,54 @@
   }
   return TYPES.map(t=>j.items.find(i=>i.type===t));
  }
+ /** Today's Lab trials from feed.json: one safe path per trial type dated today. */
+ function labList(feed,today){
+  const out=[];
+  for(const i of (feed&&Array.isArray(feed.items)?feed.items:[])){
+   if(i?.kind!=='puzzle'||i.date!==today||!LAB[i.type]||typeof i.path!=='string')continue;
+   if(!new RegExp('^reports/'+today+'-'+LAB[i.type]+'(?:-\\d+)?\\.html$').test(i.path))continue;
+   if(!out.some(x=>x.type===i.type))out.push({type:i.type,path:i.path});
+  }
+  return out;
+ }
+ /** The failed job and step of a run's jobs list, as one line, or ''. */
+ function failedStep(jobs){
+  const j=(jobs&&Array.isArray(jobs.jobs)?jobs.jobs:[]).find(x=>x&&x.conclusion==='failure');if(!j)return '';
+  const st=(Array.isArray(j.steps)?j.steps:[]).find(x=>x&&x.conclusion==='failure');
+  return String(j.name||'A job').slice(0,80)+(st?' › '+String(st.name||'').slice(0,80):'');
+ }
  const runLink=id=>/^\d+$/.test(String(id))?REPO+'/actions/runs/'+id:REPO+'/actions/workflows/build-feed.yml';
  const stamp=s=>Number.isFinite(Date.parse(s))?new Date(s).toLocaleString('en-GB',{timeZone:'Europe/London',dateStyle:'medium',timeStyle:'short'}):'Unknown time';
+ const clock=s=>new Date(s).toLocaleTimeString('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit'});
  const fmt=d=>new Date(d+'T12:00:00Z').toLocaleDateString('en-GB',{timeZone:'Europe/London',day:'numeric',month:'short',year:'numeric'});
  async function request(url,options={},json=false){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
   try{const r=await fetch(url,{cache:'no-store',...options,signal:controller.signal});if(!r.ok)throw Error('Request returned '+r.status+'.');return json?await r.json():r;}finally{clearTimeout(timer);}
  }
+ const head=async p=>{try{await request(p+'?publishing-check=1',{method:'HEAD'});return true;}catch(e){return false;}};
  function mount(){
-  const panel=document.getElementById('publishing');if(!panel)return;
+  const panel=document.getElementById('pubPanel');if(!panel)return;
   const $=id=>document.getElementById(id);let busy=false,started=false,checkedDay='';let sum={};
-  function card(id,tone,title,body){$(id).innerHTML='<p class="pub-state '+tone+'">'+esc(title)+'</p>'+body;}
+  function card(id,tone,title,body){const el=$(id);if(el)el.innerHTML='<p class="pub-state '+tone+'">'+esc(title)+'</p>'+body;}
   const text=s=>'<p class="sub">'+esc(s)+'</p>';
   const problems=d=>[d.missing.length?'Missing: '+d.missing.map(t=>NAMES[t]).join(', '):'',d.duplicate.length?'Duplicates: '+d.duplicate.map(t=>NAMES[t]).join(', '):'',d.blocked.length?'Metadata needs repair: '+d.blocked.map(t=>NAMES[t]).join(', '):''].filter(Boolean).join('. ');
   async function live(today){
    try{
     const j=await request('puzzles-today.json?publishing-check=1',{},true),items=dailyList(j,today);
-    const results=await Promise.all(items.map(async i=>{
-     try{await request(i.path+'?publishing-check=1',{method:'HEAD'});return {...i,ok:true};}catch(e){return {...i,ok:false};}
-    }));
+    let lab=[];try{lab=labList(await request('feed.json?publishing-check=1',{},true),today);}catch(e){lab=[];}
+    const all=items.map(i=>({...i,lab:false})).concat(lab.map(i=>({...i,lab:true})));
+    const results=await Promise.all(all.map(async i=>{const [page,data]=await Promise.all([head(i.path),head(i.path.replace(/\.html$/,'.json'))]);return {...i,ok:page&&data,page,data};}));
     if(day()!==today)throw Error('The London date changed during this check. Check again.');
-    const n=results.filter(i=>i.ok).length;sum.live={ok:n,total:TYPES.length};
-    card('pubLive',n===TYPES.length?'good':'bad',n+'/'+TYPES.length+' puzzle files responding',text('Checked the daily list and each live URL for '+fmt(today)+'. This checks availability, not a full play-through.')+'<ul class="pub-items">'+results.map(i=>'<li><a href="'+esc(i.path)+'">'+NAMES[i.type]+'</a> · '+(i.ok?'Available':'Could not confirm')+'</li>').join('')+'</ul>');
+    const n=results.filter(i=>i.ok).length,daily=results.filter(i=>!i.lab&&i.ok).length;
+    sum.live={ok:n,total:results.length,daily,dailyTotal:TYPES.length,lab:lab.length,down:results.filter(i=>!i.ok).map(i=>NAMES[i.type]||i.type)};
+    card('pubLive',n===results.length?'good':'bad',n+'/'+results.length+' puzzle files responding',text('Today’s '+TYPES.length+' dailies and '+lab.length+' Lab '+(lab.length===1?'trial':'trials')+', each page and its app data file, for '+fmt(today)+'. This checks availability, not a full play-through.')+'<ul class="pub-items">'+results.map(i=>'<li><a href="'+esc(i.path)+'">'+esc(NAMES[i.type]||i.type)+'</a> · '+(i.ok?'Available':!i.page?'Page not confirmed':'App data not confirmed')+'</li>').join('')+'</ul>');
    }catch(e){sum.live={error:e.message};card('pubLive','bad','Today’s puzzles not confirmed',text(e.message));}
   }
   async function stock(today){
    try{
-    const s=await request('publishing-health.json?publishing-check=1',{},true),a=analyse(s,today);sum.stock={stale:a.stale,futureDays:a.futureDays,through:a.through};
+    const s=await request('publishing-health.json?publishing-check=1',{},true),a=analyse(s,today);
+    const shortest=a.runway.slice().sort((x,y)=>(x.last||'').localeCompare(y.last||''))[0];
+    sum.stock={stale:a.stale,futureDays:a.futureDays,through:a.through,runway:a.runway,lab:a.lab,shortest,goal:GOAL};
     card('pubStock',a.stale?'warn':a.futureDays>=7?'good':'warn',a.stale?'Build snapshot is out of date':a.futureDays+' complete future days on file',text((a.through?'One of each type from tomorrow through '+fmt(a.through)+'. ':'')+'First incomplete date: '+fmt(a.firstGap.date)+'. '+problems(a.firstGap))+text('Snapshot assembled '+stamp(s.builtAt)+' (London).')+'<a href="'+runLink(s.runId)+'">View this build’s release run</a>');
     $('pubDays').innerHTML='<table><caption>Next eight days of puzzle stock</caption><thead><tr><th>Date</th><th>Types</th><th>Needs attention</th></tr></thead><tbody>'+a.next.map(d=>'<tr><th scope="row">'+fmt(d.date)+'</th><td>'+d.count+'/'+TYPES.length+'</td><td>'+esc(problems(d)||'Every type on file')+'</td></tr>').join('')+'</tbody></table>';
    }catch(e){sum.stock={error:e.message};card('pubStock','warn','Future stock not confirmed',text(e.message));$('pubDays').textContent='No inventory snapshot available.';}
@@ -70,16 +109,25 @@
    try{
     const data=await request(API,{},true);if(!Array.isArray(data.workflow_runs)||!data.workflow_runs.length)throw Error('No release runs returned.');
     const runs=data.workflow_runs,latest=runs[0],success=runs.find(r=>r.status==='completed'&&r.conclusion==='success');
-    sum.release={success:latest.conclusion==='success',failed:latest.status==='completed'&&latest.conclusion!=='success'&&latest.conclusion!=='cancelled',lastSuccess:success?success.updated_at:null,url:runLink(latest.id)};
+    const failed=latest.status==='completed'&&latest.conclusion!=='success'&&latest.conclusion!=='cancelled';
+    let step='';if(failed&&/^\d+$/.test(String(latest.id))){try{step=failedStep(await request(GH+'/runs/'+latest.id+'/jobs?per_page=30',{},true));}catch(e){step='';}}
+    sum.release={success:latest.conclusion==='success',failed,step,lastSuccess:success?success.updated_at:null,url:runLink(latest.id)};
     const label=latest.status==='completed'?({success:'Succeeded',failure:'Failed',cancelled:'Cancelled',timed_out:'Timed out'}[latest.conclusion]||latest.conclusion||'Unknown'):({in_progress:'In progress',queued:'Queued',pending:'Waiting',waiting:'Waiting',requested:'Requested'}[latest.status]||latest.status);
-    card('pubRelease',latest.conclusion==='success'?'good':latest.status==='completed'&&latest.conclusion!=='cancelled'?'bad':'warn','Latest release: '+label,'<p><a href="'+runLink(latest.id)+'">View latest release run</a></p>'+text(success?'Last successful release finished '+stamp(success.updated_at)+' (London).':'No successful release in the latest 20 runs.')+(success?'<a href="'+runLink(success.id)+'">View last successful release</a>':'')+text('A successful run includes deployment and the live health check. A failed run may fail before or after publishing; use the live URL checks alongside this status.'));
+    card('pubRelease',latest.conclusion==='success'?'good':failed?'bad':'warn','Latest release: '+label,(step?text('Failed at: '+step):'')+'<p><a href="'+runLink(latest.id)+'">View latest release run</a></p>'+text(success?'Last successful release finished '+stamp(success.updated_at)+' (London).':'No successful release in the latest 20 runs.')+(success?'<a href="'+runLink(success.id)+'">View last successful release</a>':'')+text('A successful run includes deployment and the live health check. A failed run may fail before or after publishing; use the live URL checks alongside this status.'));
    }catch(e){sum.release={error:e.message};card('pubRelease','warn','GitHub status not confirmed',text('GitHub may be unavailable or its public API rate limit reached. The live URL checks are separate.')+'<a href="'+REPO+'/actions/workflows/build-feed.yml">Open releases on GitHub</a>');}
   }
+  async function nightly(){
+   try{
+    const r=(await request(TESTS,{},true)).workflow_runs?.[0];if(!r)throw Error('No nightly run returned.');
+    const ageH=(Date.now()-Date.parse(r.created_at))/36e5;
+    sum.tests={ok:r.status==='completed'&&r.conclusion==='success',done:r.status==='completed',conclusion:r.conclusion,at:r.created_at,stale:ageH>26,url:runLink(r.id)};
+   }catch(e){sum.tests={error:e.message};}
+  }
   async function check(){
-   if(busy)return;busy=true;const today=day();checkedDay=today;$('pubCheck').disabled=true;$('pubChecked').textContent='Checking publishing…';
+   if(busy)return;busy=true;const today=day();checkedDay=today;$('pubCheck').disabled=true;$('pubChecked').textContent='Checking…';
    for(const id of ['pubLive','pubStock','pubRelease'])card(id,'','Checking…','');$('pubDays').textContent='Loading inventory…';
    sum={today};document.dispatchEvent(new CustomEvent('dn:publishing',{detail:{checking:true}}));
-   try{await Promise.all([live(today),stock(today),releases()]);$('pubChecked').textContent='Checks finished '+stamp(new Date().toISOString())+' (London).';}
+   try{await Promise.all([live(today),stock(today),releases(),nightly()]);sum.checkedAt=new Date().toISOString();$('pubChecked').textContent='Checked '+clock(sum.checkedAt);}
    finally{busy=false;$('pubCheck').disabled=false;api.last=sum;document.dispatchEvent(new CustomEvent('dn:publishing',{detail:sum}));}
   }
   $('pubCheck').onclick=check;
@@ -87,5 +135,5 @@
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&started&&!document.getElementById('app').hidden&&day()!==checkedDay)check();});
   api.start=()=>{if(!started){started=true;check();}};
  }
- const api={analyse,dailyList,mount,TYPES};return api;
+ const api={analyse,dailyList,labList,failedStep,mount,TYPES,LAB,NAMES,GOAL};return api;
 });

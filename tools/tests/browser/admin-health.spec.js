@@ -1,54 +1,78 @@
 'use strict';
+// ADMIN-TODAY: the admin Today tab (27 Nov 2026 rebuild): one headline of what needs Alec, five status lamps,
+// runway per type against the goal, yesterday's players and flags. Publishing checks stay independent of
+// the date range, start only after admin access is confirmed, and report each failure on its own.
 const {test,expect,H,goto}=require('./support');
-const {TYPES,addDay}=require('../../publishing-health');
-const ids={mini:'MINI',doku:'LEXI',sweep:'SWEEP',path:'PATH',link:'LINK',tangle:'TANG',borders:'BORD',reckon:'RECK',tally:'TALLY'};
-const today='2026-10-19';
-const list={today,items:Object.entries(TYPES).map(([type,slug])=>({type,id:'DP·'+ids[type]+'·0001',path:'reports/'+today+'-'+slug+'-0001.html'}))};
-const stock={version:1,today,builtAt:today+'T10:00:00Z',runId:'100',days:Object.fromEntries([1,2,3].map(n=>[addDay(today,n),{counts:Object.fromEntries(Object.keys(TYPES).map(t=>[t,1])),blocked:[]}]))};
-async function auth(phone,mode='admin'){
- await phone.ctx.addInitScript(mode=>{
-  const session=mode==='signed-out'?null:{user:{email:'admin@example.test'}};
-  window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session}}),onAuthStateChange(){},signOut:async()=>({})},rpc:async name=>{
-   if(mode==='not-admin')return {error:{message:'not_admin'}};
-   return {data:name==='admin_dashboard'?{range:{from:'2026-10-01',to:'2026-10-19'},generated_at:'2026-10-19T12:00:00Z',kpis:{},items:[]}:name==='admin_board'?{leagues:[]}:false};
-  }})};
- },mode);
-}
-async function fixtures(phone){
- const state={phase:'healthy',calls:[]};
- await phone.ctx.route('**/publishing-health.json*',r=>{state.calls.push(r.request().method()+' stock');if(state.phase==='hung')return new Promise(()=>{});return r.fulfill({json:{...stock,...(state.phase==='problem'?{today:'2026-10-18'}:{})}});});
- await phone.ctx.route('**/puzzles-today.json*',r=>{state.calls.push(r.request().method()+' list');return r.fulfill({json:list});});
- await phone.ctx.route(/\/reports\/.*publishing-check=1/,r=>{state.calls.push(r.request().method()+' puzzle');return r.fulfill({status:state.phase==='problem'&&r.request().url().includes('word-link')?404:200,body:''});});
- await phone.ctx.route('https://api.github.com/**',r=>{state.calls.push(r.request().method()+' github');return state.phase==='problem'?r.fulfill({status:403,json:{message:'rate limit'}}):r.fulfill({json:{workflow_runs:[{id:102,status:'in_progress',conclusion:null},{id:100,status:'completed',conclusion:'success',updated_at:'2026-10-19T10:05:00Z'}]}});});
- return state;
-}
-test('ADMIN-PUBLISH: live files, future stock and release states remain independent; refresh reports failures',async({phone})=>{
- await auth(phone);const state=await fixtures(phone);await phone.p.setViewportSize({width:360,height:780});await goto(phone,'admin.html');
- const p=phone.p;await expect(p.locator('#pubLive')).toContainText('9/9 puzzle files responding');
- await expect(p.locator('#pubStock')).toContainText('3 complete future days');await expect(p.locator('#pubStock')).toContainText('23 Oct 2026');
- await expect(p.locator('#pubRelease')).toContainText('In progress');await expect(p.locator('#pubRelease')).toContainText('19 Oct 2026');
- // Overview shows the checks as one line (20 Oct 2026 tabs layout); 3 days of stock is a warning.
- await expect(p.locator('#pubLine')).toHaveClass(/warn/);await expect(p.locator('#pubLine')).toContainText('Only 3 days of puzzle stock');await expect(p.locator('#pubLine')).toContainText('9 of 9 puzzles live');
- await p.locator('#pubLine').click();await expect(p.locator('#publishing')).toBeVisible();await expect(p.getByRole('tab',{name:'Publishing'})).toHaveAttribute('aria-selected','true');
- await p.getByRole('button',{name:'Settings'}).click();await p.getByRole('button',{name:'7 days',exact:true}).click();await p.keyboard.press('Escape');
- await expect(p.locator('#publishing')).toBeVisible();expect(state.calls.filter(x=>x==='GET github')).toHaveLength(1);
- await p.locator('#publishing summary').click();await expect(p.locator('#pubDays')).toContainText('Every type on file');
+const F=require('./admin-fixtures');
+async function at(phone){await phone.p.clock.setSystemTime(new Date('2026-11-27T17:40:00Z'));}
+
+test('ADMIN-TODAY-01: GIVEN live puzzles, a passed release, Lab stock for 22 days and Link short of the goal WHEN Today opens THEN it names both as things to do and the lamps say why',async({phone})=>{
+ await F.auth(phone);const state=await F.publishing(phone);await at(phone);await phone.p.setViewportSize({width:360,height:780});await goto(phone,'admin.html');
+ const p=phone.p;
+ await expect(p.locator('#todayHead')).toContainText('2 things need you');
+ await expect(p.locator('#todayHead')).toContainText('Make Lab puzzles past 19 Dec');
+ await expect(p.locator('#todayHead')).toContainText('Extend Link to 31 Dec 2027');
+ await expect(p.locator('#todayHead')).toContainText('Link ends 21 Jul 2027, 163 days short');
+ await expect(p.locator('#lamps')).toContainText('12 of 12 responding: 9 dailies and 3 Lab');
+ await expect(p.locator('#lamps')).toContainText('No app errors in 7 days');
+ await expect(p.locator('#lamps')).toContainText('Passed');
+ await expect(p.locator('#lamps')).toContainText('Nightly tests passed');
+ await expect(p.locator('#lamps .lmp').last()).toHaveClass(/bad/);
+ await expect(p.locator('#rwList')).toContainText('Lab trials');
+ await expect(p.locator('#rwList .rw.bad')).toHaveCount(1);
+ await expect(p.locator('#ydTiles')).toContainText('22');await expect(p.locator('#ydTiles')).toContainText('came back');
+ await expect(p.locator('#ydFlags')).toContainText('Link 110');
+ await expect(p.locator('#ydApp')).toContainText('26');
  expect(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
- await p.locator('#publishing').screenshot({path:'test-results/admin-publishing-phone.png'});
- await p.setViewportSize({width:1120,height:850});await p.locator('#publishing').screenshot({path:'test-results/admin-publishing-desktop.png'});
+ await p.screenshot({path:'test-results/admin-today-phone.png',fullPage:true});
+ // Publishing detail keeps the per-check cards; the range sheet does not repeat the checks.
+ await p.locator('#pubPanel summary').click();await expect(p.locator('#pubLive')).toContainText('12/12 puzzle files responding');
+ await expect(p.locator('#pubStock')).toContainText('complete future days');await expect(p.locator('#pubRelease')).toContainText('Succeeded');
+ const gh=state.calls.filter(x=>x==='GET github').length;
+ await p.getByRole('button',{name:'Settings'}).click();await p.getByRole('button',{name:'7 days',exact:true}).click();await p.keyboard.press('Escape');
+ expect(state.calls.filter(x=>x==='GET github')).toHaveLength(gh);
+ // Opening the page asks only for Today's figures.
+ const rpc=await p.evaluate(()=>window.__rpc);expect(rpc).not.toContain('admin_dashboard');expect(rpc).not.toContain('admin_lab');
+ await p.setViewportSize({width:1120,height:850});await p.screenshot({path:'test-results/admin-today-desktop.png',fullPage:true});
+ // Re-check with problems: one file down, a failed release (named step) and failed nightly tests.
  state.phase='problem';await p.locator('#pubCheck').click();
- await expect(p.locator('#pubLive')).toContainText('8/9 puzzle files responding');await expect(p.locator('#pubStock')).toContainText('out of date');await expect(p.locator('#pubRelease')).toContainText('GitHub status not confirmed');
- await expect(p.locator('#pubLine')).toHaveClass(/bad/);await expect(p.locator('#pubLine')).toContainText('1 of today’s puzzles not responding');
+ await expect(p.locator('#lamps')).toContainText('11 of 12 responding');
+ await expect(p.locator('#lamps')).toContainText('Failed at: Release › Required test suite');
+ await expect(p.locator('#lamps')).toContainText('Nightly tests failed');
+ await expect(p.locator('#todayHead')).toHaveClass(/bad/);await expect(p.locator('#todayHead')).toContainText('The last release failed');
+ await expect(p.locator('#pubStock')).toContainText('out of date');
  expect(state.calls.every(c=>/^(GET|HEAD) /.test(c))).toBe(true);expect(phone.errors).toEqual([]);
 });
-for(const mode of ['signed-out','not-admin'])test('ADMIN-PUBLISH: '+mode+' does not start publishing requests',async({phone})=>{
- await auth(phone,mode);const state=await fixtures(phone);await goto(phone,'admin.html');
+
+test('ADMIN-TODAY-02: GIVEN an app crash this week WHEN Today opens THEN the App lamp is red and it is first among things to do',async({phone})=>{
+ await F.auth(phone,{admin_ops:{data:F.ops({fatal:3})}});await F.publishing(phone,{stockOver:{link:'2028-08-01',lab:'2027-03-01'}});await at(phone);await goto(phone,'admin.html');
+ await expect(phone.p.locator('#lamps .lmp').nth(1)).toHaveClass(/bad/);
+ await expect(phone.p.locator('#lamps')).toContainText('3 crashes this week');
+ await expect(phone.p.locator('#todayHead .act').first()).toContainText('3 app crashes this week');
+ expect(phone.errors).toEqual([]);
+});
+
+test('ADMIN-TODAY-03: GIVEN everything live, released and stocked to the goal WHEN Today opens THEN it says All clear',async({phone})=>{
+ await F.auth(phone);await F.publishing(phone,{stockOver:{through:'2028-02-01',link:'2028-02-01',lab:'2027-03-01'}});await at(phone);await goto(phone,'admin.html');
+ await expect(phone.p.locator('#todayHead')).toHaveClass(/good/);await expect(phone.p.locator('#todayHead')).toContainText('All clear');
+ expect(phone.errors).toEqual([]);
+});
+
+for(const mode of ['signed-out','not-admin'])test('ADMIN-TODAY: '+mode+' does not start publishing requests',async({phone})=>{
+ await F.auth(phone,{},mode);const state=await F.publishing(phone);await goto(phone,'admin.html');
  await expect(phone.p.locator('#signin')).toBeVisible();await expect(phone.p.locator('#app')).toBeHidden();expect(state.calls).toEqual([]);expect(phone.errors).toEqual([]);
 });
 
-test('ADMIN-PUBLISH: a stalled snapshot times out and can be checked again',async({phone})=>{
- await auth(phone);const state=await fixtures(phone);state.phase='hung';await goto(phone,'admin.html');
+test('ADMIN-TODAY: a stalled snapshot times out and can be checked again',async({phone})=>{
+ await F.auth(phone);const state=await F.publishing(phone);state.phase='hung';await at(phone);await goto(phone,'admin.html');
  await H.wait(phone.p,13000);await expect(phone.p.locator('#pubStock')).toContainText('Future stock not confirmed');
- await phone.p.getByRole('tab',{name:'Publishing'}).click();await expect(phone.p.locator('#pubCheck')).toBeEnabled();state.phase='healthy';await phone.p.locator('#pubCheck').click();
- await expect(phone.p.locator('#pubStock')).toContainText('3 complete future days');expect(phone.errors).toEqual([]);
+ await expect(phone.p.locator('#pubCheck')).toBeEnabled();state.phase='healthy';await phone.p.locator('#pubCheck').click();
+ await expect(phone.p.locator('#pubStock')).toContainText('complete future days');expect(phone.errors).toEqual([]);
+});
+
+test('ADMIN-TODAY: old addresses open the new tabs',async({phone})=>{
+ await F.auth(phone);await F.publishing(phone);await at(phone);
+ await goto(phone,'admin.html#publishing');await expect(phone.p.getByRole('tab',{name:'Today'})).toHaveAttribute('aria-selected','true');
+ await goto(phone,'admin.html?again=1#news');await expect(phone.p.getByRole('tab',{name:'Other'})).toHaveAttribute('aria-selected','true');
+ expect(phone.errors).toEqual([]);
 });

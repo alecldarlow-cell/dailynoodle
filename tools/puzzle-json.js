@@ -76,7 +76,8 @@ function write(site) {
       written++;
     }
     items.push({ path: it.path, type: it.type, id: it.id || '', date: it.date, headline: it.headline,
-      standfirst: it.standfirst || '', read: it.read || '', mask: it.mask || '', json });
+      standfirst: it.standfirst || '', read: it.read || '', mask: it.mask || '', json,
+      band: (data && data.band) || '' });   // band from 27 Nov 2026: the admin scorecard splits Doku by it
   }
   fs.writeFileSync(path.join(site, 'feed-lite.json'),
     JSON.stringify({ built: feed.built, today: feed.today, count: items.length, items }) + '\n');

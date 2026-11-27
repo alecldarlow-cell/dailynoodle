@@ -72,4 +72,6 @@ test('puzzle json: write() covers released puzzle cards only and lists every car
     ['reports/' + legacy, null],
   ]);
   assert.strictEqual(lite.count, 2);
+  assert.strictEqual(lite.items[0].band, out.band, 'feed-lite carries the band (27 Nov 2026, admin scorecard)');
+  assert.strictEqual(lite.items[1].band, '', 'no data, no band');
 });
