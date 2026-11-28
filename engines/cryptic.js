@@ -461,7 +461,7 @@ function hint(){
   if(state.solved||state.busy||revealed()>=N)return;
   startTimer();
   state.hints++;
-  if(state.hints===1)setMsg("The definition is underlined: it’s at one end of the clue.");
+  if(state.hints===1)setMsg("The definition is highlighted. The rest is the wordplay.");
   else if(state.hints===2)setMsg("");
   else{
     const i=revealed()-1;state.letters[i]=ANS[i];

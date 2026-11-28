@@ -285,7 +285,7 @@ var dnHouseLine = (function () {
     tilt: 'Turn the maze and the ball drops until it hits a wall. Get it out through the gap: the clock is the score.',
     redact: cap(W[(P.black || []).length] || (P.black || []).length) + ' of these letters don’t belong. Black them out and the grid becomes a crossword.',
     tumbler: 'A four-letter word is hidden in the wheels. Make words on the outlined line and submit them for clues until you find it.',
-    cryptic: 'One cryptic clue a day. The definition is at one end; the rest is wordplay that builds the same answer.'
+    cryptic: 'One cryptic clue a day. The definition is at the start or the end; the rest is wordplay that builds the same answer.'
   }[TYPE];
   var HOW = {
     mini: ['Tap a square and type. Tap the clue bar to switch between across and down; the arrows either side step through the clues.', 'Check word and Check all mark wrong letters; Reveal word fills one in. The clock stops when the grid is right.'],
