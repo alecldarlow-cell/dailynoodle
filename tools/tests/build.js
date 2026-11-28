@@ -38,6 +38,13 @@ function build(out=path.join(ROOT,'_site')){
   for(const fp of ['0A:E9:05:AD:A8:46:42:4B','4B:3D:36:4E:09:54:62:90'])assert.ok(app.target.sha256_cert_fingerprints.some(f=>f.startsWith(fp)),'assetlinks.json has the '+fp+'… key');
   for(const f of app.target.sha256_cert_fingerprints)assert.match(f,/^([0-9A-F]{2}:){31}[0-9A-F]{2}$/,'Fingerprint format '+f);
   assert.ok(fs.existsSync(path.join(site,'join.html')),'join.html published');
+  // iPhone universal links (SITE.md › App links, app issue #213): the same paths as the Android intent filters, never board.html.
+  const aasa=JSON.parse(fs.readFileSync(path.join(site,'.well-known','apple-app-site-association'))).applinks.details;
+  assert.equal(aasa.length,1,'apple-app-site-association has one app');
+  assert.deepEqual(aasa[0].appIDs.map(a=>a.replace(/^[A-Z0-9]{10}\./,'')),['uk.co.dailynoodle.app'],'apple-app-site-association names the app by Team ID (10 characters) and bundle id');
+  const iosPaths=aasa[0].components.map(c=>c['/']);
+  assert.deepEqual(iosPaths,['/join.html',...['mini','doku','sweep','path','link','tangle','borders','reckon','tally'].flatMap(t=>['/'+t,'/'+t+'/','/'+t+'/index.html'])],'apple-app-site-association paths match the app');
+  assert.ok(!iosPaths.some(p=>/board/.test(p)),'board.html stays in the browser');
   for(const file of ['tools','toolchain','package.json','package-lock.json','playwright.config.js','registry.json','published.json'])assert.ok(!fs.existsSync(path.join(site,file)),'Private tooling deployed: '+file);
   // Inspect every emitted search tag and prove metadata never changes playable content.
   const searchPages=require('../search-meta').entries(feed),titles=new Set();
