@@ -19,6 +19,10 @@ function searchTags(html,meta,canonical){
  {const r=await fetch(base+'/.well-known/assetlinks.json',{signal:AbortSignal.timeout(20000),cache:'no-cache',redirect:'manual'});
   assert.equal(r.status,200,'assetlinks.json');assert.match(r.headers.get('content-type')||'',/application\/json/,'assetlinks.json content type');
   assert.ok((await r.json()).some(l=>l.target&&l.target.package_name==='uk.co.dailynoodle.app'),'assetlinks.json names the app');console.log('LIVE .well-known/assetlinks.json OK');}
+ // iPhone universal links: Apple's CDN fetches this (no extension, no redirect). GitHub Pages can't label an extensionless file as JSON, so only the body is checked here.
+ {const r=await fetch(base+'/.well-known/apple-app-site-association',{signal:AbortSignal.timeout(20000),cache:'no-cache',redirect:'manual'});
+  assert.equal(r.status,200,'apple-app-site-association');
+  assert.ok(JSON.parse(await r.text()).applinks.details[0].appIDs[0].endsWith('.uk.co.dailynoodle.app'),'apple-app-site-association names the app');console.log('LIVE .well-known/apple-app-site-association OK');}
  const list=await fetch(base+'/puzzles-today.json',{signal:AbortSignal.timeout(20000)}).then(r=>{assert.equal(r.status,200);return r.json();});
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/London'}).format(new Date());assert.equal(list.today,today,'Daily list is stale');assert.equal(list.items.length,require('../../admin-health').TYPES.length);
  require('../../admin-health').dailyList(list,today);

@@ -1,0 +1,98 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "TEAMID_TBC.uk.co.dailynoodle.app"
+        ],
+        "components": [
+          {
+            "/": "/join.html",
+            "comment": "League invites and leaderboards (join.html?c=CODE)"
+          },
+          {
+            "/": "/mini"
+          },
+          {
+            "/": "/mini/"
+          },
+          {
+            "/": "/mini/index.html"
+          },
+          {
+            "/": "/doku"
+          },
+          {
+            "/": "/doku/"
+          },
+          {
+            "/": "/doku/index.html"
+          },
+          {
+            "/": "/sweep"
+          },
+          {
+            "/": "/sweep/"
+          },
+          {
+            "/": "/sweep/index.html"
+          },
+          {
+            "/": "/path"
+          },
+          {
+            "/": "/path/"
+          },
+          {
+            "/": "/path/index.html"
+          },
+          {
+            "/": "/link"
+          },
+          {
+            "/": "/link/"
+          },
+          {
+            "/": "/link/index.html"
+          },
+          {
+            "/": "/tangle"
+          },
+          {
+            "/": "/tangle/"
+          },
+          {
+            "/": "/tangle/index.html"
+          },
+          {
+            "/": "/borders"
+          },
+          {
+            "/": "/borders/"
+          },
+          {
+            "/": "/borders/index.html"
+          },
+          {
+            "/": "/reckon"
+          },
+          {
+            "/": "/reckon/"
+          },
+          {
+            "/": "/reckon/index.html"
+          },
+          {
+            "/": "/tally"
+          },
+          {
+            "/": "/tally/"
+          },
+          {
+            "/": "/tally/index.html"
+          }
+        ]
+      }
+    ]
+  }
+}
